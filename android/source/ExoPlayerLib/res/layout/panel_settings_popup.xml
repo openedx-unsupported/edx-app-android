@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/setting_popup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_rounded_white"
+    android:orientation="vertical" >
+
+    <ETextView
+        android:id="@+id/tv_closedcaption"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_rounded_white_blue"
+        android:gravity="left|center_vertical"
+        android:padding="10dp"
+        android:text="@string/lbl_closed_captions" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_act_background" />
+
+    <ETextView
+        android:id="@+id/tv_speedcontrol"
+        style="@style/regular_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_rounded_white_blue"
+        android:gravity="left|center_vertical"
+        android:padding="10dp"
+        android:text="@string/lbl_video_speed"
+        android:textColor="@color/grey_text_mycourse" />
+
+</LinearLayout>

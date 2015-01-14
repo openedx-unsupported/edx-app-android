@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:splitMotionEvents="false" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fillViewport="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edx_logo_height"
+                    android:layout_marginBottom="@dimen/logo_margin_bottom"
+                    android:layout_marginLeft="44dp"
+                    android:layout_marginRight="44dp"
+                    android:layout_marginTop="@dimen/logo_margin_top" >
+
+                    <ImageView
+                        android:id="@+id/login_map"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:contentDescription="@string/app_name"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/edx_map_login" />
+
+                    <ImageView
+                        android:id="@+id/login_logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/edx_logo_login" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="44dp"
+                    android:paddingRight="44dp" >
+
+                    <org.edx.mobile.view.custom.EEditText
+                        android:id="@+id/email_et"
+                        style="@style/edit_text_style"
+                        android:hint="@string/email_username"
+                        android:inputType="textEmailAddress" />
+
+                    <org.edx.mobile.view.custom.EEditText
+                        android:id="@+id/password_et"
+                        style="@style/edit_text_style"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/password"
+                        android:inputType="textPassword" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/forgot_password_tv"
+                        style="@style/semibold_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/forgot_password"
+                        android:textColor="@color/cyan_text_navigation"
+                        android:textSize="12sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/login_button_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bt_signin_default" >
+
+                        <org.edx.mobile.view.custom.ETextView
+                            android:id="@+id/login_btn_tv"
+                            style="@style/regular_white_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="@string/login"
+                            android:textAllCaps="true"
+                            android:textSize="16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/login_spinner"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:indeterminateDrawable="@drawable/login_progress"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <include layout="@layout/panel_login_social" />
+                    </LinearLayout>
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/by_signing_up_tv"
+                        style="@style/regular_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:gravity="center"
+                        android:text="@string/by_signing_up"
+                        android:textColor="@color/grey_redirected_txt"
+                        android:textSize="11sp" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/end_user_agreement_tv"
+                        style="@style/regular_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:linksClickable="true"
+                        android:text="@string/licensing_agreement"
+                        android:textColor="@color/cyan_text_navigation"
+                        android:textSize="11sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="11dp"
+                        android:layout_marginTop="40dp"
+                        android:background="@color/grey_act_background"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/bottom_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/top_layout"
+                android:paddingLeft="44dp"
+                android:paddingRight="44dp" >
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/new_user_tv"
+                    style="@style/semibold_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:linksClickable="true"
+                    android:text="@string/new_user"
+                    android:textColor="@color/new_user_txt_color"
+                    android:textSize="13sp" />
+                <!--
+                 <ETextView
+                    android:id="@+id/signup_text"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/new_user_tv"
+                    android:gravity="center"
+                    android:text="@string/sign_up"
+                    android:textColor="@color/grey_redirected_txt"
+                    android:textSize="10sp" /> 
+                -->
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/bg_error_dialog"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="gone" >
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/error_header"
+            style="@style/semibold_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/error_heading"
+            android:textColor="@color/grey_text_mycourse"
+            android:textSize="14sp" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/error_message"
+            style="@style/regular_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/error_message"
+            android:textColor="@color/red_error_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

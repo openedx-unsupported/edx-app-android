@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/panel_dialog_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:minWidth="250dp"
+    android:orientation="vertical" >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_dialog_message"
+        style="@style/regular_white_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/network_panel_dialog_message_help1"
+        android:textSize="14sp" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_small_dialog_message"
+        style="@style/regular_white_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/network_panel_dialog_help"
+        android:textSize="10sp" />
+
+</LinearLayout>

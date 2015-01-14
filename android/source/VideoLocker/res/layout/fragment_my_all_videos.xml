@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_act_background"
+    android:orientation="vertical"
+    android:splitMotionEvents="false" >
+    
+    <!-- keep this container, as playerfragment needs it to be present -->
+    <LinearLayout
+        android:id="@+id/container_player"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        android:orientation="vertical" > 
+    </LinearLayout>
+
+    <ListView
+        android:layout_below="@id/container_player"
+        android:id="@+id/my_video_course_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"
+        android:padding="10dp"
+        android:drawSelectorOnTop="false"
+		android:listSelector="@color/grey_act_background"
+        />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/empty_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/no_videos_to_display"
+        android:textSize="21sp"
+        android:visibility="gone"
+        android:textColor="@color/empty_list_text"
+        style="@style/bold_text"
+        android:layout_margin="20dp" />
+
+</RelativeLayout>

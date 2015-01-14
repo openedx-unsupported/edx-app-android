@@ -1,0 +1,189 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_nav_background" >
+
+    <LinearLayout
+        android:id="@+id/name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/grey_name_background"
+        android:orientation="vertical"
+        android:padding="15dp" >
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/name_tv"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:inputType="textCapWords"
+            android:maxWidth="200dp"
+            android:paddingTop="10dp"
+            android:text="@string/name_default"
+            android:textSize="20sp" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/email_tv"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:maxWidth="200dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/email_default"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_layout"
+        android:orientation="vertical"
+        android:splitMotionEvents="false" >
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/my_contents"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_my_courses"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/my_assets"
+            style="@style/regular_white_text"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_my_videos"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/my_email"
+            style="@style/regular_white_text"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_submit_feedback"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <RelativeLayout
+            android:id="@+id/settings_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" >
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/settingsText"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_txt"
+                android:textAllCaps="true"
+                android:textColor="@color/cyan_text_navigation"
+                android:textSize="14sp" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/download_only_tv"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/settingsText"
+                android:text="@string/download_only"
+                android:textColor="@color/cyan_text_navigation"
+                android:textSize="12sp" />
+
+            <Switch
+                android:id="@+id/wifi_setting"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/download_only_tv"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/download_only_tv"
+                android:checked="true"
+                android:switchMinWidth="80dp"
+                android:switchTextAppearance="@style/default_switch"
+                android:textOff="@string/toggle_turn_off"
+                android:textOn="@string/toggle_turn_on"
+                android:thumb="@drawable/switch_inner"
+                android:thumbTextPadding="8dp"
+                android:track="@drawable/switch_track" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_version_no"
+        style="@style/regular_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:text="@string/label_version"
+        android:textColor="@color/transparent_white_90"
+        android:textSize="10sp" />
+
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/logout_button"
+        style="@style/regular_white_text"
+        android:layout_width="170dp"
+        android:layout_height="40dp"
+        android:layout_above="@id/tv_version_no"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/logout_bg_selector"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/logout"
+        android:textAllCaps="true"
+        android:textSize="15sp" />
+
+</RelativeLayout>

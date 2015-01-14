@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- texts -->
+    <string name="app_name">Video Player</string>
+    <string name="lbl_cc">CC</string>
+	<string name="lbl_slash">/</string>
+	<string name="lbl_closed_captions">Closed Captions</string>
+	<string name="lbl_video_speed">Video Speed</string>
+	<string name="lbl_cc_none">None</string>
+    
+    <!-- colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="video_details_background">#1F2124</color>
+    <color name="video_details_background_transparent">#CC1F2124</color>
+    <color name="cyan_circle">#1F9FD9</color>
+    <color name="transparent_black_50">#80000000</color>
+    <color name="grey_text_mycourse">#454951</color>
+    <color name="grey_act_background">#E2E3E5</color>
+    <color name="cc_lang_selected">#20299ED7</color>
+    <color name="speed_selected">#20299ED7</color>
+    <color name="cc_lang_or_speed_selected">#F1F1F2</color>
+    
+    <!-- styles -->
+    <style name="regular_text">
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+    
+    <style name="bold_text">
+        <item name="font">OpenSans-Bold.ttf</item>
+    </style>
+    
+    <style name="bold_white_text" parent="@style/bold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="semibold_text">
+        <item name="font">OpenSans-Semibold.ttf</item>
+    </style>
+    
+    <style name="semibold_white_text" parent="@style/semibold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="video_title" parent="@style/semibold_white_text">
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+    
+    <style name="regular_grey_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/grey_text_mycourse</item>
+    </style>
+</resources>

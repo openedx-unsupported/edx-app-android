@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_act_background"
+    android:splitMotionEvents="false" >
+
+    <LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar_style"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/download_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/download_header"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                layout="@layout/panel_download_msg"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/my_downloads_list"
+        style="@style/list_downloads"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_panel" />
+
+</RelativeLayout>

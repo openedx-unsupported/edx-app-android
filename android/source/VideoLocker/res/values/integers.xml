@@ -1,0 +1,5 @@
+<resources>
+    <!--  Error Messages -->
+	<integer name="message_delay">5000</integer>
+ 
+</resources>

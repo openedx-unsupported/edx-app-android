@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/course_row_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:paddingBottom="10dp" >
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/course_image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/course_image"
+            android:scaleType="centerCrop" />
+
+        <!--
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_alignParentTop="true" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/course_image"
+            android:src="@drawable/transparent_bg" />
+    </FrameLayout>
+        -->
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_name"
+            style="@style/bold_grey_text"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/course_image"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/course_name"
+            android:textSize="16sp" />
+        <!--
+    <ETextView
+        android:id="@+id/school_code"
+        style="@style/regular_grey_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/course_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ellipsize="end"
+        android:maxWidth="120dp"
+        android:singleLine="true"
+        android:text="@string/school_code"
+        android:textSize="12sp" />
+        -->
+
+        <LinearLayout
+            android:id="@+id/schoolcode_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/course_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:maxWidth="120dp"
+            android:orientation="horizontal" >
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/org_code_tv"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/org_code_txt"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/or_tv"
+                style="@style/regular_grey_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:maxWidth="120dp"
+                android:text="@string/or_symbol"
+                android:textSize="12sp" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/school_code_tv"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:textColor="@color/org_code_txt"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/new_course_content_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/schoolcode_layout"
+            android:layout_below="@id/course_name"
+            android:layout_marginRight="10dp" >
+
+            <View
+                android:id="@+id/ellipsis_icon"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/cyan_circle" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/new_course_content"
+                style="@style/bold_cyan_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/new_course_content"
+                android:paddingLeft="3dp"
+                android:text="@string/new_course_content"
+                android:textAllCaps="true"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/starting_from_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/schoolcode_layout"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_starting"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp" >
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/starting_from"
+                style="@style/bold_white_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/label_starting_from"
+                android:textAllCaps="true"
+                android:textSize="8sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+  <!--   <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/course_row_layout"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Looking for a new challenge"
+            android:textColor="#454951"
+            android:textSize="12sp" />
+    </LinearLayout> -->
+    <!-- put a frame over this cell, so that corners look rounded -->
+
+    <ImageView
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/course_row_layout"
+        android:layout_alignLeft="@id/course_row_layout"
+        android:layout_alignRight="@id/course_row_layout"
+        android:layout_alignTop="@id/course_row_layout"
+        android:background="@drawable/ic_card"
+        android:contentDescription="@string/app_name" />
+
+</RelativeLayout>
