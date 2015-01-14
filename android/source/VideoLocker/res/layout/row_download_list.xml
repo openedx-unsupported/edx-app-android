@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/downloads_row_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="10dp" >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloads_name"
+        style="@style/semibold_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="210dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/download_name"
+        android:textColor="@color/grey_text_mycourse"
+        android:textSize="14sp" />
+
+    <LinearLayout android:id="@+id/close_btn_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:padding="5dp" >
+
+        <ImageView
+            android:id="@+id/close_btn"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:contentDescription="@string/course_image"
+            android:src="@drawable/ic_close" />
+    </LinearLayout>
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/download_time"
+        style="@style/regular_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/downloads_name"
+        android:layout_marginLeft="18dp"
+        android:lines="1"
+        android:singleLine="true"
+        android:text="@string/download_time"
+        android:textColor="@color/grey_video_size_text"
+        android:textSize="12sp" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/download_percentage"
+        style="@style/regular_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/downloads_name"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/download_time"
+        android:lines="1"
+        android:singleLine="true"
+        android:text="@string/download_percentage"
+        android:textColor="@color/grey_video_size_text"
+        android:textSize="12sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/CustomProgressBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/download_time"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginTop="4dp"
+        android:max="100"
+        android:progress="40" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/txtDownloadFailed"
+        style="@style/semibold_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressBar"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="18dp"
+        android:text="@string/download_failed_text"
+        android:textColor="@color/red_download_failed_text"
+        android:textSize="12sp" />
+
+</RelativeLayout>

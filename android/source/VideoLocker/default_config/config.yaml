@@ -1,0 +1,6 @@
+API_HOST_URL: 'http://localhost:8000'
+COURSE_SEARCH_URL: 'http://localhost:8000/course-search?type=mobile'
+ENVIRONMENT_DISPLAY_NAME: 'Localhost'
+FEEDBACK_EMAIL_ADDRESS: 'support@example.com'
+OAUTH_CLIENT_ID: ''
+OAUTH_CLIENT_SECRET: ''

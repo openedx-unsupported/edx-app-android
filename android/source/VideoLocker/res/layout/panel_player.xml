@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" >
+
+        <org.edx.mobile.player.Preview
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:rotation="0" />
+
+        <include
+            android:id="@+id/txtSubtitles"
+            layout="@layout/view_cc_texbox" />
+
+        <include
+            android:id="@+id/panel_network_error"
+            layout="@layout/panel_network_error"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/panel_video_not_available"
+            layout="@layout/panel_video_not_available"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/panel_video_not_available"
+            layout="@layout/panel_video_not_available"
+            android:visibility="gone" />
+
+        <!--
+             <ETextView
+            android:id="@+id/txtSubtitles"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:gravity="bottom|center_horizontal"
+            android:textSize="12sp"
+            android:visibility="visible" />
+        -->
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/player_progress_style"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <!--
+         <ETextView
+        android:id="@+id/txtSubtitles"
+        style="@style/regular_white_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="visible" />
+    -->
+
+    <ImageView
+        android:id="@+id/iv_transparent_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent_black_50"
+        android:contentDescription="@string/app_name"
+        android:visibility="gone" />
+
+</RelativeLayout>

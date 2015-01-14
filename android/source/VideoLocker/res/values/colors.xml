@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2011 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.-->
+
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent_white_90">#E6FFFFFF</color>
+    <color name="transparent_white_20">#33FFFFFF</color>
+    
+    <color name="transparent_black">#90000000</color>
+    <color name="transparent_black_80">#CC000000</color>
+    <color name="transparent_black_50">#80000000</color>
+    <color name="transparent_white">#B3FFFFFF</color>
+    <color name="transparent_white_50">#80FFFFFF</color>
+    <color name="transparent_white_30">#4DFFFFFF</color>
+    <color name="cyan_text_navigation_20">#20299ED7</color>
+    <color name="disabled_chapter_list">#EBEBED</color>
+    <color name="grey">#323232</color>
+    <color name="grey_light">#3c4045</color>
+    <color name="border_color_1">#BDBDBD</color>
+    <color name="border_color_2">#F2F2F2</color>
+    <color name="cyan">#52AFDE</color>
+    <color name="dark_grey">#282B2F</color>
+    <color name="light_gray">#CCCCCC</color>
+    <color name="grey_text">#464A50</color>
+    <color name="grey_nav_background">#282B2F</color>
+    <color name="grey_name_background">#3C4045</color>
+    <color name="grey_redirected_txt">#3C4045</color>
+    <color name="grey_nav_pressed_background">#888889</color>
+    <color name="grey_video_size_text">#9EA7B3</color>
+    <color name="grey_text_mycourse">#454951</color>
+    <color name="grey_last_accessed">#464A50</color>
+    <color name="red_error_text">#F47676</color>
+    <color name="red_offline_bar">#BA2E6E</color>
+    <color name="grey_act_background">#E2E3E5</color>
+    <color name="grey_text_tab">#898B8E</color>
+    <color name="cyan_text_navigation">#299ED7</color>
+    <color name="progress_wheel_color">#7DC88F</color>
+    <color name="progress_wheel_bg_color">#E5F4E9</color>
+    <color name="include_msg_color">#65C89D</color>
+    <color name="offline_text">#BA2E6E</color>
+    <color name="cyan_circle">#1F9FD9</color>
+    <color name="grey_circle">#E6E6E7</color>
+    <color name="new_user_txt">#B82669</color>
+    <color name="new_user_txt_color">#CC3c4045</color> 
+    <color name="offline_panel">#E6BA2E6E</color>
+    <color name="browser_panel">#E2E3E5</color>
+    <color name="white_list_clicked">#F1F1F2</color>
+    <color name="transparent_download_bg">#E63E4247</color>
+    <color name="video_section_bg">#3E4247</color>
+    <color name="last_viewed_layout">#F6FCFF</color>
+    <color name="red_download_failed_text">#fd7575</color>
+    <color name="tab_bg">#3E4247</color>
+    <color name="video_details_background">#1F2124</color>
+    <color name="video_details_background_transparent">#CC1F2124</color>
+    <color name="delete_panel_bg">#3E4247</color>
+    <color name="empty_list_text">#c8c8c8</color>
+    <color name="switch_default_button_color">#C3C3C3</color>
+    <color name="switch_default_bg_color">#3C4045</color>
+    <color name="delete_btn_disabled">#565A5F</color>
+    <color name="cyan_loader">#99299ED7</color>
+    <color name="org_code_txt">#8A8C8F</color>
+    <color name="transparent_cc_bg">#661F2124</color>
+    
+</resources>

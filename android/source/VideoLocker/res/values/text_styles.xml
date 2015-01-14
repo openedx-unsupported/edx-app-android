@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="section_title" parent="@style/regular_white_text">
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">7dp</item>
+    </style>
+
+    <style name="video_title" parent="@style/semibold_white_text">
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="video_desc" parent="@style/regular_text">
+        <item name="android:textColor">@color/transparent_white_30</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingLeft">13dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+    
+     <style name="video_section_title" parent="@style/semibold_text">
+       	<item name="android:background">@color/grey_act_background</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textColor">@color/grey_text_mycourse</item>
+    </style>
+
+     <style name="course_section_title" parent="@style/semibold_white_text">
+       	<item name="android:background">@color/video_section_bg</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+     
+    <!-- EditText theme -->
+    <style name="edit_text_style" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:textColor">@color/grey_text</item>
+        <item name="android:background">@drawable/edit_bg_selector</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+        <item name="android:maxLength">60</item>
+    </style>
+
+    <style name="downloading_message">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@color/transparent_download_bg</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+    
+    <style name="offline_access_header" parent="@style/bold_white_text">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="offline_access_message" parent="@style/regular_white_text">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    
+    <style name="bold_grey_text" parent="@style/bold_text">
+        <item name="android:textColor">@color/grey_text_mycourse</item>
+    </style>
+    
+    <style name="bold_white_text" parent="@style/bold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="regular_grey_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/grey_text_mycourse</item>
+    </style>
+    
+    <style name="regular_white_text" parent="@style/regular_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="semibold_white_text" parent="@style/semibold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="bold_cyan_text" parent="@style/bold_text">
+        <item name="android:textColor">@color/cyan_text_navigation</item>
+    </style>
+    
+    <style name="semibold_text">
+        <item name="font">OpenSans-Semibold.ttf</item>
+    </style>
+    
+    <style name="regular_text">
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+    
+    <style name="bold_text">
+        <item name="font">OpenSans-Bold.ttf</item>
+    </style>
+    
+     <style name="text_network_error" parent="@style/semibold_white_text">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+     </style>
+</resources>

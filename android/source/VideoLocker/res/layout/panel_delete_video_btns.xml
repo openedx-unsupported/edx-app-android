@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/delete_video_layout"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:splitMotionEvents="false">
+    
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/edit_btn"
+        style="@style/semibold_white_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/label_edit"
+        android:textSize="14sp"
+        android:background="@drawable/delete_btn_selector"
+         />
+
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/cancel_btn"
+        style="@style/semibold_white_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="left|center_vertical"
+        android:text="@string/label_cancel"
+        android:textSize="14sp"
+        android:layout_weight="1"
+        android:background="@drawable/delete_btn_selector"
+        android:paddingLeft="10dp"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/delete_btn"
+        style="@style/semibold_white_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="right|center_vertical"
+        android:text="@string/label_delete"
+        android:textSize="14sp"
+        android:layout_weight="1"
+        android:background="@drawable/delete_btn_selector"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:enabled="false" />
+
+</LinearLayout>

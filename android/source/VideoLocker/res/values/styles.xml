@@ -1,0 +1,67 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        
+    </style>
+    
+    <!-- A theme for a custom dialog appearance. -->
+    <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
+        
+        <item name="android:textColor">#faca64</item> 
+    </style>
+
+    <!-- the theme applied to the application or activity -->
+    <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
+    <!-- ActionBar styles -->
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="MyActionBarTitleText"
+           parent="@style/android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+    
+    
+     <!-- EditText theme -->
+    <style name="offline_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">3dp</item>
+        <item name="android:background">@color/red_offline_bar</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    
+    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_red</item>
+        <item name="android:minHeight">3dip</item>
+        <item name="android:maxHeight">3dip</item>
+    </style>
+    
+    <style name="default_switch" parent="@style/semibold_text">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+        
+    </style>
+    
+</resources>

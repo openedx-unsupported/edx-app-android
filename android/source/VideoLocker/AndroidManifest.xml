@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.edx.mobile"
+    android:versionCode="37"
+    android:versionName="1.0.02"
+    android:installLocation="auto" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    
+    <!-- Google Permissions -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    
+    <!-- Allow you to get LOGCAT information when a crash occurs. -->
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <!-- Allow you to see which activity was active when a crash occurs. -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- Allows location to be tracked -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/CustomActionBarTheme"
+        android:name=".base.MainApplication" >
+        
+        <activity
+            android:name=".view.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".view.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustNothing"
+            >
+        </activity>
+        
+        <activity
+            android:name=".view.MyCoursesListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name=".view.CourseDetailTabActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+        <activity
+            android:name=".view.CourseLectureListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+         
+        <activity
+            android:name=".view.MyVideosTabActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+         <activity
+            android:name=".view.DownloadListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+        
+        <activity
+            android:name=".player.LandscapePlayerActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+        
+        <activity
+            android:name=".view.VideoListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        
+         <receiver android:name=".module.download.DownloadCompleteReceiver">
+             <intent-filter>
+                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+             </intent-filter>
+         </receiver>
+         
+         <!-- Setup for Code Coverage -->
+         <instrumentation
+	    	android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
+	    	android:targetPackage="org.edx.mobile" >
+		 </instrumentation>
+	
+		 <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
+		 <receiver android:name=".instrumentation.EndEmmaBroadcast" >
+		   	 <intent-filter>
+		    	<action android:name="org.edx.mobile.END_EMMA" />
+		     </intent-filter>
+		 </receiver>
+		 
+		 <!-- Setup Google -->
+		 <meta-data android:name="com.google.android.gms.version" 
+		     android:value="@integer/google_play_services_version" />
+
+		 <!-- Setup Facebook -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" 
+            android:value="@string/edx_facebook_app_id"/>
+		 
+		 <activity android:name="com.facebook.LoginActivity" />		 		
+    </application>
+
+</manifest>

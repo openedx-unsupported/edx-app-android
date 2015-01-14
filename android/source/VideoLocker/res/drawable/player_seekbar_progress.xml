@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@android:id/primary">
+        <clip android:drawable="@drawable/ic_seek_background" />
+    </item>
+    
+    <item android:id="@android:id/secondaryProgress">
+        <scale
+            android:drawable="@drawable/ic_seek_secondary"
+            android:scaleWidth="100%" />
+    </item>
+    
+    <item android:id="@android:id/progress">
+        <scale
+            android:drawable="@drawable/ic_seek_progress"
+            android:scaleWidth="100%" />
+    </item>
+
+</layer-list>

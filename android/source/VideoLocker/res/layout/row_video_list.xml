@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="vertical" >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/txt_course_title"
+        style="@style/course_section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="@string/course_name"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/txt_chapter_title"
+        style="@style/video_section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="@string/app_name"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/txt_lecture_title"
+        style="@style/video_section_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:text="@string/app_name"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/video_row_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp" >
+
+        <ImageView
+            android:id="@+id/video_watched_status"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:contentDescription="@string/video_size"
+            android:src="@drawable/cyan_circle" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/video_title"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/video_watched_status"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/width_video_text"
+            android:singleLine="true"
+            android:text="@string/video_title"
+            android:textColor="@color/grey_text_mycourse"
+            android:textSize="16sp" 
+            />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/video_playing_time"
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/video_title"
+            android:layout_below="@id/video_title"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:singleLine="true"
+            android:text="@string/video_playing_time"
+            android:textColor="@color/grey_video_size_text"
+            android:textSize="13sp" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/video_size"
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/video_title"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/video_playing_time"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:singleLine="true"
+            android:text="@string/video_size"
+            android:textColor="@color/grey_video_size_text"
+            android:textSize="13sp"
+ />
+
+        <LinearLayout
+            android:id="@+id/download_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="-4dp"
+            android:visibility="gone" >
+
+            <include layout="@layout/view_progress_wheel" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/video_download_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="-3dp"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/video_start_download"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:contentDescription="@string/course_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_download" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/video_select_checkbox"
+            android:layout_width="@dimen/checkbox_size"
+            android:layout_height="@dimen/checkbox_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="320dp"
+            android:layout_alignParentRight="true"
+            android:button="@drawable/checkbox_selector"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+</LinearLayout>

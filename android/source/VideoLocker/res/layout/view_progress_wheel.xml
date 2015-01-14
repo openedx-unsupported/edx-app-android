@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto" >
+
+    <org.edx.mobile.view.custom.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:layout_centerInParent="true"
+        ProgressWheel:barColor="@color/progress_wheel_color"
+        ProgressWheel:barLength="70dp"
+        ProgressWheel:barWidth="5dp"
+        ProgressWheel:contourColor="@android:color/transparent"
+        ProgressWheel:rimColor="@color/progress_wheel_bg_color"
+        ProgressWheel:rimWidth="4dp"
+        ProgressWheel:text=""
+        ProgressWheel:textColor="#222"
+        ProgressWheel:textSize="12sp" />
+
+</merge>

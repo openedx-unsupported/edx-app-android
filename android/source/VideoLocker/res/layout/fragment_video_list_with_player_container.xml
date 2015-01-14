@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_act_background"
+    android:orientation="vertical" >
+    
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/empty_list_view"
+        style="@style/bold_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/no_videos_to_display"
+        android:textColor="@color/empty_list_text"
+        android:textSize="21sp"
+        android:visibility="gone"
+        android:padding="15dp" />
+
+    <LinearLayout
+        android:id="@+id/top_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar_style"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/open_in_browser_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <include layout="@layout/panel_external_component" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/delete_button_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" >
+
+            <include layout="@layout/panel_delete_video_btns" />
+        </LinearLayout>
+    </LinearLayout>
+    
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
+    
+    <LinearLayout
+        android:id="@+id/container_player"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_below="@id/top_panel" > 
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_panel"
+        android:layout_below="@id/container_player"
+        style="@style/default_list"
+        android:transcriptMode="disabled"/>
+
+    <!--
+         <ETextView
+        android:id="@+id/empty_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/no_videos_to_display"
+        android:textSize="23sp"
+        android:visibility="gone"
+        android:textColor="@color/empty_list_text"
+        style="@style/bold_text" />
+    -->
+
+    <!-- <LinearLayout
+        android:id="@+id/offline_access_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_download_bg"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp"
+        android:visibility="gone" >
+
+        <ETextView
+            android:id="@+id/offline_access_header"
+            style="@style/offline_access_header"
+            android:text="@string/video_offline_header" />
+
+        <ETextView
+            android:id="@+id/offline_access_message"
+            style="@style/offline_access_message"
+            android:text="@string/video_offline_message" />
+    </LinearLayout> -->
+
+</RelativeLayout>

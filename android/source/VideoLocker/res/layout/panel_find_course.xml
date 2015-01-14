@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="2dp" >
+
+    <RelativeLayout
+        android:id="@+id/panel_course_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants"
+        android:paddingBottom="5dp">
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/findcourse_tv"
+            style="@style/semibold_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="18dp"
+            android:layout_marginTop="18dp"
+            android:gravity="center_horizontal"
+            android:text="@string/find_course_text"
+            android:textColor="#454951"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/course_btn"
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/findcourse_tv"
+            android:layout_centerInParent="true"
+			android:padding="10dp"
+            android:background="@drawable/bt_blue"
+            android:text="@string/find_course_btn_text"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+        
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_not_listed_tv"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="17dp"
+            android:layout_below="@id/course_btn"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:text="@string/course_not_listed_text"
+            android:textColor="@color/cyan_text_navigation"
+            android:textSize="14sp" />
+        
+    </RelativeLayout>
+    <!-- put a frame over this cell, so that corners look rounded -->
+
+    <ImageView
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/panel_course_layout"
+        android:layout_alignLeft="@id/panel_course_layout"
+        android:layout_alignRight="@id/panel_course_layout"
+        android:layout_alignTop="@id/panel_course_layout"
+        android:background="@drawable/bg_frame_course"
+        android:contentDescription="@string/app_name" />
+
+</RelativeLayout>

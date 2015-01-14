@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="poc.edx"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="poc.edx" >
+    </instrumentation>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name="poc.edx.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="poc.edx.VideoPlayerActivity"
+            android:label="Video Playback" />
+        <activity
+            android:name="poc.edx.NativeDownloadManagerActivity"
+            android:label="Native DownloadManager" />
+        <activity
+            android:name="poc.edx.MediaPlayerActivity"
+            android:label="Media Player - Progressive" />
+        <activity
+            android:name="poc.edx.YouTubePlayerActivity"
+            android:label="YouTube Player" />
+        <activity
+            android:name="poc.edx.JPlayerActivity"
+            android:label="JPlayer" />
+
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+</manifest>

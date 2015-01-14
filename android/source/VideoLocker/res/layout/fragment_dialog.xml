@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_layout"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:minWidth="250dp"
+    android:orientation="vertical" >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_dialog_title"
+        style="@style/bold_grey_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:textAllCaps="true"
+        android:textSize="17sp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@color/grey_act_background" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="horizontal" >
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/tv_dialog_message1"
+            style="@style/regular_grey_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <org.edx.mobile.view.custom.EEditText
+        android:id="@+id/email_edit"
+        style="@style/edit_text_style"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/dialog_error_message"
+        style="@style/regular_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="@string/error_invalid_email"
+        android:textColor="@color/red_error_text"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/reset_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:indeterminateDrawable="@drawable/login_progress" />
+
+        <org.edx.mobile.view.custom.ETextView
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/progressbar"
+            android:text="@string/progressText"
+            android:textColor="@color/grey_light"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_act_background"
+        android:orientation="horizontal"
+        android:paddingTop="0.5dp" >
+
+        <org.edx.mobile.view.custom.EButton
+            android:id="@+id/negativeButton"
+            style="@style/dialog_button_style"
+            android:layout_width="0dp"
+            android:layout_height="35dip"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_marginRight="0.5dp"
+            android:layout_weight="0.5"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:text="@string/label_cancel"
+            android:textAllCaps="true"
+            android:textSize="15sp" />
+
+        <org.edx.mobile.view.custom.EButton
+            android:id="@+id/positiveButton"
+            style="@style/dialog_button_style"
+            android:layout_width="0dp"
+            android:layout_height="35dip"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_weight="0.5"
+            android:background="@android:color/white"
+            android:text="@string/label_ok"
+            android:textAllCaps="true"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

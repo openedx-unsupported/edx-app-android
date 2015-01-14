@@ -1,0 +1,22 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()       // This is the default repo
+        mavenCentral()  //  This is the Maven Central repo
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+
+project.ext {
+    BUILD_TOOLS_VERSION = "21.1.1"
+
+    // dummy keystore configuration if not already defined
+    if ( !project.properties.containsKey("RELEASE_STORE_FILE")) {
+        RELEASE_STORE_FILE = "edx-android-release-key.keystore"
+        RELEASE_STORE_PASSWORD = "*****"
+        RELEASE_KEY_ALIAS = "edx-android-release"
+        RELEASE_KEY_PASSWORD = "*****"
+    }
+}
