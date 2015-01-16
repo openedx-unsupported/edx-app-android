@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.edx.mobile.R;
+import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -265,7 +266,7 @@ public class LoginActivity extends BaseFragmentActivity {
                             if(result.profile!=null){
                                 onUserLoginSuccess(result.profile);
                             } else {
-                                onUserLoginIncorrect(result.isAccountGrantError()); 
+                                onUserLoginIncorrect(result.isAccountGrantError(), null);
                             }
                         }
                     }
@@ -507,7 +508,7 @@ public class LoginActivity extends BaseFragmentActivity {
         if (profile.email == null) {
             // handle this error, show error message
             
-            onUserLoginIncorrect(false);
+            onUserLoginIncorrect(false, null);
             return;
         }
         
@@ -539,23 +540,23 @@ public class LoginActivity extends BaseFragmentActivity {
         ex.printStackTrace();
     }
     
-    private void onUserLoginIncorrect(boolean isGrantError) {
+    private void onUserLoginIncorrect(boolean isGrantError, Exception ex) {
         setLoginBtnEnabled();
         email_et.setEnabled(true);
         password_et.setEnabled(true);
         forgotPassword_tv.setEnabled(true);
         signupTv.setEnabled(true);
         eulaTv.setEnabled(true);
-        //FIXME - Need to update this once server sends invalid grant message
-        showErrorMessage(getString(R.string.login_error),
-                getString(R.string.login_failed));
-        /*if (isGrantError) {
-            showErrorMessage(getString(R.string.login_error),
-                    getString(R.string.login_failed_no_grant));
+        if (ex != null && ex instanceof  LoginException) {
+            LoginException authEx = (LoginException) ex;
+            showErrorMessage(
+                    authEx.getMessageLine1(),
+                    authEx.getMessageLine2());
         } else {
-            showErrorMessage(getString(R.string.login_error),
-                getString(R.string.login_failed));
-        }*/
+            showErrorMessage(
+                    getString(R.string.login_error),
+                    getString(R.string.login_failed));
+        }
     }
     
     private class ProfileTask extends Task<ProfileModel> {
@@ -573,7 +574,7 @@ public class LoginActivity extends BaseFragmentActivity {
 
         @Override
         public void onException(Exception ex) {
-            onUserLoginIncorrect(false);
+            onUserLoginIncorrect(false, ex);
         }
 
         @Override
@@ -588,14 +589,26 @@ public class LoginActivity extends BaseFragmentActivity {
                 SocialLoginResponse social = null;
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
                     social = api.loginByFacebook(accessToken);
+
+                    if (social.isAccountNotLinked()) {
+                        throw new LoginException(
+                                context.getString(R.string.error_account_not_linked_title_fb),
+                                context.getString(R.string.error_account_not_linked_desc_fb));
+                    }
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                     social = api.loginByGoogle(accessToken);
+
+                    throw new LoginException(
+                            getString(R.string.error_account_not_linked_title_google),
+                            getString(R.string.error_account_not_linked_desc_google));
                 }
                 
                 if ( !social.isSuccess()) {
-                    throw new Exception("authentication with access_token failed");
+                    throw new LoginException(
+                            getString(R.string.login_error),
+                            getString(R.string.login_failed));
                 }
-                
+
                 // now profile can be fetched
                 return api.getProfile();
             } catch (Exception e) {
