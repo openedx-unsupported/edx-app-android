@@ -191,15 +191,18 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.setStore(db, storage, enrollment.getCourse().getId());
-        loadData();
-        handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
         try{
+            //Check if the adapter and enrollment is not null
+            if(adapter!=null && enrollment!=null){
+                adapter.setStore(db, storage, enrollment.getCourse().getId());
+                loadData();
+            }
+
+            handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
             setTitle(activityTitle);
         }catch(Exception e){
             e.printStackTrace();
         }
-
     }
 
     @Override
