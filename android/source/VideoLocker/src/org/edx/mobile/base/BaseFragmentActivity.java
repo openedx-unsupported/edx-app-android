@@ -19,6 +19,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -198,6 +199,17 @@ public class BaseFragmentActivity extends FragmentActivity {
     public void finish() {
         super.finish();
         applyTransitionPrev();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            // FIXME: App crashes on a few devices (mostly 4.0.+) on super method call
+            // This is a workaround to avoid app crash, app still works even if Exception occurs
+            super.onRestoreInstanceState(savedInstanceState);
+        } catch(Exception ex) {
+            Log.e(getClass().getName(), "onRestoreInstanceState failed", ex);
+        }
     }
 
     //this is configure the Navigation Drawer of the application
