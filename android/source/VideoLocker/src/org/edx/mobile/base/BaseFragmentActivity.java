@@ -639,7 +639,10 @@ public class BaseFragmentActivity extends FragmentActivity {
         webViewFragment.setStyle(DialogFragment.STYLE_NORMAL,
                 android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         webViewFragment.setCancelable(false);
-        webViewFragment.show(getSupportFragmentManager(), "dialog");
-
+        //Show the dialog only if the activity is started. This is to avoid Illegal state
+        //exceptions if the dialog fragment tries to show even if the application is not in foreground
+        if(isActivityStarted()){
+            webViewFragment.show(getSupportFragmentManager(), "dialog");
+        }
     }
 }
