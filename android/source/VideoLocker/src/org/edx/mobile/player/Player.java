@@ -688,8 +688,11 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
     @Override
     protected void finalize() {
-        // explicitly release the instance
-        release();
-        super.finalize();
+        try {
+            // explicitly release the instance
+            release();
+        } finally {
+            super.finalize();
+        }
     }
 }
