@@ -224,7 +224,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
-                    adapter.notifyDataSetChanged();
                     if (AppConstants.offline_flag) {
                         hideOpenInBrowserPanel();
                     } else {
@@ -237,6 +236,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
                 }
+                //Notify the adapter to reload because the chapter map is null.
+                adapter.notifyDataSetChanged();
                 LogUtil.log("Completed displaying data on UI", DateUtil.getCurrentTimeStamp());
             }
 
