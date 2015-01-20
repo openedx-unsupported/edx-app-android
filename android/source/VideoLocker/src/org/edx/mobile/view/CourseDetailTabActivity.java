@@ -257,8 +257,10 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         if(offlineBar!=null){
             offlineBar.setVisibility(View.VISIBLE);
         }
-        if (mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
-            courseFragment.fragmentOffline();
+        if (mCurrentTab!=null && mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
+            if(courseFragment!=null){
+                courseFragment.fragmentOffline();
+            }
         }
         invalidateOptionsMenu();
     }
@@ -269,8 +271,10 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         if(offlineBar!=null){
             offlineBar.setVisibility(View.GONE);
         }
-        if (mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
-            courseFragment.fragmentOnline();
+        if (mCurrentTab!=null && mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
+            if(courseFragment!=null){
+                courseFragment.fragmentOnline();
+            }
         }
         invalidateOptionsMenu();
     }
