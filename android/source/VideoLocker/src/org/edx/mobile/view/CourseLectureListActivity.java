@@ -71,12 +71,28 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         ArrayList<LectureModel> lectureList = new ArrayList<LectureModel>();
 
         ListView lectureListView = (ListView) findViewById(R.id.lecture_list);
+        initalizeAdaptor();
+        adapter.setItems(lectureList);
+        lectureListView.setAdapter(adapter);
+        lectureListView.setOnItemClickListener(adapter);
 
+        enableOfflineCallback();
+    } 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(AppConstants.offline_flag){
+            finish();
+        }
+    }
+
+    private void initalizeAdaptor(){
         adapter = new LectureAdapter(this) {
             @Override
             public void onItemClicked(LectureModel model) {
                 try{
-                    if(model.videos!=null && model.videos.size()>0){
+                    if(model.videos!=null && model.videos.size()>0 && enrollment!=null){
                         String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                                 .username, enrollment.getCourse().getId());
                         PrefManager prefManager = new PrefManager(CourseLectureListActivity.this, prefName);
@@ -149,21 +165,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     ex.printStackTrace();
                 }
             }
-
         };
-        adapter.setItems(lectureList);
-        lectureListView.setAdapter(adapter);
-        lectureListView.setOnItemClickListener(adapter);
-
-        enableOfflineCallback();
-    } 
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(AppConstants.offline_flag){
-            finish();
-        }
     }
 
     private void loadData() {
@@ -192,12 +194,14 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     protected void onStart() {
         super.onStart();
         try{
-            //Check if the adapter and enrollment is not null
-            if(adapter!=null && enrollment!=null){
-                adapter.setStore(db, storage, enrollment.getCourse().getId());
-                loadData();
+            if(adapter==null){
+                //If adapter is null, reinitialize the adapter
+                initalizeAdaptor();
             }
-
+            if(enrollment!=null){
+                adapter.setStore(db, storage, enrollment.getCourse().getId());
+            }
+            loadData();
             handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
             setTitle(activityTitle);
         }catch(Exception e){
