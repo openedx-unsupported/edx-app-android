@@ -56,6 +56,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private static final int MSG_UPDATE_PROGRESS = 1025;
     private boolean isActivityStarted;
     private String lastAccesed_subSectionId;
+    private GetLastAccessedTask getLastAccessedTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -203,6 +204,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     public void onStop() {
         super.onStop();
         isActivityStarted = false;
+        //We need to cancel the getLastAccessed task if the fragment is stopped
+        if(getLastAccessedTask!=null){
+            getLastAccessedTask.cancel(true);
+        }
     }
 
     //Loading data to the Adapter
@@ -443,7 +448,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private long lastClickTime;
     
     protected void showLastAccessedView(View v) {
-        if (v != null) {
+        if (v != null && isActivityStarted()) {
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccesed_subSectionId!=null){
@@ -533,7 +538,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             +prefModuleId);
                     lastAccesed_subSectionId = prefModuleId;
                     showLastAccessedView(view);
-                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
+                    getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
                         @Override
                         public void onFinish(SyncLastAccessedSubsectionResponse result) {
                             String server_moduleId = null;
@@ -576,7 +581,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             e.printStackTrace();
         }
     }
-
 
     private void syncLastAccessedWithServer(final PrefManager prefManager,
             final View view, String prefModuleId){
