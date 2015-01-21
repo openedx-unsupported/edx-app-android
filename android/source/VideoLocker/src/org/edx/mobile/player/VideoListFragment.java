@@ -864,7 +864,7 @@ public class VideoListFragment extends Fragment {
                 v = (DownloadEntry) adapter.getItem(playingVideoIndex);
             }
 
-            if (v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+            if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
                 db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
@@ -1098,7 +1098,7 @@ public class VideoListFragment extends Fragment {
                 videoPos++;
                 while (videoPos < adapter.getCount()) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i instanceof DownloadEntry) {
+                    if (i!=null && i instanceof DownloadEntry) {
                         if(AppConstants.offline_flag){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
@@ -1139,7 +1139,7 @@ public class VideoListFragment extends Fragment {
                 if(videoPos!=-1){
                     for (int i=(videoPos+1) ; i<adapter.getCount(); i++) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d instanceof DownloadEntry) {
+                        if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
                             if(AppConstants.offline_flag){
                                 if(de.isDownloaded()){
@@ -1167,7 +1167,7 @@ public class VideoListFragment extends Fragment {
                 videoPos--;
                 while (videoPos >= 0) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i instanceof DownloadEntry) {
+                    if (i!=null && i instanceof DownloadEntry) {
                         if(AppConstants.offline_flag){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
@@ -1206,7 +1206,7 @@ public class VideoListFragment extends Fragment {
                 if(videoPos!=-1){
                     for (int i=(videoPos-1) ; i>=0; i--) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d instanceof DownloadEntry) {
+                        if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
                             if(AppConstants.offline_flag){
                                 if(de.isDownloaded()){
