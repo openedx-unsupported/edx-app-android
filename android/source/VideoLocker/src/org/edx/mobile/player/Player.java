@@ -316,7 +316,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    LogUtil.log("Player", "surface destroyed");
+                    // nothing to be done here
                 }
 
                 @Override
@@ -340,8 +340,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format,
                         int width, int height) {
-                    LogUtil.log("Player", "surface changed");
-                    setDisplay(holder);
+                    // nothing to be done here
                 }
             });
             preview.setOnTouchListener(new OnSwipeListener(preview.getContext()) {
