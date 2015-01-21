@@ -132,8 +132,12 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         //This handles which tab to be shown when CourseDetails is loaded 
         if (!showAnnouncment) {
             mTabHost.setCurrentTabByTag(getString(R.string.tab_chapter_list));
+            /* Set current tab.. */
+            mCurrentTab = getString(R.string.tab_chapter_list);
         } else {
             mTabHost.setCurrentTabByTag(getString(R.string.tab_announcement));
+            /* Set current tab.. */
+            mCurrentTab = getString(R.string.tab_announcement);
         }
 
 
