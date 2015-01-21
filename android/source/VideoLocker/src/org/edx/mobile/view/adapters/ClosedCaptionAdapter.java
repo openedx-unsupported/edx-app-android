@@ -58,7 +58,7 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
     public void onItemClick(AdapterView<?> arg0, View arg1, int position,
             long arg3) {
         HashMap<String, String> language = getItem(position);
-        onItemClicked(language);
+        if(language!=null) onItemClicked(language);
     }
 
     public abstract void onItemClicked(HashMap<String, String> language);

@@ -348,13 +348,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 @Override
                 public void onSwipeLeft() {
                     super.onSwipeLeft();
-                    controller.playNext();
+                    if (controller != null) {
+                        controller.playNext();
+                    }
                 }
 
                 @Override
                 public void onSwipeRight() {
                     super.onSwipeRight();
-                    controller.playPrevious();
+                    if (controller != null) {
+                        controller.playPrevious();
+                    }
                 }
 
                 @Override
@@ -364,17 +368,15 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     if (controller != null 
                             && state != PlayerState.RESET
                             && state != PlayerState.URI_SET) {
-                        {
-                            LogUtil.log("Player", "player touched");
-                            if (controller.isShowing()) {
-                                controller.hide();
-                            } else {
-                                controller.setLmsUrl(lmsURL);
-                                controller.setTitle(videoTitle);
-                                controller.show();
-                            }
+                        LogUtil.log("Player", "player touched");
+                        if (controller.isShowing()) {
+                            controller.hide();
+                        } else {
+                            controller.setLmsUrl(lmsURL);
+                            controller.setTitle(videoTitle);
+                            controller.show();
                         }
-                    } 
+                    }
                 }
             });
         }
