@@ -131,7 +131,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             LectureModel model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 
