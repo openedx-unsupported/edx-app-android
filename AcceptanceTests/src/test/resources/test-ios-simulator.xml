@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="edX_Test" verbose="16" preserve-order="true">
+
+
+	<test name="iOS" preserve-order="true">
+		<classes>
+			<class name="org.edx.iostestsuite.Online_LoginTestSuite"></class>
+			<class name="org.edx.iostestsuite.Online_MyCoursesTestSuite"></class>
+			<class name="org.edx.iostestsuite.Online_MyVideosTestSuite"></class>
+		</classes>
+
+	</test>
+
+
+</suite>
+<listeners>
+	<listener class-name="com.saucelabs.testng.SauceOnDemandTestListener" />
+</listeners>

@@ -274,8 +274,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             showProgress();
         }
 
-        // start playback after 300 milli seconds, so that it works on 
-        // HTC One, Nexus5, S4, S5 
+        // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
+        // some devices take little time to be ready
         handler.postDelayed(unfreezeCallback, 300);
     }
 
@@ -314,11 +314,16 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         super.onDestroy();
         
         if (!stateSaved) {
-            if(player!=null){
+            if (player!=null) {
                 // reset player when user goes back, and there is no state saving happened
                 player.reset();
                 removeSubtitleCallBack();
-                LogUtil.log(getClass().getName(), "player detached and reset");
+
+                // release the player instance
+                player.release();
+                player = null;
+
+                LogUtil.log(getClass().getName(), "player detached, reset and released");
             }
         }
     }
@@ -349,7 +354,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         LogUtil.log(getClass().getName(), "saving state ...");
         stateSaved = true;
         if(player!=null){
-            // hold on until activity is being destroyed, otherwise we assume next start() call would be restart()
+            // hold on until activity is being destroyed, otherwise we assume next call would be restart()
             boolean changingConfig = getActivity().isChangingConfigurations();
             LogUtil.log(getClass().getName(), "player fragment changing config?  =" + changingConfig);
             if ( !changingConfig) {
@@ -746,22 +751,30 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     }
 
     private void enterFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        if(isPrepared){
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    true, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (isPrepared) {
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        true, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            Log.e(TAG, "error entering fullscreen", ex);
         }
     }
 
     private void exitFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (isPrepared) {
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    false, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (isPrepared) {
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        false, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            Log.e(TAG, "error exiting fullscreen", ex);
         }
     }
 
