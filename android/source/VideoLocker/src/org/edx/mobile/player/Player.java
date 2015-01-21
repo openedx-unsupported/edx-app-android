@@ -316,7 +316,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                    LogUtil.log("Player", "surface destroyed");
+                    // nothing to be done here
                 }
 
                 @Override
@@ -340,8 +340,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 @Override
                 public void surfaceChanged(SurfaceHolder holder, int format,
                         int width, int height) {
-                    LogUtil.log("Player", "surface changed");
-                    setDisplay(holder);
+                    // nothing to be done here
                 }
             });
             preview.setOnTouchListener(new OnSwipeListener(preview.getContext()) {
@@ -349,13 +348,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 @Override
                 public void onSwipeLeft() {
                     super.onSwipeLeft();
-                    controller.playNext();
+                    if (controller != null) {
+                        controller.playNext();
+                    }
                 }
 
                 @Override
                 public void onSwipeRight() {
                     super.onSwipeRight();
-                    controller.playPrevious();
+                    if (controller != null) {
+                        controller.playPrevious();
+                    }
                 }
 
                 @Override
@@ -365,17 +368,15 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     if (controller != null 
                             && state != PlayerState.RESET
                             && state != PlayerState.URI_SET) {
-                        {
-                            LogUtil.log("Player", "player touched");
-                            if (controller.isShowing()) {
-                                controller.hide();
-                            } else {
-                                controller.setLmsUrl(lmsURL);
-                                controller.setTitle(videoTitle);
-                                controller.show();
-                            }
+                        LogUtil.log("Player", "player touched");
+                        if (controller.isShowing()) {
+                            controller.hide();
+                        } else {
+                            controller.setLmsUrl(lmsURL);
+                            controller.setTitle(videoTitle);
+                            controller.show();
                         }
-                    } 
+                    }
                 }
             });
         }
