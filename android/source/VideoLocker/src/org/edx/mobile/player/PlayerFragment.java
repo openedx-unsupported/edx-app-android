@@ -751,22 +751,30 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     }
 
     private void enterFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        if(isPrepared){
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    true, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (isPrepared) {
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        true, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            Log.e(TAG, "error entering fullscreen", ex);
         }
     }
 
     private void exitFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (isPrepared) {
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    false, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (isPrepared) {
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        false, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            Log.e(TAG, "error exiting fullscreen", ex);
         }
     }
 
