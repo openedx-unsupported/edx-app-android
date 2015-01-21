@@ -192,14 +192,16 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
     public void onItemClick(AdapterView<?> arg0, View arg1, int position,
             long arg3) {
         SectionItemInterface model = getItem(position);
-        if (model.isDownload()) {
-            DownloadEntry downloadEntry = (DownloadEntry) model;
-            if (downloadEntry.isDownloaded()) {
-                selectedPosition = position;
+        if(model!=null) {
+            if (model.isDownload()) {
+                DownloadEntry downloadEntry = (DownloadEntry) model;
+                if (downloadEntry.isDownloaded()) {
+                    selectedPosition = position;
+                }
             }
-        }
-        if(!AppConstants.videoListDeleteMode){
-            onItemClicked(model, position);
+            if (!AppConstants.videoListDeleteMode) {
+                onItemClicked(model, position);
+            }
         }
     }
 
