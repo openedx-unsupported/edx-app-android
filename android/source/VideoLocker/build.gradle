@@ -145,8 +145,6 @@ dependencies {
         transitive = true
     }
 
-    compile 'org.yaml:snakeyaml:1.14'
-
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:4.+'
 
