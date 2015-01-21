@@ -125,7 +125,15 @@ VideoListCallback, IPlayerEventCallback {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            super.onRestoreInstanceState(savedInstanceState);
+            //FIXME: There is an error of null pointer exception on some devices when super function is called.
+            //This is a workaround where the crash is handled in
+            //try catch and hence the app does not crash
+            try{
+                super.onRestoreInstanceState(savedInstanceState);
+            }catch(Exception e){
+                e.printStackTrace();
+                LogUtil.error("player_issue","Null pointer exception on onRestoreInstanceState");
+            }
             restore(savedInstanceState);
         }
     }
