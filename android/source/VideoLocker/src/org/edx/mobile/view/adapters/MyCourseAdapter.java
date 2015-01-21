@@ -164,7 +164,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             EnrolledCoursesResponse model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 
