@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.edx.mobile.R;
+import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
@@ -29,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -262,12 +264,18 @@ public class LoginActivity extends BaseFragmentActivity {
                 LoginTask logintask = new LoginTask(this) {
                     @Override
                     public void onFinish(AuthResponse result) {
-                        if (result != null) {
-                            if(result.profile!=null){
+                        try {
+                            if (result != null && result.hasValidProfile()) {
                                 onUserLoginSuccess(result.profile);
                             } else {
-                                onUserLoginIncorrect(result.isAccountGrantError(), null);
+                                LoginErrorMessage errorMsg =
+                                        new LoginErrorMessage(
+                                                getString(R.string.login_error),
+                                                getString(R.string.login_failed));
+                                throw new LoginException(errorMsg);
                             }
+                        } catch(LoginException ex) {
+                            handle(ex);
                         }
                     }
 
@@ -504,14 +512,16 @@ public class LoginActivity extends BaseFragmentActivity {
         task.execute(accessToken, backend);
     }
     
-    private void onUserLoginSuccess(ProfileModel profile) {
+    private void onUserLoginSuccess(ProfileModel profile) throws LoginException {
         if (profile.email == null) {
             // handle this error, show error message
-            
-            onUserLoginIncorrect(false, null);
-            return;
+            LoginErrorMessage errorMsg =
+                    new LoginErrorMessage(
+                            getString(R.string.login_error),
+                            getString(R.string.login_failed));
+            throw new LoginException(errorMsg);
         }
-        
+
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         pref.put("email", email_et.getText().toString().trim());
@@ -537,25 +547,16 @@ public class LoginActivity extends BaseFragmentActivity {
         password_et.setEnabled(true);
         forgotPassword_tv.setEnabled(true);
         signupTv.setEnabled(true);
-        ex.printStackTrace();
-    }
-    
-    private void onUserLoginIncorrect(boolean isGrantError, Exception ex) {
-        setLoginBtnEnabled();
-        email_et.setEnabled(true);
-        password_et.setEnabled(true);
-        forgotPassword_tv.setEnabled(true);
-        signupTv.setEnabled(true);
         eulaTv.setEnabled(true);
-        if (ex != null && ex instanceof  LoginException) {
-            LoginException authEx = (LoginException) ex;
+
+        // handle if this is a LoginException
+        if (ex != null && ex instanceof LoginException) {
+            LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
             showErrorMessage(
-                    authEx.getMessageLine1(),
-                    authEx.getMessageLine2());
+                    error.getMessageLine1(),
+                    error.getMessageLine2());
         } else {
-            showErrorMessage(
-                    getString(R.string.login_error),
-                    getString(R.string.login_failed));
+            Log.e(getClass().getName(), "LoginFailure", ex);
         }
     }
     
@@ -568,13 +569,17 @@ public class LoginActivity extends BaseFragmentActivity {
         @Override
         public void onFinish(ProfileModel result) {
             if (result != null) {
-                onUserLoginSuccess(result);
+                try {
+                    onUserLoginSuccess(result);
+                } catch (LoginException ex) {
+                    handle(ex);
+                }
             } 
         }
 
         @Override
         public void onException(Exception ex) {
-            onUserLoginIncorrect(false, ex);
+            onUserLoginFailure(ex);
         }
 
         @Override
@@ -591,28 +596,32 @@ public class LoginActivity extends BaseFragmentActivity {
                     social = api.loginByFacebook(accessToken);
 
                     if (social.isAccountNotLinked()) {
-                        throw new LoginException(
+                        throw new LoginException(new LoginErrorMessage(
                                 context.getString(R.string.error_account_not_linked_title_fb),
-                                context.getString(R.string.error_account_not_linked_desc_fb));
+                                context.getString(R.string.error_account_not_linked_desc_fb)));
                     }
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                     social = api.loginByGoogle(accessToken);
 
-                    throw new LoginException(
-                            getString(R.string.error_account_not_linked_title_google),
-                            getString(R.string.error_account_not_linked_desc_google));
-                }
-                
-                if ( !social.isSuccess()) {
-                    throw new LoginException(
-                            getString(R.string.login_error),
-                            getString(R.string.login_failed));
+                    if (social.isAccountNotLinked()) {
+                        throw new LoginException(new LoginErrorMessage(
+                                getString(R.string.error_account_not_linked_title_google),
+                                getString(R.string.error_account_not_linked_desc_google)));
+                    }
                 }
 
-                // now profile can be fetched
-                return api.getProfile();
+                if (social.isSuccess()) {
+                    // we got a valid accessToken so profile can be fetched
+                    ProfileModel profile = api.getProfile();
+                    if (profile.email != null) {
+                        // we got valid profile information
+                        return profile;
+                    }
+                }
+                throw new LoginException(new LoginErrorMessage(
+                        getString(R.string.login_error),
+                        getString(R.string.login_failed)));
             } catch (Exception e) {
-                e.printStackTrace();
                 handle(e);
             }
             return null;

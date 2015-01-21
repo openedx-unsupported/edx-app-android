@@ -5,19 +5,13 @@ package org.edx.mobile.exception;
  */
 public class LoginException extends Exception {
 
-    private String messageLine1;
-    private String messageLine2;
+    private LoginErrorMessage loginErrorMessage;
 
-    public LoginException(String line1, String line2) {
-        this.messageLine1 = line1;
-        this.messageLine2 = line2;
+    public LoginException(LoginErrorMessage loginErrorMessage) {
+        this.loginErrorMessage = loginErrorMessage;
     }
 
-    public String getMessageLine1() {
-        return messageLine1;
-    }
-
-    public String getMessageLine2() {
-        return messageLine2;
+    public LoginErrorMessage getLoginErrorMessage() {
+        return loginErrorMessage;
     }
 }
