@@ -85,7 +85,7 @@ public class HttpManager {
     /**
      * Executes a POST request to given URL with given parameters.
      * Returns "cookie" in a JSON object if response is HTTP 204 NO CONTENT.
-     * 
+     * Returns "error=401" in JSON format if response code is 401.
      * @param url
      * @param params
      * @param headers
@@ -120,9 +120,11 @@ public class HttpManager {
 
         HttpResponse response = client.execute(post);
 
-        if (response.getStatusLine().getStatusCode() == 204) {
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == 204) {
             // that means response has "NO CONTENTS"
             // so return empty string
+            // this is SUCCESS response for login by google/FB account
             LogUtil.log(TAG, "HTTP 204 NO CONTENT");
             
             if(response.containsHeader("Set-Cookie")){
@@ -133,8 +135,25 @@ public class HttpManager {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                // end connection and return
+                client.getConnectionManager().shutdown();
                 return json.toString();
             }
+        } else if (statusCode == 401) {
+            // for google/FB login, this means google/FB account is not associated with edX
+            LogUtil.log(TAG, "HTTP 401");
+
+            JSONObject json = new JSONObject();
+            try {
+                json.put("error", "401");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            // end connection and return
+            client.getConnectionManager().shutdown();
+            return json.toString();
         }
 
         InputStream inputStream = AndroidHttpClient

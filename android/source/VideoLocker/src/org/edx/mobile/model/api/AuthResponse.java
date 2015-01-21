@@ -37,4 +37,13 @@ public class AuthResponse implements Serializable {
     public boolean isAccountGrantError() {
         return (error != null && error.equalsIgnoreCase(ERROR_INVALID_GRANT));
     }
+
+    /**
+     * Returns true if this object contains a valid profile data.
+     * @return
+     */
+    public boolean hasValidProfile() {
+        return (profile != null
+                && profile.email != null);
+    }
 }
