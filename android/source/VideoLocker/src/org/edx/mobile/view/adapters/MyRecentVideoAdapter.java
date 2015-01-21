@@ -141,7 +141,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         selectedPosition=position;
         SectionItemInterface model = getItem(position);
-        onItemClicked(model, position);
+        if(model!=null) onItemClicked(model, position);
     }
 
     public abstract void onItemClicked(SectionItemInterface model, int position);
