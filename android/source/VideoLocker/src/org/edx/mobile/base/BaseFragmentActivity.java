@@ -634,14 +634,14 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     protected void showWebDialog(String fileName, boolean showTitle, String dialogTitle){
-        WebViewDialogFragment webViewFragment = new WebViewDialogFragment();
-        webViewFragment.setDialogContents(fileName, showTitle, dialogTitle);
-        webViewFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        webViewFragment.setCancelable(false);
         //Show the dialog only if the activity is started. This is to avoid Illegal state
         //exceptions if the dialog fragment tries to show even if the application is not in foreground
         if(isActivityStarted()){
+            WebViewDialogFragment webViewFragment = new WebViewDialogFragment();
+            webViewFragment.setDialogContents(fileName, showTitle, dialogTitle);
+            webViewFragment.setStyle(DialogFragment.STYLE_NORMAL,
+                    android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            webViewFragment.setCancelable(false);
             webViewFragment.show(getSupportFragmentManager(), "dialog");
         }
     }
