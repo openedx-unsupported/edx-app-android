@@ -55,7 +55,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private ListView chapterListView;
     private static final int MSG_UPDATE_PROGRESS = 1025;
     private boolean isActivityStarted;
-    private String lastAccesed_subSectionId;
+    private String lastAccessed_subSectionId;
     private GetLastAccessedTask getLastAccessedTask;
 
     @Override
@@ -451,10 +451,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         if (v != null && isActivityStarted()) {
             if (!AppConstants.offline_flag) {
                 try {
-                    if(courseId!=null && lastAccesed_subSectionId!=null){
+                    if(courseId!=null && lastAccessed_subSectionId!=null){
                         final Api api = new Api(getActivity());
                         final VideoResponseModel videoModel = api.getSubsectionById(courseId, 
-                                lastAccesed_subSectionId);
+                                lastAccessed_subSectionId);
                         if (videoModel != null) {
                             LinearLayout lastAccessedLayout = (LinearLayout) v
                                     .findViewById(R.id.last_viewed_layout);
@@ -536,7 +536,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     final String prefModuleId = prefManager.getLastAccessedSubsectionId();
                     LogUtil.log("Last Accessed", "Last Accessed Module ID from Preferences "
                             +prefModuleId);
-                    lastAccesed_subSectionId = prefModuleId;
+                    lastAccessed_subSectionId = prefModuleId;
                     showLastAccessedView(view);
                     getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
                         @Override
@@ -551,7 +551,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                                     //If preference last accessed flag is true, put the last access fetched 
                                     //from server in Prefernces and display it on Last Accessed. 
                                     prefManager.putLastAccessedSubsection(server_moduleId, true);
-                                    lastAccesed_subSectionId = server_moduleId;
+                                    lastAccessed_subSectionId = server_moduleId;
                                     showLastAccessedView(view);
                                 }else{
                                     //Preference's last accessed is not synched with server, 
@@ -593,7 +593,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
                         LogUtil.log("Last Accessed", "Last Accessed Module ID from Server Sync "
                                 +result.getLastVisitedModuleId());
-                        lastAccesed_subSectionId = result.getLastVisitedModuleId();
+                        lastAccessed_subSectionId = result.getLastVisitedModuleId();
                         showLastAccessedView(view);
                     }
                     isFetchingLastAccessed = false;
