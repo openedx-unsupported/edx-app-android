@@ -160,7 +160,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             SectionEntry model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 
