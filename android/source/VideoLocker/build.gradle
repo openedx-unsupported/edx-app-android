@@ -145,8 +145,6 @@ dependencies {
         transitive = true
     }
 
-    compile 'org.yaml:snakeyaml:1.14'
-
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:4.+'
 
@@ -180,7 +178,7 @@ android {
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 40
         versionName "1.0.03"
@@ -221,8 +219,10 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+
     lintOptions {
         abortOnError false
+        lintConfig file("lint.xml")
     }
 
     productFlavors {
@@ -232,7 +232,7 @@ android {
 
             versionCode 40
             versionName '1.0.03'
-            minSdkVersion 16
+            minSdkVersion 14
             targetSdkVersion 21
         }
     }
