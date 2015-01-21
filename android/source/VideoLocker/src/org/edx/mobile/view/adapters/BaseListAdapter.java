@@ -129,7 +129,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
 
     @Override
     public T getItem(int index) {
-        return items.get(index);
+        //Check if the size of items is greater than the index
+        if(index >= 0 && items.size()>index)
+            return items.get(index);
+        return null;
     }
 
     public int getPosition(T item) {
