@@ -623,7 +623,7 @@ public class MyRecentVideosFragment extends Fragment {
             // check next playable video entry
             while (playingVideoIndex < adapter.getCount()) {
                 SectionItemInterface i = adapter.getItem(playingVideoIndex);
-                if (i instanceof DownloadEntry) {
+                if (i!=null && i instanceof DownloadEntry) {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
@@ -647,7 +647,7 @@ public class MyRecentVideosFragment extends Fragment {
             }
             for (int i=(index+1) ; i<adapter.getCount(); i++) {
                 SectionItemInterface d = adapter.getItem(i);
-                if (d instanceof DownloadEntry) {
+                if (d!=null && d instanceof DownloadEntry) {
                     return true;
                 }
             }
@@ -664,7 +664,7 @@ public class MyRecentVideosFragment extends Fragment {
             // check next playable video entry
             while (playingVideoIndex >= 0) {
                 SectionItemInterface i = adapter.getItem(playingVideoIndex);
-                if (i instanceof DownloadEntry) {
+                if (i!=null && i instanceof DownloadEntry) {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
@@ -685,7 +685,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             for (int i=(playingIndex-1) ; i>=0; i--) {
                 SectionItemInterface d = adapter.getItem(i);
-                if (d instanceof DownloadEntry) {
+                if (d!=null && d instanceof DownloadEntry) {
                     return true;
                 }
             }
