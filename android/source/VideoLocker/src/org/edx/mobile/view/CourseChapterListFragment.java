@@ -220,6 +220,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         if(openInBrowserUrl==null||openInBrowserUrl.equalsIgnoreCase(""))
                             openInBrowserUrl = entry.getValue().section_url;
                     }
+                    //Notify the adapter as contents of the adapter have changed.
+                    adapter.notifyDataSetChanged();
                     if(adapter.getCount()==0){
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
@@ -232,12 +234,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     }
                 }else{
                     if(adapter.getCount()==0){
+                        //Notify the adapter to reload because the chapter map is null.
+                        adapter.notifyDataSetChanged();
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
                 }
-                //Notify the adapter to reload because the chapter map is null.
-                adapter.notifyDataSetChanged();
                 LogUtil.log("Completed displaying data on UI", DateUtil.getCurrentTimeStamp());
             }
 
