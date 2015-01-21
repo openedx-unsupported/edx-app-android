@@ -58,7 +58,10 @@ public class WebViewDialogFragment extends DialogFragment {
         Button button = (Button) v.findViewById(R.id.positiveButton);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                dismiss();
+                //Check if the dialog is not removing(dismissing)
+                // or is visible before dismissing the dialog
+                if(!isRemoving() && isVisible())
+                    dismiss();
             }
         });
 
