@@ -114,7 +114,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         DownloadEntry model = getItem(position);
-        onItemClicked(model);
+        if(model!=null) onItemClicked(model);
     }
 
     public abstract void onItemClicked(DownloadEntry model);
