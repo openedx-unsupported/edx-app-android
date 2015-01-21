@@ -1568,7 +1568,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 // FIXME: this should be permanently resolved
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        player.hideController();
+                        if (player != null) {
+                            player.hideController();
+                        }
                     }
                 }, 50 * DELAY_TIME);
             } else {
