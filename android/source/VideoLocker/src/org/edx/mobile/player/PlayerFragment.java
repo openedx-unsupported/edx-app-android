@@ -31,10 +31,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.subtitlessupport.utils.Caption;
-import com.subtitlessupport.utils.FormatSRT;
-import com.subtitlessupport.utils.TimedTextObject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -57,6 +53,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import subtitleFile.Caption;
+import subtitleFile.FormatSRT;
+import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
@@ -962,7 +962,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                         InputStream localInputStream = (InputStream)localHashMap.get(keyList[i]);
                         if (localInputStream != null)
                         {
-                            TimedTextObject localTimedTextObject = 
+                            TimedTextObject localTimedTextObject =
                                     new FormatSRT().parseFile("temp.srt", localInputStream);
                             srtList.put(keyList[i].toString(), localTimedTextObject);
                             //srtList.add(localTimedTextObject);
