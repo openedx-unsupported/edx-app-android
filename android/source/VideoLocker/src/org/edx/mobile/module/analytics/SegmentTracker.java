@@ -21,6 +21,7 @@ public class SegmentTracker {
             String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
             String debugging = context.getString(R.string.analytics_debug);
             int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
+            int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
 
             if(writeKey!=null) {
                 LogUtil.log(getClass().getName(), "SegmentTracker created with write key: " + writeKey);
@@ -28,6 +29,7 @@ public class SegmentTracker {
                 analytics = new Analytics.Builder(context, writeKey)
                         .debugging(Boolean.parseBoolean(debugging))
                         .queueSize(queueSize)
+                        .flushInterval(flushInterval)
                         .build();
             }
         } catch(RuntimeException ex) {

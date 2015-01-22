@@ -5,4 +5,6 @@
     <string name="analytics_debug">false</string>
     <!-- The number of events in the disk queue before sending events to the server. -->
     <integer name="analytics_queue_size">20</integer>
+    <!--Interval at which we should flush events in seconds.-->
+    <integer name="analytics_flush_interval">30</integer>
 </resources>
