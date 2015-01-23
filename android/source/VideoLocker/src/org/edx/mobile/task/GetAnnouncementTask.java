@@ -34,12 +34,13 @@ public abstract class GetAnnouncementTask extends
                     });
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
             
             return api.getAnnouncement(enrollment.getCourse().getCourse_updates(), false);
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

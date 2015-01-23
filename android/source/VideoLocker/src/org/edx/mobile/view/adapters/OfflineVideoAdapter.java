@@ -75,7 +75,7 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
 

@@ -10,10 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.OEXLogger;
 
 import java.util.Map;
 
 public class WifiSwitchDialogFragment extends DialogFragment {
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
 
     private IDialogCallback callback;
 

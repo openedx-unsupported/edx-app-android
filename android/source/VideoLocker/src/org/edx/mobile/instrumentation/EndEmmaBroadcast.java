@@ -9,12 +9,16 @@ import android.content.Intent;
 import android.os.Process;
 import android.util.Log;
 
+import org.edx.mobile.logger.OEXLogger;
+
 // adb shell am broadcast -a com.example.pkg.END_EMMA
 @SuppressLint("SdCardPath")
 public class EndEmmaBroadcast extends BroadcastReceiver {
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("AppiumEmma", "EndEmmaBroadcast broadcast received!");
+        logger.debug("EndEmmaBroadcast broadcast received!");
         // reflection is used so emma doesn't cause problems for other build targets
         // that do not include emma.
         try {
@@ -23,7 +27,7 @@ public class EndEmmaBroadcast extends BroadcastReceiver {
                     .getMethod("dumpCoverageData", File.class, boolean.class, boolean.class)
                     .invoke(null, ecFile, false, false);
         } catch (Exception e) {
-            Log.d("AppiumEmma", e.toString());
+            logger.error(e);
         }
 
         // once coverage is dumped, the processes is ended.

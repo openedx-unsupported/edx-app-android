@@ -21,8 +21,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.LogUtil;
-
+import org.edx.mobile.logger.OEXLogger;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -30,7 +29,6 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -76,7 +74,6 @@ import android.widget.TextView;
  */
 @SuppressLint("WrongViewCast")
 public class PlayerController extends FrameLayout {
-    private static final String TAG = "VideoControllerView";
 
     private MediaPlayerControl  mPlayer;
     private Context             mContext;
@@ -104,11 +101,11 @@ public class PlayerController extends FrameLayout {
     private ImageButton         mSettingsButton;
     private ImageButton         mLmsButton;
     private Handler             mHandler = new MessageHandler(this);
-//  private IEventListener      mEventListener;
     private String              mTitle;
     private TextView            mTitleTextView;
     private boolean             mIsAutoHide = true;
     private String              mLmsUrl;
+    private static final OEXLogger logger = new OEXLogger(PlayerController.class.getName());
 
     public PlayerController(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -117,7 +114,6 @@ public class PlayerController extends FrameLayout {
         mUseFastForward = true;
         mFromXml = true;
 
-        Log.i(TAG, TAG);
     }
 
     public PlayerController(Context context, boolean useFastForward) {
@@ -125,7 +121,6 @@ public class PlayerController extends FrameLayout {
         mContext = context;
         mUseFastForward = useFastForward;
 
-        Log.i(TAG, TAG);
     }
 
     public PlayerController(Context context) {
@@ -349,7 +344,7 @@ public class PlayerController extends FrameLayout {
             mAnchor.removeView(this);
             mHandler.removeMessages(SHOW_PROGRESS);
         } catch (IllegalArgumentException ex) {
-            Log.w("MediaController", "already removed");
+            logger.warn("MediaController already removed");
         }
         mShowing = false;
     }
@@ -494,7 +489,7 @@ public class PlayerController extends FrameLayout {
 
                 callSettings(p);
             }catch(Exception e){
-                e.printStackTrace();    
+                logger.error(e);
             }
         }
     };
@@ -564,7 +559,7 @@ public class PlayerController extends FrameLayout {
             mPlayer.callSettings(p);
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         
         // callback this event
@@ -652,11 +647,11 @@ public class PlayerController extends FrameLayout {
             try{
                 if(mPlayer!=null) {
                     endPos = mPlayer.getCurrentPosition();
-                    LogUtil.log("Seekbar", "Seek bar Start Pos: " + startPos + " End Pos: " + endPos);
+                    logger.debug("Seek bar Start Pos: " + startPos + " End Pos: " + endPos);
                     mPlayer.callPlayerSeeked(startPos, endPos, false);
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     };
@@ -709,7 +704,7 @@ public class PlayerController extends FrameLayout {
             try{
                 mPlayer.callPlayerSeeked(pos, pos-30000, true);
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
             
             // apply 30 seconds rewind
@@ -840,7 +835,7 @@ public class PlayerController extends FrameLayout {
                     break;
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         }
     }

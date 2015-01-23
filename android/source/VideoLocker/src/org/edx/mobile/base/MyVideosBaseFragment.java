@@ -1,9 +1,9 @@
 package org.edx.mobile.base;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -21,6 +21,7 @@ public class MyVideosBaseFragment extends Fragment {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

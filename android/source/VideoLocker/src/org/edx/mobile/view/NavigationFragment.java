@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -35,6 +36,7 @@ public class NavigationFragment extends Fragment {
 
     private PrefManager pref;
     private WifiSwitchDialogFragment newFragment;
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,7 +150,7 @@ public class NavigationFragment extends Fragment {
                 version_tv.setText(getString(R.string.label_version)+" "+version_name);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         
         
@@ -189,7 +191,7 @@ public class NavigationFragment extends Fragment {
                     wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ON_WIFI, false);
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
             
@@ -202,7 +204,7 @@ public class NavigationFragment extends Fragment {
                     
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         });

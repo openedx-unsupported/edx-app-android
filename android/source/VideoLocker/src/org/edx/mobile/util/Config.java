@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 
+import org.edx.mobile.logger.OEXLogger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 public class Config {
 
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
     Map<String, Object> mProperties;
 
     private static final String API_HOST_URL = "API_HOST_URL";
@@ -33,7 +35,7 @@ public class Config {
             mProperties = (Map<String, Object>)yaml.load(context.getAssets().open("config/config.yaml"));
         } catch (IOException e) {
             mProperties = new HashMap<String, Object>();
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

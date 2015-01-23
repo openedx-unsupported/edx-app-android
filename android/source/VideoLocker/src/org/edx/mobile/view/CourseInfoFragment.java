@@ -79,7 +79,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -98,7 +98,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
                     }
                 } catch (Exception ex) {
                     showEmptyInfoMessage();
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
             @Override
@@ -113,7 +113,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
         try{
             segIO.screenViewsTracking(enrollment.getCourse().getName()+" - Course Info");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -123,7 +123,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_courseinfo_tv).setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -134,7 +134,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_courseinfo_tv).setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     

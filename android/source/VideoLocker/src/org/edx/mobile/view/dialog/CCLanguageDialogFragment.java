@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.LinkedHashMap;
 
 public class CCLanguageDialogFragment extends DialogFragment {
 
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
     private IListDialogCallback callback;
     private LinkedHashMap<String, String> langList;
 
@@ -95,7 +97,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
             });
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return v;
     }

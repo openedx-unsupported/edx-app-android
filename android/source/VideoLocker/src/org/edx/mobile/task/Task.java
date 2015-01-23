@@ -6,11 +6,14 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import org.edx.mobile.logger.OEXLogger;
+
 public abstract class Task<T> extends AsyncTask<Object, Object, T> {
 
     protected Context context;
     private ProgressBar progressBar;
     protected final Handler handler = new Handler();
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
     
     public Task(Context context) { this.context = context; }
     

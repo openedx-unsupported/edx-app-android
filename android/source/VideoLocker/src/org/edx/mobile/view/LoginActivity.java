@@ -23,7 +23,6 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.social.ISocial;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
 
 import android.content.Context;
@@ -118,7 +117,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 try{
                     segIO.trackUserDoesNotHaveAccount();
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
                 showNewUserDialog();
             }
@@ -135,7 +134,7 @@ public class LoginActivity extends BaseFragmentActivity {
         try{
             segIO.screenViewsTracking("Login");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         final View activityRootView = findViewById(R.id.root_view);
@@ -152,12 +151,12 @@ public class LoginActivity extends BaseFragmentActivity {
                             showBottomLayout();
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         
         // enable login buttons at launch
@@ -462,7 +461,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 bottomLayout.setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -473,7 +472,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 bottomLayout.setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -481,7 +480,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         @Override
         public void onLogin(String accessToken) {
-            LogUtil.log("Login", "google logged in; token= " + accessToken);
+            logger.debug("Google logged in; token= " + accessToken);
             startSocialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
         }
 
@@ -491,7 +490,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         @Override
         public void onLogin(String accessToken) {
-            LogUtil.log("Login", "facebook logged in; token= " + accessToken);
+            logger.debug("Facebook logged in; token= " + accessToken);
             startSocialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
         }
     };
@@ -556,7 +555,8 @@ public class LoginActivity extends BaseFragmentActivity {
                     error.getMessageLine1(),
                     error.getMessageLine2());
         } else {
-            Log.e(getClass().getName(), "LoginFailure", ex);
+            logger.warn("Login Exception : ");
+            logger.error(ex);
         }
     }
     
@@ -645,7 +645,7 @@ public class LoginActivity extends BaseFragmentActivity {
                             facebook.logout();
                         } catch(Exception ex) {
                             // no need to handle this error
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                         return null;
                     }
@@ -679,7 +679,7 @@ public class LoginActivity extends BaseFragmentActivity {
                             google.logout();
                         } catch(Exception ex) {
                             // no need to handle this error
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                         return null;
                     }
