@@ -6,7 +6,19 @@ env:
 
 android:
   components:
+    # use the latest revision of Android SDK Tools
+    - platform-tools
+    - tools
+
+    # The BuildTools version used
     - build-tools-21.1.1
+
+    # The SDK version used to compile the project
+    - android-21
+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    - sys-img-armeabi-v7a-android-21
 
 # Disable travis email notifications until builds work properly
 notifications:
@@ -21,4 +33,10 @@ before_script:
   - chmod +x travis-build.sh
   - chmod +x android/source/gradlew
 
-script: ./travis-build.sh
+script: 
+  - ./travis-build.sh
+
+# Enable caching to speed up the build
+cache:
+  directories:
+    - $HOME/.gradle
