@@ -81,8 +81,7 @@ public class VideoListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         initDB();
-        segIO = SegmentFactory.getInstance(getActivity(), 
-                new SegmentTracker(getActivity()));
+        segIO = SegmentFactory.getInstance();
         api = new Api(getActivity());
     }
 

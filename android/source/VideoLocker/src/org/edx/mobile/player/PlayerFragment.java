@@ -126,8 +126,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        segIO = SegmentFactory.getInstance(getActivity(), 
-                new SegmentTracker(getActivity()));
+        segIO = SegmentFactory.getInstance();
         // save this fragment across activity re-creations
         setRetainInstance(true);
     }

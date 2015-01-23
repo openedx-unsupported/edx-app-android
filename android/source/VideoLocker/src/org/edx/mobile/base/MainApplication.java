@@ -6,6 +6,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import io.fabric.sdk.android.Fabric;
 
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
@@ -37,6 +38,10 @@ public class MainApplication extends Application {
         Environment.makeInstance(this.getApplicationContext());
         RequestManager.init(this);
         createImageCache();
+
+        // initialize SegmentIO, empty writeKey is handled in SegmentTracker
+        SegmentFactory.makeInstance(this);
+
         if(Environment.getInstance().getConfig().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
