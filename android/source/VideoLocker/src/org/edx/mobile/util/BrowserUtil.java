@@ -33,8 +33,7 @@ public class BrowserUtil {
             context.startActivity(intent);*/
             
             try{
-                ISegment segIO = SegmentFactory.getInstance(context, 
-                        new SegmentTracker(context));
+                ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackOpenInBrowser(url);
             }catch(Exception e){
                 e.printStackTrace();

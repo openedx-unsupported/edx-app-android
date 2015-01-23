@@ -15,28 +15,27 @@ import com.segment.analytics.Traits;
 public class SegmentTracker {
 
     /* Singleton instance of Analytics */
-    private static Analytics analytics;
+    private Analytics analytics;
     
     public SegmentTracker(Context context) {
-        if (analytics == null) {
-            try {
-                String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
+        try {
+            String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
+
+            if (writeKey != null) {
                 String debugging = context.getString(R.string.analytics_debug);
                 int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
 
-                if (writeKey != null) {
-                    LogUtil.log(getClass().getName(), "SegmentTracker created with write key: " + writeKey);
-                    // Now Analytics.with will return the custom instance
-                    analytics = new Analytics.Builder(context, writeKey)
-                            .debugging(Boolean.parseBoolean(debugging))
-                            .queueSize(queueSize)
-                            .build();
-                }
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                LogUtil.log(getClass().getName(), "SegmentTracker created with write key: " + writeKey);
+                // Now Analytics.with will return the custom instance
+                analytics = new Analytics.Builder(context, writeKey)
+                        .debugging(Boolean.parseBoolean(debugging))
+                        .queueSize(queueSize)
+                        .build();
             }
+        } catch (RuntimeException ex) {
+            LogUtil.error(getClass().getName(), "Analytics init failed: " + ex.getMessage());
+        } catch (Exception ex) {
+            LogUtil.error(getClass().getName(), "Analytics init failed: " + ex.getMessage());
         }
     }
     

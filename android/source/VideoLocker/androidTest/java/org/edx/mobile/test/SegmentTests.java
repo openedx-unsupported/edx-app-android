@@ -9,12 +9,10 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.mockito.Mockito;
 
-import java.util.concurrent.CountDownLatch;
-
 public class SegmentTests extends BaseTestCase {
 
     private static SegmentTracker tracker;
-    private static ISegment seg;
+    private static ISegment segment;
 
     @Override
     protected void setUp() throws Exception {
@@ -23,13 +21,16 @@ public class SegmentTests extends BaseTestCase {
     }
 
     private void initTracker() {
-        //Works only on Real devices and not on Simulators
-        // mock the tracker
-        if (tracker == null) {
+        //Works only on physical devices, not on Emulator
+        if (segment == null) {
+            // create mocked instance of SegmentTracker
             tracker = Mockito.mock(SegmentTracker.class);
 
-            seg = SegmentFactory.getInstance(getInstrumentation().getTargetContext(),
-                    tracker);
+            // initialize segment
+            SegmentFactory.makeInstance(getInstrumentation().getTargetContext());
+            segment = SegmentFactory.getInstance();
+            // use mocked tracker
+            segment.setTracker(tracker);
         }
     }
 
@@ -39,7 +40,7 @@ public class SegmentTests extends BaseTestCase {
         String email = "testEmail";
         String username = "testUsername";
 
-        Traits traits = seg.identifyUser(userID, email, username);
+        Traits traits = segment.identifyUser(userID, email, username);
 
         // verify that the identity method was called
         Mockito.verify(tracker).identify(Mockito.same(userID), Mockito.eq(traits),
@@ -57,7 +58,7 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
-        Properties props = seg.trackVideoPlaying(videoId, currentTime,
+        Properties props = segment.trackVideoPlaying(videoId, currentTime,
                 courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.PLAYED_VIDEO),
@@ -77,7 +78,7 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
-        Properties props = seg.trackVideoPause(videoId, currentTime, courseId,
+        Properties props = segment.trackVideoPause(videoId, currentTime, courseId,
                 unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.PAUSED_VIDEO),
@@ -98,7 +99,7 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
-        Properties props = seg.trackVideoStop(videoId, currentTime, courseId,
+        Properties props = segment.trackVideoStop(videoId, currentTime, courseId,
                 unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.STOPPED_VIDEO),
@@ -117,7 +118,7 @@ public class SegmentTests extends BaseTestCase {
         String videoId = "videoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
-        Properties props = seg.trackVideoLoading(videoId, courseId, unitUrl);
+        Properties props = segment.trackVideoLoading(videoId, courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.LOADED_VIDEO),
                 (Properties) Mockito.any());
@@ -138,7 +139,7 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime=10.11;
-        Properties props = seg.trackShowTranscript(videoId, currentTime, courseId, unitUrl);
+        Properties props = segment.trackShowTranscript(videoId, currentTime, courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SHOW_TRANSCRIPT),
                 (Properties) Mockito.any());
@@ -158,7 +159,7 @@ public class SegmentTests extends BaseTestCase {
         double currentTime = 1000;
         String courseId = "testCourseId";
         String unitUrl = "testUnitUrl";
-        Properties props = seg.trackHideTranscript(videoId, currentTime,
+        Properties props = segment.trackHideTranscript(videoId, currentTime,
                 courseId, unitUrl);
 
         // verify that the track method was called
@@ -180,7 +181,7 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         double oldTime = 10.2;
         double newTime = 10.22;
-        Properties props = seg.trackVideoSeek(videoId, oldTime,
+        Properties props = segment.trackVideoSeek(videoId, oldTime,
                 newTime, courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SEEK_VIDEO),
@@ -225,7 +226,7 @@ public class SegmentTests extends BaseTestCase {
         String videoId = "testVideoId";
         String courseId = "testCourseId";
         String unitUrl = "testUrl";
-        Properties props = seg.trackDownloadComplete(videoId, courseId, unitUrl);
+        Properties props = segment.trackDownloadComplete(videoId, courseId, unitUrl);
 
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.VIDEO_DOWNLOADED),
@@ -242,7 +243,7 @@ public class SegmentTests extends BaseTestCase {
 
     public void testOpenInBrowser() throws Exception {
         String url = "https://edx.org/";
-        Properties props = seg.trackOpenInBrowser(url);
+        Properties props = segment.trackOpenInBrowser(url);
 
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.BROWSER_LAUNCHED),
@@ -263,7 +264,7 @@ public class SegmentTests extends BaseTestCase {
         String enrollmentId = "testEnrollmentId";
         String section = "testSection";
         long videoCount = 10;
-        Properties props = seg.trackSectionBulkVideoDownload(enrollmentId,
+        Properties props = segment.trackSectionBulkVideoDownload(enrollmentId,
                 section, videoCount);
 
         // verify that the track method was called
@@ -284,7 +285,7 @@ public class SegmentTests extends BaseTestCase {
         String section = "testSection";
         long videoCount = 10;
         String subSection = "testsubSection";
-        Properties props = seg.trackSubSectionBulkVideoDownload(section,
+        Properties props = segment.trackSubSectionBulkVideoDownload(section,
                 subSection, enrollmentId, videoCount);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.BULK_DOWNLOAD_SUBSECTION),(Properties) Mockito.any());
@@ -303,7 +304,7 @@ public class SegmentTests extends BaseTestCase {
     }
     
     public void testUserLogout() throws Exception {
-        Properties props= seg.trackUserLogout();
+        Properties props= segment.trackUserLogout();
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_LOGOUT),
                 (Properties) Mockito.any());
@@ -321,7 +322,7 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         double currentTime=10.11;
         String lang="lang";
-        Properties props = seg.trackTranscriptLanguage(videoId, currentTime, lang, courseId, unitUrl);
+        Properties props = segment.trackTranscriptLanguage(videoId, currentTime, lang, courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.LANGUAGE_CLICKED),
                 (Properties) Mockito.any());
@@ -340,7 +341,7 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         String unitUrl = "uniturl";
 
-        Properties props = seg.trackSingleVideoDownload(videoId, courseId, unitUrl);
+        Properties props = segment.trackSingleVideoDownload(videoId, courseId, unitUrl);
 
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SINGLE_VIDEO_DOWNLOAD),
@@ -362,7 +363,7 @@ public class SegmentTests extends BaseTestCase {
 
         double currentTime=10.20;
         boolean isLandscape=true;
-        Properties props = seg.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
+        Properties props = segment.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SCREEN_TOGGLED),
                 (Properties) Mockito.any());
@@ -378,7 +379,7 @@ public class SegmentTests extends BaseTestCase {
 
     public void testEventLogin() throws Exception {
         String method = "Password";
-        Properties props = seg.trackUserLogin(method);
+        Properties props = segment.trackUserLogin(method);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_LOGIN),
                 (Properties) Mockito.any());
@@ -392,7 +393,7 @@ public class SegmentTests extends BaseTestCase {
     
     public void testScreenView() throws Exception {
         String screenName = "testscreen";
-        Properties props = seg.screenViewsTracking(screenName);
+        Properties props = segment.screenViewsTracking(screenName);
 
         // verify that the identity method was called
         Mockito.verify(tracker).screen(Mockito.anyString(),
@@ -405,7 +406,7 @@ public class SegmentTests extends BaseTestCase {
     }
     public void testtrackUserDoesNotHaveAccount() throws Exception {
 
-        Properties props = seg.trackUserDoesNotHaveAccount();
+        Properties props = segment.trackUserDoesNotHaveAccount();
 
         // verify that the identity method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_NO_ACCOUNT),
@@ -420,7 +421,7 @@ public class SegmentTests extends BaseTestCase {
     }
     public void testtrackUserFindsCourses() throws Exception {
 
-        Properties props = seg.trackUserFindsCourses();
+        Properties props = segment.trackUserFindsCourses();
 
         // verify that the identity method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.FIND_COURSES),
