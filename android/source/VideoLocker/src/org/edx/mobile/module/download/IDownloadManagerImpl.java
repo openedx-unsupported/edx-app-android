@@ -2,8 +2,8 @@ package org.edx.mobile.module.download;
 
 import java.io.File;
 
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.Sha1Util;
 
 import android.app.DownloadManager;
@@ -18,6 +18,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     
     private Context context;
     private DownloadManager dm;
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
 
     IDownloadManagerImpl(Context context) {
         this.context = context;
@@ -59,7 +60,7 @@ class IDownloadManagerImpl implements IDownloadManager {
             }
             c.close();
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -84,7 +85,7 @@ class IDownloadManagerImpl implements IDownloadManager {
                 return dmid;
             }
             
-            LogUtil.log(getClass().getName(), "starting download: " + url);
+            logger.debug("Starting download: " + url);
             
             Uri target = Uri.fromFile(new File(destFolder, Sha1Util.SHA1(url)));
             Request request = new Request(Uri.parse(url));
@@ -99,7 +100,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     
             dmid = dm.enqueue(request);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         
         return dmid;

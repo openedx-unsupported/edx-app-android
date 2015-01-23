@@ -7,9 +7,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import org.edx.mobile.logger.OEXLogger;
+
 public class OrientationDetector implements SensorEventListener {
 
-    public static final String TAG = "Orientation";
     public static final int LYING = 0;
     public static final int LANDSCAPE_RIGHT = 1;
     public static final int PORTRAIT = 2;
@@ -18,6 +19,7 @@ public class OrientationDetector implements SensorEventListener {
 
     private int previousOrientation = UNKNOWN;
     private Context context;
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
 
     public OrientationDetector(Context context) {
         this.context = context;
@@ -32,9 +34,9 @@ public class OrientationDetector implements SensorEventListener {
             mSensorManager.registerListener(this, mSensorOrientation,
                     SensorManager.SENSOR_DELAY_NORMAL);
             
-            Log.d(TAG, "started sensor: " + mSensorOrientation.toString());
+            logger.debug("started sensor: " + mSensorOrientation.toString());
         } else {
-            Log.e(TAG, "sensor NOT available");
+            logger.warn("sensor NOT available");
         }
     }
     
@@ -43,19 +45,18 @@ public class OrientationDetector implements SensorEventListener {
                 .getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.unregisterListener(this);
         
-        Log.d(TAG, "stopped orientation sensor");
+        logger.warn("stopped orientation sensor");
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // nothing to do
-        Log.d(TAG, String.format("accuracy changed to %d for %s", accuracy, sensor.getName()));
+        logger.debug(String.format("accuracy changed to %d for %s", accuracy, sensor.getName()));
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor sensor = event.sensor;
-        // Log.d(TAG, String.format("on sensor changed: %s", sensor.getName()));
 
         if ((sensor.getType() == Sensor.TYPE_ORIENTATION)) {
 
@@ -99,7 +100,7 @@ public class OrientationDetector implements SensorEventListener {
                     }
                 }
             } else {
-                Log.e(TAG, "orientation values unhandled: " + eventValues);
+                logger.debug("Orientation values unhandled: " + eventValues);
             }
             
             onUpdate();
@@ -121,9 +122,9 @@ public class OrientationDetector implements SensorEventListener {
         return (previousOrientation == PORTRAIT);
     }
     
-    protected void onPortrait() { Log.d(TAG, "now PORTRAIT"); }
-    protected void onLandscapeRight() { Log.d(TAG, "now LANDSCAPE right"); }
-    protected void onLandscapeLeft() { Log.d(TAG, "now LANDSCAPE left"); }
+    protected void onPortrait() { logger.debug("now PORTRAIT"); }
+    protected void onLandscapeRight() { logger.debug("now LANDSCAPE right"); }
+    protected void onLandscapeLeft() { logger.debug("now LANDSCAPE left"); }
     protected void onUpdate() { /* nothing to do here */ }
-    protected void onChanged() { /* nothing to do here */ Log.d(TAG, "orientation changed"); }
+    protected void onChanged() { /* nothing to do here */ logger.debug("orientation changed"); }
 }

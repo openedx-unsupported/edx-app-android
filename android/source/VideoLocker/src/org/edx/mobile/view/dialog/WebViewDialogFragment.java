@@ -10,9 +10,12 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.view.custom.ETextView;
 
 public class WebViewDialogFragment extends DialogFragment {
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
+
     String fileName;
     boolean showTitle;
     String dialogTitle;
@@ -51,7 +54,7 @@ public class WebViewDialogFragment extends DialogFragment {
                 view_seperator.setVisibility(View.INVISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         // Watch for button clicks.

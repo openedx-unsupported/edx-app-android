@@ -1,6 +1,5 @@
 package org.edx.mobile.base;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.OEXLogger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -22,7 +22,6 @@ import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.LogUtil;
 
 
 public class CourseDetailBaseFragment extends Fragment {
@@ -31,6 +30,7 @@ public class CourseDetailBaseFragment extends Fragment {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
+    protected final OEXLogger logger = new OEXLogger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,8 +73,8 @@ public class CourseDetailBaseFragment extends Fragment {
                 });
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.log(getClass().getName(), "error in hiding Open in Browser Panel");
+            logger.error(ex);
+            logger.debug("Error in hiding Open in Browser Panel");
         }
     }
 
@@ -87,8 +87,8 @@ public class CourseDetailBaseFragment extends Fragment {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.log(getClass().getName(), "error in showing player");
+            logger.debug("Error in showing player");
+            logger.error(ex);
         }
     }
     

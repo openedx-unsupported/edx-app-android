@@ -4,8 +4,10 @@ import android.content.Context;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 
+import org.edx.mobile.logger.OEXLogger;
+
 public class DeviceSettingUtil {
-    public static final String TAG = "Device";
+    private static final OEXLogger logger = new OEXLogger(OEXLogger.class.getName());
 
     /**
      * Returns true if device screen rotation is turned ON, false otherwise.
@@ -29,9 +31,9 @@ public class DeviceSettingUtil {
                 return false;
             }
         } catch (SettingNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e);
         } catch (Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         // default ON
         return true;

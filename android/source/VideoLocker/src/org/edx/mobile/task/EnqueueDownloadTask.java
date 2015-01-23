@@ -30,7 +30,7 @@ public abstract class EnqueueDownloadTask extends Task<Long> {
                         TranscriptManager transManager = new TranscriptManager(context);
                         transManager.downloadTranscriptsForVideo(de.transcript);
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
                 return (long)count;

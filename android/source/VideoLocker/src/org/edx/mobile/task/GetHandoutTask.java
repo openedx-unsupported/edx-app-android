@@ -32,7 +32,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 return api.getHandout(enrollment.getCourse()
@@ -40,6 +40,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

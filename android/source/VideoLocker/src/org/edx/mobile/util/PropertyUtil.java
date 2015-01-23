@@ -5,7 +5,11 @@ import java.util.Properties;
 
 import android.content.Context;
 
+import org.edx.mobile.logger.OEXLogger;
+
 public class PropertyUtil {
+
+    private static final OEXLogger logger = new OEXLogger(PropertyUtil.class.getName());
 
     public static String getDisplayVersionName(Context context) {
         try {
@@ -27,9 +31,8 @@ public class PropertyUtil {
             
             return versionName + "." + versionNameSuffix + " " + buildConfig;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
-        
         return null;
     }
 }

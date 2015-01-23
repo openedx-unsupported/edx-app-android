@@ -24,7 +24,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
         try{
             segIO.screenViewsTracking("My Videos - All Videos");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -79,7 +79,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
             }
         }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }

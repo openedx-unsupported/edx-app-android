@@ -13,8 +13,6 @@ import org.edx.mobile.model.download.NativeDownloadModel;
 
 public interface IStorage {
 
-    public static final String TAG = "Storage";
-    
     /**
      * Adds a Video for Downloading by enqueing in Native Download Manager 
      * and updating in the Database 

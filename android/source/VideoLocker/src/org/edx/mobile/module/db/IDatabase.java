@@ -21,8 +21,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
  */
 public interface IDatabase {
     
-    public static final String TAG = "Database";
-    
     /**
      * Releases this database object and all its handles.
      */

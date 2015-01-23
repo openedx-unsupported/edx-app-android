@@ -32,7 +32,7 @@ Task<Map<String, SectionEntry>> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 // return live data
@@ -40,6 +40,7 @@ Task<Map<String, SectionEntry>> {
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

@@ -1,18 +1,13 @@
 package org.edx.mobile.module.db.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.edx.mobile.model.IVideoModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
-import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.util.LogUtil;
-
 import android.content.ContentValues;
 import android.content.Context;
 
@@ -279,7 +274,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             if(callback!=null){
                 callback.sendResult(0L);
             }
-            LogUtil.error(getClass().getName(), "Not inserting, this seems a duplicate record");
+            logger.warn("Not inserting, this seems a duplicate record");
         }
 
         return 0L;

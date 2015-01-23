@@ -37,14 +37,16 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
                     });
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
             
             return api.getEnrolledCourses();
         } catch(AuthException ex) {
             handle(ex);
+            logger.error(ex);
         } catch(Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

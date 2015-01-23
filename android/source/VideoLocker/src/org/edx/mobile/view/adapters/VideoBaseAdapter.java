@@ -55,7 +55,7 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
             }
             return selectedVideoCount;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return 0;
 
@@ -81,7 +81,7 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
             }
             return videoCount;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return 0;
     }

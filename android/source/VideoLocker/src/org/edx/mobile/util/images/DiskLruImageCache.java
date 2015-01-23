@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.edx.mobile.BuildConfig;
+import org.edx.mobile.logger.OEXLogger;
 
 
 import android.content.Context;
@@ -27,6 +28,8 @@ import com.jakewharton.disklrucache.DiskLruCache;
  */
 public class DiskLruImageCache implements ImageCache  {
 
+    private final OEXLogger logger = new OEXLogger(getClass().getName());
+
     private DiskLruCache mDiskCache;
     private CompressFormat mCompressFormat = CompressFormat.JPEG;
     private static int IO_BUFFER_SIZE = 8*1024;
@@ -42,7 +45,7 @@ public class DiskLruImageCache implements ImageCache  {
                 mCompressFormat = compressFormat;
                 mCompressQuality = quality;
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
     }
 
@@ -79,23 +82,24 @@ public class DiskLruImageCache implements ImageCache  {
                 mDiskCache.flush();
                 editor.commit();
                 if ( BuildConfig.DEBUG ) {
-                   Log.d( "cache_test_DISK_", "image put on disk cache " + key );
+                   logger.debug("Cache_test_DISK image put on disk cache " + key );
                 }
             } else {
                 editor.abort();
                 if ( BuildConfig.DEBUG ) {
-                    Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                    logger.warn("cache_test_DISK ERROR on: image put on disk cache " + key );
                 }
             }   
         } catch (IOException e) {
             if ( BuildConfig.DEBUG ) {
-                Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                logger.debug("Cache_test_DISK ERROR on: image put on disk cache " + key );
             }
             try {
                 if ( editor != null ) {
                     editor.abort();
                 }
             } catch (IOException ignored) {
+                logger.error(ignored);
             }           
         }
 
@@ -119,7 +123,7 @@ public class DiskLruImageCache implements ImageCache  {
                 bitmap = BitmapFactory.decodeStream( buffIn );              
             }   
         } catch ( IOException e ) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             if ( snapshot != null ) {
                 snapshot.close();
@@ -127,7 +131,7 @@ public class DiskLruImageCache implements ImageCache  {
         }
 
         if ( BuildConfig.DEBUG ) {
-            Log.d( "cache_test_DISK_", bitmap == null ? "" : "image read from disk " + key);
+            logger.debug("cache_test_DISK_ "+ bitmap == null ? "" : "image read from disk " + key);
         }
 
         return bitmap;
@@ -142,7 +146,7 @@ public class DiskLruImageCache implements ImageCache  {
             snapshot = mDiskCache.get( key );
             contained = snapshot != null;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             if ( snapshot != null ) {
                 snapshot.close();
@@ -155,12 +159,12 @@ public class DiskLruImageCache implements ImageCache  {
 
     public void clearCache() {
         if ( BuildConfig.DEBUG ) {
-            Log.d( "cache_test_DISK_", "disk cache CLEARED");
+            logger.debug("cache_test_DISK_ disk cache CLEARED");
         }
         try {
             mDiskCache.delete();
         } catch ( IOException e ) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
