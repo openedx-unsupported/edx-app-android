@@ -31,6 +31,8 @@ public class SegmentTracker {
                         .debugging(Boolean.parseBoolean(debugging))
                         .queueSize(queueSize)
                         .build();
+            } else {
+                LogUtil.error(getClass().getName(), "writeKey is null, Segment analytics will not work.");
             }
         } catch (RuntimeException ex) {
             LogUtil.error(getClass().getName(), "Analytics init failed: " + ex.getMessage());
