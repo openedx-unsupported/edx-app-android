@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.module.db.DbStructure;
-import org.edx.mobile.util.LogUtil;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.edx.mobile.module.db.DbStructure;
+import org.edx.mobile.util.LogUtil;
 
 /**
  * This class is an implementation of {@link SQLiteOpenHelper} and handles

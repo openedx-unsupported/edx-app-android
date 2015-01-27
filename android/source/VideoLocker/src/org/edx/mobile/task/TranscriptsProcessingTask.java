@@ -1,12 +1,12 @@
 package org.edx.mobile.task;
 
-import java.io.IOException;
+import android.content.Context;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.edx.mobile.http.Api;
 
-import android.content.Context;
+import java.io.IOException;
 
 public abstract class TranscriptsProcessingTask extends Task<String> {
 

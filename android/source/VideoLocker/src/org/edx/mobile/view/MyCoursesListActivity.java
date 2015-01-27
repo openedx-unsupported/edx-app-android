@@ -1,22 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.ArrayList;
-
-import org.edx.mobile.R;
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.adapters.MyCourseAdapter;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.task.GetEnrolledCoursesTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.view.custom.ETextView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +14,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.GetEnrolledCoursesTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.MyCourseAdapter;
+import org.edx.mobile.view.custom.ETextView;
+
+import java.util.ArrayList;
 
 public class MyCoursesListActivity extends BaseFragmentActivity {
     private View offlineBar;

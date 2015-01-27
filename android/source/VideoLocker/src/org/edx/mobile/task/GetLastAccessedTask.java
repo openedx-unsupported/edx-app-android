@@ -1,9 +1,9 @@
 package org.edx.mobile.task;
 
+import android.content.Context;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
-
-import android.content.Context;
 
 public abstract class GetLastAccessedTask extends Task<SyncLastAccessedSubsectionResponse> {
 

@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.model.IVideoModel;
-import org.edx.mobile.module.db.DatabaseModelFactory;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.module.db.DatabaseModelFactory;
 
 class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
     

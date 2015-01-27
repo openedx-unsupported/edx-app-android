@@ -1,9 +1,9 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
+
 import java.io.InputStream;
 import java.util.Properties;
-
-import android.content.Context;
 
 public class PropertyUtil {
 

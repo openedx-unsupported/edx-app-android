@@ -1,11 +1,5 @@
 package org.edx.mobile.social.google;
 
-import java.io.IOException;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.util.LogUtil;
-
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
@@ -22,6 +16,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.plus.Plus;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.util.LogUtil;
+
+import java.io.IOException;
 
 public class GoogleApiActivity extends BaseFragmentActivity implements ConnectionCallbacks,
         OnConnectionFailedListener, View.OnClickListener {

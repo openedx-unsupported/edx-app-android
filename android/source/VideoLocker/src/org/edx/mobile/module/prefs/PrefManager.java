@@ -1,15 +1,15 @@
 package org.edx.mobile.module.prefs;
 
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Sha1Util;
-
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.Sha1Util;
 
 /**
  * This is a Utility for reading and writing to shared preferences.

@@ -1,10 +1,5 @@
 package org.edx.mobile.social.google;
 
-import java.io.IOException;
-
-import org.edx.mobile.social.ISocialImpl;
-import org.edx.mobile.util.LogUtil;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -20,6 +15,11 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import org.edx.mobile.social.ISocialImpl;
+import org.edx.mobile.util.LogUtil;
+
+import java.io.IOException;
 
 public class GoogleOauth2 extends ISocialImpl {
     

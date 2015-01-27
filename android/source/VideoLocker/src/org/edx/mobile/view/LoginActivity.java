@@ -1,31 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.edx.mobile.R;
-import org.edx.mobile.exception.LoginErrorMessage;
-import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SocialLoginResponse;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.task.LoginTask;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
-import org.edx.mobile.view.dialog.ResetPasswordDialog;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.social.ISocial;
-import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.view.dialog.SuccessDialogFragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +16,32 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.exception.LoginErrorMessage;
+import org.edx.mobile.exception.LoginException;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.SocialLoginResponse;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.ISocial;
+import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
+import org.edx.mobile.view.dialog.ResetPasswordDialog;
+import org.edx.mobile.view.dialog.SuccessDialogFragment;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseFragmentActivity {
 

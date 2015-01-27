@@ -1,14 +1,14 @@
 package org.edx.mobile.util;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.analytics.SegmentTracker;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.analytics.SegmentTracker;
 
 public class BrowserUtil {
 

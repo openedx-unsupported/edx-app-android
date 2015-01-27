@@ -1,10 +1,10 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.util.LogUtil;
-
 import android.content.Context;
 import android.util.SparseArray;
+
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.util.LogUtil;
 
 /**
  * This class provides singleton instances of database implemention as {@link org.edx.mobile.module.db.IDatabase}.

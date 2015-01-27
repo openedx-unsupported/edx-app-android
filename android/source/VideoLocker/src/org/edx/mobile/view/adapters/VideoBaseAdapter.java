@@ -1,12 +1,12 @@
 package org.edx.mobile.view.adapters;
 
-import java.util.ArrayList;
+import android.content.Context;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 
-import android.content.Context;
+import java.util.ArrayList;
 
 public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
 

@@ -20,26 +20,26 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.GetLastAccessedTask;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
+import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.ChapterAdapter;
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -537,7 +537,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     final PrefManager prefManager = new PrefManager(getActivity(), prefName);
                     final String prefModuleId = prefManager.getLastAccessedSubsectionId();
                     LogUtil.log("Last Accessed", "Last Accessed Module ID from Preferences "
-                            +prefModuleId);
+                            + prefModuleId);
                     lastAccessed_subSectionId = prefModuleId;
                     showLastAccessedView(view);
                     getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
@@ -548,7 +548,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                                 //Handle the last Visited Module received from Sever
                                 server_moduleId = result.getLastVisitedModuleId();
                                 LogUtil.log("Last Accessed", "Last Accessed Module ID from Server Get"
-                                        +server_moduleId);
+                                        + server_moduleId);
                                 if(prefManager.isSyncedLastAccessedSubsection()){
                                     //If preference last accessed flag is true, put the last access fetched 
                                     //from server in Prefernces and display it on Last Accessed. 
@@ -594,7 +594,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     if(result!=null && result.getLastVisitedModuleId()!=null){
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
                         LogUtil.log("Last Accessed", "Last Accessed Module ID from Server Sync "
-                                +result.getLastVisitedModuleId());
+                                + result.getLastVisitedModuleId());
                         lastAccessed_subSectionId = result.getLastVisitedModuleId();
                         showLastAccessedView(view);
                     }

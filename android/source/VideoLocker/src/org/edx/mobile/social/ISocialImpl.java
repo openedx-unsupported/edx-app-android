@@ -1,8 +1,8 @@
 package org.edx.mobile.social;
 
-import java.lang.ref.WeakReference;
-
 import android.app.Activity;
+
+import java.lang.ref.WeakReference;
 
 public abstract class ISocialImpl implements ISocial {
     
