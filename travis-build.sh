@@ -10,11 +10,4 @@ pwd
 echo "[INFO] running uninstallAll createProdDebugCoverageReport ..."
 ./gradlew uninstallAll createProdDebugCoverageReport
 echo "[INFO] finished all tests"
-
-# run Acceptance Tests
 cd ../..
-cd AcceptanceTests
-echo "[INFO] running acceptance tests ..."
-sh run-tests.sh
-
-
