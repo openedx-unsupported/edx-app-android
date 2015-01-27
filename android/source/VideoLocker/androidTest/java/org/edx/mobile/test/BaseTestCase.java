@@ -1,16 +1,15 @@
 package org.edx.mobile.test;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 /**
  * Created by rohan on 12/31/14.
  */
 public class BaseTestCase extends InstrumentationTestCase {
 
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void setUp() throws Exception {

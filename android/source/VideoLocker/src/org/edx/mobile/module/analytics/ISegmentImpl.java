@@ -9,12 +9,12 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 class ISegmentImpl implements ISegment {
 
     private SegmentTracker tracker;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public ISegmentImpl(Context context) {
         this(context, null);

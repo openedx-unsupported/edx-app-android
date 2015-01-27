@@ -3,17 +3,17 @@ package org.edx.mobile.logger;
 /**
  * Created by shahid on 22/1/15.
  */
-public class OEXLogger {
+public class Logger {
 
     private String tag;
 
-    private OEXLogger() {}
+    private Logger() {}
 
-    public OEXLogger(Class<?> cls) {
+    public Logger(Class<?> cls) {
         this.tag = cls.getName();
     }
 
-    public OEXLogger(String tag) {
+    public Logger(String tag) {
         this.tag = tag;
     }
 

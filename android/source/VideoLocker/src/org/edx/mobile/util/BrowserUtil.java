@@ -2,7 +2,7 @@ package org.edx.mobile.util;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -13,7 +13,7 @@ import android.net.Uri;
 
 public class BrowserUtil {
 
-    private static final OEXLogger logger = new OEXLogger(BrowserUtil.class.getName());
+    private static final Logger logger = new Logger(BrowserUtil.class.getName());
 
     /**
      * Opens given URL in native browser.

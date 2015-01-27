@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.IOUtils;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Sha1Util;
 
 import android.content.Context;
@@ -17,7 +17,7 @@ import android.content.Context;
 public class CacheManager {
 
     private File cacheFolder;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     public CacheManager(Context context) {
         if (context == null) {

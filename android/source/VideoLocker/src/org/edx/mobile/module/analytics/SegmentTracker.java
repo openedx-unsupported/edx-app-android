@@ -1,7 +1,7 @@
 package org.edx.mobile.module.analytics;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Environment;
 
 import android.content.Context;
@@ -15,7 +15,7 @@ import com.segment.analytics.Traits;
 public class SegmentTracker {
     
     private Analytics analytics;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
     
     public SegmentTracker(Context context) {
         try {

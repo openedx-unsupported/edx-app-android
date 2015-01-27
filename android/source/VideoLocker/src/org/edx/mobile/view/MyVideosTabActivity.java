@@ -18,7 +18,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerActivity;
@@ -36,7 +36,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
     /* Save current tabs identifier in this.. */
     private String mCurrentTab;
     private CheckBox myVideocheckBox;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

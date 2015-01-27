@@ -1,12 +1,12 @@
 package org.edx.mobile.model.api;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 public class SyncLastAccessedSubsectionResponse {
 
     public String last_visited_module_id;
     public String[] last_visited_module_path;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public String getLastVisitedModuleId() {
         if(last_visited_module_path != null && last_visited_module_path.length > 2) {

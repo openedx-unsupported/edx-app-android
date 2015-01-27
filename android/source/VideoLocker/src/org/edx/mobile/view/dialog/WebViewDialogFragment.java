@@ -10,11 +10,11 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.custom.ETextView;
 
 public class WebViewDialogFragment extends DialogFragment {
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     String fileName;
     boolean showTitle;

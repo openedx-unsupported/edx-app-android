@@ -9,14 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.edx.mobile.BuildConfig;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.jakewharton.disklrucache.DiskLruCache;
@@ -28,7 +27,7 @@ import com.jakewharton.disklrucache.DiskLruCache;
  */
 public class DiskLruImageCache implements ImageCache  {
 
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     private DiskLruCache mDiskCache;
     private CompressFormat mCompressFormat = CompressFormat.JPEG;

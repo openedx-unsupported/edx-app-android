@@ -2,7 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Config {
 
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
     Map<String, Object> mProperties;
 
     private static final String API_HOST_URL = "API_HOST_URL";

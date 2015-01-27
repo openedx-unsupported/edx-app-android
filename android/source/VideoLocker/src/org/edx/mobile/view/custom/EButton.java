@@ -1,7 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +11,7 @@ import android.widget.Button;
 
 public class EButton extends Button {
 
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
     public EButton(Context context) {
         super(context);
     }

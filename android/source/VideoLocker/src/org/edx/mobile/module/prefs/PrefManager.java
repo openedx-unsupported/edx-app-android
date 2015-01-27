@@ -1,6 +1,6 @@
 package org.edx.mobile.module.prefs;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.util.DateUtil;
@@ -22,7 +22,7 @@ public class PrefManager {
     
     private Context context;
     private String prefName;
-    private static final OEXLogger logger = new OEXLogger(PrefManager.class.getName());
+    private static final Logger logger = new Logger(PrefManager.class.getName());
 
     public PrefManager(Context context, String prefName) {
         this.context = context;

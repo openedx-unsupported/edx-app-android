@@ -1,6 +1,6 @@
 package org.edx.mobile.module.download;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -19,7 +19,7 @@ import android.content.Intent;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
     protected IStorage storage;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onReceive(final Context context, Intent data) {

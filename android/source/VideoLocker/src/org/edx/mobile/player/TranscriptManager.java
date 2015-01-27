@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 
 import org.apache.commons.io.IOUtils;
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.util.TranscriptDownloader;
 import org.edx.mobile.util.Sha1Util;
@@ -24,7 +24,7 @@ public class TranscriptManager {
 
     private File transcriptFolder;
     private Context context;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public TranscriptManager(Context context) {
         try{

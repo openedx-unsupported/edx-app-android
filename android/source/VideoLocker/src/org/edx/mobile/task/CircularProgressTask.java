@@ -1,6 +1,6 @@
 package org.edx.mobile.task;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 import android.os.AsyncTask;
@@ -9,7 +9,7 @@ import android.view.View;
 public class CircularProgressTask extends AsyncTask<Object, Object, Object> {
 
     ProgressWheel progressBar;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public CircularProgressTask() {
     }

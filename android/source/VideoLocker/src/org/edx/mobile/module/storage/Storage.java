@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -30,7 +30,6 @@ import org.edx.mobile.module.prefs.UserPrefs;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.util.Log;
 
 public class Storage implements IStorage {
 
@@ -38,7 +37,7 @@ public class Storage implements IStorage {
     private IDatabase db;
     private IDownloadManager dm;
     private UserPrefs pref;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public Storage(Context context) {
         this.context = context;

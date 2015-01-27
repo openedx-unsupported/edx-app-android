@@ -3,7 +3,7 @@ package org.edx.mobile.module.db.impl;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 
@@ -12,7 +12,7 @@ class IDatabaseBaseImpl implements Runnable {
     private DbHelper helper;
     private Queue<IDbOperation<?>> opQueue = new LinkedList<IDbOperation<?>>();
     private boolean isQueueProcessing = false;
-    protected static final OEXLogger logger = new OEXLogger(IDatabaseBaseImpl.class.getName());
+    protected static final Logger logger = new Logger(IDatabaseBaseImpl.class.getName());
     
     public IDatabaseBaseImpl(Context context) {
         helper = new DbHelper(context);
