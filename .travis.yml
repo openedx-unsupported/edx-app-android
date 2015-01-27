@@ -3,6 +3,9 @@ jdk: oraclejdk7
 env:
   matrix:
     - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
+  global:
+    # Amount of memory granted to Gradle JVM
+    - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 
 android:
   components:
@@ -43,5 +46,3 @@ script:
 cache:
   directories:
     - $HOME/.gradle
-    - $HOME/.m2
-    - apt
