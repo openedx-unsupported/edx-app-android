@@ -274,6 +274,7 @@ public class LoginActivity extends BaseFragmentActivity {
                                 throw new LoginException(errorMsg);
                             }
                         } catch(LoginException ex) {
+                            logger.error(ex);
                             handle(ex);
                         }
                     }
@@ -572,6 +573,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 try {
                     onUserLoginSuccess(result);
                 } catch (LoginException ex) {
+                    logger.error(ex);
                     handle(ex);
                 }
             } 
@@ -622,6 +624,7 @@ public class LoginActivity extends BaseFragmentActivity {
                         getString(R.string.login_error),
                         getString(R.string.login_failed)));
             } catch (Exception e) {
+                logger.error(e);
                 handle(e);
             }
             return null;

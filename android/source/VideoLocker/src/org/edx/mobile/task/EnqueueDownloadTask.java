@@ -37,6 +37,7 @@ public abstract class EnqueueDownloadTask extends Task<Long> {
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return 0L;
     }

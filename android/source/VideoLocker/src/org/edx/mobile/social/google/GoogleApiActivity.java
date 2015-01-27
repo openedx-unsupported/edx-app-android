@@ -141,6 +141,7 @@ public class GoogleApiActivity extends BaseFragmentActivity implements Connectio
                 // ConnectionResult.
                 mIntentInProgress = false;
                 mGoogleApiClient.connect();
+                logger.error(e);
             }
         }
     }

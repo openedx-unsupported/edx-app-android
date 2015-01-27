@@ -131,7 +131,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-
+            logger.error(e);
         }
     }
 

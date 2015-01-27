@@ -174,6 +174,7 @@ public class Storage implements IStorage {
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
             callback.sendException(ex);
+            logger.error(ex);
         }
     }
 
@@ -220,6 +221,7 @@ public class Storage implements IStorage {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
+            logger.error(ex);
             callback.sendException(ex);
         }
     }
@@ -331,6 +333,7 @@ public class Storage implements IStorage {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
+            logger.error(ex);
             callback.sendException(ex);
         }
     }
