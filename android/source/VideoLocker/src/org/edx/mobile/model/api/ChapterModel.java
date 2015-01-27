@@ -1,8 +1,8 @@
 package org.edx.mobile.model.api;
 
-import java.io.Serializable;
-
 import org.edx.mobile.interfaces.SectionItemInterface;
+
+import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class ChapterModel extends ResponseStatus implements Serializable, 

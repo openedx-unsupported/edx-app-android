@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
     

@@ -1,9 +1,9 @@
 package org.edx.mobile.task;
 
-import org.edx.mobile.view.custom.ProgressWheel;
-
 import android.os.AsyncTask;
 import android.view.View;
+
+import org.edx.mobile.view.custom.ProgressWheel;
 
 public class CircularProgressTask extends AsyncTask<Object, Object, Object> {
 

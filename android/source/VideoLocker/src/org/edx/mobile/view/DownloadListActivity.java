@@ -1,20 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.edx.mobile.R;
-import org.edx.mobile.model.IVideoModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.view.adapters.DownloadEntryAdapter;
-
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +12,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.DownloadEntryAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadListActivity extends BaseFragmentActivity {
 

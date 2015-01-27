@@ -1,17 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.List;
-
-import org.edx.mobile.R;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.GetAnnouncementTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.adapters.AnnouncementAdapter;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +7,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.CourseDetailBaseFragment;
+import org.edx.mobile.model.api.AnnouncementsModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.task.GetAnnouncementTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.AnnouncementAdapter;
+
+import java.util.List;
 
 public class CourseAnnouncementFragment extends CourseDetailBaseFragment {
 

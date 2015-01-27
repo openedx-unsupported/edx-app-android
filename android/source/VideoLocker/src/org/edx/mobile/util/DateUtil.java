@@ -1,11 +1,11 @@
 package org.edx.mobile.util;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import android.annotation.SuppressLint;
-import android.util.Log;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {

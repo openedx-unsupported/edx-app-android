@@ -1,13 +1,13 @@
 package org.edx.mobile.instrumentation;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Process;
 import android.util.Log;
+
+import java.io.File;
 
 // adb shell am broadcast -a com.example.pkg.END_EMMA
 @SuppressLint("SdCardPath")

@@ -1,11 +1,12 @@
 package org.edx.mobile.view.custom;
 
-import org.edx.mobile.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
 
 public class ETextView extends TextView {
 

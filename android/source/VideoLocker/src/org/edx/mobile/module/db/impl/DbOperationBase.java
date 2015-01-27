@@ -1,9 +1,9 @@
 package org.edx.mobile.module.db.impl;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.LogUtil;
-
-import android.database.sqlite.SQLiteDatabase;
 
 abstract class DbOperationBase<T> implements IDbOperation<T> {
     

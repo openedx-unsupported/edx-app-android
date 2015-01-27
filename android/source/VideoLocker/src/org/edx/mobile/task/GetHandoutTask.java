@@ -1,10 +1,10 @@
 package org.edx.mobile.task;
 
+import android.content.Context;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-
-import android.content.Context;
 
 public abstract class GetHandoutTask extends Task<HandoutModel> {
 

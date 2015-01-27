@@ -1,11 +1,5 @@
 package org.edx.mobile.player;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.view.OnSwipeListener;
-
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,6 +10,12 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.view.SurfaceHolder;
 import android.view.View.OnClickListener;
+
+import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.view.OnSwipeListener;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 @SuppressWarnings("serial")
 public class Player extends MediaPlayer implements OnErrorListener,
@@ -573,7 +573,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     && (delta < 10)  ) {
                 // no need to perform seek if current position is almost same as seekTo
                 // %10 is used to skip the difference of 10 milliseconds
-                LogUtil.log(TAG, "Skipping seek to " + msec + " from " 
+                LogUtil.log(TAG, "Skipping seek to " + msec + " from "
                         + lastCurrentPosition + " ; state=" + state);
                 return;
             }
@@ -588,7 +588,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                LogUtil.log(TAG, "seeking to " + msec + " from " 
+                LogUtil.log(TAG, "seeking to " + msec + " from "
                         + lastCurrentPosition + " ; state=" + state);
                 super.seekTo(msec);
                 lastCurrentPosition = msec;

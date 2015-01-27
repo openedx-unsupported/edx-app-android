@@ -1,16 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.ChapterModel;
-import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.model.api.SectionItemModel;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.model.db.DownloadEntry.WatchedState;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.MemoryUtil;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,6 +9,17 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.api.ChapterModel;
+import org.edx.mobile.model.api.SectionItemModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.db.DownloadEntry.WatchedState;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.MemoryUtil;
 
 public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
 

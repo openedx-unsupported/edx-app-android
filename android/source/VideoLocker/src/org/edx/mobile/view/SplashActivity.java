@@ -1,13 +1,13 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.LogUtil;
 
 public class SplashActivity extends BaseFragmentActivity {
 

@@ -1,12 +1,5 @@
 package org.edx.mobile.social.facebook;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import org.edx.mobile.social.ISocialImpl;
-import org.edx.mobile.util.LogUtil;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -20,6 +13,13 @@ import android.util.Log;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+
+import org.edx.mobile.social.ISocialImpl;
+import org.edx.mobile.util.LogUtil;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class FacebookAuth extends ISocialImpl {
 

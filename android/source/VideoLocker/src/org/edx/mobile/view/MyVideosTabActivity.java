@@ -21,10 +21,10 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerActivity;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 public class MyVideosTabActivity extends PlayerActivity implements VideoListCallback {
 

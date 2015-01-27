@@ -1,5 +1,10 @@
 package org.edx.mobile.module.download;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -11,11 +16,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.LogUtil;
-
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
     protected IStorage storage;

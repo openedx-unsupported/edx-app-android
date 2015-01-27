@@ -1,9 +1,5 @@
 package org.edx.mobile.module.analytics;
 
-import org.edx.mobile.R;
-import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.LogUtil;
-
 import android.content.Context;
 
 import com.segment.analytics.Analytics;
@@ -11,6 +7,10 @@ import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+
+import org.edx.mobile.R;
+import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.LogUtil;
 
 public class SegmentTracker {
     

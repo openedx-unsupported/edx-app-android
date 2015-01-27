@@ -1,15 +1,15 @@
 package org.edx.mobile.http;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
-import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
@@ -37,13 +37,12 @@ import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Api {
 
@@ -341,7 +340,6 @@ public class Api {
                 }
             }
         }
-
         return null;
     }
 
@@ -490,17 +488,6 @@ public class Api {
         return list;
     }
 
-    /**
-     * Returns list of videos in a particular course.
-     * 
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public List<VideoResponseModel> getVideosByCourseId(String courseId)
-            throws Exception {
-        return getVideosByCourseId(courseId, false);
-    }
 
     /**
      * Returns list of videos in a particular course.
@@ -628,33 +615,11 @@ public class Api {
         Gson gson = new GsonBuilder().create();
         TypeToken<List<AnnouncementsModel>> t = new TypeToken<List<AnnouncementsModel>>() {
         };
-
         List<AnnouncementsModel> list = gson.fromJson(json, t.getType());
-
-        // VideoResponseModel res = gson.fromJson(json,
-        // VideoResponseModel.class);
 
         return list;
     }
 
-    /**
-     * Returns enrollment of given id.
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public EnrolledCoursesResponse getEnrollmentById(String courseId) throws Exception {
-        ArrayList<EnrolledCoursesResponse> courses = getEnrolledCourses(true);
-        if (courses != null) {
-            for (EnrolledCoursesResponse r : courses) {
-                if (r.getCourse().getId().equals(courseId)) {
-                    return r;
-                }
-            }
-        }
-
-        return null;
-    }
 
     /**
      * Returns "Authorization" header with current active access token.
@@ -682,39 +647,6 @@ public class Api {
             headers.putString("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
         }
         return headers;
-    }
-
-    /**
-     * Returns Stream object from the given URL.
-     * @param url
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public CourseInfoModel srtStream(String url, boolean preferCache) throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-
-        String json = null;
-        if (NetworkUtil.isConnected(context) && !preferCache) {
-            // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            Log.d("Api", urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
-            // cache the response
-            //cache.put(url, json);
-        } else {
-            json = cache.get(url);
-        }
-
-        if (json == null) {
-            return null;
-        }
-        LogUtil.log("Api", "course_about=" + json);
-
-        Gson gson = new GsonBuilder().create();
-        CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
-        return res;
     }
 
     /**
@@ -754,36 +686,6 @@ public class Api {
             }
         }
         return null;
-    }
-
-    /**
-     * Returns list of videos for a particular URL.
-     * @param courseId
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public ArrayList<VideoResponseModel> getVideosByURL(String courseId, String videoUrl, boolean preferCache)
-            throws Exception {
-        if(videoUrl==null){
-            return null;
-        }
-        ArrayList<VideoResponseModel> vidList = getVideosByCourseId(courseId, preferCache);
-        ArrayList<VideoResponseModel> list = new ArrayList<VideoResponseModel>();
-        if(vidList!=null && vidList.size()>0){
-            for(VideoResponseModel vrm : vidList){
-                try{
-                    if(vrm.getSummary().getVideo_url().equalsIgnoreCase(videoUrl)){
-                        vrm.setCourseId(courseId);
-                        list.add(vrm);
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return list;
     }
 
     /**

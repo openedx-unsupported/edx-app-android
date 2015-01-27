@@ -1,11 +1,5 @@
 package org.edx.mobile.module.download;
 
-import java.io.File;
-
-import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.Sha1Util;
-
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;
@@ -13,6 +7,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+
+import org.edx.mobile.model.download.NativeDownloadModel;
+import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.Sha1Util;
+
+import java.io.File;
 
 class IDownloadManagerImpl implements IDownloadManager {
     

@@ -9,8 +9,6 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.mockito.Mockito;
 
-import java.util.concurrent.CountDownLatch;
-
 public class SegmentTests extends BaseTestCase {
 
     private static SegmentTracker tracker;

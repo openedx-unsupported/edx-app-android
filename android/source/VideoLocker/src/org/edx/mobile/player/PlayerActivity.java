@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.util.LogUtil;
 

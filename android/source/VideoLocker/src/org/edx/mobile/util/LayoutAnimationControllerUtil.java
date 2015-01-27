@@ -1,9 +1,10 @@
 package org.edx.mobile.util;
 
-import org.edx.mobile.R;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
+
+import org.edx.mobile.R;
 
 public class LayoutAnimationControllerUtil {
     private View messageView;

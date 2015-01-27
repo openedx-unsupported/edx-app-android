@@ -1,16 +1,5 @@
 package org.edx.mobile.util.images;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.edx.mobile.BuildConfig;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -19,6 +8,16 @@ import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.jakewharton.disklrucache.DiskLruCache;
+
+import org.edx.mobile.BuildConfig;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Implementation of DiskLruCache by Jake Wharton
