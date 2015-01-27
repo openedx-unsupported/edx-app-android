@@ -98,12 +98,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    // mark last current position
-                    int pos = player.getCurrentPosition();
-                    if (pos > 0 && pos != lastSavedPosition) {
-                        lastSavedPosition = pos;
-                        callback.saveCurrentPlaybackPosition(pos);
-                        logger.debug("Current position saved: " + pos);
+                    if(player!=null){
+                        // mark last current position
+                        int pos = player.getCurrentPosition();
+                        if (pos > 0 && pos != lastSavedPosition) {
+                            lastSavedPosition = pos;
+                            callback.saveCurrentPlaybackPosition(pos);
+                            logger.debug("Current position saved: " + pos);
+                        }
                     }
                 }
 
