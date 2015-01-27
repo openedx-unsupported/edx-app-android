@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -30,7 +30,7 @@ public class CourseDetailBaseFragment extends Fragment {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

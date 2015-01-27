@@ -1,6 +1,6 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.IDatabase;
 
 import android.content.Context;
@@ -16,7 +16,7 @@ public class DatabaseFactory {
     public static final int                 TYPE_DATABASE_NATIVE = 1;
     /* Keep singleton instances in a map, so that multiple db implementations can be handled */
     private static SparseArray<IDatabase>   dbMap = new SparseArray<IDatabase>();
-    private static final OEXLogger logger = new OEXLogger(DatabaseFactory.class.getName());
+    private static final Logger logger = new Logger(DatabaseFactory.class.getName());
 
     /**
      * Returns singleton instance of the {@link IDatabase} for the given type.

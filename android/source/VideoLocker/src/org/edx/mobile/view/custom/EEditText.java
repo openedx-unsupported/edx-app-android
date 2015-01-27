@@ -1,7 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 public class EEditText extends EditText {
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
     public EEditText(Context context) {
         super(context);
     }

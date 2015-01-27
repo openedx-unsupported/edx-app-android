@@ -21,7 +21,7 @@ import java.util.Formatter;
 import java.util.Locale;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -105,7 +105,7 @@ public class PlayerController extends FrameLayout {
     private TextView            mTitleTextView;
     private boolean             mIsAutoHide = true;
     private String              mLmsUrl;
-    private static final OEXLogger logger = new OEXLogger(PlayerController.class.getName());
+    private static final Logger logger = new Logger(PlayerController.class.getName());
 
     public PlayerController(Context context, AttributeSet attrs) {
         super(context, attrs);

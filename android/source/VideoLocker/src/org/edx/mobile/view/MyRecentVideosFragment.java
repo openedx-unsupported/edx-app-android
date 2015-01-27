@@ -19,7 +19,7 @@ import android.widget.ListView;
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -59,7 +59,7 @@ public class MyRecentVideosFragment extends Fragment {
     private Button deleteButton = null;
     private final Handler handler = new Handler();
     private ISegment segIO;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

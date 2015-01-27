@@ -12,11 +12,11 @@ import android.net.NetworkInfo.State;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 public class NetworkUtil {
 
-    private static final OEXLogger logger = new OEXLogger(NetworkUtil.class.getName());
+    private static final Logger logger = new Logger(NetworkUtil.class.getName());
 
     /**
      * Returns true if device is connected to wifi or mobile network, false

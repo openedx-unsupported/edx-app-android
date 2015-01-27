@@ -5,9 +5,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 public class OrientationDetector implements SensorEventListener {
 
@@ -19,7 +18,7 @@ public class OrientationDetector implements SensorEventListener {
 
     private int previousOrientation = UNKNOWN;
     private Context context;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     public OrientationDetector(Context context) {
         this.context = context;

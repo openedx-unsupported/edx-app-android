@@ -2,7 +2,7 @@ package org.edx.mobile.module.download;
 
 import java.io.File;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.util.Sha1Util;
 
@@ -18,7 +18,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     
     private Context context;
     private DownloadManager dm;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     IDownloadManagerImpl(Context context) {
         this.context = context;

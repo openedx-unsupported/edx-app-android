@@ -1,6 +1,6 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DataCallback;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 abstract class DbOperationBase<T> implements IDbOperation<T> {
     
     private DataCallback<T> callback;
-    protected static final OEXLogger logger = new OEXLogger(DbOperationBase.class.getName());
+    protected static final Logger logger = new Logger(DbOperationBase.class.getName());
 
     @Override
     public final void setCallback(DataCallback<T> callback) {

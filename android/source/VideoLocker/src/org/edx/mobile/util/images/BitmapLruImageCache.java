@@ -4,16 +4,15 @@ import com.android.volley.toolbox.ImageLoader.ImageCache;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 /**
  * Basic LRU Memory cache.
  */
 public class BitmapLruImageCache extends LruCache<String, Bitmap> implements ImageCache{
 
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
     
     public BitmapLruImageCache(int maxSize) {
         super(maxSize);

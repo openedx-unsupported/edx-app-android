@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.edx.mobile.http.Api;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 
@@ -13,7 +13,7 @@ public abstract class TranscriptDownloader implements Runnable {
 
     private String srtUrl;
     private Context context;
-    private final OEXLogger logger = new OEXLogger(TranscriptDownloader.class.getName());
+    private final Logger logger = new Logger(TranscriptDownloader.class.getName());
 
     public TranscriptDownloader(Context context, String url) {
         this.srtUrl = url;

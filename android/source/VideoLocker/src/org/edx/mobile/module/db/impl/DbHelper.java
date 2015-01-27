@@ -1,6 +1,6 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;
 
 import android.content.Context;
@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 class DbHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase sqliteDb;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     public DbHelper(Context context) {
         super(context, DbStructure.NAME, null, DbStructure.VERSION);

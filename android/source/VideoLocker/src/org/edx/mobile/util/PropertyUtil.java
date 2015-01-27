@@ -5,11 +5,11 @@ import java.util.Properties;
 
 import android.content.Context;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 public class PropertyUtil {
 
-    private static final OEXLogger logger = new OEXLogger(PropertyUtil.class.getName());
+    private static final Logger logger = new Logger(PropertyUtil.class.getName());
 
     public static String getDisplayVersionName(Context context) {
         try {

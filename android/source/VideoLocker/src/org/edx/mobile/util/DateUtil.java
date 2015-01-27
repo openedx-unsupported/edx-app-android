@@ -6,12 +6,12 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
 
-    private static final OEXLogger logger = new OEXLogger(DateUtil.class.getName());
+    private static final Logger logger = new Logger(DateUtil.class.getName());
 
     /*
      * Converting Date in string format to Date object and coverting the Current

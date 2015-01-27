@@ -30,7 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -65,7 +65,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected IStorage storage;
     protected ISegment segIO;
     protected boolean runOnTick = true;
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(Bundle arg0) {

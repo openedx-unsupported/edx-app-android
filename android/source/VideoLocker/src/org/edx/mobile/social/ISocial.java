@@ -3,11 +3,11 @@ package org.edx.mobile.social;
 import android.app.Application.ActivityLifecycleCallbacks;
 import android.content.Intent;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 public interface ISocial extends ActivityLifecycleCallbacks {
 
-    public final OEXLogger logger = new OEXLogger(ISocial.class.getName());
+    public final Logger logger = new Logger(ISocial.class.getName());
     
     void login();
     void logout();

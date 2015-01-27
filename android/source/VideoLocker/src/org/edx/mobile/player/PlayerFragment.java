@@ -36,7 +36,7 @@ import com.subtitlessupport.utils.FormatSRT;
 import com.subtitlessupport.utils.TimedTextObject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -90,7 +90,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private boolean isVideoMessageDisplayed;
     private boolean isNetworkMessageDisplayed;
     private boolean isManualFullscreen = false;
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;

@@ -7,14 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Process;
-import android.util.Log;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 
 // adb shell am broadcast -a com.example.pkg.END_EMMA
 @SuppressLint("SdCardPath")
 public class EndEmmaBroadcast extends BroadcastReceiver {
-    protected final OEXLogger logger = new OEXLogger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onReceive(Context context, Intent intent) {

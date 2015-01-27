@@ -3,7 +3,7 @@ package org.edx.mobile.player;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.OnSwipeListener;
 
 import android.graphics.Point;
@@ -43,7 +43,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         private String videoTitle;
         private String lmsURL;
         private String videoUri;
-        private final OEXLogger logger = new OEXLogger(getClass().getName());
+        private final Logger logger = new Logger(getClass().getName());
 
         public Player() {
             init();

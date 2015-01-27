@@ -2,7 +2,7 @@ package org.edx.mobile.model.db;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.logger.OEXLogger;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -12,7 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 public class DownloadEntry implements SectionItemInterface, IVideoModel {
-    private final OEXLogger logger = new OEXLogger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     public static enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
     public static enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
