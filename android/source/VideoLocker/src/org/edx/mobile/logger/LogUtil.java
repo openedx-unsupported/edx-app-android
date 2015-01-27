@@ -14,7 +14,7 @@ class LogUtil {
      * @param context - current context passed
      */
     public static void init(Context context) {
-        boolean isDebuggable =  ( 0 != ( context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        boolean isDebuggable =  (ApplicationInfo.FLAG_DEBUGGABLE == ( context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
         LogUtil.ISDEBUG = isDebuggable;
     }
     
