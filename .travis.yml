@@ -36,8 +36,11 @@ before_script:
 
 script: 
   - ./travis-build.sh
+  - ./travis-acceptance-tests.sh
 
 # Enable caching to speed up the build
 cache:
   directories:
     - $HOME/.gradle
+    - $HOME/.m2
+    - apt

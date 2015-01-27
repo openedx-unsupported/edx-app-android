@@ -13,8 +13,6 @@ public class FileGenerator {
 		
 		File indexFile = new File(fileLocation + "/index.html");
 		
-		int JOB_ID=1;
-
 		if (!indexFile.exists()) {
 			indexFile.createNewFile();
 		} 

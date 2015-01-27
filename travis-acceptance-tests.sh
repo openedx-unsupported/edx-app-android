@@ -3,11 +3,21 @@
 # exit on error
 set -e
 
-# get current timestamp
+# create debug build
+echo "[INFO] changing directory to android/source"
+cd android/source
+echo "[INFO] Changed directory to : " 
+pwd
+echo "[INFO] running assembleProdDebug ..."
+./gradlew assembleProdDebug
+echo "[INFO] build created"
+cd ../..
+
+# get current timestamp, to be used in apk name
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 echo "Current Time : $current_time"
 
-# export keys
+# export required keys and parameters
 export SAUCE_KEY="a24b5fd3-7533-4b5e-b063-aacf75956347"
 export SAUCE_USERNAME="rohan-dhamal-clarice"
 export APK_PATH="../android/source/VideoLocker/build/outputs/apk/VideoLocker-prod-debug.apk"
