@@ -24,6 +24,7 @@ public final class Config {
 			String appPath = PropertyLoader.loadProperty("appPath").get();
 			String osVersion = PropertyLoader.loadProperty("osVersion") .get();
 			String deviceName = PropertyLoader.loadProperty("deviceName").get();
+			String sauceBuildName = PropertyLoader.loadProperty("sauceBuildName").get();
 			
 			DesiredCapabilities cap = new DesiredCapabilities();
 			
@@ -43,7 +44,7 @@ public final class Config {
 			
 			cap.setCapability("passed", true);
 			cap.setCapability("capture-html", true);
-			cap.setCapability("name","edX-test");
+			cap.setCapability("name",sauceBuildName);
 			
 			cap.setCapability("appPackage","org.edx.mobile");
 			cap.setCapability("appActivity","org.edx.mobile.view.SplashActivity");

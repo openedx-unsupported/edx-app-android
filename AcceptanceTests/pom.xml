@@ -20,6 +20,7 @@
 		<testngXml>android.xml</testngXml>
 		<sauceUser></sauceUser>
 		<sauceKey></sauceKey>
+		<sauceBuildName></sauceBuildName>
 		<deviceOS>android</deviceOS>
 		<appPath>sauce-storage:edxDebug.apk</appPath>
 		<osVersion>4.4</osVersion>

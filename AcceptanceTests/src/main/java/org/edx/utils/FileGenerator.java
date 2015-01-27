@@ -35,8 +35,7 @@ public class FileGenerator {
 		for (int i = list.length - 1; i >= 0; i--) {
 			file = new File(fileLocation + "/" + list[i]);
 			if (file.isDirectory()) {
-				bw.write("<li><a href=\"" + list[i] + "\\index.html\" target=\"_top\">" + list[i] + "</a><br>");
-				//bw.write("<script src=\"https://saucelabs.com/video-embed/"+JOB_ID+".js></script>");
+				bw.write("<li><a href=\"" + list[i] + "/index.html\" target=\"_top\">" + list[i] + "</a><br>");
 				bw.newLine();
 			}
 		}
