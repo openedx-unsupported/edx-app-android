@@ -6,6 +6,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import io.fabric.sdk.android.Fabric;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
@@ -34,6 +35,9 @@ public class MainApplication extends Application {
      * Initialize shared components
      */
     private void init() {
+        // initialize logger
+        Logger.init(this.getApplicationContext());
+
         Environment.makeInstance(this.getApplicationContext());
         RequestManager.init(this);
         createImageCache();
