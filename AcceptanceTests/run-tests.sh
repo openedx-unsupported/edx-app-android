@@ -25,7 +25,7 @@ echo "[INFO] uploading apk file ..."
 curl -u $SAUCE_USERNAME:$SAUCE_KEY -X POST -H "Content-Type: application/octet-stream" https://saucelabs.com/rest/v1/storage/$SAUCE_USERNAME/$APK_NAME?overwrite=true --data-binary @$APK_PATH
 echo "[INFO] apk uploaded"
 
-# run acceptance tests on SauceLabs
+# run acceptance tests on SauceLabs in a background thread
 echo "[INFO] running tests ..."
 mvn test -DappPath=sauce-storage:$APK_NAME -DosVersion="4.4"  -DdeviceOS=android -DdeviceName="Android Emulator" -DtestngXml=android.xml -DsauceKey=$SAUCE_KEY -DsauceUser=$SAUCE_USERNAME -DsauceBuildName=$APK_NAME
 echo "[INFO] test run finished!"
