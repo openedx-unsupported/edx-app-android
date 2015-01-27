@@ -17,6 +17,10 @@ cd ../..
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 echo "Current Time : $current_time"
 
+# enter tests project folder
+cd AcceptanceTests
+pwd
+
 # export required keys and parameters
 export SAUCE_KEY="a24b5fd3-7533-4b5e-b063-aacf75956347"
 export SAUCE_USERNAME="rohan-dhamal-clarice"
