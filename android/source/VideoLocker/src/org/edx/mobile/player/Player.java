@@ -43,7 +43,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         private String videoTitle;
         private String lmsURL;
         private String videoUri;
-        private final Logger logger = new Logger(getClass().getName());
+        private static final Logger logger = new Logger(Player.class.getName());
 
         public Player() {
             init();
