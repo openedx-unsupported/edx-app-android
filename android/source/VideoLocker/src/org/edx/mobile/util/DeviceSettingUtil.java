@@ -7,7 +7,7 @@ import android.provider.Settings.SettingNotFoundException;
 import org.edx.mobile.logger.Logger;
 
 public class DeviceSettingUtil {
-    private static final Logger logger = new Logger(Logger.class.getName());
+    private static final Logger logger = new Logger(DeviceSettingUtil.class.getName());
 
     /**
      * Returns true if device screen rotation is turned ON, false otherwise.

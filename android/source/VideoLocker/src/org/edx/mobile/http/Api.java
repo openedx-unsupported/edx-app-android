@@ -475,7 +475,6 @@ public class Api {
             authError = gson.fromJson(json, AuthErrorResponse.class);
         } catch(Exception ex) {
             // nothing to do here
-            logger.error(ex);
         }
         if (authError != null && authError.detail != null) {
             throw new AuthException(authError);
