@@ -17,8 +17,6 @@ import java.util.List;
  */
 public interface IDatabase {
     
-    public static final String TAG = "Database";
-    
     /**
      * Releases this database object and all its handles.
      */

@@ -62,7 +62,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
                 if(videoData.isDownloaded()){

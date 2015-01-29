@@ -1,14 +1,17 @@
 package org.edx.mobile.view.custom;
 
+import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import org.edx.mobile.R;
-
 public class ETextView extends TextView {
+
+    private final Logger logger = new Logger(getClass().getName());
 
     public ETextView(Context context) {
         super(context);
@@ -36,7 +39,7 @@ public class ETextView extends TextView {
             Typeface font = FontFactory.getInstance().getFont(context,fontFileName);
             setTypeface(font);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         } finally {
         //  a.recycle();
         }

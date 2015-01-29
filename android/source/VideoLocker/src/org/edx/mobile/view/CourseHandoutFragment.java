@@ -71,7 +71,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                     .getSerializable("enrollment");
             loadData(courseData);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -89,14 +89,14 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                         showEmptyHandoutMessage();
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                     showEmptyHandoutMessage();
                 }
             }
 
             @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 showEmptyHandoutMessage();
             }
         };
@@ -107,7 +107,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
             segIO.screenViewsTracking(enrollment.getCourse().getName()+
                     " - Handouts");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -120,7 +120,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -134,7 +134,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

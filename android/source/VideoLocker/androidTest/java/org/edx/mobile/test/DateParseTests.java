@@ -32,7 +32,7 @@ public class DateParseTests extends BaseTestCase {
             Date date = input_format.parse(strDate);
             return date;
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

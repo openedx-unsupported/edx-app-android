@@ -30,13 +30,14 @@ public abstract class GetCourseInfoTask extends Task<CourseInfoModel> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 return api.getCourseInfo(enrollment.getCourse().getCourse_about(), false);
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }
