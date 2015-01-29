@@ -74,7 +74,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
                 

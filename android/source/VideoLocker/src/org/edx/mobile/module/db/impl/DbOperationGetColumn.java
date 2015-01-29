@@ -34,7 +34,7 @@ class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
                     Integer column = c.getInt(0);
                     list.add((T) column);
                 } else {
-                    Log.e(getClass().getName(), "class types does NOT match for: " + columnType);
+                    logger.warn("Class types does NOT match for: " + columnType);
                 }
             } while (c.moveToNext());
         }

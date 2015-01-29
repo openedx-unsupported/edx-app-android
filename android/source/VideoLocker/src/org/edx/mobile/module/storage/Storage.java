@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -25,12 +26,10 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.util.LogUtil;
 
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.util.Log;
 
 public class Storage implements IStorage {
 
@@ -38,6 +37,7 @@ public class Storage implements IStorage {
     private IDatabase db;
     private IDownloadManager dm;
     private UserPrefs pref;
+    private final Logger logger = new Logger(getClass().getName());
 
     public Storage(Context context) {
         this.context = context;
@@ -87,14 +87,15 @@ public class Storage implements IStorage {
             @Override
             public void onResult(Integer noOfRows) {
                 if (noOfRows > 1) {
-                    Log.w(TAG, "should have updated only one video, but seems more than one videos are updated");
+                    logger.warn("Should have updated only one video, " +
+                            "but seems more than one videos are updated");
                 }
-                LogUtil.log(TAG, "video download info updated for " + noOfRows + " videos");
+                logger.debug("Video download info updated for " + noOfRows + " videos");
             }
 
             @Override
             public void onFail(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         });
 
@@ -131,18 +132,18 @@ public class Storage implements IStorage {
 
                 if (file.exists()) {
                     if (file.delete()) {
-                        LogUtil.error(Storage.class.getName(), "deleted: " + file.getPath());
+                        logger.debug("Deleted: " + file.getPath());
                         return true;
                     } else {
-                        LogUtil.error(Storage.class.getName(), "delete failed: " + file.getPath());
+                        logger.warn("Delete failed: " + file.getPath());
                     }
                 } else {
-                    LogUtil.error(Storage.class.getName(), "delete failed, file does NOT exist: " + file.getPath());
+                    logger.warn("Delete failed, file does NOT exist: " + file.getPath());
                     return true;
                 }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return false;
@@ -172,6 +173,7 @@ public class Storage implements IStorage {
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
             callback.sendException(ex);
+            logger.error(ex);
         }
     }
 
@@ -218,6 +220,7 @@ public class Storage implements IStorage {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
+            logger.error(ex);
             callback.sendException(ex);
         }
     }
@@ -259,7 +262,7 @@ public class Storage implements IStorage {
                 return downloadedCourseList;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -294,7 +297,7 @@ public class Storage implements IStorage {
                 return recentVideolist;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -310,7 +313,7 @@ public class Storage implements IStorage {
             }
             return video;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         return null;
     }
@@ -329,6 +332,7 @@ public class Storage implements IStorage {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
             callback.sendResult(Integer.valueOf(progress));
         } catch(Exception ex) {
+            logger.error(ex);
             callback.sendException(ex);
         }
     }
@@ -385,7 +389,7 @@ public class Storage implements IStorage {
             }                   // For loop for Chapters
             return list;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         
         return null;
@@ -417,24 +421,23 @@ public class Storage implements IStorage {
                                     .parseInt(r
                                             .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                             e.duration = duration/1000;
-                            LogUtil.log(getClass().getName(), "duration updated to : "
-                                    + duration);
+                            logger.debug("Duration updated to : " + duration);
                             in.close();
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                     }
-                    // rowsAffected = updateByDmId(dmid, e);
                     rowsAffected = db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
                 }
 
             } else {
                 // download not yet successful
-                LogUtil.log(getClass().getName(), "download not yet completed");
+                logger.debug("Download not yet completed");
             }
         }catch(Exception e){
             callback.sendException(e);
+            logger.error(e);
         }
     }
 

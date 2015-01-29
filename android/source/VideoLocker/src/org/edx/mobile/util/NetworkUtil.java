@@ -12,7 +12,11 @@ import android.net.NetworkInfo.State;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
+import org.edx.mobile.logger.Logger;
+
 public class NetworkUtil {
+
+    private static final Logger logger = new Logger(NetworkUtil.class.getName());
 
     /**
      * Returns true if device is connected to wifi or mobile network, false
@@ -29,7 +33,7 @@ public class NetworkUtil {
         if (infoWifi != null) {
             State wifi = infoWifi.getState();
             if (wifi == NetworkInfo.State.CONNECTED) {
-                LogUtil.log(NetworkUtil.class.getName(), "wifi is connected");
+                logger.debug("Wifi is connected");
                 return true;
             }
         }
@@ -38,12 +42,12 @@ public class NetworkUtil {
         if (infoMobile != null) {
             State mobile = infoMobile.getState();
             if (mobile == NetworkInfo.State.CONNECTED) {
-                LogUtil.log(NetworkUtil.class.getName(), "mobile data is connected");
+                logger.debug("Mobile data is connected");
                 return true;
             }
         }
 
-        LogUtil.log(NetworkUtil.class.getName(), "network not available");
+        logger.debug("Network not available");
         return false;
     }
     
@@ -104,7 +108,9 @@ public class NetworkUtil {
                     }
                 }
             }
-        } catch (SocketException ex) {}
+        } catch (SocketException ex) {
+            logger.error(ex);
+        }
         return ipAddress;
     }
     

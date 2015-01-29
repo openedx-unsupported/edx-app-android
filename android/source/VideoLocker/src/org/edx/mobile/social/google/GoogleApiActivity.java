@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.util.LogUtil;
 
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
@@ -59,18 +58,18 @@ public class GoogleApiActivity extends BaseFragmentActivity implements Connectio
                 String accessToken = GoogleAuthUtil.getToken(GoogleApiActivity.this,
                         accountName,
                         "oauth2:" + Scopes.PLUS_LOGIN);
-                LogUtil.log("Google", "accessToken: " + accessToken);
+                logger.debug("Google accessToken: " + accessToken);
                 runOnUiThread(new Runnable() {
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Signed in to Google", Toast.LENGTH_LONG).show();
                     }
                 });
             } catch (UserRecoverableAuthException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (GoogleAuthException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     };
@@ -142,6 +141,7 @@ public class GoogleApiActivity extends BaseFragmentActivity implements Connectio
                 // ConnectionResult.
                 mIntentInProgress = false;
                 mGoogleApiClient.connect();
+                logger.error(e);
             }
         }
     }
@@ -211,7 +211,7 @@ public class GoogleApiActivity extends BaseFragmentActivity implements Connectio
         if (mGoogleApiClient.isConnected()) {
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
-            LogUtil.log("Google", "explicitly disconnected");
+            logger.debug("Explicitly disconnected");
         }
     }
 
