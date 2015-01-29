@@ -3,6 +3,9 @@ jdk: oraclejdk7
 env:
   matrix:
     - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
+  global:
+    # Amount of memory granted to Gradle JVM
+    - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 
 android:
   components:
@@ -31,11 +34,13 @@ before_script:
   - emulator -avd test -no-skin -no-audio -no-window &
   - adb wait-for-device
   - adb shell input keyevent 82 &
-  - chmod +x travis-build.sh
   - chmod +x android/source/gradlew
+  - chmod +x travis-build.sh
+  - chmod +x travis-acceptance-tests.sh
 
 script: 
   - ./travis-build.sh
+  - ./travis-acceptance-tests.sh
 
 # Enable caching to speed up the build
 cache:
