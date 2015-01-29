@@ -85,6 +85,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                         startDt = context.getString(R.string.label_starting_from)
                                 + " - " + dateformat.format(startDate);                 
                         holder.starting_from.setText(startDt);
+                        holder.starting_from_layout.setVisibility(View.VISIBLE);
                     }else{
                         holder.starting_from_layout.setVisibility(View.GONE);
                     }
@@ -94,6 +95,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                         endDt = context.getString(R.string.label_ended)
                                 + " - " + dateformat.format(endDate);
                         holder.starting_from.setText(endDt);
+                        holder.starting_from_layout.setVisibility(View.VISIBLE);
                     }else{
                         holder.starting_from_layout.setVisibility(View.GONE);
                     }
@@ -102,6 +104,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                         endDt = context.getString(R.string.label_ending_on)
                                 + " - " + dateformat.format(endDate);
                         holder.starting_from.setText(endDt);
+
                     }else{
                         holder.starting_from_layout.setVisibility(View.GONE);
                     }

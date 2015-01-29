@@ -88,4 +88,14 @@
         android:visibility="gone"
         android:gravity="center" />
 
+    <LinearLayout
+        android:id="@+id/course_not_started_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <include layout="@layout/panel_course_not_started_notify" />
+    </LinearLayout>
+
 </RelativeLayout>
