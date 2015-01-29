@@ -1,17 +1,17 @@
 package org.edx.mobile.module.analytics;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import android.content.Context;
-
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import org.edx.mobile.logger.Logger;
 
 class ISegmentImpl implements ISegment {
 
     private SegmentTracker tracker;
+    private final Logger logger = new Logger(getClass().getName());
 
     public ISegmentImpl(Context context) {
         this(context, null);
@@ -25,7 +25,7 @@ class ISegmentImpl implements ISegment {
                 this.tracker = new SegmentTracker(context);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -68,7 +68,7 @@ class ISegmentImpl implements ISegment {
             tracker.identify(userID, traits, new Options());
             return traits;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -89,7 +89,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.LOADED_VIDEO, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }
@@ -113,7 +113,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.PLAYED_VIDEO , vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -136,7 +136,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.PAUSED_VIDEO, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -160,7 +160,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.STOPPED_VIDEO, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -194,7 +194,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.SEEK_VIDEO, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -218,7 +218,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.SHOW_TRANSCRIPT, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -243,7 +243,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.HIDE_TRANSCRIPT, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -272,7 +272,7 @@ class ISegmentImpl implements ISegment {
             vEvent.data.putValue(Keys.CODE, Values.MOBILE);
             return vEvent;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return new VideoEvent();
     }
@@ -293,7 +293,7 @@ class ISegmentImpl implements ISegment {
             }
             return vEvent;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return new VideoEvent();
     }
@@ -310,7 +310,7 @@ class ISegmentImpl implements ISegment {
             bd = bd.setScale(places, RoundingMode.HALF_UP);
             return bd.doubleValue();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return 0.00;
     }
@@ -336,7 +336,7 @@ class ISegmentImpl implements ISegment {
 
             return cxtProps;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
             return new Properties();
         }
     }
@@ -367,7 +367,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.VIDEO_DOWNLOADED, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -396,7 +396,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.BULK_DOWNLOAD_SECTION, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -427,7 +427,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.BULK_DOWNLOAD_SUBSECTION, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -450,7 +450,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.SINGLE_VIDEO_DOWNLOAD, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -476,7 +476,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.SCREEN_TOGGLED, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return null;
@@ -528,7 +528,7 @@ class ISegmentImpl implements ISegment {
             tracker.screen("", screenName, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }
@@ -551,7 +551,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.BROWSER_LAUNCHED, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -572,7 +572,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.LANGUAGE_CLICKED, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -587,7 +587,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.USER_NO_ACCOUNT, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -603,7 +603,7 @@ class ISegmentImpl implements ISegment {
             tracker.track(Keys.FIND_COURSES, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

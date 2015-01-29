@@ -1,12 +1,12 @@
 package org.edx.mobile.task;
 
-import java.util.ArrayList;
+import android.content.Context;
 
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
-import android.content.Context;
+import java.util.ArrayList;
 
 public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCoursesResponse>> {
 
@@ -37,14 +37,16 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
                     });
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
             
             return api.getEnrolledCourses();
         } catch(AuthException ex) {
             handle(ex);
+            logger.error(ex);
         } catch(Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

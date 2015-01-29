@@ -1,12 +1,12 @@
 package org.edx.mobile.model.api;
 
-import java.io.Serializable;
-import java.util.Date;
+import android.content.Context;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.util.DateUtil;
 
-import android.content.Context;
+import java.io.Serializable;
+import java.util.Date;
 
 @SuppressWarnings("serial")
 public class CourseEntry implements Serializable {
