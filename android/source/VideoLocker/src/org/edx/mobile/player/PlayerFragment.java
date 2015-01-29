@@ -36,6 +36,7 @@ import com.subtitlessupport.utils.FormatSRT;
 import com.subtitlessupport.utils.TimedTextObject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -48,7 +49,6 @@ import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.util.DeviceSettingUtil;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 
@@ -64,7 +64,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
 
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME = 1000;
-    private static final String TAG = "PlayerFragment";
     protected IPlayer player;
     private boolean isPrepared = false;
     private boolean stateSaved = false;
@@ -83,7 +82,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
     private TimedTextObject srt;
-    //  private int subtitleSelected = -1;
     private String languageSubtitle;
     private LayoutInflater layoutInflater;
     private TranscriptModel transcript;
@@ -92,6 +90,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private boolean isVideoMessageDisplayed;
     private boolean isNetworkMessageDisplayed;
     private boolean isManualFullscreen = false;
+    private final Logger logger = new Logger(getClass().getName());
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
@@ -99,12 +98,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    // mark last current position
-                    int pos = player.getCurrentPosition();
-                    if (pos > 0 && pos != lastSavedPosition) {
-                        lastSavedPosition = pos;
-                        callback.saveCurrentPlaybackPosition(pos);
-                        LogUtil.log("tick", "current position saved: " + pos);
+                    if(player!=null){
+                        // mark last current position
+                        int pos = player.getCurrentPosition();
+                        if (pos > 0 && pos != lastSavedPosition) {
+                            lastSavedPosition = pos;
+                            callback.saveCurrentPlaybackPosition(pos);
+                            logger.debug("Current position saved: " + pos);
+                        }
                     }
                 }
 
@@ -163,7 +164,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             }
             reAttachPlayEventListener();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -204,7 +205,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             };
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -215,35 +216,35 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 // do UI operations only if the fragment is resumed
                 if (orientation.isLandscape()) {
                     if (isScreenLandscape()) {
-                        LogUtil.log("test", "allowing sensor from landscape rotation");
+                        logger.debug("Allowing sensor from landscape rotation");
                         isManualFullscreen = false;
                         allowSensorOrientation();
                     }
                 } else if (orientation.isPortrait()) {
                     if ( !isScreenLandscape()) {
-                        LogUtil.log("test", "allowing sensor from portrait rotation");
+                        logger.debug("Allowing sensor from portrait rotation");
                         isManualFullscreen = false;
                         allowSensorOrientation();
                     }
                 }
             } else {
-                LogUtil.log("test", "locking to portrait as Device Screen Rotation is OFF");
+                logger.debug("Locking to portrait as Device Screen Rotation is OFF");
                 // lock to portrait
                 if ( !isManualFullscreen) {
                     exitFullScreen();
                 } else {
-                    LogUtil.log("test", "You are in manual fullscreen mode");
+                    logger.debug("You are in manual fullscreen mode");
                 }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        LogUtil.log(TAG, "player fragment start");
+        logger.debug("Player fragment start");
         
         stateSaved = false;
         try{
@@ -260,7 +261,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 showNetworkError();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -293,7 +294,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     } 
 
@@ -322,8 +323,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 // release the player instance
                 player.release();
                 player = null;
-
-                LogUtil.log(getClass().getName(), "player detached, reset and released");
+                logger.debug("player detached, reset and released");
             }
         }
     }
@@ -337,7 +337,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 getView().findViewById(R.id.progress).setVisibility(View.VISIBLE);
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -345,18 +345,18 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         try {
             getView().findViewById(R.id.progress).setVisibility(View.GONE);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        LogUtil.log(getClass().getName(), "saving state ...");
+        logger.debug("Saving state ...");
         stateSaved = true;
         if(player!=null){
             // hold on until activity is being destroyed, otherwise we assume next call would be restart()
             boolean changingConfig = getActivity().isChangingConfigurations();
-            LogUtil.log(getClass().getName(), "player fragment changing config?  =" + changingConfig);
+            logger.debug("Player fragment changing config?  =" + changingConfig);
             if ( !changingConfig) {
                 // you MUST PAUSE the video  
                 // only if screen is stopping due to any reason other than CONFIGURATION CHANGE
@@ -366,7 +366,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             player.freeze();
             outState.putSerializable("player", player);
         }
-        //outState.putBoolean("isMessageDisplayed", isMessageDisplayed);
         super.onSaveInstanceState(outState);
     }
 
@@ -392,7 +391,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         try {
             player.reset();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         if(video!=null){
@@ -411,7 +410,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
             languageSubtitle = pm.getString(PrefManager.Key.TRANSCRIPT_LANGUAGE);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         // request focus on audio channel, as we are starting playback
@@ -433,7 +432,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             Log.d("test", "playing [seek=" + seekTo + "]: " + path);
             player.setUriAndPlay(path, seekTo);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -463,7 +462,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 //error("failed to set controller, player is NULL")
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -513,7 +512,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                         videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         hideCCPopUp();
@@ -527,7 +526,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             errorView.setVisibility(View.GONE);
             isNetworkMessageDisplayed = false;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -569,7 +568,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -596,7 +595,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 hideClosedCaptioning();
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -606,7 +605,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             errorView.setVisibility(View.GONE);
             isVideoMessageDisplayed = false;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -633,7 +632,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             segIO.trackVideoLoading(videoEntry.videoId, videoEntry.eid, 
                     videoEntry.lmsUrl);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         // mark prepared and allow orientation
@@ -669,7 +668,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                         , videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -682,7 +681,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                         current_time, videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         if (callback != null) {
@@ -700,7 +699,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -711,7 +710,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 BrowserUtil.open(getActivity(), url);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -731,7 +730,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 exitFullScreen();
             }
         } else {
-            LogUtil.error(getClass().getName(), "player not prepared ?? full screnn will NOT work!");
+            logger.debug("Player not prepared ?? full screnn will NOT work!");
         }
     }
 
@@ -746,7 +745,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 startActivity(i);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -780,10 +779,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private boolean isScreenLandscape() {
         try {
             int orientation = getResources().getConfiguration().orientation;
-            Log.d("test", "current orientation = " + orientation);
+            logger.debug("Current orientation = " + orientation);
             return (orientation == Configuration.ORIENTATION_LANDSCAPE);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         return false;
     }
@@ -822,7 +821,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -879,7 +878,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 break;
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -909,8 +908,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                     if(srt!=null){
                         Collection<Caption> subtitles = srt.captions.values();
                         for (Caption caption : subtitles) {
-                            /*LogUtil.log("Caption", "caption "+caption.start.mseconds 
-                                    +" "+caption.end.mseconds+" "+caption.content);*/
                             if (currentPos >= caption.start.mseconds
                                     && currentPos <= caption.end.mseconds) {
                                 setClosedCaptionData(caption);
@@ -925,7 +922,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
                 subtitleDisplayHandler.postDelayed(this, 100);
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     };
@@ -972,7 +969,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                     subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, DELAY_TIME);
                 }  
             }catch (Exception localException) {
-                localException.printStackTrace();
+                logger.error(localException);
             }
 
         }
@@ -996,7 +993,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                     subtitleFetchHandler.post(this.subtitleFetchProcessesor);
             }
         } catch (Exception localException) {
-            localException.printStackTrace();
+            logger.error(localException);
         }
     }
 
@@ -1054,7 +1051,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1068,7 +1065,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 subTitlesTv.setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1083,7 +1080,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 subTitlesTv.setVisibility(View.INVISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1096,7 +1093,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             hideClosedCaptioning();
             fetchSubtitlesTask();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1143,7 +1140,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.VISIBLE);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         showSettingsPopup(p);
     }
@@ -1153,7 +1150,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             ImageView iv = (ImageView) getActivity().findViewById(R.id.iv_transparent_bg);
             iv.setVisibility(View.GONE);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1220,7 +1217,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1265,7 +1262,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                             PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
                             pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, languageSubtitle);
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                         //subtitleSelected = pos;
                         try{
@@ -1275,7 +1272,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                                         languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
 
                         displaySrtData();
@@ -1285,7 +1282,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                             player.getController().setAutoHide(true);
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
             };
@@ -1333,7 +1330,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                             PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
                             pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, getString(R.string.lbl_cc_cancel));
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                         try{
                             if(player!=null){
@@ -1342,7 +1339,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
 
                         if(player!=null){
@@ -1350,12 +1347,12 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                             player.getController().setAutoHide(true);
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1395,7 +1392,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                                         languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                         displaySrtData();
                         if(player!=null){
@@ -1403,7 +1400,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                             player.getController().setAutoHide(true);
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
 
@@ -1420,14 +1417,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                         if(player!=null){
                             player.getController().setAutoHide(true);
                             player.getController().setSettingsBtnDrawable(false);
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
 
                 }
@@ -1437,7 +1434,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             ccFragment.show(getFragmentManager(), "dialog");
             ccFragment.setCancelable(true);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1452,7 +1449,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 settingPopup.dismiss();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1469,7 +1466,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             }
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1494,7 +1491,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                                             videoEntry.eid, videoEntry.lmsUrl);
                                 }
                             }catch(Exception e){
-                                e.printStackTrace();
+                                logger.error(e);
                             }
                             if(subtitleDisplayHandler==null){
                                 subtitleDisplayHandler = new Handler();
@@ -1505,7 +1502,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();    
+            logger.error(e);
         }
     }
 
@@ -1521,7 +1518,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                     TypedValue.COMPLEX_UNIT_DIP, point , r.getDisplayMetrics());
             return val;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return 0;
     }
@@ -1537,7 +1534,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
                     videoEntry.eid, videoEntry.lmsUrl);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1545,7 +1542,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
      * Displays controller is in PORTRAIT MODE, otherwise hides controller.
      */
     private void updateController(String source) {
-        LogUtil.log(TAG, "updating controller from : " + source);
+        logger.debug("Updating controller from : " + source);
         
         if (player != null) {
             // controller should also refresh, so hide and show it
@@ -1553,7 +1550,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             
             // if this is LANDSCAPE mode, then let controller be HIDDEN by default
             if (player.isFullScreen()) {
-                LogUtil.log(TAG, "player controller hidden because in LANDSCAPE mode");
+                logger.debug("Player controller hidden because in LANDSCAPE mode");
                 
                 // by some reason, player is still showing controller may be from some other thread ?
                 // so hide controller after a delay
@@ -1567,7 +1564,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                 }, 50 * DELAY_TIME);
             } else {
                 player.showController();
-                LogUtil.log(TAG, "player controller shown because in PORTRAIT mode");
+                logger.debug("Player controller shown because in PORTRAIT mode");
             }
         }
     }

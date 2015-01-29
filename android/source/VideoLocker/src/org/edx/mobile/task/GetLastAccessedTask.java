@@ -22,6 +22,7 @@ public abstract class GetLastAccessedTask extends Task<SyncLastAccessedSubsectio
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

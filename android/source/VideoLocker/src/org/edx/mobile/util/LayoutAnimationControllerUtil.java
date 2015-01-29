@@ -1,14 +1,16 @@
 package org.edx.mobile.util;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
+
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 
 public class LayoutAnimationControllerUtil {
     private View messageView;
-
     private Handler mHideHandler = new Handler();
+    private final Logger logger = new Logger(getClass().getName());
 
     public LayoutAnimationControllerUtil(View notificationView) {
         messageView = notificationView;
@@ -37,7 +39,7 @@ public class LayoutAnimationControllerUtil {
             animate.setFillAfter(true);
             view.startAnimation(animate);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -50,7 +52,7 @@ public class LayoutAnimationControllerUtil {
             animate.setFillAfter(true);
             messageView.startAnimation(animate);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

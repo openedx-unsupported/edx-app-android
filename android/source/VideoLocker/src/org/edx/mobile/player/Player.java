@@ -3,7 +3,7 @@ package org.edx.mobile.player;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.OnSwipeListener;
 
 import android.graphics.Point;
@@ -22,7 +22,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
 OnPreparedListener, PlayerController.MediaPlayerControl, OnBufferingUpdateListener,
 OnCompletionListener, OnInfoListener, IPlayer {
 
-    public static final String TAG = "Player";
     // Player states
     public static enum PlayerState { RESET, URI_SET, PREPARED, 
         PLAYING, PAUSED, ERROR, LAGGING, PLAYBACK_COMPLETE, STOPPED};
@@ -44,6 +43,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         private String videoTitle;
         private String lmsURL;
         private String videoUri;
+        private static final Logger logger = new Logger(Player.class.getName());
 
         public Player() {
             init();
@@ -81,8 +81,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     callback.onPlaybackComplete();
                 }
                 seekTo(0);
-                //hideController();
-                LogUtil.log(TAG, "playback complete");
+                logger.debug("Playback complete");
             }
         }
 
@@ -103,10 +102,10 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.PAUSED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                LogUtil.log(TAG, "can pause = TRUE");
+                logger.debug("Can pause = TRUE");
                 return true;
             }
-            LogUtil.log(TAG, "can pause = FALSE");
+            logger.debug("Can pause = FALSE");
             return false;
         }
 
@@ -118,10 +117,10 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.PAUSED
                     || state == PlayerState.LAGGING)
                     && isSeekable) {
-                LogUtil.log(TAG, "can seek back = TRUE");
+                logger.debug("Can seek back = TRUE");
                 return true;
             }
-            LogUtil.log(TAG, "can seek back = FALSE");
+            logger.debug("Can seek back = FALSE");
             return false;
         }
 
@@ -133,10 +132,10 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.PAUSED
                     || state == PlayerState.LAGGING)
                     && isSeekable) {
-                LogUtil.log(TAG, "can seek forward = TRUE");
+                logger.debug("Can seek forward = TRUE");
                 return true;
             }
-            LogUtil.log(TAG, "can seek forward = FALSE");
+            logger.debug("Can seek forward = FALSE");
             return false;
         }
 
@@ -191,19 +190,19 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 if (callback != null) {
                     callback.onVideoNotSeekable();
                 }
-                LogUtil.log("Player", "track not seekable");
+                logger.debug("Track not seekable");
             } else if (what == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) {
-                LogUtil.log("Player", "metadata update received");
+                logger.debug("Metadata update received");
             } else if (what == MediaPlayer.MEDIA_INFO_UNKNOWN) {
-                LogUtil.log("Player", "unknown info");
+                logger.debug("Unknown info");
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
                 state = PlayerState.LAGGING;
                 if (callback != null) {
                     callback.onVideoLagging();
                 }
-                LogUtil.log("Player", "video track lagging");
+                logger.debug("Video track lagging");
             }
-            LogUtil.log("Player", "INFO: what=" + what + ";extra=" + extra);
+            logger.debug("INFO: what=" + what + ";extra=" + extra);
             return true;
         }
 
@@ -218,14 +217,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
             }
 
             if (what == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
-                LogUtil.log("Player", "ERROR: unknown");
+                logger.warn("ERROR: unknown");
             } else if (what == MediaPlayer.MEDIA_ERROR_SERVER_DIED) {
-                LogUtil.log("Player", "ERROR: server died");
+                logger.warn("ERROR: server died");
             } else if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-                LogUtil.log("Player",
-                        "ERROR: video container invalid for progressive playback");
+                logger.warn("ERROR: video container invalid for progressive playback");
             }
-            LogUtil.error("Player", "ERROR: what=" + what + ";extra=" + extra);
+            logger.warn("ERROR: what=" + what + ";extra=" + extra);
 
             // return TRUE here, so that onCompletionListener will NOT be called
             return true;
@@ -243,7 +241,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
         @Override
         public void restart() throws Exception {
-            LogUtil.log(TAG, "RestartFreezePosition=" + seekToWhenPrepared);
+            logger.debug("RestartFreezePosition=" + seekToWhenPrepared);
 //          int seekTo = lastCurrentPosition;
             int seekTo = seekToWhenPrepared;
             lastCurrentPosition = 0;
@@ -322,18 +320,18 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
                     try {
-                        LogUtil.log("Player", "player state=" + state);
+                        logger.debug("Player state=" + state);
                         setDisplay(holder);
                         // keep screen ON
                         setScreenOnWhilePlaying(true);
-                        LogUtil.log("Player", "surface created, holder set");
+                        logger.debug("Surface created, holder set");
 
                         // preview last shown frame if not playing
                         if (!isPlaying()) {
                             seekTo(lastCurrentPosition);
                         }
                     } catch(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);;
                     }
                 }
 
@@ -368,7 +366,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     if (controller != null 
                             && state != PlayerState.RESET
                             && state != PlayerState.URI_SET) {
-                        LogUtil.log("Player", "player touched");
+                        logger.debug("Player touched");
                         if (controller.isShowing()) {
                             controller.hide();
                         } else {
@@ -404,7 +402,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             if (this.controller != null) {
                 this.controller.setMediaPlayer(this);
-                LogUtil.log("Player", "controller set");
+                logger.debug("Controller set");
 
                 // allow show/hide on touch of this controller also
                 //          this.controller.setOnTouchListener(this);
@@ -418,7 +416,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 controller.setTitle(videoTitle);
                 controller.setLmsUrl(lmsURL);
                 controller.show();
-                LogUtil.log(TAG, "player controller shown");
+                logger.debug("Player controller shown");
             }
         }
 
@@ -458,14 +456,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
             if(lastCurrentPosition!=0){
                 seekToWhenPrepared = lastCurrentPosition;
             }
-            LogUtil.log(TAG, "freezePosition=" + lastFreezePosition);
+            logger.debug("FreezePosition=" + lastFreezePosition);
         }
 
         @Override
         public void unfreeze() {
             if (isFreeze) {
-                LogUtil.log(TAG, "unFreezePosition=" + lastFreezePosition);
-                //          lastCurrentPosition = lastFreezePosition;
+                logger.debug("unFreezePosition=" + lastFreezePosition);
                 lastCurrentPosition = 0;
                 seekTo(lastFreezePosition);
                 if (freezeState == PlayerState.PLAYING
@@ -521,12 +518,12 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     callback.onPlaybackStarted();
                 }
                 state = PlayerState.PLAYING;
-                LogUtil.log(TAG, "playback started");
+                logger.debug("Playback started");
 
                 // reload controller
                 showController();
             } else {
-                LogUtil.log(TAG, "cannot start");
+                logger.warn("Cannot start");
             }
         }
 
@@ -540,9 +537,9 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 super.stop();
                 state = PlayerState.STOPPED;
 
-                LogUtil.log(TAG, "playback stopped");
+                logger.debug("Playback stopped");
             } else {
-                LogUtil.log(TAG, "cannot stop");
+                logger.warn("Playback cannot stop");
             }
         }
 
@@ -555,9 +552,9 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     callback.onPlaybackPaused();
                 }
 
-                LogUtil.log(TAG, "playback paused");
+                logger.debug("Playback paused");
             } else {
-                LogUtil.log(TAG, "cannot pause");
+                logger.warn("Playback scannot pause");
             }
         }
 
@@ -573,7 +570,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     && (delta < 10)  ) {
                 // no need to perform seek if current position is almost same as seekTo
                 // %10 is used to skip the difference of 10 milliseconds
-                LogUtil.log(TAG, "Skipping seek to " + msec + " from " 
+                logger.debug("Skipping seek to " + msec + " from "
                         + lastCurrentPosition + " ; state=" + state);
                 return;
             }
@@ -588,20 +585,20 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                LogUtil.log(TAG, "seeking to " + msec + " from " 
+                logger.debug("seeking to " + msec + " from "
                         + lastCurrentPosition + " ; state=" + state);
                 super.seekTo(msec);
                 lastCurrentPosition = msec;
-                LogUtil.log(TAG, "playback seeked");
+                logger.debug("playback seeked");
 
                 try {
                     // wait for a while, so that Player gets into a stable state after seek
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             } else {
-                LogUtil.log(TAG, "cannot seek");
+                logger.warn("Cannot seek");
             }
         }
 
@@ -617,7 +614,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     lastCurrentPosition = super.getCurrentPosition();
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);;
             }
 
             return lastCurrentPosition;
@@ -635,7 +632,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     lastDuration = super.getDuration();
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
             return lastDuration;
         }
@@ -644,20 +641,20 @@ OnCompletionListener, OnInfoListener, IPlayer {
         public boolean isPlaying() {
             if (state == PlayerState.PLAYING
                     || state == PlayerState.LAGGING) {
-                LogUtil.log(TAG, "isPlaying = TRUE");
+                logger.debug("isPlaying = TRUE");
                 return super.isPlaying();
             }
-            LogUtil.log(TAG, "isPlaying = FALSE; state=" + state);
+            logger.debug("isPlaying = FALSE; state=" + state);
             return false;
         }
 
         @Override
         public boolean isPaused() {
             if (state == PlayerState.PAUSED) {
-                LogUtil.log(TAG, "isPaused = TRUE");
+                logger.debug("isPaused = TRUE");
                 return true;
             }
-            LogUtil.log(TAG, "isPaused = FALSE; state=" + state);
+            logger.debug("isPaused = FALSE; state=" + state);
             return false;
         }
 
@@ -684,6 +681,5 @@ OnCompletionListener, OnInfoListener, IPlayer {
         if(callback!=null){
             callback.callPlayerSeeked(previousPos, nextPos, isRewindClicked);
         }
-
     }
 }

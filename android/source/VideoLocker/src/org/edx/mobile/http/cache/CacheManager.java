@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.IOUtils;
-import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Sha1Util;
 
 import android.content.Context;
@@ -17,10 +17,11 @@ import android.content.Context;
 public class CacheManager {
 
     private File cacheFolder;
+    protected final Logger logger = new Logger(getClass().getName());
 
     public CacheManager(Context context) {
         if (context == null) {
-            LogUtil.error(getClass().getName(), "Context must not be NULL");
+            logger.warn("Context must not be NULL");
         }
         cacheFolder = new File(context.getFilesDir(), "http-cache");
         if (!cacheFolder.exists()) {
@@ -43,15 +44,15 @@ public class CacheManager {
         FileOutputStream out = new FileOutputStream(file);
         out.write(response.getBytes());
         out.close();
-        LogUtil.log(getClass().getName(), "cache.put=" + hash);
+        logger.debug("Cache.put = " + hash);
     }
 
     public String get(String url) throws IOException, NoSuchAlgorithmException {
         String hash = Sha1Util.SHA1(url);
         File file = new File(cacheFolder, hash);
         
-        if (!file.exists()) { 
-            LogUtil.log(getClass().getName(), "cache.get failed, not cached");
+        if (!file.exists()) {
+            logger.debug("Cache.get failed, not cached");
             // not in cache
             return null;
         }
@@ -59,7 +60,7 @@ public class CacheManager {
         FileInputStream in = new FileInputStream(file);
         String cache = IOUtils.toString(in, Charset.defaultCharset());
         in.close();
-        LogUtil.log(getClass().getName(), "cache.get=" + hash);
+        logger.debug("Cache.get = " + hash);
         return cache;
     }
 }

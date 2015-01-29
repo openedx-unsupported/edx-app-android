@@ -23,7 +23,8 @@ class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
             video = DatabaseModelFactory.getModel(c);
         }
         if (c.moveToNext()) {
-            Log.w(getClass().getName(), "more than one records available that match your query, but you chose only first one");
+            logger.warn("More than one records available that match your query, " +
+                    "but you chose only first one");
         }
         c.close();
         

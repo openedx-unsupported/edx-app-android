@@ -1,13 +1,14 @@
 package org.edx.mobile.module.db.impl;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.LogUtil;
 
 import android.database.sqlite.SQLiteDatabase;
 
 abstract class DbOperationBase<T> implements IDbOperation<T> {
     
     private DataCallback<T> callback;
+    protected static final Logger logger = new Logger(DbOperationBase.class.getName());
 
     @Override
     public final void setCallback(DataCallback<T> callback) {
@@ -26,14 +27,15 @@ abstract class DbOperationBase<T> implements IDbOperation<T> {
             
             if (callback != null) {
                 callback.sendResult(result);
-                LogUtil.log(getClass().getName(), "sending result...");
+                logger.debug("sending result...");
             }
             
             return result;
         } catch(Exception ex) {
             if (callback != null) {
                 callback.sendException(ex);
-                LogUtil.log(getClass().getName(), "sending error...");
+                logger.debug("sending error...");
+                logger.error(ex);
             }
         }
         

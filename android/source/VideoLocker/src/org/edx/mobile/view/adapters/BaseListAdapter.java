@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 
+import org.edx.mobile.logger.Logger;
+
 public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemClickListener {
 
     // constants that define selection state of list rows
@@ -19,6 +21,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
     private ArrayList<T> items = new ArrayList<T>();
     private SparseIntArray selection = new SparseIntArray(); 
     public static final long MIN_CLICK_INTERVAL = 1000; //in millis
+    protected final Logger logger = new Logger(getClass().getName());
     
     public BaseListAdapter(Context context) {
         this.context = context;
@@ -175,7 +178,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
             
             return convertView;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         
         return convertView;

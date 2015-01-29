@@ -3,7 +3,7 @@ package org.edx.mobile.module.db.impl;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 
@@ -12,6 +12,7 @@ class IDatabaseBaseImpl implements Runnable {
     private DbHelper helper;
     private Queue<IDbOperation<?>> opQueue = new LinkedList<IDbOperation<?>>();
     private boolean isQueueProcessing = false;
+    protected static final Logger logger = new Logger(IDatabaseBaseImpl.class.getName());
     
     public IDatabaseBaseImpl(Context context) {
         helper = new DbHelper(context);
@@ -41,7 +42,7 @@ class IDatabaseBaseImpl implements Runnable {
         
         // mark queue not being processed
         isQueueProcessing = false;
-        LogUtil.log(getClass().getName(), "all database operations completed, queue is empty");
+        logger.debug("All database operations completed, queue is empty");
     }
     
     /**
@@ -53,9 +54,9 @@ class IDatabaseBaseImpl implements Runnable {
     private synchronized <T extends Object> T execute(IDbOperation<?> op) {
         // perform this database operation
         synchronized (helper) {
-            LogUtil.log(getClass().getName(), "performing a database operation ...");
+            logger.debug("Performing a database operation ...");
             T result = (T) op.requestExecute(helper.getDatabase());
-            LogUtil.log(getClass().getName(), op.getClass() + " operation completed");
+            logger.debug(op.getClass() + " operation completed");
             
             return result;
         }
@@ -77,7 +78,7 @@ class IDatabaseBaseImpl implements Runnable {
         // add non-blocking operations to the queue and process in sequence 
         synchronized (opQueue) {
             opQueue.add(operation);
-            LogUtil.log(getClass().getName(), "new operation enqueued : " + operation.getClass().getName());
+            logger.debug("New operation enqueued : " + operation.getClass().getName());
         }
         
         // start processing the queue as we have a database operation to be processed

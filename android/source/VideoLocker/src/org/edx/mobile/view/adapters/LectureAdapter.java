@@ -78,11 +78,11 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                             }
                             @Override
                             public void onFail(Exception ex) {
-                                ex.printStackTrace();
+                                logger.error(ex);
                             }
                         });
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }else{
                     holder.progresslayout.setVisibility(View.GONE);

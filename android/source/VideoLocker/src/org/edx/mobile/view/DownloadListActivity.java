@@ -12,7 +12,6 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.adapters.DownloadEntryAdapter;
 
 import android.app.ActionBar;
@@ -39,7 +38,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 if (isActivityStarted()) {
                     if (adapter != null) {
                         adapter.notifyDataSetChanged();
-                        LogUtil.log(getClass().getName(), "download list reloaded");
+                        logger.debug("download list reloaded");
                     }
                     sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
@@ -58,7 +57,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
             segIO.screenViewsTracking(getString
                     (R.string.title_download));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
 
@@ -93,7 +92,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
                         adapter.remove(model);
                         adapter.notifyDataSetChanged();
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
 
                 }
@@ -116,7 +115,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
             }
             @Override
             public void onFail(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         });
     }
@@ -179,7 +178,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
             }
             setTitle(getString(R.string.title_download));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

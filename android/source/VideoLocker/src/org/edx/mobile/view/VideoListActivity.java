@@ -25,7 +25,6 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 
 import android.app.ActionBar;
 
@@ -61,14 +60,14 @@ VideoListCallback, IPlayerEventCallback {
                 ft.replace(R.id.container_player, playerFragment, "player");
                 ft.commit();
             }catch(Exception ex){
-                ex.printStackTrace();
+                logger.error(ex);
             }
         }
 
         try{
             myVideosFlag = this.getIntent().getBooleanExtra("FromMyVideos", false);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         if(!(NetworkUtil.isConnected(this))){
@@ -101,7 +100,7 @@ VideoListCallback, IPlayerEventCallback {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             } 
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -149,7 +148,7 @@ VideoListCallback, IPlayerEventCallback {
                 }
             } 
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -161,7 +160,7 @@ VideoListCallback, IPlayerEventCallback {
             // reload this model
             storage.reloadDownloadEntry(video);
 
-            Log.d("test", "resumed= " + playerFragment.isResumed());
+            logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
                 // playback can work only if fragment is resume
                 if (playPending != null) {
@@ -191,7 +190,7 @@ VideoListCallback, IPlayerEventCallback {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             String filepath = null;
@@ -202,7 +201,7 @@ VideoListCallback, IPlayerEventCallback {
                     if (f.exists()) {
                         // play from local
                         filepath = video.filepath;
-                        LogUtil.log(getClass().getName(), "playing from local file");
+                        logger.debug("playing from local file");
                     } 
                 }
             } else {
@@ -214,7 +213,7 @@ VideoListCallback, IPlayerEventCallback {
                         if (f.exists()) {
                             // play from local
                             filepath = de.filepath;
-                            LogUtil.log(getClass().getName(), "playing from local file for " +
+                            logger.debug("playing from local file for " +
                                     "another Download Entry");
                         }
                     }
@@ -223,15 +222,15 @@ VideoListCallback, IPlayerEventCallback {
             
             if(filepath==null || filepath.length()<=0){
                 // not available on local, so play online
-                LogUtil.error(getClass().getName(), "Local file path not available");
+                logger.warn("Local file path not available");
                 filepath = video.url;
             }
             
-            LogUtil.log(getClass().getName(), "playing from URL: " + filepath);
+            logger.debug("playing from URL: " + filepath);
             playerFragment.play(filepath, video.lastPlayedOffset, 
                     video.getTitle(), transcript, video);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -272,7 +271,7 @@ VideoListCallback, IPlayerEventCallback {
             //checkBox.setSelected(true);
             checkBox.setButtonDrawable(R.drawable.ic_checkbox_active);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 

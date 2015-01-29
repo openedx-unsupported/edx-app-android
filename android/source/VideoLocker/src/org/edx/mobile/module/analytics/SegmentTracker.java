@@ -1,8 +1,8 @@
 package org.edx.mobile.module.analytics;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.LogUtil;
 
 import android.content.Context;
 
@@ -15,6 +15,7 @@ import com.segment.analytics.Traits;
 public class SegmentTracker {
     
     private Analytics analytics;
+    private final Logger logger = new Logger(getClass().getName());
     
     public SegmentTracker(Context context) {
         try {
@@ -23,7 +24,7 @@ public class SegmentTracker {
             int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
 
             if(writeKey!=null) {
-                LogUtil.log(getClass().getName(), "SegmentTracker created with write key: " + writeKey);
+                logger.debug("SegmentTracker created with write key: " + writeKey);
                 // Now Analytics.with will return the custom instance
                 analytics = new Analytics.Builder(context, writeKey)
                         .debugging(Boolean.parseBoolean(debugging))
@@ -31,9 +32,9 @@ public class SegmentTracker {
                         .build();
             }
         } catch(RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
     
@@ -47,7 +48,7 @@ public class SegmentTracker {
                 analytics.flush();
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -62,7 +63,7 @@ public class SegmentTracker {
                 analytics.track(event, props);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -77,7 +78,7 @@ public class SegmentTracker {
                 analytics.screen(category, name, properties);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -93,7 +94,7 @@ public class SegmentTracker {
                 analytics.identify(id, traits, options);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -108,7 +109,7 @@ public class SegmentTracker {
                 return analyticsContext;
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         
         return null;
@@ -120,7 +121,7 @@ public class SegmentTracker {
                 analytics.logout();
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }
