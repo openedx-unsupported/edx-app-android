@@ -628,15 +628,15 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     }
 
     private void showCourseNotStartedMessage(View view, String formatDate){
+        formatDate =  "<font color='#454951'>"+formatDate+"</font>";
         view.findViewById(R.id.no_chapter_tv).setVisibility(View.GONE);
-        view.findViewById(R.id.course_not_started_panel).setVisibility(View.VISIBLE);
-        String courseScheduledText = getString(R.string.course_schedule_text)+
-                " <font color='#454951'>"+formatDate+".</font>";
-        ETextView courseScheduleTv = (ETextView) view.findViewById(R.id.course_schedule_tv);
+        String courseScheduledText = getString(R.string.course_content_available_text);
+        courseScheduledText = courseScheduledText.replace("START_DATE",formatDate);
+        ETextView courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
         if(courseScheduleTv!=null){
+            courseScheduleTv.setVisibility(View.VISIBLE);
             courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
+            chapterListView.setEmptyView(courseScheduleTv);
         }
-
-        chapterListView.setEmptyView(view.findViewById(R.id.course_not_started_panel));
     }
 }
