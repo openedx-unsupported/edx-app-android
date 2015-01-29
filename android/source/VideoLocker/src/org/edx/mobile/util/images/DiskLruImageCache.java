@@ -1,16 +1,5 @@
 package org.edx.mobile.util.images;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import com.android.volley.toolbox.ImageLoader.ImageCache;
-import com.jakewharton.disklrucache.DiskLruCache;
-
-import org.edx.mobile.BuildConfig;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -19,12 +8,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.edx.mobile.BuildConfig;
+import org.edx.mobile.logger.Logger;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.jakewharton.disklrucache.DiskLruCache;
+
 /**
  * Implementation of DiskLruCache by Jake Wharton
  * modified from http://stackoverflow.com/questions/10185898/using-disklrucache-in-android-4-0-does-
  * not-provide-for-opencache-method
  */
 public class DiskLruImageCache implements ImageCache  {
+
+    private final Logger logger = new Logger(getClass().getName());
 
     private DiskLruCache mDiskCache;
     private CompressFormat mCompressFormat = CompressFormat.JPEG;
@@ -41,7 +42,7 @@ public class DiskLruImageCache implements ImageCache  {
                 mCompressFormat = compressFormat;
                 mCompressQuality = quality;
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
     }
 
@@ -78,23 +79,24 @@ public class DiskLruImageCache implements ImageCache  {
                 mDiskCache.flush();
                 editor.commit();
                 if ( BuildConfig.DEBUG ) {
-                   Log.d( "cache_test_DISK_", "image put on disk cache " + key );
+                   logger.debug("Cache_test_DISK image put on disk cache " + key );
                 }
             } else {
                 editor.abort();
                 if ( BuildConfig.DEBUG ) {
-                    Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                    logger.warn("cache_test_DISK ERROR on: image put on disk cache " + key );
                 }
             }   
         } catch (IOException e) {
             if ( BuildConfig.DEBUG ) {
-                Log.d( "cache_test_DISK_", "ERROR on: image put on disk cache " + key );
+                logger.debug("Cache_test_DISK ERROR on: image put on disk cache " + key );
             }
             try {
                 if ( editor != null ) {
                     editor.abort();
                 }
             } catch (IOException ignored) {
+                logger.error(ignored);
             }           
         }
 
@@ -118,7 +120,7 @@ public class DiskLruImageCache implements ImageCache  {
                 bitmap = BitmapFactory.decodeStream( buffIn );              
             }   
         } catch ( IOException e ) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             if ( snapshot != null ) {
                 snapshot.close();
@@ -126,7 +128,7 @@ public class DiskLruImageCache implements ImageCache  {
         }
 
         if ( BuildConfig.DEBUG ) {
-            Log.d( "cache_test_DISK_", bitmap == null ? "" : "image read from disk " + key);
+            logger.debug("cache_test_DISK_ "+ bitmap == null ? "" : "image read from disk " + key);
         }
 
         return bitmap;
@@ -141,7 +143,7 @@ public class DiskLruImageCache implements ImageCache  {
             snapshot = mDiskCache.get( key );
             contained = snapshot != null;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             if ( snapshot != null ) {
                 snapshot.close();
@@ -154,12 +156,12 @@ public class DiskLruImageCache implements ImageCache  {
 
     public void clearCache() {
         if ( BuildConfig.DEBUG ) {
-            Log.d( "cache_test_DISK_", "disk cache CLEARED");
+            logger.debug("cache_test_DISK_ disk cache CLEARED");
         }
         try {
             mDiskCache.delete();
         } catch ( IOException e ) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

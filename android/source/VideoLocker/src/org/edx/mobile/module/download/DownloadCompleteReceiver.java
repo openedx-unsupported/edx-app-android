@@ -4,7 +4,7 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -15,10 +15,10 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.util.LogUtil;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
     protected IStorage storage;
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onReceive(final Context context, Intent data) {
@@ -27,20 +27,17 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
             if (data != null && data.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
                 long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if (id != -1) {
-                    LogUtil.log(getClass().getName(), 
-                            "recieved download notification for id: " + id);
+                    logger.debug("Received download notification for id: " + id);
 
                     // check if download was SUCCESSFUL
                     IDownloadManager dm = DownloadFactory.getInstance(context);
                     NativeDownloadModel nm = dm.getDownload(id);
 
                     if (nm == null || nm.status != DownloadManager.STATUS_SUCCESSFUL) {
-                        LogUtil.log(getClass().getName(), 
-                                "download seems failed or cancelled for id : " + id);
+                        logger.debug("Download seems failed or cancelled for id : " + id);
                         return;
                     } else {
-                        LogUtil.log(getClass().getName(), 
-                                "download successful for id : " + id);
+                        logger.debug("Download successful for id : " + id);
                     }
 
                     // mark download as completed
@@ -69,13 +66,13 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
                         @Override
                         public void onFail(Exception ex) {
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                     });
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
     }

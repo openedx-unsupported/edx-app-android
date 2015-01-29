@@ -1,15 +1,17 @@
 package org.edx.mobile.view.custom;
 
+import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-import org.edx.mobile.R;
-
 public class EButton extends Button {
 
+    private final Logger logger = new Logger(getClass().getName());
     public EButton(Context context) {
         super(context);
     }
@@ -32,13 +34,10 @@ public class EButton extends Button {
             // check for the font attribute and setup font
             
             String fontFileName = a.getString(R.styleable.custom_view_font);
-            /*if(fontFileName==null){
-                fontFileName = attrs.getAttributeValue(null, "font");
-            }*/
             Typeface font = FontFactory.getInstance().getFont(context,  fontFileName);
             setTypeface(font);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         } finally {
             a.recycle();
         }

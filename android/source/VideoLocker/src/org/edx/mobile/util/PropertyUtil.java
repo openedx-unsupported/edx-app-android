@@ -1,11 +1,13 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
-
 import java.io.InputStream;
 import java.util.Properties;
+import org.edx.mobile.logger.Logger;
 
 public class PropertyUtil {
+
+    private static final Logger logger = new Logger(PropertyUtil.class.getName());
 
     public static String getDisplayVersionName(Context context) {
         try {
@@ -27,9 +29,8 @@ public class PropertyUtil {
             
             return versionName + "." + versionNameSuffix + " " + buildConfig;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
-        
         return null;
     }
 }

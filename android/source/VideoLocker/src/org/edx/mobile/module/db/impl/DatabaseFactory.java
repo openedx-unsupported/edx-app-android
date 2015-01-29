@@ -1,10 +1,10 @@
 package org.edx.mobile.module.db.impl;
 
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.db.IDatabase;
+
 import android.content.Context;
 import android.util.SparseArray;
-
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.util.LogUtil;
 
 /**
  * This class provides singleton instances of database implemention as {@link org.edx.mobile.module.db.IDatabase}.
@@ -16,6 +16,7 @@ public class DatabaseFactory {
     public static final int                 TYPE_DATABASE_NATIVE = 1;
     /* Keep singleton instances in a map, so that multiple db implementations can be handled */
     private static SparseArray<IDatabase>   dbMap = new SparseArray<IDatabase>();
+    private static final Logger logger = new Logger(DatabaseFactory.class.getName());
 
     /**
      * Returns singleton instance of the {@link IDatabase} for the given type.
@@ -33,7 +34,7 @@ public class DatabaseFactory {
             if (dbMap.get(type) == null) {
                 db = new IDatabaseImpl(context, username);
                 dbMap.put(type, db);
-                LogUtil.log(DatabaseFactory.class.getName(), "database object created");
+                logger.debug("Database object created");
             }
             
             // update username everytime

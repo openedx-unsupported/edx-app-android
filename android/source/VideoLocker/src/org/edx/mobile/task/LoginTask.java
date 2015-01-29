@@ -41,6 +41,7 @@ public abstract class LoginTask extends Task<AuthResponse> {
             }
         } catch(Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

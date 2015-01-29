@@ -1,5 +1,9 @@
 package org.edx.mobile.module.download;
 
+import java.io.File;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.download.NativeDownloadModel;
+import org.edx.mobile.util.Sha1Util;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;
@@ -8,16 +12,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.Sha1Util;
-
-import java.io.File;
-
 class IDownloadManagerImpl implements IDownloadManager {
     
     private Context context;
     private DownloadManager dm;
+    private final Logger logger = new Logger(getClass().getName());
 
     IDownloadManagerImpl(Context context) {
         this.context = context;
@@ -59,7 +58,7 @@ class IDownloadManagerImpl implements IDownloadManager {
             }
             c.close();
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -84,7 +83,7 @@ class IDownloadManagerImpl implements IDownloadManager {
                 return dmid;
             }
             
-            LogUtil.log(getClass().getName(), "starting download: " + url);
+            logger.debug("Starting download: " + url);
             
             Uri target = Uri.fromFile(new File(destFolder, Sha1Util.SHA1(url)));
             Request request = new Request(Uri.parse(url));
@@ -99,7 +98,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     
             dmid = dm.enqueue(request);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         
         return dmid;

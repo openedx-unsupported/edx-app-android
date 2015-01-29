@@ -27,7 +27,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.LectureAdapter;
@@ -105,7 +104,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     videoIntent.putExtra("FromMyVideos", false);
                     startActivity(videoIntent);
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
 
@@ -161,7 +160,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                         updateList();
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         };
@@ -204,7 +203,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
             setTitle(activityTitle);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -293,7 +292,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             });
 
         } catch (Exception ex) {
-            LogUtil.log(getClass().getName(), "error in showing player");
+            logger.debug("error in showing player");
         }
     }
 
@@ -327,7 +326,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             segIO.trackSubSectionBulkVideoDownload(downloadList.get(0).chapter, 
                     downloadList.get(0).section, downloadList.get(0).eid, noOfDownloads);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(this) {
@@ -349,7 +348,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                         }
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
 
@@ -421,17 +420,17 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.remove(f);
                         ft.commit();
-                        LogUtil.log(getClass().getName(), "removed progress dialog fragment");
+                        logger.debug("removed progress dialog fragment");
                     }
 
                     if ( !progressDialog.isAdded()) {
                         progressDialog.show(getSupportFragmentManager(), tag);
                         progressDialog.setCancelable(false);
-                        LogUtil.log(getClass().getName(), "showing activity indicator");
+                        logger.debug("showing activity indicator");
                     }
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         }
     }
@@ -440,7 +439,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         if(progressDialog!=null) {
             synchronized (progressDialog) {
                 progressDialog.dismiss();
-                LogUtil.log(getClass().getName(), "hiding activity indicator");
+                logger.debug("hiding activity indicator");
             }
         }
     }

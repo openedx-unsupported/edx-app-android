@@ -18,9 +18,8 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.custom.ProgressWheel;
+import org.edx.mobile.util.MemoryUtil;
 
 public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
 
@@ -76,7 +75,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
                 
@@ -94,7 +93,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                                 public void onClick(View v) {
                                     holder.progresslayout.setVisibility(View.VISIBLE);
                                     holder.video_download_layout.setVisibility(View.GONE);
-                                    LogUtil.log("Download", "Download Button Clicked");
+                                    logger.debug("Download Button Clicked");
                                     //notifyDataSetChanged();
                                     download(videoData, holder.download_pw);
                                 }
@@ -115,7 +114,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                                 }
                                 @Override
                                 public void onFail(Exception ex) {
-                                    ex.printStackTrace();
+                                    logger.error(ex);
                                     holder.progresslayout.setVisibility(View.GONE);
                                     holder.video_download_layout.setVisibility(View.VISIBLE);
                                 }
@@ -143,7 +142,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                         holder.progresslayout.setVisibility(View.GONE);
                         holder.video_download_layout.setVisibility(View.VISIBLE);
                     }

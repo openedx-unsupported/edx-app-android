@@ -1347,7 +1347,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 fail(ex.getMessage());
             }
         });

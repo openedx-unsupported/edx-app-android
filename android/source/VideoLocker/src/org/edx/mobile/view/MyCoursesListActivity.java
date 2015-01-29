@@ -1,5 +1,21 @@
 package org.edx.mobile.view;
 
+import java.util.ArrayList;
+
+import org.edx.mobile.R;
+import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.MyCourseAdapter;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.task.GetEnrolledCoursesTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.view.custom.ETextView;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,23 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.GetEnrolledCoursesTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.adapters.MyCourseAdapter;
-import org.edx.mobile.view.custom.ETextView;
-
-import java.util.ArrayList;
 
 public class MyCoursesListActivity extends BaseFragmentActivity {
     private View offlineBar;
@@ -50,7 +49,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         offlineBar = findViewById(R.id.offline_bar);
         offlinePanel = (LinearLayout) findViewById(R.id.offline_panel);
@@ -99,7 +98,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     startActivity(courseDetail);
 
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
 
@@ -168,7 +167,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
 
             @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 invalidateSwipeFunctionality();
                 /*if(adapter.getCount()<=0){
                     showEmptyCourseMessage();
@@ -181,7 +180,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     pref.clearAuth();
 
                     // end now
-                    LogUtil.error(getClass().getName(), "finishing due to auth error: " + ex.getMessage());
+                    logger.warn("finishing due to auth error: " + ex.getMessage());
                     finish();
                 }
             }
@@ -270,7 +269,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                 empty_tv.setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -290,7 +289,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     try {
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                     BrowserUtil.open(MyCoursesListActivity.this, url);
                 }
@@ -304,7 +303,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -314,7 +313,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         }
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 }
