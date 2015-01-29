@@ -31,7 +31,7 @@ class DbOperationSingleValueByRawQuery<T> extends DbOperationBase<T> {
                 Integer column = c.getInt(0);
                 return (T) column;
             } else {
-                Log.e(getClass().getName(), "class types does NOT match for: " + columnType);
+                logger.warn("Class types does NOT match for: " + columnType);
             }
         }
         

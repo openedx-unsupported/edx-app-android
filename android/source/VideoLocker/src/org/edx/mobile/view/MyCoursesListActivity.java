@@ -12,7 +12,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.task.GetEnrolledCoursesTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
@@ -50,7 +49,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         offlineBar = findViewById(R.id.offline_bar);
         offlinePanel = (LinearLayout) findViewById(R.id.offline_panel);
@@ -99,7 +98,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     startActivity(courseDetail);
 
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
 
@@ -168,7 +167,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
 
             @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 invalidateSwipeFunctionality();
                 /*if(adapter.getCount()<=0){
                     showEmptyCourseMessage();
@@ -181,7 +180,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     pref.clearAuth();
 
                     // end now
-                    LogUtil.error(getClass().getName(), "finishing due to auth error: " + ex.getMessage());
+                    logger.warn("finishing due to auth error: " + ex.getMessage());
                     finish();
                 }
             }
@@ -270,7 +269,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                 empty_tv.setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -289,7 +288,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     try {
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                     //Show the dialog only if the activity is started. This is to avoid Illegal state
                     //exceptions if the dialog fragment tries to show even if the application is not in foreground
@@ -311,7 +310,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -321,7 +320,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         }
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 }

@@ -1,10 +1,10 @@
 package org.edx.mobile.task;
 
+import android.content.Context;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
-
-import android.content.Context;
 
 /**
  * This task represents Task for login by edX username and password.
@@ -41,6 +41,7 @@ public abstract class LoginTask extends Task<AuthResponse> {
             }
         } catch(Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

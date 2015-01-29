@@ -1,9 +1,9 @@
 package org.edx.mobile.view.custom;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.graphics.Typeface;
+
+import java.util.HashMap;
 
 public class FontFactory {
     private static FontFactory instance;

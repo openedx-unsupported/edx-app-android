@@ -1,10 +1,10 @@
 package org.edx.mobile.task;
 
+import android.content.Context;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-
-import android.content.Context;
 
 public abstract class GetHandoutTask extends Task<HandoutModel> {
 
@@ -32,7 +32,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 return api.getHandout(enrollment.getCourse()
@@ -40,6 +40,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

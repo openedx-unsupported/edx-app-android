@@ -1,9 +1,9 @@
 package org.edx.mobile.social;
 
+import android.app.Activity;
+
 import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.google.GoogleOauth2;
-
-import android.app.Activity;
 
 public class SocialFactory {
 
