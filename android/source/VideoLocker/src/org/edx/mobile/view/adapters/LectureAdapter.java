@@ -1,12 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.view.custom.ProgressWheel;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.storage.IStorage;
-
 import android.content.Context;
 import android.os.SystemClock;
 import android.view.View;
@@ -14,6 +7,13 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.LectureModel;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.view.custom.ProgressWheel;
 
 public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
     private long lastClickTime;

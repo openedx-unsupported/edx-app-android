@@ -1,12 +1,12 @@
 package org.edx.mobile.task;
 
-import java.util.List;
+import android.content.Context;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
-import android.content.Context;
+import java.util.List;
 
 public abstract class GetAnnouncementTask extends
         Task<List<AnnouncementsModel>> {

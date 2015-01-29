@@ -20,25 +20,25 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.GetLastAccessedTask;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
+import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.ChapterAdapter;
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -535,8 +535,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             .username, courseId);
                     final PrefManager prefManager = new PrefManager(getActivity(), prefName);
                     final String prefModuleId = prefManager.getLastAccessedSubsectionId();
+
                     logger.debug("Last Accessed Module ID from Preferences "
                             +prefModuleId);
+
                     lastAccessed_subSectionId = prefModuleId;
                     showLastAccessedView(view);
                     getLastAccessedTask = new GetLastAccessedTask(getActivity()) {

@@ -18,21 +18,21 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.adapters.LectureAdapter;
-import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.LectureAdapter;
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

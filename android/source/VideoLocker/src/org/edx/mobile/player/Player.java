@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.OnSwipeListener;
-
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;

@@ -1,7 +1,6 @@
 package org.edx.mobile.social.google;
 
 import java.io.IOException;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 

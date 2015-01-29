@@ -1,5 +1,8 @@
 package org.edx.mobile.model.db;
 
+import android.content.Context;
+import android.database.Cursor;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -7,9 +10,6 @@ import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DbStructure;
-
-import android.content.Context;
-import android.database.Cursor;
 
 public class DownloadEntry implements SectionItemInterface, IVideoModel {
     private final Logger logger = new Logger(getClass().getName());

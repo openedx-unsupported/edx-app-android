@@ -1,6 +1,15 @@
 
 package org.edx.mobile.view.adapters;
 
+import android.content.Context;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.ChapterModel;
@@ -11,15 +20,6 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.util.MemoryUtil;
-
-import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
 

@@ -34,9 +34,6 @@ public class EButton extends Button {
             // check for the font attribute and setup font
             
             String fontFileName = a.getString(R.styleable.custom_view_font);
-            /*if(fontFileName==null){
-                fontFileName = attrs.getAttributeValue(null, "font");
-            }*/
             Typeface font = FontFactory.getInstance().getFont(context,  fontFileName);
             setTypeface(font);
         } catch (Exception ex) {

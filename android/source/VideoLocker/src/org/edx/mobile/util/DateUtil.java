@@ -1,11 +1,9 @@
 package org.edx.mobile.util;
 
+import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import android.annotation.SuppressLint;
-
 import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")

@@ -11,18 +11,17 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.SegmentTracker;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.view.CourseDetailTabActivity;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
-
+import org.edx.mobile.view.CourseDetailTabActivity;
 
 public class CourseDetailBaseFragment extends Fragment {
 

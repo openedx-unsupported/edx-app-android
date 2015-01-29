@@ -2,7 +2,6 @@ package org.edx.mobile.view.custom;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;

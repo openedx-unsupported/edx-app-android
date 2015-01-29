@@ -1,10 +1,9 @@
 package org.edx.mobile.player;
 
-import java.io.Serializable;
-
-
 import android.graphics.Point;
 import android.view.View;
+
+import java.io.Serializable;
 
 public interface IPlayer extends Serializable {
     

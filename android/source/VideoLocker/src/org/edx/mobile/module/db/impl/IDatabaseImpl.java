@@ -1,5 +1,7 @@
 package org.edx.mobile.module.db.impl;
 
+import android.content.ContentValues;
+import android.content.Context;
 import java.util.List;
 
 import org.edx.mobile.model.IVideoModel;
@@ -8,8 +10,6 @@ import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
-import android.content.ContentValues;
-import android.content.Context;
 
 class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
