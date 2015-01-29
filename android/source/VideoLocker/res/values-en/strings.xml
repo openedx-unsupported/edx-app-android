@@ -154,5 +154,9 @@
     <string name="facebook_text">Facebook</string>
     <string name="google_text">Google</string>
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
+    <string name="open_edx_btn_text">OPEN EDX.ORG IN MY BROWSER</string>
+    <string name="find_courses_dialog_text_1">Our team is currently working hard to let you enroll in courses within the app.</string>
+    <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you\'ll need to log in, enroll, and then return to the app when you\'re done.</string>
+    <string name="course_content_available_text">This course hasn\'t started yet. Come back on START_DATE to see your videos.</string>
 
 </resources>

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -13,12 +12,13 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.task.GetEnrolledCoursesTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
@@ -286,13 +286,20 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
             course_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = Environment.getInstance().getConfig().getCourseSearchUrl();
                     try {
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    BrowserUtil.open(MyCoursesListActivity.this, url);
+                    //Show the dialog only if the activity is started. This is to avoid Illegal state
+                    //exceptions if the dialog fragment tries to show even if the application is not in foreground
+                    if(isActivityStarted()){
+                        FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
+                        findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
+                                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                        findCoursesFragment.setCancelable(false);
+                        findCoursesFragment.show(getSupportFragmentManager(), "dialog");
+                    }
                 }
             });
 

@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +30,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -57,14 +59,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private boolean isActivityStarted;
     private String lastAccessed_subSectionId;
     private GetLastAccessedTask getLastAccessedTask;
+    private EnrolledCoursesResponse enrollment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
         final Bundle bundle = getArguments();
         if(bundle!=null){
-            EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) bundle
+            enrollment = (EnrolledCoursesResponse) bundle
                     .getSerializable("enrollment");
             if(enrollment!=null){
                 courseId = enrollment.getCourse().getId();
@@ -89,17 +91,46 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         chapterListView = (ListView) view
                 .findViewById(R.id.chapter_list);
 
+        initializeAdapter();
+        chapterListView.setAdapter(adapter);
+        chapterListView.setOnItemClickListener(adapter);
+        loadData(view);
+        lastClickTime = 0;
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        isActivityStarted = true;
+        adapter.setStore(db, storage);
+        handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
+        if (!adapter.isEmpty()) {
+            fetchLastAccessed(getView());
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        isActivityStarted = false;
+        //We need to cancel the getLastAccessed task if the fragment is stopped
+        if(getLastAccessedTask!=null){
+            getLastAccessedTask.cancel(true);
+        }
+    }
+
+    private void initializeAdapter(){
         adapter = new ChapterAdapter(getActivity(), courseId) {
 
             @Override
             public void onItemClicked(final SectionEntry model) {
                 // handle click
                 try{
-                    final EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) bundle
-                            .getSerializable("enrollment");
                     if (AppConstants.offline_flag) {
-                        boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId, 
-                                model.chapter, null); 
+                        boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId,
+                                model.chapter, null);
                         if(isVideoDownloaded){
                             Intent videoIntent = new Intent(getActivity(),
                                     VideoListActivity.class);
@@ -109,7 +140,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             startActivity(videoIntent);
                         } else {
                             ((CourseDetailTabActivity) getActivity())
-                            .showOfflineAccessMessage();
+                                    .showOfflineAccessMessage();
                         }
                     } else {
                         Intent lectureIntent = new Intent(mActivity,
@@ -162,7 +193,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         if (downloadSize > MemoryUtil
                                 .getAvailableExternalMemory(context)) {
                             ((CourseDetailTabActivity) getActivity())
-                            .showMessage(getString(R.string.file_size_exceeded));
+                                    .showMessage(getString(R.string.file_size_exceeded));
                             updateList();
                         } else {
                             if (downloadSize < MemoryUtil.GB) {
@@ -173,7 +204,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         }
                     } else {
                         ((CourseDetailTabActivity) getActivity())
-                        .showMessage(getString(R.string.wifi_off_message));
+                                .showMessage(getString(R.string.wifi_off_message));
                         updateList();
                     }
                 } catch (Exception ex) {
@@ -181,33 +212,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 }
             }
         };
-
-        chapterListView.setAdapter(adapter);
-        chapterListView.setOnItemClickListener(adapter);
-
-        loadData(view);
-        lastClickTime = 0;
-        return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        isActivityStarted = true;        adapter.setStore(db, storage);
-        handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-        if(!adapter.isEmpty()){
-            fetchLastAccessed(getView());
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        isActivityStarted = false;
-        //We need to cancel the getLastAccessed task if the fragment is stopped
-        if(getLastAccessedTask!=null){
-            getLastAccessedTask.cancel(true);
-        }
     }
 
     //Loading data to the Adapter
@@ -240,8 +244,20 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 adapter.notifyDataSetChanged();
 
                 if(adapter.getCount()==0){
-                    view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
-                    chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                    String startDate = null;
+                    if(enrollment!=null){
+                        if(!enrollment.getCourse().isStarted()){
+                             startDate = DateUtil.formatCourseNotStartedDate(
+                                    enrollment.getCourse().getStart());
+                        }
+                    }
+
+                    if(startDate!=null){
+                        showCourseNotStartedMessage(view, startDate);
+                    }else{
+                        view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
+                        chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                    }
                 }
 
                 LogUtil.log("Completed displaying data on UI", DateUtil.getCurrentTimeStamp());
@@ -272,17 +288,16 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             adapter.notifyDataSetChanged();
         }
         hideLastAccessedView(getView());
-        if(chapterListView!=null){
-            hideOpenInBrowserPanel();   
+        if (chapterListView != null) {
+            hideOpenInBrowserPanel();
         }
-
     }
 
     public void fragmentOnline() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
-        if(chapterListView!=null && openInBrowserUrl!=null){
+        if (chapterListView != null && openInBrowserUrl != null) {
             fetchLastAccessed(getView());
             showOpenInBrowserPanel(openInBrowserUrl);
         }
@@ -609,6 +624,19 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             syncLastAccessTask.execute(courseId, prefModuleId);
         }catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void showCourseNotStartedMessage(View view, String formatDate){
+        formatDate =  "<font color='#454951'>"+formatDate+"</font>";
+        view.findViewById(R.id.no_chapter_tv).setVisibility(View.GONE);
+        String courseScheduledText = getString(R.string.course_content_available_text);
+        courseScheduledText = courseScheduledText.replace("START_DATE",formatDate);
+        ETextView courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
+        if(courseScheduleTv!=null){
+            courseScheduleTv.setVisibility(View.VISIBLE);
+            courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
+            chapterListView.setEmptyView(courseScheduleTv);
         }
     }
 }

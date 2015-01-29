@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/find_courses_dialog_tv1"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="25dp"
+        android:gravity="left"
+        android:text="@string/find_courses_dialog_text_1"
+        android:textSize="15sp" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/find_courses_dialog_tv2"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"
+        android:gravity="left"
+        android:textSize="15sp"
+        android:layout_below="@id/find_courses_dialog_tv1"/>
+
+    <Button
+        android:id="@+id/open_edx_in_browser_btn"
+        style="@style/semibold_white_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/find_courses_dialog_tv2"
+        android:layout_margin="25dp"
+        android:background="@drawable/bt_blue"
+        android:text="@string/open_edx_btn_text"
+        android:textSize="16sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_act_background"
+        android:orientation="horizontal"
+        android:paddingTop="0.5dp"
+        android:layout_alignParentBottom="true" >
+
+        <org.edx.mobile.view.custom.EButton
+            android:id="@+id/positiveButton"
+            style="@style/dialog_button_style"
+            android:layout_width="0dp"
+            android:layout_height="35dip"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_weight="0.5"
+            android:background="@android:color/white"
+            android:text="@string/label_close"
+            android:textAllCaps="true"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</RelativeLayout>

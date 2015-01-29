@@ -88,4 +88,17 @@
         android:visibility="gone"
         android:gravity="center" />
 
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/course_content_available_tv"
+        style="@style/bold_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/course_content_available_text"
+        android:textColor="@color/empty_list_text"
+        android:textSize="20sp"
+        android:visibility="gone"/>
+
 </RelativeLayout>

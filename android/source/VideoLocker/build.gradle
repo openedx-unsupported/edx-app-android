@@ -160,8 +160,8 @@ android {
         // minimum version is Android 4.0
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 40
-        versionName "1.0.03"
+        versionCode 41
+        versionName "1.0.04"
         // test configuration
         testApplicationId 'org.edx.mobile.test'
         testInstrumentationRunner 'org.edx.mobile.test.edXInstrumentRunner'
@@ -210,8 +210,8 @@ android {
             def config = edx.loadConfig()
             ext.enableCrashlytics = config.get('FABRIC_KEY') != null
 
-            versionCode 40
-            versionName '1.0.03'
+            versionCode 41
+            versionName '1.0.04'
             minSdkVersion 14
             targetSdkVersion 21
         }

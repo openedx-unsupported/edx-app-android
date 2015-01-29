@@ -58,4 +58,17 @@ public class DateParseTests extends BaseTestCase {
         print("sending email...");
     }
 
+    /**
+     * This tests the formatted start date of a course
+     * @throws Exception
+     */
+    public void testFormatCourseNotStartedDate() throws Exception {
+        String inputDate = "2014-11-20T05:00:00Z";
+        String expectedOutput = "November 20, 2014";
+
+        String outputDate = DateUtil.formatCourseNotStartedDate(inputDate);
+        assertNotNull(outputDate);
+        assertEquals(expectedOutput,outputDate);
+    }
+
 }
