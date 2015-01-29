@@ -275,8 +275,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             showProgress();
         }
 
-        // start playback after 300 milli seconds, so that it works on 
-        // HTC One, Nexus5, S4, S5 
+        // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
+        // some devices take little time to be ready
         handler.postDelayed(unfreezeCallback, 300);
     }
 
@@ -315,11 +315,15 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         super.onDestroy();
         
         if (!stateSaved) {
-            if(player!=null){
+            if (player!=null) {
                 // reset player when user goes back, and there is no state saving happened
                 player.reset();
                 removeSubtitleCallBack();
-                logger.debug("Player detached and reset");
+
+                // release the player instance
+                player.release();
+                player = null;
+                logger.debug("player detached, reset and released");
             }
         }
     }
@@ -350,7 +354,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
         logger.debug("Saving state ...");
         stateSaved = true;
         if(player!=null){
-            // hold on until activity is being destroyed, otherwise we assume next start() call would be restart()
+            // hold on until activity is being destroyed, otherwise we assume next call would be restart()
             boolean changingConfig = getActivity().isChangingConfigurations();
             logger.debug("Player fragment changing config?  =" + changingConfig);
             if ( !changingConfig) {
