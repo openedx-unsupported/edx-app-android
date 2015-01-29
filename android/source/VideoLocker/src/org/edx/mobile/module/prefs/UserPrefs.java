@@ -1,12 +1,12 @@
 package org.edx.mobile.module.prefs;
 
 
-import java.io.File;
+import android.content.Context;
+import android.os.Environment;
 
 import org.edx.mobile.model.api.ProfileModel;
 
-import android.content.Context;
-import android.os.Environment;
+import java.io.File;
 
 public class UserPrefs {
 

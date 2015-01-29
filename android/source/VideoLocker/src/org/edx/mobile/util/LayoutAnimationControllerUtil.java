@@ -2,7 +2,6 @@ package org.edx.mobile.util;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.TranslateAnimation;

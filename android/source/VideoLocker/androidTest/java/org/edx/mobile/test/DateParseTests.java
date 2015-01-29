@@ -1,7 +1,5 @@
 package org.edx.mobile.test;
 
-import android.util.Log;
-
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Emailutill;
 

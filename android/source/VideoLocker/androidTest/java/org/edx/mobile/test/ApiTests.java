@@ -1,7 +1,5 @@
 package org.edx.mobile.test;
 
-import android.util.Log;
-
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;

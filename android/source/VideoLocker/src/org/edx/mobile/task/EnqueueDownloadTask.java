@@ -1,13 +1,13 @@
 package org.edx.mobile.task;
 
-import java.util.ArrayList;
+import android.content.Context;
 
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.TranscriptManager;
 
-import android.content.Context;
+import java.util.ArrayList;
 
 public abstract class EnqueueDownloadTask extends Task<Long> {
 

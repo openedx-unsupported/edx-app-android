@@ -1,11 +1,9 @@
 package org.edx.mobile.module.download;
 
 import java.io.File;
-
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.util.Sha1Util;
-
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;

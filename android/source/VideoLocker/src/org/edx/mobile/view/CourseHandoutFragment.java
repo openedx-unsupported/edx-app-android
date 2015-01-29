@@ -1,15 +1,5 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.task.GetHandoutTask;
-import org.edx.mobile.util.AppConstants;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Xml.Encoding;
@@ -20,6 +10,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.CourseDetailBaseFragment;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.task.GetHandoutTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 
 public class CourseHandoutFragment extends CourseDetailBaseFragment {

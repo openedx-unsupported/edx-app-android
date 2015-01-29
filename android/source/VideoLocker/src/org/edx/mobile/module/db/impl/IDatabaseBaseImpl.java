@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import android.content.Context;
 
 import org.edx.mobile.logger.Logger;
 
-import android.content.Context;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class IDatabaseBaseImpl implements Runnable {
 

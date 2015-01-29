@@ -1,9 +1,7 @@
 package org.edx.mobile.http;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import android.net.http.AndroidHttpClient;
+import android.os.Bundle;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -30,8 +28,10 @@ import org.edx.mobile.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.net.http.AndroidHttpClient;
-import android.os.Bundle;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HttpManager {
     protected final Logger logger = new Logger(getClass().getName());

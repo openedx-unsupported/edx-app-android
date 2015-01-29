@@ -1,10 +1,10 @@
 package org.edx.mobile.module.db;
 
+import android.database.Cursor;
+
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-
-import android.database.Cursor;
 
 /**
  * Model Factory class for the database models.

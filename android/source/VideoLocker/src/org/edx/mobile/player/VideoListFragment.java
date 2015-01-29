@@ -1,8 +1,19 @@
 package org.edx.mobile.player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import android.app.ActionBar;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
@@ -14,9 +25,11 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
@@ -34,23 +47,10 @@ import org.edx.mobile.view.adapters.VideoBaseAdapter;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 
-import android.app.ActionBar;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VideoListFragment extends Fragment {
 
@@ -766,6 +766,7 @@ public class VideoListFragment extends Fragment {
     public void setAllVideosChecked() {
         adapter.selectAll();
         int count  = adapter.getSelectedVideoItemsCount();
+
         logger.debug("Video Count of selected videos"+ count);
         enableDeleteButton();
         adapter.setSelectedPosition(playingVideoIndex);

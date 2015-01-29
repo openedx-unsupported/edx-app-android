@@ -5,7 +5,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Environment;
 
 import android.content.Context;
-
 import com.segment.analytics.Analytics;
 import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Options;

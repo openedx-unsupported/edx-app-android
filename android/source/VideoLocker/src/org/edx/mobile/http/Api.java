@@ -1,11 +1,11 @@
 package org.edx.mobile.http;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.content.Context;
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -35,13 +35,12 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
-
-import android.content.Context;
-import android.os.Bundle;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Api {
 
@@ -340,7 +339,6 @@ public class Api {
                 }
             }
         }
-
         return null;
     }
 
@@ -489,17 +487,6 @@ public class Api {
         return list;
     }
 
-    /**
-     * Returns list of videos in a particular course.
-     * 
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public List<VideoResponseModel> getVideosByCourseId(String courseId)
-            throws Exception {
-        return getVideosByCourseId(courseId, false);
-    }
 
     /**
      * Returns list of videos in a particular course.
@@ -627,33 +614,11 @@ public class Api {
         Gson gson = new GsonBuilder().create();
         TypeToken<List<AnnouncementsModel>> t = new TypeToken<List<AnnouncementsModel>>() {
         };
-
         List<AnnouncementsModel> list = gson.fromJson(json, t.getType());
-
-        // VideoResponseModel res = gson.fromJson(json,
-        // VideoResponseModel.class);
 
         return list;
     }
 
-    /**
-     * Returns enrollment of given id.
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public EnrolledCoursesResponse getEnrollmentById(String courseId) throws Exception {
-        ArrayList<EnrolledCoursesResponse> courses = getEnrolledCourses(true);
-        if (courses != null) {
-            for (EnrolledCoursesResponse r : courses) {
-                if (r.getCourse().getId().equals(courseId)) {
-                    return r;
-                }
-            }
-        }
-
-        return null;
-    }
 
     /**
      * Returns "Authorization" header with current active access token.
@@ -684,6 +649,8 @@ public class Api {
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Returns Stream object from the given URL.
      * @param url
      * @param preferCache
@@ -717,6 +684,7 @@ public class Api {
     }
 
     /**
+>>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -756,6 +724,8 @@ public class Api {
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Returns list of videos for a particular URL.
      * @param courseId
      * @param preferCache
@@ -786,6 +756,7 @@ public class Api {
     }
 
     /**
+>>>>>>> master
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception

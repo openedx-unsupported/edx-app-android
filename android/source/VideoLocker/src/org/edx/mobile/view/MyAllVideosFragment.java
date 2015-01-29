@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
-import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 
 import java.util.ArrayList;
 

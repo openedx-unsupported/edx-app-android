@@ -1,14 +1,11 @@
 package org.edx.mobile.module.analytics;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import android.content.Context;
-
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import org.edx.mobile.logger.Logger;
 
 class ISegmentImpl implements ISegment {

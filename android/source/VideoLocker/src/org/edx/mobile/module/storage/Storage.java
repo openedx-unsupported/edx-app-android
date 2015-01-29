@@ -1,13 +1,8 @@
 package org.edx.mobile.module.storage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import android.app.DownloadManager;
+import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -26,10 +21,13 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.UserPrefs;
-
-import android.app.DownloadManager;
-import android.content.Context;
-import android.media.MediaMetadataRetriever;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Storage implements IStorage {
 

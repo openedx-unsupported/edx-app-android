@@ -10,8 +10,6 @@ import java.io.OutputStream;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.logger.Logger;
-
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
