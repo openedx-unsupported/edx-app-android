@@ -154,5 +154,7 @@
     <string name="facebook_text">Facebook</string>
     <string name="google_text">Google</string>
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
+    <string name="course_schedule_text">This course is scheduled to start on</string>
+    <string name="course_content_available_text">Course content will be available at that point.</string>
 
 </resources>
