@@ -88,4 +88,8 @@ public class Config {
     public String getNewRelicKey() {
         return getString(NEW_RELIC_KEY);
     }
+
+    public String getFacebookAppId() {
+        return getString(FACEBOOK_APP_ID);
+    }
 }

@@ -1,17 +1,17 @@
 package org.edx.mobile.base;
 
 
+import android.app.Application;
+import android.graphics.Bitmap.CompressFormat;
+
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
-
-import io.fabric.sdk.android.Fabric;
 
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
 
-import android.app.Application;
-import android.graphics.Bitmap.CompressFormat;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Code for adding an L1 image cache to Volley. 
@@ -47,6 +47,10 @@ public class MainApplication extends Application {
                     .start(this);
         }
 
+        // initialize Facebook SDK
+        if (Environment.getInstance().getConfig().getFacebookAppId() != null) {
+            com.facebook.Settings.setApplicationId(Environment.getInstance().getConfig().getFacebookAppId());
+        }
     }
     
     /**
