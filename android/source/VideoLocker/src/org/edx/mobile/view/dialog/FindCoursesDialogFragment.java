@@ -26,9 +26,7 @@ public class FindCoursesDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.fragment_find_courses_dialog,
                 container, false);
-            String find_courses_text = getString(R.string.find_courses_dialog_text_2)+" <b>"+
-                    getString(R.string.find_courses_dialog_text_3)+"</b> "+
-                    getString(R.string.find_courses_dialog_text_4);
+            String find_courses_text = getString(R.string.find_courses_dialog_text_2);
             ETextView tv_find_courses_2 = (ETextView)v.findViewById(R.id.find_courses_dialog_tv2);
             tv_find_courses_2.setText(Html.fromHtml(find_courses_text));
 
