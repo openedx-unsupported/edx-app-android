@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-public class Emailutill {
+public class EmailUtil {
 
     public static void sendEmail(Context context, String to, String subject,
             String email) {
