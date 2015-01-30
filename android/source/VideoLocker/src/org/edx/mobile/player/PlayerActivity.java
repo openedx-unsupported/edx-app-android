@@ -9,11 +9,10 @@ import android.util.Log;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.util.LogUtil;
 
 import java.io.File;
 
@@ -61,7 +60,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         super.onSaveInstanceState(outState);
     }
@@ -94,19 +93,19 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                         ft.replace(R.id.container_player, playerFragment, "player");
                         ft.commit();
                     } else {
-                        LogUtil.error(getClass().getName(), "PlayerFragement needs to be restored, no container found!");
+                        logger.warn("PlayerFragement needs to be restored, no container found!");
                         restore(playerFragment);
                     }
                 }
             } 
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
     protected void restore(PlayerFragment pf) {
         // sub-class should handle this
-        LogUtil.log(getClass().getName(), "restore player fragment in the sub-class");
+        logger.debug("Restore player fragment in the sub-class");
     }
 
     public synchronized void playVideoModel(final DownloadEntry video) {
@@ -125,7 +124,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             // reload this model
             storage.reloadDownloadEntry(video);
 
-            Log.d("test", "resumed= " + playerFragment.isResumed());
+            logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
                 // playback can work only if fragment is resume
                 if (playPending != null) {
@@ -149,7 +148,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             try {
                 transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             String filepath = null;
@@ -160,7 +159,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                     if (f.exists()) {
                         // play from local
                         filepath = video.filepath;
-                        LogUtil.log(getClass().getName(), "playing from local file");
+                        logger.debug("Playing from local file");
                     } 
                 }
             } else {
@@ -172,7 +171,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                         if (f.exists()) {
                             // play from local
                             filepath = de.filepath;
-                            LogUtil.log(getClass().getName(), "playing from local file for " +
+                            logger.debug("Playing from local file for " +
                                     "another Download Entry");
                         } 
                     }
@@ -181,15 +180,15 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             
             if(filepath==null || filepath.length()<=0){
                 // not available on local, so play online
-                LogUtil.error(getClass().getName(), "Local file path not available");
+                logger.warn("Local file path not available");
                 filepath = video.url;
             }
             
-            LogUtil.log(getClass().getName(), "playing from URL: " + filepath);
+            logger.debug("Playing from URL: " + filepath);
             playerFragment.play(filepath, video.lastPlayedOffset, 
                     video.getTitle(), transcript, video);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

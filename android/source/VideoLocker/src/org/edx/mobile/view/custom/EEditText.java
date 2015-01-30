@@ -1,6 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
@@ -8,6 +9,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 public class EEditText extends EditText {
+    private final Logger logger = new Logger(getClass().getName());
     public EEditText(Context context) {
         super(context);
     }
@@ -35,7 +37,7 @@ public class EEditText extends EditText {
                     fontFileName);
             setTypeface(font);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         } finally {
             a.recycle();
         }

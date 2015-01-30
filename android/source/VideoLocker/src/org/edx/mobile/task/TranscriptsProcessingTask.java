@@ -1,12 +1,12 @@
 package org.edx.mobile.task;
 
-import java.io.IOException;
+import android.content.Context;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.edx.mobile.http.Api;
 
-import android.content.Context;
+import java.io.IOException;
 
 public abstract class TranscriptsProcessingTask extends Task<String> {
 
@@ -24,19 +24,20 @@ public abstract class TranscriptsProcessingTask extends Task<String> {
             return response;
         }
         catch (ParseException localParseException) {
-            localParseException.printStackTrace();
+            logger.error(localParseException);
             handle(localParseException);
         }
         catch (ClientProtocolException localClientProtocolException) {
-            localClientProtocolException.printStackTrace();
+            logger.error(localClientProtocolException);
             handle(localClientProtocolException);
         }
         catch (IOException localIOException) {
-            localIOException.printStackTrace();
+            logger.error(localIOException);
             handle(localIOException);
+
         }
         catch (Exception localException) {
-            localException.printStackTrace();
+            logger.error(localException);
             handle(localException);
         }
         return null;

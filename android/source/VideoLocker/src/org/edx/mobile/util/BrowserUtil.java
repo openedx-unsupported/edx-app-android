@@ -1,16 +1,19 @@
 package org.edx.mobile.util;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.analytics.SegmentTracker;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.SegmentTracker;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
+
 public class BrowserUtil {
+
+    private static final Logger logger = new Logger(BrowserUtil.class.getName());
 
     /**
      * Opens given URL in native browser.
@@ -33,11 +36,10 @@ public class BrowserUtil {
             context.startActivity(intent);*/
             
             try{
-                ISegment segIO = SegmentFactory.getInstance(context, 
-                        new SegmentTracker(context));
+                ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackOpenInBrowser(url);
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
 
             // apply transition when user gets back from browser
@@ -47,9 +49,9 @@ public class BrowserUtil {
             
             // apply transition animation
             context.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-            LogUtil.log(context.getClass().getName(), "next transition animation applied");
+            logger.debug("Next transition animation applied");
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 }
