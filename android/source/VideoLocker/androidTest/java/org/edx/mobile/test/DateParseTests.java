@@ -8,6 +8,7 @@ import org.edx.mobile.util.Emailutill;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateParseTests extends BaseTestCase {
 
@@ -64,11 +65,15 @@ public class DateParseTests extends BaseTestCase {
      */
     public void testFormatCourseNotStartedDate() throws Exception {
         String inputDate = "2014-11-20T05:00:00Z";
-        String expectedOutput = "November 20, 2014";
 
         String outputDate = DateUtil.formatCourseNotStartedDate(inputDate);
         assertNotNull(outputDate);
-        assertEquals(expectedOutput,outputDate);
+        //FIXME - This check is currently only for English locale.
+        //Need to have a more generic test case based on Locale
+        if(Locale.getDefault().getLanguage().equals("en")){
+            String expectedOutput = "November 20, 2014";
+            assertEquals(expectedOutput, outputDate);
+        }
     }
 
 }
