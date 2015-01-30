@@ -13,6 +13,8 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.module.validate.Validate;
+import org.edx.mobile.module.validate.ValidationUtil;
 import org.edx.mobile.view.MyVideosTabActivity;
 
 
@@ -36,15 +38,17 @@ public class MyVideosBaseFragment extends Fragment {
     
     private void initDB() {
         storage = new Storage(getActivity());
+        Validate.notNull(storage);
 
         UserPrefs userprefs = new UserPrefs(getActivity());
+        Validate.notNull(userprefs);
+
         String username = null;
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if(profile!=null){
-                username =profile.username;
-            }
+        ProfileModel profile = userprefs.getProfile();
+        if (ValidationUtil.isNotNull(profile)) {
+            username =profile.username;
         }
+
         db = DatabaseFactory.getInstance(getActivity(), 
                 DatabaseFactory.TYPE_DATABASE_NATIVE, username);
         

@@ -42,6 +42,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.module.validate.ValidationUtil;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -111,7 +112,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
         // enabling action bar app icon.
         ActionBar bar = getActionBar();
-        if (bar != null) {
+        if (ValidationUtil.isNotNull(bar)) {
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setHomeButtonEnabled(true);
             bar.setIcon(android.R.color.transparent);
@@ -128,7 +129,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         try{
             DrawerLayout mDrawerLayout = (DrawerLayout)
                     findViewById(R.id.drawer_layout);
-            if (mDrawerLayout != null) {
+            if (ValidationUtil.isNotNull(mDrawerLayout)) {
 
                 Fragment frag = getSupportFragmentManager()
                         .findFragmentByTag("NavigationFragment");
@@ -204,7 +205,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     //this is configure the Navigation Drawer of the application
     protected void configureDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null) {
+        if (ValidationUtil.isNotNull(mDrawerLayout)) {
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
@@ -276,7 +277,7 @@ public class BaseFragmentActivity extends FragmentActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
+        if (ValidationUtil.isNotNull(menu)) {
             progressMenuItem = menu.findItem(R.id.progress_download);
             //Check if the the onTick method needs to be run
             //This has been done to handle unwanted call to onTick() from login screen
@@ -290,7 +291,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // toggle nav drawer on selecting action bar app icon/title
-        if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
+        if (ValidationUtil.isNotNull(mDrawerToggle) && mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
@@ -314,11 +315,11 @@ public class BaseFragmentActivity extends FragmentActivity {
     public void setTitle(CharSequence title) {
         try {
             ActionBar bar = getActionBar();
-            if (bar != null && title!=null) {
+            if (ValidationUtil.isNotNull(bar, title)) {
                 Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Semibold.ttf");
                 int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
                 TextView titleTextView = (TextView) findViewById(titleId);
-                if(titleTextView!=null){
+                if(ValidationUtil.isNotNull(titleTextView)) {
                     titleTextView.setTextColor(getResources().getColor(R.color.grey_text_mycourse));
                     titleTextView.setTypeface(type);
                     bar.setTitle(title);
@@ -337,7 +338,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (mDrawerToggle != null ) {
+        if (ValidationUtil.isNotNull(mDrawerToggle)) {
             mDrawerToggle.syncState();
         }
     }
@@ -346,7 +347,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        if (mDrawerToggle != null ) {
+        if (ValidationUtil.isNotNull(mDrawerToggle)) {
             mDrawerToggle.onConfigurationChanged(newConfig);
         }
     }
@@ -402,11 +403,11 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onTick() {
         // this is a per second callback
         try {
-            if (progressMenuItem != null) {
+            if (ValidationUtil.isNotNull(progressMenuItem)) {
                 if(AppConstants.offline_flag){
                     progressMenuItem.setVisible(false);
                 }else{
-                    if(db!=null){
+                    if(ValidationUtil.isNotNull(db)) {
                         boolean downloading = db.isAnyVideoDownloading(null);
                         logger.debug("isDownloading "+downloading);
                         if(!downloading){
@@ -428,10 +429,10 @@ public class BaseFragmentActivity extends FragmentActivity {
         if(storage!=null){
             try {
                 View view = progressMenuItem.getActionView();
-                if (view != null) {
+                if (ValidationUtil.isNotNull(view)) {
                     totalProgress = (ProgressWheel) view
                             .findViewById(R.id.progress_wheel);
-                    if (totalProgress != null) {
+                    if (ValidationUtil.isNotNull(totalProgress)) {
                         progressMenuItem.setVisible(true);
                         storage.getAverageDownloadProgress(averageProgressCallback);
                     }else{
