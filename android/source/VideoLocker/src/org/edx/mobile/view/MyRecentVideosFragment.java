@@ -19,28 +19,27 @@ import android.widget.ListView;
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.PlayerFragment;
+import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.player.VideoListFragment.VideoListCallback;
-import org.edx.mobile.util.LogUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,8 +58,7 @@ public class MyRecentVideosFragment extends Fragment {
     private Button deleteButton = null;
     private final Handler handler = new Handler();
     private ISegment segIO;
-    private static int index;
-    private static int top;
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +70,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             segIO.screenViewsTracking("My Videos - Recent Videos");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return view;
@@ -132,7 +130,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-
+            logger.error(e);
         }
     }
 
@@ -142,7 +140,7 @@ public class MyRecentVideosFragment extends Fragment {
         try {
             addToRecentAdapter(getView());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         if (containerActivity.playerFragment != null) {
@@ -167,7 +165,7 @@ public class MyRecentVideosFragment extends Fragment {
 
     private void addToRecentAdapter(View view) {
         try {
-            LogUtil.log(getClass().getName(), "reloading adapter...");
+            logger.debug("reloading adapter...");
 
             ArrayList<SectionItemInterface> list = storage.getRecentDownloadedVideosList();
             if (list != null) {
@@ -175,14 +173,14 @@ public class MyRecentVideosFragment extends Fragment {
                 for (SectionItemInterface m : list) {
                     adapter.add(m);
                 }
-                LogUtil.log(getClass().getName(), "reload done");
+                logger.debug("reload done");
             }
             if(adapter.getCount()<=0){
                 hideDeletePanel(view);
             }
             videoListView.setOnItemClickListener(adapter);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -206,7 +204,7 @@ public class MyRecentVideosFragment extends Fragment {
                     callback.playVideoModel(v);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }
@@ -229,19 +227,19 @@ public class MyRecentVideosFragment extends Fragment {
                 FragmentTransaction ft = fm.beginTransaction();
                 if (containerActivity.playerFragment.isAdded()) {
                     ft.detach(containerActivity.playerFragment);
-                    LogUtil.log(getClass().getName(), "removing player from view ...");
+                    logger.debug("removing player from view ...");
                     ft.attach(containerActivity.playerFragment);
-                    LogUtil.log(getClass().getName(), "adding player to view ...");
+                    logger.debug("adding player to view ...");
                 } else {
                     ft.replace(R.id.container_player, containerActivity.playerFragment, "player");
                 }
                 ft.commit();
 
-                LogUtil.log(getClass().getName(), "showing player ...");
+                logger.debug("showing player ...");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(), "error in showing player");
+            logger.error(ex);
+            logger.warn("Error in showing player");
         }
     }
 
@@ -251,7 +249,7 @@ public class MyRecentVideosFragment extends Fragment {
             notifyAdapter();
             videoListView.setOnItemClickListener(adapter);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -261,7 +259,7 @@ public class MyRecentVideosFragment extends Fragment {
             notifyAdapter();
             videoListView.setOnItemClickListener(adapter);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -280,14 +278,13 @@ public class MyRecentVideosFragment extends Fragment {
                         // hide checkboxes in list
                         notifyAdapter();
                     } catch(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 }
             }, 300);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(),
-                    "error in hiding delete button Panel");
+            logger.error(ex);
+            logger.warn("error in hiding delete button Panel");
         }
     }
 
@@ -365,8 +362,8 @@ public class MyRecentVideosFragment extends Fragment {
                 hideDeletePanel(view);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.log(getClass().getName(), "error in showing delete panel");
+            logger.error(ex);
+            logger.debug("error in showing delete panel");
         }
 
     }
@@ -405,7 +402,7 @@ public class MyRecentVideosFragment extends Fragment {
                 deleteDialogFragment.dismiss();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -430,7 +427,7 @@ public class MyRecentVideosFragment extends Fragment {
             getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -452,7 +449,7 @@ public class MyRecentVideosFragment extends Fragment {
                 ((MyVideosTabActivity) getActivity()).unsetMyVideosCheckBoxSelected();
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -463,7 +460,7 @@ public class MyRecentVideosFragment extends Fragment {
             notifyAdapter();
             enableDeleteButton();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -474,7 +471,7 @@ public class MyRecentVideosFragment extends Fragment {
             notifyAdapter();
             disableDeleteButton();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -483,7 +480,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             deleteButton.setEnabled(false);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -492,7 +489,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             deleteButton.setEnabled(true);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -509,7 +506,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -522,7 +519,7 @@ public class MyRecentVideosFragment extends Fragment {
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -538,7 +535,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -550,7 +547,7 @@ public class MyRecentVideosFragment extends Fragment {
             View container = getActivity().findViewById(R.id.container_player);
             return (container != null && container.getVisibility() == View.VISIBLE);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
         return false;
     }
@@ -579,13 +576,13 @@ public class MyRecentVideosFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        LogUtil.log("listView", "In onSaveInstance State");
+        logger.debug("In onSaveInstance State");
         try{
             outState.putInt("playingVideoIndex", playingVideoIndex);
             outState.putSerializable("model", videoModel);
             super.onSaveInstanceState(outState);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -600,7 +597,7 @@ public class MyRecentVideosFragment extends Fragment {
                 videoModel = (DownloadEntry) savedInstanceState.getSerializable("model");
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -612,7 +609,7 @@ public class MyRecentVideosFragment extends Fragment {
                 notifyAdapter();
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -635,7 +632,7 @@ public class MyRecentVideosFragment extends Fragment {
                 playingVideoIndex++;
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -652,7 +649,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         return false;
@@ -677,7 +674,7 @@ public class MyRecentVideosFragment extends Fragment {
                 playingVideoIndex--;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -690,7 +687,7 @@ public class MyRecentVideosFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return false;
     }
@@ -743,24 +740,24 @@ public class MyRecentVideosFragment extends Fragment {
     private DataCallback<Integer> setWatchedStateCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
-            LogUtil.log("Db", "Watched State Updated");
+            logger.debug("Watched State Updated");
         }
 
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 
     private DataCallback<Integer> setCurrentPositionCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
-            LogUtil.log("Db", "Current Playback Position Updated");
+            logger.debug("Current Playback Position Updated");
         }
 
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 

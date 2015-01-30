@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -43,7 +44,6 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.DownloadListActivity;
 import org.edx.mobile.view.NavigationFragment;
@@ -65,6 +65,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected IStorage storage;
     protected ISegment segIO;
     protected boolean runOnTick = true;
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -79,13 +80,13 @@ public class BaseFragmentActivity extends FragmentActivity {
         try{
             applyTransitionNext();
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
         enableNetworkStateChangeCallback();
         enableLogoutCallback();
         updateActionBarShadow();
 
-        LogUtil.log(getClass().getName(), "created");
+        logger.debug( "created");
     }
 
     @Override
@@ -94,7 +95,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             super.startActivity(intent);
             applyTransitionNext();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -138,7 +139,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                 }
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -179,7 +180,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onRestart() {
         super.onRestart();
         isActivityStarted = true;
-        LogUtil.log(getClass().getName(), "activity restarted");
+        logger.debug( "activity restarted");
 
         if (applyPrevTransitionOnRestart) {
             applyTransitionPrev();
@@ -324,7 +325,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                 }
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -350,19 +351,9 @@ public class BaseFragmentActivity extends FragmentActivity {
         }
     }
 
-
-    /**
-     * Prints given message in the debug log with class name as "tag".
-     * This method prints log only in the debug mode.
-     * @param msg : This message is to print the log message
-     */
-    protected void log(String msg) {
-        LogUtil.log(getClass().getName(), msg);
-    }
-
     public void animateLayouts(View view){
         if (view == null) {
-            LogUtil.error(getClass().getName(), "null view cannot be animated!");
+            logger.warn("Null view cannot be animated!");
             return;
         }
         LayoutAnimationControllerUtil messageController;
@@ -397,7 +388,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         try{
             animateLayouts(findViewById(R.id.offline_access_panel));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -417,7 +408,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                 }else{
                     if(db!=null){
                         boolean downloading = db.isAnyVideoDownloading(null);
-                        LogUtil.log("test", "isDownloading "+downloading);
+                        logger.debug("isDownloading "+downloading);
                         if(!downloading){
                             progressMenuItem.setVisible(false);
                         }else{
@@ -428,7 +419,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
             }                               //progress menu item not null check
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -448,7 +439,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }
@@ -492,7 +483,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            log("network state changed");
+            logger.debug("network state changed");
             if (NetworkUtil.isConnected(context)) {
                 if ( !isOnline) {
                     // only notify if previous state was NOT same
@@ -538,7 +529,7 @@ public class BaseFragmentActivity extends FragmentActivity {
      */
     protected void onOnline() {
         AppConstants.offline_flag = false;
-        log ("you are now online");
+        logger.debug("You are now online");
     }
 
     /**
@@ -546,19 +537,19 @@ public class BaseFragmentActivity extends FragmentActivity {
      */
     protected void onOffline() {
         AppConstants.offline_flag = true;
-        log ("you are now offline");
+        logger.debug ("You are now offline");
     }
 
     private void applyTransitionNext() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-        LogUtil.log(getClass().getName(), "next transition animation applied");
+        logger.debug( "next transition animation applied");
     }
 
     private void applyTransitionPrev() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
-        LogUtil.log(getClass().getName(), "prev transition animation applied");
+        logger.debug( "prev transition animation applied");
     }
 
 
@@ -595,14 +586,14 @@ public class BaseFragmentActivity extends FragmentActivity {
         @Override
         public void onResult(Integer result) {
             int progressPercent = result;
-            LogUtil.log("test", "Progress Percentage"+progressPercent);
+            logger.debug("Progress Percentage "+progressPercent);
             if(progressPercent >= 0 && progressPercent <= 100){
                 totalProgress.setProgressPercent(progressPercent);
             }
         }
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 

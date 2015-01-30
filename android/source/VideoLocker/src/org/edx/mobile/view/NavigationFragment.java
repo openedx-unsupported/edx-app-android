@@ -16,7 +16,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
@@ -25,8 +28,6 @@ import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.WifiSwitchDialogFragment;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class NavigationFragment extends Fragment {
 
     private PrefManager pref;
     private WifiSwitchDialogFragment newFragment;
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,7 +149,7 @@ public class NavigationFragment extends Fragment {
                 version_tv.setText(getString(R.string.label_version)+" "+version_name);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         
         
@@ -188,7 +190,7 @@ public class NavigationFragment extends Fragment {
                     wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ON_WIFI, false);
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
             
@@ -201,7 +203,7 @@ public class NavigationFragment extends Fragment {
                     
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         });

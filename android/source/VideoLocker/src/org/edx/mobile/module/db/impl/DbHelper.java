@@ -1,7 +1,7 @@
 package org.edx.mobile.module.db.impl;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.DbStructure;
-import org.edx.mobile.util.LogUtil;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 class DbHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase sqliteDb;
+    protected final Logger logger = new Logger(getClass().getName());
 
     public DbHelper(Context context) {
         super(context, DbStructure.NAME, null, DbStructure.VERSION);
@@ -46,7 +47,7 @@ class DbHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql);
         
-        LogUtil.log(getClass().getName(), "Database created");
+        logger.debug("Database created");
     }
 
     @Override
@@ -58,9 +59,9 @@ class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(upgradeQuery);
             }
             
-            LogUtil.log(getClass().getName(), "Database upgraded from " + oldVersion + " to " + newVersion);
+            logger.debug("Database upgraded from " + oldVersion + " to " + newVersion);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -71,7 +72,7 @@ class DbHelper extends SQLiteOpenHelper {
     public SQLiteDatabase getDatabase() {
         if (sqliteDb == null) {
             sqliteDb = this.getWritableDatabase();
-            LogUtil.log(getClass().getName(), "writable database handle opened");
+            logger.debug("Writable database handle opened");
         }
         return sqliteDb;
     }
@@ -81,6 +82,6 @@ class DbHelper extends SQLiteOpenHelper {
         super.close();
         
         sqliteDb = null;
-        LogUtil.log(getClass().getName(), "Database closed");
+        logger.debug("Database closed");
     }
 }

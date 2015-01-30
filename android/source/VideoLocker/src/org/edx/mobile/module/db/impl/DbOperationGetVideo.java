@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.model.IVideoModel;
-import org.edx.mobile.module.db.DatabaseModelFactory;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.module.db.DatabaseModelFactory;
 
 class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
     
@@ -23,7 +23,8 @@ class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
             video = DatabaseModelFactory.getModel(c);
         }
         if (c.moveToNext()) {
-            Log.w(getClass().getName(), "more than one records available that match your query, but you chose only first one");
+            logger.warn("More than one records available that match your query, " +
+                    "but you chose only first one");
         }
         c.close();
         

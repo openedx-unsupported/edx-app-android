@@ -1,15 +1,5 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.task.GetHandoutTask;
-import org.edx.mobile.util.AppConstants;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Xml.Encoding;
@@ -20,6 +10,16 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.CourseDetailBaseFragment;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.task.GetHandoutTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 
 public class CourseHandoutFragment extends CourseDetailBaseFragment {
@@ -71,7 +71,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                     .getSerializable("enrollment");
             loadData(courseData);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -89,14 +89,14 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                         showEmptyHandoutMessage();
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                     showEmptyHandoutMessage();
                 }
             }
 
             @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 showEmptyHandoutMessage();
             }
         };
@@ -107,7 +107,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
             segIO.screenViewsTracking(enrollment.getCourse().getName()+
                     " - Handouts");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -120,7 +120,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -134,7 +134,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

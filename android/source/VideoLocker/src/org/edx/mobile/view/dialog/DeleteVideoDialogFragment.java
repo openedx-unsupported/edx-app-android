@@ -10,10 +10,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 
 import java.util.Map;
 
 public class DeleteVideoDialogFragment extends DialogFragment {
+
+    private final Logger logger = new Logger(getClass().getName());
 
     private IDialogCallback callback;
 
@@ -56,7 +59,7 @@ public class DeleteVideoDialogFragment extends DialogFragment {
                     
                     dismiss();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
         });
