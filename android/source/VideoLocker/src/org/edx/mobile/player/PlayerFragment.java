@@ -428,7 +428,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             this.transcript = trModel;
             player.setLMSUrl(video.lmsUrl);
             player.setVideoTitle(title);
-            Log.d("test", "playing [seek=" + seekTo + "]: " + path);
+            logger.debug("playing [seek=" + seekTo + "]: " + path);
             player.setUriAndPlay(path, seekTo);
         } catch (Exception e) {
             logger.error(e);
@@ -749,22 +749,56 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     }
 
     private void enterFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        if(isPrepared){
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    true, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (isPrepared) {
+                if (segIO == null) {
+                    logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
+                    return;
+                }
+                if (player == null) {
+                    logger.warn("player instance is null, cannot capture event enterFullScreen");
+                    return;
+                }
+                if (videoEntry == null) {
+                    logger.warn("video model instance is null, cannot capture event enterFullScreen");
+                    return;
+                }
+
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        true, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
     }
 
     private void exitFullScreen() {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (isPrepared) {
-            segIO.trackVideoOrientation(videoEntry.videoId,
-                    player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                    false, videoEntry.eid, videoEntry.lmsUrl);
+        try {
+            getActivity().setRequestedOrientation(
+                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (isPrepared) {
+                if (segIO == null) {
+                    logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
+                    return;
+                }
+                if (player == null) {
+                    logger.warn("player instance is null, cannot capture event exitFullScreen");
+                    return;
+                }
+                if (videoEntry == null) {
+                    logger.warn("video model instance is null, cannot capture event exitFullScreen");
+                    return;
+                }
+
+                segIO.trackVideoOrientation(videoEntry.videoId,
+                        player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
+                        false, videoEntry.eid, videoEntry.lmsUrl);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
     }
 
