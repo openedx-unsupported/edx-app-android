@@ -60,10 +60,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private String lastAccessed_subSectionId;
     private GetLastAccessedTask getLastAccessedTask;
     private EnrolledCoursesResponse enrollment;
+    private ETextView courseScheduleTv;
+    private String startDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chapter_list, container,
+                false);
         final Bundle bundle = getArguments();
         if(bundle!=null){
             enrollment = (EnrolledCoursesResponse) bundle
@@ -76,6 +80,18 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 }catch(Exception e){
                     e.printStackTrace();
                 }
+
+                //Initialize the text view and
+                if(!enrollment.getCourse().isStarted()){
+                    startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
+                    if(startDate!=null){
+                        startDate =  "<font color='"+ getString(R.color.grey_text_course_not_started)+"'>"+startDate+"</font>";
+                        String courseScheduledText = getString(R.string.course_content_available_text);
+                        courseScheduledText = courseScheduledText.replace("START_DATE",startDate);
+                        courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
+                        courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
+                    }
+                }
             }
         }
 
@@ -84,9 +100,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         }else{
             AppConstants.offline_flag = false;
         }
-
-        View view = inflater.inflate(R.layout.fragment_chapter_list, container,
-                false);
 
         chapterListView = (ListView) view
                 .findViewById(R.id.chapter_list);
@@ -226,7 +239,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     for (Entry<String, SectionEntry> entry : chapterMap
                             .entrySet()) {
                         adapter.add(entry.getValue());
-                        if(openInBrowserUrl==null||openInBrowserUrl.equalsIgnoreCase("")) {
+                        if (openInBrowserUrl == null || openInBrowserUrl.equalsIgnoreCase("")) {
                             // pick up browser link
                             openInBrowserUrl = entry.getValue().section_url;
                         }
@@ -243,18 +256,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 //Notify the adapter as contents of the adapter might have changed.
                 adapter.notifyDataSetChanged();
 
-                if(adapter.getCount()==0){
-                    String startDate = null;
-                    if(enrollment!=null){
-                        if(!enrollment.getCourse().isStarted()){
-                             startDate = DateUtil.formatCourseNotStartedDate(
-                                    enrollment.getCourse().getStart());
-                        }
-                    }
-
-                    if(startDate!=null){
-                        showCourseNotStartedMessage(view, startDate);
-                    }else{
+                if (adapter.getCount() == 0) {
+                    if (startDate != null) {
+                        showCourseNotStartedMessage(view);
+                    } else {
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
@@ -627,16 +632,20 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         }
     }
 
-    private void showCourseNotStartedMessage(View view, String formatDate){
-        formatDate =  "<font color='#454951'>"+formatDate+"</font>";
-        view.findViewById(R.id.no_chapter_tv).setVisibility(View.GONE);
-        String courseScheduledText = getString(R.string.course_content_available_text);
-        courseScheduledText = courseScheduledText.replace("START_DATE",formatDate);
-        ETextView courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
-        if(courseScheduleTv!=null){
-            courseScheduleTv.setVisibility(View.VISIBLE);
-            courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
-            chapterListView.setEmptyView(courseScheduleTv);
+    /**
+     * This function attaches the course not started message as Empty view to Chapter List
+     * @param view
+     */
+    private void showCourseNotStartedMessage(View view){
+        try{
+            if(courseScheduleTv!=null){
+                view.findViewById(R.id.no_chapter_tv).setVisibility(View.GONE);
+                courseScheduleTv.setVisibility(View.VISIBLE);
+                chapterListView.setEmptyView(courseScheduleTv);
+            }
+        }catch(Exception e){
+            //TODO - Remove comment while merging with master
+            //logger.error(e);
         }
     }
 }
