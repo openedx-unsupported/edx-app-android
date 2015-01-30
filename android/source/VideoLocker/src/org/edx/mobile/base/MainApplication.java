@@ -9,6 +9,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.validate.ValidationUtil;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
@@ -39,17 +40,22 @@ public class MainApplication extends Application {
         // initialize logger
         Logger.init(this.getApplicationContext());
 
+        // setup configuration in the Environment
         Environment.makeInstance(this.getApplicationContext());
-        RequestManager.init(this);
+
+        // setup image cache
         createImageCache();
 
         // initialize SegmentIO, empty writeKey is handled in SegmentTracker
         SegmentFactory.makeInstance(this);
 
-        if(Environment.getInstance().getConfig().getFabricKey() != null) {
+        // initialize Fabric
+        if(ValidationUtil.isNotNull(Environment.getInstance().getConfig().getFabricKey())) {
             Fabric.with(this, new Crashlytics());
         }
-        if(Environment.getInstance().getConfig().getNewRelicKey() != null) {
+
+        // initialize NewRelic
+        if(ValidationUtil.isNotNull(Environment.getInstance().getConfig().getNewRelicKey())) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Environment.getInstance().getConfig().getNewRelicKey())
                     .withCrashReportingEnabled(false)
@@ -57,7 +63,7 @@ public class MainApplication extends Application {
         }
 
         // initialize Facebook SDK
-        if (Environment.getInstance().getConfig().getFacebookAppId() != null) {
+        if (ValidationUtil.isNotNull(Environment.getInstance().getConfig().getFacebookAppId())) {
             com.facebook.Settings.setApplicationId(Environment.getInstance().getConfig().getFacebookAppId());
         }
     }
@@ -67,6 +73,7 @@ public class MainApplication extends Application {
      * Change to Disk for a Disk based LRU implementation.
      */
     private void createImageCache(){
+        RequestManager.init(this);
         ImageCacheManager.getInstance().init(this,
                 this.getPackageCodePath()
                 , DISK_IMAGECACHE_SIZE
