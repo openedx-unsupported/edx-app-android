@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.view.custom.ETextView;
 
 public class FindCoursesDialogFragment extends DialogFragment {
@@ -48,7 +48,7 @@ public class FindCoursesDialogFragment extends DialogFragment {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
                 if(!isRemoving() && isVisible()){
-                    String url = Environment.getInstance().getConfig().getCourseSearchUrl();
+                    String url = Config.getInstance().getCourseSearchUrl();
                     BrowserUtil.open(getActivity(), url);
                 }
             }
