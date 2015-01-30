@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.edx.mobile.R;
+import org.edx.mobile.exception.LoginErrorMessage;
+import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -21,7 +23,6 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.social.ISocial;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
 
 import android.content.Context;
@@ -115,7 +116,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 try{
                     segIO.trackUserDoesNotHaveAccount();
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
                 showNewUserDialog();
             }
@@ -132,7 +133,7 @@ public class LoginActivity extends BaseFragmentActivity {
         try{
             segIO.screenViewsTracking("Login");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         final View activityRootView = findViewById(R.id.root_view);
@@ -149,12 +150,12 @@ public class LoginActivity extends BaseFragmentActivity {
                             showBottomLayout();
                         }
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         
         // enable login buttons at launch
@@ -261,12 +262,19 @@ public class LoginActivity extends BaseFragmentActivity {
                 LoginTask logintask = new LoginTask(this) {
                     @Override
                     public void onFinish(AuthResponse result) {
-                        if (result != null) {
-                            if(result.profile!=null){
+                        try {
+                            if (result != null && result.hasValidProfile()) {
                                 onUserLoginSuccess(result.profile);
                             } else {
-                                onUserLoginIncorrect(result.isAccountGrantError()); 
+                                LoginErrorMessage errorMsg =
+                                        new LoginErrorMessage(
+                                                getString(R.string.login_error),
+                                                getString(R.string.login_failed));
+                                throw new LoginException(errorMsg);
                             }
+                        } catch(LoginException ex) {
+                            logger.error(ex);
+                            handle(ex);
                         }
                     }
 
@@ -453,7 +461,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 bottomLayout.setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -464,7 +472,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 bottomLayout.setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -472,7 +480,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         @Override
         public void onLogin(String accessToken) {
-            LogUtil.log("Login", "google logged in; token= " + accessToken);
+            logger.debug("Google logged in; token= " + accessToken);
             startSocialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
         }
 
@@ -482,7 +490,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         @Override
         public void onLogin(String accessToken) {
-            LogUtil.log("Login", "facebook logged in; token= " + accessToken);
+            logger.debug("Facebook logged in; token= " + accessToken);
             startSocialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
         }
     };
@@ -503,14 +511,16 @@ public class LoginActivity extends BaseFragmentActivity {
         task.execute(accessToken, backend);
     }
     
-    private void onUserLoginSuccess(ProfileModel profile) {
+    private void onUserLoginSuccess(ProfileModel profile) throws LoginException {
         if (profile.email == null) {
             // handle this error, show error message
-            
-            onUserLoginIncorrect(false);
-            return;
+            LoginErrorMessage errorMsg =
+                    new LoginErrorMessage(
+                            getString(R.string.login_error),
+                            getString(R.string.login_failed));
+            throw new LoginException(errorMsg);
         }
-        
+
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         pref.put("email", email_et.getText().toString().trim());
@@ -536,26 +546,18 @@ public class LoginActivity extends BaseFragmentActivity {
         password_et.setEnabled(true);
         forgotPassword_tv.setEnabled(true);
         signupTv.setEnabled(true);
-        ex.printStackTrace();
-    }
-    
-    private void onUserLoginIncorrect(boolean isGrantError) {
-        setLoginBtnEnabled();
-        email_et.setEnabled(true);
-        password_et.setEnabled(true);
-        forgotPassword_tv.setEnabled(true);
-        signupTv.setEnabled(true);
         eulaTv.setEnabled(true);
-        //FIXME - Need to update this once server sends invalid grant message
-        showErrorMessage(getString(R.string.login_error),
-                getString(R.string.login_failed));
-        /*if (isGrantError) {
-            showErrorMessage(getString(R.string.login_error),
-                    getString(R.string.login_failed_no_grant));
+
+        // handle if this is a LoginException
+        if (ex != null && ex instanceof LoginException) {
+            LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
+            showErrorMessage(
+                    error.getMessageLine1(),
+                    error.getMessageLine2());
         } else {
-            showErrorMessage(getString(R.string.login_error),
-                getString(R.string.login_failed));
-        }*/
+            logger.warn("Login Exception : ");
+            logger.error(ex);
+        }
     }
     
     private class ProfileTask extends Task<ProfileModel> {
@@ -567,13 +569,18 @@ public class LoginActivity extends BaseFragmentActivity {
         @Override
         public void onFinish(ProfileModel result) {
             if (result != null) {
-                onUserLoginSuccess(result);
+                try {
+                    onUserLoginSuccess(result);
+                } catch (LoginException ex) {
+                    logger.error(ex);
+                    handle(ex);
+                }
             } 
         }
 
         @Override
         public void onException(Exception ex) {
-            onUserLoginIncorrect(false);
+            onUserLoginFailure(ex);
         }
 
         @Override
@@ -588,18 +595,35 @@ public class LoginActivity extends BaseFragmentActivity {
                 SocialLoginResponse social = null;
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
                     social = api.loginByFacebook(accessToken);
+
+                    if (social.isAccountNotLinked()) {
+                        throw new LoginException(new LoginErrorMessage(
+                                context.getString(R.string.error_account_not_linked_title_fb),
+                                context.getString(R.string.error_account_not_linked_desc_fb)));
+                    }
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                     social = api.loginByGoogle(accessToken);
+
+                    if (social.isAccountNotLinked()) {
+                        throw new LoginException(new LoginErrorMessage(
+                                getString(R.string.error_account_not_linked_title_google),
+                                getString(R.string.error_account_not_linked_desc_google)));
+                    }
                 }
-                
-                if ( !social.isSuccess()) {
-                    throw new Exception("authentication with access_token failed");
+
+                if (social.isSuccess()) {
+                    // we got a valid accessToken so profile can be fetched
+                    ProfileModel profile = api.getProfile();
+                    if (profile.email != null) {
+                        // we got valid profile information
+                        return profile;
+                    }
                 }
-                
-                // now profile can be fetched
-                return api.getProfile();
+                throw new LoginException(new LoginErrorMessage(
+                        getString(R.string.login_error),
+                        getString(R.string.login_failed)));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 handle(e);
             }
             return null;
@@ -623,7 +647,7 @@ public class LoginActivity extends BaseFragmentActivity {
                             facebook.logout();
                         } catch(Exception ex) {
                             // no need to handle this error
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                         return null;
                     }
@@ -657,7 +681,7 @@ public class LoginActivity extends BaseFragmentActivity {
                             google.logout();
                         } catch(Exception ex) {
                             // no need to handle this error
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                         return null;
                     }

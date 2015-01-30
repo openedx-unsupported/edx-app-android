@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This file is created for segment IO analytics-->
+    <!-- Debug flag for Segment IO -->
+    <string name="analytics_debug">false</string>
+    <!-- The number of events in the disk queue before sending events to the server. -->
+    <integer name="analytics_queue_size">20</integer>
+</resources>

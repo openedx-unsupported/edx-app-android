@@ -1,14 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.MemoryUtil;
-
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +9,15 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.MemoryUtil;
 
 public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
 
@@ -62,7 +62,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
                 if(videoData.isDownloaded()){
@@ -141,7 +141,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         selectedPosition=position;
         SectionItemInterface model = getItem(position);
-        onItemClicked(model, position);
+        if(model!=null) onItemClicked(model, position);
     }
 
     public abstract void onItemClicked(SectionItemInterface model, int position);

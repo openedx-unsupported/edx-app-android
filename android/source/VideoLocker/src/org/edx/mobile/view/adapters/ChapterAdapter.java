@@ -6,7 +6,6 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 import android.content.Context;
@@ -46,9 +45,9 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         holder.no_of_videos.setVisibility(View.VISIBLE);
         holder.no_of_videos.setText("" + totalCount);
         int inProcessCount = dbStore.getVideosCountByChapter(courseId, model.chapter, null);
-        LogUtil.log("download", "In Process Count" + inProcessCount);
+        logger.debug("In Process Count" + inProcessCount);
         int videoCount = totalCount - inProcessCount;
-        LogUtil.log("download", "Video Count"+videoCount);
+        logger.debug("Video Count"+videoCount);
         if (videoCount > 0) {
             holder.progresslayout.setVisibility(View.GONE);
             holder.bulk_download_videos.setVisibility(View.VISIBLE);
@@ -77,7 +76,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                             }
                             @Override
                             public void onFail(Exception ex) {
-                                ex.printStackTrace();
+                                logger.error(ex);
                             }
                         });
             }else{
@@ -160,7 +159,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             SectionEntry model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 

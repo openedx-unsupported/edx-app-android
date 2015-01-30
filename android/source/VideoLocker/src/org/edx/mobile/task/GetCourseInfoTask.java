@@ -1,10 +1,10 @@
 package org.edx.mobile.task;
 
+import android.content.Context;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-
-import android.content.Context;
 
 public abstract class GetCourseInfoTask extends Task<CourseInfoModel> {
 
@@ -30,13 +30,14 @@ public abstract class GetCourseInfoTask extends Task<CourseInfoModel> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 return api.getCourseInfo(enrollment.getCourse().getCourse_about(), false);
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

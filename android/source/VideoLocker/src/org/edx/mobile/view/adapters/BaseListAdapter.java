@@ -1,7 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -9,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import java.util.ArrayList;
+import org.edx.mobile.logger.Logger;
 
 public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemClickListener {
 
@@ -19,6 +19,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
     private ArrayList<T> items = new ArrayList<T>();
     private SparseIntArray selection = new SparseIntArray(); 
     public static final long MIN_CLICK_INTERVAL = 1000; //in millis
+    protected final Logger logger = new Logger(getClass().getName());
     
     public BaseListAdapter(Context context) {
         this.context = context;
@@ -129,7 +130,10 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
 
     @Override
     public T getItem(int index) {
-        return items.get(index);
+        //Check if the size of items is greater than the index
+        if(index >= 0 && items.size()>index)
+            return items.get(index);
+        return null;
     }
 
     public int getPosition(T item) {
@@ -172,7 +176,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
             
             return convertView;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         
         return convertView;

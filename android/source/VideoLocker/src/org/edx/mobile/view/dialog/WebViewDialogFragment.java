@@ -10,9 +10,12 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.custom.ETextView;
 
 public class WebViewDialogFragment extends DialogFragment {
+    private final Logger logger = new Logger(getClass().getName());
+
     String fileName;
     boolean showTitle;
     String dialogTitle;
@@ -51,14 +54,17 @@ public class WebViewDialogFragment extends DialogFragment {
                 view_seperator.setVisibility(View.INVISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         // Watch for button clicks.
         Button button = (Button) v.findViewById(R.id.positiveButton);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                dismiss();
+                //Check if the dialog is not removing(dismissing)
+                // or is visible before dismissing the dialog
+                if(!isRemoving() && isVisible())
+                    dismiss();
             }
         });
 

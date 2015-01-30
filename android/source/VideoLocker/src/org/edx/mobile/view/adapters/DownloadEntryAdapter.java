@@ -1,11 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.util.MemoryUtil;
-
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
@@ -14,6 +8,12 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.download.NativeDownloadModel;
+import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.util.MemoryUtil;
 
 public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry> {
 
@@ -114,7 +114,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         DownloadEntry model = getItem(position);
-        onItemClicked(model);
+        if(model!=null) onItemClicked(model);
     }
 
     public abstract void onItemClicked(DownloadEntry model);

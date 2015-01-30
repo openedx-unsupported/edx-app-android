@@ -1,5 +1,6 @@
 package org.edx.mobile.task;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 import android.os.AsyncTask;
@@ -8,6 +9,8 @@ import android.view.View;
 public class CircularProgressTask extends AsyncTask<Object, Object, Object> {
 
     ProgressWheel progressBar;
+    private final Logger logger = new Logger(getClass().getName());
+
     public CircularProgressTask() {
     }
 
@@ -32,7 +35,7 @@ public class CircularProgressTask extends AsyncTask<Object, Object, Object> {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         return null;
@@ -46,7 +49,6 @@ public class CircularProgressTask extends AsyncTask<Object, Object, Object> {
     
     @Override
     protected void onPostExecute(Object result) {
-        // TODO Auto-generated method stub
         super.onPostExecute(result);
         if(progressBar!=null){
             progressBar.setVisibility(View.GONE);

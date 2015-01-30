@@ -1,11 +1,10 @@
 package org.edx.mobile.module.analytics;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.LogUtil;
 
 import android.content.Context;
-
 import com.segment.analytics.Analytics;
 import com.segment.analytics.AnalyticsContext;
 import com.segment.analytics.Options;
@@ -13,32 +12,33 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 public class SegmentTracker {
-    
+
+    /* Singleton instance of Analytics */
     private Analytics analytics;
+    private final Logger logger = new Logger(getClass().getName());
     
     public SegmentTracker(Context context) {
         try {
             String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
-            /*
-            String debugging = context.getString(R.string.analytics_debug);
-            int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
-            
-            analytics = new Analytics.Builder(context, writeKey)
-                .debugging(Boolean.parseBoolean(debugging))
-                .queueSize(queueSize)
-                .build();
-            */
-            
-            analytics = Analytics.with(context);
-            
-            // Must be called before any calls to Analytics.with(context)
-            // Now Analytics.with will return the custom instance
 
-            LogUtil.log(getClass().getName(), "SegmentTracker created with write key: " + writeKey);
+            if (writeKey != null) {
+                logger.debug("SegmentTracker created with write key: " + writeKey);
+
+                String debugging = context.getString(R.string.analytics_debug);
+                int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
+
+                // Now Analytics.with will return the custom instance
+                analytics = new Analytics.Builder(context, writeKey)
+                        .debugging(Boolean.parseBoolean(debugging))
+                        .queueSize(queueSize)
+                        .build();
+            } else {
+                logger.warn("writeKey is null, Segment analytics will not work.");
+            }
         } catch(RuntimeException ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
     
@@ -52,7 +52,7 @@ public class SegmentTracker {
                 analytics.flush();
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -67,7 +67,7 @@ public class SegmentTracker {
                 analytics.track(event, props);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -82,7 +82,7 @@ public class SegmentTracker {
                 analytics.screen(category, name, properties);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -98,7 +98,7 @@ public class SegmentTracker {
                 analytics.identify(id, traits, options);
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     
@@ -113,7 +113,7 @@ public class SegmentTracker {
                 return analyticsContext;
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         
         return null;
@@ -125,7 +125,7 @@ public class SegmentTracker {
                 analytics.logout();
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 }

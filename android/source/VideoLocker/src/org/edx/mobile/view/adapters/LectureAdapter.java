@@ -1,12 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.view.custom.ProgressWheel;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.storage.IStorage;
-
 import android.content.Context;
 import android.os.SystemClock;
 import android.view.View;
@@ -14,6 +7,13 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.LectureModel;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.view.custom.ProgressWheel;
 
 public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
     private long lastClickTime;
@@ -78,11 +78,11 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                             }
                             @Override
                             public void onFail(Exception ex) {
-                                ex.printStackTrace();
+                                logger.error(ex);
                             }
                         });
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }else{
                     holder.progresslayout.setVisibility(View.GONE);
@@ -131,7 +131,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             LectureModel model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 

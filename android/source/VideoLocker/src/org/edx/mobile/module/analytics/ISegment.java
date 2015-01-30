@@ -74,6 +74,14 @@ public interface ISegment {
     Properties trackUserDoesNotHaveAccount();
     
     Properties trackUserFindsCourses();
+
+    /**
+     * Sets given tracker instance and uses it for analytics.
+     * This method is useful in some cases where a given tracker is to be used.
+     * For example, unit tests might use mocked tracker object.
+     * @param tracker
+     */
+    void setTracker(SegmentTracker tracker);
     
     public static interface Keys{
         public static final String NAME = "name";

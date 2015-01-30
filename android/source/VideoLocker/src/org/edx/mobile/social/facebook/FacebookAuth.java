@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import org.edx.mobile.social.ISocialImpl;
-import org.edx.mobile.util.LogUtil;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -23,7 +21,6 @@ import com.facebook.UiLifecycleHelper;
 
 public class FacebookAuth extends ISocialImpl {
 
-    private static final String TAG = "FacebookAuth";
     private UiLifecycleHelper uiHelper;
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
@@ -105,11 +102,11 @@ public class FacebookAuth extends ISocialImpl {
             if (callback != null) {
                 callback.onLogin(session.getAccessToken());
             }
-            Log.i(TAG, "Facebook Logged in...");
+            logger.debug("Facebook Logged in...");
         } else if (state.isClosed()) {
-            Log.i(TAG, "Facebook Logged out...");
+            logger.debug("Facebook Logged out...");
         } else {
-            Log.i(TAG, "Facebook state changed ...");
+            logger.debug("Facebook state changed ...");
         }
     }
 
@@ -123,13 +120,13 @@ public class FacebookAuth extends ISocialImpl {
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.i("Facebook Key Hash:",
-                        Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                logger.debug("Facebook Key Hash:"+ Base64.encodeToString(md.digest(),
+                        Base64.DEFAULT));
             }
         } catch (NameNotFoundException e) {
-
+            logger.error(e);
         } catch (NoSuchAlgorithmException e) {
-
+            logger.error(e);
         }
     }
 
@@ -149,7 +146,7 @@ public class FacebookAuth extends ISocialImpl {
             //clear your preferences if saved
         }
         
-        LogUtil.log(TAG, "facebook logged out");
+        logger.debug("facebook logged out");
     }
 
 }

@@ -1,8 +1,8 @@
 package org.edx.mobile.model;
 
-import org.edx.mobile.model.api.LatestUpdateModel;
-
 import android.content.Context;
+
+import org.edx.mobile.model.api.LatestUpdateModel;
 
 /*
  * TODO: models to be refactored in GA+1
