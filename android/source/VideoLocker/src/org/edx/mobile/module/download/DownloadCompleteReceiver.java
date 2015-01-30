@@ -47,8 +47,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             if(result!=null){
                                 DownloadEntry download = (DownloadEntry) result;
                                 
-                                ISegment segIO = SegmentFactory.getInstance(context, 
-                                        new SegmentTracker(context));
+                                ISegment segIO = SegmentFactory.getInstance();
                                 segIO.trackDownloadComplete(download.videoId, download.eid, 
                                         download.lmsUrl);
 

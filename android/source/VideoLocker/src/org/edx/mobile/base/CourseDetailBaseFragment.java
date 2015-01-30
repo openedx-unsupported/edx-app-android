@@ -105,8 +105,7 @@ public class CourseDetailBaseFragment extends Fragment {
         db = DatabaseFactory.getInstance(getActivity(), 
                 DatabaseFactory.TYPE_DATABASE_NATIVE, username);
 
-        segIO = SegmentFactory.getInstance(getActivity(), 
-                new SegmentTracker(getActivity()));
+        segIO = SegmentFactory.getInstance();
     }
 
     /**

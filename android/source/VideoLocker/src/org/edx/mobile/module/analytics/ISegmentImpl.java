@@ -13,20 +13,18 @@ class ISegmentImpl implements ISegment {
     private SegmentTracker tracker;
     private final Logger logger = new Logger(getClass().getName());
 
-    public ISegmentImpl(Context context) {
-        this(context, null);
+    /**
+     * This Constructor also initializes {@link org.edx.mobile.module.analytics.SegmentTracker}
+     * that is used to submit analytics data.
+     * @param context
+     */
+    ISegmentImpl(Context context) {
+        this.tracker = new SegmentTracker(context);
     }
 
-    public ISegmentImpl(Context context, SegmentTracker tracker) {
-        try {
-            if (tracker != null) {
-                this.tracker = tracker;
-            } else {
-                this.tracker = new SegmentTracker(context);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
+    @Override
+    public void setTracker(SegmentTracker tracker) {
+        this.tracker = tracker;
     }
 
     class VideoEvent {

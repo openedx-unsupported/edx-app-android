@@ -132,8 +132,7 @@ public class NavigationFragment extends Fragment {
                 intent.setAction(AppConstants.LOGOUT_CLICKED);
                 getActivity().sendBroadcast(intent); 
                 
-                ISegment segIO = SegmentFactory.getInstance(getActivity(),
-                        new SegmentTracker(getActivity()));
+                ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackUserLogout();
                 segIO.resetIdentifyUser();
                 

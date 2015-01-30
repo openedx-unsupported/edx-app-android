@@ -12,23 +12,28 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 public class SegmentTracker {
-    
+
+    /* Singleton instance of Analytics */
     private Analytics analytics;
     private final Logger logger = new Logger(getClass().getName());
     
     public SegmentTracker(Context context) {
         try {
             String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
-            String debugging = context.getString(R.string.analytics_debug);
-            int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
 
-            if(writeKey!=null) {
+            if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
+
+                String debugging = context.getString(R.string.analytics_debug);
+                int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
+
                 // Now Analytics.with will return the custom instance
                 analytics = new Analytics.Builder(context, writeKey)
                         .debugging(Boolean.parseBoolean(debugging))
                         .queueSize(queueSize)
                         .build();
+            } else {
+                logger.warn("writeKey is null, Segment analytics will not work.");
             }
         } catch(RuntimeException ex) {
             logger.error(ex);

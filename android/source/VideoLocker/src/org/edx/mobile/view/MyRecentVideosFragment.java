@@ -734,8 +734,7 @@ public class MyRecentVideosFragment extends Fragment {
         db = DatabaseFactory.getInstance(getActivity(), 
                 DatabaseFactory.TYPE_DATABASE_NATIVE, username);
 
-        segIO = SegmentFactory.getInstance(getActivity(), 
-                new SegmentTracker(getActivity()));
+        segIO = SegmentFactory.getInstance();
     }
 
     private DataCallback<Integer> setWatchedStateCallback = new DataCallback<Integer>() {
