@@ -56,17 +56,17 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
             try{
                 segIO.screenViewsTracking(courseData.getCourse().getName());
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
             
             try {
                 showAnnouncements = bundle.getBoolean("announcemnts");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 showAnnouncements = false;
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -83,7 +83,7 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         try{
             setTitle(activityTitle);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -239,7 +239,7 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
                 ft.commit();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

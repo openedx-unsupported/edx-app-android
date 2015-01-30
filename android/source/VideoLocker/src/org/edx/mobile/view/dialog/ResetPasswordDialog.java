@@ -13,12 +13,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.task.ResetPasswordTask;
 import org.edx.mobile.util.InputValidationUtil;
 import org.edx.mobile.util.NetworkUtil;
 
 public class ResetPasswordDialog extends DialogFragment {
+
+    private final Logger logger = new Logger(getClass().getName());
 
     private EditText email_et;
     private TextView error;
@@ -71,7 +74,7 @@ public class ResetPasswordDialog extends DialogFragment {
                     try {
                         resetPassword(emailStr);
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 } else {
                     email_et.requestFocus();
@@ -123,7 +126,7 @@ public class ResetPasswordDialog extends DialogFragment {
 
             @Override
             public void onException(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 email_et.setEnabled(true);
                 resetLayout.setVisibility(View.GONE);
                 isResetSuccessful = false;

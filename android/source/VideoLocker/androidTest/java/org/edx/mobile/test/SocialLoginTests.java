@@ -2,7 +2,6 @@ package org.edx.mobile.test;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.SocialLoginResponse;
 
 public class SocialLoginTests extends BaseTestCase {
     
