@@ -56,17 +56,17 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
             try{
                 segIO.screenViewsTracking(courseData.getCourse().getName());
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
             
             try {
                 showAnnouncements = bundle.getBoolean("announcemnts");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 showAnnouncements = false;
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -83,7 +83,7 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         try{
             setTitle(activityTitle);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -132,8 +132,12 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         //This handles which tab to be shown when CourseDetails is loaded 
         if (!showAnnouncment) {
             mTabHost.setCurrentTabByTag(getString(R.string.tab_chapter_list));
+            /* Set current tab.. */
+            mCurrentTab = getString(R.string.tab_chapter_list);
         } else {
             mTabHost.setCurrentTabByTag(getString(R.string.tab_announcement));
+            /* Set current tab.. */
+            mCurrentTab = getString(R.string.tab_announcement);
         }
 
 
@@ -235,7 +239,7 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
                 ft.commit();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -257,8 +261,10 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         if(offlineBar!=null){
             offlineBar.setVisibility(View.VISIBLE);
         }
-        if (mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
-            courseFragment.fragmentOffline();
+        if (mCurrentTab!=null && mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
+            if(courseFragment!=null){
+                courseFragment.fragmentOffline();
+            }
         }
         invalidateOptionsMenu();
     }
@@ -269,8 +275,10 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         if(offlineBar!=null){
             offlineBar.setVisibility(View.GONE);
         }
-        if (mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
-            courseFragment.fragmentOnline();
+        if (mCurrentTab!=null && mCurrentTab.equals(getString(R.string.tab_chapter_list))) {
+            if(courseFragment!=null){
+                courseFragment.fragmentOnline();
+            }
         }
         invalidateOptionsMenu();
     }

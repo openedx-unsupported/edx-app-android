@@ -1,15 +1,6 @@
 
 package org.edx.mobile.view.adapters;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.CourseEntry;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.images.ImageCacheManager;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.SystemClock;
@@ -20,6 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.images.ImageCacheManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public abstract class MyCourseAdapter extends
 BaseListAdapter<EnrolledCoursesResponse> {
@@ -107,7 +107,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
         }
@@ -164,7 +164,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
             EnrolledCoursesResponse model = getItem(position);
-            onItemClicked(model);
+            if(model!=null) onItemClicked(model);
         }
     }
 

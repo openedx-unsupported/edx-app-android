@@ -1,17 +1,13 @@
 package org.edx.mobile.social.google;
 
 import java.io.IOException;
-
 import org.edx.mobile.social.ISocialImpl;
-import org.edx.mobile.util.LogUtil;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -51,15 +47,15 @@ public class GoogleOauth2 extends ISocialImpl {
             int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity.get());
             if (ConnectionResult.SUCCESS == result) {
                 activity.get().startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
-                LogUtil.log(TAG, "launching google account picker ...");
+                logger.debug("Launching google account picker ...");
             } else {
                 // display user friendly error message
 
-                LogUtil.log(TAG, "play services are missing ...");
+                logger.debug("Play services are missing ...");
                 GooglePlayServicesUtil.getErrorDialog(result, activity.get(), 100).show();
             }
         } catch (ActivityNotFoundException ex) {
-            LogUtil.error(TAG, "google-play-services are missing? cannot login by google");
+            logger.debug("Google-play-services are missing? cannot login by google");
         }
     }
 
@@ -104,7 +100,7 @@ public class GoogleOauth2 extends ISocialImpl {
                 // The fetchToken() method handles Google-specific exceptions,
                 // so this indicates something went wrong at a higher level.
                 // TIP: Check for network connectivity before starting the AsyncTask.
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }
@@ -114,7 +110,7 @@ public class GoogleOauth2 extends ISocialImpl {
             super.onPostExecute(result);
             if (result != null && result instanceof String) {
                 accessToken = (String) result;
-                LogUtil.log(TAG, "google oauth2: accessToken: " + accessToken);
+                logger.debug("Google oauth2: accessToken: " + accessToken);
                 if (callback != null) {
                     callback.onLogin(accessToken);
                 }
@@ -127,13 +123,13 @@ public class GoogleOauth2 extends ISocialImpl {
          */
         protected String fetchToken() throws IOException {
             try {
-                Log.d(TAG, "fetching google oauth2 token ...");
+                logger.debug("Fetching google oauth2 token ...");
                 return GoogleAuthUtil.getToken(activity.get(), mEmail, mScope);
             } catch (UserRecoverableAuthException userRecoverableException) {
                 // GooglePlayServices.apk is either old, disabled, or not present
                 // so we need to show the user some UI in the activity to recover.
-                LogUtil.error(TAG, "user recoverable error occurred");
-                userRecoverableException.printStackTrace();
+                logger.debug("User recoverable error occurred");
+                logger.error(userRecoverableException);
                 
                 // Requesting an authorization code will always throw
                   // UserRecoverableAuthException on the first call to GoogleAuthUtil.getToken
@@ -143,10 +139,10 @@ public class GoogleOauth2 extends ISocialImpl {
                 
                 activity.get().startActivityForResult(userRecoverableException.getIntent(), REQUEST_AUTHORIZATION);
             } catch (GoogleAuthException fatalException) {
-                LogUtil.error(TAG, "google auth error occurred");
+                logger.warn("google auth error occurred");
                 // Some other type of unrecoverable exception has occurred.
                 // Report and log the error as appropriate for your app.
-                fatalException.printStackTrace();
+                logger.error(fatalException);
             }
             return null;
         }
@@ -214,13 +210,13 @@ public class GoogleOauth2 extends ISocialImpl {
         if (accessToken != null) {
             try {
                 GoogleAuthUtil.clearToken(activity.get(), accessToken);
-                LogUtil.log(TAG, "google logged out");
+                logger.debug("Google logged out");
             } catch (GooglePlayServicesAvailabilityException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (GoogleAuthException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }
@@ -234,7 +230,7 @@ public class GoogleOauth2 extends ISocialImpl {
 //      String scope = "oauth2:server:client_id:" + clientId + ":api_scope:" + login + " " + email;
         
         String scope = "oauth2:" + login + " " + email;
-        LogUtil.log(TAG, "scopes= " + scope);
+        logger.debug("Scopes= " + scope);
         return scope;
     }
 }

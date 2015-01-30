@@ -1,42 +1,5 @@
 package org.edx.mobile.player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentTracker;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.task.CircularProgressTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.MemoryUtil;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.VideoListActivity;
-import org.edx.mobile.view.adapters.MyAllVideoAdapter;
-import org.edx.mobile.view.adapters.OfflineVideoAdapter;
-import org.edx.mobile.view.adapters.OnlineVideoAdapter;
-import org.edx.mobile.view.adapters.VideoBaseAdapter;
-import org.edx.mobile.view.custom.ProgressWheel;
-import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
-import org.edx.mobile.view.dialog.IDialogCallback;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
-
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -51,6 +14,43 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.LectureModel;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.analytics.SegmentTracker;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.task.CircularProgressTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.VideoListActivity;
+import org.edx.mobile.view.adapters.MyAllVideoAdapter;
+import org.edx.mobile.view.adapters.OfflineVideoAdapter;
+import org.edx.mobile.view.adapters.OnlineVideoAdapter;
+import org.edx.mobile.view.adapters.VideoBaseAdapter;
+import org.edx.mobile.view.custom.ProgressWheel;
+import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
+import org.edx.mobile.view.dialog.IDialogCallback;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class VideoListFragment extends Fragment {
 
@@ -75,14 +75,14 @@ public class VideoListFragment extends Fragment {
     private Button deleteButton;
     private ISegment segIO;
     private Api api;
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         initDB();
-        segIO = SegmentFactory.getInstance(getActivity(), 
-                new SegmentTracker(getActivity()));
+        segIO = SegmentFactory.getInstance();
         api = new Api(getActivity());
     }
 
@@ -252,7 +252,7 @@ public class VideoListFragment extends Fragment {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
             };
@@ -295,7 +295,7 @@ public class VideoListFragment extends Fragment {
             adapter.setSelectedPosition(playingVideoIndex);
             adapter.notifyDataSetChanged();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -370,7 +370,7 @@ public class VideoListFragment extends Fragment {
             adapter.setSelectedPosition(playingVideoIndex);
             adapter.notifyDataSetChanged();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -421,7 +421,7 @@ public class VideoListFragment extends Fragment {
                 segIO.screenViewsTracking("My Videos - All Videos - "
                         + enrollment.getCourse().getName());
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
 
             ArrayList<SectionItemInterface> list = storage
@@ -439,7 +439,7 @@ public class VideoListFragment extends Fragment {
             }
             notifyAdapter();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -451,7 +451,7 @@ public class VideoListFragment extends Fragment {
         try{
             getActivity().setTitle(title);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -481,7 +481,7 @@ public class VideoListFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
         }
@@ -501,8 +501,8 @@ public class VideoListFragment extends Fragment {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(), "error in showing player");
+            logger.error(ex);
+            logger.warn("Error in showing player");
         }
     }
 
@@ -511,9 +511,8 @@ public class VideoListFragment extends Fragment {
             getView().findViewById(R.id.open_in_browser_panel).setVisibility(
                     View.GONE);
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(),
-                    "error in hideOpenInBrowserPanel");
+            logger.error(ex);
+            logger.warn("Error in hideOpenInBrowserPanel");
         }
     }
 
@@ -546,9 +545,8 @@ public class VideoListFragment extends Fragment {
                 hideOpenInBrowserPanel();
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(),
-                    "error in showOpenInBrowserPanel");
+            logger.error(ex);
+            logger.warn("Error in showOpenInBrowserPanel");
         }
     }
 
@@ -617,14 +615,14 @@ public class VideoListFragment extends Fragment {
                         // hide checkboxes in list
                         notifyAdapter();
                     } catch(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 }
             }, 300);
 
         } catch (Exception ex) {
-            LogUtil.log(getClass().getName(),
-                    "error in hiding delete button Panel");
+            logger.warn("Error in hiding delete button Panel");
+            logger.error(ex);
         }
     }
 
@@ -733,8 +731,8 @@ public class VideoListFragment extends Fragment {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            LogUtil.error(getClass().getName(), "error in showing delete panel");
+            logger.warn("Error in showing delete panel");
+            logger.error(ex);
         }
     }
 
@@ -767,7 +765,8 @@ public class VideoListFragment extends Fragment {
     public void setAllVideosChecked() {
         adapter.selectAll();
         int count  = adapter.getSelectedVideoItemsCount();
-        LogUtil.log("Video COunt", count+"");
+
+        logger.debug("Video Count of selected videos"+ count);
         enableDeleteButton();
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
@@ -778,7 +777,6 @@ public class VideoListFragment extends Fragment {
         disableDeleteButton();
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
-
     }
 
     public boolean isActivityStarted() {
@@ -793,8 +791,7 @@ public class VideoListFragment extends Fragment {
                         if (adapter != null) {
                             adapter.setSelectedPosition(playingVideoIndex);
                             adapter.notifyDataSetChanged();
-                            LogUtil.log(getClass().getName(),
-                                    "download list reloaded");
+                            logger.debug("Download list reloaded");
                         }
                         sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
@@ -815,7 +812,7 @@ public class VideoListFragment extends Fragment {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -830,17 +827,18 @@ public class VideoListFragment extends Fragment {
                 db.addVideoData(v, new DataCallback<Long>() {
                     @Override
                     public void onResult(Long result) {
-                        if(result!=-1)
-                            LogUtil.log("test", v.videoId+ "Video entry inserted");
+                        if(result!=-1){
+                            logger.debug("Video entry inserted"+v.videoId);
+                        }
                     }
                     @Override
                     public void onFail(Exception ex) {
-                        ex.printStackTrace();
+                        logger.error(ex);
                     }
                 });
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -853,7 +851,7 @@ public class VideoListFragment extends Fragment {
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -864,14 +862,14 @@ public class VideoListFragment extends Fragment {
                 v = (DownloadEntry) adapter.getItem(playingVideoIndex);
             }
 
-            if (v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+            if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
                 db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                         setWatchedStateCallback);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -984,7 +982,7 @@ public class VideoListFragment extends Fragment {
                 transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1098,7 +1096,7 @@ public class VideoListFragment extends Fragment {
                 videoPos++;
                 while (videoPos < adapter.getCount()) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i instanceof DownloadEntry) {
+                    if (i!=null && i instanceof DownloadEntry) {
                         if(AppConstants.offline_flag){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
@@ -1128,7 +1126,7 @@ public class VideoListFragment extends Fragment {
             }
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1139,7 +1137,7 @@ public class VideoListFragment extends Fragment {
                 if(videoPos!=-1){
                     for (int i=(videoPos+1) ; i<adapter.getCount(); i++) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d instanceof DownloadEntry) {
+                        if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
                             if(AppConstants.offline_flag){
                                 if(de.isDownloaded()){
@@ -1153,7 +1151,7 @@ public class VideoListFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return false;
     }
@@ -1167,7 +1165,7 @@ public class VideoListFragment extends Fragment {
                 videoPos--;
                 while (videoPos >= 0) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i instanceof DownloadEntry) {
+                    if (i!=null && i instanceof DownloadEntry) {
                         if(AppConstants.offline_flag){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
@@ -1195,7 +1193,7 @@ public class VideoListFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -1206,7 +1204,7 @@ public class VideoListFragment extends Fragment {
                 if(videoPos!=-1){
                     for (int i=(videoPos-1) ; i>=0; i--) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d instanceof DownloadEntry) {
+                        if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
                             if(AppConstants.offline_flag){
                                 if(de.isDownloaded()){
@@ -1220,7 +1218,7 @@ public class VideoListFragment extends Fragment {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return false;
     }
@@ -1272,24 +1270,24 @@ public class VideoListFragment extends Fragment {
     private DataCallback<Integer> setWatchedStateCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
-            LogUtil.log("Db", "Watched State Updated");
+            logger.debug("Watched State Updated");
         }
 
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
 
     private DataCallback<Integer> setCurrentPositionCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
-            LogUtil.log("Db", "Current Playback Position Updated");
+            logger.debug("Current Playback Position Updated");
         }
 
         @Override
         public void onFail(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     };
     

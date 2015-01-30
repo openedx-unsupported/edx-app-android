@@ -1,13 +1,13 @@
 package org.edx.mobile.module.db.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import java.util.ArrayList;
+import java.util.List;
 
 class DbOperationGetVideos extends DbOperationSelect<List<IVideoModel>> {
     

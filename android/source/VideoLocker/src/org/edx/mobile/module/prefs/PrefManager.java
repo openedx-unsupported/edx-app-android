@@ -1,5 +1,6 @@
 package org.edx.mobile.module.prefs;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.util.DateUtil;
@@ -21,7 +22,8 @@ public class PrefManager {
     
     private Context context;
     private String prefName;
-    
+    private static final Logger logger = new Logger(PrefManager.class.getName());
+
     public PrefManager(Context context, String prefName) {
         this.context = context;
         this.prefName = prefName;
@@ -80,16 +82,7 @@ public class PrefManager {
         return null;
     }
     
-    /**
-     * Returns boolean value for the given key, false if no value is found.
-     * @param key
-     * @return boolean
-     */
-    public boolean getBoolean(String key) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getBoolean(key, false);
-    }
-    
+
     /**
      * Returns boolean value for the given key, can set default value as well.
      * @param key,default value
@@ -110,16 +103,7 @@ public class PrefManager {
                 .getLong(key, -1);
     }
     
-    /**
-     * Returns float value for the given key, -1 if no value is found.
-     * @param key
-     * @return float
-     */
-    public float getFloat(String key) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getFloat(key, -1);
-    }
-    
+
     /**
      * Returns current user's profile from the preferences.
      * @return
@@ -188,15 +172,6 @@ public class PrefManager {
     }
     
     /**
-     * Marks last accessed subsection as synced with server. 
-     */
-    public void putSyncedAccessedSubsectionFlag() {
-        Editor edit = context.getSharedPreferences(prefName, Context.MODE_PRIVATE).edit();
-        edit.putBoolean(PrefManager.Key.LASTACCESSED_SYNCED_FLAG, true);
-        edit.commit();
-    }
-    
-    /**
      * Returns last accessed subsection id for the given course. 
      * @return
      */
@@ -220,7 +195,7 @@ public class PrefManager {
             String hash = Sha1Util.SHA1(raw);
             return hash;
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         return raw;
     }
@@ -232,7 +207,6 @@ public class PrefManager {
     public static final class Pref {
         public static final String LOGIN = "pref_login";
         public static final String WIFI = "pref_wifi";
-        //public static final String VIDEOS = "pref_videos";
     }
     
     /**
@@ -260,6 +234,5 @@ public class PrefManager {
          */
         public static final String BACKEND_FACEBOOK             = "facebook";
         public static final String BACKEND_GOOGLE                 = "google-oauth2";
-        public static final String BACKEND_APP_OAUTH            = "app-oauth";
     }
 }

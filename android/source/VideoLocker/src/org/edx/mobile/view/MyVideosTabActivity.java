@@ -18,13 +18,13 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerActivity;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
+import org.edx.mobile.util.NetworkUtil;
 
 public class MyVideosTabActivity extends PlayerActivity implements VideoListCallback {
 
@@ -36,6 +36,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
     /* Save current tabs identifier in this.. */
     private String mCurrentTab;
     private CheckBox myVideocheckBox;
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_videos));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         // now init the tabs
@@ -86,7 +87,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             }
             clearDownloadCount();
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -99,7 +100,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
     @Override
     protected void onRestart() {
         super.onRestart();
-        LogUtil.log(getClass().getName(), "restarting ");
+        logger.debug("restarting ");
         try{
             if (mCurrentTab
                     .equalsIgnoreCase(getString(R.string.tab_my_recent_videos))) {
@@ -107,7 +108,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             }
             invalidateOptionsMenu();
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
     }
@@ -122,7 +123,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 getSupportFragmentManager().putFragment(outState, "recentFragment", recentVideosFragment);
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -139,18 +140,18 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                         recentVideosFragment.setContainerActivity(this);
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
                 try{
                     if(recentVideosFragment!=null){
                         recentVideosFragment.restore(savedInstanceState);
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -162,7 +163,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             p = new PrefManager(this, profile.username);
             p.put(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED, 0);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -216,7 +217,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             }
             mTabHost.setCurrentTab(0);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -234,14 +235,14 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                         FragmentManager fm = getSupportFragmentManager();
                         FragmentTransaction ft = fm.beginTransaction();
                         ft.detach(recentVideosFragment);
-                        LogUtil.log(getClass().getName(), "removing recent fragment...");
+                        logger.debug("removing recent fragment...");
                         ft.attach(recentVideosFragment);
-                        LogUtil.log(getClass().getName(), "adding recent fragment...");
+                        logger.debug("adding recent fragment...");
                         ft.commit();
                     }
                 }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -254,10 +255,10 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 ft.commit();
 
                 playerFragment = null;
-                LogUtil.log(getClass().getName(), "killing player ...");
+                logger.debug("killing player ...");
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -279,7 +280,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                     hideCheckBox();
                     killPlayer();
                 }catch(Exception ex){
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             } else if (tabId.equals(getString(R.string.tab_my_recent_videos))) {
                 try{
@@ -297,7 +298,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                         recentVideosFragment.setSelectionEmpty();
                     }
                 }catch(Exception ex){
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         }
@@ -327,7 +328,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             ft.commit();
             invalidateOptionsMenu();
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -356,7 +357,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 myVideocheckBox.setOnCheckedChangeListener(null);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return true;
     }
@@ -380,7 +381,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                             myVideocheckBox.setButtonDrawable(R.drawable.ic_checkbox_active);
                             //myVideocheckBox.setBackgroundResource(R.drawable.ic_checkbox_active);
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
 
                     } else {
@@ -390,7 +391,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                     }
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }
@@ -409,7 +410,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             offlineBar.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -427,7 +428,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             offlineBar.setVisibility(View.GONE);
             invalidateOptionsMenu();
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -452,7 +453,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             myVideocheckBox.setButtonDrawable(R.drawable.ic_checkbox_active);
             //myVideocheckBox.setBackgroundResource(R.drawable.ic_checkbox_active);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -462,7 +463,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             myVideocheckBox.setButtonDrawable(R.drawable.ic_checkbox_default);
             //myVideocheckBox.setBackgroundResource(R.drawable.ic_checkbox_default);
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -478,7 +479,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 recentVideosFragment.notifyAdapter();
             }
         }catch(Exception ex){
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 
@@ -490,7 +491,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 recentVideosFragment.notifyAdapter();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -502,7 +503,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                 recentVideosFragment.notifyAdapter();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

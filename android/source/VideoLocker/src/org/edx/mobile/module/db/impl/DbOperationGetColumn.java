@@ -1,11 +1,11 @@
 package org.edx.mobile.module.db.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
     
@@ -34,7 +34,7 @@ class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
                     Integer column = c.getInt(0);
                     list.add((T) column);
                 } else {
-                    Log.e(getClass().getName(), "class types does NOT match for: " + columnType);
+                    logger.warn("Class types does NOT match for: " + columnType);
                 }
             } while (c.moveToNext());
         }
