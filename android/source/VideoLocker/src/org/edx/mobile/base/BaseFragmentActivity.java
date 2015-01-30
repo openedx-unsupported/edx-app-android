@@ -579,8 +579,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         db = DatabaseFactory.getInstance(this,
                 DatabaseFactory.TYPE_DATABASE_NATIVE, username);
 
-        segIO = SegmentFactory.getInstance(this,
-                new SegmentTracker(this));
+        segIO = SegmentFactory.getInstance();
     }
 
     private DataCallback<Integer> averageProgressCallback = new DataCallback<Integer>() {
