@@ -1,7 +1,5 @@
 package org.edx.mobile.test.module;
 
-import android.util.Log;
-
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
@@ -1349,7 +1347,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
                 fail(ex.getMessage());
             }
         });

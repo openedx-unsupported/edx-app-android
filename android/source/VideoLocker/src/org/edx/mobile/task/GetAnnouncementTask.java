@@ -1,12 +1,12 @@
 package org.edx.mobile.task;
 
-import java.util.List;
+import android.content.Context;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
-import android.content.Context;
+import java.util.List;
 
 public abstract class GetAnnouncementTask extends
         Task<List<AnnouncementsModel>> {
@@ -34,12 +34,13 @@ public abstract class GetAnnouncementTask extends
                     });
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
             
             return api.getAnnouncement(enrollment.getCourse().getCourse_updates(), false);
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

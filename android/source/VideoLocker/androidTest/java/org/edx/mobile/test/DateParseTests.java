@@ -1,7 +1,5 @@
 package org.edx.mobile.test;
 
-import android.util.Log;
-
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Emailutill;
 
@@ -34,7 +32,7 @@ public class DateParseTests extends BaseTestCase {
             Date date = input_format.parse(strDate);
             return date;
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

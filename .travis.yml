@@ -2,11 +2,27 @@ language: android
 jdk: oraclejdk7
 env:
   matrix:
-    - ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-16 ANDROID_ABI=armeabi-v7a
+  global:
+    # Amount of memory granted to Gradle JVM
+    - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=512m"
 
 android:
   components:
+    # use the latest revision of Android SDK Tools
+    - platform-tools
+    - tools
+
+    # The BuildTools version used
     - build-tools-21.1.1
+
+    # The SDK version used to compile the project
+    # Android 21 (5.0) Emulator fails to launch many times, so go for Android 16
+    - android-16
+
+    # Specify at least one system image,
+    # if you need to run emulator(s) during your tests
+    - sys-img-armeabi-v7a-android-16
 
 # Disable travis email notifications until builds work properly
 notifications:
@@ -18,7 +34,15 @@ before_script:
   - emulator -avd test -no-skin -no-audio -no-window &
   - adb wait-for-device
   - adb shell input keyevent 82 &
-  - chmod +x travis-build.sh
   - chmod +x android/source/gradlew
+  - chmod +x travis-build.sh
+  - chmod +x travis-acceptance-tests.sh
 
-script: ./travis-build.sh
+script: 
+  - ./travis-build.sh
+  - ./travis-acceptance-tests.sh
+
+# Enable caching to speed up the build
+cache:
+  directories:
+    - $HOME/.gradle
