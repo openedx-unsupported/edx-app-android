@@ -3,8 +3,12 @@ package org.edx.mobile.util;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 
 public class EmailUtil {
+
+    private static final Logger logger = new Logger(EmailUtil.class.getName());
 
     public static void sendEmail(Context context, String to, String subject,
             String email) {
@@ -19,16 +23,16 @@ public class EmailUtil {
 
             // add flag to make sure this call works from non-activity context
             Intent targetIntent = Intent.createChooser(email_intent,
-                    "Send email using...");
+                    context.getString(R.string.email_chooser_header));
             targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             context.startActivity(targetIntent);
-
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(context, "no clients installed", Toast.LENGTH_LONG)
+            //There is no activity which can perform the intended share Intent
+            Toast.makeText(context, context.getString(R.string.email_client_not_present),
+                    Toast.LENGTH_SHORT)
                     .show();
-
+            logger.error(ex);
         }
     }
-
 }
