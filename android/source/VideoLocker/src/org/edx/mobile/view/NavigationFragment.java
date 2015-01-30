@@ -20,10 +20,9 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Emailutill;
+import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -98,7 +97,7 @@ public class NavigationFragment extends Fragment {
                 String to = Environment.getInstance().getConfig().getFeedbackEmailAddress();
                 String subject =getString(R.string.Email_subject);
                 String email = "";
-                Emailutill.sendEmail(getActivity(), to, subject, email);
+                EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
         });
 
