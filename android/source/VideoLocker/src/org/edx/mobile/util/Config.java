@@ -94,4 +94,8 @@ public class Config {
     public String getFacebookAppId() {
         return getString(FACEBOOK_APP_ID);
     }
+
+    public String getEnvironmentDisplayName() {
+        return getString(ENVIRONMENT_DISPLAY_NAME);
+    }
 }
