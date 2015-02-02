@@ -20,7 +20,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Emailutill;
@@ -142,18 +141,19 @@ public class NavigationFragment extends Fragment {
         
 
         TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);
-        String version_name;
         try{
-            version_name = PropertyUtil.getDisplayVersionName(getActivity());
-            if(version_name!=null){
-                version_tv.setText(getString(R.string.label_version)+" "+version_name);
+            String versionName = PropertyUtil.getManifestVersionName(getActivity());
+
+            if(versionName != null) {
+                String envDisplayName = Environment.getInstance().getConfig().getEnvironmentDisplayName();
+                String text = String.format("%s %s %s",
+                        getString(R.string.label_version), versionName, envDisplayName);
+                version_tv.setText(text);
             }
-        }catch(Exception e){
+        }catch(Exception e) {
             logger.error(e);
         }
-        
-        
-        
+
         return layout;
     }
 
