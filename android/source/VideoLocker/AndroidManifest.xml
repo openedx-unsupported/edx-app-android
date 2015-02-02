@@ -94,6 +94,12 @@
             android:screenOrientation="portrait"
             >
         </activity>
+
+        <activity
+            android:name=".view.FindCoursesActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
         
         <activity
             android:name=".player.LandscapePlayerActivity"
