@@ -2,12 +2,12 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 
+import org.apache.commons.io.IOUtils;
 import org.edx.mobile.logger.Logger;
-import org.yaml.snakeyaml.Yaml;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
 
 /**
  * Created by aleffert on 1/8/15.
@@ -15,7 +15,7 @@ import java.util.Map;
 public class Config {
 
     protected final Logger logger = new Logger(getClass().getName());
-    Map<String, Object> mProperties;
+    private JSONObject mProperties;
 
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String COURSE_SEARCH_URL = "COURSE_SEARCH_URL";
@@ -30,25 +30,36 @@ public class Config {
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
 
     Config(Context context) {
-        Yaml yaml = new Yaml();
         try {
-            mProperties = (Map<String, Object>)yaml.load(context.getAssets().open("config/config.yaml"));
-        } catch (IOException e) {
-            mProperties = new HashMap<String, Object>();
+            InputStream in = context.getAssets().open("config/config.json");
+            String strConfig = IOUtils.toString(in);
+            mProperties = new JSONObject(strConfig);
+        } catch (Exception e) {
+            mProperties = new JSONObject();
             logger.error(e);
         }
     }
 
-    Config(Map<String, Object> properties) {
+    Config(JSONObject properties) {
         mProperties = properties;
     }
 
     String getString(String key) {
-        return (String)mProperties.get(key);
+        try {
+            return mProperties.getString(key);
+        } catch (JSONException e) {
+            logger.error(e);
+        }
+        return null;
     }
 
     private Object getObject(String key) {
-        return mProperties.get(key);
+        try {
+            return mProperties.get(key);
+        } catch (JSONException e) {
+            logger.error(e);
+        }
+        return null;
     }
 
 
