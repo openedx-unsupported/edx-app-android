@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -60,38 +61,62 @@ public class NavigationFragment extends Fragment {
                 if(act instanceof MyCoursesListActivity){
                     //if MyCourses pressed when on MyCourse screen, close drawer
                     ((MyCoursesListActivity) act).closeDrawer();
-                }else if(act instanceof MyVideosTabActivity){
-                    ((MyVideosTabActivity) act).closeDrawer();
-                    Intent myCoursesIntent = new Intent(getActivity(), MyCoursesListActivity.class);
+                }else {
+                    ((BaseFragmentActivity) act).closeDrawer();
+                    Intent myCoursesIntent = new Intent(act, MyCoursesListActivity.class);
                     myCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    getActivity().startActivity(myCoursesIntent);
-                    getActivity().finish();
+                    act.startActivity(myCoursesIntent);
+                    act.finish();
                 }
             }
         });
 
         TextView my_videos_tv = (TextView) layout.findViewById(R.id.my_assets);
         my_videos_tv.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
 
+                Intent findCoursesIntent = new Intent(getActivity(),
+                        MyVideosTabActivity.class);
+                findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 if(act instanceof MyCoursesListActivity){
                     ((MyCoursesListActivity) act).closeDrawer();
-                    Intent myVideosIntent = new Intent(getActivity(), 
-                            MyVideosTabActivity.class);
-                    myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    getActivity().startActivity(myVideosIntent);
+                    act.startActivity(findCoursesIntent);
                     //Finish is not called because the MyCourse activity need not be deleted
                 }else if(act instanceof MyVideosTabActivity){
                     ((MyVideosTabActivity) act).closeDrawer();
+                }else if(act instanceof FindCoursesActivity){
+                    ((FindCoursesActivity) act).closeDrawer();
+                    act.startActivity(findCoursesIntent);
+                    act.finish();
                 }
             }
         });
+
+        TextView find_courses_tv = (TextView) layout.findViewById(R.id.find_courses_tv);
+        find_courses_tv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity act = getActivity();
+
+                Intent findCoursesIntent = new Intent(act, FindCoursesActivity.class);
+                findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                if(act instanceof FindCoursesActivity){
+                    //if find courses pressed when on Find Courses screen, close drawer
+                    ((FindCoursesActivity) act).closeDrawer();
+                }else if(act instanceof MyVideosTabActivity){
+                    ((MyVideosTabActivity) act).closeDrawer();
+                    act.startActivity(findCoursesIntent);
+                }else if(act instanceof MyCoursesListActivity){
+                    ((MyCoursesListActivity) act).closeDrawer();
+                    act.startActivity(findCoursesIntent);
+                }
+            }
+        });
+
         TextView my_email_tv = (TextView) layout.findViewById(R.id.my_email);
         my_email_tv.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String to = Environment.getInstance().getConfig().getFeedbackEmailAddress();
