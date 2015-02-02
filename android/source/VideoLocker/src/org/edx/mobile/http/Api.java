@@ -31,8 +31,8 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -127,8 +127,8 @@ public class Api {
             throws Exception {
         Bundle p = new Bundle();
         p.putString("grant_type", "password");
-        p.putString("client_id", Environment.getInstance().getConfig().getOAuthClientId());
-        p.putString("client_secret", Environment.getInstance().getConfig().getOAuthClientSecret());
+        p.putString("client_id", Config.getInstance().getOAuthClientId());
+        p.putString("client_secret", Config.getInstance().getOAuthClientSecret());
         p.putString("username", username);
         p.putString("password", password);
 
@@ -773,7 +773,7 @@ public class Api {
      * @return
      */
     public String getBaseUrl() {
-        return Environment.getInstance().getConfig().getApiHostURL();
+        return Config.getInstance().getApiHostURL();
     }
 
     /**
