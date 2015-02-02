@@ -47,6 +47,7 @@ import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.DownloadListActivity;
 import org.edx.mobile.view.NavigationFragment;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
@@ -262,8 +263,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent downloadIntent = new Intent(BaseFragmentActivity.this, DownloadListActivity.class);
-                    startActivity(downloadIntent);
+                    Router.getInstance().showDownloads(BaseFragmentActivity.this);
                 }
             });
         }
