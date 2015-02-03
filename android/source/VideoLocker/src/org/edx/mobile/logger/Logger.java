@@ -2,10 +2,12 @@ package org.edx.mobile.logger;
 
 import android.content.Context;
 
+import java.io.Serializable;
+
 /**
  * Created by shahid on 22/1/15.
  */
-public class Logger {
+public class Logger implements Serializable {
 
     private String tag;
 
