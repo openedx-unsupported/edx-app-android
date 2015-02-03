@@ -1,7 +1,7 @@
 package org.edx.mobile.test;
 
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Emailutill;
+import org.edx.mobile.util.EmailUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,7 +51,7 @@ public class DateParseTests extends BaseTestCase {
         String to = "user@edx.org";
         String subject = "edX Test Email";
         String email = "hi, this is test email";
-        Emailutill.sendEmail(getInstrumentation()
+        EmailUtil.sendEmail(getInstrumentation()
                 .getTargetContext(), to, subject, email);
         print("sending email...");
     }
