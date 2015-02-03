@@ -1,10 +1,21 @@
 package org.edx.mobile.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.download.DownloadFactory;
+import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -41,6 +52,9 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
+
+        // repair corrupt data if any
+        doRepairData();
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
@@ -323,4 +337,51 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
             logger.error(ex);
         }
     };
+
+    /**
+     * Checks progress of all the videos that are being downloaded.
+     * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
+     */
+    private void doRepairData() {
+        Thread maintenanceThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    UserPrefs userprefs = new UserPrefs(getApplicationContext());
+                    ProfileModel profile = userprefs.getProfile();
+                    String username = profile.username;
+
+                    IDownloadManager dm = DownloadFactory.getInstance(getApplicationContext());
+                    IStorage storage = new Storage(getApplicationContext());
+                    IDatabase db = DatabaseFactory.getInstance(getApplicationContext(),
+                            DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+
+                    List<Long> dmidList = db.getAllDownloadingVideosDmidList(null);
+                    for (Long d : dmidList) {
+                        // for each downloading video, check the percentage progress
+                        boolean downloadComplete = dm.isDownloadComplete(d);
+                        if (downloadComplete) {
+                            // this means download is completed
+                            // so the video status should be marked as DOWNLOADED, not DOWNLOADING
+                            // update the video status
+                            storage.markDownloadAsComplete(d, new DataCallback<IVideoModel>() {
+                                @Override
+                                public void onResult(IVideoModel result) {
+                                    logger.debug("Video download marked as completed, dmid=" + result.getDmId());
+                                }
+
+                                @Override
+                                public void onFail(Exception ex) {
+                                    logger.error(ex);
+                                }
+                            });
+                        }
+                    }
+                } catch(Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        });
+        maintenanceThread.start();
+    }
 }
