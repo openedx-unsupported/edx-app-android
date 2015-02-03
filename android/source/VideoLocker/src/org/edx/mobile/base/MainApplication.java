@@ -22,10 +22,6 @@ import io.fabric.sdk.android.Fabric;
  */
 public class MainApplication extends Application {
     
-    private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
-    private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
-    private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
-    
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,18 +36,22 @@ public class MainApplication extends Application {
         // initialize logger
         Logger.init(this.getApplicationContext());
 
+        // setup environment
         Environment env = new Environment();
         env.setupEnvironment(this.getApplicationContext());
 
-        RequestManager.init(this);
+        // setup image cache
         createImageCache();
 
         // initialize SegmentIO, empty writeKey is handled in SegmentTracker
         SegmentFactory.makeInstance(this);
 
+        // initialize Fabric
         if(Config.getInstance().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
+
+        // initialize NewRelic with crashlytics disabled
         if(Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
@@ -70,6 +70,12 @@ public class MainApplication extends Application {
      * Change to Disk for a Disk based LRU implementation.
      */
     private void createImageCache(){
+        int DISK_IMAGECACHE_SIZE = 1024*1024*10;
+        CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
+        //PNG is lossless so quality is ignored but must be provided
+        int DISK_IMAGECACHE_QUALITY = 100;
+
+        RequestManager.init(this);
         ImageCacheManager.getInstance().init(this,
                 this.getPackageCodePath()
                 , DISK_IMAGECACHE_SIZE
@@ -77,5 +83,4 @@ public class MainApplication extends Application {
                 , DISK_IMAGECACHE_QUALITY
                 , ImageCacheManager.CacheType.MEMORY);
     }
-    
 }
