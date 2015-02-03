@@ -81,7 +81,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     e.printStackTrace();
                 }
 
-                //Initialize the text view and
+                //Initialize the Course not started text view.
                 if(!enrollment.getCourse().isStarted()){
                     startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
                     if(startDate!=null){

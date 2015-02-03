@@ -70,7 +70,7 @@ public class DateParseTests extends BaseTestCase {
         assertNotNull(outputDate);
         //FIXME - This check is currently only for English locale.
         //Need to have a more generic test case based on Locale
-        if(Locale.getDefault().getLanguage().equals("en")){
+        if(Locale.getDefault().getLanguage().equals(Locale.ENGLISH)){
             String expectedOutput = "November 20, 2014";
             assertEquals(expectedOutput, outputDate);
         }
