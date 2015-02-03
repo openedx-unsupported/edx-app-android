@@ -21,7 +21,7 @@ public class MyVideosBaseFragment extends Fragment {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
-    protected final Logger logger = new Logger(getClass().getName());
+    protected transient final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

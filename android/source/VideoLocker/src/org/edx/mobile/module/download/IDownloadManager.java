@@ -42,6 +42,13 @@ public interface IDownloadManager {
      * @return
      */
     int getProgressForDownload(long dmid);
+
+    /**
+     * Returns true if download for given dmid is completed, false otherwise.
+     * @param dmid
+     * @return
+     */
+    boolean isDownloadComplete(long dmid);
     
     /**
      * Returns average progress of the downloads identified by given ids.
