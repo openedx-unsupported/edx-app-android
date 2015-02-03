@@ -105,12 +105,10 @@ public class NavigationFragment extends Fragment {
                 if(act instanceof FindCoursesActivity){
                     //if find courses pressed when on Find Courses screen, close drawer
                     ((FindCoursesActivity) act).closeDrawer();
-                }else if(act instanceof MyVideosTabActivity){
-                    ((MyVideosTabActivity) act).closeDrawer();
+                }else{
+                    ((BaseFragmentActivity) act).closeDrawer();
                     act.startActivity(findCoursesIntent);
-                }else if(act instanceof MyCoursesListActivity){
-                    ((MyCoursesListActivity) act).closeDrawer();
-                    act.startActivity(findCoursesIntent);
+                    act.finish();
                 }
             }
         });
