@@ -1,21 +1,21 @@
 package org.edx.mobile.util;
 
+import android.annotation.SuppressLint;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import android.annotation.SuppressLint;
-import android.util.Log;
+import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
+
+    private static final Logger logger = new Logger(DateUtil.class.getName());
 
     /*
      * Converting Date in string format to Date object and coverting the Current
      * Stamp
      */
     public static Date convertToDate(String date) {
-        // TODO remove this method
         if(date==null){
             return null;
         }
@@ -25,11 +25,11 @@ public class DateUtil {
         java.util.Date parsedate = null;
         try {
             parsedate = parse_to_format.parse(date);
-            Log.d("parseddatemsg", "" + parsedate);
+            logger.debug("Parsed Data"+parsedate);
             return parsedate;
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return parsedate;
     }
@@ -54,7 +54,7 @@ public class DateUtil {
             String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
             return currentTimeStamp;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }
@@ -81,7 +81,7 @@ public class DateUtil {
             String formattedTimestamp = currentTimeStamp.substring(0, len-5) + timezone;
             return formattedTimestamp;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }

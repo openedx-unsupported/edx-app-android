@@ -1,11 +1,11 @@
 package org.edx.mobile.task;
 
-import java.util.Map;
+import android.content.Context;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.SectionEntry;
 
-import android.content.Context;
+import java.util.Map;
 
 public abstract class GetCourseHierarchyTask extends
 Task<Map<String, SectionEntry>> {
@@ -32,7 +32,7 @@ Task<Map<String, SectionEntry>> {
                         });
                     }
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
 
                 // return live data
@@ -40,6 +40,7 @@ Task<Map<String, SectionEntry>> {
             }
         } catch (Exception ex) {
             handle(ex);
+            logger.error(ex);
         }
         return null;
     }

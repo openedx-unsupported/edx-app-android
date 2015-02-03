@@ -1,8 +1,8 @@
 package org.edx.mobile.module.db.impl;
 
-import org.edx.mobile.module.db.DataCallback;
-
 import android.database.sqlite.SQLiteDatabase;
+
+import org.edx.mobile.module.db.DataCallback;
 
 /**
  * This interface defines a database operation that we want to perform.

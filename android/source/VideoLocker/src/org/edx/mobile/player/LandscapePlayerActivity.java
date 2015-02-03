@@ -1,10 +1,10 @@
 package org.edx.mobile.player;
 
-import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
-
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 
 public class LandscapePlayerActivity extends BaseFragmentActivity {
 

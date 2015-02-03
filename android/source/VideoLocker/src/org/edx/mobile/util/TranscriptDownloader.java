@@ -1,17 +1,19 @@
 package org.edx.mobile.util;
 
-import java.io.IOException;
+import android.content.Context;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.logger.Logger;
 
-import android.content.Context;
+import java.io.IOException;
 
 public abstract class TranscriptDownloader implements Runnable {
 
     private String srtUrl;
     private Context context;
+    private final Logger logger = new Logger(TranscriptDownloader.class.getName());
 
     public TranscriptDownloader(Context context, String url) {
         this.srtUrl = url;
@@ -26,12 +28,16 @@ public abstract class TranscriptDownloader implements Runnable {
             onDownloadComplete(response);
         } catch (ParseException localParseException) {
             handle(localParseException);
+            logger.error(localParseException);
         } catch (ClientProtocolException localClientProtocolException) {
             handle(localClientProtocolException);
+            logger.error(localClientProtocolException);
         } catch (IOException localIOException) {
             handle(localIOException);
+            logger.error(localIOException);
         } catch (Exception localException) {
             handle(localException);
+            logger.error(localException);
         }
     }
 

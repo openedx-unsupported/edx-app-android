@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.R;
 
 import android.content.Intent;
@@ -25,9 +24,6 @@ public class SplashActivity extends BaseFragmentActivity {
         }
         setContentView(R.layout.activity_splash);
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-
-        // initialize log util
-        LogUtil.init(this);
 
         new Handler().postDelayed(new Runnable() {
 
