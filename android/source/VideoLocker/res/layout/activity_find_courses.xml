@@ -7,20 +7,41 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/grey_act_background">
 
         <View
-            android:id="@+id/blue_bar"
-            style="@style/blue_bar_style"
-            android:layout_alignParentTop="true"
-            android:visibility="visible" />
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar_style"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"/>
 
         <WebView
             android:id="@+id/find_courses_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/blue_bar"
-            android:background="@color/grey_act_background" />
+            android:background="@color/grey_act_background"
+            android:layout_below="@id/offline_bar"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/progress_spinner"
+            style="@style/api_progress_style"
+            android:visibility="gone" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/offline_mode_message"
+            style="@style/bold_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/find_courses_offline_text"
+            android:padding="10dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/empty_list_text"
+            android:textSize="20sp"
+            android:visibility="gone"
+            android:gravity="center" />
+
     </RelativeLayout>
 
     <!-- FrameLayout to display Fragment for Navigation Menu -->

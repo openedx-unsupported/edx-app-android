@@ -50,7 +50,6 @@
             style="@style/regular_white_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
-            android:layout_marginTop="20dp"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
             android:paddingBottom="10dp"
