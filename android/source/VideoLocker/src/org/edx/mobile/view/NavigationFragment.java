@@ -145,7 +145,7 @@ public class NavigationFragment extends Fragment {
             String versionName = PropertyUtil.getManifestVersionName(getActivity());
 
             if(versionName != null) {
-                String envDisplayName = Environment.getInstance().getConfig().getEnvironmentDisplayName();
+                String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
                 String text = String.format("%s %s %s",
                         getString(R.string.label_version), versionName, envDisplayName);
                 version_tv.setText(text);
