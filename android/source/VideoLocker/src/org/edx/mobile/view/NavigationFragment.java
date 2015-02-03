@@ -22,8 +22,8 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Emailutill;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.WifiSwitchDialogFragment;
@@ -97,7 +97,7 @@ public class NavigationFragment extends Fragment {
                 String to = Config.getInstance().getFeedbackEmailAddress();
                 String subject =getString(R.string.Email_subject);
                 String email = "";
-                Emailutill.sendEmail(getActivity(), to, subject, email);
+                EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
         });
 
@@ -145,7 +145,7 @@ public class NavigationFragment extends Fragment {
             String versionName = PropertyUtil.getManifestVersionName(getActivity());
 
             if(versionName != null) {
-                String envDisplayName = Environment.getInstance().getConfig().getEnvironmentDisplayName();
+                String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
                 String text = String.format("%s %s %s",
                         getString(R.string.label_version), versionName, envDisplayName);
                 version_tv.setText(text);
