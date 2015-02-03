@@ -9,17 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/blue_bar"
-            style="@style/blue_bar_style"
-            android:layout_alignParentTop="true"
-            android:visibility="visible" />
-
         <WebView
             android:id="@+id/find_courses_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/blue_bar"
             android:background="@color/grey_act_background" />
     </RelativeLayout>
 
