@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
@@ -33,12 +34,10 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.adapters.ChapterAdapter;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -78,7 +77,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     segIO.screenViewsTracking(enrollment.getCourse().getName()
                             + " - Courseware");
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
 
                 //Initialize the Course not started text view.
@@ -163,7 +162,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         mActivity.startActivity(lectureIntent);
                     }
                 }catch(Exception ex){
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
 
@@ -221,7 +220,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         updateList();
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         };
@@ -234,7 +233,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             public void onFinish(Map<String, SectionEntry> chapterMap) {
                 // display these chapters
                 if (chapterMap != null) {
-                    LogUtil.log("Start displaying on UI", DateUtil.getCurrentTimeStamp());
+                    logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
                     adapter.clear();
                     for (Entry<String, SectionEntry> entry : chapterMap
                             .entrySet()) {
@@ -265,7 +264,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     }
                 }
 
-                LogUtil.log("Completed displaying data on UI", DateUtil.getCurrentTimeStamp());
+                logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());
             }
 
             @Override
@@ -283,7 +282,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 .findViewById(R.id.api_spinner);
         task.setProgressDialog(progressBar);
         //Initializing task call
-        LogUtil.log("Initializing Chapter Task", DateUtil.getCurrentTimeStamp());
+        logger.debug("Initializing Chapter Task"+ DateUtil.getCurrentTimeStamp());
         task.execute(courseId);
 
     }
@@ -344,7 +343,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             segIO.trackSectionBulkVideoDownload(downloadList.get(0).eid, 
                     downloadList.get(0).chapter, noOfDownloads);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(getActivity()) {
@@ -369,7 +368,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         }
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
 
@@ -443,17 +442,17 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.remove(f);
                         ft.commit();
-                        LogUtil.log(getClass().getName(), "removed progress dialog fragment");
+                        logger.debug("Removed progress dialog fragment");
                     }
                     
                     if ( !progressDialog.isAdded()) {
                         progressDialog.show(getFragmentManager(), tag);
                         progressDialog.setCancelable(false);
-                        LogUtil.log(getClass().getName(), "showing activity indicator");
+                        logger.debug("Showing activity indicator");
                     }
                 }
             } catch(Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
         }
     }
@@ -462,7 +461,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         if(progressDialog!=null) {
             synchronized (progressDialog) {
                 progressDialog.dismiss();
-                LogUtil.log(getClass().getName(), "hiding activity indicator");
+                logger.debug("hiding activity indicator");
             }
         }
     }
@@ -514,7 +513,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                                             
                                             startActivity(videoIntent);
                                         } catch (Exception e) {
-                                            e.printStackTrace();
+                                            logger.error(e);
                                         }
                                     }
                                 }
@@ -525,7 +524,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     }
                 } catch (Exception e) {
                     hideLastAccessedView(v);
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             } else {
                 hideLastAccessedView(v);
@@ -541,7 +540,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 v.findViewById(R.id.last_viewed_layout).setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -556,8 +555,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             .username, courseId);
                     final PrefManager prefManager = new PrefManager(getActivity(), prefName);
                     final String prefModuleId = prefManager.getLastAccessedSubsectionId();
-                    LogUtil.log("Last Accessed", "Last Accessed Module ID from Preferences "
+
+                    logger.debug("Last Accessed Module ID from Preferences "
                             +prefModuleId);
+
                     lastAccessed_subSectionId = prefModuleId;
                     showLastAccessedView(view);
                     getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
@@ -567,7 +568,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             if(result!=null && result.getLastVisitedModuleId()!=null){
                                 //Handle the last Visited Module received from Sever
                                 server_moduleId = result.getLastVisitedModuleId();
-                                LogUtil.log("Last Accessed", "Last Accessed Module ID from Server Get"
+                                logger.debug("Last Accessed Module ID from Server Get "
                                         +server_moduleId);
                                 if(prefManager.isSyncedLastAccessedSubsection()){
                                     //If preference last accessed flag is true, put the last access fetched 
@@ -593,14 +594,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                         @Override
                         public void onException(Exception ex) {
                             isFetchingLastAccessed = false;
-                            ex.printStackTrace();
+                            logger.error(ex);
                         }
                     };
                     getLastAccessedTask.execute(courseId);
                 }   
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -613,7 +614,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 public void onFinish(SyncLastAccessedSubsectionResponse result) {
                     if(result!=null && result.getLastVisitedModuleId()!=null){
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
-                        LogUtil.log("Last Accessed", "Last Accessed Module ID from Server Sync "
+                        logger.debug("Last Accessed Module ID from Server Sync "
                                 +result.getLastVisitedModuleId());
                         lastAccessed_subSectionId = result.getLastVisitedModuleId();
                         showLastAccessedView(view);
@@ -622,13 +623,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 }
                 @Override
                 public void onException(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                     isFetchingLastAccessed = false;
                 }
             };
             syncLastAccessTask.execute(courseId, prefModuleId);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -644,8 +645,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                 chapterListView.setEmptyView(courseScheduleTv);
             }
         }catch(Exception e){
-            //TODO - Remove comment while merging with master
-            //logger.error(e);
+            logger.error(e);
         }
     }
 }

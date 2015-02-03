@@ -7,6 +7,9 @@ import android.graphics.Bitmap.CompressFormat;
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
 
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
@@ -34,22 +37,31 @@ public class MainApplication extends Application {
      * Initialize shared components
      */
     private void init() {
-        Environment.makeInstance(this.getApplicationContext());
+        // initialize logger
+        Logger.init(this.getApplicationContext());
+
+        Environment env = new Environment();
+        env.setupEnvironment(this.getApplicationContext());
+
         RequestManager.init(this);
         createImageCache();
-        if(Environment.getInstance().getConfig().getFabricKey() != null) {
+
+        // initialize SegmentIO, empty writeKey is handled in SegmentTracker
+        SegmentFactory.makeInstance(this);
+
+        if(Config.getInstance().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
-        if(Environment.getInstance().getConfig().getNewRelicKey() != null) {
+        if(Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
-            NewRelic.withApplicationToken(Environment.getInstance().getConfig().getNewRelicKey())
+            NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
                     .withCrashReportingEnabled(false)
                     .start(this);
         }
 
         // initialize Facebook SDK
-        if (Environment.getInstance().getConfig().getFacebookAppId() != null) {
-            com.facebook.Settings.setApplicationId(Environment.getInstance().getConfig().getFacebookAppId());
+        if (Config.getInstance().getFacebookAppId() != null) {
+            com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
     }
     

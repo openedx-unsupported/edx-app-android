@@ -2,19 +2,16 @@ package org.edx.mobile.module.storage;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 
 import java.util.ArrayList;
 
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.download.NativeDownloadModel;
-
 public interface IStorage {
 
-    public static final String TAG = "Storage";
-    
     /**
      * Adds a Video for Downloading by enqueing in Native Download Manager 
      * and updating in the Database 

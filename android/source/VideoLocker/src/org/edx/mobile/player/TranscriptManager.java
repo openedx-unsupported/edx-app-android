@@ -1,5 +1,13 @@
 package org.edx.mobile.player;
 
+import android.content.Context;
+import android.os.Environment;
+
+import org.apache.commons.io.IOUtils;
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.TranscriptModel;
+import org.edx.mobile.util.Sha1Util;
+import org.edx.mobile.util.TranscriptDownloader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,21 +17,13 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
-
-import org.apache.commons.io.IOUtils;
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.TranscriptModel;
-import org.edx.mobile.util.TranscriptDownloader;
-import org.edx.mobile.util.LogUtil;
-import org.edx.mobile.util.Sha1Util;
-
-import android.content.Context;
-import android.os.Environment;
+import org.edx.mobile.logger.Logger;
 
 public class TranscriptManager {
 
     private File transcriptFolder;
     private Context context;
+    private final Logger logger = new Logger(getClass().getName());
 
     public TranscriptManager(Context context) {
         try{
@@ -36,7 +36,7 @@ public class TranscriptManager {
                 transcriptFolder.mkdirs();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -93,10 +93,10 @@ public class TranscriptManager {
             FileInputStream in = new FileInputStream(file);
             String cache = IOUtils.toString(in, Charset.defaultCharset());
             in.close();
-            LogUtil.log(getClass().getName(), "cache.get=" + hash);
+            logger.debug("Cache.get=" + hash);
             return cache;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -121,7 +121,7 @@ public class TranscriptManager {
             InputStream in = new FileInputStream(file);
             return in;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -149,17 +149,17 @@ public class TranscriptManager {
                     try {
                         put(downloadLink, response);
                     } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 }
                 
                 @Override
                 public void handle(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             };
             Thread th = new Thread(td);
@@ -180,54 +180,54 @@ public class TranscriptManager {
             try {
                 startTranscriptDownload(transcript.chineseUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         if(transcript.englishUrl!=null){
             try {
                 startTranscriptDownload(transcript.englishUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         if(transcript.frenchUrl!=null){
             try {
                 startTranscriptDownload(transcript.frenchUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         if(transcript.germanUrl!=null){
             try {
                 startTranscriptDownload(transcript.germanUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         if(transcript.portugueseUrl!=null){
             try {
                 startTranscriptDownload(transcript.portugueseUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
         if(transcript.spanishUrl!=null){
             try {
                 startTranscriptDownload(transcript.spanishUrl);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                logger.error(e);
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }
@@ -275,7 +275,7 @@ public class TranscriptManager {
             
             return transcriptList;
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -297,13 +297,13 @@ public class TranscriptManager {
             return response;
             }
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

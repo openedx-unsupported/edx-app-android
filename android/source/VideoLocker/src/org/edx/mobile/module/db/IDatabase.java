@@ -1,15 +1,11 @@
 package org.edx.mobile.module.db;
 
 import org.edx.mobile.model.IVideoModel;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
-import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+
+import java.util.List;
 
 /**
  * This interface represents a database object. All the methods that are required by UI layer 
@@ -20,8 +16,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
  *
  */
 public interface IDatabase {
-    
-    public static final String TAG = "Database";
     
     /**
      * Releases this database object and all its handles.

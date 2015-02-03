@@ -1,18 +1,18 @@
 package org.edx.mobile.http;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.content.Context;
+import android.os.Bundle;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
-import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthErrorResponse;
 import org.edx.mobile.model.api.AuthResponse;
@@ -31,25 +31,23 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Environment;
-import org.edx.mobile.util.LogUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
-
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class Api {
 
     private HttpManager http;
     private CacheManager cache;
     private Context context;
+    protected final Logger logger = new Logger(getClass().getName());
 
     public Api(Context context) {
         this.context = context;
@@ -78,7 +76,7 @@ public class Api {
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "reset password=" + json);
+        logger.debug("Reset password response=" + json);
 
         // store auth token response
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
@@ -129,14 +127,14 @@ public class Api {
             throws Exception {
         Bundle p = new Bundle();
         p.putString("grant_type", "password");
-        p.putString("client_id", Environment.getInstance().getConfig().getOAuthClientId());
-        p.putString("client_secret", Environment.getInstance().getConfig().getOAuthClientSecret());
+        p.putString("client_id", Config.getInstance().getOAuthClientId());
+        p.putString("client_secret", Config.getInstance().getOAuthClientSecret());
         p.putString("username", username);
         p.putString("password", password);
 
         String url = getBaseUrl() + "/oauth2/access_token/";
         String json = http.post(url, p, null);
-        LogUtil.log("Api", "auth= " + json);
+        logger.debug("Auth response= " + json);
 
         // store auth token response
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
@@ -183,14 +181,14 @@ public class Api {
         String url = getBaseUrl() + "/api/mobile/v0.5/my_user_info";
         String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
         
-        LogUtil.log("Api", "GET: " + urlWithAppendedParams);
+        logger.debug("Url for getProfile: " + urlWithAppendedParams);
 
         String json = http.get(urlWithAppendedParams, getAuthHeaders());
 
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "getProfile()=" + json);
+        logger.debug("GetProfile response=" + json);
 
         Gson gson = new GsonBuilder().create();
         ProfileModel res = gson.fromJson(json, ProfileModel.class);
@@ -234,7 +232,7 @@ public class Api {
         Bundle p = new Bundle();
         p.putString("format", "json");
         String url = getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
-        LogUtil.log("Api", url);
+        logger.debug("Get course heirarchy url - "+url);
         String json = null;
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
@@ -251,8 +249,8 @@ public class Api {
         }
 
         //Initializing task call
-        LogUtil.log("Received Data from Server", DateUtil.getCurrentTimeStamp());
-        LogUtil.log("test", "hierarchy=" + json);
+        logger.debug("Received Data from Server at : "+ DateUtil.getCurrentTimeStamp());
+        logger.debug("Course hierarchy response= " + json);
 
         Gson gson = new GsonBuilder().create();
         TypeToken<ArrayList<VideoResponseModel>> t = new TypeToken<ArrayList<VideoResponseModel>>() {
@@ -303,12 +301,12 @@ public class Api {
                 m.getSummary().getTranscripts().englishUrl = fallbackUrl;
             }
             }catch(Exception e){
-                e.printStackTrace();
+                logger.error(e);
             }*/
             videos.add(m);
         }
 
-        LogUtil.log("Finished converting data", DateUtil.getCurrentTimeStamp());
+        logger.debug("Finished converting data at "+ DateUtil.getCurrentTimeStamp());
         return chapterMap;
     }
 
@@ -341,7 +339,6 @@ public class Api {
                 }
             }
         }
-
         return null;
     }
 
@@ -421,7 +418,7 @@ public class Api {
                 return vrm.unit_url;
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -466,7 +463,7 @@ public class Api {
             return null;
         }
 
-        Log.d("Api", "getEnrolledCourses=" + json);
+        logger.debug("Url "+"getEnrolledCourses=" + json);
 
         Gson gson = new GsonBuilder().create();
 
@@ -490,17 +487,6 @@ public class Api {
         return list;
     }
 
-    /**
-     * Returns list of videos in a particular course.
-     * 
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public List<VideoResponseModel> getVideosByCourseId(String courseId)
-            throws Exception {
-        return getVideosByCourseId(courseId, false);
-    }
 
     /**
      * Returns list of videos in a particular course.
@@ -548,7 +534,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug("Url "+urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
@@ -580,7 +566,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug("Url "+urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
@@ -591,7 +577,7 @@ public class Api {
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "course_about=" + json);
+        logger.debug("Response of course_about= " + json);
 
         Gson gson = new GsonBuilder().create();
         CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
@@ -613,7 +599,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug("url : "+urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
@@ -628,33 +614,11 @@ public class Api {
         Gson gson = new GsonBuilder().create();
         TypeToken<List<AnnouncementsModel>> t = new TypeToken<List<AnnouncementsModel>>() {
         };
-
         List<AnnouncementsModel> list = gson.fromJson(json, t.getType());
-
-        // VideoResponseModel res = gson.fromJson(json,
-        // VideoResponseModel.class);
 
         return list;
     }
 
-    /**
-     * Returns enrollment of given id.
-     * @param courseId
-     * @return
-     * @throws Exception
-     */
-    public EnrolledCoursesResponse getEnrollmentById(String courseId) throws Exception {
-        ArrayList<EnrolledCoursesResponse> courses = getEnrolledCourses(true);
-        if (courses != null) {
-            for (EnrolledCoursesResponse r : courses) {
-                if (r.getCourse().getId().equals(courseId)) {
-                    return r;
-                }
-            }
-        }
-
-        return null;
-    }
 
     /**
      * Returns "Authorization" header with current active access token.
@@ -676,7 +640,7 @@ public class Api {
                 headers.putString("Authorization", token);
                 headers.putString("Cookie", cookie);
             } else {
-                LogUtil.error("Api", "token cannot be null when AUTH_JSON is also null, something is WRONG!");
+                logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
         } else {
             headers.putString("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
@@ -685,6 +649,8 @@ public class Api {
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Returns Stream object from the given URL.
      * @param url
      * @param preferCache
@@ -699,7 +665,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug("Url "+urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             //cache.put(url, json);
@@ -710,7 +676,7 @@ public class Api {
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "course_about=" + json);
+        logger.debug("srt stream= " + json);
 
         Gson gson = new GsonBuilder().create();
         CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
@@ -718,6 +684,7 @@ public class Api {
     }
 
     /**
+>>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -736,7 +703,7 @@ public class Api {
                 }
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }
@@ -749,14 +716,16 @@ public class Api {
                     String str = http.get(url, getAuthHeaders());
                     return str;
                 }
-            } catch (Exception localException){
-                localException.printStackTrace();
+            } catch (Exception ex){
+                logger.error(ex);
             }
         }
         return null;
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Returns list of videos for a particular URL.
      * @param courseId
      * @param preferCache
@@ -778,7 +747,7 @@ public class Api {
                         list.add(vrm);
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
         }
@@ -787,6 +756,7 @@ public class Api {
     }
 
     /**
+>>>>>>> master
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception
@@ -803,7 +773,7 @@ public class Api {
      * @return
      */
     public String getBaseUrl() {
-        return Environment.getInstance().getConfig().getApiHostURL();
+        return Config.getInstance().getApiHostURL();
     }
 
     /**
@@ -862,7 +832,7 @@ public class Api {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
         return list;
@@ -891,7 +861,7 @@ public class Api {
         p.putString("access_token", accessToken);
 
         String url = getBaseUrl() + "/login_oauth_token/" + backend + "/";
-        LogUtil.log("Api", "POST: " + url);
+        logger.debug("Url for social login: " + url);
         
         String json = http.post(url, p, headers);
 
@@ -904,7 +874,7 @@ public class Api {
             json = "{}";
         }
         
-        LogUtil.log("Api", backend + " login=" + json);
+        logger.debug(backend + " login=" + json);
 
         Gson gson = new GsonBuilder().create();
         SocialLoginResponse res = gson.fromJson(json, SocialLoginResponse.class);
@@ -926,7 +896,7 @@ public class Api {
         String username = pref.getCurrentUserProfile().username;
 
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-        LogUtil.log("Api", "PATCH: " + url);
+        logger.debug("PATCH url for syncLastAccessed Subsection: " + url);
 
         String date = DateUtil.getModificationDate();
 
@@ -934,13 +904,13 @@ public class Api {
         postBody.put("last_visited_module_id", lastVisitedModuleId);
         postBody.put("modification_date", date);
 
-        LogUtil.log("Api", "PATCH body: " + postBody.toString());
+        logger.debug("PATCH body for syncLastAccessed Subsection: " + postBody.toString());
         String json = http.post(url, postBody.toString(), getAuthHeaders(), true);
 
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "sync last viewed= " + json);
+        logger.debug("Response of sync last viewed= " + json);
 
         Gson gson = new GsonBuilder().create();
         SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
@@ -953,7 +923,7 @@ public class Api {
         String username = pref.getCurrentUserProfile().username;
 
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-        LogUtil.log("Api", "GET: " + url);
+        logger.debug("Url of get last accessed subsection: " + url);
 
         String date = DateUtil.getModificationDate();
 
@@ -962,7 +932,7 @@ public class Api {
         if (json == null) {
             return null;
         }
-        LogUtil.log("Api", "get last viewed subsection.id = " + json);
+        logger.debug("Response of get last viewed subsection.id = " + json);
 
         Gson gson = new GsonBuilder().create();
         SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);

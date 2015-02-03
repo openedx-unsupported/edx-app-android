@@ -16,17 +16,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.SegmentTracker;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Emailutill;
-import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.EmailUtil;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.WifiSwitchDialogFragment;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +35,7 @@ public class NavigationFragment extends Fragment {
 
     private PrefManager pref;
     private WifiSwitchDialogFragment newFragment;
+    private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,10 +94,10 @@ public class NavigationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String to = Environment.getInstance().getConfig().getFeedbackEmailAddress();
+                String to = Config.getInstance().getFeedbackEmailAddress();
                 String subject =getString(R.string.Email_subject);
                 String email = "";
-                Emailutill.sendEmail(getActivity(), to, subject, email);
+                EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
         });
 
@@ -130,8 +131,7 @@ public class NavigationFragment extends Fragment {
                 intent.setAction(AppConstants.LOGOUT_CLICKED);
                 getActivity().sendBroadcast(intent); 
                 
-                ISegment segIO = SegmentFactory.getInstance(getActivity(),
-                        new SegmentTracker(getActivity()));
+                ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackUserLogout();
                 segIO.resetIdentifyUser();
                 
@@ -141,18 +141,19 @@ public class NavigationFragment extends Fragment {
         
 
         TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);
-        String version_name;
         try{
-            version_name = PropertyUtil.getDisplayVersionName(getActivity());
-            if(version_name!=null){
-                version_tv.setText(getString(R.string.label_version)+" "+version_name);
+            String versionName = PropertyUtil.getManifestVersionName(getActivity());
+
+            if(versionName != null) {
+                String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
+                String text = String.format("%s %s %s",
+                        getString(R.string.label_version), versionName, envDisplayName);
+                version_tv.setText(text);
             }
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(Exception e) {
+            logger.error(e);
         }
-        
-        
-        
+
         return layout;
     }
 
@@ -189,7 +190,7 @@ public class NavigationFragment extends Fragment {
                     wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ON_WIFI, false);
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
             
@@ -202,7 +203,7 @@ public class NavigationFragment extends Fragment {
                     
                     updateWifiSwitch(getView());
                 } catch(Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         });

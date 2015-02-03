@@ -1,13 +1,13 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.R;
-
 import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.AnnouncementsModel;
 
 public abstract class AnnouncementAdapter extends
         BaseListAdapter<AnnouncementsModel> {
