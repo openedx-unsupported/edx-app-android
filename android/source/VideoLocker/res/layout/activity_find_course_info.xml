@@ -5,9 +5,26 @@
     android:background="@color/grey_act_background"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/offline_bar"
+        style="@style/offline_bar_style"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"/>
+
     <WebView
         android:id="@+id/find_courses_info_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_act_background" />
+        android:background="@color/grey_act_background"
+        android:layout_below="@id/offline_bar"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/progress_spinner"
+        style="@style/api_progress_style"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/offline_mode_message"
+        style="@style/offline_mode_message"/>
 </RelativeLayout>
