@@ -57,12 +57,10 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
 
-                if(act instanceof MyCoursesListActivity){
-                    //if MyCourses pressed when on MyCourse screen, close drawer
-                    ((MyCoursesListActivity) act).closeDrawer();
-                }else {
-                    ((BaseFragmentActivity) act).closeDrawer();
+                //if MyCourses pressed when on MyCourse screen, just close the drawer.
+                if(!(act instanceof MyCoursesListActivity)){
                     Intent myCoursesIntent = new Intent(act, MyCoursesListActivity.class);
                     myCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     act.startActivity(myCoursesIntent);
@@ -76,20 +74,19 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
 
-                Intent findCoursesIntent = new Intent(getActivity(),
-                        MyVideosTabActivity.class);
-                findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                if(act instanceof MyCoursesListActivity){
-                    ((MyCoursesListActivity) act).closeDrawer();
+                if(!(act instanceof MyVideosTabActivity)){
+                    Intent findCoursesIntent = new Intent(getActivity(),
+                            MyVideosTabActivity.class);
+                    findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     act.startActivity(findCoursesIntent);
-                    //Finish is not called because the MyCourse activity need not be deleted
-                }else if(act instanceof MyVideosTabActivity){
-                    ((MyVideosTabActivity) act).closeDrawer();
-                }else if(act instanceof FindCoursesActivity){
-                    ((FindCoursesActivity) act).closeDrawer();
-                    act.startActivity(findCoursesIntent);
-                    act.finish();
+                    //Finish need not be called if the current activity is MyCourseListing
+                    // as on returning back from FindCourses,
+                    // the student should be returned to the MyCourses screen
+                    if(!(act instanceof MyCoursesListActivity)){
+                       act.finish();
+                    }
                 }
             }
         });
@@ -99,16 +96,12 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
 
-                Intent findCoursesIntent = new Intent(act, FindCoursesActivity.class);
-                findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                if(act instanceof FindCoursesActivity){
-                    //if find courses pressed when on Find Courses screen, close drawer
-                    ((FindCoursesActivity) act).closeDrawer();
-                }else{
-                    ((BaseFragmentActivity) act).closeDrawer();
+                if(!(act instanceof FindCoursesActivity)){
+                    Intent findCoursesIntent = new Intent(act, FindCoursesActivity.class);
+                    findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     act.startActivity(findCoursesIntent);
-                    act.finish();
                 }
             }
         });
@@ -123,7 +116,6 @@ public class NavigationFragment extends Fragment {
                 Emailutill.sendEmail(getActivity(), to, subject, email);
             }
         });
-
 
         ProfileModel profile = pref.getCurrentUserProfile();
         if(profile != null) {
