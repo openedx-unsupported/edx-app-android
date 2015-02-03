@@ -24,34 +24,12 @@ public class FindCoursesActivity extends BaseFragmentActivity {
         }catch(Exception e){
             logger.error(e);
         }
-
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-        }else{
-            AppConstants.offline_flag = false;
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         setTitle(getString(R.string.find_courses_title));
-    }
-
-    @Override
-    protected void onOffline() {
-        AppConstants.offline_flag = true;
-    }
-
-    @Override
-    protected void onOnline() {
-        AppConstants.offline_flag = false;
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
     }
 
     @Override
