@@ -2,7 +2,7 @@ package org.edx.mobile.module.analytics;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.Environment;
+import org.edx.mobile.util.Config;
 
 import android.content.Context;
 import com.segment.analytics.Analytics;
@@ -19,7 +19,7 @@ public class SegmentTracker {
     
     public SegmentTracker(Context context) {
         try {
-            String writeKey = Environment.getInstance().getConfig().getSegmentIOWriteKey();
+            String writeKey = Config.getInstance().getSegmentIOWriteKey();
 
             if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
