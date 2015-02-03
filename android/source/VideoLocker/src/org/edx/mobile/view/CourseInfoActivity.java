@@ -6,26 +6,19 @@ import android.view.MenuItem;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.module.analytics.ISegment;
 
 public class CourseInfoActivity extends BaseFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_courses);
+        setContentView(R.layout.activity_find_course_info);
 
         try{
-            segIO.screenViewsTracking(getString(R.string.find_courses_title));
+            segIO.screenViewsTracking(ISegment.Values.COURSE_INFO_SCREEN);
         }catch(Exception e){
             logger.error(e);
-        }
-
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-        }else{
-            AppConstants.offline_flag = false;
         }
     }
 
@@ -33,12 +26,6 @@ public class CourseInfoActivity extends BaseFragmentActivity {
     protected void onStart() {
         super.onStart();
         setTitle(getString(R.string.find_courses_title));
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
     }
 
     @Override
