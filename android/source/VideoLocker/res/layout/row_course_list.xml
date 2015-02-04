@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:id="@+id/course_row_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:descendantFocusability="blocksDescendants"
@@ -37,8 +37,8 @@
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/course_name"
             style="@style/bold_grey_text"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@id/course_image"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="10dp"
