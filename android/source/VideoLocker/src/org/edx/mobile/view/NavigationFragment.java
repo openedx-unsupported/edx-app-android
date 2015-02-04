@@ -77,10 +77,7 @@ public class NavigationFragment extends Fragment {
                 ((BaseFragmentActivity) act).closeDrawer();
 
                 if(!(act instanceof MyVideosTabActivity)){
-                    Intent findCoursesIntent = new Intent(getActivity(),
-                            MyVideosTabActivity.class);
-                    findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    act.startActivity(findCoursesIntent);
+                    Router.getInstance().showMyVideos(act);
                     //Finish need not be called if the current activity is MyCourseListing
                     // as on returning back from FindCourses,
                     // the student should be returned to the MyCourses screen
