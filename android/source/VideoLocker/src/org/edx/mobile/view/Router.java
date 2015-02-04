@@ -38,4 +38,12 @@ public class Router {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
         sourceActivity.startActivity(courseInfoIntent);
     }
+
+    public void showMyVideos(Activity sourceActivity) {
+        Intent myVideosIntent = new Intent(sourceActivity,
+                MyVideosTabActivity.class);
+        myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        sourceActivity.startActivity(myVideosIntent);
+    }
+
 }
