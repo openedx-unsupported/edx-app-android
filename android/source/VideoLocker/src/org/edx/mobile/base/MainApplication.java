@@ -9,6 +9,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
@@ -63,6 +64,9 @@ public class MainApplication extends Application {
         if (Config.getInstance().getFacebookAppId() != null) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
+
+        // try data repair if app version is updated
+        new Storage(this).doRepairData();
     }
     
     /**

@@ -66,7 +66,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected IStorage storage;
     protected ISegment segIO;
     protected boolean runOnTick = true;
-    protected transient final Logger logger = new Logger(getClass().getName());
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     protected void onCreate(Bundle arg0) {

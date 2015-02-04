@@ -90,7 +90,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private boolean isVideoMessageDisplayed;
     private boolean isNetworkMessageDisplayed;
     private boolean isManualFullscreen = false;
-    private transient final Logger logger = new Logger(getClass().getName());
+    private final Logger logger = new Logger(getClass().getName());
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
