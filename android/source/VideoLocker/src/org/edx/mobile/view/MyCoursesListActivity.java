@@ -292,8 +292,7 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     }
 
                     //Call the Find courses activity
-                    Intent findCoursesIntent = new Intent(MyCoursesListActivity.this, FindCoursesActivity.class);
-                    startActivity(findCoursesIntent);
+                    Router.getInstance().showFindCourses(MyCoursesListActivity.this);
                 }
             });
 

@@ -77,4 +77,5 @@
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
     <color name="blue_bar">#1f9ed9</color>
+    <color name="grey_text_course_not_started">#00454951</color>
 </resources>

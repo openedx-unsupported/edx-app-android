@@ -86,4 +86,21 @@ public class DateUtil {
         }
     }
 
+    /**
+     *  This function returns course start date in the MMMM dd, yyyy format
+     */
+    public static String formatCourseNotStartedDate(String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+            Date startDate = DateUtil.convertToDate(date);
+
+            String formattedDate = dateFormat.format(startDate);
+            return formattedDate;
+        } catch (Exception e) {
+            //This will be removed when the PR for log changes is merged with master
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
