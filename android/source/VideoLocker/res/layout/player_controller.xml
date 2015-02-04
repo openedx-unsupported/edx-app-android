@@ -43,6 +43,17 @@
                 android:layout_marginRight="12dp"
                 android:background="@drawable/ic_lms_selector"
                 android:contentDescription="@string/app_name" />
+
+        <ImageButton
+            android:id="@+id/share_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/lms_btn"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_facebook_discuss_selector"
+            android:contentDescription="@string/app_name"
+            />
                 
     </RelativeLayout>
 

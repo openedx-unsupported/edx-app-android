@@ -8,8 +8,8 @@ package org.edx.mobile.module.db;
 public final class DbStructure {
     
     public static final String NAME = "downloads.db";
-    //Changed to Version 2 to Add LMS Coulmn
-    public static final int VERSION = 2;
+    //Updated to Version 3 to add different encoding Urls
+    public static final int VERSION = 3;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
@@ -25,6 +25,9 @@ public final class DbStructure {
         public static final String WATCHED = "watched"; // watched, unwatched, partially watched
         public static final String DOWNLOADED = "downloaded"; // yes, no
         public static final String URL = "video_url";
+        public static final String URL_LOW_QUALITY = "video_url_low_quality";
+        public static final String URL_HIGH_QUALITY = "video_url_high_quality";
+        public static final String URL_YOUTUBE = "video_url_youtube";
         public static final String VIDEO_ID = "video_id";
         public static final String DM_ID = "download_manager_id";
         public static final String EID = "enrollment_id";

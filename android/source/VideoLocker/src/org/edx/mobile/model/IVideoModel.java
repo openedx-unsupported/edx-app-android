@@ -30,6 +30,12 @@ public interface IVideoModel {
 
     String getVideoUrl();
 
+    String getHighQualityVideoUrl();
+
+    String getLowQualityVideoUrl();
+
+    String getYoutubeVideoUrl();
+
     int getWatchedStateOrdinal();
 
     int getDownloadedStateOrdinal();

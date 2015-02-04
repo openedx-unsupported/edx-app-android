@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_row_layout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -18,7 +19,7 @@
         android:ellipsize="end"
         android:maxWidth="@dimen/width_chapter_text"
         android:singleLine="true"
-        android:text="@string/chapter_name"
+        tools:text="@string/chapter_name"
         android:textSize="16sp" />
 
     <LinearLayout
@@ -61,7 +62,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="0dp"
         android:layout_toLeftOf="@id/bulk_download_layout"
-        android:text="@string/no_of_videos"
+        tools:text="@string/no_of_videos"
         android:textColor="@color/grey_text_mycourse"
         android:textSize="15sp" />
 

@@ -15,6 +15,7 @@ import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
@@ -26,7 +27,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
     IDatabase dbStore;
     IStorage storage;
     public OnlineVideoAdapter(Context context, IDatabase dbStore, IStorage storage) {
-        super(context);
+        super(context, R.layout.row_video_list);
         this.dbStore = dbStore;
         this.storage = storage;
     }
@@ -56,9 +57,27 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                 final DownloadEntry videoData = (DownloadEntry) sectionItem;
                 final String selectedVideoId = getVideoId();
 
-                holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(context, videoData.size)); 
+                
+                holder.videoTitle.setText(videoData.title);
+                holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
+
+                if (videoData.downloaded == DownloadEntry.DownloadedState.DOWNLOADING) {
+                    // may be download in progress
+                    holder.progresslayout.setVisibility(View.VISIBLE);
+                    holder.video_download_layout.setVisibility(View.GONE);
+                    NativeDownloadModel downloadModel = storage.
+                            getNativeDownlaod(videoData.dmId);
+                    if(downloadModel!=null){
+                        int percent = downloadModel.getPercent();
+                        if(percent>=0 && percent < 100){
+                            holder.progresslayout.setVisibility(View.VISIBLE);
+                            holder.download_pw.setProgressPercent(percent);
+                        }else{
+                            holder.progresslayout.setVisibility(View.GONE);
+                        }
+                    }
+                }
 
                 dbStore.getWatchedStateForVideoId(videoData.videoId, 
                         new DataCallback<DownloadEntry.WatchedState>(true) {
@@ -175,11 +194,6 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
         holder.progresslayout = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_video_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

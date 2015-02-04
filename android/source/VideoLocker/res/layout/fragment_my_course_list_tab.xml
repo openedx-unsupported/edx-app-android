@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/offline_bar"
+        style="@style/offline_bar_style"
+        android:layout_alignParentTop="true"
+        android:visibility="visible" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/no_course_tv"
+        style="@style/bold_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/no_courses_to_display"
+        android:textColor="@color/empty_list_text"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/offline_bar">
+
+        <ListView
+            tools:listitem="@layout/row_course_list"
+            android:id="@+id/my_course_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            android:drawSelectorOnTop="false"
+            android:listSelector="@color/grey_act_background"
+            android:padding="10dp"
+            android:scrollbars="none"
+            android:clipToPadding="false"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/api_spinner"
+        style="@style/api_progress_style"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/offline_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <include layout="@layout/panel_offline_mode" />
+    </LinearLayout>
+
+</RelativeLayout>
+
+

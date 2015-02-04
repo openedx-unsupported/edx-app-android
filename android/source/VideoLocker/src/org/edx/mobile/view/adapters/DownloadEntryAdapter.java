@@ -20,7 +20,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     private IStorage storage;
 
     public DownloadEntryAdapter(Context context) {
-        super(context);
+        super(context, R.layout.row_download_list);
     }
 
     public void setStore(IStorage storage) {
@@ -46,24 +46,24 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                         + nativeModel.getSize());
             }else{
                 holder.percent.setText(nativeModel.getDownloaded() + " / "
-                        + MemoryUtil.format(context, model.size));
+                        + MemoryUtil.format(getContext(), model.size));
             }
 
             holder.progress.setProgress(nativeModel.getPercent());
             if (nativeModel.status == DownloadManager.STATUS_FAILED) {
                 holder.error.setVisibility(View.VISIBLE);
                 holder.error.setTag(model);
-                holder.error.setText(context
+                holder.error.setText(getContext()
                         .getString(R.string.error_download_failed));
 
-                holder.progress.setProgressDrawable(context.getResources()
+                holder.progress.setProgressDrawable(getContext().getResources()
                         .getDrawable(
                                 R.drawable.custom_progress_bar_horizontal_red));
             } else {
                 holder.error.setVisibility(View.GONE);
 
                 holder.progress
-                .setProgressDrawable(context
+                .setProgressDrawable(getContext()
                         .getResources()
                         .getDrawable(
                                 R.drawable.custom_progress_bar_horizontal_green));
@@ -95,11 +95,6 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
         
 
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_download_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

@@ -181,7 +181,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             if(filepath==null || filepath.length()<=0){
                 // not available on local, so play online
                 logger.warn("Local file path not available");
-                filepath = video.url;
+                filepath = video.getBestEncodingUrl(this);
             }
             
             logger.debug("Playing from URL: " + filepath);

@@ -257,6 +257,9 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             values.put(DbStructure.Column.DURATION, de.getDuration());
             values.put(DbStructure.Column.FILEPATH, de.getFilePath());
             values.put(DbStructure.Column.URL, de.getVideoUrl());
+            values.put(DbStructure.Column.URL_HIGH_QUALITY, de.getHighQualityVideoUrl());
+            values.put(DbStructure.Column.URL_LOW_QUALITY, de.getLowQualityVideoUrl());
+            values.put(DbStructure.Column.URL_YOUTUBE, de.getYoutubeVideoUrl());
             values.put(DbStructure.Column.WATCHED, de.getWatchedStateOrdinal());
             values.put(DbStructure.Column.DOWNLOADED, de.getDownloadedStateOrdinal());
             values.put(DbStructure.Column.DM_ID, de.getDmId());
@@ -463,6 +466,9 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.DURATION, model.getDuration());
         values.put(DbStructure.Column.FILEPATH, model.getFilePath());
         values.put(DbStructure.Column.URL, model.getVideoUrl());
+        values.put(DbStructure.Column.URL_HIGH_QUALITY, model.getHighQualityVideoUrl());
+        values.put(DbStructure.Column.URL_LOW_QUALITY, model.getLowQualityVideoUrl());
+        values.put(DbStructure.Column.URL_YOUTUBE, model.getYoutubeVideoUrl());
         values.put(DbStructure.Column.DOWNLOADED, model.getDownloadedStateOrdinal());
         values.put(DbStructure.Column.DOWNLOADED_ON, model.getDownloadedOn());
 

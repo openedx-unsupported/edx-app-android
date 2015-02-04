@@ -14,7 +14,7 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
     //public int selectedPosition = -1;
     public String selectedLanguage;
     public ClosedCaptionAdapter(Context context) {
-        super(context);
+        super(context, R.layout.row_cc_list);
     }
 
     @Override
@@ -43,11 +43,6 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
                 .findViewById(R.id.row_cc_lang);
 
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_cc_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

@@ -3,13 +3,19 @@ package org.edx.mobile.model.api;
 import android.content.Context;
 
 import org.edx.mobile.http.Api;
+import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.SocialUtils;
 
 import java.io.Serializable;
 import java.util.Date;
+import android.content.Context;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class CourseEntry implements Serializable {
+
+    private List<SocialMember> members_list;
 
     private LatestUpdateModel latest_updates;
     private String start; // start date
@@ -21,8 +27,10 @@ public class CourseEntry implements Serializable {
     private String course_about;
     private String course_updates;
     private String course_handouts;
+    private String course_url;
     private String id;
     private String number;
+    private SocialURLModel social_urls;
 
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
@@ -123,6 +131,12 @@ public class CourseEntry implements Serializable {
         return (latest_updates.getVideo() != null);
     }
 
+    public List<SocialMember> getMembers_list() { return members_list; }
+
+    public void setMembers_list(List<SocialMember> members_list) {
+        this.members_list = members_list;
+    }
+
     public String getCourse_about() {
         return course_about;
     }
@@ -154,4 +168,43 @@ public class CourseEntry implements Serializable {
     public void setCourse_handouts(String course_handouts) {
         this.course_handouts = course_handouts;
     }
+
+    public String getCourse_url() {
+        return course_url;
+    }
+
+    public void setCourse_url(String course_url) {
+        this.course_url = course_url;
+    }
+
+    public String getCourseGroup(SocialUtils.SocialType type) {
+
+        if (this.social_urls != null) {
+
+            switch (type) {
+                case FACEBOOK:
+                    return this.social_urls.facebook;
+            }
+
+        }
+
+        return null;
+
+    }
+
+    public boolean isGroupAvailable(SocialUtils.SocialType type) {
+
+        if (this.social_urls != null) {
+
+            switch (type) {
+                case FACEBOOK:
+                    return (this.social_urls.facebook != null && this.social_urls.facebook.length() > 0);
+            }
+
+        }
+
+        return false;
+
+    }
+
 }

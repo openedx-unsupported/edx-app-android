@@ -1,13 +1,14 @@
-
 package org.edx.mobile.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -20,14 +21,38 @@ import org.edx.mobile.util.images.ImageCacheManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.edx.mobile.social.SocialMember;
+import org.edx.mobile.view.custom.SocialFacePileView;
+
+import java.util.List;
+
 
 public abstract class MyCourseAdapter extends
 BaseListAdapter<EnrolledCoursesResponse> {
 
     private long lastClickTime;
 
-    public MyCourseAdapter(Context context) {
-        super(context);
+    private boolean showSocial;
+
+    private CourseFriendsListener courseFriendsListener;
+
+    public interface CourseFriendsListener {
+        public void fetchCourseFriends(EnrolledCoursesResponse course);
+    }
+
+    public int getPositionForCourseId(String courseId){
+        for(int i = 0; i < getCount(); i++){
+            if(getItem(i).getCourse() != null && TextUtils.equals(getItem(i).getCourse().getId(), courseId))
+                return i;
+        }
+
+        return -1;
+    }
+
+    public MyCourseAdapter(Context context, boolean showSocial, CourseFriendsListener courseFriendsListener ) {
+        super(context, R.layout.row_course_list);
+        this.courseFriendsListener = courseFriendsListener;
+        this.showSocial = showSocial;
         lastClickTime = 0;
     }
 
@@ -82,7 +107,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
 
                 if (!courseData.isStarted()) {
                     if(startDate!=null){
-                        startDt = context.getString(R.string.label_starting_from)
+                        startDt = getContext().getString(R.string.label_starting_from)
                                 + " - " + dateformat.format(startDate);                 
                         holder.starting_from.setText(startDt);
                         holder.starting_from_layout.setVisibility(View.VISIBLE);
@@ -92,7 +117,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                 }
                 else if (courseData.isStarted() && courseData.isEnded()) {
                     if(endDate!=null){
-                        endDt = context.getString(R.string.label_ended)
+                        endDt = getContext().getString(R.string.label_ended)
                                 + " - " + dateformat.format(endDate);
                         holder.starting_from.setText(endDt);
                         holder.starting_from_layout.setVisibility(View.VISIBLE);
@@ -101,7 +126,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
                     }
                 } else if (courseData.isStarted() && !courseData.isEnded()) {
                     if(endDate!=null){
-                        endDt = context.getString(R.string.label_ending_on)
+                        endDt = getContext().getString(R.string.label_ending_on)
                                 + " - " + dateformat.format(endDate);
                         holder.starting_from.setText(endDt);
 
@@ -114,10 +139,34 @@ BaseListAdapter<EnrolledCoursesResponse> {
             }
 
         }
+
+        if(enrollment.isCertificateEarned()){
+            holder.certificateBanner.setVisibility(View.VISIBLE);
+        } else {
+            holder.certificateBanner.setVisibility(View.GONE);
+        }
+
         holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(context),
+        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
                 ImageCacheManager.getInstance().getImageLoader());
         holder.courseImage.setTag(courseData);
+
+        if (showSocial) {
+
+            holder.facePileContainer.setVisibility(View.INVISIBLE);
+            List<SocialMember> membersList = enrollment.getCourse().getMembers_list();
+            if (membersList == null) {
+                courseFriendsListener.fetchCourseFriends(enrollment);
+            } else if (membersList.size() > 0){
+                holder.facePileContainer.setVisibility(View.VISIBLE);
+                holder.facePileView.setMemberList(membersList);
+            }
+
+        } else {
+
+            holder.facePileContainer.setVisibility(View.GONE);
+
+        }
 
     }
 
@@ -140,12 +189,13 @@ BaseListAdapter<EnrolledCoursesResponse> {
                 .findViewById(R.id.new_course_content_layout);
         holder.starting_from_layout = (LinearLayout) convertView
                 .findViewById(R.id.starting_from_layout);
+        holder.certificateBanner = (RelativeLayout) convertView
+                .findViewById(R.id.course_certified_banner);
+        holder.facePileView = (SocialFacePileView) convertView
+                .findViewById(R.id.course_item_facepileview);
+        holder.facePileContainer = (LinearLayout) convertView
+                .findViewById(R.id.course_item_facepile_container);
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_course_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {
@@ -157,6 +207,9 @@ BaseListAdapter<EnrolledCoursesResponse> {
         TextView starting_from;
         LinearLayout new_course_content;
         LinearLayout starting_from_layout;
+        RelativeLayout certificateBanner;
+        LinearLayout facePileContainer;
+        SocialFacePileView facePileView;
     }
 
     @Override
@@ -173,4 +226,18 @@ BaseListAdapter<EnrolledCoursesResponse> {
 
     public abstract void onItemClicked(EnrolledCoursesResponse model);
     public abstract void onAnnouncementClicked(EnrolledCoursesResponse model);
+
+    public boolean isShowSocial() {
+        return showSocial;
+    }
+
+    public void setShowSocial(boolean showSocial) {
+
+        if (showSocial != this.showSocial){
+            this.showSocial = showSocial;
+            this.notifyDataSetChanged();
+        }
+
+    }
+
 }

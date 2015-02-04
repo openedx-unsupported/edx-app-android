@@ -34,6 +34,9 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.DURATION               + " LONG, "
                 + DbStructure.Column.FILEPATH               + " TEXT, "
                 + DbStructure.Column.URL                    + " TEXT, "
+                + DbStructure.Column.URL_HIGH_QUALITY       + " TEXT, "
+                + DbStructure.Column.URL_LOW_QUALITY        + " TEXT, "
+                + DbStructure.Column.URL_YOUTUBE            + " TEXT, "
                 + DbStructure.Column.WATCHED                + " INTEGER, "
                 + DbStructure.Column.DOWNLOADED             + " INTEGER, "
                 + DbStructure.Column.DM_ID                  + " INTEGER, "
@@ -53,8 +56,11 @@ class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try{
-            String upgradeQuery = "ALTER TABLE "    + DbStructure.Table.DOWNLOADS 
-                    + " ADD COLUMN " + DbStructure.Column.UNIT_URL + " TEXT ";
+            String upgradeQuery = "ALTER TABLE "    + DbStructure.Table.DOWNLOADS
+                    + " ADD COLUMN " + DbStructure.Column.UNIT_URL + " TEXT "
+                    + " ADD COLUMN " + DbStructure.Column.URL_HIGH_QUALITY + " TEXT "
+                    + " ADD COLUMN " + DbStructure.Column.URL_LOW_QUALITY + " TEXT "
+                    + " ADD COLUMN " + DbStructure.Column.URL_YOUTUBE + " TEXT ";
             if (oldVersion == 1 && newVersion == 2) {
                 db.execSQL(upgradeQuery);
             }

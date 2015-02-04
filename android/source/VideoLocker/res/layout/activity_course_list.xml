@@ -1,19 +1,16 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
     android:splitMotionEvents="false" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
 
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar_style"
-            android:layout_alignParentTop="true"
-            android:visibility="visible" />
+    <android.support.v4.app.FragmentTabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/no_course_tv"
@@ -33,36 +30,32 @@
             style="@style/api_progress_style"
             android:visibility="gone" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_container"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/offline_bar" >
+            android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/my_course_list"
+            <TabWidget
+                android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="10.0sp"
-                android:drawSelectorOnTop="false"
-                android:listSelector="@color/grey_act_background"
-                android:padding="10dp"
-                android:scrollbars="none" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_weight="0"
+                android:background="@color/tab_bg"
+                android:orientation="horizontal"
+                />
 
-        <LinearLayout
-            android:id="@+id/offline_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
 
-            <include layout="@layout/panel_offline_mode" />
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
         </LinearLayout>
-    </RelativeLayout>
+
+    </android.support.v4.app.FragmentTabHost>
 
     <!-- FrameLayout to display Fragment for Navigation Menu -->
-
     <FrameLayout
         android:id="@+id/slider_menu"
         android:layout_width="240dp"
