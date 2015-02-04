@@ -92,16 +92,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- <TextView android:background="@drawable/bt_facebook"
-            android:drawableLeft="@drawable/ic_facebook"
-            android:layout_width="140dp"
-            android:layout_height="40dp"
-            android:text="@string/facebook_text"
-            android:gravity="left|center_vertical"
-            android:textColor="@android:color/white"
-            android:drawablePadding="20dp"
-            /> -->
-        
         <RelativeLayout
             android:id="@+id/google_layout"
             android:layout_width="0dp"
