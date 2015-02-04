@@ -53,39 +53,4 @@
         android:layout_alignParentTop="true"
 />
 
-    <!--
-         <ETextView
-        android:id="@+id/empty_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/no_videos_to_display"
-        android:textSize="23sp"
-        android:visibility="gone"
-        android:textColor="@color/empty_list_text"
-        style="@style/bold_text" />
-    -->
-
-    <!-- <LinearLayout
-        android:id="@+id/offline_access_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent_download_bg"
-        android:orientation="vertical"
-        android:paddingBottom="15dp"
-        android:paddingTop="10dp"
-        android:visibility="gone" >
-
-        <ETextView
-            android:id="@+id/offline_access_header"
-            style="@style/offline_access_header"
-            android:text="@string/video_offline_header" />
-
-        <ETextView
-            android:id="@+id/offline_access_message"
-            style="@style/offline_access_message"
-            android:text="@string/video_offline_message" />
-    </LinearLayout> -->
-
 </RelativeLayout>
