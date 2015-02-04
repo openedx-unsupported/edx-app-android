@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.edx.mobile.logger.Logger;
@@ -38,7 +39,10 @@ public class Config {
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
+    private static final String SEGMENT_IO_DEBUG_ON = "SEGMENT_IO_DEBUG_ON";
+    private static final String SEGMENT_IO_QUEUE_SIZE = "SEGMENT_IO_QUEUE_SIZE";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
+    private static final String SOCIAL_FEATURES_ENABLED = "SOCIAL_FEATURES_ENABLED";
 
     Config(Context context) {
         try {
@@ -62,6 +66,28 @@ public class Config {
             logger.error(e);
         }
         return null;
+    }
+
+    boolean getBoolean(String key, boolean defaultValue) {
+        Boolean isTrue = null;
+        try {
+            isTrue = (Boolean)mProperties.get(key);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+        return isTrue == null ? defaultValue : isTrue;
+    }
+
+    private int getInteger(String key, int defaultValue) {
+        Integer value = null;
+        try {
+            value = (Integer)mProperties.get(key);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+        return value == null ? defaultValue : value;
     }
 
     private Object getObject(String key) {
@@ -109,6 +135,14 @@ public class Config {
         return getString(SEGMENT_IO_WRITE_KEY);
     }
 
+    public boolean getSegmentDebugOn() {
+        return getBoolean(SEGMENT_IO_DEBUG_ON, false);
+    }
+
+    public int getSegmentQueueSize() {
+        return getInteger(SEGMENT_IO_QUEUE_SIZE, 1);
+    }
+
     public String getNewRelicKey() {
         return getString(NEW_RELIC_KEY);
     }
@@ -119,5 +153,8 @@ public class Config {
 
     public String getEnvironmentDisplayName() {
         return getString(ENVIRONMENT_DISPLAY_NAME);
+    }
+    public boolean getSocialFeaturesEnabled() {
+        return getBoolean(SOCIAL_FEATURES_ENABLED, false);
     }
 }

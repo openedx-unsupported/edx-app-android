@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -11,35 +13,95 @@
         android:descendantFocusability="blocksDescendants"
         android:paddingBottom="10dp" >
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/course_image"
+        <RelativeLayout
+            android:id="@+id/course_item_top_display"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_alignParentTop="true"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/course_image"
-            android:scaleType="centerCrop" />
+            android:layout_height="120dp">
 
-        <!--
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="125dp"
-        android:layout_alignParentTop="true" >
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/course_image"
+                tools:background="@drawable/sample_course_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/course_image"
+                android:scaleType="centerCrop" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/course_image"
-            android:src="@drawable/transparent_bg" />
-    </FrameLayout>
-        -->
+            <LinearLayout
+                android:id="@+id/course_item_facepile_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/course_facepile_backing"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:paddingTop="22dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="bottom">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    style="@style/semibold_text"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="0"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="@string/course_friends_also_enrolled"/>
+
+                <org.edx.mobile.view.custom.SocialFacePileView
+                    android:id="@+id/course_item_facepileview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:avatarGap="8dp"
+                    app:overflowTextSize="20dp"
+                    app:borderRadius="@dimen/avatar_image_radius"
+                    app:avatarCount="6"
+                    app:avatarMaxSize="50dp"
+                    android:gravity="center|left" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/course_certified_banner"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="17dp"
+            android:rotation="40"
+            android:translationX="51dp"
+            android:background="@color/course_banner_blue"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <org.edx.mobile.view.custom.ETextView
+                style="@style/bold_white_text"
+                android:textSize="10sp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="@string/course_banner_certified"
+                android:textColor="@android:color/white"
+                android:background="@color/course_banner_blue"
+                android:lineSpacingMultiplier="0.8"
+                android:gravity="center"
+                android:padding="3dp"
+                android:textAllCaps="true"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/course_name"
             style="@style/bold_grey_text"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/course_image"
+            android:layout_below="@id/course_item_top_display"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

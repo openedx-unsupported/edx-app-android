@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     
     <!-- Google Permissions -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -31,8 +30,8 @@
     <!-- Allows location to be tracked -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
-    
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -105,6 +104,39 @@
             android:name=".view.VideoListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.edx.mobile.view.MyGroupsListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.CourseHandoutActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.CreateGroupActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.SocialFriendPickerActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.GroupSummaryActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.CertificateActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.SettingsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="org.edx.mobile.view.FriendsInCourseActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         
          <receiver android:name=".module.download.DownloadCompleteReceiver">
              <intent-filter>
@@ -130,8 +162,15 @@
 		 <meta-data android:name="com.google.android.gms.version" 
 		     android:value="@integer/google_play_services_version" />
 
-		 <!-- Setup Facebook -->
-		 <activity android:name="com.facebook.LoginActivity" />
+        <!-- Setup Facebook -->
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/edx_facebook_app_id"/>
+		 
+		 <activity android:name="com.facebook.LoginActivity" />		 		
+        <service android:name=".services.DownloadSpeedService" />
+
+        <service android:name=".services.FetchCourseFriendsService"/>
+
     </application>
 
 </manifest>

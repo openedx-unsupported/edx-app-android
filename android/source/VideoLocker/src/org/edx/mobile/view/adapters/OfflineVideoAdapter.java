@@ -26,7 +26,7 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
 
     private IDatabase dbStore;
     public OfflineVideoAdapter(Context context, IDatabase dbStore) {
-        super(context);
+        super(context, R.layout.row_video_list);
         this.dbStore = dbStore;
     }
 
@@ -56,7 +56,7 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
 
                 holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(context,
+                holder.videoSize.setText(MemoryUtil.format(getContext(),
                         videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
@@ -87,11 +87,11 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                 //TODO : Need to check if this call to the db is required if we can get it from the above DS
                 //if(store.isDownloaded(videoData.videoId)) {
                 if(videoData.isDownloaded()){
-                    holder.videoTitle.setTextColor(context.getResources()
+                    holder.videoTitle.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_text_mycourse));
-                    holder.videoSize.setTextColor(context.getResources()
+                    holder.videoSize.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_video_size_text));
-                    holder.videoPlayingTime.setTextColor(context.getResources()
+                    holder.videoPlayingTime.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_video_size_text));
 
                     if(selectedVideoId!=null){
@@ -119,11 +119,11 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                 } else {
                     holder.videolayout.setBackgroundResource(R.color.disabled_chapter_list);
                     holder.delete_checkbox.setVisibility(View.GONE);
-                    holder.videoTitle.setTextColor(context.getResources()
+                    holder.videoTitle.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
-                    holder.videoSize.setTextColor(context.getResources()
+                    holder.videoSize.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
-                    holder.videoPlayingTime.setTextColor(context.getResources()
+                    holder.videoPlayingTime.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
                 }
             }
@@ -168,11 +168,6 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
             }
         });
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_video_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

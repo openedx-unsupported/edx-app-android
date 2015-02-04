@@ -14,8 +14,8 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
     protected String videoId;
 
     protected static boolean isPlayerOn = false;
-    public VideoBaseAdapter(Context context) {
-        super(context);
+    public VideoBaseAdapter(Context context, int layoutResourceId) {
+        super(context, layoutResourceId);
     }
 
     public void setSelectedPosition(int selectedPosition) {
@@ -68,10 +68,9 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
      */
     public int getTotalVideoItemsCount() {
         try{
-            ArrayList<T> items = getItems();
             int videoCount=0;
-            for (int i=0; i<items.size(); i++) {
-                T obj= items.get(i);
+            for (int i=0; i<getCount(); i++) {
+                T obj= getItem(i);
                 if(obj instanceof DownloadEntry){
                     DownloadEntry de = (DownloadEntry) obj;
                     if(de.downloaded == DownloadedState.DOWNLOADED){
@@ -95,10 +94,10 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
     }
 
     public int getPositionByVideoId(String videoId) {
-        ArrayList<T> items = getItems();
+
         int pos=-1;
-        for (int i=0; i<items.size(); i++) {
-            T obj= items.get(i);
+        for (int i=0; i<getCount(); i++) {
+            T obj= getItem(i);
             if(obj instanceof SectionItemInterface){
                 if(((SectionItemInterface) obj).isDownload()){
                     DownloadEntry de = (DownloadEntry)obj; 

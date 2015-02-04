@@ -17,12 +17,35 @@
 
 <resources>
 
+    <!-- official styles guide -->
+    <color name="cyan_6">#256a97</color>
+    <color name="cyan_5">#3185bd</color>
+    <color name="cyan_4">#00a0e3</color>
+    <color name="cyan_3">#4bb4fb</color>
+    <color name="cyan_2">#a7dffb</color>
+    <color name="cyan_1">#d8f1fb</color>
+    <color name="grey_6">#333435</color>
+    <color name="grey_5">#3d3e3f</color>
+    <color name="grey_4">#8c8c8c</color>
+    <color name="grey_3">#cccccc</color>
+    <color name="grey_2">#e6e6e6</color>
+    <color name="grey_1">#f2f2f2</color>
+    <color name="pink_5">#3e0a21</color>
+    <color name="pink_4">#70113f</color>
+    <color name="pink_3">#b72667</color>
+    <color name="pink_2">#e86caa</color>
+    <color name="pink_1">#ed9bc7</color>
+    <color name="edx_white">#fafafa</color>
+    <color name="edx_black">#191919</color>
+
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent_white_90">#E6FFFFFF</color>
+    <color name="transparent_white_70">#B2FFFFFF</color>
     <color name="transparent_white_20">#33FFFFFF</color>
-    
+
     <color name="transparent_black">#90000000</color>
+    <color name="transparent_black_70">#B2000000</color>
     <color name="transparent_black_80">#CC000000</color>
     <color name="transparent_black_50">#80000000</color>
     <color name="transparent_white">#B3FFFFFF</color>
@@ -32,6 +55,7 @@
     <color name="disabled_chapter_list">#EBEBED</color>
     <color name="grey">#323232</color>
     <color name="grey_light">#3c4045</color>
+    <color name="grey_medium">#666666</color>
     <color name="border_color_1">#BDBDBD</color>
     <color name="border_color_2">#F2F2F2</color>
     <color name="cyan">#52AFDE</color>
@@ -57,7 +81,7 @@
     <color name="cyan_circle">#1F9FD9</color>
     <color name="grey_circle">#E6E6E7</color>
     <color name="new_user_txt">#B82669</color>
-    <color name="new_user_txt_color">#CC3c4045</color> 
+    <color name="new_user_txt_color">#CC3c4045</color>
     <color name="offline_panel">#E6BA2E6E</color>
     <color name="browser_panel">#E2E3E5</color>
     <color name="white_list_clicked">#F1F1F2</color>
@@ -72,10 +96,30 @@
     <color name="empty_list_text">#c8c8c8</color>
     <color name="switch_default_button_color">#C3C3C3</color>
     <color name="switch_default_bg_color">#3C4045</color>
+    <color name="switch_disabled_bg_color_off">@color/grey_4</color>
+    <color name="switch_disabled_bg_color_on">@color/cyan_2</color>
+    <color name="switch_disabled_text_color">@color/grey_4</color>
     <color name="delete_btn_disabled">#565A5F</color>
     <color name="cyan_loader">#99299ED7</color>
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
     <color name="grey_text_course_not_started">#00454951</color>
-    
+
+    <color name="group_next_disabled">#aeaeae</color>
+    <color name="group_next_enabled">#33b5e5</color>
+    <color name="group_create_title">#5c5c5c</color>
+    <color name="facebook_blue">#3b5998</color>
+    <color name="facebook_blue_pressed">#425d9e</color>
+
+    <color name="friend_picker_light_gray">#e2e3e5</color>
+    <color name="friend_picker_dark_gray">#3e4247</color>
+    <color name="friend_picker_med_blue">#33b5e5</color>
+    <color name="friend_picker_divider">#e2e3e5</color>
+    <color name="friend_picker_item_text">#7e7e7e</color>
+    <color name="friend_picker_item_text_disabled">#bfbfbf</color>
+    <color name="avatar_overflow_text">#8c8c8c</color>
+
+    <color name="groups_grey">#c8c8c8</color>
+    <color name="facebook_msg_grey">#454951</color>
+    <color name="course_banner_blue">@color/cyan_3</color>
 </resources>

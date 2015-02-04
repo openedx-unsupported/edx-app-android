@@ -2,19 +2,24 @@ package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 public class WebViewDialogFragment extends DialogFragment {
     private final Logger logger = new Logger(getClass().getName());
+
+    private static final String TAG = WebViewDialogFragment.class.getCanonicalName();
 
     String fileName;
     boolean showTitle;
@@ -37,6 +42,13 @@ public class WebViewDialogFragment extends DialogFragment {
                 container, false);
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+                    BrowserUtil.open(getActivity(), url);
+                    return true;
+                }
+            });
             if(fileName!=null){
                 webView.loadUrl(fileName);
                 //eulaWeb.loadUrl("file:///android_asset/EULA.htm");

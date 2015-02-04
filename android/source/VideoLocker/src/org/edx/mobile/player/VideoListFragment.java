@@ -1,7 +1,6 @@
 package org.edx.mobile.player;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +25,6 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -37,8 +35,11 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
+
+import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.VideoListActivity;
 import org.edx.mobile.view.adapters.MyAllVideoAdapter;
 import org.edx.mobile.view.adapters.OfflineVideoAdapter;
@@ -186,71 +187,55 @@ public class VideoListFragment extends Fragment {
             }
             adapter = new OnlineVideoAdapter(getActivity(), db , storage) {
                 @Override
-                public void onItemClicked(SectionItemInterface model,
-                        int position) {
+                public void onItemClicked(final SectionItemInterface model, final int position) {
                     if (model.isDownload()) {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
 
-                        if ( !isPlayerVisible()) {
-                            // don't try to showPlayer() if already shown here
-                            // this will cause player to freeze
-                            showPlayer();
+                        if (!NetworkUtil.isConnected(getContext())) {
+                            ((VideoListActivity) getActivity()).showMessage(getString(R.string.need_data));
+                            notifyAdapter();
+                        } else {
+                            IDialogCallback dialogCallback = new IDialogCallback() {
+                                @Override
+                                public void onPositiveClicked() {
+                                    startOnlinePlay(model, position);
+                                }
+
+                                @Override
+                                public void onNegativeClicked() {
+                                    //
+                                }
+                            };
+                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
                         }
-                        DownloadEntry de = (DownloadEntry) model;
-                        adapter.setVideoId(de.videoId);
-
-                        addVideoDatatoDb(de);
-                        // initialize index for this model
-                        playingVideoIndex = position;
-
-                        play(model);
-                        notifyAdapter();
                     }
                 }
 
                 @Override
-                public void download(DownloadEntry videoData, ProgressWheel progressWheel) {
+                public void download(final DownloadEntry videoData, final ProgressWheel progressWheel) {
                     try {
-                        if (getActivity() instanceof VideoListActivity) {
-                            // check if download is only allowed over wifi
-                            PrefManager wifiPrefManager = new PrefManager(
-                                    context, PrefManager.Pref.WIFI);
-                            boolean onlyWifi = wifiPrefManager.getBoolean(
-                                    PrefManager.Key.DOWNLOAD_ON_WIFI, true);
-                            Context context = getActivity().getBaseContext();
-                            boolean startDownloadFlag = false;
-                            if (onlyWifi
-                                    && NetworkUtil.isConnectedWifi(context)) {
-                                startDownloadFlag = true;
-                            } else if (!onlyWifi
-                                    && (NetworkUtil.isConnectedWifi(context) || NetworkUtil
-                                            .isConnectedMobile(context))) {
-                                startDownloadFlag = true;
-                            } else {
-                                startDownloadFlag = false;
+                        if (!NetworkUtil.isConnected(getContext())) {
+                            ((VideoListActivity) getActivity()).showMessage(getString(R.string.need_data));
+                            notifyAdapter();
+                        } else {
+                            if (!(getActivity() instanceof VideoListActivity)) {
+                                return;
                             }
-
-                            if (startDownloadFlag) {
-                                long downloadSize = videoData.size;
-                                if (downloadSize > MemoryUtil
-                                        .getAvailableExternalMemory(context)) {
-                                    ((VideoListActivity) getActivity())
-                                    .showMessage(getString(R.string.file_size_exceeded));
-                                    notifyAdapter();
-                                } else {
-                                    if (downloadSize < MemoryUtil.GB) {
-                                        startDownload(videoData, progressWheel);
-                                    } else {
-                                        showStartDownloadDialog(videoData, progressWheel);
-                                    }
+                            IDialogCallback dialogCallback = new IDialogCallback() {
+                                @Override
+                                public void onPositiveClicked() {
+                                    startOnlineDownload(videoData, progressWheel);
                                 }
-                            } else {
-                                ((VideoListActivity) getActivity())
-                                .showMessage(getString(R.string.wifi_off_message));
-                                notifyAdapter();
-                            }
+
+                                @Override
+                                public void onNegativeClicked() {
+                                    //
+                                }
+                            };
+                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
                         }
+
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -299,6 +284,44 @@ public class VideoListFragment extends Fragment {
         }
     }
 
+    private void startOnlinePlay(SectionItemInterface model, int position){
+        // hide delete panel first, so that multiple-tap is blocked
+        hideDeletePanel(VideoListFragment.this.getView());
+
+        if ( !isPlayerVisible()) {
+            // don't try to showPlayer() if already shown here
+            // this will cause player to freeze
+            showPlayer();
+        }
+
+        DownloadEntry de = (DownloadEntry) model;
+        addVideoDatatoDb(de);
+        adapter.setVideoId(de.videoId);
+
+        // initialize index for this model
+        playingVideoIndex = position;
+
+        play(model);
+        notifyAdapter();
+    }
+
+
+    private void startOnlineDownload(DownloadEntry videoData, ProgressWheel progressWheel){
+        long downloadSize = videoData.size;
+        if (downloadSize > MemoryUtil
+                .getAvailableExternalMemory(getActivity())) {
+            ((VideoListActivity) getActivity())
+                    .showMessage(getString(R.string.file_size_exceeded));
+            notifyAdapter();
+        } else {
+            if (downloadSize < MemoryUtil.GB) {
+                startDownload(videoData, progressWheel);
+            } else {
+                showStartDownloadDialog(videoData, progressWheel);
+            }
+        }
+    }
+
     private void addDataToOfflineAdapter() {
         try {
             String selectedId = null;
@@ -324,8 +347,7 @@ public class VideoListFragment extends Fragment {
                             play(model);
                             notifyAdapter();
                         } else {
-                            ((VideoListActivity) getActivity())
-                            .showOfflineAccessMessage();
+                            UiUtil.showOfflineAccessMessage(VideoListFragment.this.getView());
                         }
                     }
                 }
@@ -960,26 +982,29 @@ public class VideoListFragment extends Fragment {
                     reloadListFlag = false;
                 }
 
-                if(segIO!=null){
-                    segIO.trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid, 
+                if (segIO != null) {
+                    segIO.trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
-
-                if( storage.addDownload(downloadEntry) != -1){
-                    ((VideoListActivity) getActivity())
-                    .showMessage(getString(R.string.msg_started_one_video_download));
-                }else{
-                    ((VideoListActivity) getActivity())
-                    .showMessage(getString(R.string.msg_video_not_downloaded));
-                }
-                ((VideoListActivity) getActivity()).updateProgress();
-                
-                //If the video is already downloaded, dont reload the adapter
-                if(reloadListFlag){
+                if (reloadListFlag) {
                     adapter.notifyDataSetChanged();
+
+                    if (storage.addDownload(downloadEntry) != -1) {
+                        ((VideoListActivity) getActivity())
+                                .showMessage(getString(R.string.msg_started_one_video_download));
+                    } else {
+                        ((VideoListActivity) getActivity())
+                                .showMessage(getString(R.string.msg_video_not_downloaded));
+                    }
+                    ((VideoListActivity) getActivity()).updateProgress();
+
+                    //If the video is already downloaded, dont reload the adapter
+                    if (reloadListFlag) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    TranscriptManager transManager = new TranscriptManager(getActivity());
+                    transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
                 }
-                TranscriptManager transManager = new TranscriptManager(getActivity());
-                transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
         }catch(Exception e){
             logger.error(e);

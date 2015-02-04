@@ -25,7 +25,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
 
     IDatabase dbStore;
     public MyAllVideoAdapter(Context context, IDatabase dbStore) {
-        super(context);
+        super(context, R.layout.row_video_list);
         this.dbStore = dbStore;
     }
 
@@ -56,7 +56,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
                 holder.videoTitle.setText(videoData.getTitle());
                 
-                holder.videoSize.setText(MemoryUtil.format(context, videoData.size)); 
+                holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
                 dbStore.getWatchedStateForVideoId(videoData.videoId, 
@@ -137,10 +137,6 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
         return holder;
     }
 
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_video_list;
-    }
 
     private static class ViewHolder extends BaseViewHolder {
         TextView videoTitle;

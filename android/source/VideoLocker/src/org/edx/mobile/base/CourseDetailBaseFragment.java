@@ -2,6 +2,7 @@ package org.edx.mobile.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +26,6 @@ import org.edx.mobile.view.CourseDetailTabActivity;
 
 public class CourseDetailBaseFragment extends Fragment {
 
-    public CourseDetailTabActivity mActivity;
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
@@ -34,7 +34,6 @@ public class CourseDetailBaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (CourseDetailTabActivity) this.getActivity();
         initDB();
     }
 
@@ -44,11 +43,10 @@ public class CourseDetailBaseFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    public boolean onBackPressed(){
-        return false;
-    }
-
     public void showOpenInBrowserPanel(final String url) {
+        if(TextUtils.isEmpty(url))
+            return;
+
         try {
             final StringBuffer urlStringBuffer = new StringBuffer();
             if (!url.contains("http://") && !url.contains("https://")){

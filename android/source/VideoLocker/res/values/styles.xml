@@ -59,9 +59,24 @@
     </style>
     
     <style name="default_switch" parent="@style/semibold_text">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@color/switch_text_color</item>
         <item name="android:textSize">14sp</item>
         
     </style>
     
+    <style name="course_detail_style">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
+
+    <style name="add_fab">
+        <item name="fab_colorNormal">@color/cyan_3</item>
+        <item name="fab_colorPressed">@color/cyan_5</item>
+    </style>
+
+    <style name="custom_fb_btn_style">
+        <item name="android:background">@drawable/custom_fb_button_selector</item>
+        <item name="android:drawablePadding">2dp</item>
+    </style>
+
 </resources>

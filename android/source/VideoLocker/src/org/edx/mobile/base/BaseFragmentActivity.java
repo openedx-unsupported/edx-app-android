@@ -30,11 +30,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.interfaces.NetworkObserver;
+import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -45,13 +46,16 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.DownloadListActivity;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
-public class BaseFragmentActivity extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
 
     // per second callback
     private static final int MSG_TYPE_TICK = 9302;
@@ -65,6 +69,35 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
+
+    private List<NetworkObserver> networkObservers = new ArrayList<NetworkObserver>();
+
+    public void registerNetworkObserver(NetworkObserver observer){
+        if(observer != null && !networkObservers.contains(observer)){
+            networkObservers.add(observer);
+        }
+    }
+
+    public void unregisterNetworkObserver(NetworkObserver observer){
+        if(observer != null && networkObservers.contains(observer)){
+            networkObservers.remove(observer);
+        }
+    }
+
+    @Override
+    public void notifyNetworkDisconnect(){
+        for(NetworkObserver o : networkObservers){
+            o.onOffline();
+        }
+    }
+
+    @Override
+    public void notifyNetworkConnect(){
+        for(NetworkObserver o : networkObservers){
+            o.onOnline();
+        }
+    }
+
     protected boolean runOnTick = true;
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -104,6 +137,14 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
+
+        handler.sendEmptyMessage(MSG_TYPE_TICK);
+
+        PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
+
+        boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this);
+
+        pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
         //Check if the the onTick method needs to be run
         //This has been done to handle unwanted call to onTick() from login screen
@@ -370,18 +411,6 @@ public class BaseFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * Animate / show the download started message
-     * @param message - Message to display on the Download Panel
-     */
-    public void showMessage(String message){
-        TextView downloadMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(downloadMessageTv!=null){
-            downloadMessageTv.setText(message);
-            animateLayouts(downloadMessageTv);
-        }
-    }
-
-    /**
      * Call this method to inform user about going  offline
      */
     public void showOfflineAccessMessage() {
@@ -492,6 +521,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                         public void run() {
                             AppConstants.offline_flag = false;
                             onOnline();
+                            notifyNetworkConnect();
                         }
                     });
                 }
@@ -502,6 +532,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                         public void run() {
                             AppConstants.offline_flag = true;
                             onOffline();
+                            notifyNetworkDisconnect();
                         }
                     });
                 }
@@ -623,7 +654,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    protected void showWebDialog(String fileName, boolean showTitle, String dialogTitle){
+    public void showWebDialog(String fileName, boolean showTitle, String dialogTitle){
         //Show the dialog only if the activity is started. This is to avoid Illegal state
         //exceptions if the dialog fragment tries to show even if the application is not in foreground
         if(isActivityStarted()){
@@ -635,4 +666,9 @@ public class BaseFragmentActivity extends FragmentActivity {
             webViewFragment.show(getSupportFragmentManager(), "dialog");
         }
     }
+
+    public void showMessage(String message) {
+        UiUtil.showMessage(findViewById(android.R.id.content), message);
+    }
+
 }

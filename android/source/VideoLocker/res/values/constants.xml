@@ -8,8 +8,24 @@
     <string name="tab_course_info">tab_course_info</string>
     <string name="tab_my_all_videos">tab_my_all_videos</string>
     <string name="tab_my_recent_videos">tab_my_recent_videos</string>
+    <string name="tab_group_discussion">tab_group_discussion</string>
+    <string name="tab_group_details">tab_group_details</string>
+    <integer name="group_avatar_count">4</integer>
+
     <string name="eula_file_link">file:///android_asset/EULA.htm</string>
     <string name="new_user_file_name">file:///android_asset/NEW_USER.htm</string>
     <string name="course_not_listed_file_name">file:///android_asset/COURSE_NOT_LISTED.htm</string>
     
+    <integer name="speed_test_timeout_in_milliseconds">5000</integer>
+    <integer name="threshold_kbps_for_video">9</integer>
+    <integer name="delay_speed_test_in_milliseconds">10000</integer>
+    <string name="speed_test_url">http://bnotions.s3.amazonaws.com/128kb.file</string>
+
+    <!-- Facebook App information (not strings) -->
+    <string name="facebook_app_id">0</string>
+    <string name="facebook_app_share_root">edxbnotionsns</string>
+    <string name="facebook_app_course_id">edx_course</string>
+    <string name="facebook_app_certificate_id">edx_certificate</string>
+    <string name="facebook_app_share_type">share_info_of</string>
+
 </resources>

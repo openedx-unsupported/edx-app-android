@@ -16,7 +16,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.task.LoginTask;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.AuthResponse;
@@ -41,13 +40,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.dialog.SimpleAlertDialog;
+
 public class LoginActivity extends BaseFragmentActivity {
 
     private TextView login_tv;
     private EditText email_et, password_et;
     private String[] email;
     public static final String KEY_EMAIL = "Email";
-    private NetworkSlowDialogFragment NoNetworkFragment;
+
+    private SimpleAlertDialog NoNetworkFragment;
+
     private ResetPasswordDialog resetDialog;
     private SuccessDialogFragment successFragment;
     private ProgressBar progressbar;
@@ -366,12 +370,11 @@ public class LoginActivity extends BaseFragmentActivity {
     }
 
     public void showNoNetworkDialog() {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title",
-                getString(R.string.reset_no_network_title));
-        dialogMap.put("message_1", getString(R.string.reset_no_network_message));
+        Bundle args = new Bundle();
+        args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
+        args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
 
-        NoNetworkFragment = NetworkSlowDialogFragment.newInstance(dialogMap);
+        NoNetworkFragment = SimpleAlertDialog.newInstance(args);
         NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
@@ -414,7 +417,7 @@ public class LoginActivity extends BaseFragmentActivity {
         } else {
             errorMessage.setText(getString(R.string.login_failed));
         }
-        animateLayouts(error_layout);
+        UiUtil.animateLayouts(error_layout);
     }
 
     @Override
