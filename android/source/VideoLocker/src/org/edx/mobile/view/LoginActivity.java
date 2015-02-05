@@ -61,8 +61,7 @@ public class LoginActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        overridePendingTransition(R.anim.slide_in_from_right,
-                R.anim.slide_out_to_left);
+        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -203,12 +202,6 @@ public class LoginActivity extends BaseFragmentActivity {
         if(savedInstanceState!=null){
             email_et.setText(savedInstanceState.getString("username"));
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_left);
     }
 
     @Override
@@ -699,4 +692,10 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         }
     };
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
+    }
 }

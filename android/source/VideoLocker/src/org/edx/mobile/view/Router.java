@@ -26,4 +26,19 @@ public class Router {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
         sourceActivity.startActivity(downloadIntent);
     }
+
+    public void showLaunchScreen(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showLogin(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showRegistration(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
 }

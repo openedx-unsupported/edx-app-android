@@ -153,5 +153,6 @@ public interface ISegment {
         public static final String APP_NAME = "edx.mobileapp.android";
         public static final String USER_NO_ACCOUNT = "edx.bi.app.user.no_account";
         public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
+        public static final String LAUNCH_ACTIVITY = "Launch";
     }
 }

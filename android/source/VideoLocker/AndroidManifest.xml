@@ -105,6 +105,12 @@
             android:name=".view.VideoListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.LaunchActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"/>
         
          <receiver android:name=".module.download.DownloadCompleteReceiver">
              <intent-filter>

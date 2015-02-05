@@ -37,10 +37,10 @@ public class SplashActivity extends BaseFragmentActivity {
                     Intent intent;
                     if (pm.getCurrentUserProfile() != null) {
                         intent = new Intent(SplashActivity.this, MyCoursesListActivity.class);
+                        startActivity(intent);
                     } else {
-                        intent = new Intent(SplashActivity.this, LoginActivity.class);
+                        Router.getInstance().showLaunchScreen(SplashActivity.this);
                     }
-                    startActivity(intent);
                     finish();
                 }
             }
