@@ -52,7 +52,7 @@ public class MainApplication extends Application {
             Fabric.with(this, new Crashlytics());
         }
 
-        // initialize NewRelic with crashlytics disabled
+        // initialize NewRelic with crash reporting disabled
         if(Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
@@ -65,8 +65,8 @@ public class MainApplication extends Application {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
 
-        // try data repair if app version is updated
-        new Storage(this).doRepairData();
+        // try repair of download data if app version is updated
+        new Storage(this).repairDownloadCompletionData();
     }
     
     /**
