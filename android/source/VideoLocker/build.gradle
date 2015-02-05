@@ -111,10 +111,18 @@ project.ext.edx.projectDir = projectDir.path
 
 try {
     apply from: projectDir.path + '/edx.properties'
-    apply from: projectDir.path + '/' + (edx.dir + '/' + 'edx.properties')
 }
 catch(GradleException e) {
     println "Could not load edx.properties, using default configuration."
+}
+
+def configPath = projectDir.path + '/' + (edx.dir + '/' + 'edx.properties') 
+try {
+    apply from: configPath 
+}
+catch(GradleException e) {
+    println "Configuration in " + configPath + " is malformed."
+    throw new GradleException(e);
 }
 
 dependencies {
