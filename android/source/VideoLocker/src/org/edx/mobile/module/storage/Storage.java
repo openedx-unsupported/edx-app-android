@@ -447,7 +447,7 @@ public class Storage implements IStorage {
      * Checks progress of all the videos that are being downloaded.
      * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
      */
-    public void doRepairData() {
+    public void repairDownloadCompletionData() {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.APP_INFO);
         String lastSavedVersionName = pref.getString(PrefManager.Key.APP_VERSION);
         if (lastSavedVersionName == null || !lastSavedVersionName.equals(PropertyUtil.getManifestVersionName(context))) {
