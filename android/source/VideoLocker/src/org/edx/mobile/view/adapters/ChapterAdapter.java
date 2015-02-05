@@ -26,7 +26,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
     private IStorage storage;
 
     public ChapterAdapter(Context context, String courseId) {
-        super(context);
+        super(context, R.layout.row_chapter_list);
         this.courseId = courseId;
         lastClickTime = 0;
     }
@@ -96,21 +96,21 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             {
                 holder.next_arrow.setBackgroundResource(R.drawable.ic_next_default);
                 holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
-                holder.chapterName.setTextColor(context.getResources()
+                holder.chapterName.setTextColor(getContext().getResources()
                         .getColor(R.color.grey_text_mycourse));
             }else{
                 holder.next_arrow
                 .setBackgroundResource(R.drawable.ic_next_deactive);
                 holder.chapterLayout
-                .setBackgroundResource(R.color.disabled_chapter_list);
-                holder.chapterName.setTextColor(context.getResources()
+                        .setBackgroundResource(R.color.disabled_chapter_list);
+                holder.chapterName.setTextColor(getContext().getResources()
                         .getColor(R.color.light_gray));
             }
 
         } else {
             holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
             holder.next_arrow.setVisibility(View.GONE);
-            holder.chapterName.setTextColor(context.getResources().getColor(
+            holder.chapterName.setTextColor(getContext().getResources().getColor(
                     R.color.grey_text_mycourse));
         }
     }
@@ -133,11 +133,6 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         holder.progresslayout = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_chapter_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

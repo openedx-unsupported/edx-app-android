@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.interfaces.NetworkObserver;
+import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
@@ -30,8 +33,10 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
 import org.edx.mobile.task.EnqueueDownloadTask;
@@ -47,7 +52,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class CourseChapterListFragment extends CourseDetailBaseFragment {
+public class CourseChapterListFragment extends CourseDetailBaseFragment implements NetworkObserver{
+
+
+    private static final String TAG = CourseChapterListFragment.class.getCanonicalName();
+    private static final String SECTION_ENTRIES = TAG + ".sectionEntryMap";
 
     private ChapterAdapter adapter;
     private String courseId;
@@ -62,42 +71,54 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     private ETextView courseScheduleTv;
     private String startDate;
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        final Bundle bundle = getArguments();
+        if(bundle!=null){
+            enrollment = (EnrolledCoursesResponse) bundle
+                    .getSerializable("enrollment");
+            if(enrollment!=null) {
+                courseId = enrollment.getCourse().getId();
+                try {
+                    segIO.screenViewsTracking(enrollment.getCourse().getName()
+                            + " - Courseware");
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chapter_list, container,
                 false);
-        final Bundle bundle = getArguments();
-        if(bundle!=null){
-            enrollment = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
-            if(enrollment!=null){
-                courseId = enrollment.getCourse().getId();
-                try{
-                    segIO.screenViewsTracking(enrollment.getCourse().getName()
-                            + " - Courseware");
-                }catch(Exception e){
-                    logger.error(e);
-                }
 
-                //Initialize the Course not started text view.
-                if(!enrollment.getCourse().isStarted()){
-                    startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
-                    if(startDate!=null){
-                        startDate =  "<font color='"+ getString(R.color.grey_text_course_not_started)+"'>"+startDate+"</font>";
-                        String courseScheduledText = getString(R.string.course_content_available_text);
-                        courseScheduledText = courseScheduledText.replace("START_DATE",startDate);
-                        courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
-                        courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
-                    }
-                }
+        //Initialize the Course not started text view.
+        if (!enrollment.getCourse().isStarted()) {
+            startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
+            if (startDate != null) {
+                startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + startDate + "</font>";
+                String courseScheduledText = getString(R.string.course_content_available_text);
+                courseScheduledText = courseScheduledText.replace("START_DATE", startDate);
+                courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
+                courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
             }
         }
 
-        if (!(NetworkUtil.isConnected(getActivity()))) {
-            AppConstants.offline_flag = true;
-        }else{
-            AppConstants.offline_flag = false;
+        ArrayList<SectionEntry> savedEntries = null;
+        if (savedInstanceState != null) {
+
+            try {
+                savedEntries = (ArrayList<SectionEntry>) savedInstanceState.getSerializable(SECTION_ENTRIES);
+                adapter.setItems(savedEntries);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         }
 
         chapterListView = (ListView) view
@@ -151,15 +172,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             videoIntent.putExtra("FromMyVideos", false);
                             startActivity(videoIntent);
                         } else {
-                            ((CourseDetailTabActivity) getActivity())
-                                    .showOfflineAccessMessage();
+                            UiUtil.showOfflineAccessMessage(CourseChapterListFragment.this.getView());
                         }
                     } else {
-                        Intent lectureIntent = new Intent(mActivity,
+                        Intent lectureIntent = new Intent(getActivity(),
                                 CourseLectureListActivity.class);
                         lectureIntent.putExtra("enrollment", enrollment);
-                        lectureIntent.putExtra("chapter", model);
-                        mActivity.startActivity(lectureIntent);
+                        lectureIntent.putExtra("lecture", model);
+                        getActivity().startActivity(lectureIntent);
                     }
                 }catch(Exception ex){
                     logger.error(ex);
@@ -167,63 +187,92 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             }
 
             @Override
-            public void download(SectionEntry model) {
-                try {
-                    // check if download is only allowed over wifi
-                    PrefManager wifiPrefManager = new PrefManager(
-                            context, PrefManager.Pref.WIFI);
-                    boolean onlyWifi = wifiPrefManager.getBoolean(
-                            PrefManager.Key.DOWNLOAD_ON_WIFI, true);
-                    Context context = getActivity().getBaseContext();
-                    boolean startDownloadFlag = false;
-                    if (onlyWifi && NetworkUtil.isConnectedWifi(context)) {
-                        startDownloadFlag = true;
-                    }else if(!onlyWifi && (NetworkUtil.isConnectedWifi(context)
-                            ||NetworkUtil.isConnectedMobile(context))) {
-                        startDownloadFlag = true;
-                    }else{
-                        startDownloadFlag = false;
-                    }
+            public void download(final SectionEntry model) {
+                try{
+                    IDialogCallback dialogCallback = new IDialogCallback() {
+                        @Override
+                        public void onPositiveClicked() {
+                            startChapterDownload(model);
+                        }
 
-                    if(startDownloadFlag){
-                        long downloadSize = 0;
-                        ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
-                        int downloadCount = 0;
-                        for (VideoResponseModel v : model.getAllVideos()) {
-                            DownloadEntry de = (DownloadEntry) storage
-                                    .getDownloadEntryfromVideoResponseModel(v);
-                            if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED) {
-                                continue;
-                            } else {
-                                downloadSize = downloadSize
-                                        + v.getSummary().getSize();
-                                downloadList.add(de);
-                                downloadCount++;
-                            }
+                        @Override
+                        public void onNegativeClicked() {
+                            //
                         }
-                        if (downloadSize > MemoryUtil
-                                .getAvailableExternalMemory(context)) {
-                            ((CourseDetailTabActivity) getActivity())
-                                    .showMessage(getString(R.string.file_size_exceeded));
-                            updateList();
-                        } else {
-                            if (downloadSize < MemoryUtil.GB) {
-                                startDownload(downloadList, downloadCount);
-                            } else {
-                                showDownloadSizeExceedDialog(downloadList, downloadCount);
-                            }
-                        }
-                    } else {
-                        ((CourseDetailTabActivity) getActivity())
-                                .showMessage(getString(R.string.wifi_off_message));
-                        updateList();
-                    }
-                } catch (Exception ex) {
-                    logger.error(ex);
+                    };
+                    MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+
+                } catch (Exception e) {
+                    logger.error(e);
                 }
+
             }
         };
+
+        if (!(NetworkUtil.isConnected(getActivity()))) {
+            AppConstants.offline_flag = true;
+        } else {
+            AppConstants.offline_flag = false;
+        }
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        refreshShowInWebPanel();
+
+        if (adapter.getCount() == 0) {
+
+            loadData(view);
+
+        }
+
+    }
+
+    private void startChapterDownload(SectionEntry model) {
+
+        long downloadSize = 0;
+        ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
+        int downloadCount = 0;
+        for (VideoResponseModel v : model.getAllVideos()) {
+            DownloadEntry de = (DownloadEntry) storage
+                    .getDownloadEntryfromVideoResponseModel(v);
+            if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
+                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED) {
+                continue;
+            } else {
+                downloadSize = downloadSize
+                        + v.getSummary().getSize();
+                downloadList.add(de);
+                downloadCount++;
+            }
+        }
+        if (downloadSize > MemoryUtil
+                .getAvailableExternalMemory(getActivity())) {
+            ((CourseDetailTabActivity) getActivity())
+                    .showMessage(getString(R.string.file_size_exceeded));
+            updateList();
+        } else {
+            if (downloadSize < MemoryUtil.GB) {
+                startDownload(downloadList, downloadCount);
+            } else {
+                showDownloadSizeExceedDialog(downloadList, downloadCount);
+            }
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ArrayList<SectionEntry> saveEntries = new ArrayList<SectionEntry>();
+        for(int i = 0; i < adapter.getCount(); i++)
+            saveEntries.add(adapter.getItem(i));
+
+        outState.putSerializable(SECTION_ENTRIES, saveEntries);
     }
 
     //Loading data to the Adapter
@@ -243,6 +292,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                             openInBrowserUrl = entry.getValue().section_url;
                         }
                     }
+                    if(adapter.getCount()==0){
+                        view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
+                        chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                    }
+                    adapter.notifyDataSetChanged();
+                    refreshShowInWebPanel();
 
                     if (AppConstants.offline_flag) {
                         hideOpenInBrowserPanel();
@@ -287,7 +342,17 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
 
     }
 
-    public void fragmentOffline() {
+    private void refreshShowInWebPanel() {
+        if (AppConstants.offline_flag) {
+            hideOpenInBrowserPanel();
+        } else {
+            fetchLastAccessed(getView());
+            showOpenInBrowserPanel(openInBrowserUrl);
+        }
+    }
+
+    @Override
+    public void onOffline() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -297,7 +362,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
         }
     }
 
-    public void fragmentOnline() {
+    @Override
+    public void onOnline() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -340,8 +406,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
     public void startDownload(ArrayList<DownloadEntry> downloadList,
             int noOfDownloads) {
         try{
-            segIO.trackSectionBulkVideoDownload(downloadList.get(0).eid, 
-                    downloadList.get(0).chapter, noOfDownloads);
+            segIO.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
+                    downloadList.get(0).getChapterName(), noOfDownloads);
         }catch(Exception e){
             logger.error(e);
         }
@@ -353,18 +419,16 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
                     hideProgressDialog();
                     if(isActivityStarted) {
                         adapter.notifyDataSetChanged();
-                        ((CourseDetailTabActivity) getActivity()).invalidateOptionsMenu();
+                        (getActivity()).invalidateOptionsMenu();
                         if (result > 1) {
-                            ((CourseDetailTabActivity) getActivity())
-                            .showMessage(getString(R.string.started_downloading) + " "
-                                    + result + " " + getString(R.string.label_videos));
+                            String msg = String.format(getString(R.string.downloading_multiple), result);
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
                         } else if (result == 1) {
-                            ((CourseDetailTabActivity) getActivity())
-                            .showMessage(getString(R.string.started_downloading) + " "
-                                    + result + " " + getString(R.string.label_video));
+                            String msg = String.format(getString(R.string.downloading_single), result);
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
                         } else {
-                            ((CourseDetailTabActivity) getActivity())
-                            .showMessage(getString(R.string.msg_video_not_downloaded));
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(),
+                                    getString(R.string.msg_video_not_downloaded));
                         }
                     }
                 }catch(Exception e){
@@ -375,9 +439,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment {
             @Override
             public void onException(Exception ex) {
                 hideProgressDialog();
-                
-                ((CourseDetailTabActivity) getActivity())
-                .showMessage(getString(R.string.msg_video_not_downloaded));
+                UiUtil.showMessage(CourseChapterListFragment.this.getView(), getString(R.string.msg_video_not_downloaded));
             }
         };
 

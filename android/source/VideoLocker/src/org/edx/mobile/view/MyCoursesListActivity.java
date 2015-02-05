@@ -1,47 +1,45 @@
 package org.edx.mobile.view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.edx.mobile.R;
-import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.adapters.MyCourseAdapter;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.task.GetEnrolledCoursesTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.TabWidget;
 
-public class MyCoursesListActivity extends BaseFragmentActivity {
-    private View offlineBar;
-    private MyCourseAdapter adapter;
-    private LinearLayout offlinePanel;
-    private SwipeRefreshLayout swipeLayout;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+
+public class MyCoursesListActivity extends BaseTabActivity implements NetworkObserver{
+
+    private UiLifecycleHelper uiLifecycleHelper;
+    private PrefManager featuresPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
 
+        featuresPref = new PrefManager(this, PrefManager.Pref.FEATURES);
+
+        // configure slider layout. This should be called only once and
+        // hence is shifted to onCreate() function
+
+        configureDrawer();
+
+        setTitle(getString(R.string.label_my_courses));
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
         configureDrawer();
@@ -51,78 +49,55 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         }catch(Exception e){
             logger.error(e);
         }
-        offlineBar = findViewById(R.id.offline_bar);
-        offlinePanel = (LinearLayout) findViewById(R.id.offline_panel);
 
-        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(new OnRefreshListener() {
+        Session.StatusCallback statusCallback = new Session.StatusCallback() {
             @Override
-            public void onRefresh() {
-                loadData();
-            }
-        });
+            public void call(Session session, SessionState state, Exception exception) {
 
-        if (!(NetworkUtil.isConnected(this))) {
-            showOfflinePanel();
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            offlineBar.setVisibility(View.VISIBLE);
-            swipeLayout.setEnabled(false);
-        }else{
-            hideOfflinePanel();
-            AppConstants.offline_flag = false;
-            invalidateOptionsMenu();
-            offlineBar.setVisibility(View.GONE);
-            swipeLayout.setEnabled(true);
-        }
-
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                R.color.grey_act_background , R.color.grey_act_background ,
-                R.color.grey_act_background);
-
-        ListView myCourseList = (ListView) findViewById(R.id.my_course_list);
-        setupFooter(myCourseList);
-
-        adapter = new MyCourseAdapter(this) {
-
-            @Override
-            public void onItemClicked(EnrolledCoursesResponse model) {
-                try {
-                    Bundle courseBundle = new Bundle();
-                    courseBundle.putSerializable("enrollment", model);
-                    courseBundle.putBoolean("announcemnts", false);
-
-                    Intent courseDetail = new Intent(MyCoursesListActivity.this,
-                            CourseDetailTabActivity.class);
-                    courseDetail.putExtra("bundle", courseBundle);
-                    startActivity(courseDetail);
-
-                } catch(Exception ex) {
-                    logger.error(ex);
-                }
+                changeSocialMode(state.isOpened());
             }
 
-            @Override
-            public void onAnnouncementClicked(EnrolledCoursesResponse model) {
-                Bundle courseBundle = new Bundle();
-                courseBundle.putBoolean("announcemnts", true);
-                courseBundle.putSerializable("CourseDetail", model);
-
-                Intent courseDetail = new Intent(MyCoursesListActivity.this,
-                        CourseDetailTabActivity.class);
-                courseDetail.putExtra("CourseDetail", courseBundle);
-                context.startActivity(courseDetail);                
-            }
         };
-        myCourseList.setAdapter(adapter);
-        myCourseList.setOnItemClickListener(adapter);
+        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+        uiLifecycleHelper.onCreate(savedInstanceState);
 
-        loadData();
     }
 
-    public void showCourseNotListedDialog() {
-        showWebDialog(getString(R.string.course_not_listed_file_name), false, 
-                null);
+    private void changeSocialMode(boolean socialEnabled) {
+
+        //Social enabled is always false if social features are disabled
+        boolean allowSocialPref = featuresPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
+        if (!allowSocialPref) {
+            socialEnabled = false;
+        }
+
+        if (tabHost != null) {
+            TabWidget widget = tabHost.getTabWidget();
+            widget.setVisibility(socialEnabled ? View.VISIBLE : View.GONE);
+
+            if (!socialEnabled) {
+                widget.setCurrentTab(0);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public List<TabModel> tabsToAdd() {
+        List<TabModel> tabs = new ArrayList<TabModel>();
+        tabs.add(new TabModel(getString(R.string.label_my_courses),
+                MyCourseListTabFragment.class,
+                null, "my_course_tab_fragment"));
+        tabs.add(new TabModel(getString(R.string.label_my_friends_courses),
+                MyFriendsCoursesTabFragment.class,
+                null, "my_friends_course_fragment"));
+
+        return tabs;
     }
 
     @Override
@@ -130,65 +105,6 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         super.onStart();
         // GetEnrolledCoursesTask();
         setTitle(getString(R.string.label_my_courses));
-    }
-
-    private void loadData() {
-        GetEnrolledCoursesTask task = new GetEnrolledCoursesTask(this) {
-            @Override
-            public void onFinish(ArrayList<EnrolledCoursesResponse> list) {
-                if(list!=null && list.size()>0){
-                    hideEmptyCourseMessage();
-                    //update all videos in the DB as Deactivated
-                    db.updateAllVideosAsDeactivated(dataCallback);
-
-                    for(int i=0;i<list.size();i++){
-                        //Check if the flag of isIs_active is marked to true,
-                        //then activate all videos
-                        if(list.get(i).isIs_active()){
-                            //update all videos for a course fetched in the API as Activated
-                            db.updateVideosActivatedForCourse(list.get(i).getCourse().getId(), 
-                                    dataCallback);
-                        }else{
-                            list.remove(i);
-                        }
-
-                    }
-                    //Delete all videos which are marked as Deactivated in the database
-                    storage.deleteAllUnenrolledVideos();
-                    adapter.setItems(list);
-                    adapter.notifyDataSetChanged();
-                    invalidateSwipeFunctionality();
-                }else{
-                    invalidateSwipeFunctionality();
-                    adapter.clear();
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                invalidateSwipeFunctionality();
-                /*if(adapter.getCount()<=0){
-                    showEmptyCourseMessage();
-                }*/
-
-                if (ex instanceof AuthException) {
-                    // there is some authentication error
-                    // clear auth tokens
-                    PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-                    pref.clearAuth();
-
-                    // end now
-                    logger.warn("finishing due to auth error: " + ex.getMessage());
-                    finish();
-                }
-            }
-        };
-
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.api_spinner);
-        task.setProgressDialog(progressBar);
-        task.execute();
     }
 
     @Override
@@ -206,44 +122,26 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
-    public void showOfflinePanel() {
-        animateLayouts(offlinePanel);
-    }
-
-    public void hideOfflinePanel() {
-        offlinePanel = (LinearLayout) findViewById(R.id.offline_panel);
-        stopAnimation(offlinePanel);
-        if(offlinePanel.getVisibility()==View.VISIBLE){
-            offlinePanel.setVisibility(View.GONE);
-        }
-        //offlinePanel.setVisibility(View.GONE);
-    }
 
     @Override
-    protected void onOffline() {
+    public void onOffline() {
         AppConstants.offline_flag = true;
-        offlineBar.setVisibility(View.VISIBLE);
         invalidateOptionsMenu();
-        showOfflinePanel();
-        swipeLayout.setEnabled(false);
     }
 
     @Override
-    protected void onOnline() {
+    public void onOnline() {
         AppConstants.offline_flag = false;
-        offlineBar.setVisibility(View.GONE);
-        hideOfflinePanel();
         invalidateOptionsMenu();
-        swipeLayout.setEnabled(true);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!AppConstants.offline_flag){
-            hideOfflinePanel();
-        }
         invalidateOptionsMenu();
+        uiLifecycleHelper.onResume();
+        changeSocialMode(new FacebookProvider().isLoggedIn());
+
     }
 
     @Override
@@ -253,66 +151,49 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        uiLifecycleHelper.onPause();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        hideOfflinePanel();
+        uiLifecycleHelper.onStop();
     }
 
-    private void invalidateSwipeFunctionality(){
-        swipeLayout.setRefreshing(false);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        uiLifecycleHelper.onDestroy();
     }
 
-    private void hideEmptyCourseMessage(){
-        try{
-            TextView empty_tv = (TextView)findViewById(R.id.no_course_tv);
-            if(empty_tv!=null){
-                empty_tv.setVisibility(View.GONE);
+    @Override
+    protected int getDefaultTab() {
+        return 0;
+    }
+
+    public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
+        if(list!=null && list.size()>0) {
+            //update all videos in the DB as Deactivated
+            db.updateAllVideosAsDeactivated(dataCallback);
+
+            for (int i = 0; i < list.size(); i++) {
+                //Check if the flag of isIs_active is marked to true,
+                //then activate all videos
+                if (list.get(i).isIs_active()) {
+                    //update all videos for a course fetched in the API as Activated
+                    db.updateVideosActivatedForCourse(list.get(i).getCourse().getId(),
+                            dataCallback);
+                } else {
+                    list.remove(i);
+                }
             }
-        }catch(Exception e){
-            logger.error(e);
+            //Delete all videos which are marked as Deactivated in the database
+            storage.deleteAllUnenrolledVideos();
         }
     }
 
-    /**
-     * Adds a footer view to the list, which has "FIND A COURSE" button.
-     * @param myCourseList - ListView
-     */
-    private void setupFooter(ListView myCourseList) {
-        try {
-            View footer = LayoutInflater.from(this).inflate(R.layout.panel_find_course, null);
-            myCourseList.addFooterView(footer, null, false);
-            Button course_btn = (Button) footer.findViewById(R.id.course_btn);
-            course_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        segIO.trackUserFindsCourses();
-                    } catch (Exception e) {
-                        logger.error(e);
-                    }
-                    //Show the dialog only if the activity is started. This is to avoid Illegal state
-                    //exceptions if the dialog fragment tries to show even if the application is not in foreground
-                    if(isActivityStarted()){
-                        FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
-                        findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                        findCoursesFragment.setCancelable(false);
-                        findCoursesFragment.show(getSupportFragmentManager(), "dialog");
-                    }
-                }
-            });
-
-            ETextView courseNotListedTv = (ETextView) findViewById(R.id.course_not_listed_tv);
-            courseNotListedTv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showCourseNotListedDialog();
-                }
-            });
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
     
     private DataCallback<Integer> dataCallback = new DataCallback<Integer>() {
         @Override

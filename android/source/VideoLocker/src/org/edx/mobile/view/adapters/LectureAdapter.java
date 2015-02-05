@@ -22,7 +22,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
     private String enrollmentId;
 
     public LectureAdapter(Context context) {
-        super(context);
+        super(context, R.layout.row_chapter_list);
         lastClickTime = 0;
     }
 
@@ -109,11 +109,6 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
         holder.progresslayout = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_chapter_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

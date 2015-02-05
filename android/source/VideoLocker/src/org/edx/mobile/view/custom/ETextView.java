@@ -28,6 +28,9 @@ public class ETextView extends TextView {
     }
 
     private void processAttrs(Context context, AttributeSet attrs) {
+        if(isInEditMode())
+            return;
+
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.custom_view, 0, 0);
 
         try {

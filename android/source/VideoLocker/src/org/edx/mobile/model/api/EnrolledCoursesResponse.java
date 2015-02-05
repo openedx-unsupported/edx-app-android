@@ -10,6 +10,8 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
     private boolean is_active;
     private CourseEntry course;
     
+    private CertificateModel certificate;
+
     // derived fields (doesn't come in server response)
     public int videoCount;
     public long size;
@@ -78,5 +80,17 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
 
     public String getVideoCountReadable() {
         return String.format("%d %s", videoCount, (videoCount==1 ? "Video" : "Videos"));
+    }
+
+    public String getCertificateURL(){
+
+        return this.certificate == null ? null : this.certificate.certificateURL;
+
+    }
+
+    public boolean isCertificateEarned(){
+
+        return (this.certificate != null && this.certificate.certificateURL != null);
+
     }
 }

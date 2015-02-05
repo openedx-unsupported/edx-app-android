@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <solid android:color="@color/switch_disabled_bg_color_off" />
+    <size android:width="@dimen/switch_default_width" android:height="@dimen/switch_default_height" />
+    <corners android:radius="@dimen/switch_corner_radius" />
+
+</shape>

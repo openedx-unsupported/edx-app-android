@@ -1,0 +1,332 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_act_background">
+
+            <org.edx.mobile.view.custom.CourseImageHeader
+                android:id="@+id/header_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="144dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"
+                android:background="@color/grey_4" />
+
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="110dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical"
+                android:gravity="bottom"
+                android:padding="12dp"
+                android:background="@drawable/course_image_header_text_backing">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/course_detail_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/bold_text"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:paddingBottom="6dp"
+                    tools:text="test course" />
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/course_detail_extras"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/regular_text"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    tools:text="XX | XX | XXXXXX" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/combined_course_certificate_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_cert"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/course_detail_margin_left"
+                android:layout_marginBottom="@dimen/course_detail_margin_left"
+                android:layout_marginLeft="@dimen/course_detail_margin_left"
+                android:layout_marginRight="@dimen/course_detail_margin_left">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cert"
+                    android:layout_weight="1"
+                    android:gravity="center|center_vertical"
+                    android:layout_marginRight="14dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center|center_vertical">
+
+                    <org.edx.mobile.view.custom.ETextView
+                        style="@style/bold_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/cyan_3"
+                        android:textAllCaps="true"
+                        android:gravity="center"
+                        android:textSize="20dp"
+                        android:text="@string/course_details_congratulations" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/pink_3"
+                        style="@style/semibold_text"
+                        android:textSize="14dp"
+                        android:gravity="center"
+                        android:text="@string/course_details_earned_cert" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/view_cert_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="150dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/certificate_button_selector"
+                        style="@style/regular_text"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:padding="10dp"
+                        android:text="@string/view_button_text" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- Layout for a logged in user -->
+        <LinearLayout
+            android:id="@+id/social_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:background="@color/grey_act_background"
+                android:gravity="center" />
+
+            <!-- share buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:padding="10dp"
+                android:background="@color/grey_2">
+
+                <org.edx.mobile.view.custom.SocialShareView
+                    android:id="@+id/combined_course_social_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <org.edx.mobile.view.custom.SocialAffirmView
+                    android:id="@+id/course_affirm_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginEnd="4dp" />
+
+            </LinearLayout>
+
+            <!-- Friends in Course -->
+            <LinearLayout
+                android:id="@+id/social_face_pile_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="1px"
+                    android:background="@color/grey_act_background"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/course_detail_margin_left"
+                    android:paddingRight="@dimen/course_detail_margin_left"
+                    android:gravity="center">
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/course_detail_margin"
+                        android:paddingBottom="@dimen/course_detail_margin"
+                        android:textSize="16sp"
+                        style="@style/regular_grey_text"
+                        android:text="@string/course_details_friends_in_course" />
+
+                    <org.edx.mobile.view.custom.SocialFacePileView
+                        android:id="@+id/combined_course_facepile"
+                        android:layout_width="match_parent"
+                        android:layout_height="26dp"
+                        android:minHeight="30dp"
+                        android:orientation="horizontal"
+                        app:avatarCount="6"
+                        app:avatarGap="2dp"
+                        app:avatarMaxSize="26dp"
+                        app:borderRadius="@dimen/avatar_image_radius_small"
+                        app:overflowBorderWidth="1dp"
+                        app:overflowTextSize="12sp"
+                        android:gravity="center|right" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/combined_course_social_group_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="1px"
+                android:background="@color/grey_act_background"
+                android:gravity="center" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/combined_course_social_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/course_details_fb_group"
+                android:paddingLeft="@dimen/course_detail_margin_left"
+                android:paddingRight="@dimen/course_detail_margin_left"
+                android:paddingTop="@dimen/course_detail_margin"
+                android:paddingBottom="@dimen/course_detail_margin"
+                android:visibility="visible"
+                style="@style/regular_grey_text"
+                android:textSize="16sp"
+                android:drawableRight="@drawable/ic_officialfbgroup" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_act_background"
+            android:gravity="center" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/combined_course_handout_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/course_details_view_handout"
+            style="@style/regular_grey_text"
+            android:paddingLeft="@dimen/course_detail_margin_left"
+            android:paddingRight="@dimen/course_detail_margin_left"
+            android:paddingTop="@dimen/course_detail_margin"
+            android:paddingBottom="@dimen/course_detail_margin"
+            android:textSize="16sp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_act_background"
+            android:gravity="center" />
+
+        <RelativeLayout
+            android:id="@+id/announcement_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/course_details_announcements_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_label_announcement"
+                    style="@style/bold_text"
+                    android:textColor="@color/grey_5"
+                    android:paddingLeft="@dimen/course_detail_margin_left"
+                    android:paddingRight="@dimen/course_detail_margin_left"
+                    android:paddingTop="@dimen/course_detail_margin"
+                    android:paddingBottom="@dimen/course_detail_margin"
+                    android:background="@color/grey_2"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="14dp" />
+
+                <LinearLayout
+                    android:id="@+id/announcement_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/api_spinner"
+                android:layout_marginTop="80dp"
+                style="@style/api_progress_style"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/no_announcement_tv"
+                style="@style/bold_text"
+                android:layout_marginTop="80dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_announcements_to_display"
+                android:padding="20dp"
+                android:layout_centerInParent="true"
+                android:textColor="@color/empty_list_text"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

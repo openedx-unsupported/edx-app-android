@@ -24,7 +24,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     private IDatabase dbStore;
 
     public MyRecentVideoAdapter(Context context, IDatabase dbStore) {
-        super(context);
+        super(context, R.layout.row_video_list);
         this.dbStore = dbStore;
     }
 
@@ -44,10 +44,10 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
                 holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(context, videoData.size));
+                holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
-                dbStore.getWatchedStateForVideoId(videoData.videoId, 
+                dbStore.getWatchedStateForVideoId(videoData.videoId,
                         new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
@@ -120,11 +120,6 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
         });
 
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_video_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

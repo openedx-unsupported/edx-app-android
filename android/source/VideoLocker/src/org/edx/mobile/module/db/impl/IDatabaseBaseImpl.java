@@ -54,9 +54,7 @@ class IDatabaseBaseImpl implements Runnable {
     private synchronized <T extends Object> T execute(IDbOperation<?> op) {
         // perform this database operation
         synchronized (helper) {
-            logger.debug("Performing a database operation ...");
             T result = (T) op.requestExecute(helper.getDatabase());
-            logger.debug(op.getClass() + " operation completed");
             
             return result;
         }
@@ -78,7 +76,6 @@ class IDatabaseBaseImpl implements Runnable {
         // add non-blocking operations to the queue and process in sequence 
         synchronized (opQueue) {
             opQueue.add(operation);
-            logger.debug("New operation enqueued : " + operation.getClass().getName());
         }
         
         // start processing the queue as we have a database operation to be processed

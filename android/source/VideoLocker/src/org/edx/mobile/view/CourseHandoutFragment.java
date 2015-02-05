@@ -1,7 +1,10 @@
 package org.edx.mobile.view;
 
+import org.edx.mobile.logger.Logger;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +15,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
@@ -20,10 +22,36 @@ import org.edx.mobile.task.GetHandoutTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
 
+public class CourseHandoutFragment extends Fragment {
 
-public class CourseHandoutFragment extends CourseDetailBaseFragment {
     public WebView webview;
+
+    static public String TAG = CourseHandoutFragment.class.getCanonicalName();
+    static public String ENROLLMENT = TAG + ".enrollment";
+    protected ISegment segIO;
+    protected final Logger logger = new Logger(getClass().getName());
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        final Bundle bundle = getArguments();
+        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
+                .getSerializable(ENROLLMENT);
+
+        segIO = SegmentFactory.getInstance();
+
+        try{
+            segIO.screenViewsTracking(courseData.getCourse().getName() +
+                    " - Handouts");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -68,7 +96,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
         try {
             final Bundle bundle = getArguments();
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
+                    .getSerializable(ENROLLMENT);
             loadData(courseData);
         } catch (Exception ex) {
             logger.error(ex);
@@ -85,6 +113,13 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
                         hideEmptyHandoutMessage();
                         webview.loadDataWithBaseURL(new Api(context).getBaseUrl(), result.handouts_html,
                                 "text/html",Encoding.UTF_8.toString(),null);
+                        webview.setWebViewClient(new WebViewClient(){
+                            @Override
+                            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+                                BrowserUtil.open(getActivity(), url);
+                                return true;
+                            }
+                        });
                     }else{
                         showEmptyHandoutMessage();
                     }
@@ -103,12 +138,7 @@ public class CourseHandoutFragment extends CourseDetailBaseFragment {
         ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.api_spinner);
         task.setProgressDialog(progressBar);
         task.execute(enrollment);
-        try{
-            segIO.screenViewsTracking(enrollment.getCourse().getName()+
-                    " - Handouts");
-        }catch(Exception e){
-            logger.error(e);
-        }
+
     }
 
     private void showEmptyHandoutMessage(){

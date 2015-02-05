@@ -30,6 +30,9 @@ public class DatabaseModelFactory {
         de.username = c.getString(c.getColumnIndex(DbStructure.Column.USERNAME));
         de.title = c.getString(c.getColumnIndex(DbStructure.Column.TITLE));
         de.url = c.getString(c.getColumnIndex(DbStructure.Column.URL));
+        de.url_high_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_HIGH_QUALITY));
+        de.url_low_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_LOW_QUALITY));
+        de.url_youtube = c.getString(c.getColumnIndex(DbStructure.Column.URL_YOUTUBE));
         de.videoId = c.getString(c.getColumnIndex(DbStructure.Column.VIDEO_ID));
         de.watched = DownloadEntry.WatchedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.WATCHED))];
         de.eid = c.getString(c.getColumnIndex(DbStructure.Column.EID));
@@ -57,6 +60,13 @@ public class DatabaseModelFactory {
         e.size = vrm.getSummary().getSize();
         e.title = vrm.getSummary().getName();
         e.url = vrm.getSummary().getVideo_url();
+        e.url_high_quality = vrm.getSummary().getHighEncoding();
+        e.url_low_quality = vrm.getSummary().getLowEncoding();
+        e.url_youtube = vrm.getSummary().getYoutubeLink();
+        e.videoId = vrm.getSummary().getId();
+        e.transcript = vrm.getSummary().getTranscripts();
+        e.lmsUrl = vrm.unit_url;
+
         e.videoId = vrm.getSummary().getId();
         e.transcript = vrm.getSummary().getTranscripts();
         e.lmsUrl = vrm.unit_url;

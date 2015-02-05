@@ -2,6 +2,7 @@ package org.edx.mobile.base;
 
 
 import android.app.Application;
+import android.content.IntentFilter;
 import android.graphics.Bitmap.CompressFormat;
 
 import com.crashlytics.android.Crashlytics;
@@ -9,6 +10,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.receivers.NetworkConnectivityReceiver;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
@@ -25,15 +27,20 @@ public class MainApplication extends Application {
     private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
     private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
     private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
+
+    NetworkConnectivityReceiver connectivityReceiver;
     
     @Override
     public void onCreate() {
         super.onCreate();
         init();
+
+        connectivityReceiver = new NetworkConnectivityReceiver();
+        registerReceiver(connectivityReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 
     /**
-     * Intialize the request manager and the image cache
+     * Initialize the request manager and the image cache
      * Initialize shared components
      */
     private void init() {

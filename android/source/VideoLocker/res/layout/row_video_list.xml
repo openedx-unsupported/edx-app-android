@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:text="@string/app_name"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txt_lecture_title"

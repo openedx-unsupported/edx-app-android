@@ -48,7 +48,7 @@
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_contents"
-            style="@style/regular_white_text"
+            style="@style/drawer_option"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
             android:layout_marginTop="20dp"
@@ -63,7 +63,7 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -71,8 +71,8 @@
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_assets"
-            style="@style/regular_white_text"
-            android:layout_width="fill_parent"
+            style="@style/drawer_option"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
@@ -85,7 +85,51 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/my_groups"
+            style="@style/drawer_option"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_my_groups"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/my_settings"
+            style="@style/drawer_option"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/label_settings"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -93,8 +137,8 @@
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_email"
-            style="@style/regular_white_text"
-            android:layout_width="fill_parent"
+            style="@style/drawer_option"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
@@ -107,63 +151,19 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:background="@color/grey_name_background" />
 
-        <RelativeLayout
-            android:id="@+id/settings_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp" >
-
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/settingsText"
-                style="@style/regular_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_txt"
-                android:textAllCaps="true"
-                android:textColor="@color/cyan_text_navigation"
-                android:textSize="14sp" />
-
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/download_only_tv"
-                style="@style/regular_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/settingsText"
-                android:text="@string/download_only"
-                android:textColor="@color/cyan_text_navigation"
-                android:textSize="12sp" />
-
-            <Switch
-                android:id="@+id/wifi_setting"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/download_only_tv"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/download_only_tv"
-                android:checked="true"
-                android:switchMinWidth="80dp"
-                android:switchTextAppearance="@style/default_switch"
-                android:textOff="@string/toggle_turn_off"
-                android:textOn="@string/toggle_turn_on"
-                android:thumb="@drawable/switch_inner"
-                android:thumbTextPadding="8dp"
-                android:track="@drawable/switch_track" />
-        </RelativeLayout>
     </LinearLayout>
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_version_no"
         style="@style/regular_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"

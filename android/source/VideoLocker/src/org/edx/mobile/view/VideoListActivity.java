@@ -220,7 +220,8 @@ VideoListCallback, IPlayerEventCallback {
             if(filepath==null || filepath.length()<=0){
                 // not available on local, so play online
                 logger.warn("Local file path not available");
-                filepath = video.url;
+
+                filepath = video.getBestEncodingUrl(this);
             }
             
             logger.debug("playing from URL: " + filepath);

@@ -1,6 +1,5 @@
 package org.edx.mobile.module.analytics;
 
-import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
@@ -19,17 +18,21 @@ public class SegmentTracker {
     
     public SegmentTracker(Context context) {
         try {
-            String writeKey = Config.getInstance().getSegmentIOWriteKey();
+            Config config = Config.getInstance();
+
+            String writeKey = config.getSegmentIOWriteKey();
+            boolean debugging = config.getSegmentDebugOn();
+            int queueSize = config.getSegmentQueueSize();
+            
+            // Must be called before any calls to Analytics.with(context)
+            // Now Analytics.with will return the custom instance
 
             if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
 
-                String debugging = context.getString(R.string.analytics_debug);
-                int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
-
                 // Now Analytics.with will return the custom instance
                 analytics = new Analytics.Builder(context, writeKey)
-                        .debugging(Boolean.parseBoolean(debugging))
+                        .debugging(debugging)
                         .queueSize(queueSize)
                         .build();
             } else {
