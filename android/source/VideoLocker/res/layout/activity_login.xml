@@ -6,21 +6,12 @@
     android:layout_height="match_parent"
     android:splitMotionEvents="false">
 
-    <LinearLayout
-        android:id="@+id/custom_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
-
-        <include layout="@layout/panel_custom_action_bar" />
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:fillViewport="true"
-        android:layout_below="@id/custom_action_bar">
+        android:layout_marginTop="50dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -150,17 +141,16 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/custom_action_bar"
         android:background="@drawable/bg_error_dialog"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:layout_marginTop="50dp">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/error_header"
@@ -185,4 +175,12 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/custom_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <include layout="@layout/panel_custom_action_bar" />
+    </LinearLayout>
 </RelativeLayout>
