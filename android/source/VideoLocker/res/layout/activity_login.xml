@@ -86,7 +86,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="15dp"
-                        android:background="@drawable/bt_signin_default" >
+                        android:background="@drawable/bt_signin_active" >
 
                         <org.edx.mobile.view.custom.ETextView
                             android:id="@+id/login_btn_tv"

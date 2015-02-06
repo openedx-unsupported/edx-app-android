@@ -348,7 +348,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnDisabled() {
         blockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
+        loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
         loginButtonLayout.setEnabled(false);
         login_tv.setText(getString(R.string.signing_in));
         
@@ -361,7 +361,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnEnabled() {
         unblockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_default);
+        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
         loginButtonLayout.setEnabled(true);
         login_tv.setText(getString(R.string.login));
         
