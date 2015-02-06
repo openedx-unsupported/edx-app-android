@@ -3,8 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 
-import org.edx.mobile.base.BaseFragmentActivity;
-
 /**
  * Created by aleffert on 1/30/15.
  */

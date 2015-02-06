@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <Spinner
+        android:id="@+id/education_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:prompt="@string/education_prompt_text"
+        android:entries="@array/country_array"
+        android:background="@drawable/spinner_selector"
+        />
+    <Spinner
+        android:id="@+id/gender_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:prompt="@string/gender_prompt_text"
+        android:entries="@array/country_array"
+        android:background="@drawable/spinner_selector"
+        />
+    <Spinner
+        android:id="@+id/birth_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:prompt="@string/birth_prompt_text"
+        android:entries="@array/country_array"
+        android:background="@drawable/spinner_selector"
+        />
+    <org.edx.mobile.view.custom.EEditText
+        android:id="@+id/mailing_address_et"
+        style="@style/edit_text_style"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/mailing_add_text"
+        android:inputType="textMultiLine"
+        android:textColorHint="@color/hint_grey_text"/>
+
+    <org.edx.mobile.view.custom.EEditText
+        android:id="@+id/registerening_reason_et"
+        style="@style/edit_text_style"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/registering_reason_text"
+        android:inputType="textMultiLine"
+        android:textColorHint="@color/hint_grey_text"/>
+
+</LinearLayout>

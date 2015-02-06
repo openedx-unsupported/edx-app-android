@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="44dp"
+        android:paddingRight="44dp"
+        android:paddingTop="20dp"
+        >
+
+        <org.edx.mobile.view.custom.EEditText
+            android:id="@+id/email_et"
+            style="@style/edit_text_style"
+            android:hint="@string/email_address"
+            android:textColorHint="@color/hint_grey_text"
+            android:inputType="textEmailAddress" />
+
+        <org.edx.mobile.view.custom.EEditText
+            android:id="@+id/fullname_et"
+            style="@style/edit_text_style"
+            android:layout_marginTop="8dp"
+            android:hint="@string/full_name"
+            android:inputType="text"
+            android:textColorHint="@color/hint_grey_text"/>
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/fullname_msg_tv"
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/full_name_msg"
+            android:textSize="10sp"
+            android:textColor="@color/grey_redirected_txt"
+            />
+
+        <org.edx.mobile.view.custom.EEditText
+            android:id="@+id/public_username_et"
+            style="@style/edit_text_style"
+            android:layout_marginTop="5dp"
+            android:hint="@string/public_user_name"
+            android:inputType="text"
+            android:textColorHint="@color/hint_grey_text"/>
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/public_username_msg"
+            style="@style/regular_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="10sp"
+            android:textColor="@color/grey_redirected_txt"/>
+
+        <org.edx.mobile.view.custom.EEditText
+            android:id="@+id/password_et"
+            style="@style/edit_text_style"
+            android:layout_marginTop="8dp"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColorHint="@color/hint_grey_text"/>
+
+
+        <Spinner
+            android:id="@+id/country_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:prompt="@string/country_prompt_text"
+            android:entries="@array/country_array"
+            android:background="@drawable/spinner_selector"
+            
+            />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center" >
+            <View
+                android:id="@+id/view1"
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/grey_act_background" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/optional_field_tv"
+                style="@style/semibold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:text="@string/show_optional_text"
+                android:textColor="#CC3c4045"
+                android:textSize="14sp" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="100dp"
+                android:layout_height="1dp"
+                android:background="@color/grey_act_background" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/optional_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <include layout="@layout/panel_optional_fields" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/createAccount_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bt_signin_default" >
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/account_btn_tv"
+                style="@style/regular_white_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/create_account_text"
+                android:textAllCaps="false"
+                android:textSize="14sp" />
+
+            <ProgressBar
+                android:id="@+id/login_spinner"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:indeterminateDrawable="@drawable/login_progress"
+                android:visibility="gone" />
+        </RelativeLayout>
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/by_creating_account_tv"
+            style="@style/regular_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="@string/by_creating_account"
+            android:textColor="@color/grey_redirected_txt"
+            android:textSize="11sp" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/end_user_agreement_tv"
+            style="@style/regular_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:linksClickable="true"
+            android:text="@string/licensing_agreement"
+            android:textColor="@color/cyan_text_navigation"
+            android:textSize="11sp" />
+
+
+
+    </LinearLayout>
+    </ScrollView>
+    </LinearLayout>

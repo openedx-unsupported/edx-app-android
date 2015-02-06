@@ -160,4 +160,22 @@
     <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you\'ll need to log in, enroll, and then return to the app when you\'re done.</string>
     <string name="email_chooser_header">Send email using...</string>
     <string name="email_client_not_present">No e-mail clients installed</string>
+
+    <!-- Registration Screen -->
+    <string name="email_address">Email address</string>
+    <string name="full_name">Full Name</string>
+    <string name="full_name_msg">This name will appear on certificates you earn</string>
+    <string name="public_user_name">Public Username</string>
+    <string name="public_username_msg">This name will appear in course discussions and &lt;b&gt;cannot be changed&lt;b&gt;</string>
+    <string name="create_account_text">Create my account</string>
+    <string name="by_creating_account">By creating an edX account, you agree to the </string>
+    <string name="show_optional_text">Show optional fields</string>
+    <string name="hide_optional_text">Hide optional fields</string>
+    <string name="mailing_add_text">Mailing Address</string>
+    <string name="registering_reason_text">Please share with us your reasons for registering with edX</string>
+    <string name="country_prompt_text">Select Country</string>
+    <string name="education_prompt_text">Select Education Level</string>
+    <string name="gender_prompt_text">Select Gender</string>
+    <string name="birth_prompt_text">Select Year of Birth</string>
+
 </resources>
