@@ -8,16 +8,4 @@
         <item>@color/grey_act_background</item>
     </array>
 
-    <!-- Zero rated carriers listed here. -->
-    <string-array name="zero_rated_carrier_names">
-        <!-- Name AirTel is not final. Carrier ID must be confirmed -->
-        <item>63514</item>
-    </string-array>
-
-    <!-- Social Features disabled carriers listed here. -->
-    <string-array name="social_disabled_carrier_names">
-        <!-- Name AirTel is not final. Carrier ID must be confirmed -->
-        <item>63514</item>
-    </string-array>
-
 </resources>
