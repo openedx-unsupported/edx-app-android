@@ -137,4 +137,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
      </style>
+
+    <style name="custom_activity_title" parent="@style/semibold_text">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:textColor">@color/new_user_txt</item>
+    </style>
 </resources>
