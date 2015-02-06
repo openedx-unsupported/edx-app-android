@@ -160,4 +160,9 @@
     <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you\'ll need to log in, enroll, and then return to the app when you\'re done.</string>
     <string name="email_chooser_header">Send email using...</string>
     <string name="email_client_not_present">No e-mail clients installed</string>
+
+    <!-- Landing Activity text -->
+    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="improve_your_career">Improve your career,\nyour mind, your life</string>
+    <string name="sign_up_and_learn">Sign up and start learning</string>
 </resources>
