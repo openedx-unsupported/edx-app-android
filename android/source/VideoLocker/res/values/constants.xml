@@ -15,14 +15,16 @@
     <string name="eula_file_link">file:///android_asset/EULA.htm</string>
     <string name="new_user_file_name">file:///android_asset/NEW_USER.htm</string>
     <string name="course_not_listed_file_name">file:///android_asset/COURSE_NOT_LISTED.htm</string>
-    
+
+    <!-- Speed Test.
+    Once this feature is ready, migrate this to the YAML config -->
     <integer name="speed_test_timeout_in_milliseconds">5000</integer>
     <integer name="threshold_kbps_for_video">9</integer>
     <integer name="delay_speed_test_in_milliseconds">10000</integer>
     <string name="speed_test_url">http://bnotions.s3.amazonaws.com/128kb.file</string>
 
-    <!-- Facebook App information (not strings) -->
-    <string name="facebook_app_id">0</string>
+    <!-- Facebook Social Sharing configuration.
+    Once this feature is ready, migrate this to the YAML config -->
     <string name="facebook_app_share_root">edxbnotionsns</string>
     <string name="facebook_app_course_id">edx_course</string>
     <string name="facebook_app_certificate_id">edx_certificate</string>

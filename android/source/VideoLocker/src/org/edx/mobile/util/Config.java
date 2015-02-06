@@ -1,14 +1,19 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 
-import org.apache.commons.io.IOUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.annotations.SerializedName;
+
 import org.edx.mobile.logger.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by aleffert on 1/8/15.
@@ -27,7 +32,7 @@ public class Config {
     }
 
     protected final Logger logger = new Logger(getClass().getName());
-    private JSONObject mProperties;
+    private JsonObject mProperties;
 
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String COURSE_SEARCH_URL = "COURSE_SEARCH_URL";
@@ -42,66 +47,93 @@ public class Config {
     private static final String SEGMENT_IO_DEBUG_ON = "SEGMENT_IO_DEBUG_ON";
     private static final String SEGMENT_IO_QUEUE_SIZE = "SEGMENT_IO_QUEUE_SIZE";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
-    private static final String SOCIAL_FEATURES_ENABLED = "SOCIAL_FEATURES_ENABLED";
+    private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
+    private static final String ZERO_RATING = "ZERO_RATING";
+
+    public class SocialSharingConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("DISABLED_CARRIERS") List<String> mDisabledCarriers;
+
+        public boolean getEnabled() {
+            return mEnabled;
+        }
+
+        public List<String> getDisabledCarriers() {
+            return mDisabledCarriers != null ? mDisabledCarriers : new ArrayList<String>();
+        }
+    }
+
+    public class ZeroRatingConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("CARRIERS") List<String> mCarriers;
+
+        public boolean getEnabled() {
+            return mEnabled;
+        }
+
+        public List<String> getCarriers() {
+            return mCarriers != null ? mCarriers : new ArrayList<String>();
+        }
+    }
 
     Config(Context context) {
         try {
             InputStream in = context.getAssets().open("config/config.json");
-            String strConfig = IOUtils.toString(in);
-            mProperties = new JSONObject(strConfig);
+            JsonParser parser = new JsonParser();
+            JsonElement config = parser.parse(new InputStreamReader(in));
+            mProperties = config.getAsJsonObject();
         } catch (Exception e) {
-            mProperties = new JSONObject();
+            mProperties = new JsonObject();
             logger.error(e);
         }
     }
 
-    Config(JSONObject properties) {
+    public Config(JsonObject properties) {
         mProperties = properties;
     }
 
     String getString(String key) {
-        try {
-            return mProperties.getString(key);
-        } catch (JSONException e) {
-            logger.error(e);
-        }
-        return null;
+        return getString(key, null);
     }
 
-    boolean getBoolean(String key, boolean defaultValue) {
-        Boolean isTrue = null;
-        try {
-            isTrue = (Boolean)mProperties.get(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private String getString(String key, String defaultValue) {
+        JsonElement element = getObject(key);
+        if(element != null) {
+            return element.getAsString();
+        }
+        else {
             return defaultValue;
         }
-        return isTrue == null ? defaultValue : isTrue;
+    }
+
+    private boolean getBoolean(String key, boolean defaultValue) {
+        JsonElement element = getObject(key);
+        if(element != null) {
+            return element.getAsBoolean();
+        }
+        else {
+            return defaultValue;
+        }
     }
 
     private int getInteger(String key, int defaultValue) {
-        Integer value = null;
-        try {
-            value = (Integer)mProperties.get(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JsonElement element = getObject(key);
+        if(element != null) {
+            return element.getAsInt();
+        }
+        else {
             return defaultValue;
         }
-        return value == null ? defaultValue : value;
     }
 
-    private Object getObject(String key) {
-        try {
-            return mProperties.get(key);
-        } catch (JSONException e) {
-            logger.error(e);
-        }
-        return null;
+    private JsonElement getObject(String key) {
+        return mProperties.get(key);
     }
 
 
     /// Known Configurations
     /// Create methods instead of just using the key names directly for a little extra flexibility
+    /// Please keep this alphabetized
 
     public String getApiHostURL() {
         return getString(API_HOST_URL);
@@ -111,8 +143,16 @@ public class Config {
         return getString(COURSE_SEARCH_URL);
     }
 
+    public String getEnvironmentDisplayName() {
+        return getString(ENVIRONMENT_DISPLAY_NAME);
+    }
+
     public String getFabricKey() {
         return getString(FABRIC_KEY);
+    }
+
+    public String getFacebookAppId() {
+        return getString(FACEBOOK_APP_ID);
     }
 
     public String getFeedbackEmailAddress() {
@@ -121,6 +161,10 @@ public class Config {
 
     public String getGooglePlusKey() {
         return getString(GOOGLE_PLUS_KEY);
+    }
+
+    public String getNewRelicKey() {
+        return getString(NEW_RELIC_KEY);
     }
 
     public String getOAuthClientId() {
@@ -143,18 +187,27 @@ public class Config {
         return getInteger(SEGMENT_IO_QUEUE_SIZE, 1);
     }
 
-    public String getNewRelicKey() {
-        return getString(NEW_RELIC_KEY);
+    public SocialSharingConfig getSocialSharing() {
+        JsonElement element = getObject(SOCIAL_SHARING);
+        if(element != null) {
+            Gson gson = new Gson();
+            SocialSharingConfig config = gson.fromJson(element, SocialSharingConfig.class);
+            return config;
+        }
+        else {
+            return new SocialSharingConfig();
+        }
     }
 
-    public String getFacebookAppId() {
-        return getString(FACEBOOK_APP_ID);
-    }
-
-    public String getEnvironmentDisplayName() {
-        return getString(ENVIRONMENT_DISPLAY_NAME);
-    }
-    public boolean getSocialFeaturesEnabled() {
-        return getBoolean(SOCIAL_FEATURES_ENABLED, false);
+    public ZeroRatingConfig getZeroRating() {
+        JsonElement element = getObject(ZERO_RATING);
+        if(element != null) {
+            Gson gson = new Gson();
+            ZeroRatingConfig config = gson.fromJson(element, ZeroRatingConfig.class);
+            return config;
+        }
+        else {
+            return new ZeroRatingConfig();
+        }
     }
 }

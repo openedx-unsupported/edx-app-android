@@ -127,7 +127,7 @@ public class NetworkUtil {
 
         Log.d(TAG, String.format("Carrier id: %s", carrierId));
 
-        String[] zeroRatedCarriers = context.getResources().getStringArray(R.array.zero_rated_carrier_names);
+        List<String> zeroRatedCarriers = Config.getInstance().getZeroRating().getCarriers();
 
         for(String carrier : zeroRatedCarriers) {
             if (carrier.equalsIgnoreCase(carrierId)) {
@@ -144,7 +144,7 @@ public class NetworkUtil {
         TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String carrierId = manager.getNetworkOperator();
 
-        String[] socialDisabledCarriers = context.getResources().getStringArray(R.array.social_disabled_carrier_names);
+        List<String> socialDisabledCarriers = Config.getInstance().getSocialSharing().getDisabledCarriers();
 
         for(String carrier : socialDisabledCarriers) {
             if (carrier.equalsIgnoreCase(carrierId)) {
@@ -159,7 +159,7 @@ public class NetworkUtil {
 
     public static boolean isSocialFeatureFlagEnabled(Context context){
 
-        boolean isSocialEnabled = Config.getInstance().getSocialFeaturesEnabled();
+        boolean isSocialEnabled = Config.getInstance().getSocialSharing().getEnabled();
 
         return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context));
 
