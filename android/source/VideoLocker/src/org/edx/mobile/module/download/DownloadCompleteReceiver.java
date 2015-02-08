@@ -4,26 +4,24 @@ import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
-    protected IStorage storage;
     private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onReceive(final Context context, Intent data) {
         try {
-            initDB(context);
             if (data != null && data.hasExtra(DownloadManager.EXTRA_DOWNLOAD_ID)) {
                 long id = data.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if (id != -1) {
@@ -41,6 +39,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     }
 
                     // mark download as completed
+                    IStorage storage = new Storage(context);
                     storage.markDownloadAsComplete(id, new DataCallback<IVideoModel>() {
                         @Override
                         public void onResult(IVideoModel result) {
@@ -75,10 +74,5 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         }
 
     }
-
-    private void initDB(Context context) {
-        storage = new Storage(context);
-    }
-
 
 }
