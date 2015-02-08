@@ -182,12 +182,12 @@ public class DbTests extends BaseTestCase {
     }
     public void testgetAllDownloadingVideosDmidList() throws Exception {
         db.clearDataByUser(username);
-        db.getAllDownloadingVideosDmidList(new DataCallback<Long[]>() {
+        db.getAllDownloadingVideosDmidList(new DataCallback<List<Long>>() {
 
             @Override
-            public void onResult(Long[] result) {
+            public void onResult(List<Long> result) {
                 assertNotNull(result);
-                assertTrue(result.length == 0);
+                assertTrue(result.size() == 0);
                 print( "Result for All Downloading Videos Dmid List for 0 is :"+ result.length);
                 unlock();
 
@@ -204,12 +204,12 @@ public class DbTests extends BaseTestCase {
         DownloadEntry de=getDummyVideoModel();
         de.downloaded=DownloadedState.DOWNLOADING;
         db.addVideoData(de, null);
-        db.getAllDownloadingVideosDmidList(new DataCallback<Long[]>() {
+        db.getAllDownloadingVideosDmidList(new DataCallback<List<Long>>() {
 
             @Override
-            public void onResult(Long[] result) {
+            public void onResult(List<Long> result) {
                 assertNotNull(result);
-                assertTrue(result.length == 1);
+                assertTrue(result.size() == 1);
                 print( "Result for All Downloading Videos Dmid List for 1 is:"+ result.length);
                 unlock();
 
