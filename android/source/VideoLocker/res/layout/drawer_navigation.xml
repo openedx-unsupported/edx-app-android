@@ -63,7 +63,7 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -72,7 +72,7 @@
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_assets"
             style="@style/regular_white_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
@@ -85,7 +85,7 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
@@ -94,7 +94,7 @@
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_email"
             style="@style/regular_white_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
@@ -107,7 +107,7 @@
             android:textSize="14sp" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="15dp"
@@ -163,7 +163,7 @@
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_version_no"
         style="@style/regular_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
