@@ -11,7 +11,7 @@
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_dialog_title"
         style="@style/bold_grey_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
@@ -20,7 +20,7 @@
         android:textSize="17sp" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -36,7 +36,7 @@
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/tv_dialog_message1"
             style="@style/regular_grey_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="20dp"
@@ -48,7 +48,7 @@
 
     <LinearLayout
         android:id="@+id/button_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_act_background"
         android:orientation="horizontal"
