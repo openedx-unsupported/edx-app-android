@@ -1,11 +1,12 @@
 package org.edx.mobile.test;
 
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Emailutill;
+import org.edx.mobile.util.EmailUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateParseTests extends BaseTestCase {
 
@@ -51,9 +52,26 @@ public class DateParseTests extends BaseTestCase {
         String to = "user@edx.org";
         String subject = "edX Test Email";
         String email = "hi, this is test email";
-        Emailutill.sendEmail(getInstrumentation()
+        EmailUtil.sendEmail(getInstrumentation()
                 .getTargetContext(), to, subject, email);
         print("sending email...");
+    }
+
+    /**
+     * This tests the formatted start date of a course
+     * @throws Exception
+     */
+    public void testFormatCourseNotStartedDate() throws Exception {
+        String inputDate = "2014-11-20T05:00:00Z";
+
+        String outputDate = DateUtil.formatCourseNotStartedDate(inputDate);
+        assertNotNull(outputDate);
+        //FIXME - This check is currently only for English locale.
+        //Need to have a more generic test case based on Locale
+        if(Locale.getDefault().getLanguage().equals(Locale.ENGLISH)){
+            String expectedOutput = "November 20, 2014";
+            assertEquals(expectedOutput, outputDate);
+        }
     }
 
 }
