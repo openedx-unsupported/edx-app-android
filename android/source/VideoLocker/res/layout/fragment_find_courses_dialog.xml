@@ -45,7 +45,7 @@
 
     <LinearLayout
         android:id="@+id/button_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey_act_background"
         android:orientation="horizontal"

@@ -23,7 +23,7 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Emailutill;
+import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.WifiSwitchDialogFragment;
@@ -97,7 +97,7 @@ public class NavigationFragment extends Fragment {
                 String to = Config.getInstance().getFeedbackEmailAddress();
                 String subject =getString(R.string.Email_subject);
                 String email = "";
-                Emailutill.sendEmail(getActivity(), to, subject, email);
+                EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
         });
 
