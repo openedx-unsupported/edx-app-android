@@ -80,7 +80,7 @@ public class DbTests extends BaseTestCase {
                 print( "got results for all videos");
                 for (IVideoModel v : result) {
                     print( v.getTitle());
-                    print( "ID : " + v.getVideoId()+ " isDownloaded : " 
+                    print( "ID : " + v.getVideoId()+ " isDownloaded : "
                             + v.getDownloadedStateOrdinal());
                 }
 
@@ -108,7 +108,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -129,7 +129,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
             }
         });
@@ -151,8 +150,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print("failed test"); 
-                fail(ex.getMessage());  
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -173,7 +171,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print("failed test"); 
                 fail(ex.getMessage());
             }
         });
@@ -188,14 +185,11 @@ public class DbTests extends BaseTestCase {
             public void onResult(List<Long> result) {
                 assertNotNull(result);
                 assertTrue(result.size() == 0);
-                print( "Result for All Downloading Videos Dmid List for 0 is :"+ result.length);
                 unlock();
-
             }
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -210,16 +204,12 @@ public class DbTests extends BaseTestCase {
             public void onResult(List<Long> result) {
                 assertNotNull(result);
                 assertTrue(result.size() == 1);
-                print( "Result for All Downloading Videos Dmid List for 1 is:"+ result.length);
                 unlock();
-
             }
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
-
             }
         });
         lock();
@@ -243,7 +233,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
             }
         });
@@ -266,7 +255,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
             }
         });
@@ -292,7 +280,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -316,7 +303,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -339,7 +325,6 @@ public class DbTests extends BaseTestCase {
             }
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -361,7 +346,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -386,7 +370,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -410,7 +393,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
             }
         });
@@ -433,7 +415,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -455,7 +436,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -483,7 +463,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -508,7 +487,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
             }
         });
@@ -532,7 +510,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -556,7 +533,6 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
 
             }
@@ -585,9 +561,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
-
             }
         });
         lock();
@@ -610,9 +584,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
                 fail(ex.getMessage());
-
             }
         });
         lock();
@@ -640,7 +612,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -667,7 +639,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -696,7 +668,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -721,7 +693,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -747,7 +719,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -772,7 +744,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -794,7 +766,7 @@ public class DbTests extends BaseTestCase {
             }
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -822,7 +794,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -847,7 +819,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -868,7 +840,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -892,7 +864,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -915,7 +887,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -940,7 +912,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -964,7 +936,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -984,7 +956,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1005,7 +977,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1027,7 +999,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1051,7 +1023,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1073,7 +1045,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1097,7 +1069,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1120,7 +1092,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1148,7 +1120,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1173,7 +1145,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1196,7 +1168,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1219,7 +1191,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1245,7 +1217,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1269,7 +1241,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1294,7 +1266,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1327,7 +1299,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1367,7 +1339,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1388,7 +1360,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1407,7 +1379,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1433,7 +1405,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1454,7 +1426,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1474,7 +1446,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1494,7 +1466,7 @@ public class DbTests extends BaseTestCase {
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
             }
         });
@@ -1505,18 +1477,18 @@ public class DbTests extends BaseTestCase {
         db.clearDataByUser(username);
         long dmId=1;
         db.getDownloadEntryByDmId(dmId, new DataCallback<IVideoModel>() {
-            
+
             @Override
             public void onResult(IVideoModel result) {
                 assertNull("result should be null", result);
                 unlock();
 
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());              
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1524,18 +1496,18 @@ public class DbTests extends BaseTestCase {
         de.dmId=1;
         db.addVideoData(de, null);
         db.getDownloadEntryByDmId(de.dmId, new DataCallback<IVideoModel>() {
-            
+
             @Override
             public void onResult(IVideoModel result) {
                 assertTrue(result!=null);
                 print( "result for getDownloadEntryByDmId for not null is:" + result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());              
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1544,7 +1516,7 @@ public class DbTests extends BaseTestCase {
         db.clearDataByUser(username);
         String videoUrl="url";
         db.getVideoCountByVideoUrl(videoUrl, new DataCallback<Integer>() {
-            
+
             @Override
             public void onResult(Integer result) {
                 assertNotNull(result);
@@ -1552,20 +1524,20 @@ public class DbTests extends BaseTestCase {
                 assertTrue(result==0);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());              
+
+                fail(ex.getMessage());
             }
         });
         lock();
-        
+
         DownloadEntry de=getDummyVideoModel();
         de.url="http://fake/url";
         db.addVideoData(de, null);
         db.getVideoCountByVideoUrl(de.url, new DataCallback<Integer>() {
-            
+
             @Override
             public void onResult(Integer result) {
                 assertNotNull(result);
@@ -1573,11 +1545,11 @@ public class DbTests extends BaseTestCase {
                 print("Result for testgetVideoCountByVideoUrl is in 1:"+ result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());                      
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1586,7 +1558,7 @@ public class DbTests extends BaseTestCase {
         db.clearDataByUser(username);
         String videoId="videoId";
         db.getWatchedStateForVideoId(videoId, new DataCallback<DownloadEntry.WatchedState>() {
-            
+
             @Override
             public void onResult(WatchedState result) {
                 assertNotNull(result);
@@ -1594,11 +1566,11 @@ public class DbTests extends BaseTestCase {
                 print( "result for getWatchedStateForVideoId :" + result.toString());
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());                  
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1607,7 +1579,7 @@ public class DbTests extends BaseTestCase {
         de.videoId="videoid";
         db.addVideoData(de, null);
         db.getWatchedStateForVideoId(de.videoId, new DataCallback<DownloadEntry.WatchedState>() {
-            
+
             @Override
             public void onResult(WatchedState result) {
                 assertNotNull(result);
@@ -1615,11 +1587,11 @@ public class DbTests extends BaseTestCase {
                 print("Result for getWatchedStateForVideoId is in 1:"+ result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());      
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1628,17 +1600,17 @@ public class DbTests extends BaseTestCase {
         db.clearDataByUser(username);
         String videoUrl="url";
         db.getVideoByVideoUrl(videoUrl,new DataCallback<IVideoModel>() {
-            
+
             @Override
             public void onResult(IVideoModel result) {
                 assertNull("result should be null", result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());  
+
+                fail(ex.getMessage());
             }
         });
         lock();
@@ -1646,29 +1618,29 @@ public class DbTests extends BaseTestCase {
         de.url="http://fake/url";
         db.addVideoData(de, null);
         db.getVideoByVideoUrl(de.url,new DataCallback<IVideoModel>() {
-            
+
             @Override
             public void onResult(IVideoModel result) {
                 assertNotNull(result);
                 //assertTrue(result == 1);
                 print("Result for getVideoByVideoUrl for not null:"+ result);
-                unlock();               
+                unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
-                fail(ex.getMessage());                  
+
+                fail(ex.getMessage());
             }
         });
-            
+
         lock();
     }
     public void testgetDownloadedVideoListForCourse() throws Exception {
         db.clearDataByUser(username);
         String courseId="courseId";
         db.getDownloadedVideoListForCourse(courseId, new DataCallback<List<IVideoModel>>() {
-            
+
             @Override
             public void onResult(List<IVideoModel> result) {
                 assertNotNull(result);
@@ -1676,10 +1648,10 @@ public class DbTests extends BaseTestCase {
                 print( "Result for getDownloadedVideoListForCourse for size 0 is" + result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());              }
         });
         lock();
@@ -1695,27 +1667,27 @@ public class DbTests extends BaseTestCase {
                 assertNotNull(result);
                 assertTrue("result size = " + result.size(), result.size() == 1);
                 print( "Result for getAllDeactivatedVideos for size 1 is" + result.toString());
-                
+
                 unlock();
             }
 
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
         });
 
         lock();
-        
+
     }
     public void testgetDownloadedStateForVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoId="videoId";
 
         db.getDownloadedStateForVideoId(videoId, new DataCallback<DownloadEntry.DownloadedState>() {
-            
+
             @Override
             public void onResult(DownloadedState result) {
 
@@ -1723,10 +1695,10 @@ public class DbTests extends BaseTestCase {
                 print( "Result for getDownloadedStateForVideoId for not downloaded" + result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }
@@ -1737,7 +1709,7 @@ public class DbTests extends BaseTestCase {
         de.downloaded = DownloadedState.DOWNLOADED;
         db.addVideoData(de, null);
         db.getDownloadedStateForVideoId(de.videoId, new DataCallback<DownloadEntry.DownloadedState>() {
-            
+
             @Override
             public void onResult(DownloadedState result) {
                 assertNotNull(result);
@@ -1745,10 +1717,10 @@ public class DbTests extends BaseTestCase {
                 print( "Result for getDownloadedStateForVideoId for downloaded is" + result);
                 unlock();
             }
-            
+
             @Override
             public void onFail(Exception ex) {
-                print( "failed test");
+
                 fail(ex.getMessage());
 
             }

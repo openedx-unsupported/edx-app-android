@@ -39,6 +39,7 @@ public class Config {
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
+    private static final String THIRD_PARTY_TRAFFIC_ENABLED = "THIRD_PARTY_TRAFFIC_ENABLED";
 
     Config(Context context) {
         try {
@@ -119,5 +120,19 @@ public class Config {
 
     public String getEnvironmentDisplayName() {
         return getString(ENVIRONMENT_DISPLAY_NAME);
+    }
+
+    /**
+     * Returns true if network data usage is enabled for all third party integrations, false otherwise.
+     * Returns true, if configuration does not specify a value.
+     * @return
+     */
+    public boolean getThirdPartyTrafficEnabled() {
+        if (getString(THIRD_PARTY_TRAFFIC_ENABLED) != null) {
+            return Boolean.getBoolean(getString(THIRD_PARTY_TRAFFIC_ENABLED));
+        }
+        else {
+            return true;
+        }
     }
 }

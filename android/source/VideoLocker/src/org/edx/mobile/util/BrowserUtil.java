@@ -7,7 +7,6 @@ import android.net.Uri;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 

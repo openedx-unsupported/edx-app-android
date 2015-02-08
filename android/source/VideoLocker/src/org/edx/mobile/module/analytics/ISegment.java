@@ -81,7 +81,7 @@ public interface ISegment {
      * For example, unit tests might use mocked tracker object.
      * @param tracker
      */
-    void setTracker(SegmentTracker tracker);
+    void setTracker(ISegmentTracker tracker);
     
     public static interface Keys{
         public static final String NAME = "name";
