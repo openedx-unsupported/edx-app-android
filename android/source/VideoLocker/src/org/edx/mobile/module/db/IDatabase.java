@@ -35,7 +35,7 @@ public interface IDatabase {
      * This method is used for showing progress in the DownloadModule
      * @return 
      */
-    public List<Long> getAllDownloadingVideosDmidList(DataCallback<Long[]> callback);
+    public List<Long> getAllDownloadingVideosDmidList(DataCallback<List<Long>> callback);
     
     
     /**

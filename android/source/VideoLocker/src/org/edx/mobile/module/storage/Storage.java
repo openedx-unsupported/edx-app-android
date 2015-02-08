@@ -9,6 +9,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -20,7 +21,10 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.util.PropertyUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -439,4 +443,58 @@ public class Storage implements IStorage {
         }
     }
 
+    /**
+     * Checks progress of all the videos that are being downloaded.
+     * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
+     */
+    public void repairDownloadCompletionData() {
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.APP_INFO);
+        String lastSavedVersionName = pref.getString(PrefManager.Key.APP_VERSION);
+        if (lastSavedVersionName == null || !lastSavedVersionName.equals(PropertyUtil.getManifestVersionName(context))) {
+            // current version not matching with the last saved version
+            pref.put(PrefManager.Key.APP_VERSION, PropertyUtil.getManifestVersionName(context));
+
+            // attempt to repair the data
+            Thread maintenanceThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        UserPrefs userprefs = new UserPrefs(context);
+                        ProfileModel profile = userprefs.getProfile();
+                        String username = profile.username;
+
+                        IDownloadManager dm = DownloadFactory.getInstance(context);
+                        IStorage storage = new Storage(context);
+                        IDatabase db = DatabaseFactory.getInstance(context,
+                                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+
+                        List<Long> dmidList = db.getAllDownloadingVideosDmidList(null);
+                        for (Long d : dmidList) {
+                            // for each downloading video, check the percentage progress
+                            boolean downloadComplete = dm.isDownloadComplete(d);
+                            if (downloadComplete) {
+                                // this means download is completed
+                                // so the video status should be marked as DOWNLOADED, not DOWNLOADING
+                                // update the video status
+                                storage.markDownloadAsComplete(d, new DataCallback<IVideoModel>() {
+                                    @Override
+                                    public void onResult(IVideoModel result) {
+                                        logger.debug("Video download marked as completed, dmid=" + result.getDmId());
+                                    }
+
+                                    @Override
+                                    public void onFail(Exception ex) {
+                                        logger.error(ex);
+                                    }
+                                });
+                            }
+                        }
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                    }
+                }
+            });
+            maintenanceThread.start();
+        }
+    }
 }
