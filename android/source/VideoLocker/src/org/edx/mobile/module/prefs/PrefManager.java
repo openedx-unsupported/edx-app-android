@@ -207,6 +207,7 @@ public class PrefManager {
     public static final class Pref {
         public static final String LOGIN = "pref_login";
         public static final String WIFI = "pref_wifi";
+        public static final String APP_INFO = "pref_app_info";
     }
     
     /**
@@ -226,6 +227,7 @@ public class PrefManager {
         public static final String LASTACCESSED_MODULE_ID = "last_access_module_id";
         public static final String LASTACCESSED_SYNCED_FLAG = "lastaccess_synced_flag";
         public static final String SEGMENT_KEY_BACKEND = "segment_backend";
+        public static final String APP_VERSION = "app_version_name";
     }
     
     public static final class Value {
