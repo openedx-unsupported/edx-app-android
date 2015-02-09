@@ -36,7 +36,9 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
 
         // TODO: test the path_id replacement and ensure if curly braces are required in the URL or be removed
         String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
-        String url = Config.getInstance().getEnrollment().getCourseInfoUrlTemplate().replace(EXTRA_PATH_ID, pathId);
+        String url = Config.getInstance().getEnrollment()
+                .getCourseInfoUrlTemplate()
+                .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
     }

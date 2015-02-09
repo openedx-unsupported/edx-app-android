@@ -2,6 +2,7 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -86,6 +87,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 logger.warn("you have not set IActionLister to this WebViewClient, " +
                         "you might miss some event");
             }
+            logger.debug("loading: " + url);
 
             if (isCourseInfoLink(url)) {
                 // we handled this URL

@@ -150,4 +150,14 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     public void onClickEnroll(String courseId, boolean emailOptIn) {
         // TODO: api call and go back to "My Courses" or "My Videos"
     }
+
+    @Override
+    public void onPageStarted() {
+        showLoadingProgress();
+    }
+
+    @Override
+    public void onPageFinished() {
+        hideLoadingProgress();
+    }
 }
