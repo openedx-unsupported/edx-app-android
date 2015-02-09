@@ -1,5 +1,6 @@
 package org.edx.mobile.view.custom;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -26,6 +27,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private IActionListener actionListener;
+    private String hostForThisPage = null;
 
     public URLInterceptorWebViewClient(WebView webView) {
         setupWebView(webView);
@@ -52,6 +54,29 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(true);
         webView.setWebViewClient(this);
+    }
+
+    @Override
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        super.onPageStarted(view, url, favicon);
+        if (actionListener != null) {
+            actionListener.onPageStarted();
+        }
+    }
+
+    @Override
+    public void onPageFinished(WebView view, String url) {
+        super.onPageFinished(view, url);
+        try {
+            // hold on the host of this page
+            this.hostForThisPage = Uri.parse(url).getHost();
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        if (actionListener != null) {
+            actionListener.onPageFinished();
+        }
     }
 
     @Override
@@ -113,12 +138,21 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     /**
      * Returns true if the pattern of the url matches with that of EXTERNAL URL pattern,
      * false otherwise.
-     * @param url
+     * @param strUrl
      * @return
      */
-    boolean isExternalLink(String url) {
-        // TODO: update this method when form of external URL is determined
-        return false;
+    boolean isExternalLink(String strUrl) {
+        try {
+            Uri uri = Uri.parse(strUrl);
+            if (hostForThisPage == null || uri.getHost().equals(hostForThisPage)) {
+                // this is not an external link
+                return false;
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        return true;
     }
 
     /**
@@ -171,5 +205,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
+
+        /**
+         * Callback that indicates page loading has started.
+         */
+        void onPageStarted();
+
+        /**
+         * Callback that indicates page loading has finished.
+         */
+        void onPageFinished();
     }
 }
