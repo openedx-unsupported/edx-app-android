@@ -26,4 +26,24 @@ public class Router {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
         sourceActivity.startActivity(downloadIntent);
     }
+
+    public void showFindCourses(Activity sourceActivity) {
+        Intent findCoursesIntent = new Intent(sourceActivity, FindCoursesActivity.class);
+        //Add this flag as multiple activities need to be created
+        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        sourceActivity.startActivity(findCoursesIntent);
+    }
+
+    public void showCourseInfo(Activity sourceActivity) {
+        Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
+        sourceActivity.startActivity(courseInfoIntent);
+    }
+
+    public void showMyVideos(Activity sourceActivity) {
+        Intent myVideosIntent = new Intent(sourceActivity,
+                MyVideosTabActivity.class);
+        myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        sourceActivity.startActivity(myVideosIntent);
+    }
+
 }

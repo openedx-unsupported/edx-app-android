@@ -158,6 +158,8 @@
     <string name="open_edx_btn_text">OPEN EDX.ORG IN MY BROWSER</string>
     <string name="find_courses_dialog_text_1">Our team is currently working hard to let you enroll in courses within the app.</string>
     <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you\'ll need to log in, enroll, and then return to the app when you\'re done.</string>
+    <string name="find_courses_title">Find Courses</string>
+    <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the internet.</string>
     <string name="email_chooser_header">Send email using...</string>
     <string name="email_client_not_present">No e-mail clients installed</string>
 </resources>
