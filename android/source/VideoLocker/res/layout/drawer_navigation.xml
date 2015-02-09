@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_nav_background" >
@@ -51,7 +50,6 @@
             style="@style/regular_white_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_drawer_menu"
-            android:layout_marginTop="20dp"
             android:background="@drawable/nav_bg_selector"
             android:gravity="center_vertical"
             android:paddingBottom="10dp"
@@ -81,6 +79,28 @@
             android:paddingRight="15dp"
             android:paddingTop="10dp"
             android:text="@string/label_my_videos"
+            android:textAllCaps="true"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/grey_name_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/find_courses_tv"
+            style="@style/regular_white_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_drawer_menu"
+            android:background="@drawable/nav_bg_selector"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:text="@string/find_courses_title"
             android:textAllCaps="true"
             android:textSize="14sp" />
 
