@@ -1,31 +1,31 @@
 package org.edx.mobile.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.edx.mobile.R;
-import org.edx.mobile.interfaces.NetworkObserver;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TabWidget;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
+import org.edx.mobile.R;
+import org.edx.mobile.interfaces.NetworkObserver;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.AppConstants;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyCoursesListActivity extends BaseTabActivity implements NetworkObserver{
 
     private UiLifecycleHelper uiLifecycleHelper;
     private PrefManager featuresPref;
+    private LinearLayout offlinePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,22 +108,6 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-
-    @Override
     public void onOffline() {
         AppConstants.offline_flag = true;
         invalidateOptionsMenu();
@@ -194,7 +178,6 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
         }
     }
 
-    
     private DataCallback<Integer> dataCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {

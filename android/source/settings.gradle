@@ -1,1 +1,1 @@
-include ':VideoLocker', ':facebook'
+include ':VideoLocker'

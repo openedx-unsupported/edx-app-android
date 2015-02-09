@@ -3,11 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -97,76 +93,10 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         }
     }
 
-    public void initializeTabs(boolean showAnnouncment) {
-        /* Setup your tab icons and content views.. Nothing special in this.. */
-        TabHost.TabSpec spec = tabHost
-                .newTabSpec(getString(R.string.tab_chapter_list));
-        spec.setContent(new TabHost.TabContentFactory() {
-            public View createTabContent(String tag) {
-                return findViewById(android.R.id.tabcontent);
-
-            }
-        });
-        spec.setIndicator(getString(R.string.tab_label_courseware));
-        tabHost.addTab(spec);
-
-        spec = tabHost.newTabSpec(getString(R.string.tab_announcement));
-        spec.setContent(new TabHost.TabContentFactory() {
-            public View createTabContent(String tag) {
-                return findViewById(android.R.id.tabcontent);
-            }
-        });
-        spec.setIndicator(getString(R.string.tab_label_announcement));
-        tabHost.addTab(spec);
-
-        spec = tabHost.newTabSpec(getString(R.string.tab_handouts));
-        spec.setContent(new TabHost.TabContentFactory() {
-            public View createTabContent(String tag) {
-                return findViewById(android.R.id.tabcontent);
-            }
-        });
-        spec.setIndicator(getString(R.string.tab_label_handouts));
-        tabHost.addTab(spec);
-
-        //This code has been commented to hide course info for September 15th launch
-
-        //This handles which tab to be shown when CourseDetails is loaded 
-        if (!showAnnouncment) {
-            tabHost.setCurrentTabByTag(getString(R.string.tab_chapter_list));
-        } else {
-            tabHost.setCurrentTabByTag(getString(R.string.tab_announcement));
-        }
-
-
-        //Fixing the width and TextColor of a Tab
-        TabWidget widget = tabHost.getTabWidget();
-
-        for (int i = 0; i < widget.getChildCount(); i++) {
-            final TextView tv = (TextView) widget.getChildAt(i).findViewById(
-                    android.R.id.title);
-            tv.setTextColor(this.getResources().getColorStateList(
-                    R.color.tab_selector));
-            tv.setSingleLine(true);
-            tv.setAllCaps(true);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-
-        if(checkBox_menuItem!=null){
-            checkBox_menuItem.setVisible(false);
-        }
-        return true;
     }
 
     @Override
@@ -216,6 +146,4 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(TAB_ID, tabHost.getCurrentTab());
     }
-
-
 }

@@ -199,7 +199,6 @@ public interface ISegment {
         public static final String USER_NO_ACCOUNT = "edx.bi.app.user.no_account";
         public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
 
-
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";
 
@@ -215,6 +214,6 @@ public interface ISegment {
         public static final String WIFI = "wifi";
         public static final String CELL_DATA = "cell_data";
 
-
+        public static final String COURSE_INFO_SCREEN = "Course Info";
     }
 }

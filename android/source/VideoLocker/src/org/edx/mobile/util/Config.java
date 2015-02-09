@@ -49,6 +49,7 @@ public class Config {
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
+    private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
 
     public class SocialSharingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
@@ -73,6 +74,24 @@ public class Config {
 
         public List<String> getCarriers() {
             return mCarriers != null ? mCarriers : new ArrayList<String>();
+        }
+    }
+
+    public class EnrollmentConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("SEARCH_URL") String mSearchUrl;
+        private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
+
+        public boolean getEnabled() {
+            return mEnabled;
+        }
+
+        public String getSearchUrl() {
+            return mSearchUrl;
+        }
+
+        public String getCourseInfoUrlTemplate() {
+            return mCourseInfoUrlTemplate;
         }
     }
 
@@ -208,6 +227,18 @@ public class Config {
         }
         else {
             return new ZeroRatingConfig();
+        }
+    }
+
+    public EnrollmentConfig getEnrollment() {
+        JsonElement element = getObject(COURSE_ENROLLMENT);
+        if(element != null) {
+            Gson gson = new Gson();
+            EnrollmentConfig config = gson.fromJson(element, EnrollmentConfig.class);
+            return config;
+        }
+        else {
+            return new EnrollmentConfig();
         }
     }
 }

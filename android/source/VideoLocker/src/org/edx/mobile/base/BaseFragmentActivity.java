@@ -292,6 +292,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
 
+        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
+        if(checkBox_menuItem!=null){
+            checkBox_menuItem.setVisible(false);
+        }
+
         MenuItem offline_tvItem = menu.findItem(R.id.offline);
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         if(AppConstants.offline_flag){

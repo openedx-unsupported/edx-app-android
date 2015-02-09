@@ -12,7 +12,7 @@
         android:id="@+id/tv_dialog_title"
         tools:text="Course Visibility"
         style="@style/bold_grey_text"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
@@ -23,7 +23,7 @@
         android:textSize="17sp" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -40,7 +40,7 @@
             android:id="@+id/tv_dialog_message1"
             tools:text="Make course visible?"
             style="@style/regular_grey_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:gravity="center_horizontal"
@@ -54,7 +54,7 @@
 
     <LinearLayout
         android:id="@+id/button_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 

@@ -229,6 +229,7 @@ public class PrefManager {
         public static final String WIFI = "pref_wifi";
         public static final String VIDEOS = "pref_videos";
         public static final String FEATURES = "features";
+        public static final String APP_INFO = "pref_app_info";
     }
     
     /**
@@ -252,6 +253,7 @@ public class PrefManager {
         public static final String SEGMENT_KEY_BACKEND = "segment_backend";
         public static final String SHARE_COURSES = "share_courses";
         public static final String SPEED_TEST_KBPS = "speed_test_kbps";
+        public static final String APP_VERSION = "app_version_name";
     }
     
     public static final class Value {

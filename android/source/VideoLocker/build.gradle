@@ -112,10 +112,18 @@ project.ext.edx.projectDir = projectDir.path
 
 try {
     apply from: projectDir.path + '/edx.properties'
-    apply from: projectDir.path + '/' + (edx.dir + '/' + 'edx.properties')
 }
 catch(GradleException e) {
     println "Could not load edx.properties, using default configuration."
+}
+
+def configPath = projectDir.path + '/' + (edx.dir + '/' + 'edx.properties') 
+try {
+    apply from: configPath 
+}
+catch(GradleException e) {
+    println "Configuration in " + configPath + " is malformed."
+    throw new GradleException(e);
 }
 
 dependencies {
@@ -123,7 +131,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.facebook.android:facebook-android-sdk:3.20.+'
+    compile 'com.facebook.android:facebook-android-sdk:3.22.+'
     compile 'com.google.android.gms:play-services:6.5.+'
 
     //Crashlytics Kit
@@ -159,19 +167,16 @@ android {
     }
 
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
-
-    lintOptions {
-        disable 'MissingTranslation'
-    }
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 42
-        versionName "1.0.02"
+        versionCode 43
+        versionName "1.0.04"
+
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
 
@@ -216,17 +221,13 @@ android {
     lintOptions {
         abortOnError false
         lintConfig file("lint.xml")
+        disable 'MissingTranslation'
     }
 
     productFlavors {
         prod {
             def config = edx.loadConfig()
             ext.enableCrashlytics = config.get('FABRIC_KEY') != null
-
-            versionCode 42
-            versionName '1.0.04'
-            minSdkVersion 14
-            targetSdkVersion 21
         }
     }
 
