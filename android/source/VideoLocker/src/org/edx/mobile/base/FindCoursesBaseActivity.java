@@ -17,11 +17,14 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 public class FindCoursesBaseActivity extends BaseFragmentActivity implements URLInterceptorWebViewClient.IActionListener {
 
     private View offlineBar;
+    private WebView webview;
+    private boolean isWebViewLoaded;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
+        webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
@@ -36,22 +39,29 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     }
 
     private void setupWebView() {
-        WebView webview = (WebView) findViewById(R.id.webview);
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
-        client.setActionListener(this);
+        if(webview!=null){
+            isWebViewLoaded = false;
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
+            client.setActionListener(this);
+        }
     }
 
     @Override
     protected void onOnline() {
         offlineBar.setVisibility(View.GONE);
-        hideOfflineMessage();
-        invalidateOptionsMenu();
+        if(isWebViewLoaded){
+            hideOfflineMessage();
+            invalidateOptionsMenu();
+        }
     }
 
     @Override
     protected void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
-        showOfflineMessage();
+        //If webview is not loaded, then show the offline mode message
+        if(isWebViewLoaded) {
+            showOfflineMessage();
+        }
         hideLoadingProgress();
         invalidateOptionsMenu();
     }
@@ -86,6 +96,10 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
      * This function shows the offline mode message
      */
     private void showOfflineMessage(){
+
+        if(webview!=null){
+            webview.setVisibility(View.GONE);
+        }
         ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
         if(offlineModeTv!=null){
             offlineModeTv.setVisibility(View.VISIBLE);
@@ -96,6 +110,9 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
      * This function hides the offline mode message
      */
     private void hideOfflineMessage(){
+        if(webview!=null){
+            webview.setVisibility(View.VISIBLE);
+        }
         ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
         if(offlineModeTv!=null){
             offlineModeTv.setVisibility(View.GONE);
