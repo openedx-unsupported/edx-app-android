@@ -131,7 +131,7 @@ class IDownloadManagerImpl implements IDownloadManager {
         Cursor c = dm.query(query);
         if (c.moveToFirst()) {
             int count = c.getCount();
-            int aggrPercent = 0;
+            float aggrPercent = 0;
             do {
                 long downloaded = c
                     .getLong(c
@@ -139,17 +139,39 @@ class IDownloadManagerImpl implements IDownloadManager {
                 long size = c.getLong(c
                     .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 
-                aggrPercent += (int) (100 * downloaded / size);
+                aggrPercent += (100f * downloaded / size);
             } while(c.moveToNext());
             
             c.close();
             
-            int average = aggrPercent / count;
+            int average = (int) (aggrPercent / count);
             return average;
         }
         c.close();
         
         return 0;
+    }
+
+    @Override
+    public boolean isDownloadComplete(long dmid) {
+        //Need to check first if the download manager service is enabled
+        if(!isDownloadManagerEnabled())
+            return false;
+
+        Query query = new Query();
+        query.setFilterById(dmid);
+
+        Cursor c = dm.query(query);
+        if (c.moveToFirst()) {
+            int status = c.getInt(c
+                    .getColumnIndex(DownloadManager.COLUMN_STATUS));
+            c.close();
+
+            return (status == DownloadManager.STATUS_SUCCESSFUL);
+        }
+        c.close();
+
+        return false;
     }
 
     @Override

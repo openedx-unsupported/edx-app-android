@@ -9,6 +9,7 @@ import com.newrelic.agent.android.NewRelic;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.images.ImageCacheManager;
@@ -21,10 +22,6 @@ import io.fabric.sdk.android.Fabric;
  * 
  */
 public class MainApplication extends Application {
-    
-    private static int DISK_IMAGECACHE_SIZE = 1024*1024*10;
-    private static CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
-    private static int DISK_IMAGECACHE_QUALITY = 100;  //PNG is lossless so quality is ignored but must be provided
     
     @Override
     public void onCreate() {
@@ -40,18 +37,22 @@ public class MainApplication extends Application {
         // initialize logger
         Logger.init(this.getApplicationContext());
 
+        // setup environment
         Environment env = new Environment();
         env.setupEnvironment(this.getApplicationContext());
 
-        RequestManager.init(this);
+        // setup image cache
         createImageCache();
 
         // initialize SegmentIO, empty writeKey is handled in SegmentTracker
         SegmentFactory.makeInstance(this);
 
+        // initialize Fabric
         if(Config.getInstance().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
+
+        // initialize NewRelic with crash reporting disabled
         if(Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
@@ -63,6 +64,9 @@ public class MainApplication extends Application {
         if (Config.getInstance().getFacebookAppId() != null) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
+
+        // try repair of download data if app version is updated
+        new Storage(this).repairDownloadCompletionData();
     }
     
     /**
@@ -70,6 +74,12 @@ public class MainApplication extends Application {
      * Change to Disk for a Disk based LRU implementation.
      */
     private void createImageCache(){
+        int DISK_IMAGECACHE_SIZE = 1024*1024*10;
+        CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
+        //PNG is lossless so quality is ignored but must be provided
+        int DISK_IMAGECACHE_QUALITY = 100;
+
+        RequestManager.init(this);
         ImageCacheManager.getInstance().init(this,
                 this.getPackageCodePath()
                 , DISK_IMAGECACHE_SIZE
@@ -77,5 +87,4 @@ public class MainApplication extends Application {
                 , DISK_IMAGECACHE_QUALITY
                 , ImageCacheManager.CacheType.MEMORY);
     }
-    
 }
