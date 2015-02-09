@@ -15,6 +15,7 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
@@ -160,6 +161,11 @@ public class LoginActivity extends BaseFragmentActivity {
         
         // enable login buttons at launch
         setLoginBtnEnabled();
+
+        // check if third party traffic is enabled
+        if ( !Config.getInstance().getThirdPartyTrafficEnabled()) {
+            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+        }
     }
     
     @Override
