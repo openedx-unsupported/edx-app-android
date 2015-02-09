@@ -243,18 +243,6 @@ public class CourseDetailTabActivity extends BaseFragmentActivity {
         }
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-
-        if(checkBox_menuItem!=null){
-            checkBox_menuItem.setVisible(false);
-        }
-        return true;
-    }
-
     @Override
     protected void onOffline() {
         AppConstants.offline_flag = true;
