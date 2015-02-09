@@ -32,9 +32,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -54,7 +54,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private RelativeLayout loginButtonLayout;
     public String emailStr;
     private TextView forgotPassword_tv;
-    private TextView signupTv, eulaTv;
+    private TextView eulaTv;
     private ISocial google, facebook;
     
     @Override
@@ -109,19 +109,6 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         });
 
-        signupTv = (TextView) findViewById(R.id.new_user_tv);
-        signupTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    segIO.trackUserDoesNotHaveAccount();
-                }catch(Exception e){
-                    logger.error(e);
-                }
-                showNewUserDialog();
-            }
-        });
-
         eulaTv = (TextView) findViewById(R.id.end_user_agreement_tv);
         eulaTv.setOnClickListener(new OnClickListener() {
             @Override
@@ -136,30 +123,23 @@ public class LoginActivity extends BaseFragmentActivity {
             logger.error(e);
         }
 
-        final View activityRootView = findViewById(R.id.root_view);
-        try{
-            activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    try{
-                        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                        if (heightDiff > 100) {
-                        // if more than 100 pixels, its probably a keyboard, hence hide the bottom layout.
-                            hideBottomLayout();
-                        }else{
-                            showBottomLayout();
-                        }
-                    }catch(Exception e){
-                        logger.error(e);
-                    }
-                }
-            });
-        }catch(Exception e){
-            logger.error(e);
-        }
-        
         // enable login buttons at launch
         setLoginBtnEnabled();
+
+        ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
+        if(closeButton!=null){
+            closeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
+
+        TextView customTitle = (TextView) findViewById(R.id.activity_title);
+        if(customTitle!=null){
+            customTitle.setText(getString(R.string.login_title));
+        }
     }
     
     @Override
@@ -254,7 +234,6 @@ public class LoginActivity extends BaseFragmentActivity {
                 email_et.setEnabled(false);
                 password_et.setEnabled(false);
                 forgotPassword_tv.setEnabled(false);
-                signupTv.setEnabled(false);
                 eulaTv.setEnabled(false);
 
                 clearDialogs();
@@ -349,11 +328,6 @@ public class LoginActivity extends BaseFragmentActivity {
                 getString(R.string.end_user_title));
     }
     
-    public void showNewUserDialog() {
-        clearDialogs();
-        showWebDialog(getResources().getString(R.string.new_user_file_name), false, null);
-    }
-
     public void showResetFailure(String text) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.title_reset_password_failed));
@@ -379,7 +353,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnDisabled() {
         blockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
+        loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
         loginButtonLayout.setEnabled(false);
         login_tv.setText(getString(R.string.signing_in));
         
@@ -392,7 +366,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnEnabled() {
         unblockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_default);
+        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
         loginButtonLayout.setEnabled(true);
         login_tv.setText(getString(R.string.login));
         
@@ -454,28 +428,6 @@ public class LoginActivity extends BaseFragmentActivity {
         return true;
     }
 
-    private void showBottomLayout(){
-        try{
-            View bottomLayout = findViewById(R.id.bottom_layout);
-            if(bottomLayout!=null){
-                bottomLayout.setVisibility(View.VISIBLE);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    private void hideBottomLayout(){
-        try{
-            View bottomLayout = findViewById(R.id.bottom_layout);
-            if(bottomLayout!=null){
-                bottomLayout.setVisibility(View.GONE);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-    
     private ISocial.Callback googleCallback = new ISocial.Callback() {
         
         @Override
@@ -545,7 +497,6 @@ public class LoginActivity extends BaseFragmentActivity {
         email_et.setEnabled(true);
         password_et.setEnabled(true);
         forgotPassword_tv.setEnabled(true);
-        signupTv.setEnabled(true);
         eulaTv.setEnabled(true);
 
         // handle if this is a LoginException

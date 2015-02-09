@@ -19,6 +19,7 @@
     <string name="sign_up">https://courses.edx.org/register</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">edX End User Licensing Agreement</string>
+    <string name="login_title">Sign in to edX</string>
 
     <!-- Navigation Drawer Labels -->
     <string name="name_default">Morgank</string>

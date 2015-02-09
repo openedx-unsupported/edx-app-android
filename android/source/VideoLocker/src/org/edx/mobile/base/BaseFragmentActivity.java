@@ -34,7 +34,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
