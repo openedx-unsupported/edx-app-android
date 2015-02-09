@@ -30,23 +30,11 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<Long> getAllDownloadingVideosDmidList(final DataCallback<Long[]> callback){
+    public List<Long> getAllDownloadingVideosDmidList(final DataCallback<List<Long>> callback){
         DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,DbStructure.Table.DOWNLOADS, new String[]{DbStructure.Column.DM_ID},
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                 new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username}, null, Long.class);
-        op.setCallback(new DataCallback<List<Long>>() {
-
-            @Override
-            public void onResult(List<Long> list) {
-                Long[] dmids = list.toArray(new Long[0]);
-                callback.sendResult(dmids);
-            }
-
-            @Override
-            public void onFail(Exception ex) {
-                callback.sendException(ex);
-            }
-        });
+        op.setCallback(callback);
         return enqueue(op);
     }
 

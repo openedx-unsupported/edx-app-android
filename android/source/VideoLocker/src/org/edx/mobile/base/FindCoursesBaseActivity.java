@@ -55,10 +55,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        //TODO - Remove checkbox code after the PR for removing checkbox is merged with master
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
         //Hide the download progress from Action bar
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         menuItem.setVisible(false);
