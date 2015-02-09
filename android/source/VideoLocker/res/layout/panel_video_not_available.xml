@@ -13,9 +13,4 @@
         android:text="@string/msg_video_not_available"
         android:textSize="15sp" />
 
-   <!--  <ETextView
-        style="@style/text_network_error"
-        android:text="@string/network_error_message"
-        android:layout_marginTop="5dp" /> -->
-
 </LinearLayout>
