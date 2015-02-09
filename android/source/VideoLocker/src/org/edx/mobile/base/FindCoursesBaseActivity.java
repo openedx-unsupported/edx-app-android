@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-public class FindCoursesBaseActivity extends BaseFragmentActivity {
+public class FindCoursesBaseActivity extends BaseFragmentActivity implements URLInterceptorWebViewClient.IActionListener {
 
     private View offlineBar;
 
@@ -28,6 +31,14 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity {
                 offlineBar.setVisibility(View.VISIBLE);
             }
         }
+
+        setupWebView();
+    }
+
+    private void setupWebView() {
+        WebView webview = (WebView) findViewById(R.id.webview);
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
+        client.setActionListener(this);
     }
 
     @Override
@@ -111,5 +122,15 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity {
         if(progressWheel!=null){
             progressWheel.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onClickCourseInfo(String pathId) {
+        Router.getInstance().showCourseInfo(this, pathId);
+    }
+
+    @Override
+    public void onClickEnroll(String courseId, boolean emailOptIn) {
+        // TODO: api call and go back to "My Courses" or "My Videos"
     }
 }

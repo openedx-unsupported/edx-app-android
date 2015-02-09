@@ -34,8 +34,9 @@ public class Router {
         sourceActivity.startActivity(findCoursesIntent);
     }
 
-    public void showCourseInfo(Activity sourceActivity) {
+    public void showCourseInfo(Activity sourceActivity, String pathId) {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
+        courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);
         sourceActivity.startActivity(courseInfoIntent);
     }
 
