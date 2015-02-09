@@ -128,7 +128,12 @@ public class LoginActivity extends BaseFragmentActivity {
 
         ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
         if(closeButton!=null){
-            closeButton.setOnClickListener(new HandleCloseButtonClick());
+            closeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);

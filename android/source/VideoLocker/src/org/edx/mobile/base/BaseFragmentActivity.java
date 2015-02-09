@@ -634,10 +634,4 @@ public class BaseFragmentActivity extends FragmentActivity {
             webViewFragment.show(getSupportFragmentManager(), "dialog");
         }
     }
-
-    public class HandleCloseButtonClick implements OnClickListener{
-        public void onClick(View arg0) {
-            finish();
-        }
-    }
 }
