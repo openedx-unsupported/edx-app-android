@@ -14,11 +14,11 @@ This project is meant to be built using Android Studio. It can also be built fro
 
 1. Check out the source code: ::
 
-	git clone https://github.com/edx/edx-mobile-android
+	git clone https://github.com/edx/edx-app-android
 
 2. Open Android Studio and choose **Open an Existing Android Studio Project**
 
-3. Choose ``edx-mobile-android/android/source``.
+3. Choose ``edx-app-android/android/source``.
 
 4. Click the **Run** button.
 
@@ -39,9 +39,9 @@ Setup
 -----
 To use a custom configuration in place of the default configuration, you will need to complete these tasks:
 
-1. Create your own configuration directory somewhere else on the file system. For example create ``my_config`` as a sibling of the ``edx-mobile-android`` repository.
+1. Create your own configuration directory somewhere else on the file system. For example create ``my_config`` as a sibling of the ``edx-app-android`` repository.
 
-2. Create an ``edx.properties`` file inside the ``android/source/VideoLocker`` directory of ``edx-mobile-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory. For example, if I stored my configuration side by side with the ``edx-mobile-android`` repository at ``../../../../my_config`` then I'd have the following ``edx.properties``:
+2. Create an ``edx.properties`` file inside the ``android/source/VideoLocker`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at ``../../../../my_config`` then I'd have the following ``edx.properties``:
 
 ::
 
