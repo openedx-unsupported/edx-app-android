@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -19,6 +20,7 @@ public class MediaConsentUtils {
     public static final String DIALOG_TAG_CONFIRM_MOBILE_DATA = TAG + ".confirm";
     public static final String DIALOG_TAG_CONFIRM_WIFI_OFF = TAG + ".wifioff";
     public static final String DIALOG_TAG_CONFIRM_LEAVING_APP = TAG + ".leaving";
+    private static final Logger logger = new Logger(MediaConsentUtils.class);
 
     /**
      * Shows any needed dialogs to the user when consent is required.
@@ -38,8 +40,7 @@ public class MediaConsentUtils {
         } else if (connectedMobile && showOnDataDialog) {
             showOnlyAllowingWifiDialog(activity, consentCallback);
         } else {
-            Log.e(VideoListFragment.class.getCanonicalName(),
-                    "No appropriate dialog to show. Cannot start video");
+            logger.warn("No appropriate dialog to show. Cannot start video");
         }
     }
 

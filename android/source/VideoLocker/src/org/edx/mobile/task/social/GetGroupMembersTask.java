@@ -26,7 +26,7 @@ public abstract class GetGroupMembersTask extends Task<List<SocialMember>> {
         try {
             return api.getGroupMembers(false, groupId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
             onException(e);
         }
         return null;

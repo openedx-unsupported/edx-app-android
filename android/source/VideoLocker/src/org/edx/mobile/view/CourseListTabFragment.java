@@ -93,7 +93,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
             segIO = SegmentFactory.getInstance();
             segIO.screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         fetchFriendsObserver = new FetchFriendsReceiver();
@@ -280,7 +280,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                     try {
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                     BrowserUtil.open(getActivity(), url);
                 }
@@ -294,7 +294,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                 }
             });
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

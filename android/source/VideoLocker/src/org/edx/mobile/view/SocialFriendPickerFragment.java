@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -51,6 +52,8 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
     private static final String FRIEND_LIST_MODELS = TAG + ".models";
     private static final String FRIEND_LIST_STATES = TAG + ".states";
     private static final String FRIEND_LIST_ALREADY_IN_GROUP = TAG + ".alreadyInGroup";
+
+    private final Logger logger = new Logger(SocialFriendPickerFragment.class);
 
     private SocialProvider friendProvider;
     private FriendListAdapter friendListAdapter;
@@ -85,7 +88,7 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
         try{
             segIO.screenViewsTracking("Social Friend Picker");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }

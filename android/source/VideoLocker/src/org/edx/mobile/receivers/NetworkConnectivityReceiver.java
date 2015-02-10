@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -23,6 +24,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
 
     private static final String TAG = NetworkConnectivityReceiver.class.getSimpleName();
 
+    private static final Logger logger = new Logger(NetworkConnectivityReceiver.class);
     private static boolean isFirstStart = false;
 
     @Override
@@ -34,7 +36,7 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
         boolean isConnected = activeNetwork != null && activeNetwork.isAvailable();
 
         if(isConnected) {
-            Log.i(TAG, "Have reconnected, testing download speed.");
+            logger.debug("Have reconnected, testing download speed.");
             //start an instance of the download speed service so it can run in the background
             Intent speedTestIntent = new Intent(context, DownloadSpeedService.class);
             String downloadEndpoint = context.getString(R.string.speed_test_url);

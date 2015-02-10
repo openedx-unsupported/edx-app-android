@@ -38,7 +38,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_friends_courses));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -56,7 +56,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
             startActivity(friendsInGroupIntent);
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
     }

@@ -132,7 +132,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             try {
                 savedAnnouncements = savedInstanceState.getParcelableArrayList(ANNOUNCEMENTS);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
         }
@@ -201,7 +201,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
     }
@@ -262,7 +262,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     populateAnnouncements(savedAnnouncements);
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                     showEmptyAnnouncementMessage();
                 }
             }
@@ -380,7 +380,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 getView().findViewById(R.id.no_announcement_tv).setVisibility(View.VISIBLE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -391,7 +391,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 getView().findViewById(R.id.no_announcement_tv).setVisibility(View.GONE);
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -428,7 +428,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                         segIO.courseShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
 
                     }catch(Exception e){
-                        e.printStackTrace();
+                        logger.error(e);
                     }
 
                     uiHelper.trackPendingDialogCall(dialog.present());
@@ -449,7 +449,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 try{
                     segIO.courseGroupAccessed(courseData.getCourse().getId());
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
 
                 Intent groupLaunchIntent =  SocialUtils.makeGroupLaunchIntent(getActivity(), String.valueOf(courseData.getCourse().getCourseGroup(SocialUtils.SocialType.FACEBOOK)), SocialUtils.SocialType.FACEBOOK);

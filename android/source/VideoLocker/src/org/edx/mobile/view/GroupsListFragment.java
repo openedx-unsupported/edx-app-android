@@ -23,6 +23,7 @@ import com.facebook.widget.LoginButton;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -52,6 +53,8 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
     private static final int REQUEST_ADD_FRIENDS = 0x0000eaea;
 
     private static final int REQUEST_GROUP_SUMMARY = 0x000efeb;
+
+    private final Logger logger = new Logger(GroupsListFragment.class);
 
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeLayout;
@@ -95,7 +98,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
         try{
             segIO.screenViewsTracking("Group List");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -235,7 +238,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
                             try{
                                 segIO.groupCreated(groupID, friends.size());
                             }catch(Exception e){
-                                e.printStackTrace();
+                                logger.error(e);
                             }
 
                             refreshAfterGroupCreate(getString(R.string.group_created));

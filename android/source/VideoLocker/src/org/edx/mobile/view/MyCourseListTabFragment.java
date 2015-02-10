@@ -35,7 +35,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -52,7 +52,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
             startActivity(courseDetail);
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
     }
 

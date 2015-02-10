@@ -623,7 +623,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -644,7 +644,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -665,7 +665,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -687,7 +687,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -709,7 +709,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -731,7 +731,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -753,7 +753,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -777,7 +777,7 @@ class ISegmentImpl implements ISegment {
 
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -799,7 +799,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 
@@ -820,7 +820,7 @@ class ISegmentImpl implements ISegment {
             return vEvent.properties;
 
         } catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
 

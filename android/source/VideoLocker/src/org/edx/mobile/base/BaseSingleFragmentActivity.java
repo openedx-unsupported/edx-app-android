@@ -27,7 +27,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
             try {
                 this.loadFirstFragment();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
 

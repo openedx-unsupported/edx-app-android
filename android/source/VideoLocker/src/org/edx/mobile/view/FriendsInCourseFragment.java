@@ -18,6 +18,7 @@ import com.facebook.Session;
 import org.edx.mobile.R;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -36,6 +37,8 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
     private static final String TAG = FriendsInCourseFragment.class.getCanonicalName();
     public static final String ARG_COURSE = TAG + ".argCourse";
     public static final String ARG_SHOW_COURSE_LINK = TAG + ".argShowCourseLink";
+
+    private final Logger logger = new Logger(FriendsInCourseFragment.class);
 
     private SimpleAdapter<SocialMember> adapter;
     private CourseEntry courseData;
@@ -68,7 +71,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
         try{
             segIO.screenViewsTracking("Friends In This Course");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }

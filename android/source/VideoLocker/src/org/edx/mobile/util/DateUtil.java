@@ -98,7 +98,7 @@ public class DateUtil {
             return formattedDate;
         } catch (Exception e) {
             //This will be removed when the PR for log changes is merged with master
-            e.printStackTrace();
+            logger.error(e);
             return null;
         }
     }

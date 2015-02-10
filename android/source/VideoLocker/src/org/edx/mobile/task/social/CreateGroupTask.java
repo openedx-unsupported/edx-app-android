@@ -31,7 +31,7 @@ public abstract class CreateGroupTask extends Task<Long> {
             return groupID;
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         return null;

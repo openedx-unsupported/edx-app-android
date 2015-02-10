@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import org.edx.mobile.http.Api;
+import org.edx.mobile.logger.Logger;
 
 /**
  * Created by yervant on 1/19/15.
@@ -17,6 +18,7 @@ public class CoursesVisibleLoader extends AsyncTaskLoader<AsyncTaskResult<Boolea
 
     public static final String KEY_SET_TO_VALUE = "key_set_to_value";
     public static final String KEY_GET_VALUE = "key_get_value";
+    private static final Logger logger = new Logger(CoursesVisibleLoader.class);
 
     public CoursesVisibleLoader(Context context, Bundle bundle){
         super(context);
@@ -47,7 +49,7 @@ public class CoursesVisibleLoader extends AsyncTaskLoader<AsyncTaskResult<Boolea
                 result.setEx(new IllegalArgumentException("Course sharing: either KEY_GET_VALUE or KEY_SET_TO_VALUE must be set."));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
             result.setEx(e);
         }
 

@@ -48,7 +48,7 @@ public class CourseHandoutFragment extends Fragment {
             segIO.screenViewsTracking(courseData.getCourse().getName() +
                     " - Handouts");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }

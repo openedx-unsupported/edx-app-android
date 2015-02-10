@@ -116,7 +116,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                 savedEntries = (ArrayList<SectionEntry>) savedInstanceState.getSerializable(SECTION_ENTRIES);
                 adapter.setItems(savedEntries);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
         }

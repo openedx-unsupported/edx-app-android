@@ -18,6 +18,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -28,6 +29,8 @@ import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 public class CertificateFragment extends Fragment {
+
+    private final Logger logger = new Logger(CertificateFragment.class);
 
     public WebView webview;
 
@@ -61,7 +64,7 @@ public class CertificateFragment extends Fragment {
         try{
             segIO.screenViewsTracking("Certificate");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -101,7 +104,7 @@ public class CertificateFragment extends Fragment {
                 try{
                     segIO.certificateShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
 
                 FacebookProvider fbProvider = new FacebookProvider();
@@ -133,7 +136,7 @@ public class CertificateFragment extends Fragment {
             webview.loadUrl(courseData.getCertificateURL());
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
         FacebookProvider fbProvider = new FacebookProvider();
 

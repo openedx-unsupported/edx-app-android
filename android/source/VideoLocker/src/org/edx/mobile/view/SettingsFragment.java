@@ -21,6 +21,7 @@ import com.facebook.widget.LoginButton;
 import org.edx.mobile.R;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesVisibleLoader;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -40,6 +41,8 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
     public static final String TAG = SettingsFragment.class.getCanonicalName();
     private static final int SHARE_LOADER_ID = 0x0000f0f0;
 
+    private final Logger logger = new Logger(SettingsFragment.class);
+
     private NetworkCheckDialogFragment newFragment;
     private UiLifecycleHelper uiHelper;
     private Switch wifiSwitch;
@@ -58,7 +61,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
         try{
             segIO.screenViewsTracking("Settings");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         PrefManager featurePrefManager = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
@@ -169,7 +172,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
         try{
             segIO.socialConnectionEvent(isLoggedIn, SocialUtils.Values.FACEBOOK);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -241,7 +244,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
                     wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false);
                     updateWifiSwitch();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
 
@@ -255,7 +258,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
 
                     updateWifiSwitch();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error(ex);
                 }
             }
         });
@@ -288,7 +291,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
                     try {
                         segIO.coursesVisibleToFriendsChange(isChecked);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
 
                     Bundle args = new Bundle();

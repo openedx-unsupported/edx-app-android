@@ -125,13 +125,13 @@ public class NetworkUtil {
         TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String carrierId = manager.getNetworkOperator();
 
-        Log.d(TAG, String.format("Carrier id: %s", carrierId));
+        logger.debug(String.format("Carrier id: %s", carrierId));
 
         List<String> zeroRatedCarriers = Config.getInstance().getZeroRating().getCarriers();
 
         for(String carrier : zeroRatedCarriers) {
             if (carrier.equalsIgnoreCase(carrierId)) {
-                Log.d(TAG, String.format("Is on zero rated carrier (ID): %s", carrierId));
+                logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
                 return true;
             }
         }
@@ -148,7 +148,7 @@ public class NetworkUtil {
 
         for(String carrier : socialDisabledCarriers) {
             if (carrier.equalsIgnoreCase(carrierId)) {
-                Log.d(TAG, "Social services disabled on this carrier.");
+                logger.debug("Social services disabled on this carrier.");
                 return true;
             }
         }

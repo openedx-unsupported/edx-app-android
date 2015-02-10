@@ -32,7 +32,7 @@ public abstract class InviteFriendsListToGroupTask extends Task<Void> {
 
 
         } catch(Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
         }
 
         return null;

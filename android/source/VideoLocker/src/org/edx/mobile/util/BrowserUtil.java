@@ -59,7 +59,7 @@ public class BrowserUtil {
     }
 
     private static void openInBrowser(FragmentActivity context, String url) {
-        Log.d(TAG, String.format("Clicking link to url: %s", url));
+        logger.debug(String.format("Clicking link to url: %s", url));
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);

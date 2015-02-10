@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -43,6 +44,8 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
     public static final String ARG_GROUP = TAG + ".group";
 
     public static final int RESULT_FRIEND_ADDED = 0X000ADDD;
+
+    private final Logger logger = new Logger(GroupSummaryFragment.class);
 
     private AddFloatingActionButton addButton;
     private ProgressBar progressBar;
@@ -76,7 +79,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
         try{
             segIO.screenViewsTracking("Group Summary - " + Long.toString(group.getId()));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
@@ -205,7 +208,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
                         try{
                             segIO.groupInvited(groupId, toInvite.size());
                         }catch(Exception e){
-                            e.printStackTrace();
+                            logger.error(e);
                         }
                         //
                         refresh();
@@ -241,7 +244,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
                 try{
                     segIO.gameGroupAccessed(group.getId(), group.getMembers().size());
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.error(e);
                 }
 
                 startActivity(SocialUtils.makeGroupLaunchIntent(getActivity(), Long.toString(group.getId()), SocialUtils.SocialType.FACEBOOK));

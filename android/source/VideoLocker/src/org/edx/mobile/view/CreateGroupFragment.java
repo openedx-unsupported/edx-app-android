@@ -22,6 +22,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.analytics.SegmentTracker;
@@ -41,6 +42,8 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
     public static final String RESULT_FRIENDS = TAG + "result.friends";
     public static final String RESULT_DESC = TAG + "result.desc";
     public static final String RESULT_NAME = TAG + "result.name";
+
+    private final Logger logger = new Logger(CreateGroupFragment.class);
 
     private EditText editTextName;
     private EditText editTextDesc;
@@ -141,7 +144,7 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
         try{
             segIO.screenViewsTracking("Create Games Group");
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }

@@ -786,7 +786,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-            Log.d("Api", urlWithAppendedParams);
+           logger.debug(urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
@@ -834,7 +834,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug(urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
@@ -949,7 +949,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-            Log.d("Api", urlWithAppendedParams);
+            logger.debug(urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);

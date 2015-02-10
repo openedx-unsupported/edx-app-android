@@ -13,6 +13,7 @@ import org.edx.mobile.logger.Logger;
 public class UiUtil {
 
     private static final String TAG = UiUtil.class.getCanonicalName();
+    private static final Logger logger = new Logger(UiUtil.class);
 
     public static void animateLayouts(View view){
         if (view == null) {
@@ -34,7 +35,7 @@ public class UiUtil {
 
     public static void showMessage(View root, String message){
         if (root == null) {
-            Log.w(TAG, "cannot show message, no views available");
+            logger.warn("cannot show message, no views available");
             return;
         }
         TextView downloadMessageTv = (TextView) root.findViewById(R.id.downloadMessage);
@@ -42,7 +43,7 @@ public class UiUtil {
             downloadMessageTv.setText(message);
             animateLayouts(downloadMessageTv);
         } else {
-            Log.w(TAG, "view downloadMessage not found");
+            logger.warn("view downloadMessage not found");
         }
     }
 
@@ -51,27 +52,27 @@ public class UiUtil {
      */
     public static void showOfflineAccessMessage(View root) {
         if (root == null) {
-            Log.w(TAG, "cannot show message, no views available");
+            logger.warn("cannot show message, no views available");
             return;
         }
         try {
             animateLayouts(root.findViewById(R.id.offline_access_panel));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
     //Hide the offline access message
     public static void hideOfflineAccessMessage(View root) {
         if (root == null) {
-            Log.w(TAG, "cannot show message, no views available");
+            logger.warn("cannot show message, no views available");
             return;
         }
         View v = root.findViewById(R.id.offline_access_panel);
         if (v != null) {
             v.setVisibility(View.GONE);
         } else {
-            Log.w(TAG, "cannot hide message, cannot find offline_access_panel");
+            logger.warn("cannot hide message, cannot find offline_access_panel");
         }
     }
 }

@@ -19,6 +19,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.model.ProgressReport;
 import org.edx.mobile.module.analytics.ISegment;
@@ -53,6 +54,8 @@ public class DownloadSpeedService extends Service {
 
     private int DELAY_IN_MILLISECONDS = 5000;
 
+    private static final Logger logger = new Logger(DownloadSpeedService.class);
+
     private ISegment segIO;
     SpeedTestHandler messageHandler;
 
@@ -71,7 +74,7 @@ public class DownloadSpeedService extends Service {
                 msg.what = RUN_SPEED_TEST_MESSAGE;
                 messageHandler.sendMessage(msg);
             } else {
-                Log.e(TAG, "missing file description");
+                logger.warn("missing file description");
             }
         }
         return START_NOT_STICKY;
@@ -137,7 +140,7 @@ public class DownloadSpeedService extends Service {
 
             }
         }catch (ConnectTimeoutException e){
-            e.printStackTrace();
+            logger.error(e);
 
             //If it times out, set a low value for download speed
             setCurrentDownloadSpeed(0.01f);
@@ -145,7 +148,7 @@ public class DownloadSpeedService extends Service {
             return;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
             sendErrorBroadcast();
             return;
 
@@ -158,7 +161,7 @@ public class DownloadSpeedService extends Service {
 
         setCurrentDownloadSpeed(downloadSpeedKps);
 
-        Log.d(TAG, String.format("+++Speed: %.1fKbps   Time: %.2fsec", downloadSpeedKps, seconds));
+        logger.debug(String.format("+++Speed: %.1fKbps   Time: %.2fsec", downloadSpeedKps, seconds));
 
         Intent intent = new Intent();
         intent.setAction(ACTION_DOWNLOAD_DONE);
@@ -175,7 +178,7 @@ public class DownloadSpeedService extends Service {
             }
 
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e);
         }
 
         sendBroadcast(intent);
