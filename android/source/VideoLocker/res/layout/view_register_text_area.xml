@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <org.edx.mobile.view.custom.EEditText xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/text_area_style"
+        android:textColorHint="@color/hint_grey_text" />
+
+    <org.edx.mobile.view.custom.ETextView
+        style="@style/registration_error_message"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.ETextView
+        style="@style/registration_instruction_message"
+        android:visibility="gone" />
+</LinearLayout>

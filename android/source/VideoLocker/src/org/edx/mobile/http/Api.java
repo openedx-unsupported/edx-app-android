@@ -22,6 +22,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
@@ -35,6 +36,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -684,7 +686,6 @@ public class Api {
     }
 
     /**
->>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -756,7 +757,6 @@ public class Api {
     }
 
     /**
->>>>>>> master
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception
@@ -936,6 +936,29 @@ public class Api {
 
         Gson gson = new GsonBuilder().create();
         SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
+
+        return res;
+    }
+
+    /**
+     * Creates new account.
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
+    public RegisterResponse register(Bundle parameters)
+            throws Exception {
+        String url = getBaseUrl() + "/create_account";
+
+        String json = http.post(url, parameters, null);
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("Register response= " + json);
+
+        Gson gson = new GsonBuilder().create();
+        RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
 
         return res;
     }

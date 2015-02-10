@@ -46,4 +46,18 @@ public class Router {
         sourceActivity.startActivity(myVideosIntent);
     }
 
+    public void showLaunchScreen(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showLogin(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showRegistration(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
 }
