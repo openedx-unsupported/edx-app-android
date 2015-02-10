@@ -939,4 +939,47 @@ public class Api {
 
         return res;
     }
+
+    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+
+        String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
+        logger.debug("POST url for enrolling in a Course: " + enrollUrl);
+
+        JSONObject postBody = new JSONObject();
+        JSONObject courseIdObject = new JSONObject();
+        courseIdObject.put("course_id", courseId);
+        postBody.put("course_details", courseIdObject);
+
+        logger.debug("POST body for Enrolling in a course: " + postBody.toString());
+        String json = http.post(enrollUrl, postBody.toString(), getAuthHeaders(), false);
+
+        if (json != null && !json.isEmpty()) {
+            JSONObject resultJson = new JSONObject(json);
+            if (resultJson.has("error")) {
+                return false;
+            }
+        }
+
+        logger.debug("Response of Enroll in a course= " + json);
+
+        String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
+        logger.debug("POST url for preference in a Course: " + preferenceUrl);
+        JSONObject optInPostBody = new JSONObject();
+        optInPostBody.put("course_id", courseId);
+        optInPostBody.put("email_opt_in", email_opt_in);
+
+        logger.debug("POST body for Preference in a course: " + optInPostBody.toString());
+        String optInJson = http.post(preferenceUrl, optInPostBody.toString(), getAuthHeaders(), false);
+        logger.debug("Response of optIn server call= " + optInJson);
+        if (optInJson != null && !optInJson.isEmpty()) {
+            // validate optInJson
+            JSONObject resultJson = new JSONObject(optInJson);
+            if (resultJson.has("error")) {
+                return false;
+            }else{
+                return true;
+            }
+        }
+        return false;
+    }
 }

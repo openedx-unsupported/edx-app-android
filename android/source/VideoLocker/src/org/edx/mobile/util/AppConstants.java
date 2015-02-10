@@ -11,4 +11,5 @@ public class AppConstants {
     public static final String VIDEOLIST_BACK_PRESSED = "offline_video_back_pressed";
 
     public static final double MILLISECONDS_PER_SECOND = 1000.00;
+    public static final String ENROLL_CLICKED = "course_enroll_clicked";
 }

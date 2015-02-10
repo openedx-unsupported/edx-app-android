@@ -10,6 +10,7 @@ import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.util.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,10 @@ public class ApiTests extends BaseTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        Environment env = new Environment();
+        env.setupEnvironment(getInstrumentation().getTargetContext());
+
         login();
     }
     
@@ -114,7 +119,7 @@ public class ApiTests extends BaseTestCase {
     
     public void login() throws Exception {
         Api api = new Api(getInstrumentation().getTargetContext());
-        AuthResponse res = api.auth("user@edx.org", "*****");
+        AuthResponse res = api.auth("user@edx.org", "****");
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
@@ -138,5 +143,18 @@ public class ApiTests extends BaseTestCase {
         for (AnnouncementsModel r : res) {
             print(r.getDate());
         }
+    }
+
+    public void testEnrollInACourse() throws Exception {
+        print("test: Enroll in a course");
+
+        Api api = new Api(getInstrumentation().getTargetContext());
+
+        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
+        String courseId = e.getCourse().getId();
+        boolean success = api.enrollInACourse(courseId, true);
+        assertTrue(success);
+        print("success");
+        print("test: finished: reset password");
     }
 }

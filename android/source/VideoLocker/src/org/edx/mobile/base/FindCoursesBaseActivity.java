@@ -1,13 +1,19 @@
 package org.edx.mobile.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
+import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
@@ -19,6 +25,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     private View offlineBar;
     private WebView webview;
     private boolean isWebViewLoaded;
+    private ProgressBar progressWheel;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -26,6 +33,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
 
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
+        progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
             invalidateOptionsMenu();
@@ -35,7 +43,21 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
             }
         }
 
+
         setupWebView();
+        enableEnrollCallback();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setTitle(getString(R.string.find_courses_title));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disableEnrollCallback();
     }
 
     private void setupWebView() {
@@ -64,12 +86,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
         }
         hideLoadingProgress();
         invalidateOptionsMenu();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setTitle(getString(R.string.find_courses_title));
     }
 
     @Override
@@ -124,7 +140,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
      * Show progress wheel while loading the web page
      */
     private void showLoadingProgress(){
-        ProgressBar progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
         if(progressWheel!=null){
             progressWheel.setVisibility(View.VISIBLE);
         }
@@ -135,7 +150,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
      * Hide progress wheel after the web page completes loading
      */
     private void hideLoadingProgress(){
-        ProgressBar progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
         if(progressWheel!=null){
             progressWheel.setVisibility(View.GONE);
         }
@@ -143,12 +157,35 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
 
     @Override
     public void onClickCourseInfo(String pathId) {
+        logger.debug("PathId" +pathId);
         Router.getInstance().showCourseInfo(this, pathId);
     }
 
     @Override
     public void onClickEnroll(String courseId, boolean emailOptIn) {
-        // TODO: api call and go back to "My Courses" or "My Videos"
+        logger.debug("CourseId - "+courseId);
+        logger.debug("Email option - "+emailOptIn);
+        EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this) {
+            @Override
+            public void onFinish(Boolean result) {
+                if(result!=null && result){
+                    logger.debug("Enrollment successful");
+                    //If the course is successfully enrolled, send a broadcast
+                    // to close the FindCoursesActivity
+                    Intent intent = new Intent();
+                    intent.setAction(AppConstants.ENROLL_CLICKED);
+                    sendBroadcast(intent);
+                }
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                logger.debug("Error during enroll api call");
+            }
+        };
+        enrollForCourseTask.setProgressDialog(progressWheel);
+        enrollForCourseTask.execute(courseId,emailOptIn);
     }
 
     @Override
@@ -159,5 +196,25 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     @Override
     public void onPageFinished() {
         hideLoadingProgress();
+    }
+
+    //Broadcast Receiver to notify all activities to finish if user logs out
+    private BroadcastReceiver courseEnrollReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
+    protected void enableEnrollCallback() {
+        // register for enroll click listener
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AppConstants.ENROLL_CLICKED);
+        registerReceiver(courseEnrollReceiver, filter);
+    }
+
+    protected void disableEnrollCallback() {
+        // un-register enrollReceiver
+        unregisterReceiver(courseEnrollReceiver);
     }
 }

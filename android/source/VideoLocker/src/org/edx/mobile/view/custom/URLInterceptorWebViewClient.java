@@ -9,6 +9,9 @@ import android.webkit.WebViewClient;
 
 import org.edx.mobile.logger.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by rohan on 2/2/15.
  *
@@ -20,8 +23,10 @@ import org.edx.mobile.logger.Logger;
 public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
-    private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
-    private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    //private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
+    public static final String URL_TYPE_ENROLL         = "edxapp://enroll/";
+    //private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
     private static final String PARAM_COURSE_ID         = "course_id";
     private static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
     private static final String PARAM_PATH_ID           = "path_id";
@@ -121,9 +126,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     boolean isCourseInfoLink(String strUrl) {
         try {
+            logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-                Uri uri = Uri.parse(strUrl);
-                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+//                Uri uri = Uri.parse(strUrl);
+//                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+
+                String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
+                if (pathId.isEmpty()) {
+                    return false;
+                }
 
                 if (actionListener != null) {
                     actionListener.onClickCourseInfo(pathId);
@@ -169,9 +180,20 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     boolean isEnrollLink(String strUrl) {
         try {
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                Uri uri = Uri.parse(strUrl);
+                /*Uri uri = Uri.parse(strUrl);
                 String courseId = uri.getQueryParameter(PARAM_COURSE_ID);
-                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));
+                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));*/
+
+                String[] params = strUrl.replace(URL_TYPE_ENROLL, "").split("&");
+
+                Map<String, String> queryParams = new HashMap<>();
+                for (String q : params) {
+                    String[] parts = q.split("=");
+                    queryParams.put(parts[0], parts[1]);
+                }
+
+                String courseId = queryParams.get("course_id");
+                boolean emailOptIn = Boolean.parseBoolean(queryParams.get("email_opt_in"));
 
                 if (actionListener != null) {
                     actionListener.onClickEnroll(courseId, emailOptIn);
