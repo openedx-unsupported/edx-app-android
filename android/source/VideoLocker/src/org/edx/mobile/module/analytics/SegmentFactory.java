@@ -32,7 +32,7 @@ public class SegmentFactory {
      */
     public static void makeInstance(Context context) {
         if (sInstance == null) {
-            if (Config.getInstance().getThirdPartyTrafficEnabled()) {
+            if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()) {
                 sInstance = new ISegmentImpl(context);
             }
             else {
