@@ -86,6 +86,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        super.onReceivedError(view, errorCode, description, failingUrl);
+        if (actionListener != null) {
+            actionListener.onPageLoadError();
+        }
+    }
+
+    @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         try {
             if (actionListener == null) {
@@ -114,6 +122,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         }
         return super.shouldOverrideUrlLoading(view, url);
     }
+
+
 
     /**
      * Checks if the URL pattern matches with that of COURSE_INFO URL.
@@ -239,5 +249,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * Callback that indicates page loading has finished.
          */
         void onPageFinished();
+
+        /**
+         * Callback that indicates error during page load.
+         */
+        void onPageLoadError();
     }
 }

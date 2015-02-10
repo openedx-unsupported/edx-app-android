@@ -885,15 +885,18 @@ public class Api {
         String json = http.post(enrollUrl, postBody.toString(), getAuthHeaders(), false);
 
         if (json != null && !json.isEmpty()) {
+            logger.debug("Response of Enroll in a course= " + json);
             JSONObject resultJson = new JSONObject(json);
             if (resultJson.has("error")) {
                 return false;
+            }else {
+                return true;
             }
         }
 
-        logger.debug("Response of Enroll in a course= " + json);
-
-        String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
+        return false;
+        //The following commented code will be removed once the optIn endpoint is resolved
+        /*String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
         logger.debug("POST url for preference in a Course: " + preferenceUrl);
         JSONObject optInPostBody = new JSONObject();
         optInPostBody.put("course_id", courseId);
@@ -910,7 +913,6 @@ public class Api {
             }else{
                 return true;
             }
-        }
-        return false;
+        }*/
     }
 }

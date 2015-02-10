@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,12 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
+import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
+import org.edx.mobile.view.dialog.IDialogCallback;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FindCoursesBaseActivity extends BaseFragmentActivity implements URLInterceptorWebViewClient.IActionListener {
 
@@ -42,7 +49,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
                 offlineBar.setVisibility(View.VISIBLE);
             }
         }
-
 
         setupWebView();
         enableEnrollCallback();
@@ -74,6 +80,9 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
         if(isWebViewLoaded){
             hideOfflineMessage();
             invalidateOptionsMenu();
+        }else{
+            setupWebView();
+            hideOfflineMessage();
         }
     }
 
@@ -81,7 +90,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     protected void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
         //If webview is not loaded, then show the offline mode message
-        if(isWebViewLoaded) {
+        if(!isWebViewLoaded) {
             showOfflineMessage();
         }
         hideLoadingProgress();
@@ -162,7 +171,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     }
 
     @Override
-    public void onClickEnroll(String courseId, boolean emailOptIn) {
+    public void onClickEnroll(final String courseId, final boolean emailOptIn) {
         logger.debug("CourseId - "+courseId);
         logger.debug("Email option - "+emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this) {
@@ -175,6 +184,8 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
                     Intent intent = new Intent();
                     intent.setAction(AppConstants.ENROLL_CLICKED);
                     sendBroadcast(intent);
+                }else{
+                    showEnrollErrorMessage(courseId,emailOptIn);
                 }
             }
 
@@ -182,6 +193,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
             public void onException(Exception ex) {
                 logger.error(ex);
                 logger.debug("Error during enroll api call");
+                showEnrollErrorMessage(courseId,emailOptIn);
             }
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
@@ -191,11 +203,13 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     @Override
     public void onPageStarted() {
         showLoadingProgress();
+        isWebViewLoaded = false;
     }
 
     @Override
     public void onPageFinished() {
         hideLoadingProgress();
+        isWebViewLoaded = true;
     }
 
     //Broadcast Receiver to notify all activities to finish if user logs out
@@ -216,5 +230,33 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     protected void disableEnrollCallback() {
         // un-register enrollReceiver
         unregisterReceiver(courseEnrollReceiver);
+    }
+
+    private void showEnrollErrorMessage(final String courseId, final boolean emailOptIn) {
+        Map<String, String> dialogMap = new HashMap<String, String>();
+        dialogMap.put("message_1", getString(R.string.enrollment_failure));
+
+        dialogMap.put("yes_button", getString(R.string.try_again));
+        dialogMap.put("no_button", getString(R.string.label_cancel));
+        EnrollmentFailureDialogFragment failureDialogFragment = EnrollmentFailureDialogFragment
+                .newInstance(dialogMap, new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
+                        onClickEnroll(courseId, emailOptIn);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+                    }
+                });
+        failureDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        failureDialogFragment.show(getSupportFragmentManager(), "dialog");
+        failureDialogFragment.setCancelable(false);
+    }
+
+    @Override
+    public void onPageLoadError() {
+        isWebViewLoaded = false;
+        showOfflineMessage();
     }
 }
