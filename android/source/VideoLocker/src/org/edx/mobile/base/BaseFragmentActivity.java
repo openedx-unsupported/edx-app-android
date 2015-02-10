@@ -44,7 +44,6 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.DownloadListActivity;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;

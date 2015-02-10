@@ -15,6 +15,7 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
@@ -134,6 +135,22 @@ public class LoginActivity extends BaseFragmentActivity {
                     finish();
                 }
             });
+        }
+
+        // enable login buttons at launch
+        setLoginBtnEnabled();
+
+        // check if third party traffic is enabled
+        Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
+        if (!thirdPartyTrafficConfig.isFacebookEnabled()
+                && !thirdPartyTrafficConfig.isGoogleEnabled()) {
+            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+        }
+        else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
+            findViewById(R.id.facebook_layout).setVisibility(View.GONE);
+        }
+        else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
+            findViewById(R.id.google_layout).setVisibility(View.GONE);
         }
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
