@@ -649,42 +649,6 @@ public class Api {
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * Returns Stream object from the given URL.
-     * @param url
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public CourseInfoModel srtStream(String url, boolean preferCache) throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-
-        String json = null;
-        if (NetworkUtil.isConnected(context) && !preferCache) {
-            // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
-            // cache the response
-            //cache.put(url, json);
-        } else {
-            json = cache.get(url);
-        }
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("srt stream= " + json);
-
-        Gson gson = new GsonBuilder().create();
-        CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
-        return res;
-    }
-
-    /**
->>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -724,39 +688,6 @@ public class Api {
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * Returns list of videos for a particular URL.
-     * @param courseId
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public ArrayList<VideoResponseModel> getVideosByURL(String courseId, String videoUrl, boolean preferCache)
-            throws Exception {
-        if(videoUrl==null){
-            return null;
-        }
-        ArrayList<VideoResponseModel> vidList = getVideosByCourseId(courseId, preferCache);
-        ArrayList<VideoResponseModel> list = new ArrayList<VideoResponseModel>();
-        if(vidList!=null && vidList.size()>0){
-            for(VideoResponseModel vrm : vidList){
-                try{
-                    if(vrm.getSummary().getVideo_url().equalsIgnoreCase(videoUrl)){
-                        vrm.setCourseId(courseId);
-                        list.add(vrm);
-                    }
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            }
-        }
-
-        return list;
-    }
-
-    /**
->>>>>>> master
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception
