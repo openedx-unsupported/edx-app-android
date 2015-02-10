@@ -43,28 +43,30 @@ public class MainApplication extends Application {
         // setup image cache
         createImageCache();
 
-        if (Config.getInstance().getThirdPartyTrafficEnabled()) {
-            // initialize SegmentIO
-            if (Config.getInstance().getSegmentIOWriteKey() != null) {
-                SegmentFactory.makeInstance(this);
-            }
+        // initialize SegmentIO
+        if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()
+                && Config.getInstance().getSegmentIOWriteKey() != null) {
+            SegmentFactory.makeInstance(this);
+        }
 
-            // initialize Fabric
-            if (Config.getInstance().getFabricKey() != null) {
-                Fabric.with(this, new Crashlytics());
-            }
+        // initialize Fabric
+        if (Config.getInstance().getThirdPartyTraffic().isFabricEnabled()
+                && Config.getInstance().getFabricKey() != null) {
+            Fabric.with(this, new Crashlytics());
+        }
 
-            // initialize NewRelic with crash reporting disabled
-            if (Config.getInstance().getNewRelicKey() != null) {
-                //Crash reporting for new relic has been disabled
-                NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
-                        .withCrashReportingEnabled(false)
-                        .start(this);
-            }
+        // initialize NewRelic with crash reporting disabled
+        if (Config.getInstance().getThirdPartyTraffic().isNewRelicEnabled()
+                && Config.getInstance().getNewRelicKey() != null) {
+            //Crash reporting for new relic has been disabled
+            NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
+                    .withCrashReportingEnabled(false)
+                    .start(this);
         }
 
         // initialize Facebook SDK
-        if (Config.getInstance().getFacebookAppId() != null) {
+        if (Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()
+                && Config.getInstance().getFacebookAppId() != null) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
 

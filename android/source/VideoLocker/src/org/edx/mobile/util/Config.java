@@ -50,7 +50,7 @@ public class Config {
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
-    private static final String THIRD_PARTY_TRAFFIC_ENABLED = "THIRD_PARTY_TRAFFIC_ENABLED";
+    private static final String THIRD_PARTY_TRAFFIC = "THIRD_PARTY_TRAFFIC";
 
     public class SocialSharingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
@@ -93,6 +93,34 @@ public class Config {
 
         public String getCourseInfoUrlTemplate() {
             return mCourseInfoUrlTemplate;
+        }
+    }
+
+    public class ThirdPartyTrafficConfig {
+        private @SerializedName("GOOGLE_ENABLED") boolean googleEnabled;
+        private @SerializedName("FACEBOOK_ENABLED") boolean facebookEnabled;
+        private @SerializedName("NEW_RELIC_ENABLED") boolean newRelicEnabled;
+        private @SerializedName("FABRIC_ENABLED") boolean fabricEnabled;
+        private @SerializedName("SEGMENTIO_ENABLED") boolean segmentEnabled;
+
+        public boolean isGoogleEnabled() {
+            return googleEnabled;
+        }
+
+        public boolean isFacebookEnabled() {
+            return facebookEnabled;
+        }
+
+        public boolean isNewRelicEnabled() {
+            return newRelicEnabled;
+        }
+
+        public boolean isFabricEnabled() {
+            return fabricEnabled;
+        }
+
+        public boolean isSegmentEnabled() {
+            return segmentEnabled;
         }
     }
 
@@ -231,6 +259,10 @@ public class Config {
         }
     }
 
+    /**
+     * Returns configuration for Enrollments.
+     * @return
+     */
     public EnrollmentConfig getEnrollment() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
         if(element != null) {
@@ -244,16 +276,18 @@ public class Config {
     }
 
     /**
-     * Returns true if network data usage is enabled for all third party integrations, false otherwise.
-     * Returns true, if configuration does not specify a value.
+     * Returns configuration for third party traffic (network requests).
      * @return
      */
-    public boolean getThirdPartyTrafficEnabled() {
-        if (getString(THIRD_PARTY_TRAFFIC_ENABLED) != null) {
-            return Boolean.getBoolean(getString(THIRD_PARTY_TRAFFIC_ENABLED));
+    public ThirdPartyTrafficConfig getThirdPartyTraffic() {
+        JsonElement element = getObject(THIRD_PARTY_TRAFFIC);
+        if(element != null) {
+            Gson gson = new Gson();
+            ThirdPartyTrafficConfig config = gson.fromJson(element, ThirdPartyTrafficConfig.class);
+            return config;
         }
         else {
-            return true;
+            return new ThirdPartyTrafficConfig();
         }
     }
 }

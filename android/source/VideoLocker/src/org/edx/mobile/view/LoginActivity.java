@@ -163,8 +163,16 @@ public class LoginActivity extends BaseFragmentActivity {
         setLoginBtnEnabled();
 
         // check if third party traffic is enabled
-        if ( !Config.getInstance().getThirdPartyTrafficEnabled()) {
+        Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
+        if (!thirdPartyTrafficConfig.isFacebookEnabled()
+                && !thirdPartyTrafficConfig.isGoogleEnabled()) {
             findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+        }
+        else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
+            findViewById(R.id.facebook_layout).setVisibility(View.GONE);
+        }
+        else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
+            findViewById(R.id.google_layout).setVisibility(View.GONE);
         }
     }
     
