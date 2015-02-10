@@ -214,9 +214,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         menuItem.setVisible(false);
 
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
         MenuItem offline_tvItem = menu.findItem(R.id.offline);
         if (AppConstants.offline_flag) {
             offline_tvItem.setVisible(true);

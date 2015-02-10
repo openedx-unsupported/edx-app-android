@@ -191,21 +191,6 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
         task.execute();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
     public void showOfflinePanel() {
         animateLayouts(offlinePanel);
     }
@@ -290,15 +275,9 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                     } catch (Exception e) {
                         logger.error(e);
                     }
-                    //Show the dialog only if the activity is started. This is to avoid Illegal state
-                    //exceptions if the dialog fragment tries to show even if the application is not in foreground
-                    if(isActivityStarted()){
-                        FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
-                        findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                        findCoursesFragment.setCancelable(false);
-                        findCoursesFragment.show(getSupportFragmentManager(), "dialog");
-                    }
+
+                    //Call the Find courses activity
+                    Router.getInstance().showFindCourses(MyCoursesListActivity.this);
                 }
             });
 

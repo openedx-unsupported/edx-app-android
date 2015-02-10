@@ -16,6 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -56,42 +57,52 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
 
-                if(act instanceof MyCoursesListActivity){
-                    //if MyCourses pressed when on MyCourse screen, close drawer
-                    ((MyCoursesListActivity) act).closeDrawer();
-                }else if(act instanceof MyVideosTabActivity){
-                    ((MyVideosTabActivity) act).closeDrawer();
-                    Intent myCoursesIntent = new Intent(getActivity(), MyCoursesListActivity.class);
+                //if MyCourses pressed when on MyCourse screen, just close the drawer.
+                if(!(act instanceof MyCoursesListActivity)){
+                    Intent myCoursesIntent = new Intent(act, MyCoursesListActivity.class);
                     myCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    getActivity().startActivity(myCoursesIntent);
-                    getActivity().finish();
+                    act.startActivity(myCoursesIntent);
+                    act.finish();
                 }
             }
         });
 
         TextView my_videos_tv = (TextView) layout.findViewById(R.id.my_assets);
         my_videos_tv.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
 
-                if(act instanceof MyCoursesListActivity){
-                    ((MyCoursesListActivity) act).closeDrawer();
-                    Intent myVideosIntent = new Intent(getActivity(), 
-                            MyVideosTabActivity.class);
-                    myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    getActivity().startActivity(myVideosIntent);
-                    //Finish is not called because the MyCourse activity need not be deleted
-                }else if(act instanceof MyVideosTabActivity){
-                    ((MyVideosTabActivity) act).closeDrawer();
+                if(!(act instanceof MyVideosTabActivity)){
+                    Router.getInstance().showMyVideos(act);
+                    //Finish need not be called if the current activity is MyCourseListing
+                    // as on returning back from FindCourses,
+                    // the student should be returned to the MyCourses screen
+                    if(!(act instanceof MyCoursesListActivity)){
+                       act.finish();
+                    }
                 }
             }
         });
+
+        TextView find_courses_tv = (TextView) layout.findViewById(R.id.find_courses_tv);
+        find_courses_tv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity act = getActivity();
+                ((BaseFragmentActivity) act).closeDrawer();
+
+                if(!(act instanceof FindCoursesActivity)){
+                    Router.getInstance().showFindCourses(act);
+                }
+            }
+        });
+
         TextView my_email_tv = (TextView) layout.findViewById(R.id.my_email);
         my_email_tv.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String to = Config.getInstance().getFeedbackEmailAddress();
@@ -100,7 +111,6 @@ public class NavigationFragment extends Fragment {
                 EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
         });
-
 
         ProfileModel profile = pref.getCurrentUserProfile();
         if(profile != null) {

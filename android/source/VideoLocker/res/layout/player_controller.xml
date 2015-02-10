@@ -63,20 +63,11 @@
             android:paddingTop="4dip"
             android:visibility="gone" >
 
-<!--             <ImageButton
-                android:id="@+id/prev"
-                style="@android:style/MediaButton.Previous"
-                android:contentDescription="@string/app_name" /> -->
-
             <ImageButton
                 android:id="@+id/ffwd"
                 style="@android:style/MediaButton.Ffwd"
                 android:contentDescription="@string/app_name" />
 
-        <!--     <ImageButton
-                android:id="@+id/next"
-                style="@android:style/MediaButton.Next"
-                android:contentDescription="@string/app_name" /> -->
         </LinearLayout>
 
         <LinearLayout
@@ -185,27 +176,6 @@
             android:layout_centerInParent="true"
             android:background="@drawable/ic_pause_button_selector"
             android:contentDescription="@string/app_name" />
-
-        
-     <!--    <ImageButton
-            android:id="@+id/prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_previous_button_selector"
-            android:contentDescription="@string/app_name"
-             />
-
-        <ImageButton
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_next_button_selector"
-            android:contentDescription="@string/app_name"/> -->
-
 
     </RelativeLayout>
 

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:fillViewport="true" >
+        android:fillViewport="true"
+        android:layout_marginTop="50dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="15dp"
-                        android:background="@drawable/bt_signin_default" >
+                        android:background="@drawable/bt_signin_active" >
 
                         <org.edx.mobile.view.custom.ETextView
                             android:id="@+id/login_btn_tv"
@@ -137,62 +137,20 @@
                         android:text="@string/licensing_agreement"
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="11sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="11dp"
-                        android:layout_marginTop="40dp"
-                        android:background="@color/grey_act_background"
-                        android:gravity="center" />
                 </LinearLayout>
             </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/bottom_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/top_layout"
-                android:paddingLeft="44dp"
-                android:paddingRight="44dp" >
-
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/new_user_tv"
-                    style="@style/semibold_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:linksClickable="true"
-                    android:text="@string/new_user"
-                    android:textColor="@color/new_user_txt_color"
-                    android:textSize="13sp" />
-                <!--
-                 <ETextView
-                    android:id="@+id/signup_text"
-                    style="@style/regular_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/new_user_tv"
-                    android:gravity="center"
-                    android:text="@string/sign_up"
-                    android:textColor="@color/grey_redirected_txt"
-                    android:textSize="10sp" /> 
-                -->
-            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@drawable/bg_error_dialog"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:layout_marginTop="50dp">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/error_header"
@@ -217,4 +175,12 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/custom_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <include layout="@layout/panel_custom_action_bar" />
+    </LinearLayout>
 </RelativeLayout>

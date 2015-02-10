@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
     <LinearLayout
         android:id="@+id/course_row_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:descendantFocusability="blocksDescendants"
@@ -14,7 +14,7 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/course_image"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="120dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/course_image"
@@ -22,7 +22,7 @@
 
         <RelativeLayout
             android:id="@+id/course_data"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -31,8 +31,8 @@
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/course_name"
                 style="@style/bold_grey_text"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="10dp"
                 android:lineSpacingExtra="-1.5dp"

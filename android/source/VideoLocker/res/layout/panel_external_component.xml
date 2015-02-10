@@ -38,17 +38,4 @@
         android:drawablePadding="8dp"
         /> 
     
-<!--     <EButton
-        android:id="@+id/open_in_browser_btn"
-        style="@style/semibold_white_text"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/logout_bg_selector"
-        android:gravity="center"
-        android:text="@string/lbl_open_in_browser"
-        android:textAllCaps="true"
-        android:textSize="14sp" /> -->
-
 </RelativeLayout>
