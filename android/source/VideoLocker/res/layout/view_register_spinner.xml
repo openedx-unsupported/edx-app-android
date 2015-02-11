@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
     <Spinner
+        android:id="@+id/input_spinner"
         style="@style/spinner_style"
-        android:textColorHint="@color/hint_grey_text" />
+        android:textColorHint="@color/hint_grey_text"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
     <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/input_spinner_error"
         style="@style/registration_error_message"
-        android:visibility="gone" />
+        android:visibility="visible"
+        tools:text="error text here"/>
 
     <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/input_spinner_instruction"
         style="@style/registration_instruction_message"
-        android:visibility="gone" />
+        android:visibility="visible"
+        tools:text="instructions here"/>
 
 </LinearLayout>

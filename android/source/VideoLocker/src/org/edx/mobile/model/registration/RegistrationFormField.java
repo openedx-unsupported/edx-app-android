@@ -13,7 +13,7 @@ public class RegistrationFormField {
     private @SerializedName("restrictions")     RegistrationRestriction restriction;
     private @SerializedName("errorMessages")    ErrorMessage errorMessage;
     private @SerializedName("instructions")     String instructions;
-    private @SerializedName("type")             String fieldType;
+    private @SerializedName("type")             RegistrationFieldType fieldType;
     private @SerializedName("label")            String label;
     private @SerializedName("options")          List<RegistrationOption> options; // may be empty
     private @SerializedName("defaultOption")    RegistrationOption defaultOption; // may be nil
@@ -46,7 +46,7 @@ public class RegistrationFormField {
         return instructions;
     }
 
-    public String getFieldType() {
+    public RegistrationFieldType getFieldType() {
         return fieldType;
     }
 

@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="4dp"
+    android:orientation="vertical">
 
     <org.edx.mobile.view.custom.EEditText
+        android:layout_height="wrap_content"
         android:id="@+id/txt_input"
         style="@style/edit_text_style"
-        android:textColorHint="@color/hint_grey_text" />
+        android:textColorHint="@color/hint_grey_text"
+        tools:hint="enter something"/>
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txt_input_error"
         style="@style/registration_error_message"
-        android:visibility="gone"/>
+        android:visibility="visible"
+        tools:text="error text here"/>
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txt_input_instruction"
         style="@style/registration_instruction_message"
-        android:visibility="gone"/>
+        android:visibility="visible"
+        tools:text="instructions here"/>
 
 </LinearLayout>

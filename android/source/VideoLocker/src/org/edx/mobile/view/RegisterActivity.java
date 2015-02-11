@@ -1,32 +1,32 @@
 package org.edx.mobile.view;
 
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import android.widget.ScrollView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.model.registration.RegistrationFieldType;
-import org.edx.mobile.model.registration.RegistrationForm;
 import org.edx.mobile.model.registration.RegistrationFormField;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.registration.IRegistrationFieldView;
-import org.edx.mobile.view.registration.RegistrationEditTextView;
+import org.edx.mobile.view.registration.RegistrationEmailView;
+import org.edx.mobile.view.registration.RegistrationPasswordView;
 import org.edx.mobile.view.registration.RegistrationSpinnerView;
 import org.edx.mobile.view.registration.RegistrationTextAreaView;
+import org.edx.mobile.view.registration.RegistrationTextView;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +38,7 @@ public class RegisterActivity extends BaseFragmentActivity {
     private LinearLayout optionalFieldsLayout;
     private ETextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
+    private View eulaLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class RegisterActivity extends BaseFragmentActivity {
         }catch(Exception e){
             logger.error(e);
         }
+
+        eulaLink = findViewById(R.id.end_user_agreement_tv);
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -66,13 +69,13 @@ public class RegisterActivity extends BaseFragmentActivity {
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optional_text.getText().toString().equalsIgnoreCase(getString(R.string.show_optional_text))) {
-                    optionalFieldsLayout.setVisibility(v.VISIBLE);
-                    optional_text.setText(getString(R.string.hide_optional_text));
-                }
-                else{
+                if(optionalFieldsLayout.getVisibility() == View.VISIBLE) {
                     optionalFieldsLayout.setVisibility(v.GONE);
                     optional_text.setText(getString(R.string.show_optional_text));
+                }
+                else{
+                    optionalFieldsLayout.setVisibility(v.VISIBLE);
+                    optional_text.setText(getString(R.string.hide_optional_text));
                 }
             }
         });
@@ -119,11 +122,19 @@ public class RegisterActivity extends BaseFragmentActivity {
     //Enable all the Fields(Views) which were disabled
     private void setElementsEnabled(){
         createButtonEnabled();
+        eulaLink.setEnabled(true);
+        for (IRegistrationFieldView v : mFieldViews) {
+            v.setEnabled(true);
+        }
     }
 
     //Disable the Fields(Views) when doing server call
     private void setElementsDisabled(){
         createButtonDisabled();
+        eulaLink.setEnabled(false);
+        for (IRegistrationFieldView v : mFieldViews) {
+            v.setEnabled(false);
+        }
     }
 
     //Disable the Create button during server call
@@ -142,28 +153,36 @@ public class RegisterActivity extends BaseFragmentActivity {
 
     private void setupRegistrationForm() {
         try {
-            InputStream in = getAssets().open("config/registration_form.json");
-            Gson gson = new Gson();
-            RegistrationForm form = gson.fromJson(new InputStreamReader(in), RegistrationForm.class);
+            RegistrationDescription form = new Api(this).getRegistrationDescription();
 
             LayoutInflater inflater = getLayoutInflater();
 
             for (RegistrationFormField field : form.getFields()) {
                 IRegistrationFieldView fieldView = null;
 
-                if (field.getFieldType().equalsIgnoreCase(RegistrationFieldType.EMAIL.toString())
-                        || field.getFieldType().equalsIgnoreCase(RegistrationFieldType.PASSWORD.toString())
-                        || field.getFieldType().equalsIgnoreCase(RegistrationFieldType.TEXT.toString())) {
+                if (field.getFieldType().equals(RegistrationFieldType.EMAIL)) {
                     View view = inflater.inflate(R.layout.view_register_edit_text, null);
-                    fieldView = new RegistrationEditTextView(field, view);
+                    fieldView = new RegistrationEmailView(field, view);
                 }
-                else if (field.getFieldType().equalsIgnoreCase(RegistrationFieldType.TEXTAREA.toString())) {
-                    View view = inflater.inflate(R.layout.view_register_text_area, null);
+                else if (field.getFieldType().equals(RegistrationFieldType.PASSWORD)) {
+                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
+                    fieldView = new RegistrationPasswordView(field, view);
+                }
+                else if (field.getFieldType().equals(RegistrationFieldType.TEXT)) {
+                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
+                    fieldView = new RegistrationTextView(field, view);
+                }
+                else if (field.getFieldType().equals(RegistrationFieldType.TEXTAREA)) {
+                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
                     fieldView = new RegistrationTextAreaView(field, view);
                 }
-                else if (field.getFieldType().equalsIgnoreCase(RegistrationFieldType.MULTI.toString())) {
+                else if (field.getFieldType().equals(RegistrationFieldType.MULTI)) {
                     View view = inflater.inflate(R.layout.view_register_spinner, null);
                     fieldView = new RegistrationSpinnerView(field, view);
+                }
+                else {
+                    logger.warn(String.format("unknown field type %s found in RegistrationDescription, skipping it",
+                            field.getFieldType().toString()));
                 }
 
                 if (fieldView != null)  mFieldViews.add(fieldView);
@@ -186,28 +205,83 @@ public class RegisterActivity extends BaseFragmentActivity {
     }
 
     private void createAccount() {
-        // TODO: validate
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
-        // TODO: prepare query (POST body)
+        boolean hasError = false;
+        // prepare query (POST body)
         Bundle parameters = new Bundle();
         for (IRegistrationFieldView v : mFieldViews) {
-            if (v.hasValue()) {
-                parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
+            if (v.isValidInput()) {
+                if (v.hasValue()) {
+                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
+                }
+            }
+            else {
+                if (!hasError) {
+                    // this is the first input field with error, so focus on it
+                    scrollToView(scrollView, v.getView());
+                }
+                hasError = true;
             }
         }
+
+        // do NOT proceed if validations are failed
+        if (hasError) {  return;  }
+
+        setElementsDisabled();
+        showProgress();
 
         RegisterTask task = new RegisterTask(this, parameters) {
 
             @Override
             public void onFinish(RegisterResponse result) {
                 logger.debug("registration success=" + result.isSuccess());
+                setElementsEnabled();
+                hideProgress();
             }
 
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
+                setElementsEnabled();
+                hideProgress();
             }
         };
         task.execute();
+    }
+
+    /**
+     * Scrolls to the top of the given View in the given ScrollView.
+     * @param scrollView
+     * @param view
+     */
+    public static void scrollToView(final ScrollView scrollView, final View view) {
+
+        // View needs a focus
+        view.requestFocus();
+
+        // Determine if scroll needs to happen
+        final Rect scrollBounds = new Rect();
+        scrollView.getHitRect(scrollBounds);
+        if (!view.getLocalVisibleRect(scrollBounds)) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(0, view.getTop());
+                }
+            });
+        }
+    }
+
+    private void showProgress() {
+        View progress = findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+        createAccountTv.setText(getString(R.string.creating_account_text));
+    }
+
+    private void hideProgress() {
+        View progress = findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
+        createAccountTv.setText(getString(R.string.create_account_text));
     }
 }

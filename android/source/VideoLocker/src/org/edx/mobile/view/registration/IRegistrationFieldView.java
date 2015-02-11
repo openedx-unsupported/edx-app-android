@@ -14,5 +14,6 @@ public interface IRegistrationFieldView {
     RegistrationFormField getField();
     View getView();
     void handleError(String errorMessage);
-    void validateInput();
+    boolean isValidInput();
+    void setEnabled(boolean enabled);
 }

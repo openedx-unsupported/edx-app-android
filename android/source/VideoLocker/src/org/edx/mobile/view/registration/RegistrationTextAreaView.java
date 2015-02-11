@@ -1,47 +1,26 @@
 package org.edx.mobile.view.registration;
 
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
-
-import com.google.gson.JsonElement;
 
 import org.edx.mobile.model.registration.RegistrationFormField;
 
-public class RegistrationTextAreaView implements IRegistrationFieldView {
-    private RegistrationFormField mField;
-    private View mView;
+public class RegistrationTextAreaView extends RegistrationEditTextView {
+
+    // Number of lines for TextArea
+    private static final int LINES = 5;
 
     public RegistrationTextAreaView(RegistrationFormField field, View view) {
-        // create and configure view and save it to an instance variable
-        this.mField = field;
-        this.mView = view;
-    }
+        super(field, view);
 
-    @Override
-    public JsonElement getCurrentValue() {
-        // turn text view content into a JsonElement and return it
-        return null;
-    }
+        mInputView.setLines(LINES);
+        mInputView.setMaxLines(LINES);
 
-    @Override
-    public boolean hasValue() {
-        return false;
-    }
-
-    @Override
-    public RegistrationFormField getField() {
-        return mField;
-    }
-
-    @Override
-    public View getView() {
-        return mView;
-    }
-
-    @Override
-    public void handleError(String error) {
-    }
-
-    @Override
-    public void validateInput() {
+        // allow multiline text
+        mInputView.setInputType(InputType.TYPE_CLASS_TEXT
+                | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        // text should start from the left-top
+        mInputView.setGravity(Gravity.LEFT | Gravity.TOP);
     }
 }

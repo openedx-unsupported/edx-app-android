@@ -8,8 +8,18 @@ import com.google.gson.annotations.SerializedName;
 public class ErrorMessage {
 
     private @SerializedName("required") String required;
+    private @SerializedName("min_length") String minLength;
+    private @SerializedName("max_length") String maxLength;
 
     public String getRequired() {
         return required;
+    }
+
+    public String getMinLength() {
+        return minLength;
+    }
+
+    public String getMaxLength() {
+        return maxLength;
     }
 }

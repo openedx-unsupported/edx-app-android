@@ -1,20 +1,23 @@
 package org.edx.mobile.model.registration;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum RegistrationFieldType {
-    MULTI ("MULTI"),
-    PASSWORD ("PASSWORD"),
-    EMAIL ("EMAIL"),
-    TEXT ("TEXT"),
-    TEXTAREA ("TEXTAREA"),
-    CHECKBOX ("CHECKBOX");
+    @SerializedName("select")
+    MULTI,
 
-    private final String fieldType;
+    @SerializedName("password")
+    PASSWORD,
 
-    private RegistrationFieldType(String name) {
-        this.fieldType = name;
-    }
+    @SerializedName("email")
+    EMAIL,
 
-    public String toString(){
-        return fieldType;
-    }
+    @SerializedName("text")
+    TEXT,
+
+    @SerializedName("textarea")
+    TEXTAREA,
+
+    @SerializedName("checkbox")
+    CHECKBOX
 }

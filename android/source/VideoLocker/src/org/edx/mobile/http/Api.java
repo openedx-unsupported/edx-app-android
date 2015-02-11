@@ -30,6 +30,7 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
@@ -37,6 +38,9 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -961,5 +965,17 @@ public class Api {
         RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
 
         return res;
+    }
+
+    /**
+     * Reads registration description from assets and return Model representation of it.
+     * @return
+     * @throws IOException
+     */
+    public RegistrationDescription getRegistrationDescription() throws IOException {
+        InputStream in = context.getAssets().open("config/registration_form.json");
+        Gson gson = new Gson();
+        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
+        return form;
     }
 }
