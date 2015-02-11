@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
@@ -22,7 +23,8 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:paddingTop="20dp"
-            android:visibility="gone" >
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <org.edx.mobile.view.custom.ETextView
                 style="@style/semibold_text"
@@ -57,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_alignParentBottom="true" >
 
         <include layout="@layout/panel_external_component" />
@@ -64,6 +67,7 @@
 
     <ListView
         android:id="@+id/chapter_list"
+        tools:listitem="@layout/row_chapter_list"
         style="@style/list_courses"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,9 +75,9 @@
         android:layout_below="@id/top_panel" />
 
     <ProgressBar
-              android:id="@+id/api_spinner"
-              style="@style/api_progress_style"
-              android:visibility="gone" />
+        android:id="@+id/api_spinner"
+        style="@style/api_progress_style"
+        android:visibility="gone" />
     
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_chapter_tv"

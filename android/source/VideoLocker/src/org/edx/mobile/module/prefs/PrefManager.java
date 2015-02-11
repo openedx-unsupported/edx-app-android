@@ -103,6 +103,26 @@ public class PrefManager {
                 .getLong(key, -1);
     }
     
+    /**
+     * Returns float value for the given key, -1 if no value is found.
+     * @param key
+     * @return float
+     */
+    public float getFloat(String key) {
+        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                .getFloat(key, -1);
+    }
+
+    /**
+     * Returns float value for the given key, defaultValue if no value is found.
+     * @param key
+     * @param defaultValue
+     * @return float
+     */
+    public float getFloat(String key, float defaultValue) {
+        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                .getFloat(key, defaultValue);
+    }
 
     /**
      * Returns current user's profile from the preferences.
@@ -207,6 +227,8 @@ public class PrefManager {
     public static final class Pref {
         public static final String LOGIN = "pref_login";
         public static final String WIFI = "pref_wifi";
+        public static final String VIDEOS = "pref_videos";
+        public static final String FEATURES = "features";
         public static final String APP_INFO = "pref_app_info";
     }
     
@@ -220,13 +242,17 @@ public class PrefManager {
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
         public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";
-        public static final String DOWNLOAD_ON_WIFI = "download_on_wifi";
+        public static final String DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi";
+        public static final String DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG = "download_off_wifi_dialog_flag";
         public static final String COUNT_OF_VIDEOS_DOWNLOADED = "count_videos_downloaded";
         public static final String TRANSCRIPT_LANGUAGE = "transcript_language";
+        public static final String ALLOW_SOCIAL_FEATURES = "allow_social_features";
         public static final String LAST_ACCESS_MODIFICATION_TIME = "last_access_modification_time";
         public static final String LASTACCESSED_MODULE_ID = "last_access_module_id";
         public static final String LASTACCESSED_SYNCED_FLAG = "lastaccess_synced_flag";
         public static final String SEGMENT_KEY_BACKEND = "segment_backend";
+        public static final String SHARE_COURSES = "share_courses";
+        public static final String SPEED_TEST_KBPS = "speed_test_kbps";
         public static final String APP_VERSION = "app_version_name";
     }
     

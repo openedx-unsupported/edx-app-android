@@ -3,6 +3,7 @@ package org.edx.mobile.test;
 import android.test.InstrumentationTestCase;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.Environment;
 
 /**
  * Created by rohan on 12/31/14.
@@ -13,6 +14,8 @@ public class BaseTestCase extends InstrumentationTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        Environment environment = new Environment();
+        environment.setupEnvironment(getInstrumentation().getContext());
         super.setUp();
         print("Started Test Case: " + getClass().getName());
     }

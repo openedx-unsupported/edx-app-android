@@ -14,6 +14,7 @@ public class SummaryModel implements Serializable {
     private String id;
     private long size;
     private TranscriptModel transcripts;
+    private EncodingsModel encodings;
 
     public String getCategory() {
         return category;
@@ -79,6 +80,18 @@ public class SummaryModel implements Serializable {
 
     public void setTranscripts(TranscriptModel transcripts) {
         this.transcripts = transcripts;
+    }
+
+    public String getHighEncoding() {
+        return this.encodings == null ? null : encodings.highEncoding;
+    }
+
+    public String getLowEncoding() {
+        return this.encodings == null ? null : encodings.lowEncoding;
+    }
+
+    public String getYoutubeLink() {
+        return this.encodings == null ? null : encodings.youtubeLink;
     }
 
     private String getMemorySize(long bytes) {

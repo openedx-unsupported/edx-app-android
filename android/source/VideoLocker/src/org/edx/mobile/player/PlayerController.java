@@ -44,6 +44,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import org.edx.mobile.module.prefs.PrefManager;
+
 /**
  * A view containing controls for a MediaPlayer. Typically contains the
  * buttons like "Play/Pause", "Rewind", "Fast Forward" and a progress
@@ -100,12 +102,22 @@ public class PlayerController extends FrameLayout {
     private ImageButton         mFullscreenButton;
     private ImageButton         mSettingsButton;
     private ImageButton         mLmsButton;
+    private ImageButton         shareButton;
     private Handler             mHandler = new MessageHandler(this);
     private String              mTitle;
+    private String              shareURL;
     private TextView            mTitleTextView;
     private boolean             mIsAutoHide = true;
     private String              mLmsUrl;
+
     private static final Logger logger = new Logger(PlayerController.class.getName());
+
+    private ShareVideoListener  shareVideoListener;
+
+    public interface ShareVideoListener {
+        public void onVideoShare();
+    }
+
 
     public PlayerController(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -173,6 +185,10 @@ public class PlayerController extends FrameLayout {
     }
 
     private void initControllerView(View v) {
+
+        PrefManager featuresPrefManager = new PrefManager(getContext(), PrefManager.Pref.FEATURES);
+        boolean enableSocialFeatures = featuresPrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
+
         mPauseButton = (ImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
@@ -230,6 +246,16 @@ public class PlayerController extends FrameLayout {
         if (mSettingsButton != null) {
             mSettingsButton.requestFocus();
             mSettingsButton.setOnClickListener(mSettingsListener);
+        }
+
+        shareButton = (ImageButton) v.findViewById(R.id.share_btn);
+        if (shareButton != null) {
+            if (enableSocialFeatures){
+                shareButton.setOnClickListener(socialShareListener);
+                shareButton.setVisibility(View.VISIBLE);
+            } else {
+                shareButton.setVisibility(View.GONE);
+            }
         }
 
         mEndTime = (TextView) v.findViewById(R.id.time);
@@ -492,6 +518,23 @@ public class PlayerController extends FrameLayout {
                 logger.error(e);
             }
         }
+    };
+
+    public void setShareVideoListener(ShareVideoListener shareVideoListener){
+        this.shareVideoListener = shareVideoListener;
+    }
+
+    private OnClickListener socialShareListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+
+            if (shareVideoListener != null) {
+                shareVideoListener.onVideoShare();
+            }
+
+        }
+
     };
 
     private void updateTitle() {
@@ -838,6 +881,17 @@ public class PlayerController extends FrameLayout {
                 logger.error(ex);
             }
         }
+    }
+
+
+    public void setShareEnabled(boolean shareEnabled) {
+
+        PrefManager featuresPrefManager = new PrefManager(getContext(), PrefManager.Pref.FEATURES);
+        boolean enableSocialFeatures = featuresPrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
+        if (shareButton != null) {
+            shareButton.setVisibility(shareEnabled && enableSocialFeatures ? VISIBLE : GONE);
+        }
+
     }
 
     public void setTitle(String title) {

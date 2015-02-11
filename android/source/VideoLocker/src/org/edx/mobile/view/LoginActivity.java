@@ -1,31 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.edx.mobile.R;
-import org.edx.mobile.exception.LoginErrorMessage;
-import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SocialLoginResponse;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.task.LoginTask;
-import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.NetworkSlowDialogFragment;
-import org.edx.mobile.view.dialog.ResetPasswordDialog;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.social.ISocial;
-import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.dialog.SuccessDialogFragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +7,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,13 +15,40 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.exception.LoginErrorMessage;
+import org.edx.mobile.exception.LoginException;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.SocialLoginResponse;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.ISocial;
+import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.dialog.ResetPasswordDialog;
+import org.edx.mobile.view.dialog.SimpleAlertDialog;
+import org.edx.mobile.view.dialog.SuccessDialogFragment;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginActivity extends BaseFragmentActivity {
 
     private TextView login_tv;
     private EditText email_et, password_et;
-    private String[] email;
-    public static final String KEY_EMAIL = "Email";
-    private NetworkSlowDialogFragment NoNetworkFragment;
+
+    private SimpleAlertDialog NoNetworkFragment;
+
     private ResetPasswordDialog resetDialog;
     private SuccessDialogFragment successFragment;
     private ProgressBar progressbar;
@@ -139,16 +139,22 @@ public class LoginActivity extends BaseFragmentActivity {
         setLoginBtnEnabled();
 
         // check if third party traffic is enabled
+        boolean isAllowedThirdPartyTraffic = NetworkUtil.isAllowedThirdPartyTraffic(getApplicationContext());
         Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
-        if (!thirdPartyTrafficConfig.isFacebookEnabled()
-                && !thirdPartyTrafficConfig.isGoogleEnabled()) {
+
+        if ( !isAllowedThirdPartyTraffic) {
             findViewById(R.id.panel_login_social).setVisibility(View.GONE);
-        }
-        else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
-            findViewById(R.id.facebook_layout).setVisibility(View.GONE);
-        }
-        else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
-            findViewById(R.id.google_layout).setVisibility(View.GONE);
+        } else {
+            if (!thirdPartyTrafficConfig.isFacebookEnabled()
+                    && !thirdPartyTrafficConfig.isGoogleEnabled()) {
+                findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+            }
+            else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
+                findViewById(R.id.facebook_layout).setVisibility(View.GONE);
+            }
+            else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
+                findViewById(R.id.google_layout).setVisibility(View.GONE);
+            }
         }
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
@@ -235,11 +241,19 @@ public class LoginActivity extends BaseFragmentActivity {
                 email_et.requestFocus();
             }
 
+            else if (!matchFound) {
+                showErrorMessage(getString(R.string.login_error),
+                        getString(R.string.error_invalid_email));
+                email_et.requestFocus();
+            }
+
             else if (password_et != null && passwordStr.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_password));
                 password_et.requestFocus();
-            } else {
+            }
+
+            else {
                 email_et.setEnabled(false);
                 password_et.setEnabled(false);
                 forgotPassword_tv.setEnabled(false);
@@ -333,7 +347,7 @@ public class LoginActivity extends BaseFragmentActivity {
 
     public void showEulaDialog() {
         clearDialogs();
-        showWebDialog(getString(R.string.eula_file_link), true, 
+        showWebDialog(getString(R.string.eula_file_link), true,
                 getString(R.string.end_user_title));
     }
     
@@ -349,12 +363,11 @@ public class LoginActivity extends BaseFragmentActivity {
     }
 
     public void showNoNetworkDialog() {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title",
-                getString(R.string.reset_no_network_title));
-        dialogMap.put("message_1", getString(R.string.reset_no_network_message));
+        Bundle args = new Bundle();
+        args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
+        args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
 
-        NoNetworkFragment = NetworkSlowDialogFragment.newInstance(dialogMap);
+        NoNetworkFragment = SimpleAlertDialog.newInstance(args);
         NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
@@ -397,7 +410,7 @@ public class LoginActivity extends BaseFragmentActivity {
         } else {
             errorMessage.setText(getString(R.string.login_failed));
         }
-        animateLayouts(error_layout);
+        UiUtil.animateLayouts(error_layout);
     }
 
     @Override

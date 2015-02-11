@@ -18,7 +18,7 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
     private long lastClickTime;
 
     public MyAllVideoCourseAdapter(Context context) {
-        super(context);
+        super(context, R.layout.row_myvideo_course_list);
         lastClickTime = 0;
     }
 
@@ -33,10 +33,10 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         holder.schoolCode.setText(code);
         String videos=enrollment.getVideoCountReadable() + ",";
         holder.no_of_videos.setText(videos);
-        holder.size_of_videos.setText(MemoryUtil.format(context, enrollment.size));
+        holder.size_of_videos.setText(MemoryUtil.format(getContext(), enrollment.size));
 
         holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(context), 
+        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
                 ImageCacheManager.getInstance().getImageLoader());
         holder.courseImage.setTag(courseData);
     }
@@ -55,11 +55,6 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         holder.size_of_videos = (TextView) convertView
                 .findViewById(R.id.size_of_videos);
         return holder;
-    }
-
-    @Override
-    public int getListItemLayoutResId() {
-        return R.layout.row_myvideo_course_list;
     }
 
     private static class ViewHolder extends BaseViewHolder {

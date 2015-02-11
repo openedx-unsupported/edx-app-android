@@ -608,4 +608,225 @@ class ISegmentImpl implements ISegment {
         }
         return null;
     }
+
+    //Tracking methods introduced by BNOTIONS
+
+    //We may want to explore the idea of adding cell carrier to the context.
+    @Override
+    public Properties trackUserCellConnection(String carrierName, boolean isZeroRated) {
+
+        try{
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.CONNECTION_CELL);
+            vEvent.data.putValue(Keys.CELL_CARRIER, carrierName);
+            vEvent.data.putValue(Keys.CELL_ZERO_RATED, isZeroRated);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.TRACK_CELL_CONNECTION, vEvent.properties);
+            return vEvent.properties;
+
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.CONNECTION_SPEED);
+            vEvent.data.putValue(Keys.CONNECTION_TYPE, connectionType);
+            vEvent.data.putValue(Keys.CONNECTION_SPEED, connectionSpeed);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.SPEED, vEvent.properties);
+            return vEvent.properties;
+
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties courseGroupAccessed(String courseName) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.ACCESS_COURSE_GROUP);
+
+            vEvent.data.putValue(Keys.COURSE_ID, courseName);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.COURSE_GROUP_ACCESSED, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties gameGroupAccessed(long groupID, int groupUserCount) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.ACCESS_GAME_GROUP);
+
+            vEvent.data.putValue(Keys.GROUP_ID, groupID);
+            vEvent.data.putValue(Keys.GROUP_USER_COUNT, groupUserCount);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.GAME_GROUP_ACCESSED, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties groupCreated(long groupID, int invitedUserCount) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.CREATE_GAME_GROUP);
+
+            vEvent.data.putValue(Keys.GROUP_ID, groupID);
+            vEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.GAME_GROUP_CREATE, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties groupInvited(long groupID, int invitedUserCount){
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.INVITE_GAME_GROUP);
+
+            vEvent.data.putValue(Keys.GROUP_ID, groupID);
+            vEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.GAME_GROUP_INVITE, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties courseShared(String courseName, String socialNetwork) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_SHARED);
+
+            vEvent.data.putValue(Keys.COURSE_ID, courseName);
+            vEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.SOCIAL_COURSE_SHARED, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+
+    }
+
+    @Override
+    public Properties certificateShared(String courseName, String socialNetwork) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);
+
+            vEvent.data.putValue(Keys.COURSE_ID, courseName);
+            vEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.SOCIAL_CERTIFICATE_SHARED, vEvent.properties);
+            return vEvent.properties;
+
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties socialConnectionEvent(boolean connected, String socialNetwork) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CONNECTION_CHANGE);
+
+            vEvent.data.putValue(Keys.SOCIAL_CONNECTION_STATE, connected);
+            vEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.SOCIAL_CONNECTION_CHANGE, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
+    @Override
+    public Properties coursesVisibleToFriendsChange(boolean visible) {
+
+        try {
+
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.SETTING_COURSES_VISIBLE_CHANGE);
+
+            vEvent.data.putValue(Keys.SETTING_COURSES_VISIBLE_STATE, visible);
+
+            vEvent.setAppNameContext();
+            tracker.track(Keys.SETTING_COURSES_VISIBLE_CHANGE, vEvent.properties);
+            return vEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+
+    }
+
 }

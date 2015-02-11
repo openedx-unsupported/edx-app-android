@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +31,9 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
+
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -37,6 +41,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
@@ -45,6 +50,7 @@ import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
+import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -58,7 +64,7 @@ import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
-public class PlayerFragment extends Fragment implements IPlayerListener,Serializable, AudioManager.OnAudioFocusChangeListener {
+public class PlayerFragment extends Fragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
 
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME = 1000;
@@ -88,7 +94,11 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     private boolean isVideoMessageDisplayed;
     private boolean isNetworkMessageDisplayed;
     private boolean isManualFullscreen = false;
+
     private final Logger logger = new Logger(getClass().getName());
+
+    private UiLifecycleHelper uiHelper;
+    private boolean pauseDueToDialog;
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
@@ -123,6 +133,22 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     }
 
     @Override
+    public void onVideoShare() {
+
+        if (this.videoEntry == null || TextUtils.isEmpty(this.videoEntry.getYoutubeVideoUrl())) {return;}
+
+        FacebookProvider fbProvider = new FacebookProvider();
+        FacebookDialog dialog = (FacebookDialog) fbProvider.shareVideo(getActivity(), this.videoEntry.getTitle(), this.videoEntry.getYoutubeVideoUrl());
+        if (dialog != null) {
+            uiHelper.trackPendingDialogCall(dialog.present());
+            pauseDueToDialog = true;
+        } else {
+            new InstallFacebookDialog().show(getFragmentManager(), null);
+        }
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         segIO = SegmentFactory.getInstance();
@@ -135,7 +161,29 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
         this.layoutInflater = inflater;
+
+        uiHelper = new UiLifecycleHelper(getActivity(), null);
+        uiHelper.onCreate(savedInstanceState);
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+
+            }
+        });
+
     }
 
     /**
@@ -171,6 +219,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             boolean isLandscape = isScreenLandscape();
             player.setFullScreen(isLandscape);
             player.setPlayerListener(this);
+            player.setShareVideoListener(this);
         }
     }
 
@@ -265,6 +314,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     @Override
     public void onResume() {
         super.onResume();
+
+        uiHelper.onResume();
+
         setupController();
 
         if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed){
@@ -280,6 +332,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     @Override
     public void onPause() {
         super.onPause();
+
+        uiHelper.onPause();
+
         try{
             orientation.stop();
             handler.removeCallbacks(unfreezeCallback);
@@ -310,7 +365,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
     @Override
     public void onDestroy() {
         super.onDestroy();
-        
+        uiHelper.onDestroy();
+
         if (!stateSaved) {
             if (player!=null) {
                 // reset player when user goes back, and there is no state saving happened
@@ -364,6 +420,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             outState.putSerializable("player", player);
         }
         super.onSaveInstanceState(outState);
+
+        uiHelper.onSaveInstanceState(outState);
+
     }
 
     /**
@@ -426,7 +485,13 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
             this.transcript = trModel;
             player.setLMSUrl(video.lmsUrl);
             player.setVideoTitle(title);
+
             logger.debug("playing [seek=" + seekTo + "]: " + path);
+
+            boolean enableShare = videoEntry != null && !TextUtils.isEmpty(videoEntry.getYoutubeVideoUrl()) && new FacebookProvider().isLoggedIn();
+
+            player.setShareEnabled(enableShare);
+
             player.setUriAndPlay(path, seekTo);
         } catch (Exception e) {
             logger.error(e);
@@ -449,7 +514,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
 
                     controller.setPrevNextListeners(nextListner, prevListner);
                     player.setController(controller);
-
+                    player.setShareVideoListener(this);
+                    //
                     reAttachPlayEventListener();
                     
                 } else {
@@ -830,6 +896,12 @@ public class PlayerFragment extends Fragment implements IPlayerListener,Serializ
                         hideProgress();
                         updateController("player unfreezed");
                     }
+
+                    if (pauseDueToDialog){
+                        pauseDueToDialog = false;
+                        player.pause();
+                    }
+
                 }
                 orientation.start();
                 handler.sendEmptyMessage(MSG_TYPE_TICK);

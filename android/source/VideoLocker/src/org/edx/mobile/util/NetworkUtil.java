@@ -6,16 +6,20 @@ import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+
+import org.edx.mobile.logger.Logger;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import org.edx.mobile.logger.Logger;
+import java.util.List;
 
 public class NetworkUtil {
 
     private static final Logger logger = new Logger(NetworkUtil.class.getName());
+    private static final String TAG = NetworkUtil.class.getSimpleName();
 
     /**
      * Returns true if device is connected to wifi or mobile network, false
@@ -113,4 +117,51 @@ public class NetworkUtil {
         return ipAddress;
     }
     
+    public static boolean isOnZeroRatedNetwork(Context context){
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String carrierId = manager.getNetworkOperator();
+
+        logger.debug(String.format("Carrier id: %s", carrierId));
+
+        List<String> zeroRatedCarriers = Config.getInstance().getZeroRating().getCarriers();
+
+        for(String carrier : zeroRatedCarriers) {
+            if (carrier.equalsIgnoreCase(carrierId)) {
+                logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isOnSocialDisabledNetwork(Context context){
+
+        TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        String carrierId = manager.getNetworkOperator();
+
+        List<String> socialDisabledCarriers = Config.getInstance().getSocialSharing().getDisabledCarriers();
+
+        for(String carrier : socialDisabledCarriers) {
+            if (carrier.equalsIgnoreCase(carrierId)) {
+                logger.debug("Social services disabled on this carrier.");
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+    public static boolean isSocialFeatureFlagEnabled(Context context){
+
+        boolean isSocialEnabled = Config.getInstance().getSocialSharing().getEnabled();
+
+        return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context));
+
+    }
+
+    public static boolean isAllowedThirdPartyTraffic(Context context) {
+        return (!isOnZeroRatedNetwork(context) || isConnectedWifi(context));
+    }
 }

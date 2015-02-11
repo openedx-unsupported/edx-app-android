@@ -43,6 +43,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
         private String lmsURL;
         private String videoUri;
         private static final Logger logger = new Logger(Player.class.getName());
+        private boolean shareEnabled;
+
 
         public Player() {
             init();
@@ -403,6 +405,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 this.controller.setMediaPlayer(this);
                 logger.debug("Controller set");
 
+                this.controller.setShareEnabled(this.shareEnabled);
+
                 // allow show/hide on touch of this controller also
                 //          this.controller.setOnTouchListener(this);
             }
@@ -483,6 +487,21 @@ OnCompletionListener, OnInfoListener, IPlayer {
             }
 
             isFreeze = false;
+        }
+
+        @Override
+        public void setShareVideoListener(PlayerController.ShareVideoListener shareVideoListener){
+            if (controller != null) {
+                controller.setShareVideoListener(shareVideoListener);
+            }
+        }
+
+        @Override
+        public void setShareEnabled(Boolean shrareEnabled) {
+            this.shareEnabled = shrareEnabled;
+            if (controller != null){
+                controller.setShareEnabled(shrareEnabled);
+            }
         }
 
         @Override

@@ -121,4 +121,54 @@ public class ISegmentEmptyImpl implements ISegment {
     @Override
     public void setTracker(ISegmentTracker tracker) {
     }
+
+    @Override
+    public Properties trackUserCellConnection(String carrierName, boolean isZeroRated) {
+        return null;
+    }
+
+    @Override
+    public Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed) {
+        return null;
+    }
+
+    @Override
+    public Properties courseGroupAccessed(String courseId) {
+        return null;
+    }
+
+    @Override
+    public Properties gameGroupAccessed(long groupID, int groupUserCount) {
+        return null;
+    }
+
+    @Override
+    public Properties groupCreated(long groupID, int invitedUserCount) {
+        return null;
+    }
+
+    @Override
+    public Properties groupInvited(long groupID, int invitedUserCount) {
+        return null;
+    }
+
+    @Override
+    public Properties courseShared(String courseId, String socialNetwork) {
+        return null;
+    }
+
+    @Override
+    public Properties certificateShared(String courseId, String socialNetwork) {
+        return null;
+    }
+
+    @Override
+    public Properties socialConnectionEvent(boolean connected, String socialNetwork) {
+        return null;
+    }
+
+    @Override
+    public Properties coursesVisibleToFriendsChange(boolean visible) {
+        return null;
+    }
 }

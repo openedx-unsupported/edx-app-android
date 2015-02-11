@@ -27,12 +27,13 @@
     <string name="action_settings">Settings</string>
     <string name="label_my_courses">My Courses</string>
     <string name="label_my_videos">My Videos</string>
+    <string name="label_find_courses">Find Courses</string>
     <string name="label_submit_feedback">Submit Feedback</string>
     <string name="email_subject">Submit Feedback</string>
     <string name="toggle_turn_on">ON</string>
     <string name="toggle_turn_off">OFF</string>
     <string name="logout">Logout</string>
-    <string name="download_only">Download only \non Wi-Fi</string>
+    <string name="download_only">Download only on Wi-Fi</string>
     <string name="settings_txt">Settings</string>
     <string name="offline_msg">You are offline</string>
     <string name="label_version">Version</string>
@@ -52,6 +53,8 @@
     <string name="delete_single_video_dialog">Are you sure you want to\n delete this video?</string>
     <string name="delete_multiple_video_dialog">Are you sure you want to\n delete these videos?</string>
     <string name="delete_successful_dialog_title_help">Delete</string>
+    <string name="leaving_app_data_title">Leaving the edX App</string>
+    <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free edX content. Data charges may apply.</string>
 
     <!-- Reset Dialog Fragment Place Holder messages -->
     <string name="reset_dialog_title">Reset Title</string>
@@ -149,6 +152,7 @@
     <string name="cc_spanish_code">es</string>
     <string name="lbl_cc_spanish">Spanish</string>
     <string name="lbl_cc_cancel">None</string>
+
     <string name="find_course_text">Looking for a new challenge?</string>
     <string name="find_course_btn_text">FIND A MOBILE-FRIENDLY COURSE</string>
     <string name="signin_with_text">Or Sign in with</string>

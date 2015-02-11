@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -42,10 +41,21 @@ public class Router {
     }
 
     public void showMyVideos(Activity sourceActivity) {
-        Intent myVideosIntent = new Intent(sourceActivity,
-                MyVideosTabActivity.class);
+        Intent myVideosIntent = new Intent(sourceActivity, MyVideosTabActivity.class);
         myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(myVideosIntent);
+    }
+
+    public void showMyGroups(Activity sourceActivity) {
+        Intent myGroupsIntent = new Intent(sourceActivity, MyGroupsListActivity.class);
+        myGroupsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        sourceActivity.startActivity(myGroupsIntent);
+    }
+
+    public void showSettings(Activity sourceActivity) {
+        Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        sourceActivity.startActivity(settingsIntent);
     }
 
     public void showLaunchScreen(Activity sourceActivity) {

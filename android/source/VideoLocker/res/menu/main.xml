@@ -20,5 +20,21 @@
         android:actionLayout="@layout/view_actionbar_checkbox"
         android:showAsAction="always"
         android:title="@string/label_delete"/>
+
+    <item
+        android:id="@+id/done_btn"
+        android:actionLayout="@layout/view_done_btn"
+        android:showAsAction="always"
+        android:title="@string/done_text"
+        android:visible="false"
+        />
+
+    <item
+        android:id="@+id/unread_display"
+        android:actionLayout="@layout/view_unread_text"
+        android:showAsAction="always"
+        android:title="@string/unread_text"
+        android:visible="false"
+        />
    
 </menu>

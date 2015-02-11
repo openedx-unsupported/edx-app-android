@@ -83,6 +83,26 @@ public interface ISegment {
      */
     void setTracker(ISegmentTracker tracker);
     
+    Properties trackUserCellConnection(String carrierName, boolean isZeroRated);
+
+    Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed);
+
+    Properties courseGroupAccessed(String courseId);
+
+    Properties gameGroupAccessed(long groupID, int groupUserCount);
+
+    Properties groupCreated(long groupID, int invitedUserCount);
+
+    Properties groupInvited(long groupID, int invitedUserCount);
+
+    Properties courseShared(String courseId, String socialNetwork);
+
+    Properties certificateShared(String courseId, String socialNetwork);
+
+    Properties socialConnectionEvent(boolean connected, String socialNetwork);
+
+    Properties coursesVisibleToFriendsChange(boolean visible);
+
     public static interface Keys{
         public static final String NAME = "name";
         public static final String OLD_TIME = "old_time";
@@ -123,6 +143,31 @@ public interface ISegment {
         public static final String LANGUAGE_CLICKED = "Language Clicked";
         public static final String USER_NO_ACCOUNT = "User Has No Account Clicked";
         public static final String FIND_COURSES = "Find Courses Clicked";
+
+        public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
+        public static final String CELL_CARRIER = "cell_carrier";
+        public static final String CELL_ZERO_RATED = "cell_zero_rated";
+
+        public static final String SPEED = "Connected Speed Report";
+        public static final String CONNECTION_TYPE = "connection_type";
+        public static final String CONNECTION_SPEED = "connection_speed";
+
+        public static final String GROUP_ID = "group_id";
+        public static final String GROUP_USER_COUNT = "group_user_count";
+        public static final String GROUP_INVITED_USER_COUNT = "group_invited_count";
+        public static final String SOCIAL_NETWORK = "social_network";
+        public static final String SOCIAL_CONNECTION_STATE = "social_connection_state";
+        public static final String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
+
+        public static final String COURSE_GROUP_ACCESSED = "Course Group Accessed";
+        public static final String GAME_GROUP_ACCESSED = "Game Group Accessed";
+        public static final String GAME_GROUP_CREATE = "Game Group Created";
+        public static final String GAME_GROUP_INVITE = "Game Group Invited";
+        public static final String SOCIAL_COURSE_SHARED = "Social Course Shared";
+        public static final String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
+        public static final String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
+        public static final String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
+
     }
     
     public static interface Values{
@@ -153,6 +198,22 @@ public interface ISegment {
         public static final String APP_NAME = "edx.mobileapp.android";
         public static final String USER_NO_ACCOUNT = "edx.bi.app.user.no_account";
         public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
+
+        public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
+        public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";
+
+        public static final String ACCESS_COURSE_GROUP = "edx.bi.app.groups.course_access";
+        public static final String ACCESS_GAME_GROUP = "edx.bi.app.groups.game_access";
+        public static final String CREATE_GAME_GROUP = "edx.bi.app.groups.game_create";
+        public static final String INVITE_GAME_GROUP = "edx.bi.app.groups.game_invite";
+        public static final String SOCIAL_COURSE_SHARED = "edx.bi.app.social.course_share";
+        public static final String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.social.certificate_share";
+        public static final String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
+        public static final String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
+
+        public static final String WIFI = "wifi";
+        public static final String CELL_DATA = "cell_data";
+
         public static final String COURSE_INFO_SCREEN = "Course Info";
         public static final String LAUNCH_ACTIVITY = "Launch";
     }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 
 public class SocialFactory {
 
@@ -13,14 +14,16 @@ public class SocialFactory {
     
     public static ISocial getInstance(Activity activity, int type) {
         if (type == TYPE_GOOGLE) {
-            if (Config.getInstance().getThirdPartyTraffic().isGoogleEnabled()) {
+            if (NetworkUtil.isAllowedThirdPartyTraffic(activity)
+                && Config.getInstance().getThirdPartyTraffic().isGoogleEnabled()) {
                 return new GoogleOauth2(activity);
             }
             else {
                 return new ISocialEmptyImpl();
             }
         } else if (type == TYPE_FACEBOOK) {
-            if (Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()) {
+            if (NetworkUtil.isAllowedThirdPartyTraffic(activity)
+                    && Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()) {
                 return new FacebookAuth(activity);
             }
             else {

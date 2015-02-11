@@ -18,7 +18,8 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
+
+import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -27,12 +28,14 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.LectureAdapter;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,8 +92,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         adapter = new LectureAdapter(this) {
             @Override
             public void onItemClicked(LectureModel model) {
-                try{
-                    if(model.videos!=null && model.videos.size()>0 && enrollment!=null){
+                try {
+                    if (model.videos != null && model.videos.size() > 0 && enrollment != null) {
                         String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                                 .username, enrollment.getCourse().getId());
                         PrefManager prefManager = new PrefManager(CourseLectureListActivity.this, prefName);
@@ -103,71 +106,70 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     videoIntent.putExtra("lecture", model);
                     videoIntent.putExtra("FromMyVideos", false);
                     startActivity(videoIntent);
-                }catch(Exception e){
+                } catch (Exception e) {
                     logger.error(e);
                 }
             }
 
             @Override
-            public void download(LectureModel lecture) {
-                try {
-                    // check if download is only allowed over wifi
-                    PrefManager wifiPrefManager = new PrefManager(
-                            context, PrefManager.Pref.WIFI);
-                    boolean onlyWifi = wifiPrefManager.getBoolean(
-                            PrefManager.Key.DOWNLOAD_ON_WIFI, true);
-                    Context context = CourseLectureListActivity.this;
-                    boolean startDownloadFlag = false;
-                    if (onlyWifi && NetworkUtil.isConnectedWifi(context)) {
-                        startDownloadFlag = true;
-                    }else if(!onlyWifi && (NetworkUtil.isConnectedWifi(context)
-                            ||NetworkUtil.isConnectedMobile(context))) {
-                        startDownloadFlag = true;
-                    }else{
-                        startDownloadFlag = false;
-                    }
-                    if(startDownloadFlag){
-                        if (lecture.videos != null) {
-                            long downloadSize = 0;
-                            int downloadCount = 0;
-                            ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
-                            for (VideoResponseModel v : lecture.videos) {
-                                DownloadEntry de = (DownloadEntry) storage
-                                        .getDownloadEntryfromVideoResponseModel(v);
 
-                                if(de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                                        || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED){
-                                    continue;
-                                }else{
-                                    downloadSize = downloadSize +  v.getSummary().getSize();
-                                    downloadList.add(de);
-                                    downloadCount++;
-                                }
-                            }
-                            if(downloadSize > MemoryUtil.getAvailableExternalMemory(context)){
-                                showMessage(getString(R.string.file_size_exceeded));
-                                updateList();
-                            }else{
-                                if(downloadSize < MemoryUtil.GB){
-                                    startDownload(downloadList, downloadCount);
-                                }else{
-                                    showDownloadSizeExceedDialog(downloadList, downloadCount);
-                                }
-                            }
+            public void download(final LectureModel lecture) {
+                if (!NetworkUtil.isConnected(getContext())) {
+                    showMessage(getString(R.string.need_data));
+                    updateList();
+                } else {
+                    IDialogCallback dialogCallback = new IDialogCallback() {
+                        @Override
+                        public void onPositiveClicked() {
+                            startLectureDownload(lecture);
                         }
-                    }else{
-                        showMessage(getString(R.string.wifi_off_message));
-                        updateList();
-                    }
-                } catch(Exception ex) {
-                    logger.error(ex);
+
+                        @Override
+                        public void onNegativeClicked() {
+                            //
+                        }
+                    };
+                    MediaConsentUtils.consentToMediaDownload(CourseLectureListActivity.this, dialogCallback);
                 }
-            }
+            };
+
         };
     }
+    private void startLectureDownload(LectureModel lecture) {
+
+        long downloadSize = 0;
+        int downloadCount = 0;
+        ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
+        for (VideoResponseModel v : lecture.videos) {
+        DownloadEntry de = (DownloadEntry) storage
+                .getDownloadEntryfromVideoResponseModel(v);
+
+        if(de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
+                || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED){
+                continue;
+            }else{
+                downloadSize = downloadSize +  v.getSummary().getSize();
+                downloadList.add(de);
+                downloadCount++;
+            }
+        }
+        if(downloadSize > MemoryUtil.getAvailableExternalMemory(this)){
+            showMessage(getString(R.string.file_size_exceeded));
+            updateList();
+        }else{
+            if(downloadSize < MemoryUtil.GB){
+                startDownload(downloadList, downloadCount);
+            }else{
+                showDownloadSizeExceedDialog(downloadList, downloadCount);
+            }
+        }
+
+    }
+
 
     private void loadData() {
-        SectionEntry chapter = (SectionEntry) getIntent().getSerializableExtra("chapter");
+        SectionEntry chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
+        setTitle(chapter.chapter);
         activityTitle = chapter.chapter;
 
         if(chapter.sections.entrySet().size()>0){
@@ -309,8 +311,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
     public void startDownload(ArrayList<DownloadEntry> downloadList, int noOfDownloads){
         try{
-            segIO.trackSubSectionBulkVideoDownload(downloadList.get(0).chapter, 
-                    downloadList.get(0).section, downloadList.get(0).eid, noOfDownloads);
+            segIO.trackSubSectionBulkVideoDownload(downloadList.get(0).getChapterName(),
+                    downloadList.get(0).getSectionName(), downloadList.get(0).getEnrollmentId(), noOfDownloads);
         }catch(Exception e){
             logger.error(e);
         }

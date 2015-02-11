@@ -6,23 +6,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import org.edx.mobile.logger.Logger;
 
-public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemClickListener {
+public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnItemClickListener {
 
     // constants that define selection state of list rows
     public static final int STATE_NOT_SELECTED = 0;
     public static final int STATE_SELECTED = 1;
-    protected Context context;
-    private ArrayList<T> items = new ArrayList<T>();
+    private final int layoutResource;
+
     private SparseIntArray selection = new SparseIntArray(); 
     public static final long MIN_CLICK_INTERVAL = 1000; //in millis
     protected final Logger logger = new Logger(getClass().getName());
     
-    public BaseListAdapter(Context context) {
-        this.context = context;
+    public BaseListAdapter(Context context, int layoutResourceId) {
+        super(context, layoutResourceId);
+        layoutResource = layoutResourceId;
     }
     
     /**
@@ -82,72 +84,32 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
         }
         return selectedItems;
     }
-
-    /**
-     * Adds given item to this adapter.
-     * @param item
-     */
-    public void add(T item) {
-        items.add(item);
-    }
-    
-    /**
-     * Removes specified object from the adapter and returns success.
-     * @param item
-     * @return
-     */
-    public boolean remove(T item) {
-        return items.remove(item);
-    }
     
     /**
      * Clears existing items from the adapter and sets given list as the data. 
      * If null is provided, this method clears the existing values. 
      * This avoids null value errors. 
-     * @param items
+     * @param newItems
      */
-    public void setItems(ArrayList<T> items) {
-        if (items == null) {
-            this.items.clear();
-        } else {
-            this.items = items;
+    public void setItems(ArrayList<T> newItems) {
+        clear();
+
+        if (newItems != null) {
+            addAll(newItems);
         }
-        this.selection.clear();
     }
     
     /**
      * Clears all items from this adapter.
      */
     public void clear() {
-        items.clear();
+        super.clear();
         selection.clear();
-    }
-
-    @Override
-    public int getCount() {
-        return items.size();
-    }
-
-    @Override
-    public T getItem(int index) {
-        //Check if the size of items is greater than the index
-        if(index >= 0 && items.size()>index)
-            return items.get(index);
-        return null;
-    }
-
-    public int getPosition(T item) {
-        int pos = items.indexOf(item);
-        return pos;
     }
     
     @Override
     public long getItemId(int index) {
         return index;
-    }
-    
-    public ArrayList<T> getItems() {
-        return items;
     }
 
     @Override
@@ -155,8 +117,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
         try {
             if (convertView == null) {
                 // create list row
-                LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflator.inflate(getListItemLayoutResId(), null);
+                convertView = LayoutInflater.from(getContext()).inflate(layoutResource, adapter, false);
                 
                 // apply a tag to this list row
                 BaseViewHolder tag = getTag(convertView);
@@ -169,7 +130,7 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
             tag.position = position;
             
             // get model data for this list row
-            T model = items.get(position);
+            T model = getItem(position);
             
             // now render data for this list row
             render(tag, model);
@@ -198,12 +159,6 @@ public abstract class BaseListAdapter<T> extends BaseAdapter implements OnItemCl
      * @return
      */
     public abstract BaseViewHolder getTag(View convertView);
-
-    /**
-     * Sub-class should override this method to return layoutId of list item layout.
-     * @return
-     */
-    public abstract int getListItemLayoutResId();
 
     /**
      * Base class for ViewHolders in individual adapters.

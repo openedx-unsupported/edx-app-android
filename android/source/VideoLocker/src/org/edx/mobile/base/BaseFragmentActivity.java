@@ -30,6 +30,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.interfaces.NetworkObserver;
+import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -49,7 +51,10 @@ import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
-public class BaseFragmentActivity extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
 
     public static final String ACTION_SHOW_MESSAGE = "ACTION_SHOW_MESSAGE";
     // per second callback
@@ -64,6 +69,35 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected IDatabase db;
     protected IStorage storage;
     protected ISegment segIO;
+
+    private List<NetworkObserver> networkObservers = new ArrayList<NetworkObserver>();
+
+    public void registerNetworkObserver(NetworkObserver observer){
+        if(observer != null && !networkObservers.contains(observer)){
+            networkObservers.add(observer);
+        }
+    }
+
+    public void unregisterNetworkObserver(NetworkObserver observer){
+        if(observer != null && networkObservers.contains(observer)){
+            networkObservers.remove(observer);
+        }
+    }
+
+    @Override
+    public void notifyNetworkDisconnect(){
+        for(NetworkObserver o : networkObservers){
+            o.onOffline();
+        }
+    }
+
+    @Override
+    public void notifyNetworkConnect(){
+        for(NetworkObserver o : networkObservers){
+            o.onOnline();
+        }
+    }
+
     protected boolean runOnTick = true;
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -103,6 +137,14 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
+
+        handler.sendEmptyMessage(MSG_TYPE_TICK);
+
+        PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
+
+        boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this);
+
+        pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
         // register receiver for showing flying message
         IntentFilter filter = new IntentFilter(ACTION_SHOW_MESSAGE);
@@ -391,7 +433,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             animateLayouts(downloadMessageTv);
             return true;
         } else {
-            logger.warn("textview not available, so couldn't show flying message");
+            logger.warn("TextView not available, so couldn't show flying message");
         }
 
         return false;
@@ -508,6 +550,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                         public void run() {
                             AppConstants.offline_flag = false;
                             onOnline();
+                            notifyNetworkConnect();
                         }
                     });
                 }
@@ -518,6 +561,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                         public void run() {
                             AppConstants.offline_flag = true;
                             onOffline();
+                            notifyNetworkDisconnect();
                         }
                     });
                 }
@@ -639,7 +683,7 @@ public class BaseFragmentActivity extends FragmentActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    protected void showWebDialog(String fileName, boolean showTitle, String dialogTitle){
+    public void showWebDialog(String fileName, boolean showTitle, String dialogTitle){
         //Show the dialog only if the activity is started. This is to avoid Illegal state
         //exceptions if the dialog fragment tries to show even if the application is not in foreground
         if(isActivityStarted()){

@@ -3,12 +3,29 @@
     
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="width_chapter_text">195dp</dimen>
-     <dimen name="width_video_text">200dp</dimen>
-     <dimen name="checkbox_margin">10dp</dimen>
-     <dimen name="checkbox_size">25dp</dimen>
-     <dimen name="edx_logo_height">125dp</dimen>
-     <dimen name="logo_margin_top">20dp</dimen>
-     <dimen name="logo_margin_bottom">15dp</dimen>
-     <dimen name="social_margin_top">20dp</dimen>
-     <dimen name="social_margin_bottom">15dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="avatar_view_width">32dp</dimen>
+    <dimen name="avatar_view_height">32dp</dimen>
+    <dimen name="avatar_image_radius">6dp</dimen>
+    <dimen name="avatar_image_radius_small">3dp</dimen>
+    <dimen name="avatar_border_width">1dp</dimen>
+    <dimen name="group_avatar_radius">3dp</dimen>
+    <dimen name="group_avatar_gap">1px</dimen>
+    <dimen name="group_avatar_overflow_text">24sp</dimen>
+    <dimen name="course_detail_margin_left">20dp</dimen>
+    <dimen name="course_detail_margin">12dp</dimen>
+
+    <dimen name="width_video_text">200dp</dimen>
+    <dimen name="checkbox_margin">10dp</dimen>
+    <dimen name="checkbox_size">25dp</dimen>
+    <dimen name="edx_logo_height">125dp</dimen>
+    <dimen name="logo_margin_top">20dp</dimen>
+    <dimen name="logo_margin_bottom">15dp</dimen>
+    <dimen name="social_margin_top">20dp</dimen>
+    <dimen name="social_margin_bottom">15dp</dimen>
+
+    <dimen name="switch_corner_radius">3dp</dimen>
+    <dimen name="switch_default_height">25dp</dimen>
+    <dimen name="switch_default_width">60dp</dimen>
 </resources>

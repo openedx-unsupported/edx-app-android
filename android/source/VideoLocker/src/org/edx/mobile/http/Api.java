@@ -11,6 +11,8 @@ import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
+import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
+import org.edx.mobile.http.serialization.ShareCourseResult;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -31,9 +33,14 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.json.CreateGroupResponse;
+import org.edx.mobile.model.json.GetFriendsListResponse;
+import org.edx.mobile.model.json.GetGroupMembersResponse;
+import org.edx.mobile.model.json.SuccessResponse;
 import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -43,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -173,6 +181,8 @@ public class Api {
         // hold the json string as it is
         res.json = json;
 
+        logger.debug("profile=" + json);
+
         return res;
     }
 
@@ -257,7 +267,7 @@ public class Api {
 
         //Initializing task call
         logger.debug("Received Data from Server at : "+ DateUtil.getCurrentTimeStamp());
-        logger.debug("Course hierarchy response= " + json);
+        logger.debug("course_hierarchy= " + json);
 
         Gson gson = new GsonBuilder().create();
         TypeToken<ArrayList<VideoResponseModel>> t = new TypeToken<ArrayList<VideoResponseModel>>() {
@@ -463,11 +473,11 @@ public class Api {
     /**
      * Returns enrolled courses of given user.
      * 
-     * @param preferCache
+     * @param fetchFromCache
      * @return
      * @throws Exception
      */
-    public ArrayList<EnrolledCoursesResponse> getEnrolledCourses(boolean preferCache) throws Exception {
+    public ArrayList<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
 
         Bundle p = new Bundle();
@@ -475,13 +485,16 @@ public class Api {
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + pref.getCurrentUserProfile().username
                 + "/course_enrollments/";
         String json = null;
-        if (NetworkUtil.isConnected(context) && !preferCache) {
+
+        if (NetworkUtil.isConnected(context) && !fetchFromCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             json = http.get(urlWithAppendedParams, getAuthHeaders());
             // cache the response
             cache.put(url, json);
-        } else {
+        }
+
+        if(json == null) {
             json = cache.get(url);
         }
 
@@ -489,7 +502,7 @@ public class Api {
             return null;
         }
 
-        logger.debug("Url "+"getEnrolledCourses=" + json);
+        logger.debug("Url "+"enrolled_courses=" + json);
 
         Gson gson = new GsonBuilder().create();
 
@@ -535,6 +548,7 @@ public class Api {
         } else {
             json = cache.get(url);
         }
+        logger.debug("videos_by_course=" + json);
 
         Gson gson = new GsonBuilder().create();
         TypeToken<ArrayList<VideoResponseModel>> t = new TypeToken<ArrayList<VideoResponseModel>>() {
@@ -571,6 +585,7 @@ public class Api {
         if (json == null) {
             return null;
         }
+        logger.debug("handout=" + json);
 
         Gson gson = new GsonBuilder().create();
         HandoutModel res = gson.fromJson(json, HandoutModel.class);
@@ -708,8 +723,6 @@ public class Api {
     }
 
     /**
-=======
->>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -778,9 +791,201 @@ public class Api {
         return list;
     }
 
+    public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
+        return getFriendsCourses(false, oauthToken);
+    }
+
+    public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+        params.putString("oauth_token", oauthToken);
+
+        String json;
+        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/courses/friends";
+        if (NetworkUtil.isConnected(context) && !preferCache) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
+           logger.debug(urlWithAppendedParams);
+            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            // cache the response
+            cache.put(url, json);
+        } else {
+            json = cache.get(url);
+        }
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("get_friends_courses=" + json);
+
+        Gson gson = new GsonBuilder().create();
+
+        AuthErrorResponse authError = null;
+        try {
+            // check if auth error
+            authError = gson.fromJson(json, AuthErrorResponse.class);
+        } catch(Exception ex) {
+            // nothing to do here
+        }
+        if (authError != null && authError.detail != null) {
+            throw new AuthException(authError);
+        }
+
+        EnrolledCoursesResponse[] courseItems = gson.fromJson(json, EnrolledCoursesResponse[].class);
+
+        List<EnrolledCoursesResponse> list = Arrays.asList(courseItems);
+
+        return list;
+
+    }
+
+    public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
+        return getFriendsInCourse(false, courseId, oauthToken);
+    }
+
+    public List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+        params.putString("oauth_token", oauthToken);
+
+        String json;
+        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/friends/course/" + courseId;
+        if (NetworkUtil.isConnected(context) && !preferCache) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
+            logger.debug(urlWithAppendedParams);
+            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            // cache the response
+            cache.put(url, json);
+        } else {
+            json = cache.get(url);
+        }
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("friends_in_course=" + json);
+
+        GetFriendsListResponse response = new Gson().fromJson(json, GetFriendsListResponse.class);
+        return response.getFriends();
+    }
+
+    public boolean inviteFriendsToGroup(long[] toInvite, long groupId, String oauthToken) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+        //make a csv of the array
+        StringBuilder csv = new StringBuilder();
+        for (int i = 0; i < toInvite.length; i++) {
+            csv.append(Long.toString(toInvite[i]));
+            if ((i + 1) < toInvite.length) {
+                csv.append(",");
+            }
+        }
+        params.putString("member_ids", csv.toString());
+        params.putString("oauth_token", oauthToken);
+
+        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/groups/" + Long.toString(groupId) + "/member/";
+        String json = http.post(url, params, getAuthHeaders());
+
+        if (json == null) {
+            return false;
+        }
+        logger.debug("invite_friends=" + json);
+
+        SuccessResponse response = new Gson().fromJson(json, SuccessResponse.class);
+        return response.isSuccess();
+    }
+
     /**
-=======
->>>>>>> master
+     *  return of -1 indicates an error
+     */
+    public long createGroup(String name, String description, boolean privacy, long adminId, String socialToken) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+        params.putString("name", name);
+        params.putString("description", description);
+        params.putString("privacy", privacy ? "open" : "closed");
+        params.putString("admin-id", Long.toString(adminId));
+        params.putString("oauth_token", socialToken);
+
+        //String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/groups/create/";
+        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/groups/";
+        String json = http.post(url, params, getAuthHeaders());
+
+        if (json == null) {
+            return -1;
+        }
+        logger.debug("create_group=" + json);
+
+        CreateGroupResponse response = new Gson().fromJson(json, CreateGroupResponse.class);
+        return Long.valueOf(response.getId());
+    }
+
+    public boolean setUserCourseShareConsent(boolean consent) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+        params.putString("share_with_facebook_friends", Boolean.toString(consent));
+
+        String url = getBaseUrl() + "/api/mobile/v0.5/settings/preferences/";
+        String json = http.post(url, params, getAuthHeaders());
+
+        if (json == null) {
+            return false;
+        }
+        logger.debug("course_share_consent=" + json);
+
+        Gson gson = JsonBooleanDeserializer.getCaseInsensitiveBooleanGson();
+
+        SuccessResponse response = gson.fromJson(json, ShareCourseResult.class);
+        return response.isSuccess();
+    }
+
+    public boolean getUserCourseShareConsent() throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+
+        String url = getBaseUrl() + "/api/mobile/v0.5/settings/preferences/";
+        String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
+        String json = http.get(urlWithAppendedParams, getAuthHeaders());
+
+        if (json == null) {
+            return false;
+        }
+        logger.debug("course_share_consent=" + json);
+
+        Gson gson = JsonBooleanDeserializer.getCaseInsensitiveBooleanGson();
+
+        SuccessResponse response = gson.fromJson(json, ShareCourseResult.class);
+        return response.isSuccess();
+    }
+
+    public List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception {
+        Bundle params = new Bundle();
+        params.putString("format", "json");
+
+        String json;
+        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/groups/" + groupId + "/members";
+        if (NetworkUtil.isConnected(context) && !preferCache) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
+            logger.debug(urlWithAppendedParams);
+            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            // cache the response
+            cache.put(url, json);
+        } else {
+            json = cache.get(url);
+        }
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("get_group_members=" + json);
+
+        GetGroupMembersResponse response = new Gson().fromJson(json, GetGroupMembersResponse.class);
+        return response.getMembers();
+    }
+
+    /**
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception
