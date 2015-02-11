@@ -218,6 +218,22 @@ public class HttpManager {
         post.setEntity(se);
 
         HttpResponse response = client.execute(post);
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode == 404 || statusCode == 400) {
+            // Enroll endpoint may return 404 and 400 errors
+            logger.debug("Response of HTTP " + statusCode);
+
+            JSONObject json = new JSONObject();
+            try {
+                json.put("error", String.valueOf(statusCode));
+            } catch (JSONException e) {
+                logger.error(e);
+            }
+
+            // end connection and return
+            client.getConnectionManager().shutdown();
+            return json.toString();
+        }
         InputStream inputStream = AndroidHttpClient
                 .getUngzippedContent(response.getEntity());
         String strRes = IOUtils.toString(inputStream);

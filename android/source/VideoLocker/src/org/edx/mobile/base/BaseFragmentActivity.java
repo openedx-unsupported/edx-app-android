@@ -30,7 +30,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -51,6 +53,7 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
+    public static final String ACTION_SHOW_MESSAGE = "ACTION_SHOW_MESSAGE";
     // per second callback
     private static final int MSG_TYPE_TICK = 9302;
 
@@ -102,6 +105,11 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
+
+        // register receiver for showing flying message
+        IntentFilter filter = new IntentFilter(ACTION_SHOW_MESSAGE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(showFlyingMessageReceiver, filter);
 
         //Check if the the onTick method needs to be run
         //This has been done to handle unwanted call to onTick() from login screen
@@ -173,6 +181,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
+        unregisterReceiver(showFlyingMessageReceiver);
     }
 
     @Override
@@ -375,13 +384,19 @@ public class BaseFragmentActivity extends FragmentActivity {
     /**
      * Animate / show the download started message
      * @param message - Message to display on the Download Panel
+     * @return boolean - Returns true if message shown, false otherwise.
      */
-    public void showMessage(String message){
+    public boolean showMessage(String message){
         TextView downloadMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(downloadMessageTv!=null){
+        if(downloadMessageTv!=null) {
             downloadMessageTv.setText(message);
             animateLayouts(downloadMessageTv);
+            return true;
+        } else {
+            logger.warn("textview not available, so couldn't show flying message");
         }
+
+        return false;
     }
 
     /**
@@ -638,4 +653,29 @@ public class BaseFragmentActivity extends FragmentActivity {
             webViewFragment.show(getSupportFragmentManager(), "dialog");
         }
     }
+
+    /**
+     * Receives the sticky broadcast message and attempts showing flying message.
+     * If message gets shown then removes this sticky broadcast.
+     */
+    private BroadcastReceiver showFlyingMessageReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (intent.getAction().equals(ACTION_SHOW_MESSAGE)) {
+                    String message = intent.getStringExtra("message");
+                    if (showMessage(message)) {
+                        // make this message one-shot
+                        removeStickyBroadcast(intent);
+                    } else {
+                        // may be some other screen will display this message
+                        // do nothing here, do NOT remove broadcast
+                    }
+                }
+            } catch(Exception ex) {
+                logger.error(ex);
+            }
+        }
+    };
 }

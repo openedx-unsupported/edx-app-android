@@ -163,4 +163,7 @@
     <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the internet.</string>
     <string name="email_chooser_header">Send email using...</string>
     <string name="email_client_not_present">No e-mail clients installed</string>
+    <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
+    <string name="try_again">TRY AGAIN</string>
+    <string name="you_are_now_enrolled">You are now enrolled</string>
 </resources>

@@ -1,8 +1,11 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.webkit.WebView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
+import org.edx.mobile.util.Config;
 
 public class FindCoursesActivity extends FindCoursesBaseActivity {
 
@@ -20,5 +23,14 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         }catch(Exception e){
             logger.error(e);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        String url = Config.getInstance().getEnrollment().getSearchUrl();
+        WebView webview = (WebView) findViewById(R.id.webview);
+        webview.loadUrl(url);
     }
 }

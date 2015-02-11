@@ -89,27 +89,34 @@
             android:layout_marginRight="15dp"
             android:background="@color/grey_name_background" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/find_courses_tv"
-            style="@style/regular_white_text"
+        <LinearLayout
+            android:id="@+id/panel_option_find_courses"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_drawer_menu"
-            android:background="@drawable/nav_bg_selector"
-            android:gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="10dp"
-            android:text="@string/find_courses_title"
-            android:textAllCaps="true"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@color/grey_name_background" />
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/find_courses_tv"
+                style="@style/regular_white_text"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_drawer_menu"
+                android:background="@drawable/nav_bg_selector"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/find_courses_title"
+                android:textAllCaps="true"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/grey_name_background" />
+        </LinearLayout>
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/my_email"
