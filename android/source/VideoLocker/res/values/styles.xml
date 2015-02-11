@@ -66,7 +66,7 @@
         <item name="android:layout_height">3dp</item>
         <item name="android:background">@color/blue_bar</item>
     </style>
-    
+
     <style name="course_detail_style">
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
@@ -80,6 +80,13 @@
     <style name="custom_fb_btn_style">
         <item name="android:background">@drawable/custom_fb_button_selector</item>
         <item name="android:drawablePadding">2dp</item>
+    </style>
+
+    <style name="spinner_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <!-- <item name="android:background">@color/white</item> -->
+        <item name="android:layout_marginTop">8dp</item>
     </style>
 
 </resources>

@@ -1,29 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.edx.mobile.R;
-import org.edx.mobile.exception.LoginErrorMessage;
-import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SocialLoginResponse;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.task.LoginTask;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.ResetPasswordDialog;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.social.ISocial;
-import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.dialog.SuccessDialogFragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,24 +7,45 @@ import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.exception.LoginErrorMessage;
+import org.edx.mobile.exception.LoginException;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.SocialLoginResponse;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.ISocial;
+import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
+import org.edx.mobile.view.dialog.SuccessDialogFragment;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseFragmentActivity {
 
     private TextView login_tv;
     private EditText email_et, password_et;
-    private String[] email;
-    public static final String KEY_EMAIL = "Email";
 
     private SimpleAlertDialog NoNetworkFragment;
 
@@ -58,24 +55,22 @@ public class LoginActivity extends BaseFragmentActivity {
     private RelativeLayout loginButtonLayout;
     public String emailStr;
     private TextView forgotPassword_tv;
-    private TextView signupTv, eulaTv;
+    private TextView eulaTv;
     private ISocial google, facebook;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        overridePendingTransition(R.anim.slide_in_from_right,
-                R.anim.slide_out_to_left);
+        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        hideSoftKeypad();
 
         runOnTick = false;
 
         // setup for social login
         SocialLogin();
-        
+
         google.onActivityCreated(this, savedInstanceState);
         facebook.onActivityCreated(this, savedInstanceState);
 
@@ -113,19 +108,6 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         });
 
-        signupTv = (TextView) findViewById(R.id.new_user_tv);
-        signupTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    segIO.trackUserDoesNotHaveAccount();
-                }catch(Exception e){
-                    logger.error(e);
-                }
-                showNewUserDialog();
-            }
-        });
-
         eulaTv = (TextView) findViewById(R.id.end_user_agreement_tv);
         eulaTv.setOnClickListener(new OnClickListener() {
             @Override
@@ -140,30 +122,45 @@ public class LoginActivity extends BaseFragmentActivity {
             logger.error(e);
         }
 
-        final View activityRootView = findViewById(R.id.root_view);
-        try{
-            activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    try{
-                        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                        if (heightDiff > 100) {
-                        // if more than 100 pixels, its probably a keyboard, hence hide the bottom layout.
-                            hideBottomLayout();
-                        }else{
-                            showBottomLayout();
-                        }
-                    }catch(Exception e){
-                        logger.error(e);
-                    }
-                }
-            });
-        }catch(Exception e){
-            logger.error(e);
-        }
-        
         // enable login buttons at launch
         setLoginBtnEnabled();
+
+        ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
+        if(closeButton!=null){
+            closeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+        }
+
+        // enable login buttons at launch
+        setLoginBtnEnabled();
+
+        // check if third party traffic is enabled
+        boolean isAllowedThirdPartyTraffic = NetworkUtil.isAllowedThirdPartyTraffic(getApplicationContext());
+        Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
+
+        if ( !isAllowedThirdPartyTraffic) {
+            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+        } else {
+            if (!thirdPartyTrafficConfig.isFacebookEnabled()
+                    && !thirdPartyTrafficConfig.isGoogleEnabled()) {
+                findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+            }
+            else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
+                findViewById(R.id.facebook_layout).setVisibility(View.GONE);
+            }
+            else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
+                findViewById(R.id.google_layout).setVisibility(View.GONE);
+            }
+        }
+
+        TextView customTitle = (TextView) findViewById(R.id.activity_title);
+        if(customTitle!=null){
+            customTitle.setText(getString(R.string.login_title));
+        }
     }
     
     @Override
@@ -210,12 +207,6 @@ public class LoginActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_left);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         google.onActivityResult(requestCode, resultCode, data);
@@ -250,15 +241,22 @@ public class LoginActivity extends BaseFragmentActivity {
                 email_et.requestFocus();
             }
 
+            else if (!matchFound) {
+                showErrorMessage(getString(R.string.login_error),
+                        getString(R.string.error_invalid_email));
+                email_et.requestFocus();
+            }
+
             else if (password_et != null && passwordStr.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_password));
                 password_et.requestFocus();
-            } else {
+            }
+
+            else {
                 email_et.setEnabled(false);
                 password_et.setEnabled(false);
                 forgotPassword_tv.setEnabled(false);
-                signupTv.setEnabled(false);
                 eulaTv.setEnabled(false);
 
                 clearDialogs();
@@ -349,15 +347,10 @@ public class LoginActivity extends BaseFragmentActivity {
 
     public void showEulaDialog() {
         clearDialogs();
-        showWebDialog(getString(R.string.eula_file_link), true, 
+        showWebDialog(getString(R.string.eula_file_link), true,
                 getString(R.string.end_user_title));
     }
     
-    public void showNewUserDialog() {
-        clearDialogs();
-        showWebDialog(getResources().getString(R.string.new_user_file_name), false, null);
-    }
-
     public void showResetFailure(String text) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.title_reset_password_failed));
@@ -382,7 +375,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnDisabled() {
         blockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
+        loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
         loginButtonLayout.setEnabled(false);
         login_tv.setText(getString(R.string.signing_in));
         
@@ -395,7 +388,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void setLoginBtnEnabled() {
         unblockTouch();
         
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_default);
+        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
         loginButtonLayout.setEnabled(true);
         login_tv.setText(getString(R.string.login));
         
@@ -435,10 +428,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void myCourseScreen() {
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
-            
-            Intent intent = new Intent(LoginActivity.this,
-                    MyCoursesListActivity.class);
-            startActivity(intent);
+            Router.getInstance().showMyCourses(this);
         }
         
         // but finish this screen anyways as login is succeeded
@@ -457,28 +447,6 @@ public class LoginActivity extends BaseFragmentActivity {
         return true;
     }
 
-    private void showBottomLayout(){
-        try{
-            View bottomLayout = findViewById(R.id.bottom_layout);
-            if(bottomLayout!=null){
-                bottomLayout.setVisibility(View.VISIBLE);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    private void hideBottomLayout(){
-        try{
-            View bottomLayout = findViewById(R.id.bottom_layout);
-            if(bottomLayout!=null){
-                bottomLayout.setVisibility(View.GONE);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-    
     private ISocial.Callback googleCallback = new ISocial.Callback() {
         
         @Override
@@ -548,7 +516,6 @@ public class LoginActivity extends BaseFragmentActivity {
         email_et.setEnabled(true);
         password_et.setEnabled(true);
         forgotPassword_tv.setEnabled(true);
-        signupTv.setEnabled(true);
         eulaTv.setEnabled(true);
 
         // handle if this is a LoginException
@@ -702,4 +669,10 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         }
     };
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
+    }
 }

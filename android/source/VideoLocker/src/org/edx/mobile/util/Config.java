@@ -50,6 +50,8 @@ public class Config {
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String THIRD_PARTY_TRAFFIC = "THIRD_PARTY_TRAFFIC";
+    private static final String DEPRECATED_REGISTRATION_API_DO_NOT_USE = "DEPRECATED_REGISTRATION_API_DO_NOT_USE";
 
     public class SocialSharingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
@@ -92,6 +94,34 @@ public class Config {
 
         public String getCourseInfoUrlTemplate() {
             return mCourseInfoUrlTemplate;
+        }
+    }
+
+    public class ThirdPartyTrafficConfig {
+        private @SerializedName("GOOGLE_ENABLED") boolean googleEnabled;
+        private @SerializedName("FACEBOOK_ENABLED") boolean facebookEnabled;
+        private @SerializedName("NEW_RELIC_ENABLED") boolean newRelicEnabled;
+        private @SerializedName("FABRIC_ENABLED") boolean fabricEnabled;
+        private @SerializedName("SEGMENTIO_ENABLED") boolean segmentEnabled;
+
+        public boolean isGoogleEnabled() {
+            return googleEnabled;
+        }
+
+        public boolean isFacebookEnabled() {
+            return facebookEnabled;
+        }
+
+        public boolean isNewRelicEnabled() {
+            return newRelicEnabled;
+        }
+
+        public boolean isFabricEnabled() {
+            return fabricEnabled;
+        }
+
+        public boolean isSegmentEnabled() {
+            return segmentEnabled;
         }
     }
 
@@ -206,6 +236,10 @@ public class Config {
         return getInteger(SEGMENT_IO_QUEUE_SIZE, 1);
     }
 
+    public boolean getDeprecatedRegistrationApiDoNotUse() {
+        return getBoolean(DEPRECATED_REGISTRATION_API_DO_NOT_USE, false);
+    }
+
     public SocialSharingConfig getSocialSharing() {
         JsonElement element = getObject(SOCIAL_SHARING);
         if(element != null) {
@@ -230,6 +264,10 @@ public class Config {
         }
     }
 
+    /**
+     * Returns configuration for Enrollments.
+     * @return
+     */
     public EnrollmentConfig getEnrollment() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
         if(element != null) {
@@ -239,6 +277,22 @@ public class Config {
         }
         else {
             return new EnrollmentConfig();
+        }
+    }
+
+    /**
+     * Returns configuration for third party traffic (network requests).
+     * @return
+     */
+    public ThirdPartyTrafficConfig getThirdPartyTraffic() {
+        JsonElement element = getObject(THIRD_PARTY_TRAFFIC);
+        if(element != null) {
+            Gson gson = new Gson();
+            ThirdPartyTrafficConfig config = gson.fromJson(element, ThirdPartyTrafficConfig.class);
+            return config;
+        }
+        else {
+            return new ThirdPartyTrafficConfig();
         }
     }
 }

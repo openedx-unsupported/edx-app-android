@@ -46,7 +46,6 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -57,6 +56,7 @@ import java.util.List;
 
 public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
 
+    public static final String ACTION_SHOW_MESSAGE = "ACTION_SHOW_MESSAGE";
     // per second callback
     private static final int MSG_TYPE_TICK = 9302;
 
@@ -146,6 +146,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
+        // register receiver for showing flying message
+        IntentFilter filter = new IntentFilter(ACTION_SHOW_MESSAGE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(showFlyingMessageReceiver, filter);
+
         //Check if the the onTick method needs to be run
         //This has been done to handle unwanted call to onTick() from login screen
         if(runOnTick)
@@ -187,7 +192,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
 
     private void updateActionBarShadow() {
-        //Check for JellyBeans version 
+            //Check for JellyBeans version
         if (Build.VERSION.SDK_INT == 18) {
             // Get the content view
             View contentView = findViewById(android.R.id.content);
@@ -216,6 +221,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
+        unregisterReceiver(showFlyingMessageReceiver);
     }
 
     @Override
@@ -413,6 +419,24 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             messageController = new LayoutAnimationControllerUtil(view);
             messageController.stopAnimation();
         }
+    }
+
+    /**
+     * Animate / show the download started message
+     * @param message - Message to display on the Download Panel
+     * @return boolean - Returns true if message shown, false otherwise.
+     */
+    public boolean showMessage(String message){
+        TextView downloadMessageTv = (TextView) findViewById(R.id.downloadMessage);
+        if(downloadMessageTv!=null) {
+            downloadMessageTv.setText(message);
+            animateLayouts(downloadMessageTv);
+            return true;
+        } else {
+            logger.warn("TextView not available, so couldn't show flying message");
+        }
+
+        return false;
     }
 
     /**
@@ -672,8 +696,46 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         }
     }
 
-    public void showMessage(String message) {
-        UiUtil.showMessage(findViewById(android.R.id.content), message);
+    protected void hideSoftKeypad() {
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
+    /**
+     * Sends a sticky broadcast message which will be displayed by any activity which receives this
+     * broadcast.
+     * Message is one-shot and gets removed when it is shown by any activity.
+     * @param message
+     */
+    protected void sendBroadcastFlyingMessage(String message) {
+        Intent intent = new Intent();
+        intent.putExtra("message", message);
+        intent.setAction(ACTION_SHOW_MESSAGE);
+        sendStickyBroadcast(intent);
+    }
+
+    /**
+     * Receives the sticky broadcast message and attempts showing flying message.
+     * If message gets shown then removes this sticky broadcast.
+     */
+    private BroadcastReceiver showFlyingMessageReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (intent.getAction().equals(ACTION_SHOW_MESSAGE)) {
+                    String message = intent.getStringExtra("message");
+                    if (showMessage(message)) {
+                        // make this message one-shot
+                        removeStickyBroadcast(intent);
+                    } else {
+                        // may be some other screen will display this message
+                        // do nothing here, do NOT remove broadcast
+                    }
+                }
+            } catch(Exception ex) {
+                logger.error(ex);
+            }
+        }
+    };
 }

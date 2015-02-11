@@ -5,13 +5,13 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.ISegmentTracker;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.mockito.Mockito;
 
 public class SegmentTests extends BaseTestCase {
 
-    private static SegmentTracker tracker;
+    private static ISegmentTracker tracker;
     private static ISegment segment;
 
     @Override
@@ -24,7 +24,7 @@ public class SegmentTests extends BaseTestCase {
         //Works only on physical devices, not on Emulator
         if (segment == null) {
             // create mocked instance of SegmentTracker
-            tracker = Mockito.mock(SegmentTracker.class);
+            tracker = Mockito.mock(ISegmentTracker.class);
 
             // initialize segment
             SegmentFactory.makeInstance(getInstrumentation().getTargetContext());
@@ -43,8 +43,9 @@ public class SegmentTests extends BaseTestCase {
         Traits traits = segment.identifyUser(userID, email, username);
 
         // verify that the identity method was called
-        Mockito.verify(tracker).identify(Mockito.same(userID), Mockito.eq(traits),
-                (Options) Mockito.any());
+        Mockito.verify(tracker).identify(Mockito.same(userID),
+                Mockito.eq(traits),
+                Mockito.any(Options.class));
 
         // verify the keys
         assertTrue(traits.containsValue(email));

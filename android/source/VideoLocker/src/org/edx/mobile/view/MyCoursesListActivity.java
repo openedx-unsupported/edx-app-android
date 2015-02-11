@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TabWidget;
 
 import com.facebook.Session;
@@ -25,7 +24,6 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
 
     private UiLifecycleHelper uiLifecycleHelper;
     private PrefManager featuresPref;
-    private LinearLayout offlinePanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +156,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     }
 
     public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
-        if(list!=null && list.size()>0) {
+        if (list != null && list.size() > 0) {
             //update all videos in the DB as Deactivated
             db.updateAllVideosAsDeactivated(dataCallback);
 
@@ -173,6 +171,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
                     list.remove(i);
                 }
             }
+
             //Delete all videos which are marked as Deactivated in the database
             storage.deleteAllUnenrolledVideos();
         }

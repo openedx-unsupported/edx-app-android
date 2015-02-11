@@ -81,7 +81,7 @@ public interface ISegment {
      * For example, unit tests might use mocked tracker object.
      * @param tracker
      */
-    void setTracker(SegmentTracker tracker);
+    void setTracker(ISegmentTracker tracker);
     
     Properties trackUserCellConnection(String carrierName, boolean isZeroRated);
 
@@ -215,5 +215,6 @@ public interface ISegment {
         public static final String CELL_DATA = "cell_data";
 
         public static final String COURSE_INFO_SCREEN = "Course Info";
+        public static final String LAUNCH_ACTIVITY = "Launch";
     }
 }

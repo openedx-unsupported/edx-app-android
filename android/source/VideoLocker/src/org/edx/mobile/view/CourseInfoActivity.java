@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 public class CourseInfoActivity extends FindCoursesBaseActivity {
+
+    public static final String EXTRA_PATH_ID = "path_id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,4 +30,16 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // TODO: test the path_id replacement and ensure if curly braces are required in the URL or be removed
+        String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
+        String url = Config.getInstance().getEnrollment()
+                .getCourseInfoUrlTemplate()
+                .replace("{" + EXTRA_PATH_ID + "}", pathId);
+        WebView webview = (WebView) findViewById(R.id.webview);
+        webview.loadUrl(url);
+    }
 }

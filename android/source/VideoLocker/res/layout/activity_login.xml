@@ -3,13 +3,14 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:fillViewport="true" >
+        android:fillViewport="true"
+        android:layout_marginTop="50dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,14 +60,16 @@
                         android:id="@+id/email_et"
                         style="@style/edit_text_style"
                         android:hint="@string/email_username"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:maxLength="100"/>
 
                     <org.edx.mobile.view.custom.EEditText
                         android:id="@+id/password_et"
                         style="@style/edit_text_style"
                         android:layout_marginTop="8dp"
                         android:hint="@string/password"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:maxLength="100"/>
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/forgot_password_tv"
@@ -84,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginTop="15dp"
-                        android:background="@drawable/bt_signin_default" >
+                        android:background="@drawable/bt_signin_active" >
 
                         <org.edx.mobile.view.custom.ETextView
                             android:id="@+id/login_btn_tv"
@@ -107,9 +110,11 @@
                     </RelativeLayout>
 
                     <LinearLayout
+                        android:id="@+id/panel_login_social"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/social_margin_top">
 
                         <include layout="@layout/panel_login_social" />
                     </LinearLayout>
@@ -135,73 +140,25 @@
                         android:text="@string/licensing_agreement"
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="11sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="11dp"
-                        android:layout_marginTop="40dp"
-                        android:background="@color/grey_act_background"
-                        android:gravity="center" />
                 </LinearLayout>
             </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/bottom_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/top_layout"
-                android:paddingLeft="44dp"
-                android:paddingRight="44dp" >
-
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/new_user_tv"
-                    style="@style/semibold_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:linksClickable="true"
-                    android:text="@string/new_user"
-                    android:textColor="@color/new_user_txt_color"
-                    android:textSize="13sp" />
-
-            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/bg_error_dialog"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="gone" >
+        android:layout_height="wrap_content">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/error_header"
-            style="@style/semibold_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/error_heading"
-            android:textColor="@color/grey_text_mycourse"
-            android:textSize="14sp" />
-
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/error_message"
-            style="@style/regular_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:text="@string/error_message"
-            android:textColor="@color/red_error_text"
-            android:textSize="16sp" />
+        <include layout="@layout/panel_login_error" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/custom_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <include layout="@layout/panel_custom_action_bar" />
+    </LinearLayout>
 </RelativeLayout>

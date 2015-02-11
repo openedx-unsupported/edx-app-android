@@ -22,7 +22,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.UiUtil;

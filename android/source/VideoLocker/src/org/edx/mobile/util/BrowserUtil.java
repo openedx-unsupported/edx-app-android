@@ -11,7 +11,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.view.dialog.IDialogCallback;

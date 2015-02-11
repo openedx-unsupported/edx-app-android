@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -31,19 +32,17 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
 import java.util.List;
 
@@ -263,7 +262,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     }
 
-
     /**
      * Adds a footer view to the list, which has "FIND A COURSE" button.
      * @param myCourseList - ListView
@@ -276,13 +274,30 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
             course_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = Config.getInstance().getCourseSearchUrl();
                     try {
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
                         logger.error(e);
                     }
-                    BrowserUtil.open(getActivity(), url);
+
+                    try {
+                        if (Config.getInstance().getEnrollment().getEnabled()) {
+                            //Call the Find courses activity
+                            Router.getInstance().showFindCourses(getActivity());
+                        } else {
+                            //Show the dialog only if the activity is started. This is to avoid Illegal state
+                            //exceptions if the dialog fragment tries to show even if the application is not in foreground
+                            if (isAdded() && isVisible()) {
+                                FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
+                                findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
+                                        android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                                findCoursesFragment.setCancelable(false);
+                                findCoursesFragment.show(getFragmentManager(), "dialog-find-courses");
+                            }
+                        }
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
                 }
             });
 

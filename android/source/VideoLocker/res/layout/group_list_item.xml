@@ -43,8 +43,8 @@
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/group_name"
                 style="@style/bold_grey_text"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text=""
                 tools:text="A.I. Fundamentals Discussion Group"
                 android:maxLines="2"

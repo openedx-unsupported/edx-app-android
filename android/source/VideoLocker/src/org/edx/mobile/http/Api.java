@@ -19,11 +19,13 @@ import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthErrorResponse;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ChapterModel;
+import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
@@ -31,27 +33,29 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
+import org.edx.mobile.model.registration.RegistrationDescription;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import android.util.Log;
-
-import java.util.Arrays;
 
 public class Api {
 
@@ -448,6 +452,25 @@ public class Api {
     }
 
     /**
+     * Returns course identified by given id from cache, null if not course is found.
+     * @param courseId
+     * @return
+     */
+    public CourseEntry getCourseById(String courseId) {
+        try {
+            for (EnrolledCoursesResponse r : getEnrolledCourses(true)) {
+                if (r.getCourse().getId().equals(courseId)) {
+                    return r.getCourse();
+                }
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        return null;
+    }
+
+    /**
      * Returns enrolled courses of given user.
      * 
      * @param fetchFromCache
@@ -667,8 +690,6 @@ public class Api {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Returns Stream object from the given URL.
      * @param url
      * @param preferCache
@@ -741,8 +762,6 @@ public class Api {
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Returns list of videos for a particular URL.
      * @param courseId
      * @param preferCache
@@ -1148,5 +1167,104 @@ public class Api {
         SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
 
         return res;
+    }
+
+    /**
+     * Creates new account.
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
+    public RegisterResponse register(Bundle parameters)
+            throws Exception {
+        String url = getBaseUrl() + "/create_account";
+
+        String json = http.post(url, parameters, null);
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("Register response= " + json);
+
+        Gson gson = new GsonBuilder().create();
+        RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
+
+        return res;
+    }
+
+    /**
+     * Reads registration description from assets and return Model representation of it.
+     * @return
+     * @throws IOException
+     */
+    public RegistrationDescription getRegistrationDescription() throws Exception {
+        Gson gson = new Gson();
+
+        // check if we have a cached version of registration description
+        try {
+            String url = getBaseUrl() + "/user_api/v1/account/registration/";
+            String json = cache.get(url);
+            if (json != null) {
+                return gson.fromJson(json, RegistrationDescription.class);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        // if not cached, read the in-app registration description
+        InputStream in = context.getAssets().open("config/registration_form.json");
+        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
+        return form;
+    }
+
+    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+        String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
+        logger.debug("POST url for enrolling in a Course: " + enrollUrl);
+
+        JSONObject postBody = new JSONObject();
+        JSONObject courseIdObject = new JSONObject();
+        courseIdObject.put("course_id", courseId);
+        postBody.put("course_details", courseIdObject);
+
+        logger.debug("POST body for Enrolling in a course: " + postBody.toString());
+        String json = http.post(enrollUrl, postBody.toString(), getAuthHeaders(), false);
+
+        if (json != null && !json.isEmpty()) {
+            logger.debug("Response of Enroll in a course= " + json);
+            JSONObject resultJson = new JSONObject(json);
+            if (resultJson.has("error")) {
+                return false;
+            }else {
+                return true;
+            }
+        }
+
+        return false;
+        //The following commented code will be removed once the optIn endpoint is resolved
+        /*String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
+        logger.debug("POST url for preference in a Course: " + preferenceUrl);
+        JSONObject optInPostBody = new JSONObject();
+        optInPostBody.put("course_id", courseId);
+        optInPostBody.put("email_opt_in", email_opt_in);
+
+        logger.debug("POST body for Preference in a course: " + optInPostBody.toString());
+        String optInJson = http.post(preferenceUrl, optInPostBody.toString(), getAuthHeaders(), false);
+        logger.debug("Response of optIn server call= " + optInJson);
+        if (optInJson != null && !optInJson.isEmpty()) {
+            // validate optInJson
+            JSONObject resultJson = new JSONObject(optInJson);
+            if (resultJson.has("error")) {
+                return false;
+            }else{
+                return true;
+            }
+        }*/
+    }
+
+    public String downloadRegistrationDescription() throws Exception {
+        String url = getBaseUrl() + "/user_api/v1/account/registration/";
+        String json = http.get(url, null);
+        cache.put(url, json);
+        return json;
     }
 }

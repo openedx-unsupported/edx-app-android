@@ -116,6 +116,9 @@ public class NavigationFragment extends Fragment {
                 if (!(act instanceof FindCoursesActivity)) {
                     Router.getInstance().showFindCourses(act);
 
+                    //Finish need not be called if the current activity is MyCourseListing
+                    // as on returning back from FindCourses,
+                    // the student should be returned to the MyCourses screen
                     if (!(act instanceof MyCoursesListActivity)) {
                         act.finish();
                     }

@@ -67,6 +67,7 @@
     <string name="sign_up">https://courses.edx.org/register</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">edX End User Licensing Agreement</string>
+    <string name="login_title">Sign in to edX</string>
 
     <!-- Navigation Drawer Labels -->
     <string name="name_default">Morgank</string>
@@ -273,4 +274,22 @@
     <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the internet.</string>
     <string name="email_chooser_header">Send email using...</string>
     <string name="email_client_not_present">No e-mail clients installed</string>
+
+    <!-- Landing Activity text -->
+    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="improve_your_career">Improve your career,\nyour mind, your life</string>
+    <string name="sign_up_and_learn">Sign up and start learning</string>
+
+    <!-- Registration Screen -->
+    <string name="by_creating_account">By creating an edX account, you agree to the </string>
+    <string name="show_optional_text">Show optional fields</string>
+    <string name="hide_optional_text">Hide optional fields</string>
+    <string name="create_account_text">Create my account</string>
+    <string name="creating_account_text">Creating account...</string>
+    <string name="register_title">Sign up for edX</string>
+
+    <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
+    <string name="try_again">TRY AGAIN</string>
+    <string name="you_are_now_enrolled">You are now enrolled</string>
+    <string name="msg_registration_successful"></string>
 </resources>

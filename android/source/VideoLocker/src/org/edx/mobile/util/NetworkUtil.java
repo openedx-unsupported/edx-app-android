@@ -7,18 +7,14 @@ import android.net.NetworkInfo.State;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
-import org.edx.mobile.R;
-
-import java.util.Arrays;
-import java.util.List;
+import org.edx.mobile.logger.Logger;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import org.edx.mobile.logger.Logger;
+import java.util.List;
 
 public class NetworkUtil {
 
@@ -165,4 +161,7 @@ public class NetworkUtil {
 
     }
 
+    public static boolean isAllowedThirdPartyTraffic(Context context) {
+        return (!isOnZeroRatedNetwork(context) || isConnectedWifi(context));
+    }
 }

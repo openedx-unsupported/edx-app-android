@@ -8,7 +8,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -24,7 +23,6 @@ import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.model.ProgressReport;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.analytics.SegmentTracker;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 

@@ -17,13 +17,13 @@
 
         <RelativeLayout
             android:id="@+id/tabsScroll"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/offline_bar">
 
             <TabWidget
                 android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/tab_bg"
                 android:orientation="horizontal" />

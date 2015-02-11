@@ -32,15 +32,18 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <!-- Sticky broadcast passing a message from one screen and display on another -->
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme"
-        android:name=".base.MainApplication" >
-        
+        android:name="org.edx.mobile.base.MainApplication" >
+
         <activity
-            android:name=".view.SplashActivity"
+            android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -50,9 +53,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.edx.mobile.view.LaunchActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         
         <activity
-            android:name=".view.LoginActivity"
+            android:name="org.edx.mobile.view.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
@@ -61,59 +70,59 @@
         </activity>
         
         <activity
-            android:name=".view.MyCoursesListActivity"
+            android:name="org.edx.mobile.view.MyCoursesListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
         
         <activity
-            android:name=".view.CourseDetailTabActivity"
+            android:name="org.edx.mobile.view.CourseDetailTabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>
         
         <activity
-            android:name=".view.CourseLectureListActivity"
+            android:name="org.edx.mobile.view.CourseLectureListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>
          
         <activity
-            android:name=".view.MyVideosTabActivity"
+            android:name="org.edx.mobile.view.MyVideosTabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>
         
-         <activity
-            android:name=".view.DownloadListActivity"
+        <activity
+            android:name="org.edx.mobile.view.DownloadListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>
 
         <activity
-            android:name=".view.FindCoursesActivity"
+            android:name="org.edx.mobile.view.FindCoursesActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".view.CourseInfoActivity"
+            android:name="org.edx.mobile.view.CourseInfoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".player.LandscapePlayerActivity"
+            android:name="org.edx.mobile.player.LandscapePlayerActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         
         <activity
-            android:name=".view.VideoListActivity"
+            android:name="org.edx.mobile.view.VideoListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
 
@@ -149,35 +158,42 @@
             android:name="org.edx.mobile.view.FriendsInCourseActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        
-         <receiver android:name=".module.download.DownloadCompleteReceiver">
-             <intent-filter>
-                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
-                 <category android:name="android.intent.category.DEFAULT"/>
-             </intent-filter>
-         </receiver>
-         
-         <!-- Setup for Code Coverage -->
-         <instrumentation
-	    	android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
-	    	android:targetPackage="org.edx.mobile" >
-		 </instrumentation>
-	
-		 <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
-		 <receiver android:name=".instrumentation.EndEmmaBroadcast" >
-		   	 <intent-filter>
-		    	<action android:name="org.edx.mobile.END_EMMA" />
-		     </intent-filter>
-		 </receiver>
-		 
-		 <!-- Setup Google -->
-		 <meta-data android:name="com.google.android.gms.version" 
-		     android:value="@integer/google_play_services_version" />
 
+        <activity
+            android:name="org.edx.mobile.view.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+         
+        <!-- Setup for Code Coverage -->
+        <instrumentation
+            android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
+            android:targetPackage="org.edx.mobile" >
+        </instrumentation>
+	
+        <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
+        <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast" >
+            <intent-filter>
+                <action android:name="org.edx.mobile.END_EMMA" />
+            </intent-filter>
+        </receiver>
+		 
+        <!-- Setup Google -->
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Setup Facebook -->
         <activity android:name="com.facebook.LoginActivity" />
 
-        <service android:name=".services.DownloadSpeedService" />
-        <service android:name=".services.FetchCourseFriendsService"/>
+        <service android:name="org.edx.mobile.services.DownloadSpeedService" />
+        <service android:name="org.edx.mobile.services.FetchCourseFriendsService"/>
 
     </application>
 
