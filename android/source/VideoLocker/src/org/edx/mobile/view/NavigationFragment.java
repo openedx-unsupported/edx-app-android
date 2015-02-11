@@ -106,36 +106,30 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
-        tvFindCourses.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Activity act = getActivity();
-                ((BaseFragmentActivity) act).closeDrawer();
+        if (Config.getInstance().getEnrollment().getEnabled()) {
+            TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
+            tvFindCourses.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity act = getActivity();
+                    ((BaseFragmentActivity) act).closeDrawer();
 
-                if (!(act instanceof FindCoursesActivity)) {
-                    Router.getInstance().showFindCourses(act);
+                    if (!(act instanceof FindCoursesActivity)) {
+                        Router.getInstance().showFindCourses(act);
 
-                    //Finish need not be called if the current activity is MyCourseListing
-                    // as on returning back from FindCourses,
-                    // the student should be returned to the MyCourses screen
-                    if (!(act instanceof MyCoursesListActivity)) {
-                        act.finish();
+                        //Finish need not be called if the current activity is MyCourseListing
+                        // as on returning back from FindCourses,
+                        // the student should be returned to the MyCourses screen
+                        if (!(act instanceof MyCoursesListActivity)) {
+                            act.finish();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            layout.findViewById(R.id.panel_option_find_courses).setVisibility(View.GONE);
+        }
 
-        TextView tvSubmitFeedback = (TextView) layout.findViewById(R.id.drawer_option_submit_feedback);
-        tvSubmitFeedback.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String to = Config.getInstance().getFeedbackEmailAddress();
-                String subject = getString(R.string.Email_subject);
-                String email = "";
-                EmailUtil.sendEmail(getActivity(), to, subject, email);
-            }
-        });
 
         TextView tvMyGroups = (TextView) layout.findViewById(R.id.drawer_option_my_groups);
         tvMyGroups.setOnClickListener(new OnClickListener() {
@@ -155,7 +149,6 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-
         TextView tvSettings = (TextView) layout.findViewById(R.id.drawer_option_my_settings);
         tvSettings.setOnClickListener(new OnClickListener() {
             @Override
@@ -172,6 +165,18 @@ public class NavigationFragment extends Fragment {
                 }
             }
         });
+
+        TextView tvSubmitFeedback = (TextView) layout.findViewById(R.id.drawer_option_submit_feedback);
+        tvSubmitFeedback.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String to = Config.getInstance().getFeedbackEmailAddress();
+                String subject = getString(R.string.Email_subject);
+                String email = "";
+                EmailUtil.sendEmail(getActivity(), to, subject, email);
+            }
+        });
+
 
         ProfileModel profile = pref.getCurrentUserProfile();
         if(profile != null) {

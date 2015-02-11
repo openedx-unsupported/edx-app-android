@@ -81,23 +81,6 @@
 
         <include layout="@layout/divider_drawer_options" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/drawer_option_find_courses"
-            style="@style/drawer_option"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_drawer_menu"
-            android:background="@drawable/nav_bg_selector"
-            android:gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="10dp"
-            android:text="@string/label_find_courses"
-            android:textAllCaps="true"
-            android:textSize="14sp" />
-
-        <include layout="@layout/divider_drawer_options" />
-        
         <LinearLayout
             android:id="@+id/panel_option_find_courses"
             android:orientation="vertical"
@@ -105,8 +88,8 @@
             android:layout_height="wrap_content">
 
             <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/find_courses_tv"
-                style="@style/regular_white_text"
+                android:id="@+id/drawer_option_find_courses"
+                style="@style/drawer_option"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_drawer_menu"
                 android:background="@drawable/nav_bg_selector"
@@ -115,7 +98,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/find_courses_title"
+                android:text="@string/label_find_courses"
                 android:textAllCaps="true"
                 android:textSize="14sp" />
 

@@ -1,67 +1,78 @@
-<android.support.v4.widget.DrawerLayout
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_act_background"
-    android:splitMotionEvents="false" >
+    android:layout_height="match_parent">
 
-
-    <android.support.v4.app.FragmentTabHost
-        android:id="@android:id/tabhost"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/grey_act_background"
+        android:splitMotionEvents="false" >
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/no_course_tv"
-            style="@style/bold_text"
+        <android.support.v4.app.FragmentTabHost
+            android:id="@android:id/tabhost"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/no_courses_to_display"
-            android:textColor="@color/empty_list_text"
-            android:textSize="20sp"
-            android:visibility="gone" />
+            android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/api_spinner"
-            style="@style/api_progress_style"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/no_course_tv"
+                style="@style/bold_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/tab_bg"
-                android:orientation="horizontal"
-                />
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/no_courses_to_display"
+                android:textColor="@color/empty_list_text"
+                android:textSize="20sp"
+                android:visibility="gone" />
 
+            <ProgressBar
+                android:id="@+id/api_spinner"
+                style="@style/api_progress_style"
+                android:visibility="gone" />
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@color/tab_bg"
+                    android:orientation="horizontal"
+                    />
 
-    </android.support.v4.app.FragmentTabHost>
 
-    <!-- FrameLayout to display Fragment for Navigation Menu -->
-    <FrameLayout
-        android:id="@+id/slider_menu"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="@color/black"
-        android:clickable="true" />
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-</android.support.v4.widget.DrawerLayout>
+            </LinearLayout>
+
+        </android.support.v4.app.FragmentTabHost>
+
+        <!-- FrameLayout to display Fragment for Navigation Menu -->
+        <FrameLayout
+            android:id="@+id/slider_menu"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@color/black"
+            android:clickable="true" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
+</RelativeLayout>
