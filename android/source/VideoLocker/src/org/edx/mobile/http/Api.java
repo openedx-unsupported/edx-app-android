@@ -23,6 +23,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
@@ -30,12 +31,17 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -669,6 +675,41 @@ public class Api {
     }
 
     /**
+     * Returns Stream object from the given URL.
+     * @param url
+     * @param preferCache
+     * @return
+     * @throws Exception
+     */
+    public CourseInfoModel srtStream(String url, boolean preferCache) throws Exception {
+        Bundle p = new Bundle();
+        p.putString("format", "json");
+
+        String json = null;
+        if (NetworkUtil.isConnected(context) && !preferCache) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
+            logger.debug("Url "+urlWithAppendedParams);
+            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            // cache the response
+            //cache.put(url, json);
+        } else {
+            json = cache.get(url);
+        }
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("srt stream= " + json);
+
+        Gson gson = new GsonBuilder().create();
+        CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
+        return res;
+    }
+
+    /**
+=======
+>>>>>>> master
      * Returns Transcript of a given Video.
      * 
      * @param 
@@ -708,6 +749,38 @@ public class Api {
     }
 
     /**
+     * Returns list of videos for a particular URL.
+     * @param courseId
+     * @param preferCache
+     * @return
+     * @throws Exception
+     */
+    public ArrayList<VideoResponseModel> getVideosByURL(String courseId, String videoUrl, boolean preferCache)
+            throws Exception {
+        if(videoUrl==null){
+            return null;
+        }
+        ArrayList<VideoResponseModel> vidList = getVideosByCourseId(courseId, preferCache);
+        ArrayList<VideoResponseModel> list = new ArrayList<VideoResponseModel>();
+        if(vidList!=null && vidList.size()>0){
+            for(VideoResponseModel vrm : vidList){
+                try{
+                    if(vrm.getSummary().getVideo_url().equalsIgnoreCase(videoUrl)){
+                        vrm.setCourseId(courseId);
+                        list.add(vrm);
+                    }
+                }catch(Exception e){
+                    logger.error(e);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    /**
+=======
+>>>>>>> master
      * Returns list of headers for a particular Get request.
      * @return
      * @throws Exception
@@ -891,8 +964,55 @@ public class Api {
         return res;
     }
 
-    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+    /**
+     * Creates new account.
+     * @param parameters
+     * @return
+     * @throws Exception
+     */
+    public RegisterResponse register(Bundle parameters)
+            throws Exception {
+        String url = getBaseUrl() + "/create_account";
 
+        String json = http.post(url, parameters, null);
+
+        if (json == null) {
+            return null;
+        }
+        logger.debug("Register response= " + json);
+
+        Gson gson = new GsonBuilder().create();
+        RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
+
+        return res;
+    }
+
+    /**
+     * Reads registration description from assets and return Model representation of it.
+     * @return
+     * @throws IOException
+     */
+    public RegistrationDescription getRegistrationDescription() throws Exception {
+        Gson gson = new Gson();
+
+        // check if we have a cached version of registration description
+        try {
+            String url = getBaseUrl() + "/user_api/v1/account/registration/";
+            String json = cache.get(url);
+            if (json != null) {
+                return gson.fromJson(json, RegistrationDescription.class);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        // if not cached, read the in-app registration description
+        InputStream in = context.getAssets().open("config/registration_form.json");
+        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
+        return form;
+    }
+
+    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
         logger.debug("POST url for enrolling in a Course: " + enrollUrl);
 
@@ -934,5 +1054,12 @@ public class Api {
                 return true;
             }
         }*/
+    }
+
+    public String downloadRegistrationDescription() throws Exception {
+        String url = getBaseUrl() + "/user_api/v1/account/registration/";
+        String json = http.get(url, null);
+        cache.put(url, json);
+        return json;
     }
 }

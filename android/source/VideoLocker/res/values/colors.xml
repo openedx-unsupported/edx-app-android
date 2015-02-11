@@ -78,4 +78,5 @@
     <color name="transparent_cc_bg">#661F2124</color>
     <color name="blue_bar">#1f9ed9</color>
     <color name="grey_text_course_not_started">#00454951</color>
+    <color name="hint_grey_text">#8c8e90</color>
 </resources>

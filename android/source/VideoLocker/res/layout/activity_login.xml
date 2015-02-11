@@ -60,14 +60,16 @@
                         android:id="@+id/email_et"
                         style="@style/edit_text_style"
                         android:hint="@string/email_username"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:maxLength="100"/>
 
                     <org.edx.mobile.view.custom.EEditText
                         android:id="@+id/password_et"
                         style="@style/edit_text_style"
                         android:layout_marginTop="8dp"
                         android:hint="@string/password"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:maxLength="100"/>
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/forgot_password_tv"
@@ -111,7 +113,8 @@
                         android:id="@+id/panel_login_social"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/social_margin_top">
 
                         <include layout="@layout/panel_login_social" />
                     </LinearLayout>
@@ -141,38 +144,13 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_error_dialog"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="gone"
-        android:layout_marginTop="50dp">
+        android:layout_height="wrap_content">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/error_header"
-            style="@style/semibold_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:text="@string/error_heading"
-            android:textColor="@color/grey_text_mycourse"
-            android:textSize="14sp" />
-
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/error_message"
-            style="@style/regular_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:text="@string/error_message"
-            android:textColor="@color/red_error_text"
-            android:textSize="16sp" />
+        <include layout="@layout/panel_login_error" />
     </LinearLayout>
 
     <LinearLayout

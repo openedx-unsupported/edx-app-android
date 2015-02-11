@@ -30,9 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -152,7 +150,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
 
     private void updateActionBarShadow() {
-        //Check for JellyBeans version 
+            //Check for JellyBeans version
         if (Build.VERSION.SDK_INT == 18) {
             // Get the content view
             View contentView = findViewById(android.R.id.content);
@@ -652,6 +650,24 @@ public class BaseFragmentActivity extends FragmentActivity {
             webViewFragment.setCancelable(false);
             webViewFragment.show(getSupportFragmentManager(), "dialog");
         }
+    }
+
+    protected void hideSoftKeypad() {
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    /**
+     * Sends a sticky broadcast message which will be displayed by any activity which receives this
+     * broadcast.
+     * Message is one-shot and gets removed when it is shown by any activity.
+     * @param message
+     */
+    protected void sendBroadcastFlyingMessage(String message) {
+        Intent intent = new Intent();
+        intent.putExtra("message", message);
+        intent.setAction(ACTION_SHOW_MESSAGE);
+        sendStickyBroadcast(intent);
     }
 
     /**

@@ -58,7 +58,6 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
-        <item name="android:maxLength">100</item>
     </style>
 
     <style name="downloading_message">
@@ -158,4 +157,42 @@
         <item name="android:textColor">@color/empty_list_text</item>
         <item name="android:visibility">gone</item>
     </style>
+
+    <!-- TextArea theme -->
+    <style name="text_area_style" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:maxWidth">300dp</item>
+        <item name="android:maxHeight">80dp</item>
+        <item name="android:textColor">@color/grey_text</item>
+        <item name="android:background">@drawable/edit_bg_selector</item>
+        <item name="android:gravity">left|top</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:padding">10dp</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
+    <!-- Registration Error Message below fields-->
+    <style name="registration_error_message" parent="@android:style/Widget.DeviceDefault.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/red_error_text</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
+    <!-- Registration Message below fields-->
+    <style name="registration_instruction_message" parent="@android:style/Widget.DeviceDefault.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_redirected_txt</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:padding">5dp</item>
+        <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
 </resources>

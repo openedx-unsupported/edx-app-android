@@ -204,10 +204,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
                     if (course == null) {
                         // this means, you were not already enrolled to this course
                         String msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                        intent = new Intent();
-                        intent.putExtra("message", msg);
-                        intent.setAction(ACTION_SHOW_MESSAGE);
-                        sendStickyBroadcast(intent);
+                        sendBroadcastFlyingMessage(msg);
                     }
                 }else{
                     showEnrollErrorMessage(courseId, emailOptIn);

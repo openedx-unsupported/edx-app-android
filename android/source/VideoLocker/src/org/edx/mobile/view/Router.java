@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.util.AppConstants;
 
 /**
  * Created by aleffert on 1/30/15.
@@ -47,4 +48,26 @@ public class Router {
         sourceActivity.startActivity(myVideosIntent);
     }
 
+    public void showLaunchScreen(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showLogin(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showRegistration(Activity sourceActivity) {
+        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
+        sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showMyCourses(Activity sourceActivity) {
+        Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
+        sourceActivity.startActivity(intent);
+        Intent loginIntent = new Intent();
+        loginIntent.setAction(AppConstants.USER_LOG_IN);
+        sourceActivity.sendBroadcast(loginIntent);
+    }
 }

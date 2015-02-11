@@ -1,5 +1,8 @@
 package org.edx.mobile.test;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
@@ -10,6 +13,7 @@ import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.util.Environment;
 
 import java.util.ArrayList;
@@ -23,6 +27,8 @@ import java.util.Map.Entry;
  */
 public class ApiTests extends BaseTestCase {
 
+    private Api api;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -30,12 +36,12 @@ public class ApiTests extends BaseTestCase {
         Environment env = new Environment();
         env.setupEnvironment(getInstrumentation().getTargetContext());
 
-        login();
+        api = new Api(getInstrumentation().getTargetContext());
     }
     
     public void testSyncLastSubsection() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
-        
+        login();
+
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         Map<String, SectionEntry> map = api.getCourseHierarchy(e.getCourse().getId());
         Entry<String, SectionEntry> entry = map.entrySet().iterator().next();
@@ -58,9 +64,9 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void testGetLastAccessedModule() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
-        
-        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0); 
+        login();
+
+        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         
         String courseId = e.getCourse().getId();
         assertNotNull(courseId);
@@ -74,8 +80,6 @@ public class ApiTests extends BaseTestCase {
     
     public void testResetPassword() throws Exception {
         print("test: reset password");
-
-        Api api = new Api(getInstrumentation().getTargetContext());
         ResetPasswordResponse model = api.resetPassword("user@edx.org");
         assertTrue(model != null);
         print(model.value);
@@ -83,7 +87,7 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void testHandouts() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
+        login();
 
         // get a course id for this test
         List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
@@ -97,7 +101,7 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void testCourseStructure() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
+        login();
 
         // get a course id for this test
         List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
@@ -118,7 +122,6 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void login() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
         AuthResponse res = api.auth("user@edx.org", "****");
         assertNotNull(res);
         assertNotNull(res.access_token);
@@ -130,7 +133,7 @@ public class ApiTests extends BaseTestCase {
     }
 
     public void testGetAnnouncement() throws Exception {
-        Api api = new Api(getInstrumentation().getTargetContext());
+        login();
 
         // get a course id for this test
         List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
@@ -145,10 +148,21 @@ public class ApiTests extends BaseTestCase {
         }
     }
 
+    public void testReadRegistrationDescription() throws Exception {
+        RegistrationDescription form = api.getRegistrationDescription();
+
+        assertNotNull(form);
+        assertNotNull(form.getEndpoint());
+        assertNotNull(form.getMethod());
+        assertNotNull(form.getFields());
+        assertTrue(form.getFields().size() > 0);
+
+        // verify if enum type is parsed
+        assertNotNull(form.getFields().get(0).getFieldType());
+    }
+
     public void testEnrollInACourse() throws Exception {
         print("test: Enroll in a course");
-
-        Api api = new Api(getInstrumentation().getTargetContext());
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         String courseId = e.getCourse().getId();
@@ -156,5 +170,17 @@ public class ApiTests extends BaseTestCase {
         assertTrue(success);
         print("success");
         print("test: finished: reset password");
+    }
+
+    public void testDownloadRegistrationDescription() throws Exception {
+        String json = api.downloadRegistrationDescription();
+        assertNotNull(json);
+        Gson gson = new Gson();
+        RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
+        assertNotNull(form);
+        assertNotNull(form.getEndpoint());
+        assertNotNull(form.getMethod());
+        assertNotNull(form.getFields());
+        assertTrue(form.getFields().size() > 0);
     }
 }
