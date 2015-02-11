@@ -461,6 +461,11 @@ public class Storage implements IStorage {
                     try {
                         UserPrefs userprefs = new UserPrefs(context);
                         ProfileModel profile = userprefs.getProfile();
+                        if (profile == null) {
+                            // user no logged in
+                            return;
+                        }
+
                         String username = profile.username;
 
                         IDownloadManager dm = DownloadFactory.getInstance(context);
