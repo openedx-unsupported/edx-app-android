@@ -51,6 +51,7 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
+    public static final String ACTION_SHOW_MESSAGE = "ACTION_SHOW_MESSAGE";
     // per second callback
     private static final int MSG_TYPE_TICK = 9302;
 
@@ -102,6 +103,11 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
+
+        // register receiver for showing flying message
+        IntentFilter filter = new IntentFilter(ACTION_SHOW_MESSAGE);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        registerReceiver(showFlyingMessageReceiver, filter);
 
         //Check if the the onTick method needs to be run
         //This has been done to handle unwanted call to onTick() from login screen
@@ -173,6 +179,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
+        unregisterReceiver(showFlyingMessageReceiver);
     }
 
     @Override
@@ -375,13 +382,19 @@ public class BaseFragmentActivity extends FragmentActivity {
     /**
      * Animate / show the download started message
      * @param message - Message to display on the Download Panel
+     * @return boolean - Returns true if message shown, false otherwise.
      */
-    public void showMessage(String message){
+    public boolean showMessage(String message){
         TextView downloadMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(downloadMessageTv!=null){
+        if(downloadMessageTv!=null) {
             downloadMessageTv.setText(message);
             animateLayouts(downloadMessageTv);
+            return true;
+        } else {
+            logger.warn("textview not available, so couldn't show flying message");
         }
+
+        return false;
     }
 
     /**
@@ -643,4 +656,42 @@ public class BaseFragmentActivity extends FragmentActivity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
+
+    /**
+     * Sends a sticky broadcast message which will be displayed by any activity which receives this
+     * broadcast.
+     * Message is one-shot and gets removed when it is shown by any activity.
+     * @param message
+     */
+    protected void sendBroadcastFlyingMessage(String message) {
+        Intent intent = new Intent();
+        intent.putExtra("message", message);
+        intent.setAction(ACTION_SHOW_MESSAGE);
+        sendStickyBroadcast(intent);
+    }
+
+    /**
+     * Receives the sticky broadcast message and attempts showing flying message.
+     * If message gets shown then removes this sticky broadcast.
+     */
+    private BroadcastReceiver showFlyingMessageReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (intent.getAction().equals(ACTION_SHOW_MESSAGE)) {
+                    String message = intent.getStringExtra("message");
+                    if (showMessage(message)) {
+                        // make this message one-shot
+                        removeStickyBroadcast(intent);
+                    } else {
+                        // may be some other screen will display this message
+                        // do nothing here, do NOT remove broadcast
+                    }
+                }
+            } catch(Exception ex) {
+                logger.error(ex);
+            }
+        }
+    };
 }

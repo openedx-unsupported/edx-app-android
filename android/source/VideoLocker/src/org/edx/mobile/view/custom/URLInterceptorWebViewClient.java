@@ -2,11 +2,15 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.edx.mobile.logger.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by rohan on 2/2/15.
@@ -19,8 +23,10 @@ import org.edx.mobile.logger.Logger;
 public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
-    private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
-    private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    //private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
+    public static final String URL_TYPE_ENROLL         = "edxapp://enroll/";
+    //private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
     private static final String PARAM_COURSE_ID         = "course_id";
     private static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
     private static final String PARAM_PATH_ID           = "path_id";
@@ -80,12 +86,21 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        super.onReceivedError(view, errorCode, description, failingUrl);
+        if (actionListener != null) {
+            actionListener.onPageLoadError();
+        }
+    }
+
+    @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         try {
             if (actionListener == null) {
                 logger.warn("you have not set IActionLister to this WebViewClient, " +
                         "you might miss some event");
             }
+            logger.debug("loading: " + url);
 
             if (isCourseInfoLink(url)) {
                 // we handled this URL
@@ -108,6 +123,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         return super.shouldOverrideUrlLoading(view, url);
     }
 
+
+
     /**
      * Checks if the URL pattern matches with that of COURSE_INFO URL.
      * Extracts path_id from the URL and gives a callback to the registered
@@ -119,9 +136,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     boolean isCourseInfoLink(String strUrl) {
         try {
+            logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-                Uri uri = Uri.parse(strUrl);
-                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+//                Uri uri = Uri.parse(strUrl);
+//                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+
+                String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
+                if (pathId.isEmpty()) {
+                    return false;
+                }
 
                 if (actionListener != null) {
                     actionListener.onClickCourseInfo(pathId);
@@ -167,9 +190,20 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     boolean isEnrollLink(String strUrl) {
         try {
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                Uri uri = Uri.parse(strUrl);
+                /*Uri uri = Uri.parse(strUrl);
                 String courseId = uri.getQueryParameter(PARAM_COURSE_ID);
-                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));
+                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));*/
+
+                String[] params = strUrl.replace(URL_TYPE_ENROLL, "").split("&");
+
+                Map<String, String> queryParams = new HashMap<>();
+                for (String q : params) {
+                    String[] parts = q.split("=");
+                    queryParams.put(parts[0], parts[1]);
+                }
+
+                String courseId = queryParams.get("course_id");
+                boolean emailOptIn = Boolean.parseBoolean(queryParams.get("email_opt_in"));
 
                 if (actionListener != null) {
                     actionListener.onClickEnroll(courseId, emailOptIn);
@@ -215,5 +249,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * Callback that indicates page loading has finished.
          */
         void onPageFinished();
+
+        /**
+         * Callback that indicates error during page load.
+         */
+        void onPageLoadError();
     }
 }

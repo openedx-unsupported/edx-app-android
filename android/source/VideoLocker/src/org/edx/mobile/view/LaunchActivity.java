@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.http.Api;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
@@ -53,6 +54,8 @@ public class LaunchActivity extends BaseFragmentActivity {
         }
 
         enableLoginCallback();
+
+        fetchRegistrationDescription();
     }
 
     @Override
@@ -79,5 +82,21 @@ public class LaunchActivity extends BaseFragmentActivity {
     protected void disableLoginCallback() {
         // un-register loginReceiver
         unregisterReceiver(loginReceiver);
+    }
+
+    private void fetchRegistrationDescription() {
+        Thread th = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    Api api = new Api(getApplicationContext());
+                    api.downloadRegistrationDescription();
+                } catch(Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        };
+        th.start();
     }
 }

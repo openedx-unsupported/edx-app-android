@@ -177,4 +177,7 @@
     <string name="creating_account_text">Creating account...</string>
     <string name="register_title">Sign up for edX</string>
 
+    <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
+    <string name="try_again">TRY AGAIN</string>
+    <string name="you_are_now_enrolled">You are now enrolled</string>
 </resources>

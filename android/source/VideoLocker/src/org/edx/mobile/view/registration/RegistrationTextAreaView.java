@@ -6,7 +6,7 @@ import android.view.View;
 
 import org.edx.mobile.model.registration.RegistrationFormField;
 
-public class RegistrationTextAreaView extends RegistrationEditTextView {
+class RegistrationTextAreaView extends RegistrationEditTextView {
 
     // Number of lines for TextArea
     private static final int LINES = 5;

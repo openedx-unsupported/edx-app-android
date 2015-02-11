@@ -415,13 +415,7 @@ public class LoginActivity extends BaseFragmentActivity {
     private void myCourseScreen() {
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
-
-            Intent intent = new Intent(LoginActivity.this,
-                    MyCoursesListActivity.class);
-            startActivity(intent);
-            Intent loginIntent = new Intent();
-            loginIntent.setAction(AppConstants.USER_LOG_IN);
-            this.sendBroadcast(loginIntent);
+            Router.getInstance().showMyCourses(this);
         }
         
         // but finish this screen anyways as login is succeeded

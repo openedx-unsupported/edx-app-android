@@ -1,8 +1,7 @@
 package org.edx.mobile.view.registration;
 
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -11,40 +10,29 @@ import com.google.gson.JsonPrimitive;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.registration.RegistrationFormField;
-import org.edx.mobile.model.registration.RegistrationOption;
 
-class RegistrationSpinnerView implements IRegistrationFieldView {
+class RegistrationCheckBoxView implements IRegistrationFieldView {
 
-    protected static final Logger logger = new Logger(RegistrationEditTextView.class);
+    protected static final Logger logger = new Logger(RegistrationCheckBoxView.class);
     private RegistrationFormField mField;
     private View mView;
-    protected Spinner mInputView;
+    protected CheckBox mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationSpinnerView(RegistrationFormField field, View view) {
+    public RegistrationCheckBoxView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (Spinner) view.findViewById(R.id.input_spinner);
-        this.mErrorView = (TextView) view.findViewById(R.id.input_spinner_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.input_spinner_instruction);
+        this.mInputView = (CheckBox) view.findViewById(R.id.checkbox_input);
+        this.mErrorView = (TextView) view.findViewById(R.id.checkbox_input_error);
+        this.mInstructionView = (TextView) view.findViewById(R.id.checkbox_input_instruction);
 
         // set hint
-        mInputView.setPrompt(mField.getLabel());
+        mInputView.setHint(mField.getLabel());
 
-        // display default value and set the entries
-        ArrayAdapter<RegistrationOption> adapter = new ArrayAdapter<>(mInputView.getContext(), R.layout.list_row_spinner);
-        int i=0, selectedIndex=0;
-        for (RegistrationOption option : mField.getOptions()) {
-            if (option.isDefaultValue()) {
-                selectedIndex = i;
-            }
-            adapter.add(option);
-            i++;
-        }
-        mInputView.setAdapter(adapter);
-        mInputView.setSelection(selectedIndex);
+        // display default value
+        mInputView.setChecked(Boolean.getBoolean(mField.getDefaultValue()));
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -61,12 +49,13 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue());
+        return new JsonPrimitive(mInputView.isChecked());
     }
 
     @Override
     public boolean hasValue() {
-        return !mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue().isEmpty();
+        // being checkbox, this always has a value
+        return true;
     }
 
     @Override
@@ -96,20 +85,8 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
         mErrorView.setVisibility(View.GONE);
 
         // check if this is required field and has an input value
-        if (mField.isRequired() && !hasValue()) {
+        if (mField.isRequired() && !mInputView.isChecked()) {
             handleError(mField.getErrorMessage().getRequired());
-            return false;
-        }
-
-        // check if length restrictions are followed
-        int inputLength = getCurrentValue().getAsString().length();
-        if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
-            return false;
-        }
-        if (mField.getRestriction().getMaxLength() > 0
-                && inputLength > mField.getRestriction().getMaxLength()) {
-            handleError(mField.getErrorMessage().getMaxLength());
             return false;
         }
 

@@ -69,24 +69,32 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        TextView my_videos_tv = (TextView) layout.findViewById(R.id.my_assets);
-        my_videos_tv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Activity act = getActivity();
-                ((BaseFragmentActivity) act).closeDrawer();
+        View panelFindCourses = layout.findViewById(R.id.panel_option_find_courses);
+        if (Config.getInstance().getEnrollment().getEnabled()) {
+            panelFindCourses.setVisibility(View.VISIBLE);
 
-                if(!(act instanceof MyVideosTabActivity)){
-                    Router.getInstance().showMyVideos(act);
-                    //Finish need not be called if the current activity is MyCourseListing
-                    // as on returning back from FindCourses,
-                    // the student should be returned to the MyCourses screen
-                    if(!(act instanceof MyCoursesListActivity)){
-                       act.finish();
+            TextView my_videos_tv = (TextView) layout.findViewById(R.id.my_assets);
+            my_videos_tv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity act = getActivity();
+                    ((BaseFragmentActivity) act).closeDrawer();
+
+                    if (!(act instanceof MyVideosTabActivity)) {
+                        Router.getInstance().showMyVideos(act);
+                        //Finish need not be called if the current activity is MyCourseListing
+                        // as on returning back from MyVideos,
+                        // the student should be returned to the MyCourses screen
+                        if (!(act instanceof MyCoursesListActivity)) {
+                            act.finish();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        else {
+            panelFindCourses.setVisibility(View.GONE);
+        }
 
         TextView find_courses_tv = (TextView) layout.findViewById(R.id.find_courses_tv);
         find_courses_tv.setOnClickListener(new OnClickListener() {
@@ -97,6 +105,12 @@ public class NavigationFragment extends Fragment {
 
                 if(!(act instanceof FindCoursesActivity)){
                     Router.getInstance().showFindCourses(act);
+                    //Finish need not be called if the current activity is MyCourseListing
+                    // as on returning back from FindCourses,
+                    // the student should be returned to the MyCourses screen
+                    if (!(act instanceof MyCoursesListActivity)) {
+                        act.finish();
+                    }
                 }
             }
         });

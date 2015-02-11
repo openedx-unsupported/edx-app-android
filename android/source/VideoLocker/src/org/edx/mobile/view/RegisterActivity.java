@@ -13,23 +13,17 @@ import android.widget.ScrollView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.registration.RegistrationDescription;
-import org.edx.mobile.model.registration.RegistrationFieldType;
 import org.edx.mobile.model.registration.RegistrationFormField;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.registration.IRegistrationFieldView;
-import org.edx.mobile.view.registration.RegistrationEmailView;
-import org.edx.mobile.view.registration.RegistrationPasswordView;
-import org.edx.mobile.view.registration.RegistrationSpinnerView;
-import org.edx.mobile.view.registration.RegistrationTextAreaView;
-import org.edx.mobile.view.registration.RegistrationTextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class RegisterActivity extends BaseFragmentActivity {
 
@@ -158,33 +152,7 @@ public class RegisterActivity extends BaseFragmentActivity {
             LayoutInflater inflater = getLayoutInflater();
 
             for (RegistrationFormField field : form.getFields()) {
-                IRegistrationFieldView fieldView = null;
-
-                if (field.getFieldType().equals(RegistrationFieldType.EMAIL)) {
-                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
-                    fieldView = new RegistrationEmailView(field, view);
-                }
-                else if (field.getFieldType().equals(RegistrationFieldType.PASSWORD)) {
-                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
-                    fieldView = new RegistrationPasswordView(field, view);
-                }
-                else if (field.getFieldType().equals(RegistrationFieldType.TEXT)) {
-                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
-                    fieldView = new RegistrationTextView(field, view);
-                }
-                else if (field.getFieldType().equals(RegistrationFieldType.TEXTAREA)) {
-                    View view = inflater.inflate(R.layout.view_register_edit_text, null);
-                    fieldView = new RegistrationTextAreaView(field, view);
-                }
-                else if (field.getFieldType().equals(RegistrationFieldType.MULTI)) {
-                    View view = inflater.inflate(R.layout.view_register_spinner, null);
-                    fieldView = new RegistrationSpinnerView(field, view);
-                }
-                else {
-                    logger.warn(String.format("unknown field type %s found in RegistrationDescription, skipping it",
-                            field.getFieldType().toString()));
-                }
-
+                IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
                 if (fieldView != null)  mFieldViews.add(fieldView);
             }
 
@@ -225,6 +193,10 @@ public class RegisterActivity extends BaseFragmentActivity {
             }
         }
 
+        // set honor_code and terms_of_service to true
+        parameters.putString("honor_code", "true");
+        parameters.putString("terms_of_service", "true");
+
         // do NOT proceed if validations are failed
         if (hasError) {  return;  }
 
@@ -238,6 +210,18 @@ public class RegisterActivity extends BaseFragmentActivity {
                 logger.debug("registration success=" + result.isSuccess());
                 setElementsEnabled();
                 hideProgress();
+
+                if ( !result.isSuccess()) {
+                    sendBroadcastFlyingMessage(result.getValue());
+                } else {
+                    AuthResponse auth = getAuth();
+                    if (auth != null && auth.isSuccess()) {
+                        // launch my courses screen
+                        Router.getInstance().showMyCourses(RegisterActivity.this);
+                    } else {
+                        sendBroadcastFlyingMessage(getString(R.string.login_error));
+                    }
+                }
             }
 
             @Override

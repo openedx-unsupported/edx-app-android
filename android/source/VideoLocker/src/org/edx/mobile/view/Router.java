@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.util.AppConstants;
 
 /**
  * Created by aleffert on 1/30/15.
@@ -34,8 +35,9 @@ public class Router {
         sourceActivity.startActivity(findCoursesIntent);
     }
 
-    public void showCourseInfo(Activity sourceActivity) {
+    public void showCourseInfo(Activity sourceActivity, String pathId) {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
+        courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);
         sourceActivity.startActivity(courseInfoIntent);
     }
 
@@ -59,5 +61,13 @@ public class Router {
     public void showRegistration(Activity sourceActivity) {
         Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
         sourceActivity.startActivity(launchIntent);
+    }
+
+    public void showMyCourses(Activity sourceActivity) {
+        Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
+        sourceActivity.startActivity(intent);
+        Intent loginIntent = new Intent();
+        loginIntent.setAction(AppConstants.USER_LOG_IN);
+        sourceActivity.sendBroadcast(loginIntent);
     }
 }

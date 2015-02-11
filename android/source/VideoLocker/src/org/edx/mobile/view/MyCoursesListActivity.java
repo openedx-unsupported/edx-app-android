@@ -24,6 +24,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetEnrolledCoursesTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
@@ -276,8 +277,21 @@ public class MyCoursesListActivity extends BaseFragmentActivity {
                         logger.error(e);
                     }
 
-                    //Call the Find courses activity
-                    Router.getInstance().showFindCourses(MyCoursesListActivity.this);
+                    if (Config.getInstance().getEnrollment().getEnabled()) {
+                        //Call the Find courses activity
+                        Router.getInstance().showFindCourses(MyCoursesListActivity.this);
+                    }
+                    else {
+                        //Show the dialog only if the activity is started. This is to avoid Illegal state
+                        //exceptions if the dialog fragment tries to show even if the application is not in foreground
+                        if(isActivityStarted()){
+                            FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
+                            findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
+                                    android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                            findCoursesFragment.setCancelable(false);
+                            findCoursesFragment.show(getSupportFragmentManager(), "dialog-find-courses");
+                        }
+                    }
                 }
             });
 

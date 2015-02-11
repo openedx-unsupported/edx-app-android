@@ -135,4 +135,10 @@
 
         <include layout="@layout/panel_custom_action_bar" />
     </LinearLayout>
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
 </RelativeLayout>

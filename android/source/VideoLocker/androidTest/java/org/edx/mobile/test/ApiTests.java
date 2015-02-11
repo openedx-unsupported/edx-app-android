@@ -1,5 +1,8 @@
 package org.edx.mobile.test;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
@@ -119,7 +122,7 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void login() throws Exception {
-        AuthResponse res = api.auth("user@edx.org", "*****");
+        AuthResponse res = api.auth("user@edx.org", "****");
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
@@ -156,5 +159,28 @@ public class ApiTests extends BaseTestCase {
 
         // verify if enum type is parsed
         assertNotNull(form.getFields().get(0).getFieldType());
+    }
+
+    public void testEnrollInACourse() throws Exception {
+        print("test: Enroll in a course");
+
+        EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
+        String courseId = e.getCourse().getId();
+        boolean success = api.enrollInACourse(courseId, true);
+        assertTrue(success);
+        print("success");
+        print("test: finished: reset password");
+    }
+
+    public void testDownloadRegistrationDescription() throws Exception {
+        String json = api.downloadRegistrationDescription();
+        assertNotNull(json);
+        Gson gson = new Gson();
+        RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
+        assertNotNull(form);
+        assertNotNull(form.getEndpoint());
+        assertNotNull(form.getMethod());
+        assertNotNull(form.getFields());
+        assertTrue(form.getFields().size() > 0);
     }
 }

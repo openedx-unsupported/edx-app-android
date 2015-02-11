@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RegisterResponse {
 
-    private @SerializedName("success") boolean success;
+    private @SerializedName("success") boolean success = false;
     private @SerializedName("redirect_url") String redirectUrl;
     private @SerializedName("field") String field;
     private @SerializedName("value") String value;

@@ -17,12 +17,11 @@
             android:layout_alignParentTop="true"/>
 
         <WebView
-            android:id="@+id/find_courses_webview"
+            android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey_act_background"
-            android:layout_below="@id/offline_bar"
-            android:visibility="gone"/>
+            android:layout_below="@id/offline_bar"/>
 
         <ProgressBar
             android:id="@+id/progress_spinner"

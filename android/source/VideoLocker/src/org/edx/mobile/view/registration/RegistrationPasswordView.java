@@ -8,7 +8,7 @@ import org.edx.mobile.model.registration.RegistrationFormField;
 /**
  * Created by rohan on 2/11/15.
  */
-public class RegistrationPasswordView extends RegistrationEditTextView {
+class RegistrationPasswordView extends RegistrationEditTextView {
 
     public RegistrationPasswordView(RegistrationFormField field, View view) {
         super(field, view);

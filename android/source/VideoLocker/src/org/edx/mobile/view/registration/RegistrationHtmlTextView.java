@@ -1,8 +1,7 @@
 package org.edx.mobile.view.registration;
 
-import android.text.InputFilter;
+import android.text.Html;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -12,40 +11,25 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.registration.RegistrationFormField;
 
-class RegistrationEditTextView implements IRegistrationFieldView {
+class RegistrationHtmlTextView implements IRegistrationFieldView {
 
-    protected static final Logger logger = new Logger(RegistrationEditTextView.class);
+    protected static final Logger logger = new Logger(RegistrationHtmlTextView.class);
     protected RegistrationFormField mField;
     private View mView;
-    protected EditText mInputView;
+    protected TextView mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationEditTextView(RegistrationFormField field, View view) {
+    public RegistrationHtmlTextView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (EditText) view.findViewById(R.id.txt_input);
+        this.mInputView = (TextView) view.findViewById(R.id.txt_input);
         this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
         this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
 
-        // set max lines for this input to be 1
-        mInputView.setLines(1);
-
-        // apply max length
-        if (mField.getRestriction().getMaxLength() > 0) {
-            // otherwise, you may end up disabling the field
-
-            InputFilter[] FilterArray = new InputFilter[1];
-            FilterArray[0] = new InputFilter.LengthFilter(mField.getRestriction().getMaxLength());
-            mInputView.setFilters(FilterArray);
-        }
-
-        // set hint
-        mInputView.setHint(mField.getLabel());
-
-        // display default value
-        mInputView.setText(mField.getDefaultValue());
+        // display label as HTML
+        mInputView.setText(Html.fromHtml(mField.getLabel()));
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -62,12 +46,12 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mInputView.getText().toString());
+        return new JsonPrimitive(true);
     }
 
     @Override
     public boolean hasValue() {
-        return !mInputView.getText().toString().isEmpty();
+        return true;
     }
 
     @Override
@@ -95,25 +79,6 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     public boolean isValidInput() {
         // hide error as we are re-validating the input
         mErrorView.setVisibility(View.GONE);
-
-        // check if this is required field and has an input value
-        if (mField.isRequired() && !hasValue()) {
-            handleError(mField.getErrorMessage().getRequired());
-            return false;
-        }
-
-        // check if length restrictions are followed
-        int inputLength = getCurrentValue().getAsString().length();
-        if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
-            return false;
-        }
-        if (mField.getRestriction().getMaxLength() > 0
-                && inputLength > mField.getRestriction().getMaxLength()) {
-            handleError(mField.getErrorMessage().getMaxLength());
-            return false;
-        }
-
         return true;
     }
 
