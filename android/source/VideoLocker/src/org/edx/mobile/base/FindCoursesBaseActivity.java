@@ -11,16 +11,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.edx.mobile.R;
+import org.edx.mobile.http.Api;
+import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
-import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FindCoursesBaseActivity extends BaseFragmentActivity implements URLInterceptorWebViewClient.IActionListener {
+
+    private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
     private View offlineBar;
     private WebView webview;
@@ -187,15 +189,28 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
             public void onFinish(Boolean result) {
                 isTaskInProgress = false;
 
-                if(result!=null && result){
+                if(result!=null && result) {
                     logger.debug("Enrollment successful");
                     //If the course is successfully enrolled, send a broadcast
                     // to close the FindCoursesActivity
                     Intent intent = new Intent();
-                    intent.setAction(AppConstants.ENROLL_CLICKED);
+                    intent.putExtra("course_id", courseId);
+                    intent.setAction(ACTION_ENROLLED);
                     sendBroadcast(intent);
+
+                    // show flying message about the success of Enroll
+                    Api api = new Api(context);
+                    CourseEntry course = api.getCourseById(courseId);
+                    if (course == null) {
+                        // this means, you were not already enrolled to this course
+                        String msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
+                        intent = new Intent();
+                        intent.putExtra("message", msg);
+                        intent.setAction(ACTION_SHOW_MESSAGE);
+                        sendStickyBroadcast(intent);
+                    }
                 }else{
-                    showEnrollErrorMessage(courseId,emailOptIn);
+                    showEnrollErrorMessage(courseId, emailOptIn);
                 }
             }
 
@@ -234,7 +249,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     protected void enableEnrollCallback() {
         // register for enroll click listener
         IntentFilter filter = new IntentFilter();
-        filter.addAction(AppConstants.ENROLL_CLICKED);
+        filter.addAction(ACTION_ENROLLED);
         registerReceiver(courseEnrollReceiver, filter);
     }
 

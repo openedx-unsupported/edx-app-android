@@ -18,8 +18,7 @@ import org.edx.mobile.util.images.RequestManager;
 import io.fabric.sdk.android.Fabric;
 
 /**
- * Code for adding an L1 image cache to Volley. 
- * 
+ * This class initializes the modules of the app based on the configuration.
  */
 public class MainApplication extends Application {
     
@@ -30,8 +29,8 @@ public class MainApplication extends Application {
     }
 
     /**
-     * Intialize the request manager and the image cache
-     * Initialize shared components
+     * Initializes the request manager, image cache,
+     * all third party integrations and shared components.
      */
     private void init() {
         // initialize logger
@@ -44,16 +43,21 @@ public class MainApplication extends Application {
         // setup image cache
         createImageCache();
 
-        // initialize SegmentIO, empty writeKey is handled in SegmentTracker
-        SegmentFactory.makeInstance(this);
+        // initialize SegmentIO
+        if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()
+                && Config.getInstance().getSegmentIOWriteKey() != null) {
+            SegmentFactory.makeInstance(this);
+        }
 
         // initialize Fabric
-        if(Config.getInstance().getFabricKey() != null) {
+        if (Config.getInstance().getThirdPartyTraffic().isFabricEnabled()
+                && Config.getInstance().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
 
         // initialize NewRelic with crash reporting disabled
-        if(Config.getInstance().getNewRelicKey() != null) {
+        if (Config.getInstance().getThirdPartyTraffic().isNewRelicEnabled()
+                && Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
                     .withCrashReportingEnabled(false)
@@ -61,7 +65,8 @@ public class MainApplication extends Application {
         }
 
         // initialize Facebook SDK
-        if (Config.getInstance().getFacebookAppId() != null) {
+        if (Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()
+                && Config.getInstance().getFacebookAppId() != null) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
         }
 

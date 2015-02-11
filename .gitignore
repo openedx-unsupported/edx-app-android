@@ -15,4 +15,5 @@ build
 .idea
 Test-Reports
 test-build
-
+*.keystore
+gradle.properties

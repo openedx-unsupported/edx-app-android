@@ -17,6 +17,7 @@ import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthErrorResponse;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ChapterModel;
+import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
@@ -432,6 +433,25 @@ public class Api {
     public ArrayList<EnrolledCoursesResponse> getEnrolledCourses()
             throws Exception {
         return getEnrolledCourses(false);
+    }
+
+    /**
+     * Returns course identified by given id from cache, null if not course is found.
+     * @param courseId
+     * @return
+     */
+    public CourseEntry getCourseById(String courseId) {
+        try {
+            for (EnrolledCoursesResponse r : getEnrolledCourses(true)) {
+                if (r.getCourse().getId().equals(courseId)) {
+                    return r.getCourse();
+                }
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        return null;
     }
 
     /**

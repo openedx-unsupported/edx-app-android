@@ -19,6 +19,7 @@
     <string name="sign_up">https://courses.edx.org/register</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">edX End User Licensing Agreement</string>
+    <string name="login_title">Sign in to edX</string>
 
     <!-- Navigation Drawer Labels -->
     <string name="name_default">Morgank</string>
@@ -164,4 +165,5 @@
     <string name="email_client_not_present">No e-mail clients installed</string>
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <string name="try_again">TRY AGAIN</string>
+    <string name="you_are_now_enrolled">You are now enrolled</string>
 </resources>
