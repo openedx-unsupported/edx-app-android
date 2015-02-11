@@ -33,6 +33,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     private WebView webview;
     private boolean isWebViewLoaded;
     private ProgressBar progressWheel;
+    private boolean isTaskInProgress = false;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -121,7 +122,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
      * This function shows the offline mode message
      */
     private void showOfflineMessage(){
-
         if(webview!=null){
             webview.setVisibility(View.GONE);
         }
@@ -134,12 +134,12 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     /**
      * This function hides the offline mode message
      */
-    private void hideOfflineMessage(){
-        if(webview!=null){
+    private void hideOfflineMessage() {
+        if(webview!=null) {
             webview.setVisibility(View.VISIBLE);
         }
         ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
-        if(offlineModeTv!=null){
+        if(offlineModeTv!=null) {
             offlineModeTv.setVisibility(View.GONE);
         }
     }
@@ -172,11 +172,21 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
 
     @Override
     public void onClickEnroll(final String courseId, final boolean emailOptIn) {
+        if (isTaskInProgress) {
+            // avoid duplicate actions
+            logger.debug("already enroll task is in progress, so skipping Enroll action");
+            return;
+        }
+
+        isTaskInProgress = true;
+
         logger.debug("CourseId - "+courseId);
         logger.debug("Email option - "+emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this) {
             @Override
             public void onFinish(Boolean result) {
+                isTaskInProgress = false;
+
                 if(result!=null && result){
                     logger.debug("Enrollment successful");
                     //If the course is successfully enrolled, send a broadcast
@@ -191,6 +201,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
 
             @Override
             public void onException(Exception ex) {
+                isTaskInProgress = false;
                 logger.error(ex);
                 logger.debug("Error during enroll api call");
                 showEnrollErrorMessage(courseId,emailOptIn);
@@ -233,25 +244,27 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
     }
 
     private void showEnrollErrorMessage(final String courseId, final boolean emailOptIn) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("message_1", getString(R.string.enrollment_failure));
+        if (isActivityStarted()) {
+            Map<String, String> dialogMap = new HashMap<String, String>();
+            dialogMap.put("message_1", getString(R.string.enrollment_failure));
 
-        dialogMap.put("yes_button", getString(R.string.try_again));
-        dialogMap.put("no_button", getString(R.string.label_cancel));
-        EnrollmentFailureDialogFragment failureDialogFragment = EnrollmentFailureDialogFragment
-                .newInstance(dialogMap, new IDialogCallback() {
-                    @Override
-                    public void onPositiveClicked() {
-                        onClickEnroll(courseId, emailOptIn);
-                    }
+            dialogMap.put("yes_button", getString(R.string.try_again));
+            dialogMap.put("no_button", getString(R.string.label_cancel));
+            EnrollmentFailureDialogFragment failureDialogFragment = EnrollmentFailureDialogFragment
+                    .newInstance(dialogMap, new IDialogCallback() {
+                        @Override
+                        public void onPositiveClicked() {
+                            onClickEnroll(courseId, emailOptIn);
+                        }
 
-                    @Override
-                    public void onNegativeClicked() {
-                    }
-                });
-        failureDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        failureDialogFragment.show(getSupportFragmentManager(), "dialog");
-        failureDialogFragment.setCancelable(false);
+                        @Override
+                        public void onNegativeClicked() {
+                        }
+                    });
+            failureDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+            failureDialogFragment.show(getSupportFragmentManager(), "dialog");
+            failureDialogFragment.setCancelable(false);
+        }
     }
 
     @Override
