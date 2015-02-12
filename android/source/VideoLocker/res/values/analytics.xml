@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Whether to print additional debug information as you develop. -->
-    <string name="analytics_debug">false</string>
+    <bool name="analytics_debug">false</bool>
 
     <!-- Optional, the number of events in the disk queue before sending events to the server. -->
     <integer name="analytics_queue_size">20</integer>
