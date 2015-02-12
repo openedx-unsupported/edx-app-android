@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -295,5 +296,11 @@ public class RegisterActivity extends BaseFragmentActivity {
             errorMessage.setText(getString(R.string.login_failed));
         }
         UiUtil.animateLayouts(error_layout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Launch screen doesn't have any menu
+        return true;
     }
 }

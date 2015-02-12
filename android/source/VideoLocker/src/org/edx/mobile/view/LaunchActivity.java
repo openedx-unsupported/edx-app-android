@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -98,5 +99,11 @@ public class LaunchActivity extends BaseFragmentActivity {
             }
         };
         th.start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Launch screen doesn't have any menu
+        return true;
     }
 }
