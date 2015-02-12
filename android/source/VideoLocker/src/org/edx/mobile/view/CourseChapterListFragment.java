@@ -252,7 +252,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         if (downloadSize > MemoryUtil
                 .getAvailableExternalMemory(getActivity())) {
             ((CourseDetailTabActivity) getActivity())
-                    .showMessage(getString(R.string.file_size_exceeded));
+                    .showInfoMessage(getString(R.string.file_size_exceeded));
             updateList();
         } else {
             if (downloadSize < MemoryUtil.GB) {
@@ -261,7 +261,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                 showDownloadSizeExceedDialog(downloadList, downloadCount);
             }
         }
-
     }
 
     @Override

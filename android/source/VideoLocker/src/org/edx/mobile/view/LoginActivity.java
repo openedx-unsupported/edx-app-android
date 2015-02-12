@@ -505,11 +505,12 @@ public class LoginActivity extends BaseFragmentActivity {
         // handle if this is a LoginException
         if (ex != null && ex instanceof LoginException) {
             LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
+
             showErrorMessage(
                     error.getMessageLine1(),
-                    error.getMessageLine2());
+                    (error.getMessageLine2() != null) ?
+                            error.getMessageLine2() : getString(R.string.login_failed));
         } else {
-            logger.warn("Login Exception : ");
             logger.error(ex);
         }
     }
