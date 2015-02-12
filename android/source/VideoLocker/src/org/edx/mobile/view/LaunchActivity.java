@@ -27,6 +27,9 @@ public class LaunchActivity extends BaseFragmentActivity {
         overridePendingTransition(R.anim.slide_in_from_right,
                 R.anim.slide_out_to_left);
 
+        //The onTick method need not be run in the LaunchActivity
+        runOnTick = false;
+
         ETextView sign_in_tv = (ETextView) findViewById(R.id.sign_in_tv);
         sign_in_tv.setOnClickListener(new OnClickListener() {
             @Override

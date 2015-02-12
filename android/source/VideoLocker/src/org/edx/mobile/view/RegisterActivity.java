@@ -45,6 +45,9 @@ public class RegisterActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_register);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
+        //The onTick method need not be run in the RegisterActivity
+        runOnTick = false;
+
         try{
             segIO.screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
         }catch(Exception e){
