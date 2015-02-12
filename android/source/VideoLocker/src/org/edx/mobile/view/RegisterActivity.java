@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -19,6 +20,9 @@ import org.edx.mobile.model.registration.RegistrationDescription;
 import org.edx.mobile.model.registration.RegistrationFormField;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.RegisterTask;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.registration.IRegistrationFieldView;
 
@@ -97,8 +101,9 @@ public class RegisterActivity extends BaseFragmentActivity {
             }
         });
 
-        setupRegistrationForm();
+        AppConstants.offline_flag = !NetworkUtil.isConnected(this);
 
+        setupRegistrationForm();
         hideSoftKeypad();
     }
 
@@ -173,65 +178,75 @@ public class RegisterActivity extends BaseFragmentActivity {
     }
 
     private void createAccount() {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
+        if(!AppConstants.offline_flag){
+            ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
-        boolean hasError = false;
-        // prepare query (POST body)
-        Bundle parameters = new Bundle();
-        for (IRegistrationFieldView v : mFieldViews) {
-            if (v.isValidInput()) {
-                if (v.hasValue()) {
-                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
-                }
-            }
-            else {
-                if (!hasError) {
-                    // this is the first input field with error, so focus on it
-                    scrollToView(scrollView, v.getView());
-                }
-                hasError = true;
-            }
-        }
-
-        // set honor_code and terms_of_service to true
-        parameters.putString("honor_code", "true");
-        parameters.putString("terms_of_service", "true");
-
-        // do NOT proceed if validations are failed
-        if (hasError) {  return;  }
-
-        setElementsDisabled();
-        showProgress();
-
-        RegisterTask task = new RegisterTask(this, parameters) {
-
-            @Override
-            public void onFinish(RegisterResponse result) {
-                logger.debug("registration success=" + result.isSuccess());
-                setElementsEnabled();
-                hideProgress();
-
-                if ( !result.isSuccess()) {
-                    sendBroadcastFlyingMessage(result.getValue());
-                } else {
-                    AuthResponse auth = getAuth();
-                    if (auth != null && auth.isSuccess()) {
-                        // launch my courses screen
-                        Router.getInstance().showMyCourses(RegisterActivity.this);
-                    } else {
-                        sendBroadcastFlyingMessage(getString(R.string.login_error));
+            boolean hasError = false;
+            // prepare query (POST body)
+            Bundle parameters = new Bundle();
+            for (IRegistrationFieldView v : mFieldViews) {
+                if (v.isValidInput()) {
+                    if (v.hasValue()) {
+                        parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
                     }
                 }
+                else {
+                    if (!hasError) {
+                        // this is the first input field with error, so focus on it
+                        scrollToView(scrollView, v.getView());
+                    }
+                    hasError = true;
+                }
             }
 
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                setElementsEnabled();
-                hideProgress();
-            }
-        };
-        task.execute();
+            // set honor_code and terms_of_service to true
+            parameters.putString("honor_code", "true");
+            parameters.putString("terms_of_service", "true");
+
+            // do NOT proceed if validations are failed
+            if (hasError) {  return;  }
+
+            setElementsDisabled();
+            showProgress();
+
+            RegisterTask task = new RegisterTask(this, parameters) {
+
+                @Override
+                public void onFinish(RegisterResponse result) {
+                    if(result!=null){
+                        logger.debug("registration success=" + result.isSuccess());
+                        setElementsEnabled();
+                        hideProgress();
+
+                        if ( !result.isSuccess()) {
+                            sendBroadcastFlyingMessage(result.getValue());
+                        } else {
+                            AuthResponse auth = getAuth();
+                            if (auth != null && auth.isSuccess()) {
+                                // launch my courses screen
+                                Router.getInstance().showMyCourses(RegisterActivity.this);
+                            } else {
+                                sendBroadcastFlyingMessage(getString(R.string.login_error));
+                            }
+                        }
+                    }else{
+                        setElementsEnabled();
+                        hideProgress();
+                    }
+                }
+
+                @Override
+                public void onException(Exception ex) {
+                    logger.error(ex);
+                    setElementsEnabled();
+                    hideProgress();
+                }
+            };
+            task.execute();
+        }else {
+            showErrorMessage(getString(R.string.no_connectivity),
+                    getString(R.string.network_not_connected));
+        }
     }
 
     /**
@@ -267,5 +282,18 @@ public class RegisterActivity extends BaseFragmentActivity {
         View progress = findViewById(R.id.progress);
         progress.setVisibility(View.GONE);
         createAccountTv.setText(getString(R.string.create_account_text));
+    }
+
+    private void showErrorMessage(String header, String message) {
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        TextView errorHeader = (TextView) findViewById(R.id.error_header);
+        TextView errorMessage = (TextView) findViewById(R.id.error_message);
+        errorHeader.setText(header);
+        if (message != null) {
+            errorMessage.setText(message);
+        } else {
+            errorMessage.setText(getString(R.string.login_failed));
+        }
+        UiUtil.animateLayouts(error_layout);
     }
 }
