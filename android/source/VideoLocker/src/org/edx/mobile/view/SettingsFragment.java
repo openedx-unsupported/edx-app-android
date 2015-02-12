@@ -24,6 +24,7 @@ import org.edx.mobile.loader.CoursesVisibleLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
@@ -43,7 +44,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
     private final Logger logger = new Logger(SettingsFragment.class);
 
     private NetworkCheckDialogFragment newFragment;
-    private UiLifecycleHelper uiHelper;
+    private IUiLifecycleHelper uiHelper;
     private Switch wifiSwitch;
     private Switch visibilitySwitch;
     protected ISegment segIO;
@@ -66,7 +67,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
         PrefManager featurePrefManager = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
         showSocialFeatures = featurePrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
 
-        uiHelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
             @Override
             public void call(Session session, SessionState state, Exception exception) {
                 if (showSocialFeatures) {

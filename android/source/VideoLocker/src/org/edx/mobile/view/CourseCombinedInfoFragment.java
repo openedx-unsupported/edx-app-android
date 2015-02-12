@@ -16,9 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facebook.Session;
 import com.facebook.Settings;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LikeView;
 
@@ -30,11 +28,13 @@ import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
@@ -68,7 +68,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private List<AnnouncementsModel> savedAnnouncements;
     private SocialAffirmView likeButton;
     private SocialShareView shareButton;
-    private UiLifecycleHelper uiHelper;
+    private IUiLifecycleHelper uiHelper;
 
     private ArrayList<SocialMember> courseFriends;
 
@@ -82,7 +82,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         Settings.sdkInitialize(getActivity());
 
-        uiHelper = new UiLifecycleHelper(getActivity(), null);
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
 
     }
@@ -323,7 +323,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         Bundle args = new Bundle();
 
         args.putString(FriendsInCourseLoader.TAG_COURSE_ID, courseData.getCourse().getId());
-        args.putString(FriendsInCourseLoader.TAG_COURSE_OAUTH, Session.getActiveSession().getAccessToken());
+        args.putString(FriendsInCourseLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
 
         getLoaderManager().restartLoader(LOADER_ID, args, this);
 

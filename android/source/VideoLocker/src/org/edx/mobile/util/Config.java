@@ -95,12 +95,17 @@ public class Config {
         }
     }
 
+    /**
+     * Third party service calls are enabled by default, if no configuration is provided.
+     * Providing empty configuration disables all the services.
+     * Providing complete configuration allows to enable or disable the calls to individual service.
+     */
     public class ThirdPartyTrafficConfig {
-        private @SerializedName("GOOGLE_ENABLED") boolean googleEnabled;
-        private @SerializedName("FACEBOOK_ENABLED") boolean facebookEnabled;
-        private @SerializedName("NEW_RELIC_ENABLED") boolean newRelicEnabled;
-        private @SerializedName("FABRIC_ENABLED") boolean fabricEnabled;
-        private @SerializedName("SEGMENTIO_ENABLED") boolean segmentEnabled;
+        private @SerializedName("GOOGLE_ENABLED") boolean googleEnabled = true;
+        private @SerializedName("FACEBOOK_ENABLED") boolean facebookEnabled = true;
+        private @SerializedName("NEW_RELIC_ENABLED") boolean newRelicEnabled = true;
+        private @SerializedName("FABRIC_ENABLED") boolean fabricEnabled = true;
+        private @SerializedName("SEGMENTIO_ENABLED") boolean segmentEnabled = true;
 
         public boolean isGoogleEnabled() {
             return googleEnabled;

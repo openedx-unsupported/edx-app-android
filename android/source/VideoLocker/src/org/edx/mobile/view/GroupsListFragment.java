@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.Session;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 
@@ -26,6 +25,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
@@ -61,7 +61,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
     private View facebookConnectLayout;
     private View errorLayout;
 
-    private UiLifecycleHelper uiLifecycleHelper;
+    private IUiLifecycleHelper uiLifecycleHelper;
     private GroupListAdapter groupListAdapter;
     private SocialProvider groupProvider;
 
@@ -89,7 +89,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
             lastGroupToInvite = savedInstanceState.getParcelable(GROUP_BRING_INVITED);
         }
 
-        uiLifecycleHelper = new UiLifecycleHelper(getActivity(), null);
+        uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiLifecycleHelper.onCreate(savedInstanceState);
 
         segIO = SegmentFactory.getInstance();
