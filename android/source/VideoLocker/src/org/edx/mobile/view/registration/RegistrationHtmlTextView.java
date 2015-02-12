@@ -1,6 +1,7 @@
 package org.edx.mobile.view.registration;
 
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ class RegistrationHtmlTextView implements IRegistrationFieldView {
         this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
 
         // display label as HTML and text to be centered horizontally
+        mInputView.setMovementMethod(LinkMovementMethod.getInstance());
         mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
         mInputView.setText(Html.fromHtml(
                 String.format("<a href=%s>%s</a>", mField.getAgreement().getLink(), mField.getAgreement().getText())));
