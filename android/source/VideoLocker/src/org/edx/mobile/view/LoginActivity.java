@@ -222,28 +222,12 @@ public class LoginActivity extends BaseFragmentActivity {
     public void callServerForLogin() {
 
         if (!AppConstants.offline_flag) {
-            boolean matchFound = false;
             emailStr = email_et.getText().toString().trim();
             String passwordStr = password_et.getText().toString().trim();
-
-            if (emailStr != null && emailStr.length() > 0) {
-                Pattern p = Pattern
-                        .compile("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-                // Match the given string with the pattern
-                Matcher m = p.matcher(emailStr);
-                // check whether match is found
-                matchFound = m.matches();
-            }
 
             if (email_et != null && emailStr.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_email));
-                email_et.requestFocus();
-            }
-
-            else if (!matchFound) {
-                showErrorMessage(getString(R.string.login_error),
-                        getString(R.string.error_invalid_email));
                 email_et.requestFocus();
             }
 
