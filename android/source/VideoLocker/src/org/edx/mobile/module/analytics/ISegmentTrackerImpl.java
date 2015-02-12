@@ -8,6 +8,7 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
+import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
