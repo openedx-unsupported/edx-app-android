@@ -56,8 +56,7 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
 
                 holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(getContext(),
-                        videoData.size));
+                holder.videoSize.setText(MemoryUtil.format(getContext(),videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
                 dbStore.getWatchedStateForVideoId(videoData.videoId, 
@@ -126,6 +125,8 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                     holder.videoPlayingTime.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
                 }
+                //Hiding the video size in Video Listing
+                holder.videoSize.setVisibility(View.GONE);
             }
         }
     }
