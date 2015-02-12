@@ -193,7 +193,7 @@ public class VideoListFragment extends Fragment {
                         hideDeletePanel(VideoListFragment.this.getView());
 
                         if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showMessage(getString(R.string.need_data));
+                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
                             notifyAdapter();
                         } else {
                             IDialogCallback dialogCallback = new IDialogCallback() {
@@ -216,7 +216,7 @@ public class VideoListFragment extends Fragment {
                 public void download(final DownloadEntry videoData, final ProgressWheel progressWheel) {
                     try {
                         if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showMessage(getString(R.string.need_data));
+                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
                             notifyAdapter();
                         } else {
                             if (!(getActivity() instanceof VideoListActivity)) {
@@ -311,7 +311,7 @@ public class VideoListFragment extends Fragment {
         if (downloadSize > MemoryUtil
                 .getAvailableExternalMemory(getActivity())) {
             ((VideoListActivity) getActivity())
-                    .showMessage(getString(R.string.file_size_exceeded));
+                    .showInfoMessage(getString(R.string.file_size_exceeded));
             notifyAdapter();
         } else {
             if (downloadSize < MemoryUtil.GB) {
@@ -991,10 +991,10 @@ public class VideoListFragment extends Fragment {
 
                     if (storage.addDownload(downloadEntry) != -1) {
                         ((VideoListActivity) getActivity())
-                                .showMessage(getString(R.string.msg_started_one_video_download));
+                                .showInfoMessage(getString(R.string.msg_started_one_video_download));
                     } else {
                         ((VideoListActivity) getActivity())
-                                .showMessage(getString(R.string.msg_video_not_downloaded));
+                                .showInfoMessage(getString(R.string.msg_video_not_downloaded));
                     }
                     ((VideoListActivity) getActivity()).updateProgress();
 

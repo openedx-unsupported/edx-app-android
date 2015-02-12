@@ -115,7 +115,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
             public void download(final LectureModel lecture) {
                 if (!NetworkUtil.isConnected(getContext())) {
-                    showMessage(getString(R.string.need_data));
+                    showInfoMessage(getString(R.string.need_data));
                     updateList();
                 } else {
                     IDialogCallback dialogCallback = new IDialogCallback() {
@@ -154,7 +154,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             }
         }
         if(downloadSize > MemoryUtil.getAvailableExternalMemory(this)){
-            showMessage(getString(R.string.file_size_exceeded));
+            showInfoMessage(getString(R.string.file_size_exceeded));
             updateList();
         }else{
             if(downloadSize < MemoryUtil.GB){
@@ -326,13 +326,13 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                         adapter.notifyDataSetChanged();
                         invalidateOptionsMenu();
                         if(result>1){
-                            showMessage(getString(R.string.started_downloading)+" "+result+
+                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
                                     " "+getString(R.string.label_videos));
                         }else if (result==1){
-                            showMessage(getString(R.string.started_downloading)+" "+result+
+                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
                                     " "+getString(R.string.label_video));
                         } else {
-                            showMessage(getString(R.string.msg_video_not_downloaded));
+                            showInfoMessage(getString(R.string.msg_video_not_downloaded));
                         }
                     }
                 }catch(Exception e){
@@ -343,7 +343,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             @Override
             public void onException(Exception ex) {
                 hideProgressDialog();
-                showMessage(getString(R.string.msg_video_not_downloaded));
+                showInfoMessage(getString(R.string.msg_video_not_downloaded));
             }
         };
         downloadTask.execute(downloadList);

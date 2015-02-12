@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -46,6 +47,7 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -56,7 +58,8 @@ import java.util.List;
 
 public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
 
-    public static final String ACTION_SHOW_MESSAGE = "ACTION_SHOW_MESSAGE";
+    public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
+    public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
     // per second callback
     private static final int MSG_TYPE_TICK = 9302;
 
@@ -147,7 +150,9 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
         // register receiver for showing flying message
-        IntentFilter filter = new IntentFilter(ACTION_SHOW_MESSAGE);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_SHOW_MESSAGE_INFO);
+        filter.addAction(ACTION_SHOW_MESSAGE_ERROR);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(showFlyingMessageReceiver, filter);
 
@@ -426,11 +431,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
      * @param message - Message to display on the Download Panel
      * @return boolean - Returns true if message shown, false otherwise.
      */
-    public boolean showMessage(String message){
-        TextView downloadMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(downloadMessageTv!=null) {
-            downloadMessageTv.setText(message);
-            animateLayouts(downloadMessageTv);
+    public boolean showInfoMessage(String message){
+        TextView infoMessageTv = (TextView) findViewById(R.id.downloadMessage);
+        if(infoMessageTv!=null) {
+            infoMessageTv.setText(message);
+            animateLayouts(infoMessageTv);
             return true;
         } else {
             logger.warn("TextView not available, so couldn't show flying message");
@@ -702,16 +707,54 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     }
 
     /**
-     * Sends a sticky broadcast message which will be displayed by any activity which receives this
+     * Sends a sticky broadcast info message which will be displayed by any activity which receives this
      * broadcast.
      * Message is one-shot and gets removed when it is shown by any activity.
      * @param message
      */
-    protected void sendBroadcastFlyingMessage(String message) {
+    protected void sendBroadcastFlyingInfoMessage(String message) {
         Intent intent = new Intent();
         intent.putExtra("message", message);
-        intent.setAction(ACTION_SHOW_MESSAGE);
+        intent.setAction(ACTION_SHOW_MESSAGE_INFO);
         sendStickyBroadcast(intent);
+    }
+
+    /**
+     * Sends a sticky broadcast error message which will be displayed by any activity which receives this
+     * broadcast.
+     * Message is one-shot and gets removed when it is shown by any activity.
+     * @param header
+     * @param message
+     */
+    protected void sendBroadcastFlyingErrorMessage(String header, String message) {
+        Intent intent = new Intent();
+        intent.putExtra("header", header);
+        intent.putExtra("message", message);
+        intent.setAction(ACTION_SHOW_MESSAGE_ERROR);
+        sendStickyBroadcast(intent);
+    }
+
+    private boolean showErrorMessage(String header, String message) {
+        try {
+            LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+            if(error_layout!=null){
+                TextView errorHeader = (TextView) findViewById(R.id.error_header);
+                TextView errorMessage = (TextView) findViewById(R.id.error_message);
+                errorHeader.setText(header);
+                if (message != null) {
+                    errorMessage.setText(message);
+                }
+                UiUtil.animateLayouts(error_layout);
+                return true;
+            }else{
+                logger.warn("Error Layout not available, so couldn't show flying message");
+                return false;
+            }
+        }catch(Exception e){
+            logger.error(e);
+        }
+        logger.warn("Error Layout not available, so couldn't show flying message");
+        return false;
     }
 
     /**
@@ -723,9 +766,21 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (intent.getAction().equals(ACTION_SHOW_MESSAGE)) {
+                if (intent.getAction().equals(ACTION_SHOW_MESSAGE_INFO)) {
                     String message = intent.getStringExtra("message");
-                    if (showMessage(message)) {
+                    if (showInfoMessage(message)) { // TODO: make it showInfoMessage
+                        // make this message one-shot
+                        removeStickyBroadcast(intent);
+                    } else {
+                        // may be some other screen will display this message
+                        // do nothing here, do NOT remove broadcast
+                    }
+                }
+
+                else if (intent.getAction().equals(ACTION_SHOW_MESSAGE_ERROR)) {
+                    String header = intent.getStringExtra("header");
+                    String message = intent.getStringExtra("message");
+                    if (showErrorMessage(header, message)) {
                         // make this message one-shot
                         removeStickyBroadcast(intent);
                     } else {
