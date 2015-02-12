@@ -1283,7 +1283,11 @@
         "errorMessages": {
             "required": "You must agree to the edX <a href=\"https://www.edx.org/terms\">Terms of Service and Honor Code</a>."
         },
-        "placeholder": "",
+        "agreement" : {
+            "url" : "https://www.edx.org/terms",
+            "text" : "edX End User Licensing Agreement"
+        },
+        "placeholder" : "",
         "defaultValue": false,
         "instructions": "",
         "type": "checkbox",

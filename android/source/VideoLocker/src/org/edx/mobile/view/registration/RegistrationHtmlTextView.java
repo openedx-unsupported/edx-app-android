@@ -1,6 +1,7 @@
 package org.edx.mobile.view.registration;
 
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.google.gson.JsonPrimitive;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.registration.RegistrationFormField;
+import org.edx.mobile.util.BrowserUtil;
 
 class RegistrationHtmlTextView implements IRegistrationFieldView {
 
@@ -28,8 +30,10 @@ class RegistrationHtmlTextView implements IRegistrationFieldView {
         this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
         this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
 
-        // display label as HTML
-        mInputView.setText(Html.fromHtml(mField.getLabel()));
+        // display label as HTML and text to be centered horizontally
+        mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
+        mInputView.setText(Html.fromHtml(
+                String.format("<a href=%s>%s</a>", mField.getAgreement().getLink(), mField.getAgreement().getText())));
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {

@@ -1204,8 +1204,12 @@ public class Api {
         try {
             String url = getBaseUrl() + "/user_api/v1/account/registration/";
             String json = cache.get(url);
+            // TODO: let the form be rendered by JSON in assets for testing, but delete below line for prod
+            json = null;
             if (json != null) {
-                return gson.fromJson(json, RegistrationDescription.class);
+                RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
+                logger.debug("picking up registration description (form) from cache, not from assets");
+                return form;
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -1214,6 +1218,7 @@ public class Api {
         // if not cached, read the in-app registration description
         InputStream in = context.getAssets().open("config/registration_form.json");
         RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
+        logger.debug("picking up registration description (form) from assets, not from cache");
         return form;
     }
 

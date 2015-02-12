@@ -52,14 +52,16 @@ public interface IRegistrationFieldView {
                 View view = inflater.inflate(R.layout.view_register_spinner, null);
                 return new RegistrationSpinnerView(field, view);
             }
-            else if (field.getName().equalsIgnoreCase("honor_code")) {
-                View view = inflater.inflate(R.layout.view_register_html_text, null);
-                return new RegistrationHtmlTextView(field, view);
+            else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
+                if (field.getAgreement() != null) {
+                    View view = inflater.inflate(R.layout.view_register_html_text, null);
+                    return new RegistrationHtmlTextView(field, view);
+                }
+                else {
+                    View view = inflater.inflate(R.layout.view_register_checkbox, null);
+                    return new RegistrationCheckBoxView(field, view);
+                }
             }
-//            else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-//                View view = inflater.inflate(R.layout.view_register_checkbox, null);
-//                return new RegistrationCheckBoxView(field, view);
-//            }
             else {
                 logger.warn(String.format("unknown field type %s found in RegistrationDescription, skipping it",
                         fieldType.toString()));

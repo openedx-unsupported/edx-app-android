@@ -17,6 +17,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.registration.RegistrationDescription;
+import org.edx.mobile.model.registration.RegistrationFieldType;
 import org.edx.mobile.model.registration.RegistrationFormField;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.RegisterTask;
@@ -34,6 +35,7 @@ public class RegisterActivity extends BaseFragmentActivity {
     private RelativeLayout createAccountBtn;
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
+    private LinearLayout agreementLayout;
     private ETextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private View eulaLink;
@@ -63,6 +65,7 @@ public class RegisterActivity extends BaseFragmentActivity {
         createAccountTv = (ETextView) findViewById(R.id.create_account_tv);
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
+        agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
         final ETextView optional_text=(ETextView)findViewById(R.id.optional_field_tv);
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,11 +159,23 @@ public class RegisterActivity extends BaseFragmentActivity {
 
             LayoutInflater inflater = getLayoutInflater();
 
+            List<RegistrationFormField> agreements = new ArrayList<>();
+
             for (RegistrationFormField field : form.getFields()) {
-                IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
-                if (fieldView != null)  mFieldViews.add(fieldView);
+                if (field.getFieldType().equals(RegistrationFieldType.CHECKBOX)
+                        && field.getAgreement() != null) {
+                    // this is agreement field
+                    // this must be added at the end of the form
+                    // hold on it
+                    agreements.add(field);
+                }
+                else {
+                    IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
+                    if (fieldView != null) mFieldViews.add(fieldView);
+                }
             }
 
+            // add required and optional fields to the window
             for (IRegistrationFieldView v : mFieldViews) {
                 if (v.getField().isRequired()) {
                     requiredFieldsLayout.addView(v.getView());
@@ -170,8 +185,21 @@ public class RegisterActivity extends BaseFragmentActivity {
                 }
             }
 
+
+            // display agreements panel
+            if (agreements.size() > 0) {
+                agreementLayout.setVisibility(View.VISIBLE);
+            }
+            // add agreement fields to the window if available
+            for (RegistrationFormField agreement : agreements) {
+                IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
+                agreementLayout.addView(agreementView.getView());
+            }
+
+            // request rendering of the layouts
             requiredFieldsLayout.requestLayout();
             optionalFieldsLayout.requestLayout();
+            agreementLayout.requestLayout();
         } catch(Exception ex) {
             logger.error(ex);
         }
