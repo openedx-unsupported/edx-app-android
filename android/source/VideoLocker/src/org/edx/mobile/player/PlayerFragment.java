@@ -40,6 +40,7 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
@@ -97,7 +98,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private final Logger logger = new Logger(getClass().getName());
 
-    private UiLifecycleHelper uiHelper;
+    private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
 
     private final transient Handler handler = new Handler() {
@@ -162,7 +163,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         View view = inflater.inflate(R.layout.panel_player, null);
         this.layoutInflater = inflater;
 
-        uiHelper = new UiLifecycleHelper(getActivity(), null);
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
 
         return view;

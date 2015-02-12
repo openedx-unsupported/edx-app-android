@@ -75,7 +75,10 @@ public class Router {
 
     public void showMyCourses(Activity sourceActivity) {
         Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(intent);
+
+        // let login screens be ended
         Intent loginIntent = new Intent();
         loginIntent.setAction(AppConstants.USER_LOG_IN);
         sourceActivity.sendBroadcast(loginIntent);

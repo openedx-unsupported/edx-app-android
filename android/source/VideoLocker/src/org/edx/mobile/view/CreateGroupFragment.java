@@ -25,6 +25,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
@@ -56,7 +57,7 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
     private List<SocialMember> friendsConnectedToEdx;
 
-    private UiLifecycleHelper uiHelper;
+    private IUiLifecycleHelper uiHelper;
 
     private SocialProvider.Callback<List<SocialMember>> getFriendsCallback = new SocialProvider.Callback<List<SocialMember>>() {
         @Override
@@ -190,7 +191,7 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
         refreshVisibility();
 
-        uiHelper = new UiLifecycleHelper(getActivity(), null);
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
 
         return rootView;

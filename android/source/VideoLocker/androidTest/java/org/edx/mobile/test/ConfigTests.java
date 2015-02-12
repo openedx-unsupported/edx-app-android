@@ -1,7 +1,6 @@
 package org.edx.mobile.test;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -24,6 +23,13 @@ public class ConfigTests extends BaseTestCase {
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
     private static final String SEARCH_URL = "SEARCH_URL";
     private static final String COURSE_INFO_URL_TEMPLATE = "COURSE_INFO_URL_TEMPLATE";
+
+    private static final String THIRD_PARTY_TRAFFIC = "THIRD_PARTY_TRAFFIC";
+    private static final String GOOGLE_ENABLED = "GOOGLE_ENABLED";
+    private static final String FACEBOOK_ENABLED = "FACEBOOK_ENABLED";
+    private static final String NEW_RELIC_ENABLED = "NEW_RELIC_ENABLED";
+    private static final String FABRIC_ENABLED = "FABRIC_ENABLED";
+    private static final String SEGMENTIO_ENABLED = "SEGMENTIO_ENABLED";
 
     public void testSocialSharingNoConfig() {
         JsonObject configBase = new JsonObject();
@@ -125,5 +131,45 @@ public class ConfigTests extends BaseTestCase {
         assertTrue(config.getEnrollment().getEnabled());
         assertEquals(config.getEnrollment().getSearchUrl(), "fake-url");
         assertEquals(config.getEnrollment().getCourseInfoUrlTemplate(), "fake-url-template");
+    }
+
+    public void testThirdPartyNoConfig() {
+        JsonObject configBase = new JsonObject();
+        Config config = new Config(configBase);
+        assertTrue(config.getThirdPartyTraffic().isFabricEnabled());
+        assertTrue(config.getThirdPartyTraffic().isFacebookEnabled());
+        assertTrue(config.getThirdPartyTraffic().isGoogleEnabled());
+        assertTrue(config.getThirdPartyTraffic().isNewRelicEnabled());
+        assertTrue(config.getThirdPartyTraffic().isSegmentEnabled());
+    }
+
+    public void testThirdPartyEmptyConfig() {
+        JsonObject configBase = new JsonObject();
+        JsonObject thirdPartyConfig = new JsonObject();
+        configBase.add(THIRD_PARTY_TRAFFIC, thirdPartyConfig);
+        Config config = new Config(configBase);
+        assertFalse(config.getThirdPartyTraffic().isFabricEnabled());
+        assertFalse(config.getThirdPartyTraffic().isFacebookEnabled());
+        assertFalse(config.getThirdPartyTraffic().isGoogleEnabled());
+        assertFalse(config.getThirdPartyTraffic().isNewRelicEnabled());
+        assertFalse(config.getThirdPartyTraffic().isSegmentEnabled());
+    }
+
+    public void testThirdPartyConfig() {
+        JsonObject configBase = new JsonObject();
+        JsonObject thirdPartyConfig = new JsonObject();
+        thirdPartyConfig.add(GOOGLE_ENABLED, new JsonPrimitive(false));
+        thirdPartyConfig.add(FABRIC_ENABLED, new JsonPrimitive(false));
+        thirdPartyConfig.add(NEW_RELIC_ENABLED, new JsonPrimitive(false));
+        thirdPartyConfig.add(FABRIC_ENABLED, new JsonPrimitive(false));
+        thirdPartyConfig.add(SEGMENTIO_ENABLED, new JsonPrimitive(false));
+        configBase.add(THIRD_PARTY_TRAFFIC, thirdPartyConfig);
+
+        Config config = new Config(configBase);
+        assertFalse(config.getThirdPartyTraffic().isFabricEnabled());
+        assertFalse(config.getThirdPartyTraffic().isFacebookEnabled());
+        assertFalse(config.getThirdPartyTraffic().isGoogleEnabled());
+        assertFalse(config.getThirdPartyTraffic().isNewRelicEnabled());
+        assertFalse(config.getThirdPartyTraffic().isSegmentEnabled());
     }
 }
