@@ -148,7 +148,8 @@
     <LinearLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include layout="@layout/panel_login_error" />
     </LinearLayout>
@@ -158,7 +159,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" >
-
         <include layout="@layout/panel_custom_action_bar" />
     </LinearLayout>
+
 </RelativeLayout>

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Segment.IO Analytics Dave's key -->
-    <string name="analytics_write_key"></string>
-
-    <!--Whether to print additional log information as you develop.-->
-    <bool name="analytics_logging">false</bool>
-
     <!-- Whether to print additional debug information as you develop. -->
-    <string name="analytics_debug">false</string>
+    <bool name="analytics_debug">false</bool>
 
     <!-- Optional, the number of events in the disk queue before sending events to the server. -->
-    <integer name="analytics_queue_size">5</integer>
+    <integer name="analytics_queue_size">20</integer>
+
+    <!--Interval at which we should flush events in seconds.-->
+    <integer name="analytics_flush_interval">30</integer>
 
 </resources>
