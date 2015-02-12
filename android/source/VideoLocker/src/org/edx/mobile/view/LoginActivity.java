@@ -511,7 +511,6 @@ public class LoginActivity extends BaseFragmentActivity {
                     (error.getMessageLine2() != null) ?
                             error.getMessageLine2() : getString(R.string.login_failed));
         } else {
-            logger.warn("Login Exception : ");
             logger.error(ex);
         }
     }

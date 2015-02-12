@@ -768,7 +768,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             try {
                 if (intent.getAction().equals(ACTION_SHOW_MESSAGE_INFO)) {
                     String message = intent.getStringExtra("message");
-                    if (showInfoMessage(message)) { // TODO: make it showInfoMessage
+                    if (showInfoMessage(message)) {
                         // make this message one-shot
                         removeStickyBroadcast(intent);
                     } else {
