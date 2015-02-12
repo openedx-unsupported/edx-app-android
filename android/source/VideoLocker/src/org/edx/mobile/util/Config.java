@@ -44,8 +44,6 @@ public class Config {
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
-    private static final String SEGMENT_IO_DEBUG_ON = "SEGMENT_IO_DEBUG_ON";
-    private static final String SEGMENT_IO_QUEUE_SIZE = "SEGMENT_IO_QUEUE_SIZE";
     private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
@@ -226,14 +224,6 @@ public class Config {
 
     public String getSegmentIOWriteKey() {
         return getString(SEGMENT_IO_WRITE_KEY);
-    }
-
-    public boolean getSegmentDebugOn() {
-        return getBoolean(SEGMENT_IO_DEBUG_ON, false);
-    }
-
-    public int getSegmentQueueSize() {
-        return getInteger(SEGMENT_IO_QUEUE_SIZE, 1);
     }
 
     public boolean getDeprecatedRegistrationApiDoNotUse() {
