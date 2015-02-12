@@ -22,8 +22,9 @@ class ISegmentTrackerImpl implements ISegmentTracker {
             Config config = Config.getInstance();
 
             String writeKey = config.getSegmentIOWriteKey();
-            boolean debugging = config.getSegmentDebugOn();
-            int queueSize = config.getSegmentQueueSize();
+            boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
+            int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
+            int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);
             
             // Must be called before any calls to Analytics.with(context)
             // Now Analytics.with will return the custom instance
@@ -35,6 +36,7 @@ class ISegmentTrackerImpl implements ISegmentTracker {
                 analytics = new Analytics.Builder(context, writeKey)
                         .debugging(debugging)
                         .queueSize(queueSize)
+                        .flushInterval(flushInterval)
                         .build();
             } else {
                 logger.warn("writeKey is null, Segment analytics will not work.");
