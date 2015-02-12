@@ -1,11 +1,5 @@
 package org.edx.mobile.social.facebook;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-
-import org.edx.mobile.social.ISocialImpl;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -17,11 +11,17 @@ import android.util.Base64;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
+
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
+import org.edx.mobile.social.ISocialImpl;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class FacebookAuth extends ISocialImpl {
 
-    private UiLifecycleHelper uiHelper;
+    private IUiLifecycleHelper uiHelper;
 
     private Session.StatusCallback statusCallback = new Session.StatusCallback() {
         @Override
@@ -54,7 +54,7 @@ public class FacebookAuth extends ISocialImpl {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        uiHelper = new UiLifecycleHelper(activity, statusCallback);
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(activity, statusCallback);
         uiHelper.onCreate(savedInstanceState);
 
         keyHash();

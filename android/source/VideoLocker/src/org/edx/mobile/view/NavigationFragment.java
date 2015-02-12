@@ -25,6 +25,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
@@ -43,7 +44,7 @@ public class NavigationFragment extends Fragment {
     private PrefManager socialPref;
     private NetworkCheckDialogFragment newFragment;
 
-    private UiLifecycleHelper uiLifecycleHelper;
+    private IUiLifecycleHelper uiLifecycleHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
@@ -53,7 +54,7 @@ public class NavigationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiLifecycleHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), callback);
         uiLifecycleHelper.onCreate(savedInstanceState);
     }
 

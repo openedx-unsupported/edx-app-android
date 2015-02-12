@@ -21,7 +21,6 @@ import android.widget.ProgressBar;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -32,6 +31,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.SocialMember;
@@ -39,6 +39,7 @@ import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
@@ -59,7 +60,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     protected ISegment segIO;
 
-    protected UiLifecycleHelper uiHelper;
+    protected IUiLifecycleHelper uiHelper;
     protected ListView myCourseList;
 
     FetchFriendsReceiver fetchFriendsObserver;
@@ -119,11 +120,11 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
             }
         };
 
-        uiHelper = new UiLifecycleHelper(getActivity(), new Session.StatusCallback() {
+        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
             @Override
             public void call(Session session, SessionState state, Exception exception) {
 
-                if (state.isOpened()){
+                if (state.isOpened()) {
                     adapter.notifyDataSetChanged();
                 }
 
@@ -350,7 +351,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         Intent fetchFriends = new Intent(getActivity(), FetchCourseFriendsService.class);
 
         fetchFriends.putExtra(FetchCourseFriendsService.TAG_COURSE_ID, course.getCourse().getId());
-        fetchFriends.putExtra(FetchCourseFriendsService.TAG_COURSE_OAUTH, Session.getActiveSession().getAccessToken());
+        fetchFriends.putExtra(FetchCourseFriendsService.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
 
         getActivity().startService(fetchFriends);
     }

@@ -13,6 +13,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class MyCoursesListActivity extends BaseTabActivity implements NetworkObserver{
 
-    private UiLifecycleHelper uiLifecycleHelper;
+    private IUiLifecycleHelper uiLifecycleHelper;
     private PrefManager featuresPref;
 
     @Override
@@ -56,9 +57,8 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
             }
 
         };
-        uiLifecycleHelper = new UiLifecycleHelper(this, statusCallback);
+        uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(this, statusCallback);
         uiLifecycleHelper.onCreate(savedInstanceState);
-
     }
 
     private void changeSocialMode(boolean socialEnabled) {

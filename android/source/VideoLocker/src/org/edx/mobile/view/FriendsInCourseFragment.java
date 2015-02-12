@@ -13,8 +13,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.facebook.Session;
-
 import org.edx.mobile.R;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
@@ -24,6 +22,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FriendsInCourseAdapter;
 import org.edx.mobile.view.adapters.SimpleAdapter;
@@ -122,7 +121,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
         Bundle args = new Bundle();
         args.putString(FriendsInCourseLoader.TAG_COURSE_ID, courseData.getId());
-        args.putString(FriendsInCourseLoader.TAG_COURSE_OAUTH, Session.getActiveSession().getAccessToken());
+        args.putString(FriendsInCourseLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
 
         getLoaderManager().restartLoader(LOADER_ID, args, this);
 

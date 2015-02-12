@@ -13,9 +13,9 @@ class DbOperationExists extends DbOperationSelect<Boolean> {
     @Override
     public Boolean execute(SQLiteDatabase db) {
         Cursor c = getCursor(db);
-        boolean exists = (c.getCount() > 0);
+        Boolean exists = (c.getCount() > 0);
         c.close();
-        return exists;
+        return (exists != null && exists);
     }
     
 }

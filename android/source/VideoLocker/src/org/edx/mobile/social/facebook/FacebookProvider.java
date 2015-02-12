@@ -27,6 +27,7 @@ import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.task.social.CreateGroupTask;
 import org.edx.mobile.task.social.InviteFriendsListToGroupTask;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.util.ArrayList;
@@ -143,7 +144,7 @@ public class FacebookProvider implements SocialProvider {
     @Override
     public void inviteFriendsListToGroup(Context context, long groupID, List<SocialMember> friendList, final Callback<Void> callback) {
 
-        String token = Session.getActiveSession().getAccessToken();
+        String token = FacebookSessionUtil.getAccessToken();
 
         Long[] friendIDs = new Long[friendList.size()];
         for (int i = 0; i < friendList.size(); i++){
@@ -168,7 +169,7 @@ public class FacebookProvider implements SocialProvider {
     @Override
     public void createNewGroup(Context context, String name, String description, String admin, final Callback<Long> callback) {
 
-        String token = Session.getActiveSession().getAccessToken();
+        String token = FacebookSessionUtil.getAccessToken();
 
         CreateGroupTask createGroupTask = new CreateGroupTask(context) {
 

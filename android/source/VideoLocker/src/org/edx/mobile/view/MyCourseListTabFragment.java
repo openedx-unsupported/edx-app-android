@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.Session;
-
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.Api;
@@ -18,6 +16,7 @@ import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         }
 
         Bundle args = new Bundle();
-        args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, Session.getActiveSession().getAccessToken());
+        args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
 
         getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, args, this);
     }
@@ -104,6 +103,11 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     public void onLoadFinished(Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> asyncTaskResultLoader, AsyncTaskResult<List<EnrolledCoursesResponse>> result) {
 
         if (progressBar != null) progressBar.setVisibility(View.GONE);
+
+        if (result == null) {
+            logger.warn("result is found null, was expecting non-null");
+            return;
+        }
 
         if(result.getEx() != null)
         {

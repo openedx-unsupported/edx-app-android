@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.Session;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -20,6 +19,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
         }
 
         Bundle args = new Bundle();
-        args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, Session.getActiveSession().getAccessToken());
+        args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
 
         getLoaderManager().restartLoader(FREINDS_COURSES_LOADER_ID, args, this);
 
