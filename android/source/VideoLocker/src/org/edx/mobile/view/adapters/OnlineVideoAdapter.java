@@ -165,7 +165,9 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                         holder.progresslayout.setVisibility(View.GONE);
                         holder.video_download_layout.setVisibility(View.VISIBLE);
                     }
-                });                 
+                });
+                //Hiding the video size in Video Listing
+                holder.videoSize.setVisibility(View.GONE);
             }
         }
     }
