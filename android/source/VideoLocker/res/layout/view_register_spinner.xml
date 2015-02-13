@@ -12,7 +12,7 @@
         style="@style/spinner_style"
         android:layout_height="wrap_content"
         android:textColorHint="@color/hint_grey_text"
-        android:paddingLeft="10dp"
+        android:paddingLeft="5dp"
         android:paddingRight="10dp"/>
 
     <org.edx.mobile.view.custom.ETextView
