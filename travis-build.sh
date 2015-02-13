@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# change directory to source
-echo "[INFO] changing directory to android/source"
-cd android/source
-echo "[INFO] Changed directory to : " 
+# print working directory
 pwd
 
 # run tests
