@@ -138,9 +138,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         } else {
             adapter.clear();
             noCourseText.setVisibility(View.VISIBLE);
-
         }
-
     }
 
     @Override
@@ -149,7 +147,4 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         adapter.notifyDataSetChanged();
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
     }
-
-
-
 }

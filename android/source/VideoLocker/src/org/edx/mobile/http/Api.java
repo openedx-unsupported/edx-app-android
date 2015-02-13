@@ -1228,8 +1228,8 @@ public class Api {
 
         JSONObject postBody = new JSONObject();
         JSONObject courseIdObject = new JSONObject();
-        courseIdObject.put("course_id", courseId);
         courseIdObject.put("email_opt_in", email_opt_in);
+        courseIdObject.put("course_id", courseId);
         postBody.put("course_details", courseIdObject);
 
         logger.debug("POST body for Enrolling in a course: " + postBody.toString());

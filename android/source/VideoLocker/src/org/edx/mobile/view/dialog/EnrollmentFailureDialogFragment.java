@@ -50,7 +50,7 @@ public class EnrollmentFailureDialogFragment extends DialogFragment {
         dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
         // Watch for button clicks.
         Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
-        positiveBtn.setText(getArguments().getString("dialog_yes_btn"));
+        positiveBtn.setText(getArguments().getString("dialog_yes_btn").toUpperCase());
         positiveBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 try {
