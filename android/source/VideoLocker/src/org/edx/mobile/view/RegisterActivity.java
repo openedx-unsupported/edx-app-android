@@ -16,16 +16,17 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.RegisterResponse;
-import org.edx.mobile.model.registration.RegistrationDescription;
-import org.edx.mobile.model.registration.RegistrationFieldType;
-import org.edx.mobile.model.registration.RegistrationFormField;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.registration.model.RegistrationAgreement;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.module.registration.model.RegistrationFieldType;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
+import org.edx.mobile.module.registration.view.IRegistrationFieldView;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.registration.IRegistrationFieldView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,6 @@ public class RegisterActivity extends BaseFragmentActivity {
     private LinearLayout agreementLayout;
     private ETextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
-    private View eulaLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,6 @@ public class RegisterActivity extends BaseFragmentActivity {
         }catch(Exception e){
             logger.error(e);
         }
-
-        eulaLink = findViewById(R.id.end_user_agreement_tv);
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -96,23 +94,16 @@ public class RegisterActivity extends BaseFragmentActivity {
             customTitle.setText(getString(R.string.register_title));
         }
 
-        ETextView eulaTv = (ETextView) findViewById(R.id.end_user_agreement_tv);
-        eulaTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showEulaDialog();
-            }
-        });
-
         AppConstants.offline_flag = !NetworkUtil.isConnected(this);
 
         setupRegistrationForm();
         hideSoftKeypad();
     }
 
-    public void showEulaDialog() {
-        showWebDialog(getString(R.string.eula_file_link), true,
-                getString(R.string.end_user_title));
+    public void showAgreement(RegistrationAgreement agreement) {
+        showWebDialog(agreement.getLink(),
+                true,
+                agreement.getText());
     }
 
     @Override
@@ -124,7 +115,6 @@ public class RegisterActivity extends BaseFragmentActivity {
     //Enable all the Fields(Views) which were disabled
     private void setElementsEnabled(){
         createButtonEnabled();
-        eulaLink.setEnabled(true);
         for (IRegistrationFieldView v : mFieldViews) {
             v.setEnabled(true);
         }
@@ -133,7 +123,6 @@ public class RegisterActivity extends BaseFragmentActivity {
     //Disable the Fields(Views) when doing server call
     private void setElementsDisabled(){
         createButtonDisabled();
-        eulaLink.setEnabled(false);
         for (IRegistrationFieldView v : mFieldViews) {
             v.setEnabled(false);
         }
@@ -185,14 +174,15 @@ public class RegisterActivity extends BaseFragmentActivity {
                 }
             }
 
-
-            // display agreements panel
-            if (agreements.size() > 0) {
-                agreementLayout.setVisibility(View.VISIBLE);
-            }
             // add agreement fields to the window if available
             for (RegistrationFormField agreement : agreements) {
                 IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
+                agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
+                    @Override
+                    public void onClickAgreement(RegistrationAgreement agreement) {
+                        showAgreement(agreement);
+                    }
+                });
                 agreementLayout.addView(agreementView.getView());
             }
 
@@ -200,6 +190,9 @@ public class RegisterActivity extends BaseFragmentActivity {
             requiredFieldsLayout.requestLayout();
             optionalFieldsLayout.requestLayout();
             agreementLayout.requestLayout();
+
+            // enable all the views
+            setElementsEnabled();
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -215,6 +208,7 @@ public class RegisterActivity extends BaseFragmentActivity {
             for (IRegistrationFieldView v : mFieldViews) {
                 if (v.isValidInput()) {
                     if (v.hasValue()) {
+                        // we submit the field only if it provides a value
                         parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
                     }
                 }

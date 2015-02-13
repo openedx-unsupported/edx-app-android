@@ -14,6 +14,8 @@
         android:background="@color/white"
         android:textColorHint="@color/hint_grey_text"
         android:textColorLink="@color/cyan_text_navigation"
+        android:textColor="@color/cyan_text_navigation"
+        android:clickable="true"
         tools:hint="sample email link: email@domain.org"/>
 
     <org.edx.mobile.view.custom.ETextView

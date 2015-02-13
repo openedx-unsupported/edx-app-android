@@ -22,17 +22,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/improve_career_tv"
-            style="@style/semibold_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/improve_your_career"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:layout_alignParentTop="true"/>
-
         <org.edx.mobile.view.custom.EButton
             android:id="@+id/sign_up_btn"
             style="@style/bold_white_text"
@@ -44,7 +33,6 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:padding="5dp"
-            android:layout_below="@id/improve_career_tv"
             android:text="@string/sign_up_and_learn"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"

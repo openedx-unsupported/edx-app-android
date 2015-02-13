@@ -59,5 +59,10 @@
         android:background="@color/grey_act_background"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
-    
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/api_progress_style"
+        android:visibility="gone" />
+
 </RelativeLayout>

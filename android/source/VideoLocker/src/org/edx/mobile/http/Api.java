@@ -37,7 +37,7 @@ import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
-import org.edx.mobile.model.registration.RegistrationDescription;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;

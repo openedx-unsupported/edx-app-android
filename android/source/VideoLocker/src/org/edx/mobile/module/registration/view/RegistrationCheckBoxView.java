@@ -1,9 +1,7 @@
-package org.edx.mobile.view.registration;
+package org.edx.mobile.module.registration.view;
 
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -11,31 +9,30 @@ import com.google.gson.JsonPrimitive;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.registration.RegistrationFormField;
-import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
 
-class RegistrationHtmlTextView implements IRegistrationFieldView {
+class RegistrationCheckBoxView implements IRegistrationFieldView {
 
-    protected static final Logger logger = new Logger(RegistrationHtmlTextView.class);
-    protected RegistrationFormField mField;
+    protected static final Logger logger = new Logger(RegistrationCheckBoxView.class);
+    private RegistrationFormField mField;
     private View mView;
-    protected TextView mInputView;
+    protected CheckBox mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationHtmlTextView(RegistrationFormField field, View view) {
+    public RegistrationCheckBoxView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (TextView) view.findViewById(R.id.txt_input);
-        this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
+        this.mInputView = (CheckBox) view.findViewById(R.id.checkbox_input);
+        this.mErrorView = (TextView) view.findViewById(R.id.checkbox_input_error);
+        this.mInstructionView = (TextView) view.findViewById(R.id.checkbox_input_instruction);
 
-        // display label as HTML and text to be centered horizontally
-        mInputView.setMovementMethod(LinkMovementMethod.getInstance());
-        mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
-        mInputView.setText(Html.fromHtml(
-                String.format("<a href=%s>%s</a>", mField.getAgreement().getLink(), mField.getAgreement().getText())));
+        // set hint
+        mInputView.setHint(mField.getLabel());
+
+        // display default value
+        mInputView.setChecked(Boolean.getBoolean(mField.getDefaultValue()));
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -52,11 +49,12 @@ class RegistrationHtmlTextView implements IRegistrationFieldView {
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(true);
+        return new JsonPrimitive(mInputView.isChecked());
     }
 
     @Override
     public boolean hasValue() {
+        // being checkbox, this always has a value
         return true;
     }
 
@@ -85,11 +83,23 @@ class RegistrationHtmlTextView implements IRegistrationFieldView {
     public boolean isValidInput() {
         // hide error as we are re-validating the input
         mErrorView.setVisibility(View.GONE);
+
+        // check if this is required field and has an input value
+        if (mField.isRequired() && !mInputView.isChecked()) {
+            handleError(mField.getErrorMessage().getRequired());
+            return false;
+        }
+
         return true;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
         mInputView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setActionListener(IActionListener actionListener) {
+        // no actions for this field
     }
 }

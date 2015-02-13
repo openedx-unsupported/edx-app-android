@@ -1,4 +1,4 @@
-package org.edx.mobile.model.registration;
+package org.edx.mobile.module.registration.model;
 
 // TODO: delete if this class is not really required
 class RegistrationError {

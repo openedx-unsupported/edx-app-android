@@ -19,6 +19,10 @@ import java.util.Map;
  * This class is responsible for setting up a given {@link android.webkit.WebView}, assign itself
  * as a {@link android.webkit.WebViewClient} delegate and to intercept URLs being loaded.
  * Depending on the form of URL, this client may forward URL back to the app.
+ *
+ * This implementation detects host of the first URL being loaded. Further, if any URL intercepted has a different host
+ * than the current one, then treats it as an external link and may open in external browser.
+ *
  */
 public class URLInterceptorWebViewClient extends WebViewClient {
 
@@ -33,6 +37,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
     private Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private IActionListener actionListener;
+    private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
 
     public URLInterceptorWebViewClient(WebView webView) {
@@ -46,6 +51,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     public void setActionListener(IActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    /**
+     * Gives page status callbacks like page loading started, finished or error.
+     * @param pageStatusListener
+     */
+    public void setPageStatusListener(IPageStatusListener pageStatusListener) {
+        this.pageStatusListener = pageStatusListener;
     }
 
     /**
@@ -65,8 +78,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if (actionListener != null) {
-            actionListener.onPageStarted();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageStarted();
         }
     }
 
@@ -80,16 +93,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             logger.error(ex);
         }
 
-        if (actionListener != null) {
-            actionListener.onPageFinished();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageFinished();
         }
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        if (actionListener != null) {
-            actionListener.onPageLoadError();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageLoadError();
         }
     }
 
@@ -239,7 +252,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
+    }
 
+    /**
+     * Page state callbacks.
+     */
+    public static interface IPageStatusListener {
         /**
          * Callback that indicates page loading has started.
          */

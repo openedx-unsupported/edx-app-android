@@ -1,7 +1,6 @@
 package org.edx.mobile.test;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -13,7 +12,7 @@ import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.registration.RegistrationDescription;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.util.Environment;
 
 import java.util.ArrayList;
