@@ -1229,6 +1229,7 @@ public class Api {
         JSONObject postBody = new JSONObject();
         JSONObject courseIdObject = new JSONObject();
         courseIdObject.put("course_id", courseId);
+        courseIdObject.put("email_opt_in", email_opt_in);
         postBody.put("course_details", courseIdObject);
 
         logger.debug("POST body for Enrolling in a course: " + postBody.toString());
@@ -1245,25 +1246,6 @@ public class Api {
         }
 
         return false;
-        //The following commented code will be removed once the optIn endpoint is resolved
-        /*String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
-        logger.debug("POST url for preference in a Course: " + preferenceUrl);
-        JSONObject optInPostBody = new JSONObject();
-        optInPostBody.put("course_id", courseId);
-        optInPostBody.put("email_opt_in", email_opt_in);
-
-        logger.debug("POST body for Preference in a course: " + optInPostBody.toString());
-        String optInJson = http.post(preferenceUrl, optInPostBody.toString(), getAuthHeaders(), false);
-        logger.debug("Response of optIn server call= " + optInJson);
-        if (optInJson != null && !optInJson.isEmpty()) {
-            // validate optInJson
-            JSONObject resultJson = new JSONObject(optInJson);
-            if (resultJson.has("error")) {
-                return false;
-            }else{
-                return true;
-            }
-        }*/
     }
 
     public String downloadRegistrationDescription() throws Exception {
