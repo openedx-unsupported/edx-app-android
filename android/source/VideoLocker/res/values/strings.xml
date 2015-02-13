@@ -290,7 +290,7 @@
 
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <string name="try_again">TRY AGAIN</string>
-    <string name="you_are_now_enrolled">You are now enrolled</string>
+    <string name="you_are_now_enrolled">You have enrolled in this course</string>
     <string name="msg_registration_successful"></string>
     <string name="oops">Oops!</string>
 </resources>

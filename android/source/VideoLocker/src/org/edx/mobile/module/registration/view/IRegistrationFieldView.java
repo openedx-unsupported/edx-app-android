@@ -1,4 +1,4 @@
-package org.edx.mobile.view.registration;
+package org.edx.mobile.module.registration.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +7,9 @@ import com.google.gson.JsonElement;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.registration.RegistrationFieldType;
-import org.edx.mobile.model.registration.RegistrationFormField;
+import org.edx.mobile.module.registration.model.RegistrationAgreement;
+import org.edx.mobile.module.registration.model.RegistrationFieldType;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
 
 public interface IRegistrationFieldView {
     // Returns the value that should be sent to the server when registering.
@@ -20,10 +21,15 @@ public interface IRegistrationFieldView {
     void handleError(String errorMessage);
     boolean isValidInput();
     void setEnabled(boolean enabled);
+    void setActionListener(IActionListener actionListener);
+
+    public static interface IActionListener {
+        void onClickAgreement(RegistrationAgreement agreement);
+    }
 
     /**
-     * Factory class to get instance {@link org.edx.mobile.view.registration.IRegistrationFieldView}
-     * for the given {@link org.edx.mobile.model.registration.RegistrationFormField}.
+     * Factory class to get instance {@link IRegistrationFieldView}
+     * for the given {@link org.edx.mobile.module.registration.model.RegistrationFormField}.
      */
     public static class Factory {
 
@@ -52,14 +58,16 @@ public interface IRegistrationFieldView {
                 View view = inflater.inflate(R.layout.view_register_spinner, null);
                 return new RegistrationSpinnerView(field, view);
             }
-            else if (field.getName().equalsIgnoreCase("honor_code")) {
-                View view = inflater.inflate(R.layout.view_register_html_text, null);
-                return new RegistrationHtmlTextView(field, view);
+            else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
+                if (field.getAgreement() != null) {
+                    View view = inflater.inflate(R.layout.view_register_agreement, null);
+                    return new RegistrationAgreementView(field, view);
+                }
+                else {
+                    View view = inflater.inflate(R.layout.view_register_checkbox, null);
+                    return new RegistrationCheckBoxView(field, view);
+                }
             }
-//            else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-//                View view = inflater.inflate(R.layout.view_register_checkbox, null);
-//                return new RegistrationCheckBoxView(field, view);
-//            }
             else {
                 logger.warn(String.format("unknown field type %s found in RegistrationDescription, skipping it",
                         fieldType.toString()));

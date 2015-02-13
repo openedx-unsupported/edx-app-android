@@ -27,7 +27,8 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindCoursesBaseActivity extends BaseFragmentActivity implements URLInterceptorWebViewClient.IActionListener {
+public class FindCoursesBaseActivity extends BaseFragmentActivity
+        implements URLInterceptorWebViewClient.IActionListener, URLInterceptorWebViewClient.IPageStatusListener {
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
@@ -74,6 +75,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity implements URL
             isWebViewLoaded = false;
             URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
             client.setActionListener(this);
+            client.setPageStatusListener(this);
         }
     }
 

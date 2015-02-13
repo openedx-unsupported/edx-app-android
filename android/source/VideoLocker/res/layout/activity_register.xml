@@ -103,6 +103,12 @@
                 android:textColor="@color/grey_redirected_txt"
                 android:textSize="11sp" />
 
+            <LinearLayout
+                android:id="@+id/layout_agreement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/end_user_agreement_tv"
                 style="@style/regular_text"
@@ -113,7 +119,8 @@
                 android:text="@string/licensing_agreement"
                 android:textColor="@color/cyan_text_navigation"
                 android:textSize="11sp"
-                android:layout_marginTop="2dp"/>
+                android:layout_marginTop="2dp"
+                android:visibility="gone"/>
 
 
         </LinearLayout>

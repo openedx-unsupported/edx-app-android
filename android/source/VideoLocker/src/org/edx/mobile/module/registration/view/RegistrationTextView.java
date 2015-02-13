@@ -1,9 +1,9 @@
-package org.edx.mobile.view.registration;
+package org.edx.mobile.module.registration.view;
 
 import android.text.InputType;
 import android.view.View;
 
-import org.edx.mobile.model.registration.RegistrationFormField;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
 
 /**
  * Created by rohan on 2/11/15.
