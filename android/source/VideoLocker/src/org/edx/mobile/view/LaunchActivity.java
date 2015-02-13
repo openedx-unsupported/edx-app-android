@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -25,6 +26,9 @@ public class LaunchActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_launch);
         overridePendingTransition(R.anim.slide_in_from_right,
                 R.anim.slide_out_to_left);
+
+        //The onTick method need not be run in the LaunchActivity
+        runOnTick = false;
 
         ETextView sign_in_tv = (ETextView) findViewById(R.id.sign_in_tv);
         sign_in_tv.setOnClickListener(new OnClickListener() {
@@ -98,5 +102,11 @@ public class LaunchActivity extends BaseFragmentActivity {
             }
         };
         th.start();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Launch screen doesn't have any menu
+        return true;
     }
 }

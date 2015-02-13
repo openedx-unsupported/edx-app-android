@@ -206,7 +206,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     if (course == null) {
                         // this means, you were not already enrolled to this course
                         String msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                        sendBroadcastFlyingMessage(msg);
+                        sendBroadcastFlyingInfoMessage(msg);
                     }
                 }else{
                     showEnrollErrorMessage(courseId, emailOptIn);

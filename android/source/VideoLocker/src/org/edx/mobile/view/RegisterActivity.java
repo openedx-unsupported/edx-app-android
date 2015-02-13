@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -45,6 +46,9 @@ public class RegisterActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
+
+        //The onTick method need not be run in the RegisterActivity
+        runOnTick = false;
 
         try{
             segIO.screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
@@ -241,14 +245,14 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            sendBroadcastFlyingMessage(result.getValue());
+                            sendBroadcastFlyingErrorMessage(getString(R.string.oops),result.getValue());
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
                                 // launch my courses screen
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                             } else {
-                                sendBroadcastFlyingMessage(getString(R.string.login_error));
+                                sendBroadcastFlyingErrorMessage(getString(R.string.oops),getString(R.string.login_error));
                             }
                         }
                     }else{
@@ -266,8 +270,7 @@ public class RegisterActivity extends BaseFragmentActivity {
             };
             task.execute();
         }else {
-            showErrorMessage(getString(R.string.no_connectivity),
-                    getString(R.string.network_not_connected));
+            sendBroadcastFlyingErrorMessage(getString(R.string.no_connectivity),getString(R.string.network_not_connected));
         }
     }
 
@@ -306,16 +309,9 @@ public class RegisterActivity extends BaseFragmentActivity {
         createAccountTv.setText(getString(R.string.create_account_text));
     }
 
-    private void showErrorMessage(String header, String message) {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        TextView errorHeader = (TextView) findViewById(R.id.error_header);
-        TextView errorMessage = (TextView) findViewById(R.id.error_message);
-        errorHeader.setText(header);
-        if (message != null) {
-            errorMessage.setText(message);
-        } else {
-            errorMessage.setText(getString(R.string.login_failed));
-        }
-        UiUtil.animateLayouts(error_layout);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Launch screen doesn't have any menu
+        return true;
     }
 }

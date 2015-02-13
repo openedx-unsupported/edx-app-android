@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@android:color/white"
-        android:fillViewport="true">
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
 
             <LinearLayout
                 android:id="@+id/required_fields_layout"
@@ -81,7 +80,7 @@
                     android:layout_centerInParent="true"
                     android:text="@string/create_account_text"
                     android:textAllCaps="false"
-                    android:textSize="16sp" />-->
+                    android:textSize="16sp" />
 
                 <ProgressBar
                     android:id="@+id/progress"
@@ -136,6 +135,13 @@
         <include layout="@layout/panel_login_error" />
     </LinearLayout>
 
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:layout_marginTop="50dp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/custom_action_bar"
         android:layout_width="match_parent"
@@ -145,9 +151,4 @@
         <include layout="@layout/panel_custom_action_bar" />
     </LinearLayout>
 
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/downloadMessage"
-        style="@style/downloading_message"
-        android:text="@string/started_downloading"
-        android:visibility="gone" />
 </RelativeLayout>
