@@ -1,9 +1,7 @@
 package org.edx.mobile.test;
 
 import android.net.Uri;
-
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,16 +38,5 @@ public class UrlTests extends BaseTestCase {
 
         assertNotNull(pathId);
         assertEquals("cosmology-anux-anu-astro4x", pathId);
-        print("Path Id - "+pathId);
     }
-
-    /*public void testCourseInfoPaths() throws Exception {
-        String url = "edxapp://view_course/course_path=course/introduction-environmental-science-dartmouthx-dart-envs-01-x";
-
-        String pathId = url.replace(URLInterceptorWebViewClient.URL_TYPE_COURSE_INFO, "").trim();
-
-        assertNotNull(pathId);
-        assertEquals("introduction-environmental-science-dartmouthx-dart-envs-01-x", pathId);
-        print("Path Id - "+pathId);
-    }*/
 }
