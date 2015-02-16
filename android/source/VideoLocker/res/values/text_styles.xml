@@ -111,7 +111,7 @@
     </style>
 
     <style name="drawer_option" parent="@style/regular_white_text">
-        <item name="android:textColor">@drawable/drawer_option_text</item>
+        <item name="android:textColor">@color/drawer_option_text</item>
     </style>
     
     <style name="semibold_white_text" parent="@style/semibold_text">
