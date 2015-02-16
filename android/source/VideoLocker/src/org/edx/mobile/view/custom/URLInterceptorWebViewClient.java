@@ -2,7 +2,6 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -124,8 +123,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             } else if (isExternalLink(url)) {
                 // open URL in external web browser
                 // return true means the host application handles the url
-                // this should open the URL in the browser
-                return true;
+                // this should open the URL in the browser with user's confirmation
+                view.stopLoading();
+                if (actionListener != null) {
+                    // let activity handle this
+                    actionListener.onOpenExternalURL(url);
+                }
+                return false;
             } else {
                 // return false means the current WebView handles the url.
                 return false;
@@ -147,7 +151,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isCourseInfoLink(String strUrl) {
+    private boolean isCourseInfoLink(String strUrl) {
         try {
             logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
@@ -177,7 +181,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isExternalLink(String strUrl) {
+    private boolean isExternalLink(String strUrl) {
         try {
             Uri uri = Uri.parse(strUrl);
             if (hostForThisPage == null || uri.getHost().equals(hostForThisPage)) {
@@ -200,7 +204,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isEnrollLink(String strUrl) {
+    private boolean isEnrollLink(String strUrl) {
         try {
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
                 /*Uri uri = Uri.parse(strUrl);
@@ -252,6 +256,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
+
+        /**
+         * Callback that gets called when an external URL is being loaded.
+         * @param url
+         */
+        void onOpenExternalURL(String url);
     }
 
     /**
