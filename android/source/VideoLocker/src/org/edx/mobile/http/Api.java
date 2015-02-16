@@ -37,7 +37,7 @@ import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
-import org.edx.mobile.model.registration.RegistrationDescription;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
@@ -1204,8 +1204,12 @@ public class Api {
         try {
             String url = getBaseUrl() + "/user_api/v1/account/registration/";
             String json = cache.get(url);
+            // TODO: let the form be rendered by JSON in assets for testing, but delete below line for prod
+            json = null;
             if (json != null) {
-                return gson.fromJson(json, RegistrationDescription.class);
+                RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
+                logger.debug("picking up registration description (form) from cache, not from assets");
+                return form;
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -1214,6 +1218,7 @@ public class Api {
         // if not cached, read the in-app registration description
         InputStream in = context.getAssets().open("config/registration_form.json");
         RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
+        logger.debug("picking up registration description (form) from assets, not from cache");
         return form;
     }
 
@@ -1223,6 +1228,7 @@ public class Api {
 
         JSONObject postBody = new JSONObject();
         JSONObject courseIdObject = new JSONObject();
+        courseIdObject.put("email_opt_in", email_opt_in);
         courseIdObject.put("course_id", courseId);
         postBody.put("course_details", courseIdObject);
 
@@ -1240,25 +1246,6 @@ public class Api {
         }
 
         return false;
-        //The following commented code will be removed once the optIn endpoint is resolved
-        /*String preferenceUrl = getBaseUrl() + "/api/user_api/v1/preferences/email_opt_in";
-        logger.debug("POST url for preference in a Course: " + preferenceUrl);
-        JSONObject optInPostBody = new JSONObject();
-        optInPostBody.put("course_id", courseId);
-        optInPostBody.put("email_opt_in", email_opt_in);
-
-        logger.debug("POST body for Preference in a course: " + optInPostBody.toString());
-        String optInJson = http.post(preferenceUrl, optInPostBody.toString(), getAuthHeaders(), false);
-        logger.debug("Response of optIn server call= " + optInJson);
-        if (optInJson != null && !optInJson.isEmpty()) {
-            // validate optInJson
-            JSONObject resultJson = new JSONObject(optInJson);
-            if (resultJson.has("error")) {
-                return false;
-            }else{
-                return true;
-            }
-        }*/
     }
 
     public String downloadRegistrationDescription() throws Exception {

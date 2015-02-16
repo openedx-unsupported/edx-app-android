@@ -19,20 +19,25 @@ import java.util.Map;
  * This class is responsible for setting up a given {@link android.webkit.WebView}, assign itself
  * as a {@link android.webkit.WebViewClient} delegate and to intercept URLs being loaded.
  * Depending on the form of URL, this client may forward URL back to the app.
+ *
+ * This implementation detects host of the first URL being loaded. Further, if any URL intercepted has a different host
+ * than the current one, then treats it as an external link and may open in external browser.
+ *
  */
 public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
-    //private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
-    public static final String URL_TYPE_ENROLL         = "edxapp://enroll/";
-    //private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
-    public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
-    private static final String PARAM_COURSE_ID         = "course_id";
-    private static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
-    private static final String PARAM_PATH_ID           = "path_id";
+    private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
+    private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    //public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
+    public static final String PARAM_COURSE_ID         = "course_id";
+    public static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
+    public static final String PARAM_PATH_ID           = "path_id";
+    public static final String COURSE                  = "course/";
 
     private Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private IActionListener actionListener;
+    private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
 
     public URLInterceptorWebViewClient(WebView webView) {
@@ -46,6 +51,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     public void setActionListener(IActionListener actionListener) {
         this.actionListener = actionListener;
+    }
+
+    /**
+     * Gives page status callbacks like page loading started, finished or error.
+     * @param pageStatusListener
+     */
+    public void setPageStatusListener(IPageStatusListener pageStatusListener) {
+        this.pageStatusListener = pageStatusListener;
     }
 
     /**
@@ -65,8 +78,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if (actionListener != null) {
-            actionListener.onPageStarted();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageStarted();
         }
     }
 
@@ -80,16 +93,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             logger.error(ex);
         }
 
-        if (actionListener != null) {
-            actionListener.onPageFinished();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageFinished();
         }
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        if (actionListener != null) {
-            actionListener.onPageLoadError();
+        if (pageStatusListener != null) {
+            pageStatusListener.onPageLoadError();
         }
     }
 
@@ -138,10 +151,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         try {
             logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-//                Uri uri = Uri.parse(strUrl);
-//                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                Uri uri = Uri.parse(strUrl);
+                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                if(pathId.startsWith(URLInterceptorWebViewClient.COURSE)){
+                    pathId = pathId.replaceFirst(URLInterceptorWebViewClient.COURSE,"").trim();
+                }
 
-                String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
+                //String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
                 if (pathId.isEmpty()) {
                     return false;
                 }
@@ -189,13 +205,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     boolean isEnrollLink(String strUrl) {
         try {
+            logger.debug("Course Enroll url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                /*Uri uri = Uri.parse(strUrl);
-                String courseId = uri.getQueryParameter(PARAM_COURSE_ID);
-                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));*/
+                Uri uri = Uri.parse(strUrl);
 
-                String[] params = strUrl.replace(URL_TYPE_ENROLL, "").split("&");
-
+                String query = uri.getQuery().trim();
+                String[] params = query.split("&");
                 Map<String, String> queryParams = new HashMap<>();
                 for (String q : params) {
                     String[] parts = q.split("=");
@@ -239,7 +254,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
+    }
 
+    /**
+     * Page state callbacks.
+     */
+    public static interface IPageStatusListener {
         /**
          * Callback that indicates page loading has started.
          */

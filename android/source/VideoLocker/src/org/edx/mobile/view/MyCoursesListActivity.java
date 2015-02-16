@@ -7,7 +7,6 @@ import android.widget.TabWidget;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -186,4 +185,12 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
             logger.error(ex);
         }
     };
+
+    @Override
+    protected void reloadMyCoursesData() {
+        CourseListTabFragment fragment = (CourseListTabFragment) getFragmentByTag("my_course_tab_fragment");
+        if (fragment != null) {
+            fragment.loadData(false);
+        }
+    }
 }

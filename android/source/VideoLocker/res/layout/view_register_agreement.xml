@@ -12,9 +12,10 @@
         android:id="@+id/txt_input"
         style="@style/edit_text_style"
         android:background="@color/white"
-        android:autoLink="web"
-        android:linksClickable="true"
         android:textColorHint="@color/hint_grey_text"
+        android:textColorLink="@color/cyan_text_navigation"
+        android:textColor="@color/cyan_text_navigation"
+        android:clickable="true"
         tools:hint="sample email link: email@domain.org"/>
 
     <org.edx.mobile.view.custom.ETextView

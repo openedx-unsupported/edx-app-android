@@ -1,8 +1,8 @@
-package org.edx.mobile.view.registration;
+package org.edx.mobile.module.registration.view;
 
-import android.text.InputFilter;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -10,42 +10,41 @@ import com.google.gson.JsonPrimitive;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.registration.RegistrationFormField;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
+import org.edx.mobile.module.registration.model.RegistrationOption;
 
-class RegistrationEditTextView implements IRegistrationFieldView {
+class RegistrationSpinnerView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
-    protected RegistrationFormField mField;
+    private RegistrationFormField mField;
     private View mView;
-    protected EditText mInputView;
+    protected Spinner mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationEditTextView(RegistrationFormField field, View view) {
+    public RegistrationSpinnerView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (EditText) view.findViewById(R.id.txt_input);
-        this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
-
-        // set max lines for this input to be 1
-        mInputView.setLines(1);
-
-        // apply max length
-        if (mField.getRestriction().getMaxLength() > 0) {
-            // otherwise, you may end up disabling the field
-
-            InputFilter[] FilterArray = new InputFilter[1];
-            FilterArray[0] = new InputFilter.LengthFilter(mField.getRestriction().getMaxLength());
-            mInputView.setFilters(FilterArray);
-        }
+        this.mInputView = (Spinner) view.findViewById(R.id.input_spinner);
+        this.mErrorView = (TextView) view.findViewById(R.id.input_spinner_error);
+        this.mInstructionView = (TextView) view.findViewById(R.id.input_spinner_instruction);
 
         // set hint
-        mInputView.setHint(mField.getLabel());
+        mInputView.setPrompt(mField.getLabel());
 
-        // display default value
-        mInputView.setText(mField.getDefaultValue());
+        // display default value and set the entries
+        ArrayAdapter<RegistrationOption> adapter = new ArrayAdapter<>(mInputView.getContext(), R.layout.list_row_spinner);
+        int i=0, selectedIndex=0;
+        for (RegistrationOption option : mField.getOptions()) {
+            if (option.isDefaultValue()) {
+                selectedIndex = i;
+            }
+            adapter.add(option);
+            i++;
+        }
+        mInputView.setAdapter(adapter);
+        mInputView.setSelection(selectedIndex);
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -62,12 +61,12 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mInputView.getText().toString());
+        return new JsonPrimitive(mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue());
     }
 
     @Override
     public boolean hasValue() {
-        return !mInputView.getText().toString().isEmpty();
+        return !mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue().isEmpty();
     }
 
     @Override
@@ -120,5 +119,10 @@ class RegistrationEditTextView implements IRegistrationFieldView {
     @Override
     public void setEnabled(boolean enabled) {
         mInputView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setActionListener(IActionListener actionListener) {
+        // no actions for this field
     }
 }

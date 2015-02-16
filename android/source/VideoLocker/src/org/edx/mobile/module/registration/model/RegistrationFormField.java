@@ -1,4 +1,4 @@
-package org.edx.mobile.model.registration;
+package org.edx.mobile.module.registration.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +17,7 @@ public class RegistrationFormField {
     private @SerializedName("label")            String label;
     private @SerializedName("options")          List<RegistrationOption> options; // may be empty
     private @SerializedName("defaultOption")    RegistrationOption defaultOption; // may be nil
+    private @SerializedName("agreement")        RegistrationAgreement agreement;
 
     public boolean isRequired() {
         return required;
@@ -63,5 +64,9 @@ public class RegistrationFormField {
 
     public String getDefaultValue() {
         return defaultValue;
+    }
+
+    public RegistrationAgreement getAgreement() {
+        return agreement;
     }
 }

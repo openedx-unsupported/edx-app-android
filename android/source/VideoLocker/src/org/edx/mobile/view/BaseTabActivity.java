@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.widget.TabWidget;
@@ -59,6 +60,15 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
                     R.color.tab_selector));
             tv.setSingleLine(true);
             tv.setAllCaps(true);
+        }
+    }
+
+    protected Fragment getFragmentByTag(String tag) {
+        if (fragmentManager != null) {
+            return fragmentManager.findFragmentByTag(tag);
+        }
+        else {
+            return null;
         }
     }
 

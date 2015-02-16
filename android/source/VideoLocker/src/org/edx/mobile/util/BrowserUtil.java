@@ -29,7 +29,8 @@ public class BrowserUtil {
      */
     public static void open(final FragmentActivity activity, final String url) {
 
-        if (TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url) || activity == null){
+            logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
             return;
         }
 
