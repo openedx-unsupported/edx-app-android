@@ -335,4 +335,3 @@ public class NavigationFragment extends Fragment {
         newFragment.setCancelable(false);
     }
 }
-
