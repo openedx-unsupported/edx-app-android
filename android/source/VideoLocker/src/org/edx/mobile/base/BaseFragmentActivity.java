@@ -479,7 +479,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                         }
                     }   //store not null check
                 }
-
             }                               //progress menu item not null check
         } catch(Exception ex) {
             logger.error(ex);
@@ -764,6 +763,13 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     }
 
     /**
+     * This method should be implemented by {@link org.edx.mobile.view.MyCoursesListActivity}.
+     */
+    protected void reloadMyCoursesData() {
+        // nothing to do here
+    }
+
+    /**
      * Receives the sticky broadcast message and attempts showing flying message.
      * If message gets shown then removes this sticky broadcast.
      */
@@ -780,6 +786,15 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                     } else {
                         // may be some other screen will display this message
                         // do nothing here, do NOT remove broadcast
+                    }
+
+                    if (message.equalsIgnoreCase(getString(R.string.you_are_now_enrolled))) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                reloadMyCoursesData();
+                            }
+                        });
                     }
                 }
 

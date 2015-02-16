@@ -1,5 +1,5 @@
 <resources>
-    <!--  Error Messages -->
-	<integer name="message_delay">5000</integer>
+    <!-- This delay is to start Animation for hiding info / error messages -->
+	<integer name="message_delay">4000</integer>
  
 </resources>

@@ -187,7 +187,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/red_error_text</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:padding">5dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
     </style>
@@ -198,7 +198,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/grey_redirected_txt</item>
         <item name="android:gravity">left|center_vertical</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:padding">5dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
     </style>
