@@ -48,6 +48,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
@@ -1112,30 +1113,32 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
             if(subTitlesTv!=null ){
                 if(text!=null){
+                    int twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
+                    int ten_dp = (int) UiUtil.getParamsInDP(getResources(),20);
                     if(player!=null){
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
                         if (player.getController()!=null && player.getController().isShown()){
                             if(player.isFullScreen()){
-                                lp.setMargins((int)getParamsInDP(20), 0, 
-                                        (int)getParamsInDP(20),(int)getParamsInDP(50));
+                                lp.setMargins(twenty_dp, 0,
+                                        twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
                             }else{
-                                lp.setMargins((int)getParamsInDP(20), 0, 
-                                        (int)getParamsInDP(20),(int)getParamsInDP(42));
+                                lp.setMargins(twenty_dp, 0,
+                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }else{
                             if(player.isFullScreen()){
-                                lp.setMargins((int)getParamsInDP(20), 0, 
-                                        (int)getParamsInDP(20),(int)getParamsInDP(10));
+                                lp.setMargins(twenty_dp, 0,
+                                        twenty_dp, ten_dp);
                             }else{
-                                lp.setMargins((int)getParamsInDP(20), 0, 
-                                        (int)getParamsInDP(20),(int)getParamsInDP(5));
+                                lp.setMargins(twenty_dp, 0,
+                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }
                     }
-                    subTitlesTv.setPadding((int)getParamsInDP(10), (int)getParamsInDP(2), 
-                            (int)getParamsInDP(10),(int)getParamsInDP(2) );
+                    subTitlesTv.setPadding(ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
+                            ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
                     
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />
@@ -1333,8 +1336,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private void showClosedCaptionLandscapePopup(Point p){
         try{
             LinkedHashMap<String, String> languageList = getLanguageList();
-            float popupHeight = getParamsInDP(220);
-            float popupWidth = getParamsInDP(250);
+            float popupHeight = UiUtil.getParamsInDP(getResources(),220);
+            float popupWidth = UiUtil.getParamsInDP(getResources(),250);
 
             // Inflate the popup_layout.xml
             LinearLayout viewGroup = (LinearLayout) getActivity()
@@ -1608,23 +1611,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }catch(Exception e){
             logger.error(e);
         }
-    }
-
-    /**
-     * This function is used to return the passed Value in Display Metrics form 
-     * @param point width/height as int
-     * @return float
-     */
-    private float getParamsInDP(int point){
-        try{
-            Resources r = getResources();
-            float val = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, point , r.getDisplayMetrics());
-            return val;
-        }catch(Exception e){
-            logger.error(e);
-        }
-        return 0;
     }
 
     @Override
