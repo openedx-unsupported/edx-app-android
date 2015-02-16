@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -26,7 +25,6 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
