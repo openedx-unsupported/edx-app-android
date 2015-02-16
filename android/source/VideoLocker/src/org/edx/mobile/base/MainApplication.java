@@ -48,25 +48,20 @@ public class MainApplication extends Application {
         // setup image cache
         createImageCache();
 
-        boolean isThirdPartyTrafficAllowed = NetworkUtil.isAllowedThirdPartyTraffic(getApplicationContext());
-
         // initialize SegmentIO
-        if (isThirdPartyTrafficAllowed
-                && Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()
+        if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()
                 && Config.getInstance().getSegmentIOWriteKey() != null) {
             SegmentFactory.makeInstance(this);
         }
 
         // initialize Fabric
-        if (isThirdPartyTrafficAllowed
-                && Config.getInstance().getThirdPartyTraffic().isFabricEnabled()
+        if (Config.getInstance().getThirdPartyTraffic().isFabricEnabled()
                 && Config.getInstance().getFabricKey() != null) {
             Fabric.with(this, new Crashlytics());
         }
 
         // initialize NewRelic with crash reporting disabled
-        if (isThirdPartyTrafficAllowed
-                && Config.getInstance().getThirdPartyTraffic().isNewRelicEnabled()
+        if (Config.getInstance().getThirdPartyTraffic().isNewRelicEnabled()
                 && Config.getInstance().getNewRelicKey() != null) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
@@ -75,7 +70,8 @@ public class MainApplication extends Application {
         }
 
         // initialize Facebook SDK
-        if (isThirdPartyTrafficAllowed
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
+        if ( !isOnZeroRatedNetwork
                 && Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()
                 && Config.getInstance().getFacebookAppId() != null) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
