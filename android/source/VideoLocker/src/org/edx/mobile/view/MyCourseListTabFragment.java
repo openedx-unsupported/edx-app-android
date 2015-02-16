@@ -67,7 +67,6 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
 
     protected void loadData(boolean forceRefresh) {
-
         if(forceRefresh){
             Intent clearFriends = new Intent(getActivity(), FetchCourseFriendsService.class);
 
@@ -78,7 +77,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
         Bundle args = new Bundle();
         args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
-
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, args, this);
     }
 
@@ -127,20 +126,14 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
             if(result.getResult().size() == 0){
                 adapter.clear();
-                noCourseText.setVisibility(View.VISIBLE);
-
             } else {
-                noCourseText.setVisibility(View.GONE);
                 adapter.setItems(newItems);
                 adapter.notifyDataSetChanged();
             }
 
         } else {
             adapter.clear();
-            noCourseText.setVisibility(View.VISIBLE);
-
         }
-
     }
 
     @Override
@@ -149,7 +142,4 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         adapter.notifyDataSetChanged();
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
     }
-
-
-
 }
