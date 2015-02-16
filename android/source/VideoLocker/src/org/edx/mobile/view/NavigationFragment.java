@@ -197,11 +197,7 @@ public class NavigationFragment extends Fragment {
                 pref.clearAuth();
                 pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, 
                         getString(R.string.lbl_cc_cancel));
-                
-                Intent loginIntent = new Intent(getActivity()
-                        .getBaseContext(), LoginActivity.class);
-                loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent
-                        .FLAG_ACTIVITY_CLEAR_TOP); 
+
                 Intent intent = new Intent();
                 intent.setAction(AppConstants.LOGOUT_CLICKED);
                 getActivity().sendBroadcast(intent); 
@@ -209,8 +205,10 @@ public class NavigationFragment extends Fragment {
                 ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackUserLogout();
                 segIO.resetIdentifyUser();
-                
-                startActivity(loginIntent);
+
+                Router.getInstance().showLaunchScreen(getActivity());
+                Router.getInstance().showLogin(getActivity());
+
             }
         });
         
@@ -337,4 +335,3 @@ public class NavigationFragment extends Fragment {
         newFragment.setCancelable(false);
     }
 }
-
