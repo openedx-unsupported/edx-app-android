@@ -139,10 +139,10 @@ public class LoginActivity extends BaseFragmentActivity {
         setLoginBtnEnabled();
 
         // check if third party traffic is enabled
-        boolean isAllowedThirdPartyTraffic = NetworkUtil.isAllowedThirdPartyTraffic(getApplicationContext());
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
         Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
 
-        if ( !isAllowedThirdPartyTraffic) {
+        if (isOnZeroRatedNetwork) {
             findViewById(R.id.panel_login_social).setVisibility(View.GONE);
         } else {
             if (!thirdPartyTrafficConfig.isFacebookEnabled()
