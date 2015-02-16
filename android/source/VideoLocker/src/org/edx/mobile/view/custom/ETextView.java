@@ -36,9 +36,10 @@ public class ETextView extends TextView {
         try {
             // check for the font attribute and setup font
             String fontFileName = a.getString(R.styleable.custom_view_font);
-            /*if(fontFileName==null){
-                fontFileName = attrs.getAttributeValue(null, "font");
-            }*/
+            if(fontFileName==null){
+                //If font is not set for ETextView, set default font
+                fontFileName = "OpenSans-Regular.ttf";
+            }
             Typeface font = FontFactory.getInstance().getFont(context,fontFileName);
             setTypeface(font);
         } catch (Exception ex) {

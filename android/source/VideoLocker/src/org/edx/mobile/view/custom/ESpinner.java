@@ -22,7 +22,6 @@ public class ESpinner<T> extends ETextView implements View.OnClickListener,
     private String hint;
     private String prompt;
     private List<T> items;
-    private T defaultItem;
     private T selectedItem;
     private int checkedItemIndex = 0;
 
@@ -61,13 +60,13 @@ public class ESpinner<T> extends ETextView implements View.OnClickListener,
 
     public void setItems(List<T> items, T defaultItem) {
         this.items = items;
-        this.defaultItem = defaultItem;
+        this.selectedItem = defaultItem;
 
         // calculate checkedItemIndex
-        if (items != null && defaultItem != null) {
+        if (items != null && selectedItem != null) {
             int i=0;
             for (T item : items) {
-                if (item.equals(defaultItem)) {
+                if (item.equals(selectedItem)) {
                     checkedItemIndex = i;
                     break;
                 }
@@ -101,7 +100,7 @@ public class ESpinner<T> extends ETextView implements View.OnClickListener,
         } else {
             setText(item.toString());
             setTextColor(getResources().getColor(R.color.grey_text));
-            setTextSize(UiUtil.getParamsInDP(getResources(),4));
+            setTextSize(UiUtil.getParamsInDP(getResources(), 4));
         }
     }
 
@@ -125,6 +124,6 @@ public class ESpinner<T> extends ETextView implements View.OnClickListener,
     private void showHint() {
         setText(hint);
         setTextColor(getResources().getColor(R.color.hint_grey_text));
-        setTextSize(UiUtil.getParamsInDP(getResources(),4));
+        setTextSize(UiUtil.getParamsInDP(getResources(), 4));
     }
 }
