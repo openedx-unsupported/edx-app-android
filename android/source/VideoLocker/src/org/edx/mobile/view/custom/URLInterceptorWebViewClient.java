@@ -78,6 +78,15 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
 
+        try {
+            // hold on the host of this page, just once
+            if (this.hostForThisPage == null) {
+                this.hostForThisPage = Uri.parse(url).getHost();
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
         if (pageStatusListener != null) {
             pageStatusListener.onPageStarted();
         }
@@ -86,15 +95,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-
-        try {
-            // hold on the host of this page, just once
-            if (this.hostForThisPage != null) {
-                this.hostForThisPage = Uri.parse(url).getHost();
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
 
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
