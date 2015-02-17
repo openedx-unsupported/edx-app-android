@@ -26,13 +26,13 @@ import java.util.Map;
 public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
-    //private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
-    public static final String URL_TYPE_ENROLL         = "edxapp://enroll/";
-    //private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
-    public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
-    private static final String PARAM_COURSE_ID         = "course_id";
-    private static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
-    private static final String PARAM_PATH_ID           = "path_id";
+    private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
+    private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    //public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
+    public static final String PARAM_COURSE_ID         = "course_id";
+    public static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
+    public static final String PARAM_PATH_ID           = "path_id";
+    public static final String COURSE                  = "course/";
 
     private Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private IActionListener actionListener;
@@ -159,10 +159,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         try {
             logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-//                Uri uri = Uri.parse(strUrl);
-//                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                Uri uri = Uri.parse(strUrl);
+                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                if(pathId.startsWith(URLInterceptorWebViewClient.COURSE)){
+                    pathId = pathId.replaceFirst(URLInterceptorWebViewClient.COURSE,"").trim();
+                }
 
-                String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
+                //String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
                 if (pathId.isEmpty()) {
                     return false;
                 }
@@ -210,13 +213,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isEnrollLink(String strUrl) {
         try {
+            logger.debug("Course Enroll url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                /*Uri uri = Uri.parse(strUrl);
-                String courseId = uri.getQueryParameter(PARAM_COURSE_ID);
-                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));*/
+                Uri uri = Uri.parse(strUrl);
 
-                String[] params = strUrl.replace(URL_TYPE_ENROLL, "").split("&");
-
+                String query = uri.getQuery().trim();
+                String[] params = query.split("&");
                 Map<String, String> queryParams = new HashMap<>();
                 for (String q : params) {
                     String[] parts = q.split("=");

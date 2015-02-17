@@ -116,7 +116,13 @@ public class NetworkUtil {
         }
         return ipAddress;
     }
-    
+
+    /**
+     * Returns true if app is running on a carrier id mentioned in zero-rated configuration,
+     * false otherwise.
+     * @param context
+     * @return
+     */
     public static boolean isOnZeroRatedNetwork(Context context){
         TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String carrierId = manager.getNetworkOperator();
@@ -159,9 +165,5 @@ public class NetworkUtil {
 
         return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context));
 
-    }
-
-    public static boolean isAllowedThirdPartyTraffic(Context context) {
-        return (!isOnZeroRatedNetwork(context) || isConnectedWifi(context));
     }
 }
