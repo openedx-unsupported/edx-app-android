@@ -257,7 +257,7 @@
             android:id="@+id/combined_course_handout_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/course_details_view_handout"
+            android:text="@string/view_handouts"
             style="@style/regular_grey_text"
             android:paddingLeft="@dimen/course_detail_margin_left"
             android:paddingRight="@dimen/course_detail_margin_left"
