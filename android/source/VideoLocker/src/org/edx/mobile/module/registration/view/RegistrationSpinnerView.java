@@ -1,8 +1,7 @@
 package org.edx.mobile.module.registration.view;
 
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -18,7 +17,7 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     private RegistrationFormField mField;
     private View mView;
-    protected Spinner mInputView;
+    protected RegistrationOptionSpinner mInputView;
     private TextView mErrorView, mInstructionView;
 
     public RegistrationSpinnerView(RegistrationFormField field, View view) {
@@ -26,25 +25,25 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
         this.mField = field;
         this.mView = view;
 
-        this.mInputView = (Spinner) view.findViewById(R.id.input_spinner);
+        this.mInputView = (RegistrationOptionSpinner) view.findViewById(R.id.input_spinner);
         this.mErrorView = (TextView) view.findViewById(R.id.input_spinner_error);
         this.mInstructionView = (TextView) view.findViewById(R.id.input_spinner_instruction);
 
-        // set hint
+        // set prompt
         mInputView.setPrompt(mField.getLabel());
 
-        // display default value and set the entries
-        ArrayAdapter<RegistrationOption> adapter = new ArrayAdapter<>(mInputView.getContext(), R.layout.list_row_spinner);
-        int i=0, selectedIndex=0;
+        // set hint
+        mInputView.setHint(mField.getLabel());
+
+        RegistrationOption defaultOption = null;
         for (RegistrationOption option : mField.getOptions()) {
             if (option.isDefaultValue()) {
-                selectedIndex = i;
+                defaultOption = option;
+                break;
             }
-            adapter.add(option);
-            i++;
         }
-        mInputView.setAdapter(adapter);
-        mInputView.setSelection(selectedIndex);
+        mInputView.setItems(mField.getOptions(),defaultOption);
+        //mInputView.setSelection(selectedIndex);
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -61,12 +60,13 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
-        return new JsonPrimitive(mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue());
+        return new JsonPrimitive(mInputView.getSelectedItem().getValue());
     }
 
     @Override
     public boolean hasValue() {
-        return !mField.getOptions().get(mInputView.getSelectedItemPosition()).getValue().isEmpty();
+        return (mInputView.getSelectedItem() != null
+                && !TextUtils.isEmpty(mInputView.getSelectedItem().getValue()));
     }
 
     @Override

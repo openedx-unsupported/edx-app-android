@@ -1,6 +1,8 @@
 package org.edx.mobile.util;
 
+import android.content.res.Resources;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -74,5 +76,21 @@ public class UiUtil {
         } else {
             logger.warn("cannot hide message, cannot find offline_access_panel");
         }
+    }
+
+    /**
+     * This function is used to return the passed Value in Display Metrics form
+     * @param point width/height as int
+     * @return float
+     */
+    public static float getParamsInDP(Resources r, int point){
+        try{
+            float val = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, point, r.getDisplayMetrics());
+            return val;
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return 0;
     }
 }
