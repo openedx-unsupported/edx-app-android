@@ -271,4 +271,29 @@ public class Online_MyCoursesTestSuite extends MyCoursesTestSuiteBase {
 	public String getSettingsBtnId() {
 		return btnSettingsId;
 	}
+
+	@Override
+	public String getShowingOnlyVideosName() {
+		return txtShowingOnlyVideos;
+	}
+
+	@Override
+	public String getCourseInfoName() {
+		return btnCourseInfoName;
+	}
+
+	@Override
+	public String getMySettingsId() {
+		return txtMySettingsId;
+	}
+
+	@Override
+	public String getFindCourseHeaderName() {
+		return txtFindCourseName;
+	}
+
+	@Override
+	public String getFindCourseWebView() {
+		return findACoursewebView;
+	}
 }

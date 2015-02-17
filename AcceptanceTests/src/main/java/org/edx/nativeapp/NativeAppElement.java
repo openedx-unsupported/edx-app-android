@@ -48,7 +48,7 @@ public class NativeAppElement extends RemoteWebElement{
 	public void click() {
 		try {
 			WebDriverWait wait = new WebDriverWait(this.nativeAppDriver, maxWaitTime, 500);
-			wait.until(ExpectedConditions.elementToBeClickable(this.getByLocator()));
+			wait.until(ExpectedConditions.presenceOfElementLocated(this.getByLocator()));
 			webElement.click();
 		} catch (Exception e) {
 			Reporter.log("Unable to click element by " + this.getByLocator().toString());

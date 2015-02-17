@@ -55,8 +55,7 @@ public class NativeAppDriver extends RemoteWebDriver {
 			.get();
 	private final String sauceUserName = PropertyLoader.loadProperty(
 			"sauceUserName").get();
-	private final String sauceKey = PropertyLoader.loadProperty("sauceKey")
-			.get();
+	private String sauceKey = PropertyLoader.loadProperty("sauceKey").get();
 
 	URL serverAddress;
 
@@ -70,8 +69,8 @@ public class NativeAppDriver extends RemoteWebDriver {
 	 */
 	public NativeAppDriver() throws Throwable {
 		super();
-		if (sauceKey.equals("")) {
-			serverAddress = new URL("http://127.0.0.1:4723/wd/hub");// appium:
+		if (sauceKey.isEmpty()) {
+			serverAddress = new URL("http://0.0.0.0:4723/wd/hub");// appium:
 																	// 4723,
 																	// 4475
 		} else {
@@ -91,7 +90,6 @@ public class NativeAppDriver extends RemoteWebDriver {
 			}
 
 		} catch (Throwable e) {
-			e.printStackTrace();
 			System.out.println(">> Error while initiating Driver " + deviceOS);
 			throw e;
 		}
@@ -215,16 +213,9 @@ public class NativeAppDriver extends RemoteWebDriver {
 	 * Captures the screenshot
 	 */
 	public void captureScreenshot() {
-		String outputPath = null;
-		// if tests are running by maven then
-		if (!PropertyLoader.loadProperty("output.path").get()
-				.contains("timestamp")) {
-			outputPath = PropertyLoader.loadProperty("output.path").get();
-		} else {
-			// It is running by main function
+		String outputPath = PropertyLoader.loadProperty("output.path").get();
 
-		}
-		String screenShotPath = outputPath + "\\ScreenShots\\";
+		String screenShotPath = outputPath + "/ScreenShots/";
 		String fileName = generateFileName() + ".jpg";
 		// Take the screenshot
 		File scrFile = ((TakesScreenshot) (this.appiumDriver))
@@ -371,7 +362,7 @@ public class NativeAppDriver extends RemoteWebDriver {
 	public boolean verifyElementNotPresntById(String id) {
 		boolean found = false;
 		try {
-			this.findElementById(id);
+			appiumDriver.findElementById(id);
 			found = true;
 			Reporter.log("Element is present with id " + id);
 			throw new AssertionError("Element is present with id " + id);
@@ -441,6 +432,10 @@ public class NativeAppDriver extends RemoteWebDriver {
 		findElementById(id).click();
 	}
 
+	public void clickElementByXpath(String xpath) {
+		findElementByXpath(xpath).click();
+	}
+
 	public void clickElementByName(String name) {
 		findElementByName(name).click();
 	}
@@ -459,6 +454,10 @@ public class NativeAppDriver extends RemoteWebDriver {
 
 	public void verifyElementPresentByName(String name) {
 		findElementByName(name);
+	}
+
+	public void verifyElementPresentByXpath(String name) {
+		findElementByXpath(name);
 	}
 
 	public void verifyElementPresentById(String id) {
@@ -650,14 +649,18 @@ public class NativeAppDriver extends RemoteWebDriver {
 			if (isAndroid()) {
 				new WebDriverWait(appiumDriver, 20).until(ExpectedConditions
 						.presenceOfElementLocated(By.id(id)));
-				appiumDriver.swipe(360, 500, 360, 1000, 80000);
+				Dimension dimension = appiumDriver.manage().window().getSize();
+				int ht = dimension.height;
+				int width = dimension.width;
+				appiumDriver.swipe((width / 2), (ht / 4), (width / 2),
+						(ht / 2), 1000);
 			} else {
 				new WebDriverWait(appiumDriver, 20).until(ExpectedConditions
 						.presenceOfElementLocated(By.id(id)));
 				if (deviceName.equalsIgnoreCase("iphone 5")) {
 					appiumDriver.swipe((int) 0.1, 557, 211, 206, 500);
 				} else if (deviceName.equalsIgnoreCase("iphone 6")) {
-					appiumDriver.swipe((int) 0.1, 660, 50, 50, 500);// iphone 6
+					appiumDriver.swipe((int) 0.1, 660, 50, 50, 500);
 				}
 			}
 		} catch (Throwable e) {
@@ -671,9 +674,9 @@ public class NativeAppDriver extends RemoteWebDriver {
 	 * Hide Keyboard (specific for android)
 	 */
 	public void hideKeyboard() {
-		if (sauceKey.equals("")) {
-			appiumDriver.hideKeyboard();
-		}
+		// if (sauceKey.equals("")) {
+		appiumDriver.hideKeyboard();
+		// }
 	}
 
 	/**
@@ -727,19 +730,6 @@ public class NativeAppDriver extends RemoteWebDriver {
 	}
 
 	/**
-	 * Return size of element and count
-	 */
-	public int getSize(String id) {
-		try {
-			System.out.println("Download "
-					+ appiumDriver.findElementsById(id).size() + "videos");
-			return appiumDriver.findElementsById(id).size();
-		} catch (Throwable e) {
-			throw e;
-		}
-	}
-
-	/**
 	 * Scroll the list till item found by name
 	 * 
 	 * @param name
@@ -748,16 +738,20 @@ public class NativeAppDriver extends RemoteWebDriver {
 	 */
 	public void scrollList(String name) throws Throwable {
 		int i = 0;
+		Dimension dimension = appiumDriver.manage().window().getSize();
+		int ht = dimension.height;
+		int width = dimension.width;
 		if (isAndroid()) {
-			if(!(appiumDriver.findElementById(name).isDisplayed())){
-			appiumDriver.scrollTo(name);
+			while (!verifyElementIsDisplayedById(name)) {
+				appiumDriver.swipe((width / 2), (ht / 2), (width / 4),
+						(ht / 4), 500);
 			}
 		} else {
 			try {
-				if (appPath.contains(".app")) {
+				if (appPath.contains(".ipa")) {
 					while (!(verifyElementIsDisplayedById(name))) {
-						appiumDriver.swipe(300, 400, 100, 100, 500);
-						appiumDriver.swipe(300, 400, 100, 100, 500);
+						appiumDriver.swipe((width / 2), (ht / 2), (width / 4),
+								(ht / 4), 500);
 						i++;
 						if (i > 20) {
 							throw new Exception();
@@ -836,4 +830,5 @@ public class NativeAppDriver extends RemoteWebDriver {
 	private boolean isiOS() {
 		return deviceOS.equalsIgnoreCase(Config.iOS.OS_NAME);
 	}
+
 }

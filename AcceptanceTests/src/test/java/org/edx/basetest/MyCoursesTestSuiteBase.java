@@ -15,14 +15,18 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 		login(driver, getEmailLocatorId(), getPasswordLocatorId(),
 				getSignInLocatorId(), isAndroid());
 		driver.clickElementById(getHeaderId());
+		driver.clickElementById(getMySettingsId());
 		driver.clickElementById(getSettingsBtnId());
 		driver.clickElementById(getOkPopupId());
+		driver.clickElementById(getHeaderId());
 		driver.clickElementById(getMyCourseId());
 	}
 
-
-
-	// Todo - change the coordinates for swipe
+	/**
+	 * Verify that user can refresh the Courses Listing screen
+	 * 
+	 * @throws Throwable
+	 */
 	@Test
 	public void verifyRefreshTest() throws Throwable {
 		if (isAndroid()) {
@@ -42,11 +46,11 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 		gotoMyCoursesView();
 		driver.clickElementById(getHeaderId());
 		driver.clickElementById(getMyCourseId());
-		Thread.sleep(10000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementWithIndexById(getCourseListId(), 1);
-		Thread.sleep(8000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementById(getSectionSubsectionListId());
-		Thread.sleep(8000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementById(getSectionSubsectionListId());
 		driver.clickElementById(getVideoListId());
 		// verify video player
@@ -60,34 +64,21 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 	 */
 	@Test
 	public void verifyDownloadScreenTest() throws Throwable {
+
 		Thread.sleep(8000);
 		gotoMyCoursesView();
 		Thread.sleep(10000);
-		driver.clickElementWithIndexById(getCourseListId(), 2);
+
+		driver.clickElementWithIndexById(getCourseListId(), 0);
 		Thread.sleep(8000);
-		driver.clickElementWithIndexById(getSectionSubsectionDownloadId(), 0); // Downloading
-																				// video
-																				// from
-																				// 3rd
-																				// course
-																				// and
-																				// 0th
-																				// section
+		driver.clickElementWithIndexById(getSectionSubsectionDownloadId(), 0);
 		driver.verifyElementPresentById(getDownloadMessage());
-		//failed here
 		driver.clickElementById(getDownloadScreenId());
 		driver.clickElementWithIndexById(getDownloadScreenCancelBtnId(), 0);
 		driver.insertWait(getLstDownloadId());
 		driver.clickElementById(getHeaderId());
 		Thread.sleep(30000);
-		driver.clickElementWithIndexById(getSectionSubsectionDownloadId(), 1);// Downloading
-																				// video
-																				// from
-																				// 3rd
-																				// course
-																				// and
-																				// 1st
-																				// section
+		driver.clickElementWithIndexById(getSectionSubsectionDownloadId(), 1);
 		driver.verifyElementPresentById(getDownloadMessage());
 		driver.clickElementById(getDownloadScreenId());
 		driver.clickElementById(getBtnViewId());
@@ -109,47 +100,66 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 	public void verifyLastAccessedLinkTest() throws Throwable {
 		Thread.sleep(8000);
 		gotoMyCoursesView();
-		Thread.sleep(10000);
-		driver.clickElementWithIndexById(getCourseListId(), 2);
-		Thread.sleep(10000);
+		Thread.sleep(10 * 1000);
+		driver.clickElementWithIndexById(getCourseListId(), 1);
+		Thread.sleep(10 * 1000);
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 2);
-		Thread.sleep(8000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
-		Thread.sleep(8000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementWithIndexById(getVideoListId(), 0);
 		gotoMyCoursesView();
-		Thread.sleep(10000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementWithIndexById(getCourseListId(), 2);
 		// failed for ios
-		Thread.sleep(10000);
+		Thread.sleep(10 * 1000);
 		driver.clickElementById(getLastAccessedBtnId());
-		videoInformation(driver, getVideoName(), getVideoSize(),
-				getVideoLength());
+		videoInformation(driver, getVideoName(), getVideoLength());
 		driver.clickElementById(getVideoListId());
-		videoInformation(driver, getVideoName(), getVideoSize(),
-				getVideoLength());
+		videoInformation(driver, getVideoName(), getVideoLength());
 		driver.verifyElementPresentById(getVideoPlayerId());
 		videoPlayer(driver, getFullScreenId(), getLMSId(),
 				getVideoPlayerSettings(), getRewindId(), getSeekBarId(),
 				getPlayPauseId(), getVideoPlayerId(), false, isAndroid());
 	}
 
+	/**
+	 * Verify that user can switch to Course info tab and Handouts tab.
+	 * 
+	 * @throws Throwable
+	 */
 	@Test
-	public void verifyAnnouncementsAndHandoutsTabTest() throws Throwable {
+	public void verifyCourseInfoTabTest() throws Throwable {
 		Thread.sleep(8000);
 		gotoMyCoursesView();
 		Thread.sleep(20000);
-		driver.clickElementWithIndexById(getCourseListId(), 2);
-		driver.clickElementByName(getAnnouncementsName());
+		driver.clickElementWithIndexById(getCourseListId(), 1);
+		driver.clickElementByName(getCourseInfoName());
+		driver.verifyElementPresentByName(getAnnouncementsName());
 		driver.clickElementByName(getHandoutsName());
 	}
 
+	/**
+	 * Verify that View on web button is present on section listing, subsection
+	 * listing and video listing screen
+	 * 
+	 * @throws Throwable
+	 */
 	@Test
 	public void verifyViewOnWebTest() throws Throwable {
 		gotoMyCoursesView();
 		Thread.sleep(8000);
 		driver.clickElementWithIndexById(getCourseListId(), 1);
 		driver.verifyElementPresentById(getViewOnWebId());
+		driver.verifyElementPresentByName(getShowingOnlyVideosName());
+		Thread.sleep(8000);
+		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
+		driver.verifyElementPresentById(getViewOnWebId());
+		driver.verifyElementPresentByName(getShowingOnlyVideosName());
+		Thread.sleep(8000);
+		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
+		driver.verifyElementPresentById(getViewOnWebId());
+		driver.verifyElementPresentByName(getShowingOnlyVideosName());
 	}
 
 	/**
@@ -163,8 +173,7 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 		Thread.sleep(8000);
 		gotoMyCoursesView();
 		verifyVideoPlayedTest();
-		videoInformation(driver, getVideoName(), getVideoSize(),
-				getVideoLength());
+		videoInformation(driver, getVideoName(), getVideoLength());
 		videoPlayer(driver, getFullScreenId(), getLMSId(),
 				getSettingsPopUpId(), getRewindId(), getSeekBarId(),
 				getPlayPauseId(), getVideoPlayerId(), false, isAndroid());
@@ -180,12 +189,14 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 	public void verifyFindACourseTest() throws Throwable {
 		Thread.sleep(8000);
 		gotoMyCoursesView();
-		if (isAndroid() && appPath.contains(".app")) {
+		if (isAndroid() || appPath.contains(".ipa")) {
+
 			driver.scrollList(getDontSeeOneOfCoursesId());
 			driver.verifyElementPresentByName(getTxtLookingForChallenge());
 			driver.clickElementById(getDontSeeOneOfCoursesId());
 			driver.clickElementById(getCloseId());
-			driver.verifyElementPresentById(getFindACourseBtnId());
+			driver.clickElementById(getFindACourseBtnId());
+			driver.verifyElementPresentByName(getFindCourseHeaderName());
 		}
 	}
 
