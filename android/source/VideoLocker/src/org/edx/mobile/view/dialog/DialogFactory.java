@@ -39,8 +39,9 @@ public class DialogFactory {
      */
     public static Dialog getChargesApplyConfirmationDialog(final FragmentActivity activity, final String uri) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
-        dialog.setMessage(activity.getString(R.string.open_external_url, uri));
-        dialog.setPositiveButton(R.string.label_ok, new DialogInterface.OnClickListener() {
+        dialog.setTitle(activity.getString(R.string.open_external_url_title));
+        dialog.setMessage(activity.getString(R.string.open_external_url_desc));
+        dialog.setPositiveButton(R.string.label_continue, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface d, int which) {
                 BrowserUtil.open(activity, uri);
                 d.dismiss();
