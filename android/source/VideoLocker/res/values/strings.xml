@@ -239,7 +239,6 @@
     <string name="empty_groups_header">More minds are better than one</string>
     <string name="empty_groups_msg">Form a study group with your friends to stay motivated, learn more, and conquer your courses!</string>
     <string name="empty_groups_msg2">You must connect to a Facebook account to use this feature</string>
-    <string name="label_continue">Continue</string>
     <string name="group_created">Group Created</string>
     <string name="friends_invited">Friends Invited</string>
     <string name="groups_facebook_disconnected">You must connect a facebook account to use this feature\n</string>
@@ -293,4 +292,8 @@
     <string name="you_are_now_enrolled">You have enrolled in this course</string>
     <string name="msg_registration_successful"></string>
     <string name="oops">Oops!</string>
+
+    <!-- data charges may apply dialog text -->
+    <string name="open_external_url_title">Data charges may apply</string>
+    <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 </resources>
