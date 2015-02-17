@@ -31,6 +31,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.PropertyUtil;
+import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
@@ -107,30 +108,37 @@ public class NavigationFragment extends Fragment {
             }
         });
 
-        if (Config.getInstance().getEnrollment().getEnabled()) {
+
             TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
             tvFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
+                    if (Config.getInstance().getEnrollment().getEnabled()) {
+                        if (!(act instanceof FindCoursesActivity)) {
+                            Router.getInstance().showFindCourses(act);
 
-                    if (!(act instanceof FindCoursesActivity)) {
-                        Router.getInstance().showFindCourses(act);
-
-                        //Finish need not be called if the current activity is MyCourseListing
-                        // as on returning back from FindCourses,
-                        // the student should be returned to the MyCourses screen
-                        if (!(act instanceof MyCoursesListActivity)) {
-                            act.finish();
+                            //Finish need not be called if the current activity is MyCourseListing
+                            // as on returning back from FindCourses,
+                            // the student should be returned to the MyCourses screen
+                            if (!(act instanceof MyCoursesListActivity)) {
+                                act.finish();
+                            }
+                        }
+                    } else {
+                        //Show the dialog only if the activity is started. This is to avoid Illegal state
+                        //exceptions if the dialog fragment tries to show even if the application is not in foreground
+                        if (isAdded() && isVisible()) {
+                            FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
+                            findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
+                                    android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                            findCoursesFragment.setCancelable(false);
+                            findCoursesFragment.show(getFragmentManager(), "dialog-find-courses");
                         }
                     }
                 }
             });
-        } else {
-            layout.findViewById(R.id.panel_option_find_courses).setVisibility(View.GONE);
-        }
-
 
         TextView tvMyGroups = (TextView) layout.findViewById(R.id.drawer_option_my_groups);
         tvMyGroups.setOnClickListener(new OnClickListener() {
@@ -197,11 +205,7 @@ public class NavigationFragment extends Fragment {
                 pref.clearAuth();
                 pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, 
                         getString(R.string.lbl_cc_cancel));
-                
-                Intent loginIntent = new Intent(getActivity()
-                        .getBaseContext(), LoginActivity.class);
-                loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent
-                        .FLAG_ACTIVITY_CLEAR_TOP); 
+
                 Intent intent = new Intent();
                 intent.setAction(AppConstants.LOGOUT_CLICKED);
                 getActivity().sendBroadcast(intent); 
@@ -209,8 +213,10 @@ public class NavigationFragment extends Fragment {
                 ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackUserLogout();
                 segIO.resetIdentifyUser();
-                
-                startActivity(loginIntent);
+
+                Router.getInstance().showLaunchScreen(getActivity());
+                Router.getInstance().showLogin(getActivity());
+
             }
         });
         
@@ -337,4 +343,3 @@ public class NavigationFragment extends Fragment {
         newFragment.setCancelable(false);
     }
 }
-

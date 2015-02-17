@@ -7,12 +7,12 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
 
-    <Spinner
+    <org.edx.mobile.module.registration.view.RegistrationOptionSpinner
         android:id="@+id/input_spinner"
         style="@style/spinner_style"
         android:layout_height="wrap_content"
         android:textColorHint="@color/hint_grey_text"
-        android:paddingLeft="10dp"
+        android:paddingLeft="5dp"
         android:paddingRight="10dp"/>
 
     <org.edx.mobile.view.custom.ETextView

@@ -2,7 +2,6 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -27,13 +26,13 @@ import java.util.Map;
 public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
-    //private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
-    public static final String URL_TYPE_ENROLL         = "edxapp://enroll/";
-    //private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
-    public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
-    private static final String PARAM_COURSE_ID         = "course_id";
-    private static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
-    private static final String PARAM_PATH_ID           = "path_id";
+    private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
+    private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
+    //public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
+    public static final String PARAM_COURSE_ID         = "course_id";
+    public static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
+    public static final String PARAM_PATH_ID           = "path_id";
+    public static final String COURSE                  = "course/";
 
     private Logger logger = new Logger(URLInterceptorWebViewClient.class);
     private IActionListener actionListener;
@@ -78,6 +77,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
+
+        try {
+            // hold on the host of this page, just once
+            if (this.hostForThisPage == null) {
+                this.hostForThisPage = Uri.parse(url).getHost();
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
         if (pageStatusListener != null) {
             pageStatusListener.onPageStarted();
         }
@@ -86,12 +95,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        try {
-            // hold on the host of this page
-            this.hostForThisPage = Uri.parse(url).getHost();
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
 
         if (pageStatusListener != null) {
             pageStatusListener.onPageFinished();
@@ -124,8 +127,13 @@ public class URLInterceptorWebViewClient extends WebViewClient {
             } else if (isExternalLink(url)) {
                 // open URL in external web browser
                 // return true means the host application handles the url
-                // this should open the URL in the browser
-                return true;
+                // this should open the URL in the browser with user's confirmation
+                view.stopLoading();
+                if (actionListener != null) {
+                    // let activity handle this
+                    actionListener.onOpenExternalURL(url);
+                }
+                return false;
             } else {
                 // return false means the current WebView handles the url.
                 return false;
@@ -147,14 +155,17 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isCourseInfoLink(String strUrl) {
+    private boolean isCourseInfoLink(String strUrl) {
         try {
             logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-//                Uri uri = Uri.parse(strUrl);
-//                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                Uri uri = Uri.parse(strUrl);
+                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+                if(pathId.startsWith(URLInterceptorWebViewClient.COURSE)){
+                    pathId = pathId.replaceFirst(URLInterceptorWebViewClient.COURSE,"").trim();
+                }
 
-                String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
+                //String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
                 if (pathId.isEmpty()) {
                     return false;
                 }
@@ -177,7 +188,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isExternalLink(String strUrl) {
+    private boolean isExternalLink(String strUrl) {
         try {
             Uri uri = Uri.parse(strUrl);
             if (hostForThisPage == null || uri.getHost().equals(hostForThisPage)) {
@@ -200,15 +211,14 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      * @param strUrl
      * @return
      */
-    boolean isEnrollLink(String strUrl) {
+    private boolean isEnrollLink(String strUrl) {
         try {
+            logger.debug("Course Enroll url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                /*Uri uri = Uri.parse(strUrl);
-                String courseId = uri.getQueryParameter(PARAM_COURSE_ID);
-                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter(PARAM_EMAIL_OPT_IN));*/
+                Uri uri = Uri.parse(strUrl);
 
-                String[] params = strUrl.replace(URL_TYPE_ENROLL, "").split("&");
-
+                String query = uri.getQuery().trim();
+                String[] params = query.split("&");
                 Map<String, String> queryParams = new HashMap<>();
                 for (String q : params) {
                     String[] parts = q.split("=");
@@ -252,6 +262,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
+
+        /**
+         * Callback that gets called when an external URL is being loaded.
+         * @param url
+         */
+        void onOpenExternalURL(String url);
     }
 
     /**

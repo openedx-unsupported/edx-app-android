@@ -106,7 +106,7 @@
 
         <org.edx.mobile.view.custom.EButton
             android:id="@+id/negativeButton"
-            style="@style/dialog_button_style"
+            style="@style/bold_text"
             android:layout_width="0dp"
             android:layout_height="35dip"
             android:layout_gravity="center|center_horizontal"
@@ -120,7 +120,7 @@
 
         <org.edx.mobile.view.custom.EButton
             android:id="@+id/positiveButton"
-            style="@style/dialog_button_style"
+            style="@style/bold_text"
             android:layout_width="0dp"
             android:layout_height="35dip"
             android:layout_gravity="center|center_horizontal"

@@ -60,6 +60,7 @@ public class Router {
 
     public void showLaunchScreen(Activity sourceActivity) {
         Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(launchIntent);
     }
 
