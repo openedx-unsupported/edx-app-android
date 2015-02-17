@@ -22,7 +22,6 @@
             android:inputType="textCapWords"
             android:maxWidth="200dp"
             android:paddingTop="10dp"
-            android:text="@string/name_default"
             android:textSize="20sp" />
 
         <org.edx.mobile.view.custom.ETextView
@@ -34,7 +33,6 @@
             android:maxWidth="200dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="@string/email_default"
             android:textSize="13sp" />
     </LinearLayout>
 
