@@ -6,11 +6,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 
 repositories {
-    mavenLocal()
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url 'https://maven.fabric.io/public' }
-    //Included for NewRelic
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 buildscript {
@@ -175,7 +172,7 @@ android {
         // minimum version is Android 4.0
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 43
+        versionCode 44
         versionName "1.0.04"
 
         renderscriptTargetApi 18
@@ -190,18 +187,12 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        // instrumentTest.setRoot('tests')
-        androidTest {
-            setRoot('androidTest')
         }
 
         // code coverage with Jacoco
@@ -210,8 +201,8 @@ android {
         }
 
         // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml.
+        // This moves them out of default location under src/<type>/... which would
         // conflict with src/ being used by the main source set.
         // Adding new build types or product flavors should be accompanied
         // by a similar customization.

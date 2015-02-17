@@ -4,14 +4,10 @@
 set -e
 
 # create debug build
-echo "[INFO] changing directory to android/source"
-cd android/source
-echo "[INFO] Changed directory to : " 
 pwd
 echo "[INFO] running assembleProdDebug ..."
-./gradlew assembleProdDebug
+./gradlew assembleProdDebug exportSauceKeys
 echo "[INFO] build created"
-cd ../..
 
 # get current timestamp, to be used in apk name
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
@@ -25,7 +21,7 @@ pwd
 # Travis Environment is supposed to provide two vairables
 # SAUCE_KEY and SAUCE_USERNAME
 # These two variables are used later in this shell script.
-export APK_PATH="../android/source/VideoLocker/build/outputs/apk/VideoLocker-prod-debug.apk"
+export APK_PATH="../VideoLocker/build/outputs/apk/VideoLocker-prod-debug.apk"
 export APK_NAME="edx-prod-debug-"$current_time".apk"
 
 echo "-----------------Configuration------------------"

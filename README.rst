@@ -41,11 +41,11 @@ To use a custom configuration in place of the default configuration, you will ne
 
 1. Create your own configuration directory somewhere else on the file system. For example create ``my_config`` as a sibling of the ``edx-app-android`` repository.
 
-2. Create an ``edx.properties`` file inside the ``android/source/VideoLocker`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at ``../../../../my_config`` then I'd have the following ``edx.properties``:
+2. Create an ``edx.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory relative to the ``VideoLocker`` directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at `my_config`` then I'd have the following ``edx.properties``:
 
 ::
 
-    edx.dir = '../../../../my_config'
+    edx.dir = '../../my_config'
 
 3.  In the configuration directory that you added in step 1, create another
 ``edx.properties`` file. This properties file contains a list of filenames. The files should be in YAML format and are for storing specific keys. These files are specified relative to the configuration directory. Keys in files earlier in the list will be overridden by keys from files later in the list. For example, if I had two files, one shared between ios and android called ``shared.yaml`` and one with Android specific keys called ``android.yaml``, I would have the following ``edx.properties``:

@@ -35,7 +35,6 @@ public class Config {
     private JsonObject mProperties;
 
     private static final String API_HOST_URL = "API_HOST_URL";
-    private static final String COURSE_SEARCH_URL = "COURSE_SEARCH_URL";
     private static final String FABRIC_KEY = "FABRIC_KEY";
     private static final String ENVIRONMENT_DISPLAY_NAME = "ENVIRONMENT_DISPLAY_NAME";
     private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
@@ -189,10 +188,6 @@ public class Config {
 
     public String getApiHostURL() {
         return getString(API_HOST_URL);
-    }
-
-    public String getCourseSearchUrl() {
-        return getString(COURSE_SEARCH_URL);
     }
 
     public String getEnvironmentDisplayName() {
