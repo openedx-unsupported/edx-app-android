@@ -34,10 +34,6 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             selectedTab = savedInstanceState.getInt(TAB_ID);
         }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
-
         setApplyPrevTransitionOnRestart(true);
         
         bundle = getIntent().getBundleExtra("bundle");

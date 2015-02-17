@@ -10,16 +10,9 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 public class CourseHandoutActivity extends BaseSingleFragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
+    protected void onStart() {
+        super.onStart();
         setTitle(getString(R.string.tab_label_handouts));
-
     }
 
     @Override
@@ -29,16 +22,12 @@ public class CourseHandoutActivity extends BaseSingleFragmentActivity {
 
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent().getSerializableExtra(CourseHandoutFragment.ENROLLMENT);
         if (courseData != null) {
-
             Bundle bundle = new Bundle();
             bundle.putSerializable(CourseHandoutFragment.ENROLLMENT, courseData);
             frag.setArguments(bundle);
-
         }
-
         return frag;
     }
-
 }
 
 
