@@ -3,7 +3,6 @@ package org.edx.mobile.module.analytics;
 import android.content.Context;
 
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
 
 public class SegmentFactory {
 
@@ -33,8 +32,7 @@ public class SegmentFactory {
      */
     public static void makeInstance(Context context) {
         if (sInstance == null) {
-            if (NetworkUtil.isAllowedThirdPartyTraffic(context)
-                && Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()) {
+            if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()) {
                 sInstance = new ISegmentImpl(context);
             }
             else {

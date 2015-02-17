@@ -49,7 +49,7 @@ public class Config {
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
     private static final String THIRD_PARTY_TRAFFIC = "THIRD_PARTY_TRAFFIC";
-    private static final String DEPRECATED_REGISTRATION_API_DO_NOT_USE = "DEPRECATED_REGISTRATION_API_DO_NOT_USE";
+    private static final String REGISTRATION_API_DEPRECATED = "REGISTRATION_API_DEPRECATED";
 
     public class SocialSharingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
@@ -231,8 +231,8 @@ public class Config {
         return getString(SEGMENT_IO_WRITE_KEY);
     }
 
-    public boolean getDeprecatedRegistrationApiDoNotUse() {
-        return getBoolean(DEPRECATED_REGISTRATION_API_DO_NOT_USE, false);
+    public boolean isRegistrationAPIDeprecated() {
+        return getBoolean(REGISTRATION_API_DEPRECATED, true);
     }
 
     public SocialSharingConfig getSocialSharing() {
