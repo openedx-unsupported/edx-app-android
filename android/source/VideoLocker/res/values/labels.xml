@@ -23,4 +23,5 @@
     <string name="label_edit">Edit</string>
     <string name="label_ok">OK</string>
     <string name="label_close">Close</string>
+    <string name="label_continue">Continue</string>
 </resources>

@@ -78,7 +78,13 @@
         android:id="@+id/api_spinner"
         style="@style/api_progress_style"
         android:visibility="gone" />
-    
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
+
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_chapter_tv"
         style="@style/bold_text"
