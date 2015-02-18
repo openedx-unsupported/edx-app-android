@@ -9,7 +9,9 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.serverapi.ApiFactory;
 import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
+import org.json.JSONObject;
 
 import java.net.URL;
 
@@ -38,6 +40,12 @@ public class MockedApiTests extends BaseTestCase {
 
         Environment env = new Environment();
         env.setupEnvironment(getInstrumentation().getTargetContext());
+
+        // set test configuration
+        JsonObject json = new JsonObject();
+        json.add("API_HOST_URL", new JsonPrimitive(String.format("http://localhost:%d", PORT)));
+        Config config = new Config(json);
+        Config.setInstance(config);
     }
 
     @Override
@@ -46,19 +54,24 @@ public class MockedApiTests extends BaseTestCase {
         server.shutdown();
     }
 
+    private void startServer() throws Exception {
+        server.play(PORT);
+        URL baseUrl = server.getUrl("/mocked");
+        print("mocked URL: " + baseUrl.toString());
+    }
+
     public void testLogin() throws Exception {
         // TODO: mock the response
-        JsonObject json = new JsonObject();
-        json.add("access_token", new JsonPrimitive("fake-token"));
+        JSONObject json = new JSONObject();
+        json.put("access_token", "fake-token");
 
         MockResponse mockResponse = new MockResponse()
                 .setResponseCode(200)
                 .setBody(json.toString());
 
         server.enqueue(mockResponse);
-        server.play(PORT);
-        URL baseUrl = server.getUrl("/mock/");
-        print("mock URL: " + baseUrl.toString());
+
+        startServer();
 
         // run the code
         AuthResponse resp = api.doLogin(EMAIL, PASSWORD);

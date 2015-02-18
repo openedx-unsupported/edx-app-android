@@ -1,6 +1,7 @@
 package org.edx.mobile.module.serverapi.http;
 
 import org.apache.http.client.methods.HttpPost;
+import org.edx.mobile.module.serverapi.IRequest;
 
 /**
  * This class represents HTTP PATCH request.
@@ -10,14 +11,12 @@ import org.apache.http.client.methods.HttpPost;
  */
 class HttpPatch extends HttpPost {
     
-    public static final String METHOD_PATCH = "PATCH";
-
     public HttpPatch(final String url) {
         super(url);
     }
 
     @Override
     public String getMethod() {
-        return METHOD_PATCH;
+        return IRequest.Method.PATCH;
     }
 }
