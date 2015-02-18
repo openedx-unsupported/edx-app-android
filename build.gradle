@@ -20,3 +20,27 @@ project.ext {
         RELEASE_KEY_PASSWORD = "*****"
     }
 }
+
+task copyBuildArtifacts << { task ->
+    def hashPipe = new ByteArrayOutputStream()
+    task.project.exec {
+        commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+        standardOutput = hashPipe
+    }
+
+    def hash = hashPipe.toString().trim()
+    def destPath = 'artifacts'
+
+    task.project.exec {
+        commandLine = ['mkdir', '-p', destPath]
+    }
+
+    def hashPath = "${destPath}/hash.txt"
+    task.project.exec {
+        commandLine = ['touch', "${destPath}/hash.txt"]
+    }
+
+    new File(hashPath).withWriter { out ->
+        out.writeLine(hash)
+    }
+}
