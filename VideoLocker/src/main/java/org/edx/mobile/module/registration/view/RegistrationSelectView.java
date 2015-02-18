@@ -43,7 +43,6 @@ class RegistrationSelectView implements IRegistrationFieldView {
             }
         }
         mInputView.setItems(mField.getOptions(),defaultOption);
-        //mInputView.setSelection(selectedIndex);
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
