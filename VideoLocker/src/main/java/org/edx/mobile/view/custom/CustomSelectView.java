@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by rohan on 2/16/15.
  */
-public class ESpinner<T> extends ETextView implements View.OnClickListener,
+public class CustomSelectView<T> extends ETextView implements View.OnClickListener,
         DialogInterface.OnClickListener {
 
     private String hint;
@@ -25,19 +25,19 @@ public class ESpinner<T> extends ETextView implements View.OnClickListener,
     private T selectedItem;
     private int checkedItemIndex = 0;
 
-    public ESpinner(Context context) {
+    public CustomSelectView(Context context) {
         super(context);
         setOnClickListener(this);
         setUIParams();
     }
 
-    public ESpinner(Context context, AttributeSet attrs) {
+    public CustomSelectView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOnClickListener(this);
         setUIParams();
     }
 
-    public ESpinner(Context context, AttributeSet attrs, int defStyle) {
+    public CustomSelectView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setOnClickListener(this);
         setUIParams();

@@ -12,7 +12,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 
-class RegistrationSpinnerView implements IRegistrationFieldView {
+class RegistrationSelectView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     private RegistrationFormField mField;
@@ -20,7 +20,7 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
     protected RegistrationOptionSpinner mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationSpinnerView(RegistrationFormField field, View view) {
+    public RegistrationSelectView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
