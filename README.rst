@@ -18,7 +18,7 @@ This project is meant to be built using Android Studio. It can also be built fro
 
 2. Open Android Studio and choose **Open an Existing Android Studio Project**
 
-3. Choose ``edx-app-android/android/source``.
+3. Choose ``edx-app-android``.
 
 4. Click the **Run** button.
 
@@ -39,7 +39,7 @@ Setup
 -----
 To use a custom configuration in place of the default configuration, you will need to complete these tasks:
 
-1. Create your own configuration directory somewhere else on the file system. For example create ``my_config`` as a sibling of the ``edx-app-android`` repository.
+1. Create your own configuration directory somewhere else on the file system. For example, create ``my_config`` as a sibling of the ``edx-app-android`` repository.
 
 2. Create an ``edx.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory relative to the ``VideoLocker`` directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at `my_config`` then I'd have the following ``edx.properties``:
 

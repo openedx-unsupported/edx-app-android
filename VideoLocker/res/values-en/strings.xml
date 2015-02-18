@@ -22,8 +22,8 @@
     <string name="login_title">Sign in to edX</string>
 
     <!-- Navigation Drawer Labels -->
-    <string name="name_default">Morgank</string>
-    <string name="email_default">morgan.knuston@yahoo.com</string>
+    <string name="name_default">Username</string>
+    <string name="email_default">user@domain.com</string>
     <string name="action_settings">Settings</string>
     <string name="label_my_courses">My Courses</string>
     <string name="label_my_videos">My Videos</string>
