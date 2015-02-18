@@ -112,5 +112,4 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
 
     protected  abstract int getDefaultTab();
 
-
 }

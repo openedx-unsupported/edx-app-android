@@ -13,14 +13,14 @@ public class CreateGroupActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
-        setTitle(getString(R.string.label_new_group));
 
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay_put);
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setTitle(getString(R.string.label_new_group));
     }
 
     @Override
