@@ -8,10 +8,22 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/my_groups_list_container">
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar_style"
+            android:visibility="gone"
+            android:layout_alignParentTop="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_groups_list_container"
+            android:layout_below="@id/offline_bar">
 
         </RelativeLayout>
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/slider_menu"
