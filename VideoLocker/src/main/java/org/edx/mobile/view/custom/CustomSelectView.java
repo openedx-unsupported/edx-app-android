@@ -43,6 +43,9 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         setUIParams();
     }
 
+    /**
+     * This sets the common view parameters for Custom SelectView
+     */
     private void setUIParams(){
         int padding = (int)UiUtil.getParamsInDP(getResources(),10);
         setPadding(padding,padding,padding,padding);
@@ -54,10 +57,24 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         showHint();
     }
 
+    /**
+     * Show the hint text on the custom select view
+     */
+    private void showHint() {
+        setText(hint);
+        setTextColor(getResources().getColor(R.color.hint_grey_text));
+        setTextSize(UiUtil.getParamsInDP(getResources(), 4));
+    }
+
     public void setPrompt(String prompt) {
         this.prompt = prompt;
     }
 
+    /**
+     * Set the list of items to be displayed when the selectView is clicked
+     * @param items - List of items
+     * @param defaultItem - Default item to be shown as selected
+     */
     public void setItems(List<T> items, T defaultItem) {
         this.items = items;
         this.selectedItem = defaultItem;
@@ -93,7 +110,14 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         dialog.dismiss();
     }
 
+    /**
+     * Call this function when a value is selected in the Dialog for custom select
+     * @param item - Selected Item
+     */
     private void select(T item) {
+        //Check if the selected options value is empty
+        //The current json contains '--' as the first value
+        //and hence show the hint text instead of '--' in the select view
         if (TextUtils.isEmpty(item.toString())
                 ||item.toString().equalsIgnoreCase("--")) {
             showHint();
@@ -114,16 +138,8 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
             for (int i=0; i<items.size(); i++) {
                 stringItems[i] = items.get(i).toString();
             }
-
             return stringItems;
         }
-
         return null;
-    }
-
-    private void showHint() {
-        setText(hint);
-        setTextColor(getResources().getColor(R.color.hint_grey_text));
-        setTextSize(UiUtil.getParamsInDP(getResources(), 4));
     }
 }
