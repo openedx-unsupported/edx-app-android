@@ -28,9 +28,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     // URL forms to be intercepted
     private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
     private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
-    //public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
-    public static final String PARAM_COURSE_ID         = "course_id";
-    public static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
     public static final String PARAM_PATH_ID           = "path_id";
     public static final String COURSE                  = "course/";
 
