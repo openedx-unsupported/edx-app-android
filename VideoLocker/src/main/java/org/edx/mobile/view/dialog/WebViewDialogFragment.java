@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -61,6 +62,24 @@ public class WebViewDialogFragment extends DialogFragment {
                 @Override
                 public void onPageLoadError() {
                     progress.setVisibility(View.GONE);
+                }
+            });
+
+            client.setActionListener(new URLInterceptorWebViewClient.IActionListener() {
+                @Override
+                public void onClickCourseInfo(String pathId) {
+                    // this action is part of enrollment feature and will not happen here
+                }
+
+                @Override
+                public void onClickEnroll(String courseId, boolean emailOptIn) {
+                    // this action is part of enrollment feature and will not happen here
+                }
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    // open URL in external browser
+                    BrowserUtil.open(getActivity(), url);
                 }
             });
 

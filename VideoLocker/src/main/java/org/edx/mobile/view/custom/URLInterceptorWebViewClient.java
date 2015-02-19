@@ -157,7 +157,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isCourseInfoLink(String strUrl) {
         try {
-            logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
                 Uri uri = Uri.parse(strUrl);
                 String pathId = uri.getQueryParameter(PARAM_PATH_ID);
@@ -172,6 +171,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
                 if (actionListener != null) {
                     actionListener.onClickCourseInfo(pathId);
+                    logger.debug("found course-info URL: " + strUrl);
                     return true;
                 }
             }
@@ -213,7 +213,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isEnrollLink(String strUrl) {
         try {
-            logger.debug("Course Enroll url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
                 Uri uri = Uri.parse(strUrl);
 
@@ -230,6 +229,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
                 if (actionListener != null) {
                     actionListener.onClickEnroll(courseId, emailOptIn);
+                    logger.debug("found enroll URL: " + strUrl);
                     return true;
                 }
             }
