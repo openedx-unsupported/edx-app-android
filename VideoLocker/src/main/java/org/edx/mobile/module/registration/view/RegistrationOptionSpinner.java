@@ -4,12 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import org.edx.mobile.module.registration.model.RegistrationOption;
-import org.edx.mobile.view.custom.ESpinner;
+import org.edx.mobile.view.custom.CustomSelectView;
 
 /**
  * Created by rohan on 2/16/15.
  */
-public class RegistrationOptionSpinner extends ESpinner<RegistrationOption> {
+public class RegistrationOptionSpinner extends CustomSelectView<RegistrationOption> {
 
     public RegistrationOptionSpinner(Context context) {
         super(context);
