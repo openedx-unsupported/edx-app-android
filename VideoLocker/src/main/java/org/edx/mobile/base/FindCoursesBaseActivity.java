@@ -10,7 +10,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -79,17 +78,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         if(webview!=null){
             showLoadingProgress();
             isWebViewLoaded = false;
-
-            //We need to hide the loading progress if the Page starts rendering.
-            webview.setWebChromeClient(new WebChromeClient() {
-                public void onProgressChanged(WebView view, int progress)
-                {
-                    if(progress == 40){
-                        hideLoadingProgress();
-                    }
-                }
-            });
-
             URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
             client.setActionListener(this);
             client.setPageStatusListener(this);
@@ -316,5 +304,10 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     public void onPageLoadError() {
         isWebViewLoaded = false;
         showOfflineMessage();
+    }
+
+    @Override
+    public void onPagePartiallyLoaded() {
+        hideLoadingProgress();
     }
 }

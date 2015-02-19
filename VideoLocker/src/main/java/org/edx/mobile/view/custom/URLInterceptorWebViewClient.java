@@ -2,6 +2,7 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -69,6 +70,16 @@ public class URLInterceptorWebViewClient extends WebViewClient {
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(true);
         webView.setWebViewClient(this);
+        //We need to hide the loading progress if the Page starts rendering.
+        webView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress > 50) {
+                    if (pageStatusListener != null) {
+                        pageStatusListener.onPagePartiallyLoaded();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -285,5 +296,10 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * Callback that indicates error during page load.
          */
         void onPageLoadError();
+
+        /**
+         * Callback that indicates that the page is 50 percent loaded.
+         */
+        void onPagePartiallyLoaded();
     }
 }
