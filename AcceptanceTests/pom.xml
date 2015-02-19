@@ -21,13 +21,13 @@
 		<sauceUser></sauceUser>
 		<sauceKeys></sauceKeys>
 		<sauceBuildName></sauceBuildName>
-		<deviceOS>android</deviceOS>
-		<appPath>/Users/divakarpatil/Desktop/edx-prod-release-1.0.04-45.apk</appPath>
-		<osVersion>4.4.2</osVersion>
-		<deviceName>Android Emulator</deviceName>
-		<appPackage>org.edx.mobile</appPackage>
-		<emailId>divakar.patil@claricetechnologies.com</emailId>
-		<password>edx1</password>
+		<deviceOS></deviceOS>
+		<appPath></appPath>
+		<osVersion></osVersion>
+		<deviceName></deviceName>
+		<appPackage></appPackage>
+		<emailId></emailId>
+		<password></password>
 		<udid></udid>
 	</properties>
 
