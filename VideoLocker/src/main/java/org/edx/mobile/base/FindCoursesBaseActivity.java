@@ -76,7 +76,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
     private void setupWebView() {
         if(webview!=null){
-            showLoadingProgress();
             isWebViewLoaded = false;
             URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
             client.setActionListener(this);
@@ -247,6 +246,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
     @Override
     public void onPageStarted() {
+        showLoadingProgress();
         isWebViewLoaded = false;
     }
 
