@@ -15,11 +15,11 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:orientation="vertical">
-        <ImageButton
+        <ImageView
             android:id="@+id/actionbar_close_btn"
             android:layout_width="21dp"
             android:layout_height="21dp"
-            android:background="@drawable/ic_close"
+            android:src="@drawable/ic_close"
             android:contentDescription="@string/app_name"
             android:layout_centerInParent="true"/>
     </RelativeLayout>

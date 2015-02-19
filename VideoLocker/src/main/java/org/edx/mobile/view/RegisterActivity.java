@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -244,14 +243,14 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            sendBroadcastFlyingErrorMessage(getString(R.string.oops),result.getValue());
+                            sendBroadcastFlyingErrorMessage(getString(R.string.sign_up_error),result.getValue());
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
                                 // launch my courses screen
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                             } else {
-                                sendBroadcastFlyingErrorMessage(getString(R.string.oops),getString(R.string.login_error));
+                                sendBroadcastFlyingErrorMessage(getString(R.string.sign_up_error),getString(R.string.login_error));
                             }
                         }
                     }else{
