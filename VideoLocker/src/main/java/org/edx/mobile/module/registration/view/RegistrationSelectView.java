@@ -96,21 +96,19 @@ class RegistrationSelectView implements IRegistrationFieldView {
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
-            handleError(mField.getErrorMessage().getRequired());
+            String errorMessage = mField.getErrorMessage().getRequired();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_select_field);
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.register_field) ,mField.getLabel().toLowerCase());
+            }
+            if(errorMessage!=null){
+                handleError(errorMessage);
+            }
             return false;
         }
 
-        // check if length restrictions are followed
-        int inputLength = getCurrentValue().getAsString().length();
-        if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
-            return false;
-        }
-        if (mField.getRestriction().getMaxLength() > 0
-                && inputLength > mField.getRestriction().getMaxLength()) {
-            handleError(mField.getErrorMessage().getMaxLength());
-            return false;
-        }
+        //For select we should not have length checks as there is no input
 
         return true;
     }

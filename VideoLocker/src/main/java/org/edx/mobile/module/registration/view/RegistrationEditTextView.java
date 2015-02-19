@@ -99,18 +99,47 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
-            handleError(mField.getErrorMessage().getRequired());
+            String errorMessage = mField.getErrorMessage().getRequired();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_enter_field);
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.register_field) ,mField.getLabel().toLowerCase());
+            }
+            if(errorMessage!=null){
+                handleError(errorMessage);
+            }
             return false;
         }
 
         // check if length restrictions are followed
         int inputLength = getCurrentValue().getAsString().length();
         if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
+            String errorMessage = mField.getErrorMessage().getMinLength();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_min_length);
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.register_field), mField.getLabel());
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.minimum_size), mField.getRestriction().getMinLength()+"");
+            }
+            if(errorMessage!=null){
+                handleError(errorMessage);
+            }
             return false;
         }
         if (mField.getRestriction().getMaxLength() > 0
                 && inputLength > mField.getRestriction().getMaxLength()) {
+            String errorMessage = mField.getErrorMessage().getMaxLength();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_max_length);
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.register_field), mField.getLabel());
+                errorMessage = errorMessage.replaceFirst(getView().getResources()
+                        .getString(R.string.maximum_size), mField.getRestriction().getMaxLength()+"");
+            }
+            if(errorMessage!=null){
+                handleError(errorMessage);
+            }
             handleError(mField.getErrorMessage().getMaxLength());
             return false;
         }
