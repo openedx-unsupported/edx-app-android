@@ -116,7 +116,7 @@
             android:layout_below="@id/course_name"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:maxWidth="120dp"
+            android:maxWidth="160dp"
             android:orientation="horizontal" >
 
             <org.edx.mobile.view.custom.ETextView
@@ -126,7 +126,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/org_code_txt"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxWidth="75dp"
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/or_tv"
@@ -134,7 +136,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:maxWidth="120dp"
                 android:text="@string/or_symbol"
                 android:textSize="12sp" />
 
@@ -146,7 +147,9 @@
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:textColor="@color/org_code_txt"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:maxWidth="75dp"
+                android:singleLine="true"/>
         </LinearLayout>
 
         <LinearLayout
@@ -204,7 +207,7 @@
 
     <!-- put a frame over this cell, so that corners look rounded -->
 
-    <ImageView
+   <ImageView
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
