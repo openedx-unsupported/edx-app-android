@@ -81,9 +81,10 @@ public class RegisterActivity extends BaseFragmentActivity {
             }
         });
 
-        ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
-        if(closeButton!=null){
-            closeButton.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout closeButtonLayout = (RelativeLayout)
+                findViewById(R.id.actionbar_close_btn_layout);
+        if(closeButtonLayout!=null){
+            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
