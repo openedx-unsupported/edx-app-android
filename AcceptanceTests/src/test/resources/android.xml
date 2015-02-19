@@ -9,8 +9,10 @@
 			<class name="org.edx.androidtestsuite.Online_LoginTestSuite"></class>
 			<class name="org.edx.androidtestsuite.Online_MyCoursesTestSuite"></class>
 			<class name="org.edx.androidtestsuite.Online_MyVideosTestSuite"></class>
+			<class name="org.edx.androidtestsuite.Online_FindCourseTestSuite"></class>
 			<class name="org.edx.androidtestsuite.Offline_MyCoursesTestSuite"></class>
 			<class name="org.edx.androidtestsuite.Offline_MyVideosTestSuite"></class>
+			<class name="org.edx.androidtestsuite.Offline_FindCourseTestSuite"></class>
 			<class name="org.edx.androidtestsuite.Offline_LoginTestSuite"></class>
 		</classes>
 

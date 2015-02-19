@@ -15,11 +15,9 @@ public interface IFindCourseLocators {
 
 	String getHeaderId();
 
-	String getViewingCoursesByXpath();
+	String getViewingCoursesById();
 
-	String getFeaturedCoursesByXpath();
-
-	String getFilterCoursesByXpath();
+	String getFilterCoursesById();
 
 	String getCourseEnrollButtonByXpath();
 
@@ -30,10 +28,9 @@ public interface IFindCourseLocators {
 	String Android_lnpFindCoursesId="org.edx.mobile:id/drawer_option_find_courses";
 	String Android_FindCoursesName="Find Courses";
 	String Android_HeaderId="android:id/up";
-	String Android_ViewingCoursesXpath="//android.view.View[1]/android.widget.FrameLayout[2]/android.view.View[1]/android.widget.RelativeLayout[1]/android.view.View[1]/android.view.View[2]/android.view.View[2]";
-	String Android_FeaturedCoursesXpath="//android.view.View[1]/android.widget.FrameLayout[2]/android.view.View[1]/android.widget.RelativeLayout[1]/android.view.View[1]/android.view.View[2]/android.view.View[5]/android.view.View[1]";
-	String Android_FilterCoursesXpath="//android.view.View[1]/android.widget.FrameLayout[2]/android.view.View[1]/android.widget.RelativeLayout[1]/android.view.View[1]/android.view.View[2]/android.view.View[3]/android.view.View[1]";
+	String Android_ViewingCoursesId="Viewing 123 courses matching Heading";
+	String Android_FilterCoursesId="FILTER COURSES Link";
 	String Android_CourseEnrollButtonXpath="//android.view.View[1]/android.widget.FrameLayout[2]/android.view.View[1]/android.widget.RelativeLayout[1]/android.view.View[1]/android.view.View[2]/android.view.View[5]/android.view.View[2]";
-	String Android_CourseEnrollmentXpath="//android.view.View[1]/android.widget.FrameLayout[2]/android.view.View[1]/android.widget.RelativeLayout[1]/android.view.View[1]/android.view.View[2]/android.view.View[3]";
+	String Android_CourseEnrollmentXpath="//android.view.View[1]/android.widget.FrameLayout[2]//android.widget.RelativeLayout[1]//android.view.View[2]/android.view.View[5]/android.view.View[1]";
 
 }

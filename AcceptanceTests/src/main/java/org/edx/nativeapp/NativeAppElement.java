@@ -60,14 +60,7 @@ public class NativeAppElement extends RemoteWebElement{
 	@Override
 	public WebElement findElement(By loc) {
 		WebElement innerElement = webElement.findElement(loc);
-		/*try {
-			innerElement = (new WebDriverWait(cateredWebDriver.getDriver(), maxWaitTime)).until(ExpectedConditions
-					.presenceOfElementLocated(loc));
-		} catch (Throwable te) {
-			Reporter.log("Unable to find the element by locator: " + loc.toString());
-			cateredWebDriver.captureScreenshot();
-			throw new TimeoutException(te);
-		}*/
+		
 		((JavascriptExecutor) nativeAppDriver.getDriver()).executeScript("arguments[0].scrollIntoView();", innerElement);
 
 		return innerElement;

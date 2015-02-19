@@ -87,6 +87,7 @@ public class NativeAppDriver extends RemoteWebDriver {
 				desiredCapabilities = Config.Android.getCapabilities();
 				appiumDriver = new AndroidDriver(serverAddress,
 						desiredCapabilities);
+				
 			}
 
 		} catch (Throwable e) {
@@ -628,6 +629,7 @@ public class NativeAppDriver extends RemoteWebDriver {
 	public void launchApp() {
 		appiumDriver.closeApp();
 		appiumDriver.launchApp();
+		
 	}
 
 	/**

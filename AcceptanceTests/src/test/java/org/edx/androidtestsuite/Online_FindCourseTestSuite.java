@@ -20,20 +20,15 @@ public class Online_FindCourseTestSuite extends FindCourseTestSuiteBase{
 	public String getHeaderId() {
 		return Android_HeaderId;
 	}
-
+	
 	@Override
-	public String getViewingCoursesByXpath() {
-		return Android_ViewingCoursesXpath;
+	public String getViewingCoursesById() {
+		return Android_ViewingCoursesId;
 	}
 
 	@Override
-	public String getFeaturedCoursesByXpath() {
-		return Android_FeaturedCoursesXpath;
-	}
-
-	@Override
-	public String getFilterCoursesByXpath() {
-		return Android_FilterCoursesXpath;
+	public String getFilterCoursesById() {
+		return Android_FilterCoursesId;
 	}
 
 	@Override

@@ -110,7 +110,7 @@ public abstract class MyCoursesTestSuiteBase extends CommonFunctionalities
 		driver.clickElementWithIndexById(getVideoListId(), 0);
 		gotoMyCoursesView();
 		Thread.sleep(10 * 1000);
-		driver.clickElementWithIndexById(getCourseListId(), 2);
+		driver.clickElementWithIndexById(getCourseListId(), 1);
 		// failed for ios
 		Thread.sleep(10 * 1000);
 		driver.clickElementById(getLastAccessedBtnId());

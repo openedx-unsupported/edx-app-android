@@ -151,7 +151,7 @@ public interface IMyCoursesLocators {
 	String btnCourseWareName = "Courseware";
 	String btnCourseInfoName = "Course Info";
 	String btnAnnouncementsName="Announcements";
-	String btnHandOutsName = "Course handouts";
+	String btnHandOutsName = "View course handouts";
 	String hlnkViewOnWebId = "org.edx.mobile:id/open_in_browser_btn";
 	String btnVideoId = "org.edx.mobile:id/video_row_layout";
 	String btnVideoDownloadId = "org.edx.mobile:id/video_start_download";

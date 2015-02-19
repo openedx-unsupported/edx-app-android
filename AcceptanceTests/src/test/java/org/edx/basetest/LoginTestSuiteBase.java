@@ -1,9 +1,6 @@
 package org.edx.basetest;
 
 import org.edx.elementlocators.ILoginLocators;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
@@ -22,8 +19,7 @@ public abstract class LoginTestSuiteBase extends CommonFunctionalities
 		driver.clickElementById(getSignInButtonId());
 		driver.verifyElementPresentByName(getSignInTextName());
 		
-		new WebDriverWait(driver, 3).until(ExpectedConditions
-				.visibilityOfElementLocated(By.id(getEmailLocatorId())));
+		
 		driver.enterTextToElementById(getEmailLocatorId(), "zzz");
 		if (isAndroid()) {
 			driver.hideKeyboard();
@@ -91,6 +87,9 @@ public abstract class LoginTestSuiteBase extends CommonFunctionalities
 		} else {
 			driver.enterTextToElementByClassname(
 					getForgotPasswordMailId_ClassName(), "zzz");
+		}
+		if (isAndroid()) {
+			driver.hideKeyboard();
 		}
 		driver.clickElementById(getOkPopUpId());
 		driver.findElementByName(getMsgForgotPasswordWithWrongEmailId());

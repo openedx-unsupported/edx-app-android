@@ -1,13 +1,13 @@
 package org.edx.basetest;
 
+import org.edx.elementlocators.IFindCourseLocators_Offline;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-import org.edx.elementlocators.IFindCourseLocators;
 
-public abstract class FindCourseTestSuiteBase extends CommonFunctionalities
-		implements IFindCourseLocators {
+public abstract class Offline_FindCourseTestSuiteBase extends BaseTest
+		implements IFindCourseLocators_Offline {
 
 	@Test(priority = 0)
 	public void verifyFindCoursesTest() {
@@ -16,6 +16,13 @@ public abstract class FindCourseTestSuiteBase extends CommonFunctionalities
 		driver.verifyElementPresentByName(getFindCourseName());
 	}
 
+	@Test(priority = 1)
+	private void verifyElementsPresentOnFindCoursesScreenTest() {
+		driver.verifyElementPresentById(getOfflineModeLabelId());
+		driver.verifyElementPresentById(getOfflineBarId());
+		driver.verifyElementPresentById(getOfflineModeTextId());
+	}
+	
 	/**
 	 * Recovery Scenario for Find Courses screen if any of the test case fails
 	 * 
@@ -27,5 +34,5 @@ public abstract class FindCourseTestSuiteBase extends CommonFunctionalities
 			Reporter.log("Failed Test: " + rs.getTestName());
 		}
 	}
-	
+
 }

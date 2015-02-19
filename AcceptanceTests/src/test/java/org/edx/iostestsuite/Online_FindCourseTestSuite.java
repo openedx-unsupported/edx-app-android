@@ -20,27 +20,22 @@ public class Online_FindCourseTestSuite extends FindCourseTestSuiteBase{
 	}
 
 	@Override
-	public String getViewingCoursesByXpath() {
-		return null;
-	}
-
-	@Override
-	public String getFeaturedCoursesByXpath() {
-		return null;
-	}
-
-	@Override
-	public String getFilterCoursesByXpath() {
-		return null;
-	}
-
-	@Override
 	public String getCourseEnrollButtonByXpath() {
 		return null;
 	}
 
 	@Override
 	public String getCourseEnrollmentByXpath() {
+		return null;
+	}
+
+	@Override
+	public String getViewingCoursesById() {
+		return null;
+	}
+
+	@Override
+	public String getFilterCoursesById() {
 		return null;
 	}
 

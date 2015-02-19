@@ -10,7 +10,7 @@ import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeTest;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
+
 
 public abstract class BaseTest {
 
@@ -47,7 +47,7 @@ public abstract class BaseTest {
 	 * @throws AddressException
 	 */
 	@AfterSuite(alwaysRun = true, groups = { "Android", "iOS" })
-	public void createIndexFile(ITestContext testContext) throws IOException, MessagingException {
+	public void createIndexFile(ITestContext testContext) throws IOException{
 
 		String root = PropertyLoader.loadProperty("output.path").get();
 		testLogger.info("report path " + root);
