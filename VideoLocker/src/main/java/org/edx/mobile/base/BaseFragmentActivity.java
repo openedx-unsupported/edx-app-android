@@ -170,6 +170,8 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             //If activity is in landscape, hide the Action bar
             if (isLandscape()) {
                 bar.hide();
+            }else{
+                bar.show();
             }
         }
     }

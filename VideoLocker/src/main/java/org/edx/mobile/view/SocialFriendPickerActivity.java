@@ -25,21 +25,12 @@ public class SocialFriendPickerActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
 
         addState = getIntent().getBooleanExtra(ADD_TO_GROUP, false);
 
         if (addState) {
             overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay_put);
-            setTitle(getString(R.string.label_add_new_group_friends));
-        } else {
-            setTitle(getString(R.string.label_add_group_friends));
         }
-
-
 
         try{
             String analyticsID = addState ? "Social Friend Picker - existing group" : "Social Friend Picker - new group";
@@ -47,7 +38,16 @@ public class SocialFriendPickerActivity extends BaseSingleFragmentActivity {
         }catch(Exception e){
             logger.error(e);
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (addState) {
+            setTitle(getString(R.string.label_add_new_group_friends));
+        } else {
+            setTitle(getString(R.string.label_add_group_friends));
+        }
     }
 
     @Override

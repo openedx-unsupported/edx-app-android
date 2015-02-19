@@ -62,9 +62,6 @@ class DbHelper extends SQLiteOpenHelper {
 
             String[] upgradeToV3 = new String[] {
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
-                                      + DbStructure.Column.UNIT_URL + " TEXT ",
-
-                    "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                                       + DbStructure.Column.URL_HIGH_QUALITY + " TEXT ",
 
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
@@ -73,13 +70,13 @@ class DbHelper extends SQLiteOpenHelper {
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                                       + DbStructure.Column.URL_YOUTUBE + " TEXT "};
 
-            if (oldVersion == 1 && newVersion == 2) {
+            if (oldVersion == 1 && (newVersion == 2 || newVersion == 3)) {
                 // upgrade from 1 to 2
                 db.execSQL(upgradeToV2);
             }
 
-            if (oldVersion == 1 && newVersion == 3) {
-                // upgrade from 1 to 3
+            if (newVersion == 3) {
+                // upgrade to version 3
                 for (String query : upgradeToV3) {
                     db.execSQL(query);
                 }

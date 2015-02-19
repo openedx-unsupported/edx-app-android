@@ -1113,32 +1113,32 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
             if(subTitlesTv!=null ){
                 if(text!=null){
-                    int twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
-                    int ten_dp = (int) UiUtil.getParamsInDP(getResources(),20);
+                    int margin_twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
+                    int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(),10);
                     if(player!=null){
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
                         if (player.getController()!=null && player.getController().isShown()){
                             if(player.isFullScreen()){
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
                             }else{
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }else{
                             if(player.isFullScreen()){
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp, ten_dp);
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp, margin_ten_dp);
                             }else{
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }
                     }
-                    subTitlesTv.setPadding(ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
-                            ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
+                    subTitlesTv.setPadding(margin_ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
+                            margin_ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
                     
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />

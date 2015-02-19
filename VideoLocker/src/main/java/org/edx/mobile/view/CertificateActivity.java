@@ -10,16 +10,9 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 public class CertificateActivity extends BaseSingleFragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
+    protected void onStart() {
+        super.onStart();
         setTitle(getString(R.string.tab_label_certificate));
-
     }
 
     @Override
