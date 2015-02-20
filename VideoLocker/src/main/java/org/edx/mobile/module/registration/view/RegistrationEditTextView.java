@@ -12,6 +12,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
+import java.util.Locale;
+
 class RegistrationEditTextView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
@@ -101,9 +103,8 @@ class RegistrationEditTextView implements IRegistrationFieldView {
         if (mField.isRequired() && !hasValue()) {
             String errorMessage = mField.getErrorMessage().getRequired();
             if(errorMessage==null || errorMessage.isEmpty()){
-                errorMessage = getView().getResources().getString(R.string.error_enter_field);
-                errorMessage = errorMessage.replaceFirst(getView().getResources()
-                        .getString(R.string.register_field) ,mField.getLabel().toLowerCase());
+                errorMessage = getView().getResources().getString(R.string.error_enter_field,
+                        mField.getLabel());
             }
             if(errorMessage!=null){
                 handleError(errorMessage);
@@ -116,11 +117,8 @@ class RegistrationEditTextView implements IRegistrationFieldView {
         if (inputLength < mField.getRestriction().getMinLength()) {
             String errorMessage = mField.getErrorMessage().getMinLength();
             if(errorMessage==null || errorMessage.isEmpty()){
-                errorMessage = getView().getResources().getString(R.string.error_min_length);
-                errorMessage = errorMessage.replaceFirst(getView().getResources()
-                        .getString(R.string.register_field), mField.getLabel());
-                errorMessage = errorMessage.replaceFirst(getView().getResources()
-                        .getString(R.string.minimum_size), mField.getRestriction().getMinLength()+"");
+                errorMessage = getView().getResources().getString(R.string.error_min_length,
+                        mField.getLabel(), mField.getRestriction().getMinLength());
             }
             if(errorMessage!=null){
                 handleError(errorMessage);
@@ -131,11 +129,8 @@ class RegistrationEditTextView implements IRegistrationFieldView {
                 && inputLength > mField.getRestriction().getMaxLength()) {
             String errorMessage = mField.getErrorMessage().getMaxLength();
             if(errorMessage==null || errorMessage.isEmpty()){
-                errorMessage = getView().getResources().getString(R.string.error_max_length);
-                errorMessage = errorMessage.replaceFirst(getView().getResources()
-                        .getString(R.string.register_field), mField.getLabel());
-                errorMessage = errorMessage.replaceFirst(getView().getResources()
-                        .getString(R.string.maximum_size), mField.getRestriction().getMaxLength()+"");
+                errorMessage = getView().getResources().getString(R.string.error_max_length,
+                        mField.getLabel(), mField.getRestriction().getMaxLength());
             }
             if(errorMessage!=null){
                 handleError(errorMessage);

@@ -40,12 +40,9 @@
     <string name="video_offline_message">Please select a video that you\'ve downloaded onto your device.</string>
 
     <!-- Registration Error Messages -->
-    <string name="error_enter_field">Please enter your REGISTER_FIELD and try again.</string>
-    <string name="error_select_field">Please select your REGISTER_FIELD and try again.</string>
-    <string name="error_min_length">REGISTER_FIELD must have at least MINIMUM_SIZE characters.</string>
-    <string name="error_max_length">REGISTER_FIELD cannot have more than MAXIMUM_SIZE characters.</string>
-    <string name="register_field">REGISTER_FIELD</string>
-    <string name="minimum_size">MINIMUM_SIZE</string>
-    <string name="maximum_size">MAXIMUM_SIZE</string>
+    <string name="error_enter_field">Please enter your %1$s and try again.</string>
+    <string name="error_select_field">Please select your %1$s and try again.</string>
+    <string name="error_min_length">%1$s must have at least %2$d characters.</string>
+    <string name="error_max_length">%1$s cannot have more than %2$d characters.</string>
 
 </resources>
