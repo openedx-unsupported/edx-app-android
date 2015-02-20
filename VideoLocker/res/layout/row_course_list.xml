@@ -116,7 +116,7 @@
             android:layout_below="@id/course_name"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:maxWidth="160dp"
+            android:maxWidth="@dimen/school_code_layout"
             android:orientation="horizontal" >
 
             <org.edx.mobile.view.custom.ETextView
@@ -127,7 +127,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/org_code_txt"
                 android:textSize="12sp"
-                android:maxWidth="75dp"
+                android:maxWidth="@dimen/school_code"
                 android:singleLine="true"/>
 
             <TextView
@@ -148,7 +148,7 @@
                 android:ellipsize="end"
                 android:textColor="@color/org_code_txt"
                 android:textSize="12sp"
-                android:maxWidth="75dp"
+                android:maxWidth="@dimen/school_code"
                 android:singleLine="true"/>
         </LinearLayout>
 
