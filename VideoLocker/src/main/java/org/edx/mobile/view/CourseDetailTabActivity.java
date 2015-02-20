@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public class CourseDetailTabActivity extends BaseTabActivity {
 
+    public static final String EXTRA_ANNOUNCEMENTS = "announcemnts";
+    public static final String EXTRA_BUNDLE = "bundle";
     public static String TAG = CourseDetailTabActivity.class.getCanonicalName();
     static final String TAB_ID = TAG + ".tabID";
 
@@ -36,7 +39,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
 
         setApplyPrevTransitionOnRestart(true);
         
-        bundle = getIntent().getBundleExtra("bundle");
+        bundle = getIntent().getBundleExtra(EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
@@ -48,7 +51,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
 
         try{
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
+                    .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             activityTitle = courseData.getCourse().getName();
             try{
                 segIO.screenViewsTracking(courseData.getCourse().getName());

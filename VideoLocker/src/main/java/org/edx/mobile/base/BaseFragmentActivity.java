@@ -58,6 +58,8 @@ import java.util.List;
 
 public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
 
+    public static final String EXTRA_ENROLLMENT = "enrollment";
+
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
     // per second callback
