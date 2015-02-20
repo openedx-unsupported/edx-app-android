@@ -24,9 +24,9 @@ class RegistrationEmailView extends RegistrationEditTextView {
         if(isValidInput){
             if(!InputValidationUtil.isValidEmail(getCurrentValue().getAsString())){
                 handleError(getView().getResources().getString(R.string.error_invalid_email));
-                return false;
+                isValidInput = false;
             }
         }
-        return true;
+        return isValidInput;
     }
 }

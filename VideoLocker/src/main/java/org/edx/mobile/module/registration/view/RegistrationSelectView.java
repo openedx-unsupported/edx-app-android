@@ -101,9 +101,7 @@ class RegistrationSelectView implements IRegistrationFieldView {
                 errorMessage = getView().getResources().getString(R.string.error_select_field,
                         mField.getLabel());
             }
-            if(errorMessage!=null){
-                handleError(errorMessage);
-            }
+            handleError(errorMessage);
             return false;
         }
 

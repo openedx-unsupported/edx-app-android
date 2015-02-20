@@ -106,9 +106,7 @@ class RegistrationEditTextView implements IRegistrationFieldView {
                 errorMessage = getView().getResources().getString(R.string.error_enter_field,
                         mField.getLabel());
             }
-            if(errorMessage!=null){
-                handleError(errorMessage);
-            }
+            handleError(errorMessage);
             return false;
         }
 
@@ -120,9 +118,7 @@ class RegistrationEditTextView implements IRegistrationFieldView {
                 errorMessage = getView().getResources().getString(R.string.error_min_length,
                         mField.getLabel(), mField.getRestriction().getMinLength());
             }
-            if(errorMessage!=null){
-                handleError(errorMessage);
-            }
+            handleError(errorMessage);
             return false;
         }
         if (mField.getRestriction().getMaxLength() > 0
@@ -132,10 +128,7 @@ class RegistrationEditTextView implements IRegistrationFieldView {
                 errorMessage = getView().getResources().getString(R.string.error_max_length,
                         mField.getLabel(), mField.getRestriction().getMaxLength());
             }
-            if(errorMessage!=null){
-                handleError(errorMessage);
-            }
-            handleError(mField.getErrorMessage().getMaxLength());
+            handleError(errorMessage);
             return false;
         }
 
