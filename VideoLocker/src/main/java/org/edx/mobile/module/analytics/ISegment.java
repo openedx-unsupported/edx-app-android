@@ -75,6 +75,10 @@ public interface ISegment {
     
     Properties trackUserFindsCourses();
 
+    Properties trackCreateAccountClicked();
+
+    Properties trackEnrollClicked(String courseId, boolean email_opt_in);
+
     /**
      * Sets given tracker instance and uses it for analytics.
      * This method is useful in some cases where a given tracker is to be used.
@@ -141,8 +145,11 @@ public interface ISegment {
         public static final String USER_LOGOUT = "User Logout";
         public static final String BROWSER_LAUNCHED = "Browser Launched";
         public static final String LANGUAGE_CLICKED = "Language Clicked";
-        public static final String USER_NO_ACCOUNT = "User Has No Account Clicked";
+        public static final String SIGN_UP = "Sign up Clicked";
         public static final String FIND_COURSES = "Find Courses Clicked";
+        public static final String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
+        public static final String ENROLL_COURSES = "Enroll Course Clicked";
+        public static final String EMAIL_OPT_IN = "email_opt_in";
 
         public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
         public static final String CELL_CARRIER = "cell_carrier";
@@ -196,8 +203,10 @@ public interface ISegment {
         public static final String USERLOGOUT = "edx.bi.app.user.logout";
         public static final String USERLOGIN = "edx.bi.app.user.login";
         public static final String APP_NAME = "edx.mobileapp.android";
-        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.no_account";
+        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.sign_up";
         public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
+        public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register";
+        public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll";
 
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";

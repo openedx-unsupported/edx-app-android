@@ -578,6 +578,9 @@ class ISegmentImpl implements ISegment {
         return null;
     }
 
+    /**
+     * This function is used to track if user clicks on Sign up on landing page
+     */
     @Override
     public Properties trackUserDoesNotHaveAccount() {
         try{
@@ -594,6 +597,10 @@ class ISegmentImpl implements ISegment {
 
     }
 
+    /**
+     * This function is used to track if user clicks on Find Courses
+     * @return
+     */
     @Override
     public Properties trackUserFindsCourses() {
         try{
@@ -602,6 +609,49 @@ class ISegmentImpl implements ISegment {
             vEvent.setAppNameContext();
 
             tracker.track(Keys.FIND_COURSES, vEvent.properties);
+            return vEvent.properties;
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+    }
+
+    /**
+     * This function is used to track if user clicks on Create Account on registration screen
+     * @return
+     */
+    @Override
+    public Properties trackCreateAccountClicked() {
+        try{
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
+            vEvent.setAppNameContext();
+
+            tracker.track(Keys.CREATE_ACCOUNT_CLICKED, vEvent.properties);
+            return vEvent.properties;
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+    }
+
+    /**
+     * This function is used to track if user clicks on Enroll in the FindCourses Activity
+     * @return
+     * @param courseId - Course Id for which user selected enroll
+     * @param email_opt_in - Flag to show user wants to opt in for email notification
+     * @return
+     */
+    @Override
+    public Properties trackEnrollClicked(String courseId, boolean email_opt_in) {
+        try{
+            VideoEvent vEvent = new VideoEvent();
+            vEvent.data.putValue(Keys.COURSE_ID, courseId);
+            vEvent.data.putValue(Keys.EMAIL_OPT_IN, email_opt_in);
+            vEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
+            vEvent.setAppNameContext();
+
+            tracker.track(Keys.ENROLL_COURSES, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
             logger.error(e);
