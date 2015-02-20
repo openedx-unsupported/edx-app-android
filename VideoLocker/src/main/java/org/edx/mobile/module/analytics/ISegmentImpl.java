@@ -588,7 +588,7 @@ class ISegmentImpl implements ISegment {
             vEvent.properties.putValue(Keys.NAME, Values.USER_NO_ACCOUNT);
             vEvent.setAppNameContext();
 
-            tracker.track(Keys.USER_NO_ACCOUNT, vEvent.properties);
+            tracker.track(Keys.SIGN_UP, vEvent.properties);
             return vEvent.properties;
         }catch(Exception e){
             logger.error(e);
