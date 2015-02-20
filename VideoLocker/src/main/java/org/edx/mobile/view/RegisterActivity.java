@@ -243,14 +243,18 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            sendBroadcastFlyingErrorMessage(getString(R.string.sign_up_error),result.getValue());
+                            String errorMessage = result.getValue();
+                            if(errorMessage == null || errorMessage.isEmpty()){
+                                errorMessage = getString(R.string.sign_up_error);
+                            }
+                            sendBroadcastFlyingErrorMessage(null,errorMessage);
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
                                 // launch my courses screen
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                             } else {
-                                sendBroadcastFlyingErrorMessage(getString(R.string.sign_up_error),getString(R.string.login_error));
+                                sendBroadcastFlyingErrorMessage(null, getString(R.string.sign_up_error));
                             }
                         }
                     }else{
