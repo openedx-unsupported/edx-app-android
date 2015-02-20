@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -62,8 +60,6 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
             tv.setSingleLine(true);
             tv.setAllCaps(true);
         }
-
-        tabHost.setOnTabChangedListener(tabChangeListener);
     }
 
     protected Fragment getFragmentByTag(String tag) {
@@ -109,25 +105,6 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
         public NoTabLayoutElementsException(String detailMessage) {
             super(detailMessage);
         }
-    }
-
-    private TabHost.OnTabChangeListener tabChangeListener = new TabHost.OnTabChangeListener() {
-        @Override
-        public void onTabChanged(String tabId) {
-            if (tabId != null) {
-                Fragment fragment = getFragmentByTag(tabId);
-                if (fragment != null) {
-                    displayFragment(tabId, fragment);
-                }
-            }
-        }
-    };
-
-    private void displayFragment(String tag, Fragment fragment) {
-        FragmentManager   manager         =   getSupportFragmentManager();
-        FragmentTransaction ft            =   manager.beginTransaction();
-        ft.replace(android.R.id.tabcontent, fragment, tag);
-        ft.commit();
     }
 
     protected abstract List<TabModel> tabsToAdd();
