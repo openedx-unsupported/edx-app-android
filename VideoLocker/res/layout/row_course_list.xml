@@ -117,7 +117,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:maxWidth="@dimen/school_code_layout"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/org_code_tv"
@@ -159,7 +159,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/schoolcode_layout"
             android:layout_below="@id/course_name"
-            android:layout_marginRight="10dp" >
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/schoolcode_layout">
 
             <View
                 android:id="@+id/ellipsis_icon"
