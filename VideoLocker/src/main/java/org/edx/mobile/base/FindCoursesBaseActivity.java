@@ -232,7 +232,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     @Override
     public void onOpenExternalURL(String url) {
         // verify if the app is running on zero-rated network?
-        if (Config.getInstance().getZeroRating().getEnabled()
+        if (Config.getInstance().getZeroRatingConfig().isEnabled()
                 && NetworkUtil.isOnZeroRatedNetwork(this)) {
             // inform user if they get may charged for this browsing this URL
             Dialog d = DialogFactory.getChargesApplyConfirmationDialog(this, url);

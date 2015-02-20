@@ -140,19 +140,18 @@ public class LoginActivity extends BaseFragmentActivity {
 
         // check if third party traffic is enabled
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
-        Config.ThirdPartyTrafficConfig thirdPartyTrafficConfig = Config.getInstance().getThirdPartyTraffic();
 
         if (isOnZeroRatedNetwork) {
             findViewById(R.id.panel_login_social).setVisibility(View.GONE);
         } else {
-            if (!thirdPartyTrafficConfig.isFacebookEnabled()
-                    && !thirdPartyTrafficConfig.isGoogleEnabled()) {
+            if (!Config.getInstance().getFacebookConfig().isEnabled()
+                    && !Config.getInstance().getGoogleConfig().isEnabled()) {
                 findViewById(R.id.panel_login_social).setVisibility(View.GONE);
             }
-            else if (!thirdPartyTrafficConfig.isFacebookEnabled()) {
+            else if (!Config.getInstance().getFacebookConfig().isEnabled()) {
                 findViewById(R.id.facebook_layout).setVisibility(View.GONE);
             }
-            else if (!thirdPartyTrafficConfig.isGoogleEnabled()) {
+            else if (!Config.getInstance().getGoogleConfig().isEnabled()) {
                 findViewById(R.id.google_layout).setVisibility(View.GONE);
             }
         }

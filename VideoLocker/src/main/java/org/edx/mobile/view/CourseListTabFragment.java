@@ -282,7 +282,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                     }
 
                     try {
-                        if (Config.getInstance().getEnrollment().getEnabled()) {
+                        if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
                             //Call the Find courses activity
                             Router.getInstance().showFindCourses(getActivity());
                         } else {

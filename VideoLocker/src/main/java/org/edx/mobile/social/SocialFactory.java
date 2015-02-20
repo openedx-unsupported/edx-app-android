@@ -13,14 +13,14 @@ public class SocialFactory {
     
     public static ISocial getInstance(Activity activity, int type) {
         if (type == TYPE_GOOGLE) {
-            if (Config.getInstance().getThirdPartyTraffic().isGoogleEnabled()) {
+            if (Config.getInstance().getGoogleConfig().isEnabled()) {
                 return new GoogleOauth2(activity);
             }
             else {
                 return new ISocialEmptyImpl();
             }
         } else if (type == TYPE_FACEBOOK) {
-            if (Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()) {
+            if (Config.getInstance().getFacebookConfig().isEnabled()) {
                 return new FacebookAuth(activity);
             }
             else {
