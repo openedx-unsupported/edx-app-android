@@ -292,7 +292,7 @@
     <string name="try_again">Try Again</string>
     <string name="you_are_now_enrolled">You have enrolled in this course</string>
     <string name="msg_registration_successful"></string>
-    <string name="oops">Oops!</string>
+    <string name="sign_up_error">Your account could not be created. Try again later.</string>
 
     <!-- data charges may apply dialog text -->
     <string name="open_external_url_title">Data charges may apply</string>

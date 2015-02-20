@@ -305,4 +305,9 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         isWebViewLoaded = false;
         showOfflineMessage();
     }
+
+    @Override
+    public void onPagePartiallyLoaded() {
+        hideLoadingProgress();
+    }
 }

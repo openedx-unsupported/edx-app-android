@@ -62,6 +62,11 @@ public class WebViewDialogFragment extends DialogFragment {
                 public void onPageLoadError() {
                     progress.setVisibility(View.GONE);
                 }
+
+                @Override
+                public void onPagePartiallyLoaded() {
+                    //Nothing to do here
+                }
             });
 
             if(fileName!=null){
