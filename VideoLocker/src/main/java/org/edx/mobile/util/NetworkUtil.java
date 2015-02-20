@@ -123,18 +123,20 @@ public class NetworkUtil {
      * @param context
      * @return
      */
-    public static boolean isOnZeroRatedNetwork(Context context){
-        TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        String carrierId = manager.getNetworkOperator();
+    public static boolean isOnZeroRatedNetwork(Context context) {
+        if (Config.getInstance().getZeroRating().getEnabled()) {
+            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String carrierId = manager.getNetworkOperator();
 
-        logger.debug(String.format("Carrier id: %s", carrierId));
+            logger.debug(String.format("Carrier id: %s", carrierId));
 
-        List<String> zeroRatedCarriers = Config.getInstance().getZeroRating().getCarriers();
+            List<String> zeroRatedCarriers = Config.getInstance().getZeroRating().getCarriers();
 
-        for(String carrier : zeroRatedCarriers) {
-            if (carrier.equalsIgnoreCase(carrierId)) {
-                logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
-                return true;
+            for (String carrier : zeroRatedCarriers) {
+                if (carrier.equalsIgnoreCase(carrierId)) {
+                    logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
+                    return true;
+                }
             }
         }
 

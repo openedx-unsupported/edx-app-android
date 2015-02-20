@@ -19,7 +19,6 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
@@ -232,8 +231,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     @Override
     public void onOpenExternalURL(String url) {
         // verify if the app is running on zero-rated network?
-        if (Config.getInstance().getZeroRating().getEnabled()
-                && NetworkUtil.isOnZeroRatedNetwork(this)) {
+        if (NetworkUtil.isOnZeroRatedNetwork(this)) {
             // inform user if they get may charged for this browsing this URL
             Dialog d = DialogFactory.getChargesApplyConfirmationDialog(this, url);
             d.show();
