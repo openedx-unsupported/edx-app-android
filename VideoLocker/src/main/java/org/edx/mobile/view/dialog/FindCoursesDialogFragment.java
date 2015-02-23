@@ -48,7 +48,7 @@ public class FindCoursesDialogFragment extends DialogFragment {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
                 if(!isRemoving() && isVisible()){
-                    String url = Config.getInstance().getEnrollmentConfig().getCourseSearchUrl();
+                    String url = Config.getInstance().getEnrollmentConfig().getExternalCourseSearchUrl();
                     BrowserUtil.open(getActivity(), url);
                 }
             }

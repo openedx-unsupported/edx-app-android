@@ -27,6 +27,7 @@ public class ConfigTests extends BaseTestCase {
     private static final String DISABLED_CARRIERS       = "DISABLED_CARRIERS";
     private static final String CARRIERS                = "CARRIERS";
     private static final String COURSE_SEARCH_URL       = "COURSE_SEARCH_URL";
+    private static final String EXTERNAL_COURSE_SEARCH_URL = "EXTERNAL_COURSE_SEARCH_URL";
     private static final String COURSE_INFO_URL_TEMPLATE = "COURSE_INFO_URL_TEMPLATE";
     private static final String FACEBOOK_APP_ID         = "FACEBOOK_APP_ID";
     private static final String FABRIC_KEY              = "FABRIC_KEY";
@@ -114,6 +115,7 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertFalse(config.getEnrollmentConfig().isEnabled());
         assertNull(config.getEnrollmentConfig().getCourseSearchUrl());
+        assertNull(config.getEnrollmentConfig().getExternalCourseSearchUrl());
         assertNull(config.getEnrollmentConfig().getCourseInfoUrlTemplate());
     }
 
@@ -125,6 +127,7 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertFalse(config.getEnrollmentConfig().isEnabled());
         assertNull(config.getEnrollmentConfig().getCourseSearchUrl());
+        assertNull(config.getEnrollmentConfig().getExternalCourseSearchUrl());
         assertNull(config.getEnrollmentConfig().getCourseInfoUrlTemplate());
     }
 
@@ -133,12 +136,14 @@ public class ConfigTests extends BaseTestCase {
         JsonObject enrollmentConfig = new JsonObject();
         enrollmentConfig.add(ENABLED, new JsonPrimitive(true));
         enrollmentConfig.add(COURSE_SEARCH_URL, new JsonPrimitive("fake-url"));
+        enrollmentConfig.add(EXTERNAL_COURSE_SEARCH_URL, new JsonPrimitive("external-fake-url"));
         enrollmentConfig.add(COURSE_INFO_URL_TEMPLATE, new JsonPrimitive("fake-url-template"));
         configBase.add(COURSE_ENROLLMENT, enrollmentConfig);
 
         Config config = new Config(configBase);
         assertTrue(config.getEnrollmentConfig().isEnabled());
         assertEquals(config.getEnrollmentConfig().getCourseSearchUrl(), "fake-url");
+        assertEquals(config.getEnrollmentConfig().getExternalCourseSearchUrl(), "external-fake-url");
         assertEquals(config.getEnrollmentConfig().getCourseInfoUrlTemplate(), "fake-url-template");
     }
 

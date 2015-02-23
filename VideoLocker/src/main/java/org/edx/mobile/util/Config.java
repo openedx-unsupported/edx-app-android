@@ -91,6 +91,7 @@ public class Config {
     public class EnrollmentConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
+        private @SerializedName("EXTERNAL_COURSE_SEARCH_URL") String mExternalSearchUrl;
         private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
         public boolean isEnabled() {
@@ -99,6 +100,10 @@ public class Config {
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
+        }
+
+        public String getExternalCourseSearchUrl() {
+            return mExternalSearchUrl;
         }
 
         public String getCourseInfoUrlTemplate() {
