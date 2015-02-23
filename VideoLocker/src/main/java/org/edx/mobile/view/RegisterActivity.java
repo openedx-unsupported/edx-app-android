@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -81,9 +80,10 @@ public class RegisterActivity extends BaseFragmentActivity {
             }
         });
 
-        ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
-        if(closeButton!=null){
-            closeButton.setOnClickListener(new View.OnClickListener() {
+        RelativeLayout closeButtonLayout = (RelativeLayout)
+                findViewById(R.id.actionbar_close_btn_layout);
+        if(closeButtonLayout!=null){
+            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
@@ -243,14 +243,18 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            sendBroadcastFlyingErrorMessage(getString(R.string.oops),result.getValue());
+                            String errorMessage = result.getValue();
+                            if(errorMessage == null || errorMessage.isEmpty()){
+                                errorMessage = getString(R.string.sign_up_error);
+                            }
+                            sendBroadcastFlyingErrorMessage(null,errorMessage);
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
                                 // launch my courses screen
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                             } else {
-                                sendBroadcastFlyingErrorMessage(getString(R.string.oops),getString(R.string.login_error));
+                                sendBroadcastFlyingErrorMessage(null, getString(R.string.sign_up_error));
                             }
                         }
                     }else{

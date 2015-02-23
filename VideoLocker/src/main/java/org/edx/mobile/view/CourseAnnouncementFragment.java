@@ -57,7 +57,7 @@ public class CourseAnnouncementFragment extends CourseDetailBaseFragment {
         try {
             final Bundle bundle = getArguments();
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
+                    .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             if(courseData!=null){
                 loadData(courseData);
             }

@@ -2,6 +2,7 @@ package org.edx.mobile.view.custom;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -28,9 +29,6 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     // URL forms to be intercepted
     private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
     private static final String URL_TYPE_COURSE_INFO    = "edxapp://course_info";
-    //public static final String URL_TYPE_COURSE_INFO    = "edxapp://view_course/course_path=course/";
-    public static final String PARAM_COURSE_ID         = "course_id";
-    public static final String PARAM_EMAIL_OPT_IN      = "email_opt_in";
     public static final String PARAM_PATH_ID           = "path_id";
     public static final String COURSE                  = "course/";
 
@@ -72,6 +70,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
         settings.setBuiltInZoomControls(false);
         settings.setSupportZoom(true);
         webView.setWebViewClient(this);
+        //We need to hide the loading progress if the Page starts rendering.
+        webView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress > 50) {
+                    if (pageStatusListener != null) {
+                        pageStatusListener.onPagePartiallyLoaded();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -286,5 +294,10 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
          * Callback that indicates error during page load.
          */
         void onPageLoadError();
+
+        /**
+         * Callback that indicates that the page is 50 percent loaded.
+         */
+        void onPagePartiallyLoaded();
     }
 }

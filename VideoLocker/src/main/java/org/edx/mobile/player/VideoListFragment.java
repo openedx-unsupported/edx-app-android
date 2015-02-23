@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -35,7 +36,6 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -119,7 +119,7 @@ public class VideoListFragment extends Fragment {
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
-                        .getSerializableExtra("enrollment");
+                        .getSerializableExtra(BaseFragmentActivity.EXTRA_ENROLLMENT);
             }
         }
 

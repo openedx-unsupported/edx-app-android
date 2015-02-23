@@ -2,7 +2,9 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -76,12 +78,29 @@ public class Router {
 
     public void showMyCourses(Activity sourceActivity) {
         Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        /*
+        Using CLEAR_TOP flag, causes the activity to be re-created every time.
+        This reloads the list of courses. We don't want that.
+        Using REORDER_TO_FRONT solves this problem
+         */
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(intent);
 
         // let login screens be ended
         Intent loginIntent = new Intent();
         loginIntent.setAction(AppConstants.USER_LOG_IN);
         sourceActivity.sendBroadcast(loginIntent);
+    }
+
+    public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
+                                     boolean announcements) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(CourseDetailTabActivity.EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(CourseDetailTabActivity.EXTRA_ANNOUNCEMENTS, announcements);
+
+        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra(CourseDetailTabActivity.EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
     }
 }

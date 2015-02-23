@@ -56,7 +56,7 @@ public interface IRegistrationFieldView {
             }
             else if (fieldType.equals(RegistrationFieldType.MULTI)) {
                 View view = inflater.inflate(R.layout.view_register_spinner, null);
-                return new RegistrationSpinnerView(field, view);
+                return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
                 if (field.getAgreement() != null) {

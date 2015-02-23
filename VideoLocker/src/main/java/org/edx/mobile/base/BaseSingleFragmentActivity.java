@@ -5,12 +5,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.NetworkUtil;
 
 public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
 
     public static final String FIRST_FRAG_TAG = "first_frag";
+    private View offlineBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +21,12 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups_list);
 
+        offlineBar = findViewById(R.id.offline_bar);
+        if(NetworkUtil.isConnected(this)){
+            hideOfflineBar();
+        }else{
+            showOfflineBar();
+        }
     }
 
     @Override
@@ -58,4 +67,30 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
     }
 
     public abstract Fragment getFirstFragment();
+
+    @Override
+    protected void onOnline() {
+        super.onOnline();
+        hideOfflineBar();
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onOffline() {
+        super.onOffline();
+        showOfflineBar();
+        invalidateOptionsMenu();
+    }
+
+    private void showOfflineBar(){
+        if(offlineBar!=null){
+            offlineBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideOfflineBar(){
+        if(offlineBar!=null){
+            offlineBar.setVisibility(View.GONE);
+        }
+    }
 }

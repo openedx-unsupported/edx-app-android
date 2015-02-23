@@ -12,7 +12,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 
-class RegistrationSpinnerView implements IRegistrationFieldView {
+class RegistrationSelectView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     private RegistrationFormField mField;
@@ -20,7 +20,7 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
     protected RegistrationOptionSpinner mInputView;
     private TextView mErrorView, mInstructionView;
 
-    public RegistrationSpinnerView(RegistrationFormField field, View view) {
+    public RegistrationSelectView(RegistrationFormField field, View view) {
         // create and configure view and save it to an instance variable
         this.mField = field;
         this.mView = view;
@@ -43,7 +43,6 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
             }
         }
         mInputView.setItems(mField.getOptions(),defaultOption);
-        //mInputView.setSelection(selectedIndex);
 
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
@@ -97,21 +96,16 @@ class RegistrationSpinnerView implements IRegistrationFieldView {
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
-            handleError(mField.getErrorMessage().getRequired());
+            String errorMessage = mField.getErrorMessage().getRequired();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_select_field,
+                        mField.getLabel());
+            }
+            handleError(errorMessage);
             return false;
         }
 
-        // check if length restrictions are followed
-        int inputLength = getCurrentValue().getAsString().length();
-        if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
-            return false;
-        }
-        if (mField.getRestriction().getMaxLength() > 0
-                && inputLength > mField.getRestriction().getMaxLength()) {
-            handleError(mField.getErrorMessage().getMaxLength());
-            return false;
-        }
+        //For select we should not have length checks as there is no input
 
         return true;
     }
