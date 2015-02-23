@@ -20,7 +20,6 @@ project.ext {
         RELEASE_KEY_PASSWORD = "*****"
     }
 }
-
 // task that creates 'artifacts' directory
 task createBuildArtifactsDirectory << { task ->
     def hashPipe = new ByteArrayOutputStream()
