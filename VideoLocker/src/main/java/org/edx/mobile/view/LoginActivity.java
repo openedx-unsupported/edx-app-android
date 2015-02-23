@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,8 +38,6 @@ import org.edx.mobile.view.dialog.SuccessDialogFragment;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseFragmentActivity {
 
@@ -125,9 +122,10 @@ public class LoginActivity extends BaseFragmentActivity {
         // enable login buttons at launch
         setLoginBtnEnabled();
 
-        ImageButton closeButton = (ImageButton) findViewById(R.id.actionbar_close_btn);
-        if(closeButton!=null){
-            closeButton.setOnClickListener(new OnClickListener() {
+        RelativeLayout closeButtonLayout = (RelativeLayout)
+                findViewById(R.id.actionbar_close_btn_layout);
+        if(closeButtonLayout!=null){
+            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();

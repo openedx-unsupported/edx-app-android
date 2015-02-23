@@ -6,14 +6,14 @@
     android:background="@drawable/bg_error_dialog"
     android:orientation="vertical"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/error_header"
         style="@style/semibold_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/error_heading"
         android:textColor="@color/grey_text_mycourse"
@@ -24,7 +24,6 @@
         style="@style/regular_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
         android:gravity="center"
         android:text="@string/error_message"
         android:textColor="@color/red_error_text"

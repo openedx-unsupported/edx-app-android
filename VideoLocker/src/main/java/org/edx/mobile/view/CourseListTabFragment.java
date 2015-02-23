@@ -110,13 +110,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
             @Override
             public void onAnnouncementClicked(EnrolledCoursesResponse model) {
-                Bundle courseBundle = new Bundle();
-                courseBundle.putBoolean("announcemnts", true);
-                courseBundle.putSerializable("CourseDetail", model);
-
-                Intent courseDetail = new Intent(getContext(), CourseDetailTabActivity.class);
-                courseDetail.putExtra("CourseDetail", courseBundle);
-                getContext().startActivity(courseDetail);
+                Router.getInstance().showCourseDetailTabs(getActivity(), model, true);
             }
         };
 

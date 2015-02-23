@@ -118,23 +118,25 @@ public class NetworkUtil {
     }
 
     /**
-     * Returns true if app is running on a carrier id mentioned in zero-rated configuration,
+     * Returns true if Zero-Rating is enabled and app is running on a carrier id mentioned in zero-rated configuration,
      * false otherwise.
      * @param context
      * @return
      */
     public static boolean isOnZeroRatedNetwork(Context context){
-        TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        String carrierId = manager.getNetworkOperator();
+        if (Config.getInstance().getZeroRatingConfig().isEnabled()) {
+            TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String carrierId = manager.getNetworkOperator();
 
-        logger.debug(String.format("Carrier id: %s", carrierId));
+            logger.debug(String.format("Carrier id: %s", carrierId));
 
-        List<String> zeroRatedCarriers = Config.getInstance().getZeroRatingConfig().getCarriers();
+            List<String> zeroRatedCarriers = Config.getInstance().getZeroRatingConfig().getCarriers();
 
-        for(String carrier : zeroRatedCarriers) {
-            if (carrier.equalsIgnoreCase(carrierId)) {
-                logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
-                return true;
+            for (String carrier : zeroRatedCarriers) {
+                if (carrier.equalsIgnoreCase(carrierId)) {
+                    logger.debug(String.format("Is on zero rated carrier (ID): %s", carrierId));
+                    return true;
+                }
             }
         }
 
