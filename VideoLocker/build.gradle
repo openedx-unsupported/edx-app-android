@@ -89,17 +89,19 @@ class Configuration {
         // is undocumented, but is necessary because it tries to read
         // the meta-data at compile time so resource references don't work
         def fabric = config.get('FABRIC');
-        def fabric_key = fabric.get('FABRIC_KEY') ?: ""
-        def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
-        if(fabric_key != null && fabric_secret != null) {
-            def crashlyticsPath = projectDir + '/crashlytics.properties'
-            def writer = new FileWriter(crashlyticsPath)
-            writer.write(
-"""
+        if (fabric != null) {
+            def fabric_key = fabric.get('FABRIC_KEY') ?: ""
+            def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
+            if (fabric_key != null && fabric_secret != null) {
+                def crashlyticsPath = projectDir + '/crashlytics.properties'
+                def writer = new FileWriter(crashlyticsPath)
+                writer.write(
+                        """
 apiSecret=$fabric_secret
 apiKey=$fabric_key
 """)
-            writer.close()
+                writer.close()
+            }
         }
     }
 
@@ -220,13 +222,17 @@ android {
     productFlavors {
         prod {
             def config = edx.loadConfig()
-            ext.enableCrashlytics = config.get('FABRIC').get('FABRIC_KEY') != null
+            def fabric = config.get('FABRIC')
+            if (fabric != null) {
+                ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
+            }
         }
     }
 
     buildTypes {
         debug {
             testCoverageEnabled true
+            ext.enableCrashlytics = false
         }
 
         release {
