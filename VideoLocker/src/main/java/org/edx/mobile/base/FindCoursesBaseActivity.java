@@ -74,7 +74,14 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     private void setupWebView() {
         if(webview!=null){
             isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview) {
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    // open URL in external browser
+                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
+                }
+            };
             client.setActionListener(this);
             client.setPageStatusListener(this);
         }
@@ -224,12 +231,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
         enrollForCourseTask.execute(courseId,emailOptIn);
-    }
-
-    @Override
-    public void onOpenExternalURL(String url) {
-        // open URL in external browser
-        BrowserUtil.open(this, url);
     }
 
     @Override

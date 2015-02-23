@@ -23,7 +23,7 @@ import java.util.Map;
  * than the current one, then treats it as an external link and may open in external browser.
  *
  */
-public class URLInterceptorWebViewClient extends WebViewClient {
+public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
     private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
@@ -129,10 +129,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 // return true means the host application handles the url
                 // this should open the URL in the browser with user's confirmation
                 view.stopLoading();
-                if (actionListener != null) {
-                    // let activity handle this
-                    actionListener.onOpenExternalURL(url);
-                }
+                // let activity handle this
+                onOpenExternalURL(url);
                 return false;
             } else {
                 // return false means the current WebView handles the url.
@@ -241,6 +239,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     /**
+     * Callback that gets called when an external URL is being loaded.
+     * @param url
+     */
+    public abstract void onOpenExternalURL(String url);
+
+    /**
      * Action listener interface for handling enroll link click action
      * and course-info link click action.
      * We may need to add more actions to this interface in future.
@@ -262,12 +266,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
-
-        /**
-         * Callback that gets called when an external URL is being loaded.
-         * @param url
-         */
-        void onOpenExternalURL(String url);
     }
 
     /**

@@ -46,7 +46,14 @@ public class WebViewDialogFragment extends DialogFragment {
 
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webView);
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webView) {
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    // open URL in external browser
+                    BrowserUtil.open(getActivity(), url);
+                }
+            };
             client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
 
                 @Override
@@ -62,24 +69,6 @@ public class WebViewDialogFragment extends DialogFragment {
                 @Override
                 public void onPageLoadError() {
                     progress.setVisibility(View.GONE);
-                }
-            });
-
-            client.setActionListener(new URLInterceptorWebViewClient.IActionListener() {
-                @Override
-                public void onClickCourseInfo(String pathId) {
-                    // this action is part of enrollment feature and will not happen here
-                }
-
-                @Override
-                public void onClickEnroll(String courseId, boolean emailOptIn) {
-                    // this action is part of enrollment feature and will not happen here
-                }
-
-                @Override
-                public void onOpenExternalURL(String url) {
-                    // open URL in external browser
-                    BrowserUtil.open(getActivity(), url);
                 }
             });
 
