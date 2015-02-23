@@ -40,3 +40,7 @@ echo "[INFO] apk uploaded"
 echo "[INFO] running tests ..."
 mvn test -DappPath=sauce-storage:$APK_NAME -DosVersion="4.4"  -DdeviceOS=android -DdeviceName="Android Emulator" -DtestngXml=android.xml -DsauceKey=$SAUCE_KEY -DsauceUser=$SAUCE_USERNAME -DsauceBuildName=$APK_NAME
 echo "[INFO] test run finished!"
+
+# upload reports to artifacts folder
+./gradlew copyAcceptanceTestBuildArtifacts
+echo "[INFO] acceptance test reports are being uploaded"

@@ -43,7 +43,6 @@ script:
   - ./travis-acceptance-tests.sh
 
 after_script:
-  - ./gradlew copyBuildArtifacts
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
   - ~/bin/artifacts upload artifacts
 
