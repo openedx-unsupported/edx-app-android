@@ -40,7 +40,7 @@ before_script:
 
 script: 
   - ./travis-build.sh
-  - ./travis-acceptance-tests.sh
+#  - ./travis-acceptance-tests.sh
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
