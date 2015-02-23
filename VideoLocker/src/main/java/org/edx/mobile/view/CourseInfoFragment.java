@@ -12,6 +12,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseInfoModel;
@@ -71,7 +72,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
         try {
             final Bundle bundle = getArguments();
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
+                    .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             if(courseData!=null){
                 loadData(courseData);
             }else{

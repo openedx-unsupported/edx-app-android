@@ -115,7 +115,7 @@ public class NavigationFragment extends Fragment {
                 public void onClick(View v) {
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
-                    if (Config.getInstance().getEnrollment().getEnabled()) {
+                    if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
                         if (!(act instanceof FindCoursesActivity)) {
                             Router.getInstance().showFindCourses(act);
 

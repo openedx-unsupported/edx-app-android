@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -18,8 +16,7 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -29,13 +26,12 @@ import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
+import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.LectureAdapter;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +63,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         }
 
 
-        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra("enrollment");
+        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra(BaseFragmentActivity.EXTRA_ENROLLMENT);
 
         ArrayList<LectureModel> lectureList = new ArrayList<LectureModel>();
 
@@ -102,7 +98,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                     Intent videoIntent = new Intent(CourseLectureListActivity.this,
                             VideoListActivity.class);
-                    videoIntent.putExtra("enrollment", enrollment);
+                    videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
                     videoIntent.putExtra("lecture", model);
                     videoIntent.putExtra("FromMyVideos", false);
                     startActivity(videoIntent);

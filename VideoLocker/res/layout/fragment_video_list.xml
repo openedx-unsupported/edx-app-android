@@ -52,9 +52,4 @@
         android:layout_above="@id/bottom_panel"
         android:layout_alignParentTop="true"/>
 
-    <include
-        android:id="@+id/offline_access_panel"
-        layout="@layout/panel_video_not_available_offline"
-        android:visibility="gone"/>
-
 </RelativeLayout>
