@@ -43,6 +43,10 @@ script:
 #  - ./travis-build.sh
 #  - ./travis-acceptance-tests.sh
 
+branches:
+  only:
+    - master
+
 # Enable caching to speed up the build
 cache:
   directories:
