@@ -88,8 +88,9 @@ class Configuration {
         // Using 'apiKey' instead of passing it in the meta-data
         // is undocumented, but is necessary because it tries to read
         // the meta-data at compile time so resource references don't work
-        def fabric_key = config.get('FABRIC_KEY') ?: ""
-        def fabric_secret = config.get('FABRIC_BUILD_SECRET')
+        def fabric = config.get('FABRIC');
+        def fabric_key = fabric.get('FABRIC_KEY') ?: ""
+        def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
         if(fabric_key != null && fabric_secret != null) {
             def crashlyticsPath = projectDir + '/crashlytics.properties'
             def writer = new FileWriter(crashlyticsPath)
@@ -219,7 +220,7 @@ android {
     productFlavors {
         prod {
             def config = edx.loadConfig()
-            ext.enableCrashlytics = config.get('FABRIC_KEY') != null
+            ext.enableCrashlytics = config.get('FABRIC').get('FABRIC_KEY') != null
         }
     }
 

@@ -37,8 +37,7 @@ public class BrowserUtil {
         }
 
         // verify if the app is running on zero-rated network?
-        if (Config.getInstance().getZeroRating().getEnabled()
-                && NetworkUtil.isOnZeroRatedNetwork(activity)) {
+        if (NetworkUtil.isOnZeroRatedNetwork(activity)) {
             // inform user if they get may charged for this browsing this URL
             Dialog d = DialogFactory.getChargesApplyConfirmationDialog(activity, url);
             d.show();
