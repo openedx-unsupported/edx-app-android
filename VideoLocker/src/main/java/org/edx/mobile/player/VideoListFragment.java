@@ -347,7 +347,8 @@ public class VideoListFragment extends Fragment {
                             play(model);
                             notifyAdapter();
                         } else {
-                            UiUtil.showOfflineAccessMessage(VideoListFragment.this.getView());
+                            ((VideoListActivity) getActivity())
+                                    .showOfflineAccessMessage();
                         }
                     }
                 }

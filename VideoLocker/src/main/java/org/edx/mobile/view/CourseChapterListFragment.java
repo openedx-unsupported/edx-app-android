@@ -176,8 +176,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                 videoIntent.putExtra("FromMyVideos", false);
                                 startActivity(videoIntent);
                             } else {
-                                UiUtil.showMessage(CourseChapterListFragment.this.getView(),
-                                        getString(R.string.section_offline_header));
+                                UiUtil.showOfflineAccessMessage(CourseChapterListFragment.this.getView());
                             }
                         } else {
                             Intent lectureIntent = new Intent(getActivity(),
