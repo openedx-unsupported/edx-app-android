@@ -749,7 +749,12 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             if(error_layout!=null){
                 TextView errorHeader = (TextView) findViewById(R.id.error_header);
                 TextView errorMessage = (TextView) findViewById(R.id.error_message);
-                errorHeader.setText(header);
+                if(header==null || header.isEmpty()){
+                   errorHeader.setVisibility(View.GONE);
+                }else{
+                    errorHeader.setVisibility(View.VISIBLE);
+                    errorHeader.setText(header);
+                }
                 if (message != null) {
                     errorMessage.setText(message);
                 }
