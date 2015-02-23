@@ -39,9 +39,12 @@ before_script:
   - chmod +x travis-acceptance-tests.sh
 
 script: 
-   - ./gradlew clean assembleProdDebug assembleProdDebugTest
-#  - ./travis-build.sh
-#  - ./travis-acceptance-tests.sh
+  - ./travis-build.sh
+  - ./travis-acceptance-tests.sh
+
+branches:
+    only:
+      - master
 
 # Enable caching to speed up the build
 cache:
