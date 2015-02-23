@@ -6,7 +6,7 @@ set -e
 # create debug build
 pwd
 echo "[INFO] running assembleProdDebug ..."
-./gradlew assembleProdDebug exportSauceKeys
+./gradlew assembleProdDebug
 echo "[INFO] build created"
 
 # get current timestamp, to be used in apk name
