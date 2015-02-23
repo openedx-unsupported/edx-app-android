@@ -20,3 +20,30 @@ project.ext {
         RELEASE_KEY_PASSWORD = "*****"
     }
 }
+
+task copyBuildArtifacts << { task ->
+    def hashPipe = new ByteArrayOutputStream()
+    task.project.exec {
+        commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+        standardOutput = hashPipe
+    }
+
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd-HHmmss')
+    def destDir = "artifacts/${formattedDate}"
+    task.project.exec {
+        commandLine = ['mkdir', '-p', destDir]
+    }
+
+    // copy unit test reports
+    def srcPath = "VideoLocker/build/outputs/reports"
+    task.project.exec {
+        commandLine = ['cp', '-R', srcPath, destDir]
+    }
+
+    // copy acceptance test reports
+    srcPath = "AcceptanceTests/Test-Reports"
+    task.project.exec {
+        commandLine = ['cp', '-R', srcPath, destDir]
+    }
+}
