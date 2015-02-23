@@ -13,34 +13,38 @@ public class VideoResponseModel implements SectionItemInterface {
     public String unit_url;
 
     /**
-     * Returns section object of this model.
-     * @return
+     * Returns chapter object of this model. The chapter object is found
+     * by traversing down a PathModel[]. If the chapter cannot be found,
+     * returns null.
+     *
+     * @return      Chapter object of PathModel
      */
     public PathModel getChapter() {
         // not being depend on array index
         // check if the object is really a chapter object
-        
-        if (path[0].isChapter())
-            return path[0];
-        if (path[1].isChapter())
-            return path[1];
-        
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isChapter())
+                return path[i];
+        }
         return null;
     }
 
     /**
-     * Returns sub-section object of this model.
-     * @return
+     * Returns section object of this model. The section object is found
+     * by traversing down a PathModel[]. If the section cannot be found,
+     * returns null
+     *
+     * @return      Section object of this PathModel
      */
     public PathModel getSection() {
         // not being depend on array index
         // check if the object is really a section object
-        
-        if (path[1].isSequential())
-            return path[1];
-        if (path[0].isSequential())
-            return path[0];
-        
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isSequential())
+                return path[i];
+        }
         return null;
     }
 

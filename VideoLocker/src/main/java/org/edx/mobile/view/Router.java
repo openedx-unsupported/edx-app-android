@@ -2,7 +2,9 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -88,5 +90,17 @@ public class Router {
         Intent loginIntent = new Intent();
         loginIntent.setAction(AppConstants.USER_LOG_IN);
         sourceActivity.sendBroadcast(loginIntent);
+    }
+
+    public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
+                                     boolean announcements) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(CourseDetailTabActivity.EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(CourseDetailTabActivity.EXTRA_ANNOUNCEMENTS, announcements);
+
+        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra(CourseDetailTabActivity.EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
     }
 }
