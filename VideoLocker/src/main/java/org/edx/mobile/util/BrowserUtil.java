@@ -1,11 +1,10 @@
 package org.edx.mobile.util;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -13,6 +12,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.view.dialog.DialogFactory;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -23,14 +23,25 @@ public class BrowserUtil {
 
     /**
      * Opens given URL in native browser.
+     * If app is running on zero-rated network, confirm the user if they really want to proceed
+     * browsing the non-zero-rated content.
+     * Otherwise, confirms the user as they are leaving the app to browse external contents.
      * 
      * @param activity
      * @param url
      */
     public static void open(final FragmentActivity activity, final String url) {
-
         if (TextUtils.isEmpty(url) || activity == null){
             logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
+            return;
+        }
+
+        // verify if the app is running on zero-rated network?
+        if (Config.getInstance().getZeroRating().getEnabled()
+                && NetworkUtil.isOnZeroRatedNetwork(activity)) {
+            // inform user if they get may charged for this browsing this URL
+            Dialog d = DialogFactory.getChargesApplyConfirmationDialog(activity, url);
+            d.show();
             return;
         }
 

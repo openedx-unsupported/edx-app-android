@@ -24,7 +24,7 @@ import java.util.Map;
  * than the current one, then treats it as an external link and may open in external browser.
  *
  */
-public class URLInterceptorWebViewClient extends WebViewClient {
+public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
     private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
@@ -137,10 +137,8 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 // return true means the host application handles the url
                 // this should open the URL in the browser with user's confirmation
                 view.stopLoading();
-                if (actionListener != null) {
-                    // let activity handle this
-                    actionListener.onOpenExternalURL(url);
-                }
+                // let activity handle this
+                onOpenExternalURL(url);
                 return false;
             } else {
                 // return false means the current WebView handles the url.
@@ -165,7 +163,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isCourseInfoLink(String strUrl) {
         try {
-            logger.debug("Is Course info url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
                 Uri uri = Uri.parse(strUrl);
                 String pathId = uri.getQueryParameter(PARAM_PATH_ID);
@@ -180,6 +177,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
                 if (actionListener != null) {
                     actionListener.onClickCourseInfo(pathId);
+                    logger.debug("found course-info URL: " + strUrl);
                     return true;
                 }
             }
@@ -221,7 +219,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isEnrollLink(String strUrl) {
         try {
-            logger.debug("Course Enroll url "+strUrl);
             if (strUrl.startsWith(URL_TYPE_ENROLL)) {
                 Uri uri = Uri.parse(strUrl);
 
@@ -238,6 +235,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
                 if (actionListener != null) {
                     actionListener.onClickEnroll(courseId, emailOptIn);
+                    logger.debug("found enroll URL: " + strUrl);
                     return true;
                 }
             }
@@ -247,6 +245,12 @@ public class URLInterceptorWebViewClient extends WebViewClient {
 
         return false;
     }
+
+    /**
+     * Callback that gets called when an external URL is being loaded.
+     * @param url
+     */
+    public abstract void onOpenExternalURL(String url);
 
     /**
      * Action listener interface for handling enroll link click action
@@ -270,12 +274,6 @@ public class URLInterceptorWebViewClient extends WebViewClient {
          * @param emailOptIn
          */
         void onClickEnroll(String courseId, boolean emailOptIn);
-
-        /**
-         * Callback that gets called when an external URL is being loaded.
-         * @param url
-         */
-        void onOpenExternalURL(String url);
     }
 
     /**
