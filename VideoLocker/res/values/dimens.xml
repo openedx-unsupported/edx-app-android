@@ -28,6 +28,4 @@
     <dimen name="switch_corner_radius">3dp</dimen>
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
-    <dimen name="school_code">70dp</dimen>
-    <dimen name="school_code_layout">150dp</dimen>
 </resources>

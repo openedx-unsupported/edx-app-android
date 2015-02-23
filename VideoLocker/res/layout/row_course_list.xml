@@ -110,46 +110,25 @@
             android:textSize="16sp" />
 
         <LinearLayout
-            android:id="@+id/schoolcode_layout"
+            android:id="@+id/starting_from_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/course_name"
-            android:layout_marginLeft="10dp"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:maxWidth="@dimen/school_code_layout"
-            android:orientation="horizontal">
+            android:background="@drawable/ic_starting"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:layout_below="@id/course_name">
 
             <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/org_code_tv"
-                style="@style/regular_text"
+                android:id="@+id/starting_from"
+                style="@style/bold_white_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/org_code_txt"
-                android:textSize="12sp"
-                android:maxWidth="@dimen/school_code"
-                android:singleLine="true"/>
-
-            <TextView
-                android:id="@+id/or_tv"
-                style="@style/regular_grey_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/or_symbol"
-                android:textSize="12sp" />
-
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/school_code_tv"
-                style="@style/regular_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:ellipsize="end"
-                android:textColor="@color/org_code_txt"
-                android:textSize="12sp"
-                android:maxWidth="@dimen/school_code"
-                android:singleLine="true"/>
+                android:layout_gravity="center"
+                android:text="@string/label_starting_from"
+                android:textAllCaps="true"
+                android:textSize="8sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -157,10 +136,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@id/schoolcode_layout"
             android:layout_below="@id/course_name"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@id/schoolcode_layout">
+            android:layout_marginRight="10dp">
 
             <View
                 android:id="@+id/ellipsis_icon"
@@ -183,26 +160,46 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/starting_from_layout"
+            android:id="@+id/schoolcode_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/schoolcode_layout"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/ic_starting"
-            android:paddingLeft="5dp"
-            android:paddingRight="10dp" >
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@id/starting_from_layout"
+            android:layout_alignTop="@id/starting_from_layout"
+            android:layout_below="@id/course_name">
 
             <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/starting_from"
-                style="@style/bold_white_text"
+                android:id="@+id/org_code_tv"
+                style="@style/regular_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/label_starting_from"
-                android:textAllCaps="true"
-                android:textSize="8sp" />
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/org_code_txt"
+                android:textSize="12sp"
+                android:singleLine="true"/>
+
+            <TextView
+                android:id="@+id/or_tv"
+                style="@style/regular_grey_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/or_symbol"
+                android:textSize="12sp" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/school_code_tv"
+                style="@style/regular_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:textColor="@color/org_code_txt"
+                android:textSize="12sp"
+                android:singleLine="true"/>
         </LinearLayout>
     </RelativeLayout>
 

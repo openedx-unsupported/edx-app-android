@@ -4,6 +4,4 @@
     <dimen name="width_video_text">210dp</dimen>
     <dimen name="checkbox_margin">40dp</dimen>
     <dimen name="checkbox_size">30dp</dimen>
-    <dimen name="school_code">80dp</dimen>
-    <dimen name="school_code_layout">170dp</dimen>
 </resources>

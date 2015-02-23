@@ -2,6 +2,4 @@
 <resources>
     <dimen name="width_chapter_text">260dp</dimen>
     <dimen name="width_video_text">250dp</dimen>
-    <dimen name="school_code">110dp</dimen>
-    <dimen name="school_code_layout">240dp</dimen>
 </resources>
