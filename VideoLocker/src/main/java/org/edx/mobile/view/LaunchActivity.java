@@ -47,7 +47,7 @@ public class LaunchActivity extends BaseFragmentActivity {
                 @Override
                 public void onClick(View v) {
                     try {
-                        segIO.trackUserDoesNotHaveAccount();
+                        segIO.trackUserSignUpForAccount();
                     }catch(Exception e){
                         logger.error(e);
                     }

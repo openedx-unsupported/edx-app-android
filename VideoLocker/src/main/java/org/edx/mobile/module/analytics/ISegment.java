@@ -71,7 +71,7 @@ public interface ISegment {
     Properties trackVideoOrientation(String videoId, Double currentTime,
             boolean isLandscape, String courseId, String unitUrl);
     
-    Properties trackUserDoesNotHaveAccount();
+    Properties trackUserSignUpForAccount();
     
     Properties trackUserFindsCourses();
 

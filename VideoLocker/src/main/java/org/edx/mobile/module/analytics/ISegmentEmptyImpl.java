@@ -109,7 +109,7 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackUserDoesNotHaveAccount() {
+    public Properties trackUserSignUpForAccount() {
         return null;
     }
 

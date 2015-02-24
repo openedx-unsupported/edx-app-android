@@ -39,7 +39,7 @@ class ISegmentImpl implements ISegment {
             }
         }
 
-        public void setContext(String courseId, String unitUrl, String component) {
+        public void setCourseContext(String courseId, String unitUrl, String component) {
             this.properties.put(Keys.CONTEXT, getEventContext(courseId, unitUrl, component));
         }
 
@@ -86,7 +86,7 @@ class ISegmentImpl implements ISegment {
     public Properties trackVideoLoading(String videoId, String courseId, String unitUrl){
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
             tracker.track(Keys.LOADED_VIDEO, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -109,7 +109,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
                     videoId, Values.VIDEO_PLAYED);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
             tracker.track(Keys.PLAYED_VIDEO , aEvent.properties);
             return aEvent.properties;
@@ -133,7 +133,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
                     videoId, Values.VIDEO_PAUSED);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
             tracker.track(Keys.PAUSED_VIDEO, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -156,7 +156,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
                     videoId, Values.VIDEO_STOPPED);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
             tracker.track(Keys.STOPPED_VIDEO, aEvent.properties);
             return aEvent.properties;
@@ -181,7 +181,7 @@ class ISegmentImpl implements ISegment {
             Double oldTime, Double newTime, String courseId, String unitUrl){
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
             //Call the format Double value so that we can have upto 3 decimal places after
             oldTime = formatDoubleValue(oldTime, 3);
             newTime = formatDoubleValue(newTime, 3);
@@ -214,7 +214,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
                     videoId, Values.TRANSCRIPT_SHOWN);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
             tracker.track(Keys.SHOW_TRANSCRIPT, aEvent.properties);
             return aEvent.properties;
@@ -239,7 +239,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                     videoId, Values.TRANSCRIPT_HIDDEN);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
             tracker.track(Keys.HIDE_TRANSCRIPT, aEvent.properties);
             return aEvent.properties;
@@ -363,7 +363,7 @@ class ISegmentImpl implements ISegment {
             String unitUrl) {
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
-            aEvent.setContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
+            aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
             tracker.track(Keys.VIDEO_DOWNLOADED, aEvent.properties);
             return aEvent.properties;
@@ -391,7 +391,7 @@ class ISegmentImpl implements ISegment {
             }
             aEvent.data.putValue(Keys.NO_OF_VIDEOS, videoCount);
             aEvent.properties.putValue(Keys.NAME, Values.BULKDOWNLOAD_SECTION);
-            aEvent.setContext(enrollmentId,
+            aEvent.setCourseContext(enrollmentId,
                     null, Values.DOWNLOAD_MODULE);
 
             tracker.track(Keys.BULK_DOWNLOAD_SECTION, aEvent.properties);
@@ -422,7 +422,7 @@ class ISegmentImpl implements ISegment {
             }
             aEvent.data.putValue(Keys.NO_OF_VIDEOS, videoCount);
             aEvent.properties.putValue(Keys.NAME, Values.BULK_DOWNLOAD_SUBSECTION);
-            aEvent.setContext(enrollmentId,
+            aEvent.setCourseContext(enrollmentId,
                     null, Values.DOWNLOAD_MODULE);
 
             tracker.track(Keys.BULK_DOWNLOAD_SUBSECTION, aEvent.properties);
@@ -446,7 +446,7 @@ class ISegmentImpl implements ISegment {
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, 
                     Values.SINGLE_VIDEO_DOWNLOAD);
-            aEvent.setContext(courseId, 
+            aEvent.setCourseContext(courseId,
                     unitUrl, Values.DOWNLOAD_MODULE);
             tracker.track(Keys.SINGLE_VIDEO_DOWNLOAD, aEvent.properties);
             return aEvent.properties;
@@ -472,7 +472,7 @@ class ISegmentImpl implements ISegment {
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
                     videoId, Values.FULLSREEN_TOGGLED);
             aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
-            aEvent.setContext(courseId, unitUrl, Values.VIDEOPLAYER);
+            aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
             tracker.track(Keys.SCREEN_TOGGLED, aEvent.properties);
             return aEvent.properties;
@@ -567,7 +567,7 @@ class ISegmentImpl implements ISegment {
             SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                     videoId, Values.TRANSCRIPT_LANGUAGE);
             aEvent.properties.putValue(Keys.LANGUAGE, lang);
-            aEvent.setContext(courseId, unitUrl,
+            aEvent.setCourseContext(courseId, unitUrl,
                     Values.VIDEOPLAYER);
 
             tracker.track(Keys.LANGUAGE_CLICKED, aEvent.properties);
@@ -582,7 +582,7 @@ class ISegmentImpl implements ISegment {
      * This function is used to track if user clicks on Sign up on landing page
      */
     @Override
-    public Properties trackUserDoesNotHaveAccount() {
+    public Properties trackUserSignUpForAccount() {
         try{
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
             aEvent.properties.putValue(Keys.NAME, Values.USER_NO_ACCOUNT);
