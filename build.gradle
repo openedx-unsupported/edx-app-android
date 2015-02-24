@@ -29,9 +29,7 @@ task copyUnitTestBuildArtifacts << { task ->
         standardOutput = hashPipe
     }
 
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMdd-HHmmss')
-    def destDir = "artifacts/${formattedDate}"
+    def destDir = "artifacts"
     task.project.exec {
         commandLine = ['mkdir', '-p', destDir]
     }
@@ -51,9 +49,7 @@ task copyAcceptanceTestBuildArtifacts << { task ->
         standardOutput = hashPipe
     }
 
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMdd-HHmmss')
-    def destDir = "artifacts/${formattedDate}"
+    def destDir = "artifacts"
     task.project.exec {
         commandLine = ['mkdir', '-p', destDir]
     }
