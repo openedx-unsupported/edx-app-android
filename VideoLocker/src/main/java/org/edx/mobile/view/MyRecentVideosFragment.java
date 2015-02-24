@@ -499,9 +499,25 @@ public class MyRecentVideosFragment extends Fragment {
             if (v != null) {
                 if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
                     videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
-                    // mark this as partially watches, as playing has started
-                    db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.PARTIALLY_WATCHED,
-                            setWatchedStateCallback);
+
+                    // video entry might not exist in the database, add it
+                    db.addVideoData(videoModel, new DataCallback<Long>() {
+                        @Override
+                        public void onResult(Long result) {
+                            try {
+                                // mark this as partially watches, as playing has started
+                                db.updateVideoWatchedState(videoModel.getVideoId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
+                                        setWatchedStateCallback);
+                            } catch (Exception ex) {
+                                logger.error(ex);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                        }
+                    });
                 }
             }
         } catch (Exception ex) {
