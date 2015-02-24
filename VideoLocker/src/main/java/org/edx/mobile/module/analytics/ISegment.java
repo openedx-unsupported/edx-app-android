@@ -203,10 +203,10 @@ public interface ISegment {
         public static final String USERLOGOUT = "edx.bi.app.user.logout";
         public static final String USERLOGIN = "edx.bi.app.user.login";
         public static final String APP_NAME = "edx.mobileapp.android";
-        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.sign_up";
-        public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
-        public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register";
-        public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll";
+        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
+        public static final String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
+        public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
+        public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
 
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";
