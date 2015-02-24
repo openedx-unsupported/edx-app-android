@@ -85,6 +85,14 @@
         android:text="@string/started_downloading"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/offline_access_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" >
+        <include layout="@layout/panel_offline_access" />
+    </LinearLayout>
+
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_chapter_tv"
         style="@style/bold_text"

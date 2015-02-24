@@ -39,10 +39,8 @@ public class LaunchActivity extends BaseFragmentActivity {
         });
 
         EButton sign_up_button = (EButton) findViewById(R.id.sign_up_btn);
-        if (Config.getInstance().isRegistrationAPIDeprecated()) {
-            // disable registration feature for deprecated API endpoint
-            sign_up_button.setVisibility(View.GONE);
-        } else {
+        if (Config.getInstance().isUseDeprecatedRegistrationAPI()) {
+            sign_up_button.setVisibility(View.VISIBLE);
             sign_up_button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -54,6 +52,9 @@ public class LaunchActivity extends BaseFragmentActivity {
                     Router.getInstance().showRegistration(LaunchActivity.this);
                 }
             });
+        } else {
+            // disable registration feature for deprecated API endpoint
+            sign_up_button.setVisibility(View.GONE);
         }
 
         try {

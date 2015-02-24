@@ -22,7 +22,7 @@ class ISegmentTrackerImpl implements ISegmentTracker {
         try {
             Config config = Config.getInstance();
 
-            String writeKey = config.getSegmentIOWriteKey();
+            String writeKey = config.getSegmentConfig().getSegmentWriteKey();
             boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
             int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);
             int flushInterval = context.getResources().getInteger(R.integer.analytics_flush_interval);

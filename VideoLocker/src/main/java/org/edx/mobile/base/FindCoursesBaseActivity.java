@@ -1,6 +1,5 @@
 package org.edx.mobile.base;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +18,10 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
-import org.edx.mobile.view.dialog.DialogFactory;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
@@ -77,7 +74,14 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     private void setupWebView() {
         if(webview!=null){
             isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview) {
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    // open URL in external browser
+                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
+                }
+            };
             client.setActionListener(this);
             client.setPageStatusListener(this);
         }
@@ -233,21 +237,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
         enrollForCourseTask.execute(courseId,emailOptIn);
-    }
-
-    @Override
-    public void onOpenExternalURL(String url) {
-        // verify if the app is running on zero-rated network?
-        if (Config.getInstance().getZeroRating().getEnabled()
-                && NetworkUtil.isOnZeroRatedNetwork(this)) {
-            // inform user if they get may charged for this browsing this URL
-            Dialog d = DialogFactory.getChargesApplyConfirmationDialog(this, url);
-            d.show();
-        }
-        else {
-            // open URL in external browser
-            BrowserUtil.open(this, url);
-        }
     }
 
     @Override

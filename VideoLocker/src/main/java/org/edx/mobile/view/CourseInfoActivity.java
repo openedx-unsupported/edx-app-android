@@ -35,7 +35,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
         super.onStart();
 
         String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
-        String url = Config.getInstance().getEnrollment()
+        String url = Config.getInstance().getEnrollmentConfig()
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
