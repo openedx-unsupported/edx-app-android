@@ -206,6 +206,7 @@ public class LoginActivity extends BaseFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        enableAllClicks();
         google.onActivityResult(requestCode, resultCode, data);
         facebook.onActivityResult(requestCode, resultCode, data);
     }
@@ -351,6 +352,40 @@ public class LoginActivity extends BaseFragmentActivity {
         NoNetworkFragment = SimpleAlertDialog.newInstance(args);
         NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void disableAllClicks() {
+        loginButtonLayout.setEnabled(false);
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setClickable(false);
+        imgFacebook.setEnabled(false);
+        imgGoogle.setClickable(false);
+        imgGoogle.setEnabled(false);
+
+        email_et.setEnabled(false);
+        password_et.setEnabled(false);
+
+        forgotPassword_tv.setEnabled(false);
+        eulaTv.setEnabled(false);
+    }
+
+    private void enableAllClicks() {
+        loginButtonLayout.setEnabled(true);
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setClickable(true);
+        imgFacebook.setEnabled(true);
+        imgGoogle.setClickable(true);
+        imgGoogle.setEnabled(true);
+
+        email_et.setEnabled(true);
+        password_et.setEnabled(true);
+
+        forgotPassword_tv.setEnabled(true);
+        eulaTv.setEnabled(true);
     }
 
     private void setLoginBtnDisabled() {
@@ -611,8 +646,10 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onException(Exception ex) {
+                        enableAllClicks();
                     }
                 };
+                disableAllClicks();
                 logout.execute();
             }
         }
@@ -645,8 +682,10 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onException(Exception ex) {
+                        enableAllClicks();
                     }
                 };
+                disableAllClicks();
                 logout.execute();
             }
         }
