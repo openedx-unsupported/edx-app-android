@@ -25,6 +25,7 @@ import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+
 import java.io.File;
 
 @SuppressWarnings("serial")
@@ -150,6 +151,15 @@ VideoListCallback, IPlayerEventCallback {
     }
 
     public synchronized void playVideoModel(final DownloadEntry video) {
+        try {
+            if (playerFragment.isPlaying()) {
+                if (video.getVideoId().equals(playerFragment.getPlayingVideo().getVideoId())) {
+                    logger.debug("this video is already being played, skipping play event");
+                    return;
+                }
+            }
+        } catch(Exception ex) {}
+
         try{
             View container = findViewById(R.id.container_player);
             container.setVisibility(View.VISIBLE);
@@ -223,9 +233,8 @@ VideoListCallback, IPlayerEventCallback {
 
                 filepath = video.getBestEncodingUrl(this);
             }
-            
-            logger.debug("playing from URL: " + filepath);
-            playerFragment.play(filepath, video.lastPlayedOffset, 
+
+            playerFragment.play(filepath, video.lastPlayedOffset,
                     video.getTitle(), transcript, video);
         }catch(Exception ex){
             logger.error(ex);

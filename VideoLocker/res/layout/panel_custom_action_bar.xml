@@ -9,16 +9,16 @@
         style="@style/custom_activity_title"/>
 
     <RelativeLayout android:id="@+id/actionbar_close_btn_layout"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:orientation="vertical">
         <ImageView
             android:id="@+id/actionbar_close_btn"
-            android:layout_width="21dp"
-            android:layout_height="21dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:src="@drawable/ic_close"
             android:contentDescription="@string/app_name"
             android:layout_centerInParent="true"/>
