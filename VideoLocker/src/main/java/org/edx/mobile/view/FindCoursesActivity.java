@@ -23,9 +23,19 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         }catch(Exception e){
             logger.error(e);
         }
+
+        reload();
+    }
+
+    @Override
+    protected void onOnline() {
+        super.onOnline();
+        reload();
+    }
+
+    private void reload() {
         String url = Config.getInstance().getEnrollmentConfig().getCourseSearchUrl();
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
     }
-
 }
