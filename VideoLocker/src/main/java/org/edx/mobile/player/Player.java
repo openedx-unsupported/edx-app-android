@@ -1,11 +1,7 @@
 package org.edx.mobile.player;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import org.edx.mobile.logger.Logger;
-import org.edx.mobile.view.OnSwipeListener;
 import android.graphics.Point;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -13,8 +9,15 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.view.SurfaceHolder;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View.OnClickListener;
+
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.view.OnSwipeListener;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 @SuppressWarnings("serial")
 public class Player extends MediaPlayer implements OnErrorListener,
@@ -311,18 +314,14 @@ OnCompletionListener, OnInfoListener, IPlayer {
             if (preview == null) {
                 return;
             }
-            preview.getHolder().addCallback(new SurfaceHolder.Callback() {
+            preview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
                 @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    // nothing to be done here
-                }
-
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
+                public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                     try {
                         logger.debug("Player state=" + state);
-                        setDisplay(holder);
+                        Surface surface = new Surface(surfaceTexture);
+                        setSurface(surface);
                         // keep screen ON
                         setScreenOnWhilePlaying(true);
                         logger.debug("Surface created, holder set");
@@ -331,15 +330,25 @@ OnCompletionListener, OnInfoListener, IPlayer {
                         if (!isPlaying()) {
                             seekTo(lastCurrentPosition);
                         }
-                    } catch(Exception ex) {
-                        logger.error(ex);;
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        ;
                     }
                 }
 
                 @Override
-                public void surfaceChanged(SurfaceHolder holder, int format,
-                        int width, int height) {
-                    // nothing to be done here
+                public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+                }
+
+                @Override
+                public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                    return true;
+                }
+
+                @Override
+                public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
                 }
             });
             preview.setOnTouchListener(new OnSwipeListener(preview.getContext()) {
