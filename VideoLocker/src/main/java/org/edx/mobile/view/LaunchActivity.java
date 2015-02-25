@@ -13,6 +13,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.custom.EButton;
@@ -25,6 +26,16 @@ public class LaunchActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Register for Login Receiver before checking for logged in user
+        enableLoginCallback();
+
+        //We need to stop the Launch Activity from launching if the user has logged in
+        PrefManager pm =new PrefManager(LaunchActivity.this, PrefManager.Pref.LOGIN);
+        if (pm.getCurrentUserProfile() != null) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_launch);
 
         //Activity override animation has to be handled if the Launch Activity
@@ -68,8 +79,6 @@ public class LaunchActivity extends BaseFragmentActivity {
         } catch(Exception e) {
             logger.error(e);
         }
-
-        enableLoginCallback();
 
         fetchRegistrationDescription();
     }
