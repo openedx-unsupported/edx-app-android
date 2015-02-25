@@ -43,6 +43,7 @@ public class WebViewDialogFragment extends DialogFragment {
                 container, false);
 
         progress = (ProgressBar) v.findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
 
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
@@ -50,6 +51,8 @@ public class WebViewDialogFragment extends DialogFragment {
 
                 @Override
                 public void onOpenExternalURL(String url) {
+                    progress.setVisibility(View.GONE);
+
                     // open URL in external browser
                     BrowserUtil.open(getActivity(), url);
                 }
@@ -73,7 +76,7 @@ public class WebViewDialogFragment extends DialogFragment {
 
                 @Override
                 public void onPagePartiallyLoaded() {
-                    //Nothing to do here
+                    progress.setVisibility(View.GONE);
                 }
             });
 

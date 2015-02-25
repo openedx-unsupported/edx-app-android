@@ -103,9 +103,18 @@ public class RegisterActivity extends BaseFragmentActivity {
     }
 
     public void showAgreement(RegistrationAgreement agreement) {
-        showWebDialog(agreement.getLink(),
-                true,
-                agreement.getText());
+        if (agreement.isInAppEULALink()) {
+            // show EULA license that is shipped with app
+            showWebDialog(getString(R.string.eula_file_link),
+                    true,
+                    agreement.getText());
+        }
+        else {
+            // for any other link, open agreement link in a webview container
+            showWebDialog(agreement.getLink(),
+                    true,
+                    agreement.getText());
+        }
     }
 
     @Override
