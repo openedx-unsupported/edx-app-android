@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
 import org.edx.mobile.R;
@@ -109,6 +108,15 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
     }
 
     public synchronized void playVideoModel(final DownloadEntry video) {
+        try {
+            if (playerFragment.isPlaying()) {
+                if (video.getVideoId().equals(playerFragment.getPlayingVideo().getVideoId())) {
+                    logger.debug("this video is already being played, skipping play event");
+                    return;
+                }
+            }
+        } catch(Exception ex) {}
+
         try{
             if (playerFragment == null) {
                 return;
@@ -183,9 +191,8 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                 logger.warn("Local file path not available");
                 filepath = video.getBestEncodingUrl(this);
             }
-            
-            logger.debug("Playing from URL: " + filepath);
-            playerFragment.play(filepath, video.lastPlayedOffset, 
+
+            playerFragment.play(filepath, video.lastPlayedOffset,
                     video.getTitle(), transcript, video);
         }catch(Exception e){
             logger.error(e);

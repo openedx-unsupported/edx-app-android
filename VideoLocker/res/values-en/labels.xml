@@ -6,7 +6,7 @@
     <string name="lbl_offline_mode_desc">In offline mode, you can only view videos that are saved on your device.</string>
     <string name="lbl_open_in_browser">Open in Browser</string>
     <string name="lbl_view_on_web">VIEW ON WEB</string>
-    <string name="lbl_showing_only_videos">Showing only Videos</string>
+    <string name="lbl_showing_only_videos">Showing only videos</string>
     
     <!-- open in browser 14/07/2014 -->
     <string name="lbl_browser_components">Some content cannot be viewed in this app.</string>

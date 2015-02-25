@@ -78,7 +78,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
         return R.layout.fragment_my_friends_course_list_tab;
     }
 
-    protected void loadData(boolean forceRefresh) {
+    protected void loadData(boolean forceRefresh,boolean showProgress) {
 
         if(forceRefresh){
             Intent clearFriends = new Intent(getActivity(), FetchCourseFriendsService.class);

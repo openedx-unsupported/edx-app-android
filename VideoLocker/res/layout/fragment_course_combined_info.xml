@@ -249,26 +249,43 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/grey_act_background"
+            android:layout_height="1dp"
+            android:background="@color/grey"
             android:gravity="center" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/combined_course_handout_text"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/view_handouts"
-            style="@style/regular_grey_text"
-            android:paddingLeft="@dimen/course_detail_margin_left"
-            android:paddingRight="@dimen/course_detail_margin_left"
-            android:paddingTop="@dimen/course_detail_margin"
-            android:paddingBottom="@dimen/course_detail_margin"
-            android:textSize="16sp"/>
+            android:background="@android:color/white">
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/combined_course_handout_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/view_handouts"
+                style="@style/regular_grey_text"
+                android:paddingLeft="@dimen/course_detail_margin_left"
+                android:paddingRight="@dimen/course_detail_margin_left"
+                android:paddingTop="@dimen/course_detail_margin"
+                android:paddingBottom="@dimen/course_detail_margin"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:id="@+id/next_arrow"
+                android:layout_width="10dp"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="14dp"
+                android:background="@drawable/ic_next_default"
+                android:contentDescription="@string/course_content"
+                android:scaleType="fitXY"/>
+            </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/grey_act_background"
+            android:layout_height="1dp"
+            android:background="@color/grey"
             android:gravity="center" />
 
         <RelativeLayout
@@ -294,7 +311,6 @@
                     android:paddingTop="@dimen/course_detail_margin"
                     android:paddingBottom="@dimen/course_detail_margin"
                     android:background="@color/grey_2"
-                    android:layout_marginBottom="8dp"
                     android:textSize="14dp" />
 
                 <LinearLayout

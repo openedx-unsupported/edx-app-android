@@ -239,6 +239,12 @@ public class RegisterActivity extends BaseFragmentActivity {
             // do NOT proceed if validations are failed
             if (hasError) {  return;  }
 
+            try {
+                segIO.trackCreateAccountClicked();
+            }catch(Exception e){
+                logger.error(e);
+            }
+
             setElementsDisabled();
             showProgress();
 

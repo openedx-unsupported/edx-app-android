@@ -109,12 +109,22 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackUserDoesNotHaveAccount() {
+    public Properties trackUserSignUpForAccount() {
         return null;
     }
 
     @Override
     public Properties trackUserFindsCourses() {
+        return null;
+    }
+
+    @Override
+    public Properties trackCreateAccountClicked() {
+            return null;
+    }
+
+    @Override
+    public Properties trackEnrollClicked(String courseId, boolean email_opt_in) {
         return null;
     }
 

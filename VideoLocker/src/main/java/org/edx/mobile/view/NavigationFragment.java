@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -113,6 +112,12 @@ public class NavigationFragment extends Fragment {
             tvFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        ISegment segIO = SegmentFactory.getInstance();
+                        segIO.trackUserFindsCourses();
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
                     if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
@@ -214,7 +219,7 @@ public class NavigationFragment extends Fragment {
                 segIO.trackUserLogout();
                 segIO.resetIdentifyUser();
 
-                Router.getInstance().showLaunchScreen(getActivity());
+                Router.getInstance().showLaunchScreen(getActivity(),true);
                 Router.getInstance().showLogin(getActivity());
 
             }
