@@ -90,7 +90,7 @@ class Configuration {
         // the meta-data at compile time so resource references don't work
         def fabric = config.get('FABRIC');
         if (fabric != null) {
-            def fabric_key = fabric.get('FABRIC_KEY') ?: ""
+            def fabric_key = fabric.get('FABRIC_KEY')
             def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
             if (fabric_key != null && fabric_secret != null) {
                 def crashlyticsPath = projectDir + '/crashlytics.properties'
@@ -232,6 +232,7 @@ android {
     buildTypes {
         debug {
             testCoverageEnabled true
+            // disable crashlytics for debug build
             ext.enableCrashlytics = false
         }
 

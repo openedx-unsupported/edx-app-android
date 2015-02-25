@@ -39,6 +39,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -494,19 +495,7 @@ public class MyRecentVideosFragment extends Fragment {
 
 
     public void markPlaying() {
-        try {
-            DownloadEntry v = videoModel;
-            if (v != null) {
-                if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
-                    videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
-                    // mark this as partially watches, as playing has started
-                    db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.PARTIALLY_WATCHED,
-                            setWatchedStateCallback);
-                }
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+        storage.markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     public void saveCurrentPlaybackPosition(int offset) {
@@ -530,7 +519,7 @@ public class MyRecentVideosFragment extends Fragment {
                     videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                     // mark this as partially watches, as playing has started
                     db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
-                            setWatchedStateCallback);
+                            watchedStateCallback);
                 }
             }
         } catch (Exception ex) {
@@ -736,7 +725,7 @@ public class MyRecentVideosFragment extends Fragment {
         segIO = SegmentFactory.getInstance();
     }
 
-    private DataCallback<Integer> setWatchedStateCallback = new DataCallback<Integer>() {
+    private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
             logger.debug("Watched State Updated");
