@@ -39,12 +39,11 @@ public class SplashActivity extends BaseFragmentActivity {
                         intent = new Intent(SplashActivity.this, MyCoursesListActivity.class);
                         startActivity(intent);
                     } else {
-                        Router.getInstance().showLaunchScreen(SplashActivity.this);
+                        Router.getInstance().showLaunchScreen(SplashActivity.this, false);
                     }
                     finish();
                 }
             }
         }, SPLASH_TIME_OUT);
     }
-    
 }

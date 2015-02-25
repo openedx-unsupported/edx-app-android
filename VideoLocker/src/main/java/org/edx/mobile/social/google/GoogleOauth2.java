@@ -162,7 +162,13 @@ public class GoogleOauth2 extends ISocialImpl {
                 // Toast.makeText(this, R.string.pick_account, Toast.LENGTH_SHORT).show();
             }
         }
-        // Later, more code will go here to handle the result from some exceptions...
+        else if (requestCode == REQUEST_AUTHORIZATION) {
+            // after authorization, try to get token again
+            if (resultCode == Activity.RESULT_OK) {
+                // re-try go get the auth token
+                getUsername();
+            }
+        }
     }
     
     @Override

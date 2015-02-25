@@ -34,7 +34,6 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: test the path_id replacement and ensure if curly braces are required in the URL or be removed
         String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
         String url = Config.getInstance().getEnrollmentConfig()
                 .getCourseInfoUrlTemplate()

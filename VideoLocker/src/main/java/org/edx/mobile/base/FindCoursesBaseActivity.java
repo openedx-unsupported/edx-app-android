@@ -190,6 +190,12 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
             return;
         }
 
+        try {
+            segIO.trackEnrollClicked(courseId, emailOptIn);
+        }catch(Exception e){
+            logger.error(e);
+        }
+
         isTaskInProgress = true;
 
         logger.debug("CourseId - "+courseId);
