@@ -47,8 +47,8 @@ after_script:
   - ~/bin/artifacts upload artifacts
 
 branches:
-    only:
-      - master
+  only:
+    - master
 
 # Enable caching to speed up the build
 cache:
