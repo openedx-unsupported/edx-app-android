@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -103,7 +104,18 @@ public class RegisterActivity extends BaseFragmentActivity {
     }
 
     public void showAgreement(RegistrationAgreement agreement) {
-        if (agreement.isInAppEULALink()) {
+        boolean isInAppEULALink = false;
+        try {
+            Uri uri = Uri.parse(agreement.getLink());
+            if (uri.getScheme().equals("edxapp")
+                    && uri.getHost().equals("show_eula")) {
+                isInAppEULALink = true;
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        if (isInAppEULALink) {
             // show EULA license that is shipped with app
             showWebDialog(getString(R.string.eula_file_link),
                     true,
