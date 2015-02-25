@@ -210,10 +210,13 @@ public class MyRecentVideosFragment extends Fragment {
     }
 
     private void showPlayer() {
-        if (!isVisible()) {
-            logger.warn("not showing player because fragment is NOT visible");
+        if (!isResumed() || isRemoving()) {
+            logger.warn("not showing player because fragment is being stopped");
             return;
         }
+
+        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+        activity.disableTabChange();
 
         hideDeletePanel(getView());
         try {
@@ -227,7 +230,7 @@ public class MyRecentVideosFragment extends Fragment {
             }
 
             // this is for INLINE player only
-            if (isResumed() && !isLandscape()) {
+            if (isResumed() && !isLandscape() && !isRemoving()) {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 if (containerActivity.playerFragment.isAdded()) {
@@ -245,6 +248,13 @@ public class MyRecentVideosFragment extends Fragment {
         } catch (Exception ex) {
             logger.error(ex);
             logger.warn("Error in showing player");
+        } finally {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (activity != null)   activity.enableTabChange();
+                }
+            }, 300);
         }
     }
 
@@ -278,7 +288,8 @@ public class MyRecentVideosFragment extends Fragment {
                 public void run() {
                     try {
                         // hide checkbox in action bar
-                        ((MyVideosTabActivity) getActivity()).hideCheckBox();
+                        MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+                        if (activity != null)   activity.hideCheckBox();
 
                         // hide checkboxes in list
                         notifyAdapter();

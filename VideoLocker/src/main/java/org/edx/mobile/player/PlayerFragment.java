@@ -817,8 +817,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void enterFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
@@ -844,8 +845,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void exitFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
