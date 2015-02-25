@@ -258,6 +258,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
             this.seekToWhenPrepared = seekTo;
             this.playWhenPrepared = playWhenPrepared;
             this.isFreeze = false;
+            this.lastCurrentPosition = 0; // reset last seek position
 
             // re-display controller, so that it shows latest data
             if (this.controller != null) {
