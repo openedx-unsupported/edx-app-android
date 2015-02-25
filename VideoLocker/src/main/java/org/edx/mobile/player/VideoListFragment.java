@@ -39,7 +39,6 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.VideoListActivity;
 import org.edx.mobile.view.adapters.MyAllVideoAdapter;
 import org.edx.mobile.view.adapters.OfflineVideoAdapter;
@@ -824,35 +823,7 @@ public class VideoListFragment extends Fragment {
     };
 
     public void markPlaying() {
-        try {
-            final DownloadEntry v = videoModel;
-            if (v != null) {
-                if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
-                    videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
-                    
-                    // insert video entry as it might not exist in the database
-                    db.addVideoData(videoModel, new DataCallback<Long>() {
-                        @Override
-                        public void onResult(Long result) {
-                            try {
-                                // mark this as partially watches, as playing has started
-                                db.updateVideoWatchedState(videoModel.getVideoId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
-                                        setWatchedStateCallback);
-                            } catch (Exception ex) {
-                                logger.error(ex);
-                            }
-                        }
-
-                        @Override
-                        public void onFail(Exception ex) {
-                            logger.error(ex);
-                        }
-                    });
-                }
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+        storage.markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     /**
@@ -905,7 +876,7 @@ public class VideoListFragment extends Fragment {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
                 db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
-                        setWatchedStateCallback);
+                        watchedStateCallback);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -1309,7 +1280,7 @@ public class VideoListFragment extends Fragment {
 
     }
 
-    private DataCallback<Integer> setWatchedStateCallback = new DataCallback<Integer>() {
+    private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
             logger.debug("Watched State Updated");
