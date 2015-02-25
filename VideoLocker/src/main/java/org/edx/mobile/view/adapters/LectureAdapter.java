@@ -36,7 +36,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
     public void render(BaseViewHolder tag, final LectureModel lectureData) {
         final ViewHolder holder = (ViewHolder) tag;
 
-        holder.lectureTitle.setText(lectureData.name);
+        holder.lecture_title.setText(lectureData.name);
         if (lectureData.videos != null) {
             final int totalCount = lectureData.videos.size();
             holder.no_of_videos.setVisibility(View.VISIBLE);
@@ -45,7 +45,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                     lectureData.chapter.chapter, lectureData.name, null);
             int videoCount = totalCount - inProcessCount;
             if (videoCount > 0) {
-                holder.progresslayout.setVisibility(View.GONE);
+                holder.progress_layout.setVisibility(View.INVISIBLE);
                 holder.bulk_download_videos_layout.setVisibility(View.VISIBLE);
                 holder.bulk_download_videos_layout.setTag(lectureData);
                 holder.bulk_download_videos_layout
@@ -53,7 +53,7 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                     @Override
                     public void onClick(View v) {
                         download(lectureData);
-                        holder.progresslayout.setVisibility(View.VISIBLE);
+                        holder.progress_layout.setVisibility(View.VISIBLE);
                         holder.bulk_download_videos_layout.setVisibility(View.INVISIBLE); 
                     }
                 });
@@ -70,10 +70,10 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                             public void onResult(Integer result) {
                                 int percent = result;
                                 if(percent>=0 && percent<100){
-                                    holder.progresslayout.setVisibility(View.VISIBLE);
+                                    holder.progress_layout.setVisibility(View.VISIBLE);
                                     holder.download_pw.setProgressPercent(percent);
                                 }else{
-                                    holder.progresslayout.setVisibility(View.GONE);
+                                    holder.progress_layout.setVisibility(View.INVISIBLE);
                                 }
                             }
                             @Override
@@ -85,20 +85,20 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                         logger.error(e);
                     }
                 }else{
-                    holder.progresslayout.setVisibility(View.GONE);
+                    holder.progress_layout.setVisibility(View.INVISIBLE);
                 }
             }
         } else {
             holder.no_of_videos.setVisibility(View.INVISIBLE);
             holder.bulk_download_videos_layout.setVisibility(View.INVISIBLE);
-            holder.progresslayout.setVisibility(View.GONE);
+            holder.progress_layout.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.lectureTitle = (TextView) convertView
+        holder.lecture_title = (TextView) convertView
                 .findViewById(R.id.chapter_name);
         holder.no_of_videos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
@@ -106,17 +106,17 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                 .findViewById(R.id.bulk_download_layout);
         holder.download_pw = (ProgressWheel) convertView.
                 findViewById(R.id.progress_wheel);
-        holder.progresslayout = (LinearLayout) convertView
+        holder.progress_layout = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView lectureTitle;
+        TextView lecture_title;
         TextView no_of_videos;
         LinearLayout bulk_download_videos_layout;
         ProgressWheel download_pw;
-        LinearLayout progresslayout;
+        LinearLayout progress_layout;
     }
 
     @Override
