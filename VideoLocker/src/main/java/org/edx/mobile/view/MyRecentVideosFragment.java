@@ -249,6 +249,11 @@ public class MyRecentVideosFragment extends Fragment {
             logger.error(ex);
             logger.warn("Error in showing player");
         } finally {
+            /*
+            After a while, enable tabs.
+            300 milliseconds is enough time for player view to be shown.
+            Enabling the tabs immediately will allow simultaneous taps and will let the player play in background.
+            */
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
