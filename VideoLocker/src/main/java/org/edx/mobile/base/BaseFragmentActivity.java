@@ -475,7 +475,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 }else{
                     if(db!=null){
                         boolean downloading = db.isAnyVideoDownloading(null);
-                        logger.debug("isDownloading "+downloading);
                         if(!downloading){
                             progressMenuItem.setVisible(false);
                         }else{
@@ -654,7 +653,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         @Override
         public void onResult(Integer result) {
             int progressPercent = result;
-            logger.debug("Progress Percentage "+progressPercent);
             if(progressPercent >= 0 && progressPercent <= 100){
                 totalProgress.setProgressPercent(progressPercent);
             }
