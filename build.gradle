@@ -20,3 +20,37 @@ project.ext {
         RELEASE_KEY_PASSWORD = "*****"
     }
 }
+
+// task that creates 'artifacts' directory
+task createBuildArtifactsDirectory << { task ->
+    def hashPipe = new ByteArrayOutputStream()
+    task.project.exec {
+        commandLine = ['git', 'rev-parse', '--verify', 'HEAD']
+        standardOutput = hashPipe
+    }
+
+    def destDir = "artifacts"
+    task.project.exec {
+        commandLine = ['mkdir', '-p', destDir]
+    }
+}
+
+// Copies unit test reports to the 'artifacts' directory
+task copyUnitTestBuildArtifacts << { task ->
+    // copy unit test reports
+    def srcPath = "VideoLocker/build/outputs/reports"
+    task.project.exec {
+        commandLine = ['cp', '-R', srcPath, 'artifacts']
+    }
+}
+copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
+
+// Copies acceptance test reports to the 'artifacts' directory
+task copyAcceptanceTestBuildArtifacts << { task ->
+    // copy acceptance test reports
+    srcPath = "AcceptanceTests/Test-Reports"
+    task.project.exec {
+        commandLine = ['cp', '-R', srcPath, 'artifacts']
+    }
+}
+copyAcceptanceTestBuildArtifacts.dependsOn createBuildArtifactsDirectory

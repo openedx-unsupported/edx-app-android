@@ -125,4 +125,10 @@ public interface IStorage {
      */
     void markDownloadAsComplete(long dmId, DataCallback<IVideoModel> callback);
 
+    /**
+     * Marks given video as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.
+     * @param videoModel
+     * @param watchedStateCallback
+     */
+    void markVideoPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
 }

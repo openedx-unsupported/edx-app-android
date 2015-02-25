@@ -36,6 +36,7 @@ import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
@@ -1657,5 +1658,21 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 logger.debug("Player controller shown because in PORTRAIT mode");
             }
         }
+    }
+
+    /**
+     * Returns the video model that this fragment is supposed to play.
+     * @return
+     */
+    public IVideoModel getPlayingVideo() {
+        return videoEntry;
+    }
+
+    /**
+     * Returns true if playback is ongoing, false otherwise.
+     * @return
+     */
+    public boolean isPlaying() {
+        return (player != null && player.isPlaying());
     }
 }
