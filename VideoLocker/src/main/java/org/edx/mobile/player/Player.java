@@ -343,7 +343,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
                 @Override
                 public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                    return false;
+                    return true;
                 }
 
                 @Override
