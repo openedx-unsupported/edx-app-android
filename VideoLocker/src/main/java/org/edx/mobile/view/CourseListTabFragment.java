@@ -126,7 +126,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
             }
         });
         uiHelper.onCreate(savedInstanceState);
-        loadData(false);
+        loadData(false,false);
 
     }
 
@@ -167,7 +167,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(true);
+                loadData(true,false);
             }
         });
 
@@ -188,7 +188,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     protected abstract int getViewResourceID();
 
-    protected abstract void loadData(boolean forceRefresh);
+    protected abstract void loadData(boolean forceRefresh, boolean showProgress);
 
 
     protected void invalidateSwipeFunctionality(){
