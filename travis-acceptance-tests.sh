@@ -6,7 +6,7 @@ set -e
 # create debug build
 pwd
 echo "[INFO] running assembleProdDebug ..."
-./gradlew assembleProdDebug exportSauceKeys
+./gradlew assembleProdDebug
 echo "[INFO] build created"
 
 # get current timestamp, to be used in apk name
@@ -40,3 +40,11 @@ echo "[INFO] apk uploaded"
 echo "[INFO] running tests ..."
 mvn test -DappPath=sauce-storage:$APK_NAME -DosVersion="4.4"  -DdeviceOS=android -DdeviceName="Android Emulator" -DtestngXml=android.xml -DsauceKey=$SAUCE_KEY -DsauceUser=$SAUCE_USERNAME -DsauceBuildName=$APK_NAME
 echo "[INFO] test run finished!"
+
+# exit from the AcceptanceTests folder
+cd ..
+pwd
+
+# upload reports to artifacts folder
+./gradlew copyAcceptanceTestBuildArtifacts
+echo "[INFO] acceptance test reports are being uploaded"
