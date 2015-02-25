@@ -31,7 +31,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -109,7 +108,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null){
+                    if(player!=null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -1617,6 +1616,11 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
         try{
+            if (callback != null) {
+                callback.saveCurrentPlaybackPosition((int) newPosition);
+                logger.debug("Current position saved: " + newPosition);
+            }
+
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
