@@ -3,6 +3,7 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -500,6 +501,39 @@ public class Storage implements IStorage {
                 }
             });
             maintenanceThread.start();
+        }
+    }
+
+    @Override
+    public void markVideoPlaying(DownloadEntry videoModel, final DataCallback<Integer> watchedStateCallback) {
+        try {
+            final DownloadEntry v = videoModel;
+            if (v != null) {
+                if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
+                    videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
+
+                    // video entry might not exist in the database, add it
+                    db.addVideoData(videoModel, new DataCallback<Long>() {
+                        @Override
+                        public void onResult(Long result) {
+                            try {
+                                // mark this as partially watches, as playing has started
+                                db.updateVideoWatchedState(v.getVideoId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
+                                        watchedStateCallback);
+                            } catch (Exception ex) {
+                                logger.error(ex);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                        }
+                    });
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 }
