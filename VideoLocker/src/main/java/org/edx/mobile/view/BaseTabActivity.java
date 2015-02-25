@@ -45,8 +45,7 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
         for (int i = 0; i < tabs.size(); i ++){
             TabModel tab = tabs.get(i);
             tabHost.addTab(
-                    tabHost.newTabSpec(tab.getTag())
-                            .setIndicator(tab.getName(), null),
+                    tabHost.newTabSpec(tab.getTag()).setIndicator(tab.getName(), null),
                     tab.getFragmentClass(),
                     tab.getFragmentArgs());
         }
@@ -111,5 +110,4 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
     protected abstract List<TabModel> tabsToAdd();
 
     protected  abstract int getDefaultTab();
-
 }

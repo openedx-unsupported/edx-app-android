@@ -49,22 +49,19 @@ public class MainApplication extends Application {
         createImageCache();
 
         // initialize SegmentIO
-        if (Config.getInstance().getThirdPartyTraffic().isSegmentEnabled()
-                && Config.getInstance().getSegmentIOWriteKey() != null) {
+        if (Config.getInstance().getSegmentConfig().isEnabled()) {
             SegmentFactory.makeInstance(this);
         }
 
         // initialize Fabric
-        if (Config.getInstance().getThirdPartyTraffic().isFabricEnabled()
-                && Config.getInstance().getFabricKey() != null) {
+        if (Config.getInstance().getFabricConfig().isEnabled()) {
             Fabric.with(this, new Crashlytics());
         }
 
         // initialize NewRelic with crash reporting disabled
-        if (Config.getInstance().getThirdPartyTraffic().isNewRelicEnabled()
-                && Config.getInstance().getNewRelicKey() != null) {
+        if (Config.getInstance().getNewRelicConfig().isEnabled()) {
             //Crash reporting for new relic has been disabled
-            NewRelic.withApplicationToken(Config.getInstance().getNewRelicKey())
+            NewRelic.withApplicationToken(Config.getInstance().getNewRelicConfig().getNewRelicKey())
                     .withCrashReportingEnabled(false)
                     .start(this);
         }
@@ -72,9 +69,8 @@ public class MainApplication extends Application {
         // initialize Facebook SDK
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
         if ( !isOnZeroRatedNetwork
-                && Config.getInstance().getThirdPartyTraffic().isFacebookEnabled()
-                && Config.getInstance().getFacebookAppId() != null) {
-            com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookAppId());
+                && Config.getInstance().getFacebookConfig().isEnabled()) {
+            com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookConfig().getFacebookAppId());
         }
 
         // try repair of download data if app version is updated

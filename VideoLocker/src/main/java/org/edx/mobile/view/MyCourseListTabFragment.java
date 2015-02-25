@@ -40,31 +40,15 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public void handleCourseClick(EnrolledCoursesResponse model) {
-        try {
-            Bundle courseBundle = new Bundle();
-            courseBundle.putSerializable("enrollment", model);
-            courseBundle.putBoolean("announcemnts", false);
-
-            Intent courseDetail = new Intent(getActivity(),
-                    CourseDetailTabActivity.class);
-            courseDetail.putExtra("bundle", courseBundle);
-            startActivity(courseDetail);
-
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
+        Router.getInstance().showCourseDetailTabs(getActivity(), model, false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = super.onCreateView(inflater, container, savedInstanceState);
         noCourseText = (TextView) view.findViewById(R.id.no_course_tv);
-
         return view;
-
     }
-
 
     protected void loadData(boolean forceRefresh) {
         if(forceRefresh){
