@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="2dp"
     android:orientation="vertical">
 
     <org.edx.mobile.view.custom.EEditText
