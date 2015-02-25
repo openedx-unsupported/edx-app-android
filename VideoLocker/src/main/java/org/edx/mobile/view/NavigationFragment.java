@@ -112,6 +112,12 @@ public class NavigationFragment extends Fragment {
             tvFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        ISegment segIO = SegmentFactory.getInstance();
+                        segIO.trackUserFindsCourses();
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
                     if (Config.getInstance().getEnrollmentConfig().isEnabled()) {

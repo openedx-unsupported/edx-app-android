@@ -50,6 +50,11 @@ public class LaunchActivity extends BaseFragmentActivity {
             sign_up_button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        segIO.trackUserSignUpForAccount();
+                    }catch(Exception e){
+                        logger.error(e);
+                    }
                     Router.getInstance().showRegistration(LaunchActivity.this);
                 }
             });
