@@ -60,8 +60,9 @@ public class Router {
         sourceActivity.startActivity(settingsIntent);
     }
 
-    public void showLaunchScreen(Activity sourceActivity) {
+    public void showLaunchScreen(Activity sourceActivity, boolean overrideAnimation) {
         Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG,overrideAnimation);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         sourceActivity.startActivity(launchIntent);
     }
