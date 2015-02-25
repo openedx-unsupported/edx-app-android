@@ -190,7 +190,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     protected void reloadMyCoursesData() {
         CourseListTabFragment fragment = (CourseListTabFragment) getFragmentByTag("my_course_tab_fragment");
         if (fragment != null) {
-            fragment.loadData(false);
+            fragment.loadData(false, true);
         }
     }
 }
