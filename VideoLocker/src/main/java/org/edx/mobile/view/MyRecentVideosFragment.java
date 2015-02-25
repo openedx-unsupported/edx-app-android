@@ -210,6 +210,11 @@ public class MyRecentVideosFragment extends Fragment {
     }
 
     private void showPlayer() {
+        if (!isVisible()) {
+            logger.warn("not showing player because fragment is NOT visible");
+            return;
+        }
+
         hideDeletePanel(getView());
         try {
             View container = getView().findViewById(R.id.container_player);
