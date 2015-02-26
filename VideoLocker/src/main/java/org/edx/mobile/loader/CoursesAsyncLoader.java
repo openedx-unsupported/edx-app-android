@@ -6,6 +6,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.Config;
 
 import java.util.List;
 import java.util.Observable;
@@ -34,7 +35,8 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
 
         Api api = new Api(getContext());
-        if (this.oauthToken == null){
+        // FIXME: (PR#120) Should this Loader class really be called when social feature is disabled?
+        if (Config.getInstance().getSocialSharingConfig().isEnabled() && this.oauthToken == null) {
             return null;
         }
 

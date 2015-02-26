@@ -210,6 +210,14 @@ public class MyRecentVideosFragment extends Fragment {
     }
 
     private void showPlayer() {
+        if (!isResumed() || isRemoving()) {
+            logger.warn("not showing player because fragment is being stopped");
+            return;
+        }
+
+        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+        activity.setTabChangeEnabled(false);
+
         hideDeletePanel(getView());
         try {
             View container = getView().findViewById(R.id.container_player);
@@ -222,7 +230,7 @@ public class MyRecentVideosFragment extends Fragment {
             }
 
             // this is for INLINE player only
-            if (isResumed() && !isLandscape()) {
+            if (isResumed() && !isLandscape() && !isRemoving()) {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 if (containerActivity.playerFragment.isAdded()) {
@@ -240,6 +248,18 @@ public class MyRecentVideosFragment extends Fragment {
         } catch (Exception ex) {
             logger.error(ex);
             logger.warn("Error in showing player");
+        } finally {
+            /*
+            After a while, enable tabs.
+            300 milliseconds is enough time for player view to be shown.
+            Enabling the tabs immediately will allow simultaneous taps and will let the player play in background.
+            */
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (activity != null)   activity.setTabChangeEnabled(true);
+                }
+            }, 300);
         }
     }
 
@@ -273,7 +293,8 @@ public class MyRecentVideosFragment extends Fragment {
                 public void run() {
                     try {
                         // hide checkbox in action bar
-                        ((MyVideosTabActivity) getActivity()).hideCheckBox();
+                        MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+                        if (activity != null)   activity.hideCheckBox();
 
                         // hide checkboxes in list
                         notifyAdapter();
