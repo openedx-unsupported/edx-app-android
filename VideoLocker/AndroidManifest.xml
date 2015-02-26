@@ -50,6 +50,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <!-- Required by app to detect phone calls and manage playback accordingly -->
+    <!-- Required by telephony service to get mobile network information -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
