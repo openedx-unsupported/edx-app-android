@@ -216,7 +216,7 @@ public class MyRecentVideosFragment extends Fragment {
         }
 
         final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
-        activity.disableTabChange();
+        activity.setTabChangeEnabled(false);
 
         hideDeletePanel(getView());
         try {
@@ -257,7 +257,7 @@ public class MyRecentVideosFragment extends Fragment {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (activity != null)   activity.enableTabChange();
+                    if (activity != null)   activity.setTabChangeEnabled(true);
                 }
             }, 300);
         }
