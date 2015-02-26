@@ -171,24 +171,12 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,DbStructure.Table.DOWNLOADS, 
                 new String[]{DbStructure.Column.DM_ID},
                 DbStructure.Column.DOWNLOADED + "=? AND "+ DbStructure.Column.EID + "=? AND " 
-                        + DbStructure.Column.CHAPTER + "=? AND "+ DbStructure.Column.USERNAME + "=?",
+                        + DbStructure.Column.CHAPTER + "=? AND "
+                        + DbStructure.Column.SECTION + "=? AND "
+                        + DbStructure.Column.USERNAME + "=?",
                         new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), 
-                enrollmentId, chapter,username}, null, Long.class);
+                enrollmentId, chapter, section, username}, null, Long.class);
         op.setCallback(callback);
-        /*
-         new DataCallback<List<Long>>() {
-            @Override
-            public void onResult(List<Long> list) {
-                Long[] dmids = list.toArray(new Long[0]);
-                callback.sendResult(dmids);
-            }
-
-            @Override
-            public void onFail(Exception ex) {
-                callback.sendException(ex);
-            }
-        }
-         */
         return enqueue(op);
     }
 
