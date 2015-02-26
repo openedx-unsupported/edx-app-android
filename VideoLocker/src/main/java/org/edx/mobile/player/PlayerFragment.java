@@ -108,7 +108,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null && player.isPlaying()){
+                    if(player!=null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -1609,6 +1609,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if (callback != null) {
                 // mark last seeked position
                 callback.saveCurrentPlaybackPosition((int) newPosition);
+                logger.debug("Current position saved: " + newPosition);
             }
 
             if(isRewindClicked){
