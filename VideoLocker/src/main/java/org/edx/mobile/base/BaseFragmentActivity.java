@@ -258,6 +258,17 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         applyTransitionPrev();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            // App crashes on a few devices (mostly 4.0.+) on super method call
+            // This is a workaround to avoid app crash, app still works even if Exception occurs
+            super.onRestoreInstanceState(savedInstanceState);
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+    }
+
     //this is configure the Navigation Drawer of the application
     protected void configureDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
