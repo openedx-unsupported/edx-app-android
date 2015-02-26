@@ -35,6 +35,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
 
         Api api = new Api(getContext());
+        // FIXME: (PR#120) Should this Loader class really be called when social feature is disabled?
         if (Config.getInstance().getSocialSharingConfig().isEnabled() && this.oauthToken == null) {
             return null;
         }
