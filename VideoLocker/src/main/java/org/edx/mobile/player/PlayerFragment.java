@@ -31,7 +31,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -109,7 +108,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null){
+                    if(player!=null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -341,13 +340,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             orientation.stop();
             handler.removeCallbacks(unfreezeCallback);
-            if(player!=null){
-                player.freeze();
-                if (callback != null) {
-                    // mark last freeze position
-                    callback.saveCurrentPlaybackPosition(player.getLastFreezePosition());
-                }
-            }
+            freezePlayer();
         }catch(Exception e){
             logger.error(e);
         }
@@ -360,8 +353,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             audioManager.abandonAudioFocus(this);
         }
         if(player!=null){
-            player.freeze();
             handler.removeMessages(MSG_TYPE_TICK);
+            freezePlayer();
         }
     }
 
@@ -419,7 +412,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 player.setPausedOnUnfreeze();
             }
             
-            player.freeze();
+            freezePlayer();
             outState.putSerializable("player", player);
         }
         super.onSaveInstanceState(outState);
@@ -685,9 +678,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public void onPrepared() {
         if ( !isResumed() 
                 || !isVisible()) {
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
             return;
         }
 
@@ -785,9 +776,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (isPrepared) {
             // stop orientation updates before locking the screen
             orientation.stop();
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -802,8 +791,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     protected void showLandscape() {
         try{
-            if(player!=null){
-                player.freeze();
+            if(player!=null) {
+                freezePlayer();
 
                 Intent i = new Intent(getActivity(), LandscapePlayerActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -1617,6 +1606,12 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
         try{
+            if (callback != null) {
+                // mark last seeked position
+                callback.saveCurrentPlaybackPosition((int) newPosition);
+                logger.debug("Current position saved: " + newPosition);
+            }
+
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
@@ -1674,5 +1669,18 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
      */
     public boolean isPlaying() {
         return (player != null && player.isPlaying());
+    }
+    
+    private void freezePlayer() {
+        if (player!=null) {
+            if (callback != null && player.isPlaying()) {
+                int pos = player.getCurrentPosition();
+                if (pos > 0) {
+                    callback.saveCurrentPlaybackPosition(pos);
+                }
+            }
+
+            player.freeze();
+        }
     }
 }
