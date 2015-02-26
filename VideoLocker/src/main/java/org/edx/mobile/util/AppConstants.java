@@ -12,4 +12,5 @@ public class AppConstants {
 
     public static final double MILLISECONDS_PER_SECOND = 1000.00;
     public static final String USER_LOG_IN = "user_login_clicked";
+    public static final String DOWNLOAD_COMPLETE = "download_complete";
 }

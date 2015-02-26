@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -44,12 +45,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyRecentVideosFragment extends Fragment {
+public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
     private MyRecentVideoAdapter adapter;
     private ListView videoListView;
-    protected IDatabase db;
-    protected IStorage storage;
     private DeleteVideoDialogFragment deleteDialogFragment;
     private int playingVideoIndex = -1;
     private VideoListCallback callback;
@@ -57,14 +56,12 @@ public class MyRecentVideosFragment extends Fragment {
     private DownloadEntry videoModel;
     private Button deleteButton = null;
     private final Handler handler = new Handler();
-    private ISegment segIO;
     protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        initDB();
         View view = inflater.inflate(R.layout.fragment_video_list_with_player_container,
                 null);
         try{
@@ -694,6 +691,13 @@ public class MyRecentVideosFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public void reloadList() {
+        if(getView()!=null){
+            addToRecentAdapter(getView());
+        }
+    }
+
     private class NextClickListener implements OnClickListener{
         @Override
         public void onClick(View v) {
@@ -706,23 +710,6 @@ public class MyRecentVideosFragment extends Fragment {
         public void onClick(View v) {
             playPrevious();
         }
-    }
-
-    private void initDB() {
-        storage = new Storage(getActivity());
-
-        UserPrefs userprefs = new UserPrefs(getActivity());
-        String username = null;
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if(profile!=null){
-                username =profile.username;
-            }
-        }
-        db = DatabaseFactory.getInstance(getActivity(), 
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
-
-        segIO = SegmentFactory.getInstance();
     }
 
     private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
@@ -757,5 +744,4 @@ public class MyRecentVideosFragment extends Fragment {
         PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
         return prefManager.getCurrentUserProfile();
     }
-
 }
