@@ -39,29 +39,29 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
         holder.lectureTitle.setText(lectureData.name);
         if (lectureData.videos != null) {
             final int totalCount = lectureData.videos.size();
-            holder.no_of_videos.setVisibility(View.VISIBLE);
-            holder.no_of_videos.setText("" + totalCount);
+            holder.noOfVideos.setVisibility(View.VISIBLE);
+            holder.noOfVideos.setText("" + totalCount);
             int inProcessCount = dbStore.getVideosCountBySection(enrollmentId, 
                     lectureData.chapter.chapter, lectureData.name, null);
             int videoCount = totalCount - inProcessCount;
             if (videoCount > 0) {
-                holder.progresslayout.setVisibility(View.GONE);
-                holder.bulk_download_videos_layout.setVisibility(View.VISIBLE);
-                holder.bulk_download_videos_layout.setTag(lectureData);
-                holder.bulk_download_videos_layout
+                holder.progressLayout.setVisibility(View.INVISIBLE);
+                holder.bulkDownloadVideosLayout.setVisibility(View.VISIBLE);
+                holder.bulkDownloadVideosLayout.setTag(lectureData);
+                holder.bulkDownloadVideosLayout
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         download(lectureData);
-                        holder.progresslayout.setVisibility(View.VISIBLE);
-                        holder.bulk_download_videos_layout.setVisibility(View.INVISIBLE); 
+                        holder.progressLayout.setVisibility(View.VISIBLE);
+                        holder.bulkDownloadVideosLayout.setVisibility(View.INVISIBLE); 
                     }
                 });
             } else {
-                holder.bulk_download_videos_layout.setVisibility(View.INVISIBLE);
+                holder.bulkDownloadVideosLayout.setVisibility(View.INVISIBLE);
                 if(dbStore.isVideoDownloadingInSection(enrollmentId, 
                         lectureData.chapter.chapter, lectureData.name, null)){
-                    holder.download_pw.setVisibility(View.VISIBLE);
+                    holder.downloadProgressWheel.setVisibility(View.VISIBLE);
                     try{
                         storage.getAverageDownloadProgressInSection
                         (enrollmentId, lectureData.chapter.chapter, 
@@ -70,10 +70,10 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                             public void onResult(Integer result) {
                                 int percent = result;
                                 if(percent>=0 && percent<100){
-                                    holder.progresslayout.setVisibility(View.VISIBLE);
-                                    holder.download_pw.setProgressPercent(percent);
+                                    holder.progressLayout.setVisibility(View.VISIBLE);
+                                    holder.downloadProgressWheel.setProgressPercent(percent);
                                 }else{
-                                    holder.progresslayout.setVisibility(View.GONE);
+                                    holder.progressLayout.setVisibility(View.INVISIBLE);
                                 }
                             }
                             @Override
@@ -85,13 +85,13 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
                         logger.error(e);
                     }
                 }else{
-                    holder.progresslayout.setVisibility(View.GONE);
+                    holder.progressLayout.setVisibility(View.INVISIBLE);
                 }
             }
         } else {
-            holder.no_of_videos.setVisibility(View.INVISIBLE);
-            holder.bulk_download_videos_layout.setVisibility(View.INVISIBLE);
-            holder.progresslayout.setVisibility(View.GONE);
+            holder.noOfVideos.setVisibility(View.INVISIBLE);
+            holder.bulkDownloadVideosLayout.setVisibility(View.INVISIBLE);
+            holder.progressLayout.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -100,23 +100,23 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
         ViewHolder holder = new ViewHolder();
         holder.lectureTitle = (TextView) convertView
                 .findViewById(R.id.chapter_name);
-        holder.no_of_videos = (TextView) convertView
+        holder.noOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
-        holder.bulk_download_videos_layout = (LinearLayout) convertView
+        holder.bulkDownloadVideosLayout = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
-        holder.download_pw = (ProgressWheel) convertView.
+        holder.downloadProgressWheel = (ProgressWheel) convertView.
                 findViewById(R.id.progress_wheel);
-        holder.progresslayout = (LinearLayout) convertView
+        holder.progressLayout = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
         TextView lectureTitle;
-        TextView no_of_videos;
-        LinearLayout bulk_download_videos_layout;
-        ProgressWheel download_pw;
-        LinearLayout progresslayout;
+        TextView noOfVideos;
+        LinearLayout bulkDownloadVideosLayout;
+        ProgressWheel downloadProgressWheel;
+        LinearLayout progressLayout;
     }
 
     @Override
