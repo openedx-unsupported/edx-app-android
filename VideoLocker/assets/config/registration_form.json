@@ -1284,8 +1284,8 @@
             "required": "You must agree to the edX <a href=\"https://www.edx.org/terms\">Terms of Service and Honor Code</a>."
         },
         "agreement" : {
-            "url" : "https://www.edx.org/terms",
-            "text" : "edX End User Licensing Agreement"
+            "url" : "edxapp://show_eula",
+            "text" : "edX Terms of Service and Honor Code"
         },
         "placeholder" : "",
         "defaultValue": false,

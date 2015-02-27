@@ -23,12 +23,17 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         }catch(Exception e){
             logger.error(e);
         }
+
+        loadCourseSearchUrl();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onOnline() {
+        super.onOnline();
+        loadCourseSearchUrl();
+    }
 
+    private void loadCourseSearchUrl() {
         String url = Config.getInstance().getEnrollmentConfig().getCourseSearchUrl();
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
