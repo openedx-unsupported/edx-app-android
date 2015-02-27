@@ -37,9 +37,9 @@ import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
@@ -112,19 +112,17 @@ public class Api {
      */
     private Bundle setCookieHeaders(Bundle headerBundle) throws Exception {
         Header header = getLoginResponseHeaders();
-        HeaderElement[] elements = header.getElements();
-        if(elements[0].getName().equalsIgnoreCase("csrftoken")){
-            headerBundle.putString("Cookie", elements[0].getName()
-                    +"="+elements[0].getValue());
-            headerBundle.putString("X-CSRFToken", elements[0].getValue());
-        }else{
-            for(int i=0; i<elements.length;i++){
-                HeaderElement element = elements[i];
-                if(element.getName().equalsIgnoreCase("csrftoken")){
-                    headerBundle.putString("Cookie", elements[0].getName()
-                            +"="+elements[0].getValue());
-                    headerBundle.putString("X-CSRFToken", elements[0].getValue());
-                    break;
+        if (header != null) {
+            HeaderElement[] elements = header.getElements();
+            if (elements != null) {
+                for (int i = 0; i < elements.length; i++) {
+                    HeaderElement element = elements[i];
+                    if (element.getName().equalsIgnoreCase("CSRFToken")) {
+                        headerBundle.putString("Cookie",
+                                String.format("%s=%s", element.getName(), element.getValue()));
+                        headerBundle.putString("X-CSRFToken", element.getValue());
+                        break;
+                    }
                 }
             }
         }
@@ -1223,6 +1221,12 @@ public class Api {
     }
 
     public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+        // uses auth headers
+        Bundle headers = getAuthHeaders();
+
+        // this API endpoint also requires CSRFToken, so add it
+        headers = setCookieHeaders(headers);
+
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
         logger.debug("POST url for enrolling in a Course: " + enrollUrl);
 
@@ -1233,12 +1237,12 @@ public class Api {
         postBody.put("course_details", courseIdObject);
 
         logger.debug("POST body for Enrolling in a course: " + postBody.toString());
-        String json = http.post(enrollUrl, postBody.toString(), getAuthHeaders(), false);
+        String json = http.post(enrollUrl, postBody.toString(), headers, false);
 
         if (json != null && !json.isEmpty()) {
             logger.debug("Response of Enroll in a course= " + json);
             JSONObject resultJson = new JSONObject(json);
-            if (resultJson.has("error")) {
+            if (resultJson.has("error") || resultJson.has("detail")) {
                 return false;
             }else {
                 return true;

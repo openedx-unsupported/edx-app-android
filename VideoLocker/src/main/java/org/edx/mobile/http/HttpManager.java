@@ -302,7 +302,7 @@ public class HttpManager {
         if(response.containsHeader("Set-Cookie")){
             header = response.getFirstHeader("Set-Cookie");
         }
-        
+
         client.getConnectionManager().shutdown();
 
         return header;
