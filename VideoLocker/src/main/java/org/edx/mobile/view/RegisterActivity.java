@@ -31,11 +31,11 @@ import java.util.List;
 
 public class RegisterActivity extends BaseFragmentActivity {
 
-    private RelativeLayout createAccountBtn;
-    private LinearLayout requiredFieldsLayout;
-    private LinearLayout optionalFieldsLayout;
-    private LinearLayout agreementLayout;
-    private ETextView createAccountTv;
+    private RelativeLayout layoutCreateAccountBtn;
+    private LinearLayout layoutRequiredFields;
+    private LinearLayout layoutOptionalFields;
+    private LinearLayout layoutAgreement;
+    private ETextView txtCreateAccount;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
 
     @Override
@@ -53,37 +53,36 @@ public class RegisterActivity extends BaseFragmentActivity {
             logger.error(e);
         }
 
-        createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
-        createAccountBtn.setOnClickListener(new View.OnClickListener() {
+        layoutCreateAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
+        layoutCreateAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createAccount();
             }
         });
 
-        createAccountTv = (ETextView) findViewById(R.id.create_account_tv);
-        requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
-        optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
-        agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
-        final ETextView optional_text=(ETextView)findViewById(R.id.optional_field_tv);
-        optional_text.setOnClickListener(new View.OnClickListener() {
+        txtCreateAccount = (ETextView) findViewById(R.id.create_account_tv);
+        layoutRequiredFields = (LinearLayout) findViewById(R.id.required_fields_layout);
+        layoutOptionalFields = (LinearLayout) findViewById(R.id.optional_fields_layout);
+        layoutAgreement = (LinearLayout) findViewById(R.id.layout_agreement);
+        final ETextView txtOptional=(ETextView)findViewById(R.id.optional_field_tv);
+        txtOptional.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optionalFieldsLayout.getVisibility() == View.VISIBLE) {
-                    optionalFieldsLayout.setVisibility(v.GONE);
-                    optional_text.setText(getString(R.string.show_optional_text));
-                }
-                else{
-                    optionalFieldsLayout.setVisibility(v.VISIBLE);
-                    optional_text.setText(getString(R.string.hide_optional_text));
+                if (layoutOptionalFields.getVisibility() == View.VISIBLE) {
+                    layoutOptionalFields.setVisibility(v.GONE);
+                    txtOptional.setText(getString(R.string.show_optional_text));
+                } else {
+                    layoutOptionalFields.setVisibility(v.VISIBLE);
+                    txtOptional.setText(getString(R.string.hide_optional_text));
                 }
             }
         });
 
-        RelativeLayout closeButtonLayout = (RelativeLayout)
+        RelativeLayout layoutCloseButton = (RelativeLayout)
                 findViewById(R.id.actionbar_close_btn_layout);
-        if(closeButtonLayout!=null){
-            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
+        if(layoutCloseButton!=null){
+            layoutCloseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
@@ -91,9 +90,9 @@ public class RegisterActivity extends BaseFragmentActivity {
             });
         }
 
-        ETextView customTitle = (ETextView) findViewById(R.id.activity_title);
-        if(customTitle!=null){
-            customTitle.setText(getString(R.string.register_title));
+        ETextView txtCustomTitle = (ETextView) findViewById(R.id.activity_title);
+        if(txtCustomTitle!=null){
+            txtCustomTitle.setText(getString(R.string.register_title));
         }
 
         AppConstants.offline_flag = !NetworkUtil.isConnected(this);
@@ -132,16 +131,16 @@ public class RegisterActivity extends BaseFragmentActivity {
 
     //Disable the Create button during server call
     private void createButtonDisabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.new_bt_signin_active);
-        createAccountBtn.setEnabled(false);
-        createAccountTv.setText(getString(R.string.creating_account_text));
+        layoutCreateAccountBtn.setBackgroundResource(R.drawable.new_bt_signin_active);
+        layoutCreateAccountBtn.setEnabled(false);
+        txtCreateAccount.setText(getString(R.string.creating_account_text));
     }
 
     //Enable the Create button during server call
     private void createButtonEnabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.bt_signin_active);
-        createAccountBtn.setEnabled(true);
-        createAccountTv.setText(getString(R.string.create_account_text));
+        layoutCreateAccountBtn.setBackgroundResource(R.drawable.bt_signin_active);
+        layoutCreateAccountBtn.setEnabled(true);
+        txtCreateAccount.setText(getString(R.string.create_account_text));
     }
 
     private void setupRegistrationForm() {
@@ -169,10 +168,10 @@ public class RegisterActivity extends BaseFragmentActivity {
             // add required and optional fields to the window
             for (IRegistrationFieldView v : mFieldViews) {
                 if (v.getField().isRequired()) {
-                    requiredFieldsLayout.addView(v.getView());
+                    layoutRequiredFields.addView(v.getView());
                 }
                 else {
-                    optionalFieldsLayout.addView(v.getView());
+                    layoutOptionalFields.addView(v.getView());
                 }
             }
 
@@ -185,13 +184,13 @@ public class RegisterActivity extends BaseFragmentActivity {
                         showAgreement(agreement);
                     }
                 });
-                agreementLayout.addView(agreementView.getView());
+                layoutAgreement.addView(agreementView.getView());
             }
 
             // request rendering of the layouts
-            requiredFieldsLayout.requestLayout();
-            optionalFieldsLayout.requestLayout();
-            agreementLayout.requestLayout();
+            layoutRequiredFields.requestLayout();
+            layoutOptionalFields.requestLayout();
+            layoutAgreement.requestLayout();
 
             // enable all the views
             setElementsEnabled();
@@ -249,11 +248,11 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            String errorMessage = result.getValue();
-                            if(errorMessage == null || errorMessage.isEmpty()){
-                                errorMessage = getString(R.string.sign_up_error);
+                            String strErrorMessage = result.getValue();
+                            if(strErrorMessage == null || strErrorMessage.isEmpty()){
+                                strErrorMessage = getString(R.string.sign_up_error);
                             }
-                            sendBroadcastFlyingErrorMessage(null,errorMessage);
+                            sendBroadcastFlyingErrorMessage(null,strErrorMessage);
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
@@ -308,13 +307,13 @@ public class RegisterActivity extends BaseFragmentActivity {
     private void showProgress() {
         View progress = findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
-        createAccountTv.setText(getString(R.string.creating_account_text));
+        txtCreateAccount.setText(getString(R.string.creating_account_text));
     }
 
     private void hideProgress() {
         View progress = findViewById(R.id.progress);
         progress.setVisibility(View.GONE);
-        createAccountTv.setText(getString(R.string.create_account_text));
+        txtCreateAccount.setText(getString(R.string.create_account_text));
     }
 
     @Override

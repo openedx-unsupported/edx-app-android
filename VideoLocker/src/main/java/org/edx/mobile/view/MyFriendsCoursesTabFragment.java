@@ -30,7 +30,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
     private static final String TAG = MyCourseListTabFragment.class.getSimpleName();
 
     private final int FREINDS_COURSES_LOADER_ID = 0x605000;
-    private LinearLayout noFriendsLayout;
+    private LinearLayout layoutNoFriends;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +65,9 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        noFriendsLayout = (LinearLayout) view.findViewById(R.id.friends_course_no_friends_layout);
-        TextView shareBtn = (TextView) view.findViewById(R.id.friends_course_no_btn_share_app);
-        shareBtn.setOnClickListener(this);
+        layoutNoFriends = (LinearLayout) view.findViewById(R.id.friends_course_no_friends_layout);
+        TextView txtShareBtn = (TextView) view.findViewById(R.id.friends_course_no_btn_share_app);
+        txtShareBtn.setOnClickListener(this);
 
         return view;
 
@@ -119,7 +119,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
                 getActivity().finish();
             } else {
                 adapter.clear();
-                noFriendsLayout.setVisibility(View.VISIBLE);
+                layoutNoFriends.setVisibility(View.VISIBLE);
                 swipeLayout.setVisibility(View.GONE);
             }
 
@@ -132,10 +132,10 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
 
             if(result.getResult().size() == 0){
                 adapter.clear();
-                noFriendsLayout.setVisibility(View.VISIBLE);
+                layoutNoFriends.setVisibility(View.VISIBLE);
                 swipeLayout.setVisibility(View.GONE);
             } else {
-                noFriendsLayout.setVisibility(View.GONE);
+                layoutNoFriends.setVisibility(View.GONE);
                 swipeLayout.setVisibility(View.VISIBLE);
                 adapter.setItems(newItems);
                 adapter.notifyDataSetChanged();
@@ -143,7 +143,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
 
         } else {
             adapter.clear();
-            noFriendsLayout.setVisibility(View.VISIBLE);
+            layoutNoFriends.setVisibility(View.VISIBLE);
             swipeLayout.setVisibility(View.GONE);
 
         }

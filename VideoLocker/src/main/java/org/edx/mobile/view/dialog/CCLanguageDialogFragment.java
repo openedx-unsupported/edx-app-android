@@ -33,7 +33,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
         d.langList = dialogMap;
         Bundle args = new Bundle();
         d.langList = dialogMap;
-        args.putString("selectedLanguage", languageSelected);
+        args.putString("strSelectedLanguage", languageSelected);
         d.setArguments(args);
 
         return d;
@@ -46,7 +46,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.panel_cc_popup, container,
                 false);
         try{
-            ListView lv_ccLang = (ListView) v.findViewById(R.id.cc_list);
+            ListView listViewCcLang = (ListView) v.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
                     ClosedCaptionAdapter(getActivity().getBaseContext()) {
                 @Override
@@ -57,8 +57,8 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     dismiss();
                 }
             };
-            lv_ccLang.setAdapter(ccAdaptor);
-            lv_ccLang.setOnItemClickListener(ccAdaptor);
+            listViewCcLang.setAdapter(ccAdaptor);
+            listViewCcLang.setOnItemClickListener(ccAdaptor);
             //ArrayList<String> langList =  getArguments().getStringArrayList("langs");
 
             if(langList!=null){
@@ -70,24 +70,24 @@ public class CCLanguageDialogFragment extends DialogFragment {
                     ccAdaptor.add(hm);
                 }
             }
-            String langSelected = getArguments().getString("selectedLanguage");
+            String langSelected = getArguments().getString("strSelectedLanguage");
 
-            ccAdaptor.selectedLanguage = langSelected;
+            ccAdaptor.strSelectedLanguage = langSelected;
             ccAdaptor.notifyDataSetChanged();
 
 
-            TextView tvNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
+            TextView txtNone = (TextView) v.findViewById(R.id.tv_cc_cancel);
             if(langSelected!=null){
                 if(langSelected.equalsIgnoreCase("none")){
-                    tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
+                    txtNone.setBackgroundResource(R.color.cyan_text_navigation_20);
                 }else{
-                    tvNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
+                    txtNone.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
                 }
             }else{
-                tvNone.setBackgroundResource(R.color.cyan_text_navigation_20);
+                txtNone.setBackgroundResource(R.color.cyan_text_navigation_20);
             }
 
-            tvNone.setOnClickListener(new OnClickListener() {
+            txtNone.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
                     if (callback != null) {
                         callback.onCancelClicked();

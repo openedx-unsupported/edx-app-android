@@ -42,11 +42,11 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private View offlineBar;
     private LectureAdapter adapter;
     private DownloadSizeExceedDialog downloadFragment;
-    private String openInBrowserUrl;
+    private String strOpenInBrowserUrl;
     private boolean isActivityVisible;
     private static final int MSG_UPDATE_PROGRESS = 1026;
     private EnrolledCoursesResponse enrollment;
-    private String activityTitle;
+    private String strActivityTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +67,11 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
         ArrayList<LectureModel> lectureList = new ArrayList<LectureModel>();
 
-        ListView lectureListView = (ListView) findViewById(R.id.lecture_list);
+        ListView listViewLecture = (ListView) findViewById(R.id.lecture_list);
         initalizeAdaptor();
         adapter.setItems(lectureList);
-        lectureListView.setAdapter(adapter);
-        lectureListView.setOnItemClickListener(adapter);
+        listViewLecture.setAdapter(adapter);
+        listViewLecture.setOnItemClickListener(adapter);
 
         enableOfflineCallback();
     } 
@@ -166,7 +166,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private void loadData() {
         SectionEntry chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
         setTitle(chapter.chapter);
-        activityTitle = chapter.chapter;
+        strActivityTitle = chapter.chapter;
 
         if(chapter.sections.entrySet().size()>0){
             adapter.clear();
@@ -175,8 +175,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                 m.chapter = chapter;
                 m.name = entry.getKey();
                 m.videos = entry.getValue();
-                if(openInBrowserUrl==null||openInBrowserUrl.equalsIgnoreCase("")){
-                    openInBrowserUrl = m.videos.get(0).section_url;
+                if(strOpenInBrowserUrl ==null|| strOpenInBrowserUrl.equalsIgnoreCase("")){
+                    strOpenInBrowserUrl = m.videos.get(0).section_url;
                 }
                 adapter.add(m);
             }
@@ -199,7 +199,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             }
             loadData();
             handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-            setTitle(activityTitle);
+            setTitle(strActivityTitle);
         }catch(Exception e){
             logger.error(e);
         }
@@ -257,20 +257,20 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private void showOpenInBrowserPanel() {
         try {
             final StringBuffer urlStringBuffer = new StringBuffer();
-            if (!openInBrowserUrl.contains("http://") && !openInBrowserUrl.contains("https://")){
+            if (!strOpenInBrowserUrl.contains("http://") && !strOpenInBrowserUrl.contains("https://")){
                 urlStringBuffer.append("http://");
-                urlStringBuffer.append(openInBrowserUrl);
+                urlStringBuffer.append(strOpenInBrowserUrl);
             }else{
-                urlStringBuffer.append(openInBrowserUrl);
+                urlStringBuffer.append(strOpenInBrowserUrl);
             }
             findViewById(R.id.open_in_browser_panel).setVisibility(
                     View.VISIBLE);
-            TextView openInBrowserTv = (TextView) findViewById
+            TextView txtOpenInBrowser = (TextView) findViewById
                     (R.id.open_in_browser_btn);
-            openInBrowserTv.setOnClickListener(new OnClickListener() {
+            txtOpenInBrowser.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BrowserUtil.open(CourseLectureListActivity.this, 
+                    BrowserUtil.open(CourseLectureListActivity.this,
                             urlStringBuffer.toString());
                 }
             });

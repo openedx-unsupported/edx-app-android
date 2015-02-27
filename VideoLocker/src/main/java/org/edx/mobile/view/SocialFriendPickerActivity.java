@@ -33,8 +33,8 @@ public class SocialFriendPickerActivity extends BaseSingleFragmentActivity {
         }
 
         try{
-            String analyticsID = addState ? "Social Friend Picker - existing group" : "Social Friend Picker - new group";
-            segIO.screenViewsTracking(analyticsID);
+            String strAnalyticsID = addState ? "Social Friend Picker - existing group" : "Social Friend Picker - new group";
+            segIO.screenViewsTracking(strAnalyticsID);
         }catch(Exception e){
             logger.error(e);
         }

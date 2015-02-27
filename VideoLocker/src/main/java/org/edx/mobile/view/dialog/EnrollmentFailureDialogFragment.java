@@ -42,16 +42,16 @@ public class EnrollmentFailureDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.delete_video_dialog, container,
                 false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        title_tv.setVisibility(View.GONE);
-        TextView dialog_tv_1 = (TextView) v
+        TextView txtTitle = (TextView) v.findViewById(R.id.tv_dialog_title);
+        txtTitle.setVisibility(View.GONE);
+        TextView txtDialogMessage = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
+        txtDialogMessage.setText(getArguments().getString("dialog_msg_1"));
         // Watch for button clicks.
-        Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
-        positiveBtn.setText(getArguments().getString("dialog_yes_btn"));
-        positiveBtn.setOnClickListener(new OnClickListener() {
+        Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setText(getArguments().getString("dialog_yes_btn"));
+        btnPositive.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 try {
                     if (callback != null && isVisible()) {
@@ -64,9 +64,9 @@ public class EnrollmentFailureDialogFragment extends DialogFragment {
             }
         });
 
-        Button negativebtn = (Button) v.findViewById(R.id.negativeButton);
-        negativebtn.setText(getArguments().getString("dialog_no_btn").toUpperCase());
-        negativebtn.setOnClickListener(new OnClickListener() {
+        Button btnNegative = (Button) v.findViewById(R.id.negativeButton);
+        btnNegative.setText(getArguments().getString("dialog_no_btn").toUpperCase());
+        btnNegative.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 if (callback != null && isVisible()) {
                     callback.onNegativeClicked();

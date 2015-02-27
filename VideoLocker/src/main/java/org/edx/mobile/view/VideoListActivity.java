@@ -34,7 +34,7 @@ VideoListCallback, IPlayerEventCallback {
 
     private boolean myVideosFlag;
     private CheckBox checkBox;
-    private CourseVideoCheckBoxListener checklistener;
+    private CourseVideoCheckBoxListener checkListener;
     private PlayerFragment playerFragment;
     private VideoListFragment listFragment;
     private final Handler playHandler = new Handler();
@@ -274,7 +274,7 @@ VideoListCallback, IPlayerEventCallback {
         try{
             checkBox.setOnCheckedChangeListener(null);
             checkBox.setChecked(true);
-            checkBox.setOnCheckedChangeListener(checklistener);
+            checkBox.setOnCheckedChangeListener(checkListener);
             //checkBox.setSelected(true);
             checkBox.setButtonDrawable(R.drawable.ic_checkbox_active);
         }catch(Exception ex){
@@ -285,7 +285,7 @@ VideoListCallback, IPlayerEventCallback {
     public void unsetCheckBoxSelected(){
         checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(false);
-        checkBox.setOnCheckedChangeListener(checklistener);
+        checkBox.setOnCheckedChangeListener(checkListener);
         //checkBox.setSelected(false);
         checkBox.setButtonDrawable(R.drawable.ic_checkbox_default);
         //checkBox.setBackgroundResource(R.drawable.ic_checkbox_default);
@@ -358,31 +358,31 @@ VideoListCallback, IPlayerEventCallback {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         super.onCreateOptionsMenu(menu);
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        View checkBoxView = checkBox_menuItem.getActionView();
+        MenuItem menuItemCheckBox = menu.findItem(R.id.delete_checkbox);
+        View checkBoxView = menuItemCheckBox.getActionView();
         checkBox = (CheckBox) checkBoxView.findViewById(R.id.select_checkbox);
 
-        if(checklistener==null) {
-            checklistener = new CourseVideoCheckBoxListener();
+        if(checkListener ==null) {
+            checkListener = new CourseVideoCheckBoxListener();
         }
 
         if(myVideosFlag){
             if(AppConstants.myVideosDeleteMode) {
-                checkBox_menuItem.setVisible(true);
+                menuItemCheckBox.setVisible(true);
                 checkBox.setVisibility(View.VISIBLE);
-                checkBox.setOnCheckedChangeListener(checklistener);
+                checkBox.setOnCheckedChangeListener(checkListener);
             }else{
-                checkBox_menuItem.setVisible(false);
+                menuItemCheckBox.setVisible(false);
                 checkBox.setVisibility(View.GONE);
                 checkBox.setOnCheckedChangeListener(null);
             }
         }else{
             if(AppConstants.videoListDeleteMode){
-                checkBox_menuItem.setVisible(true);
+                menuItemCheckBox.setVisible(true);
                 checkBox.setVisibility(View.VISIBLE);
-                checkBox.setOnCheckedChangeListener(checklistener);
+                checkBox.setOnCheckedChangeListener(checkListener);
             }else{
-                checkBox_menuItem.setVisible(false);
+                menuItemCheckBox.setVisible(false);
                 checkBox.setVisibility(View.GONE);
                 checkBox.setOnCheckedChangeListener(null);
             }

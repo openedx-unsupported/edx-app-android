@@ -540,13 +540,13 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     /*@Override
-    public Boolean isVideoDownloadingByVideoId(String videoId,
+    public Boolean isVideoDownloadingByVideoId(String strVideoId,
             DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, 
                 new String[] {DbStructure.Column.VIDEO_ID}, 
                 DbStructure.Column.VIDEO_ID + "=? "
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                        new String[] { videoId, String.valueOf(DownloadedState.DOWNLOADING.ordinal())
+                        new String[] { strVideoId, String.valueOf(DownloadedState.DOWNLOADING.ordinal())
                 ,username}, null);
         op.setCallback(callback);
         return enqueue(op);

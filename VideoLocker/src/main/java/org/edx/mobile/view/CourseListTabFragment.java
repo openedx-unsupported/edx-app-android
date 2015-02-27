@@ -52,7 +52,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     protected MyCourseAdapter adapter;
 
     protected SwipeRefreshLayout swipeLayout;
-    protected LinearLayout offlinePanel;
+    protected LinearLayout layoutOfflinePanel;
     protected View offlineBar;
     protected ProgressBar progressBar;
 
@@ -61,7 +61,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     protected ISegment segIO;
 
     protected IUiLifecycleHelper uiHelper;
-    protected ListView myCourseList;
+    protected ListView listViewMyCourse;
 
     FetchFriendsReceiver fetchFriendsObserver;
 
@@ -162,7 +162,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         View view = inflater.inflate(getViewResourceID(), container, false);
 
         offlineBar = view.findViewById(R.id.offline_bar);
-        offlinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
+        layoutOfflinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -177,11 +177,11 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
         progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
 
-        myCourseList = (ListView) view.findViewById(R.id.my_course_list);
-        myCourseList.setAdapter(adapter);
-        myCourseList.setOnItemClickListener(adapter);
+        listViewMyCourse = (ListView) view.findViewById(R.id.my_course_list);
+        listViewMyCourse.setAdapter(adapter);
+        listViewMyCourse.setOnItemClickListener(adapter);
 
-        setupFooter(myCourseList);
+        setupFooter(listViewMyCourse);
 
         return view;
     }
@@ -209,14 +209,14 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     }
 
     public void hideOfflinePanel() {
-        UiUtil.stopAnimation(offlinePanel);
-        if(offlinePanel.getVisibility()==View.VISIBLE){
-            offlinePanel.setVisibility(View.GONE);
+        UiUtil.stopAnimation(layoutOfflinePanel);
+        if(layoutOfflinePanel.getVisibility()==View.VISIBLE){
+            layoutOfflinePanel.setVisibility(View.GONE);
         }
     }
 
     public void showOfflinePanel() {
-        UiUtil.animateLayouts(offlinePanel);
+        UiUtil.animateLayouts(layoutOfflinePanel);
     }
 
     @Override
@@ -265,8 +265,8 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         try {
             View footer = LayoutInflater.from(getActivity()).inflate(R.layout.panel_find_course, null);
             myCourseList.addFooterView(footer, null, false);
-            Button course_btn = (Button) footer.findViewById(R.id.course_btn);
-            course_btn.setOnClickListener(new View.OnClickListener() {
+            Button btnCourse = (Button) footer.findViewById(R.id.course_btn);
+            btnCourse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
@@ -296,8 +296,8 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                 }
             });
 
-            ETextView courseNotListedTv = (ETextView) footer.findViewById(R.id.course_not_listed_tv);
-            courseNotListedTv.setOnClickListener(new View.OnClickListener() {
+            ETextView txtCourseNotListed = (ETextView) footer.findViewById(R.id.course_not_listed_tv);
+            txtCourseNotListed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showCourseNotListedDialog();
@@ -317,12 +317,12 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String courseId = intent.getStringExtra(FetchCourseFriendsService.EXTRA_BROADCAST_COURSE_ID);
+            String strCourseId = intent.getStringExtra(FetchCourseFriendsService.EXTRA_BROADCAST_COURSE_ID);
 
-            AsyncTaskResult<List<SocialMember>> result = FetchCourseFriendsService.fetchResult(courseId);
+            AsyncTaskResult<List<SocialMember>> result = FetchCourseFriendsService.fetchResult(strCourseId);
 
             if (result !=null && result.getResult() != null) {
-                int listPos = adapter.getPositionForCourseId(courseId);
+                int listPos = adapter.getPositionForCourseId(strCourseId);
                 if(listPos < 0)
                     return;
                 adapter.getItem(listPos).getCourse().setMembers_list(result.getResult());

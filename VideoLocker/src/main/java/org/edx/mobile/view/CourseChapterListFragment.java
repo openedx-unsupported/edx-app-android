@@ -58,17 +58,17 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private static final String SECTION_ENTRIES = TAG + ".sectionEntryMap";
 
     private ChapterAdapter adapter;
-    private String courseId;
-    private String openInBrowserUrl;
+    private String strCourseId;
+    private String strOpenInBrowserUrl;
     private DownloadSizeExceedDialog downloadFragment;
-    private ListView chapterListView;
+    private ListView listViewChapter;
     private static final int MSG_UPDATE_PROGRESS = 1025;
     private boolean isActivityStarted;
-    private String lastAccessed_subSectionId;
+    private String strLastAccessedSubSectionId;
     private GetLastAccessedTask getLastAccessedTask;
     private EnrolledCoursesResponse enrollment;
-    private ETextView courseScheduleTv;
-    private String startDate;
+    private ETextView txtCourseSchedule;
+    private String strStartDate;
     private boolean isTaskRunning = false;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             enrollment = (EnrolledCoursesResponse) bundle
                     .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             if(enrollment!=null) {
-                courseId = enrollment.getCourse().getId();
+                strCourseId = enrollment.getCourse().getId();
                 try {
                     segIO.screenViewsTracking(enrollment.getCourse().getName()
                             + " - Courseware");
@@ -101,13 +101,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
         //Initialize the Course not started text view.
         if (!enrollment.getCourse().isStarted()) {
-            startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
-            if (startDate != null) {
-                startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + startDate + "</font>";
-                String courseScheduledText = getString(R.string.course_content_available_text);
-                courseScheduledText = courseScheduledText.replace("START_DATE", startDate);
-                courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
-                courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
+            strStartDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
+            if (strStartDate != null) {
+                strStartDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + strStartDate + "</font>";
+                String strCourseScheduled = getString(R.string.course_content_available_text);
+                strCourseScheduled = strCourseScheduled.replace("START_DATE", strStartDate);
+                txtCourseSchedule = (ETextView) view.findViewById(R.id.course_content_available_tv);
+                txtCourseSchedule.setText(Html.fromHtml(strCourseScheduled));
             }
         }
 
@@ -123,12 +123,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
         }
 
-        chapterListView = (ListView) view
+        listViewChapter = (ListView) view
                 .findViewById(R.id.chapter_list);
 
         initializeAdapter();
-        chapterListView.setAdapter(adapter);
-        chapterListView.setOnItemClickListener(adapter);
+        listViewChapter.setAdapter(adapter);
+        listViewChapter.setOnItemClickListener(adapter);
         lastClickTime = 0;
 
         return view;
@@ -159,14 +159,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         if (adapter == null) {
             // creating adapter just once
 
-            adapter = new ChapterAdapter(getActivity(), courseId) {
+            adapter = new ChapterAdapter(getActivity(), strCourseId) {
 
                 @Override
                 public void onItemClicked(final SectionEntry model) {
                     // handle click
                     try {
                         if (AppConstants.offline_flag) {
-                            boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId,
+                            boolean isVideoDownloaded = db.isVideoDownloadedInChapter(strCourseId,
                                     model.chapter, null);
                             if (isVideoDownloaded) {
                                 Intent videoIntent = new Intent(getActivity(),
@@ -291,14 +291,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     for (Entry<String, SectionEntry> entry : chapterMap
                             .entrySet()) {
                         adapter.add(entry.getValue());
-                        if (openInBrowserUrl == null || openInBrowserUrl.equalsIgnoreCase("")) {
+                        if (strOpenInBrowserUrl == null || strOpenInBrowserUrl.equalsIgnoreCase("")) {
                             // pick up browser link
-                            openInBrowserUrl = entry.getValue().section_url;
+                            strOpenInBrowserUrl = entry.getValue().section_url;
                         }
                     }
                     if(adapter.getCount()==0){
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
-                        chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                        listViewChapter.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
                     adapter.notifyDataSetChanged();
                     updateOpenInBrowserPanel();
@@ -312,11 +312,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                 adapter.notifyDataSetChanged();
 
                 if (adapter.getCount() == 0) {
-                    if (startDate != null) {
+                    if (strStartDate != null) {
                         showCourseNotStartedMessage(view);
                     } else {
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
-                        chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                        listViewChapter.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
                 }
 
@@ -330,7 +330,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     // calling setEmptyView requires adapter to be notified
                     adapter.notifyDataSetChanged();
                     view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
-                    chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
+                    listViewChapter.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                 }
 
                 isTaskRunning = false;
@@ -343,14 +343,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         //Initializing task call
         logger.debug("Initializing Chapter Task"+ DateUtil.getCurrentTimeStamp());
         isTaskRunning = true;
-        task.execute(courseId);
+        task.execute(strCourseId);
     }
 
     private void updateOpenInBrowserPanel() {
         if (AppConstants.offline_flag || adapter.isEmpty()) {
             hideOpenInBrowserPanel();
         } else {
-            showOpenInBrowserPanel(openInBrowserUrl);
+            showOpenInBrowserPanel(strOpenInBrowserUrl);
         }
     }
 
@@ -360,7 +360,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             adapter.notifyDataSetChanged();
         }
         hideLastAccessedView(getView());
-        if (chapterListView != null) {
+        if (listViewChapter != null) {
             updateOpenInBrowserPanel();
         }
     }
@@ -370,7 +370,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
-        if (chapterListView != null && openInBrowserUrl != null) {
+        if (listViewChapter != null && strOpenInBrowserUrl != null) {
             fetchLastAccessed(getView());
             updateOpenInBrowserPanel();
         }
@@ -424,11 +424,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                         adapter.notifyDataSetChanged();
                         (getActivity()).invalidateOptionsMenu();
                         if (result > 1) {
-                            String msg = String.format(getString(R.string.downloading_multiple), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
+                            String strMsg = String.format(getString(R.string.downloading_multiple), result);
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), strMsg);
                         } else if (result == 1) {
-                            String msg = String.format(getString(R.string.downloading_single), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
+                            String strMsg = String.format(getString(R.string.downloading_single), result);
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), strMsg);
                         } else {
                             UiUtil.showMessage(CourseChapterListFragment.this.getView(),
                                     getString(R.string.msg_video_not_downloaded));
@@ -535,21 +535,21 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         if (v != null && isActivityStarted()) {
             if (!AppConstants.offline_flag) {
                 try {
-                    if(courseId!=null && lastAccessed_subSectionId!=null){
+                    if(strCourseId !=null && strLastAccessedSubSectionId !=null){
                         final Api api = new Api(getActivity());
-                        final VideoResponseModel videoModel = api.getSubsectionById(courseId, 
-                                lastAccessed_subSectionId);
+                        final VideoResponseModel videoModel = api.getSubsectionById(strCourseId,
+                                strLastAccessedSubSectionId);
                         if (videoModel != null) {
-                            LinearLayout lastAccessedLayout = (LinearLayout) v
+                            LinearLayout layoutLastAccessed = (LinearLayout) v
                                     .findViewById(R.id.last_viewed_layout);
-                            lastAccessedLayout.setVisibility(View.VISIBLE);
+                            layoutLastAccessed.setVisibility(View.VISIBLE);
 
-                            TextView lastAccessedVideoTv = (TextView) v
+                            TextView txtLastAccessedVideo = (TextView) v
                                     .findViewById(R.id.last_viewed_tv);
-                            lastAccessedVideoTv.setText(" "
+                            txtLastAccessedVideo.setText(" "
                                     + videoModel.getSection().name);
 
-                            lastAccessedLayout.setOnClickListener(new OnClickListener() {
+                            layoutLastAccessed.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //This has been used so that if user clicks continuously on the screen, 
@@ -558,11 +558,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
                                         Bundle bundle = getArguments();
-                                        EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) 
+                                        EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse)
                                                 bundle.getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
                                         try {
-                                            LectureModel lecture = api.getLecture(courseId,
-                                                    videoModel.getChapterName(), 
+                                            LectureModel lecture = api.getLecture(strCourseId,
+                                                    videoModel.getChapterName(),
                                                     videoModel.getSequentialName());
                                             SectionEntry chapter = new SectionEntry();
                                             chapter.chapter = videoModel.getChapterName();
@@ -573,7 +573,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                             videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
                                             videoIntent.putExtra("lecture", lecture);
                                             videoIntent.putExtra("FromMyVideos", false);
-                                            
+
                                             startActivity(videoIntent);
                                         } catch (Exception e) {
                                             logger.error(e);
@@ -610,43 +610,43 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private void fetchLastAccessed(final View view){
         try{
             if(!isFetchingLastAccessed) {
-                if(courseId!=null && getProfile()!=null && getProfile().username!=null){
-                    String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                            .username, courseId);
-                    final PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                    final String prefModuleId = prefManager.getLastAccessedSubsectionId();
+                if(strCourseId !=null && getProfile()!=null && getProfile().username!=null){
+                    String strPrefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
+                            .username, strCourseId);
+                    final PrefManager prefManager = new PrefManager(getActivity(), strPrefName);
+                    final String strPrefModuleId = prefManager.getLastAccessedSubsectionId();
 
                     logger.debug("Last Accessed Module ID from Preferences "
-                            +prefModuleId);
+                            +strPrefModuleId);
 
-                    lastAccessed_subSectionId = prefModuleId;
+                    strLastAccessedSubSectionId = strPrefModuleId;
                     showLastAccessedView(view);
                     getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
                         @Override
                         public void onFinish(SyncLastAccessedSubsectionResponse result) {
-                            String server_moduleId = null;
+                            String strServerModuleId = null;
                             if(result!=null && result.getLastVisitedModuleId()!=null){
                                 //Handle the last Visited Module received from Sever
-                                server_moduleId = result.getLastVisitedModuleId();
+                                strServerModuleId = result.getLastVisitedModuleId();
                                 logger.debug("Last Accessed Module ID from Server Get "
-                                        +server_moduleId);
+                                        +strServerModuleId);
                                 if(prefManager.isSyncedLastAccessedSubsection()){
                                     //If preference last accessed flag is true, put the last access fetched 
                                     //from server in Prefernces and display it on Last Accessed. 
-                                    prefManager.putLastAccessedSubsection(server_moduleId, true);
-                                    lastAccessed_subSectionId = server_moduleId;
+                                    prefManager.putLastAccessedSubsection(strServerModuleId, true);
+                                    strLastAccessedSubSectionId = strServerModuleId;
                                     showLastAccessedView(view);
                                 }else{
                                     //Preference's last accessed is not synched with server, 
                                     //Sync with server and display the result from server on UI.
-                                    if(prefModuleId!=null && prefModuleId.length()>0){
-                                        syncLastAccessedWithServer(prefManager, view, prefModuleId);
+                                    if(strPrefModuleId!=null && strPrefModuleId.length()>0){
+                                        syncLastAccessedWithServer(prefManager, view, strPrefModuleId);
                                     }
                                 }
                             }else{
                                 //There is no Last Accessed module on the server
-                                if(prefModuleId!=null && prefModuleId.length()>0){
-                                    syncLastAccessedWithServer(prefManager,view, prefModuleId);
+                                if(strPrefModuleId!=null && strPrefModuleId.length()>0){
+                                    syncLastAccessedWithServer(prefManager,view, strPrefModuleId);
                                 }
                             }
                             isFetchingLastAccessed = false;
@@ -659,7 +659,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     };
 
                     isFetchingLastAccessed = true;
-                    getLastAccessedTask.execute(courseId);
+                    getLastAccessedTask.execute(strCourseId);
                 }   
             }
         }catch(Exception e){
@@ -678,7 +678,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
                         logger.debug("Last Accessed Module ID from Server Sync "
                                 +result.getLastVisitedModuleId());
-                        lastAccessed_subSectionId = result.getLastVisitedModuleId();
+                        strLastAccessedSubSectionId = result.getLastVisitedModuleId();
                         showLastAccessedView(view);
                     }
                 }
@@ -688,7 +688,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     logger.error(ex);
                 }
             };
-            syncLastAccessTask.execute(courseId, prefModuleId);
+            syncLastAccessTask.execute(strCourseId, prefModuleId);
         }catch(Exception e){
             logger.error(e);
         }
@@ -700,10 +700,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
      */
     private void showCourseNotStartedMessage(View view){
         try{
-            if(courseScheduleTv!=null){
+            if(txtCourseSchedule !=null){
                 view.findViewById(R.id.no_chapter_tv).setVisibility(View.GONE);
-                courseScheduleTv.setVisibility(View.VISIBLE);
-                chapterListView.setEmptyView(courseScheduleTv);
+                txtCourseSchedule.setVisibility(View.VISIBLE);
+                listViewChapter.setEmptyView(txtCourseSchedule);
             }
         }catch(Exception e){
             logger.error(e);

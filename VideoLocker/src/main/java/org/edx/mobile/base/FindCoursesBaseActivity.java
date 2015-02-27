@@ -137,9 +137,9 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         if(webview!=null){
             webview.setVisibility(View.GONE);
         }
-        ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
-        if(offlineModeTv!=null){
-            offlineModeTv.setVisibility(View.VISIBLE);
+        ETextView txtOfflineMode = (ETextView) findViewById(R.id.offline_mode_message);
+        if(txtOfflineMode!=null){
+            txtOfflineMode.setVisibility(View.VISIBLE);
         }
     }
 

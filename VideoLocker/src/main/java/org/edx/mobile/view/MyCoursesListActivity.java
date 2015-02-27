@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MyCoursesListActivity extends BaseTabActivity implements NetworkObserver{
 
-    private IUiLifecycleHelper uiLifecycleHelper;
+    private IUiLifecycleHelper uiLifeCycleHelper;
     private PrefManager featuresPref;
 
     @Override
@@ -56,8 +56,8 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
             }
 
         };
-        uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(this, statusCallback);
-        uiLifecycleHelper.onCreate(savedInstanceState);
+        uiLifeCycleHelper = IUiLifecycleHelper.Factory.getInstance(this, statusCallback);
+        uiLifeCycleHelper.onCreate(savedInstanceState);
     }
 
     private void changeSocialMode(boolean socialEnabled) {
@@ -81,7 +81,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+        uiLifeCycleHelper.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
-        uiLifecycleHelper.onResume();
+        uiLifeCycleHelper.onResume();
         changeSocialMode(new FacebookProvider().isLoggedIn());
 
     }
@@ -134,19 +134,19 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     @Override
     protected void onPause() {
         super.onPause();
-        uiLifecycleHelper.onPause();
+        uiLifeCycleHelper.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        uiLifecycleHelper.onStop();
+        uiLifeCycleHelper.onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        uiLifecycleHelper.onDestroy();
+        uiLifeCycleHelper.onDestroy();
     }
 
     @Override

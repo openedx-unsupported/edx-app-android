@@ -27,42 +27,42 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         ViewHolder holder = (ViewHolder) tag;
 
         CourseEntry courseData = enrollment.getCourse();
-        holder.courseTitle.setText(courseData.getName());
+        holder.txtCourseTitle.setText(courseData.getName());
 
         String code = courseData.getOrg()+ " | " + courseData.getNumber();
-        holder.schoolCode.setText(code);
+        holder.txtSchoolCode.setText(code);
         String videos=enrollment.getVideoCountReadable() + ",";
-        holder.no_of_videos.setText(videos);
-        holder.size_of_videos.setText(MemoryUtil.format(getContext(), enrollment.size));
+        holder.txtNoOfVideos.setText(videos);
+        holder.txtSizeOfVideos.setText(MemoryUtil.format(getContext(), enrollment.size));
 
-        holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
+        holder.imgCourse.setDefaultImageResId(R.drawable.edx_map);
+        holder.imgCourse.setImageUrl(courseData.getCourse_image(getContext()),
                 ImageCacheManager.getInstance().getImageLoader());
-        holder.courseImage.setTag(courseData);
+        holder.imgCourse.setTag(courseData);
     }
 
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.courseTitle = (TextView) convertView
+        holder.txtCourseTitle = (TextView) convertView
                 .findViewById(R.id.course_name);
-        holder.schoolCode = (TextView) convertView
+        holder.txtSchoolCode = (TextView) convertView
                 .findViewById(R.id.school_code);
-        holder.courseImage = (NetworkImageView) convertView
+        holder.imgCourse = (NetworkImageView) convertView
                 .findViewById(R.id.course_image);
-        holder.no_of_videos = (TextView) convertView
+        holder.txtNoOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
-        holder.size_of_videos = (TextView) convertView
+        holder.txtSizeOfVideos = (TextView) convertView
                 .findViewById(R.id.size_of_videos);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        NetworkImageView courseImage;
-        TextView courseTitle;
-        TextView schoolCode;
-        TextView no_of_videos;
-        TextView size_of_videos;
+        NetworkImageView imgCourse;
+        TextView txtCourseTitle;
+        TextView txtSchoolCode;
+        TextView txtNoOfVideos;
+        TextView txtSizeOfVideos;
     }
 
     @Override

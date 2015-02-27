@@ -63,29 +63,29 @@ BaseListAdapter<EnrolledCoursesResponse> {
         ViewHolder holder = (ViewHolder) tag;
 
         CourseEntry courseData = enrollment.getCourse();
-        holder.courseTitle.setText(courseData.getName());
+        holder.txtCourseTitle.setText(courseData.getName());
 
         if (courseData.getOrg() != null) {
-            holder.orgCodeTv.setVisibility(View.VISIBLE);
-            holder.orgCodeTv.setText(courseData.getOrg()+" ");
+            holder.txtOrgCode.setVisibility(View.VISIBLE);
+            holder.txtOrgCode.setText(courseData.getOrg() + " ");
         }else{
-            holder.orSymbolTv.setVisibility(View.GONE);
-            holder.orgCodeTv.setVisibility(View.GONE);
+            holder.txtOrSymbol.setVisibility(View.GONE);
+            holder.txtOrgCode.setVisibility(View.GONE);
         }
 
         if (courseData.getNumber() != null) {
-            holder.orSymbolTv.setVisibility(View.VISIBLE);
-            holder.schoolCodeTv.setText(" "+courseData.getNumber());
+            holder.txtOrSymbol.setVisibility(View.VISIBLE);
+            holder.txtSchoolCode.setText(" " + courseData.getNumber());
         }else{
-            holder.orSymbolTv.setVisibility(View.GONE);
-            holder.schoolCodeTv.setVisibility(View.GONE);
+            holder.txtOrSymbol.setVisibility(View.GONE);
+            holder.txtSchoolCode.setVisibility(View.GONE);
         }
 
         if (enrollment.getCourse().hasUpdates()) {
-            holder.new_course_content.setVisibility(View.VISIBLE);
-            holder.starting_from_layout.setVisibility(View.GONE);
-            holder.new_course_content.setTag(courseData);
-            holder.new_course_content
+            holder.layoutNewCourseContent.setVisibility(View.VISIBLE);
+            holder.layoutStartingFrom.setVisibility(View.GONE);
+            holder.layoutNewCourseContent.setTag(courseData);
+            holder.layoutNewCourseContent
             .setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -95,8 +95,8 @@ BaseListAdapter<EnrolledCoursesResponse> {
             });
         } else {
             try{
-                holder.new_course_content.setVisibility(View.GONE);
-                holder.starting_from_layout.setVisibility(View.VISIBLE);
+                holder.layoutNewCourseContent.setVisibility(View.GONE);
+                holder.layoutStartingFrom.setVisibility(View.VISIBLE);
 
                 SimpleDateFormat dateformat = new SimpleDateFormat("MMMM dd");
 
@@ -109,29 +109,29 @@ BaseListAdapter<EnrolledCoursesResponse> {
                     if(startDate!=null){
                         startDt = getContext().getString(R.string.label_starting_from)
                                 + " - " + dateformat.format(startDate);                 
-                        holder.starting_from.setText(startDt);
-                        holder.starting_from_layout.setVisibility(View.VISIBLE);
+                        holder.txtStartingFrom.setText(startDt);
+                        holder.layoutStartingFrom.setVisibility(View.VISIBLE);
                     }else{
-                        holder.starting_from_layout.setVisibility(View.GONE);
+                        holder.layoutStartingFrom.setVisibility(View.GONE);
                     }
                 }
                 else if (courseData.isStarted() && courseData.isEnded()) {
                     if(endDate!=null){
                         endDt = getContext().getString(R.string.label_ended)
                                 + " - " + dateformat.format(endDate);
-                        holder.starting_from.setText(endDt);
-                        holder.starting_from_layout.setVisibility(View.VISIBLE);
+                        holder.txtStartingFrom.setText(endDt);
+                        holder.layoutStartingFrom.setVisibility(View.VISIBLE);
                     }else{
-                        holder.starting_from_layout.setVisibility(View.GONE);
+                        holder.layoutStartingFrom.setVisibility(View.GONE);
                     }
                 } else if (courseData.isStarted() && !courseData.isEnded()) {
                     if(endDate!=null){
                         endDt = getContext().getString(R.string.label_ending_on)
                                 + " - " + dateformat.format(endDate);
-                        holder.starting_from.setText(endDt);
+                        holder.txtStartingFrom.setText(endDt);
 
                     }else{
-                        holder.starting_from_layout.setVisibility(View.GONE);
+                        holder.layoutStartingFrom.setVisibility(View.GONE);
                     }
                 }
             } catch (Exception ex) {
@@ -141,30 +141,30 @@ BaseListAdapter<EnrolledCoursesResponse> {
         }
 
         if(enrollment.isCertificateEarned()){
-            holder.certificateBanner.setVisibility(View.VISIBLE);
+            holder.layoutCertificateBanner.setVisibility(View.VISIBLE);
         } else {
-            holder.certificateBanner.setVisibility(View.GONE);
+            holder.layoutCertificateBanner.setVisibility(View.GONE);
         }
 
-        holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
+        holder.imgCourse.setDefaultImageResId(R.drawable.edx_map);
+        holder.imgCourse.setImageUrl(courseData.getCourse_image(getContext()),
                 ImageCacheManager.getInstance().getImageLoader());
-        holder.courseImage.setTag(courseData);
+        holder.imgCourse.setTag(courseData);
 
         if (showSocial) {
 
-            holder.facePileContainer.setVisibility(View.INVISIBLE);
+            holder.layoutFacePileContainer.setVisibility(View.INVISIBLE);
             List<SocialMember> membersList = enrollment.getCourse().getMembers_list();
             if (membersList == null) {
                 courseFriendsListener.fetchCourseFriends(enrollment);
             } else if (membersList.size() > 0){
-                holder.facePileContainer.setVisibility(View.VISIBLE);
+                holder.layoutFacePileContainer.setVisibility(View.VISIBLE);
                 holder.facePileView.setMemberList(membersList);
             }
 
         } else {
 
-            holder.facePileContainer.setVisibility(View.GONE);
+            holder.layoutFacePileContainer.setVisibility(View.GONE);
 
         }
 
@@ -173,42 +173,42 @@ BaseListAdapter<EnrolledCoursesResponse> {
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.courseTitle = (TextView) convertView
+        holder.txtCourseTitle = (TextView) convertView
                 .findViewById(R.id.course_name);
-        holder.orgCodeTv = (TextView) convertView.
+        holder.txtOrgCode = (TextView) convertView.
                 findViewById(R.id.org_code_tv);
-        holder.orSymbolTv = (TextView) convertView.
+        holder.txtOrSymbol = (TextView) convertView.
                 findViewById(R.id.or_tv);
-        holder.schoolCodeTv = (TextView) convertView
+        holder.txtSchoolCode = (TextView) convertView
                 .findViewById(R.id.school_code_tv);
-        holder.starting_from = (TextView) convertView
+        holder.txtStartingFrom = (TextView) convertView
                 .findViewById(R.id.starting_from);
-        holder.courseImage = (NetworkImageView) convertView
+        holder.imgCourse = (NetworkImageView) convertView
                 .findViewById(R.id.course_image);
-        holder.new_course_content = (LinearLayout) convertView
+        holder.layoutNewCourseContent = (LinearLayout) convertView
                 .findViewById(R.id.new_course_content_layout);
-        holder.starting_from_layout = (LinearLayout) convertView
+        holder.layoutStartingFrom = (LinearLayout) convertView
                 .findViewById(R.id.starting_from_layout);
-        holder.certificateBanner = (RelativeLayout) convertView
+        holder.layoutCertificateBanner = (RelativeLayout) convertView
                 .findViewById(R.id.course_certified_banner);
         holder.facePileView = (SocialFacePileView) convertView
                 .findViewById(R.id.course_item_facepileview);
-        holder.facePileContainer = (LinearLayout) convertView
+        holder.layoutFacePileContainer = (LinearLayout) convertView
                 .findViewById(R.id.course_item_facepile_container);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        NetworkImageView courseImage;
-        TextView courseTitle;
-        TextView schoolCodeTv;
-        TextView orgCodeTv;
-        TextView orSymbolTv;
-        TextView starting_from;
-        LinearLayout new_course_content;
-        LinearLayout starting_from_layout;
-        RelativeLayout certificateBanner;
-        LinearLayout facePileContainer;
+        NetworkImageView imgCourse;
+        TextView txtCourseTitle;
+        TextView txtSchoolCode;
+        TextView txtOrgCode;
+        TextView txtOrSymbol;
+        TextView txtStartingFrom;
+        LinearLayout layoutNewCourseContent;
+        LinearLayout layoutStartingFrom;
+        RelativeLayout layoutCertificateBanner;
+        LinearLayout layoutFacePileContainer;
         SocialFacePileView facePileView;
     }
 

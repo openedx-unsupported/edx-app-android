@@ -26,28 +26,28 @@ public class FindCoursesDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.fragment_find_courses_dialog,
                 container, false);
-            String find_courses_text = getString(R.string.find_courses_dialog_text_2);
-            ETextView tv_find_courses_2 = (ETextView)v.findViewById(R.id.find_courses_dialog_tv2);
-            tv_find_courses_2.setText(Html.fromHtml(find_courses_text));
+            String strFindCoursesText = getString(R.string.find_courses_dialog_text_2);
+            ETextView txtFindCourseDialog = (ETextView)v.findViewById(R.id.find_courses_dialog_tv2);
+            txtFindCourseDialog.setText(Html.fromHtml(strFindCoursesText));
 
         // Watch for button clicks.
-        Button close_button = (Button) v.findViewById(R.id.positiveButton);
-        close_button.setOnClickListener(new OnClickListener() {
+        Button btnClose = (Button) v.findViewById(R.id.positiveButton);
+        btnClose.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
-                if(!isRemoving() && isVisible())
+                if (!isRemoving() && isVisible())
                     dismiss();
             }
         });
 
         // Watch for button clicks.
-        Button find_courses_button = (Button) v.findViewById(R.id.open_edx_in_browser_btn);
-        find_courses_button.setOnClickListener(new OnClickListener() {
+        Button btnFindCourses = (Button) v.findViewById(R.id.open_edx_in_browser_btn);
+        btnFindCourses.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
-                if(!isRemoving() && isVisible()){
+                if (!isRemoving() && isVisible()) {
                     String url = Config.getInstance().getEnrollmentConfig().getExternalCourseSearchUrl();
                     BrowserUtil.open(getActivity(), url);
                 }

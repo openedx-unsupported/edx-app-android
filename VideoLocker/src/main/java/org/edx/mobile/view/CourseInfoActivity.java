@@ -34,10 +34,10 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     protected void onStart() {
         super.onStart();
 
-        String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
+        String strPathId = getIntent().getStringExtra(EXTRA_PATH_ID);
         String url = Config.getInstance().getEnrollmentConfig()
                 .getCourseInfoUrlTemplate()
-                .replace("{" + EXTRA_PATH_ID + "}", pathId);
+                .replace("{" + EXTRA_PATH_ID + "}", strPathId);
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
     }

@@ -36,12 +36,12 @@ public class DeleteSuccessfulDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.delete_successful_dialog, container,
                 false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        TextView dialog_tv_1 = (TextView) v
+        TextView txtTitle = (TextView) v.findViewById(R.id.tv_dialog_title);
+        TextView txtDialogMessageOne = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        title_tv.setText(getArguments().getString("title"));
-        dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
+        txtTitle.setText(getArguments().getString("title"));
+        txtDialogMessageOne.setText(getArguments().getString("dialog_msg_1"));
         // Watch for button clicks.
 
         Button button = (Button) v.findViewById(R.id.positiveButton);

@@ -38,65 +38,66 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
 
         if (sectionItem != null) {
             if (sectionItem.isChapter()) {
-                holder.videolayout.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.GONE);
                 ChapterModel c = (ChapterModel) sectionItem;
-                holder.course_title.setText(c.name);
-                holder.course_title.setVisibility(View.VISIBLE);
-                holder.section_title.setVisibility(View.GONE);
+                holder.txtCourseTitle.setText(c.name);
+                holder.txtCourseTitle.setVisibility(View.VISIBLE);
+                holder.txtSectionTitle.setVisibility(View.GONE);
             }else if (sectionItem.isSection()) {
-                holder.videolayout.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.GONE);
                 SectionItemModel s = (SectionItemModel) sectionItem;
-                holder.section_title.setText(s.name);
-                holder.section_title.setVisibility(View.VISIBLE);
-                holder.course_title.setVisibility(View.GONE);
+                holder.txtSectionTitle.setText(s.name);
+                holder.txtSectionTitle.setVisibility(View.VISIBLE);
+                holder.txtCourseTitle.setVisibility(View.GONE);
             }else {
-                holder.course_title.setVisibility(View.GONE);
-                holder.section_title.setVisibility(View.GONE);
-                holder.videolayout.setVisibility(View.VISIBLE);
+                holder.txtCourseTitle.setVisibility(View.GONE);
+                holder.txtSectionTitle.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.VISIBLE);
 
                 final DownloadEntry videoData = (DownloadEntry) sectionItem;
                 final String selectedVideoId = getVideoId();
 
                 
-                holder.videoTitle.setText(videoData.title);
-                holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
-                holder.videoPlayingTime.setText(videoData.getDurationReadable());
+                holder.txtVideoTitle.setText(videoData.title);
+                holder.txtVideoSize.setText(MemoryUtil.format(getContext(), videoData.size));
+                holder.txtVideoPlayingTime.setText(videoData.getDurationReadable());
 
                 if (videoData.downloaded == DownloadEntry.DownloadedState.DOWNLOADING) {
                     // may be download in progress
-                    holder.progresslayout.setVisibility(View.VISIBLE);
-                    holder.video_download_layout.setVisibility(View.GONE);
+                    holder.layoutProgress.setVisibility(View.VISIBLE);
+                    holder.layoutVideoDownload.setVisibility(View.GONE);
                     NativeDownloadModel downloadModel = storage.
                             getNativeDownlaod(videoData.dmId);
                     if(downloadModel!=null){
                         int percent = downloadModel.getPercent();
                         if(percent>=0 && percent < 100){
-                            holder.progresslayout.setVisibility(View.VISIBLE);
-                            holder.download_pw.setProgressPercent(percent);
+                            holder.layoutProgress.setVisibility(View.VISIBLE);
+                            holder.progressWheelDownload.setProgressPercent(percent);
                         }else{
-                            holder.progresslayout.setVisibility(View.GONE);
+                            holder.layoutProgress.setVisibility(View.GONE);
                         }
                     }
                 }
 
-                dbStore.getWatchedStateForVideoId(videoData.videoId, 
+                dbStore.getWatchedStateForVideoId(videoData.videoId,
                         new DataCallback<DownloadEntry.WatchedState>(true) {
-                    @Override
-                    public void onResult(DownloadEntry.WatchedState result) {
-                        DownloadEntry.WatchedState ws = result;
-                        if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.cyan_circle);
-                        } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.ic_partially_watched);
-                        } else {
-                            holder.video_watched_status.setImageResource(R.drawable.grey_circle);
-                        }
-                    }
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
-                    }
-                });
+                            @Override
+                            public void onResult(DownloadEntry.WatchedState result) {
+                                DownloadEntry.WatchedState ws = result;
+                                if (ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.cyan_circle);
+                                } else if (ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.ic_partially_watched);
+                                } else {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.grey_circle);
+                                }
+                            }
+
+                            @Override
+                            public void onFail(Exception ex) {
+                                logger.error(ex);
+                            }
+                        });
                 
                 dbStore.getDownloadedStateForVideoId(videoData.videoId, 
                         new DataCallback<DownloadEntry.DownloadedState>(true) {
@@ -105,69 +106,69 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                         DownloadEntry.DownloadedState ds = result;
                         if(ds == null || ds == DownloadEntry.DownloadedState.ONLINE) {
                             // not yet downloaded
-                            holder.video_download_layout.setVisibility(View.VISIBLE);
-                            holder.progresslayout.setVisibility(View.GONE);
-                            holder.video_download_layout.setOnClickListener(new OnClickListener() {
+                            holder.layoutVideoDownload.setVisibility(View.VISIBLE);
+                            holder.layoutProgress.setVisibility(View.GONE);
+                            holder.layoutVideoDownload.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    holder.progresslayout.setVisibility(View.VISIBLE);
-                                    holder.video_download_layout.setVisibility(View.GONE);
+                                    holder.layoutProgress.setVisibility(View.VISIBLE);
+                                    holder.layoutVideoDownload.setVisibility(View.GONE);
                                     logger.debug("Download Button Clicked");
                                     //notifyDataSetChanged();
-                                    download(videoData, holder.download_pw);
+                                    download(videoData, holder.progressWheelDownload);
                                 }
                             });
                         } else if(ds == DownloadEntry.DownloadedState.DOWNLOADING) {
                             // may be download in progress
-                            holder.progresslayout.setVisibility(View.VISIBLE);
-                            holder.video_download_layout.setVisibility(View.GONE);
+                            holder.layoutProgress.setVisibility(View.VISIBLE);
+                            holder.layoutVideoDownload.setVisibility(View.GONE);
                             storage.getDownloadProgressByDmid(videoData.dmId, new DataCallback<Integer>(true) {
                                 @Override
                                 public void onResult(Integer result) {
                                     if(result>=0 && result < 100){
-                                        holder.progresslayout.setVisibility(View.VISIBLE);
-                                        holder.download_pw.setProgressPercent(result);
+                                        holder.layoutProgress.setVisibility(View.VISIBLE);
+                                        holder.progressWheelDownload.setProgressPercent(result);
                                     }else{
-                                        holder.progresslayout.setVisibility(View.GONE);
+                                        holder.layoutProgress.setVisibility(View.GONE);
                                     }
                                 }
                                 @Override
                                 public void onFail(Exception ex) {
                                     logger.error(ex);
-                                    holder.progresslayout.setVisibility(View.GONE);
-                                    holder.video_download_layout.setVisibility(View.VISIBLE);
+                                    holder.layoutProgress.setVisibility(View.GONE);
+                                    holder.layoutVideoDownload.setVisibility(View.VISIBLE);
                                 }
                             });
                         } else if (ds == DownloadEntry.DownloadedState.DOWNLOADED) {
                             // downloaded
-                            holder.video_download_layout.setVisibility(View.GONE);
-                            holder.progresslayout.setVisibility(View.GONE);
+                            holder.layoutVideoDownload.setVisibility(View.GONE);
+                            holder.layoutProgress.setVisibility(View.GONE);
                         }
                         
                         if(selectedVideoId!=null){
                             if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
                                 // mark this cell as selected and playing
-                                holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                                holder.layoutVideo.setBackgroundResource(R.color.cyan_text_navigation_20);
                                 if(isPlayerOn){
-                                    holder.video_download_layout.setVisibility(View.GONE);
+                                    holder.layoutVideoDownload.setVisibility(View.GONE);
                                 }
                             } else {
                                 // mark this cell as non-selected
-                                holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                                holder.layoutVideo.setBackgroundResource(R.drawable.list_selector);
                             }
                         }else{
-                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                            holder.layoutVideo.setBackgroundResource(R.drawable.list_selector);
                         }
                     }
                     @Override
                     public void onFail(Exception ex) {
                         logger.error(ex);
-                        holder.progresslayout.setVisibility(View.GONE);
-                        holder.video_download_layout.setVisibility(View.VISIBLE);
+                        holder.layoutProgress.setVisibility(View.GONE);
+                        holder.layoutVideoDownload.setVisibility(View.VISIBLE);
                     }
                 });
                 //Hiding the video size in Video Listing
-                holder.videoSize.setVisibility(View.GONE);
+                holder.txtVideoSize.setVisibility(View.GONE);
             }
         }
     }
@@ -175,40 +176,40 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
     @Override
     public BaseViewHolder getTag(View convertView) {
         final ViewHolder holder = new ViewHolder();
-        holder.video_download_layout = (LinearLayout) convertView
+        holder.layoutVideoDownload = (LinearLayout) convertView
                 .findViewById(R.id.video_download_layout);
-        holder.download_pw = (ProgressWheel) convertView
+        holder.progressWheelDownload = (ProgressWheel) convertView
                 .findViewById(R.id.progress_wheel);
-        holder.videoTitle = (TextView) convertView
+        holder.txtVideoTitle = (TextView) convertView
                 .findViewById(R.id.video_title);
-        holder.videoPlayingTime = (TextView) convertView
+        holder.txtVideoPlayingTime = (TextView) convertView
                 .findViewById(R.id.video_playing_time);
-        holder.videoSize = (TextView) convertView
+        holder.txtVideoSize = (TextView) convertView
                 .findViewById(R.id.video_size);
-        holder.video_watched_status = (ImageView) convertView
+        holder.imgVideoWatchedStatus = (ImageView) convertView
                 .findViewById(R.id.video_watched_status);
-        holder.course_title = (TextView) convertView
+        holder.txtCourseTitle = (TextView) convertView
                 .findViewById(R.id.txt_course_title);
-        holder.section_title = (TextView) convertView
+        holder.txtSectionTitle = (TextView) convertView
                 .findViewById(R.id.txt_chapter_title);
-        holder.videolayout = (RelativeLayout) convertView
+        holder.layoutVideo = (RelativeLayout) convertView
                 .findViewById(R.id.video_row_layout);
-        holder.progresslayout = (LinearLayout) convertView
+        holder.layoutProgress = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView videoTitle;
-        TextView videoPlayingTime;
-        TextView videoSize;
-        ImageView video_watched_status;
-        LinearLayout video_download_layout;
-        LinearLayout progresslayout;
-        ProgressWheel download_pw;
-        TextView course_title;
-        TextView section_title;
-        RelativeLayout videolayout;
+        TextView txtVideoTitle;
+        TextView txtVideoPlayingTime;
+        TextView txtVideoSize;
+        ImageView imgVideoWatchedStatus;
+        LinearLayout layoutVideoDownload;
+        LinearLayout layoutProgress;
+        ProgressWheel progressWheelDownload;
+        TextView txtCourseTitle;
+        TextView txtSectionTitle;
+        RelativeLayout layoutVideo;
     }
 
 

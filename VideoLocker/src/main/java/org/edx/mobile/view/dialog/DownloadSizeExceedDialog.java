@@ -38,16 +38,16 @@ public class DownloadSizeExceedDialog extends DialogFragment {
 
         View v = inflater.inflate(R.layout.fragment_videosize_exceeds_dialog, container,
                 false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        TextView dialog_tv_1 = (TextView) v
+        TextView txtTitle = (TextView) v.findViewById(R.id.tv_dialog_title);
+        TextView txtDialogMessage = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        title_tv.setText(getArguments().getString("title"));
-        dialog_tv_1.setText(getArguments().getString("dialog_msg_1"));
+        txtTitle.setText(getArguments().getString("title"));
+        txtDialogMessage.setText(getArguments().getString("dialog_msg_1"));
         // Watch for button clicks.
-        final Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
-        positiveBtn.setText(getString(R.string.label_download));
-        positiveBtn.setOnClickListener(new OnClickListener() {
+        final Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setText(getString(R.string.label_download));
+        btnPositive.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 try {
                     dismiss();
@@ -60,8 +60,8 @@ public class DownloadSizeExceedDialog extends DialogFragment {
             }
         });
 
-        Button negativeBtn = (Button) v.findViewById(R.id.negativeButton);
-        negativeBtn.setOnClickListener(new OnClickListener() {
+        Button btnNegative = (Button) v.findViewById(R.id.negativeButton);
+        btnNegative.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 if (callback != null) {
                     callback.onNegativeClicked();

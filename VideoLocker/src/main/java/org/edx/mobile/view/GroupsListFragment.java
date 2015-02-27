@@ -129,8 +129,8 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
             }
         });
 
-        LoginButton loginButton = (LoginButton) view.findViewById(R.id.authButton);
-        loginButton.setFragment(this);
+        LoginButton btnLogin = (LoginButton) view.findViewById(R.id.authButton);
+        btnLogin.setFragment(this);
 
         addGroupFab = (AddFloatingActionButton) view.findViewById(R.id.group_fab);
         addGroupFab.setOnClickListener(new View.OnClickListener() {
@@ -186,10 +186,10 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
         } else if (requestCode == REQUEST_CREATE_GROUP && resultCode == Activity.RESULT_OK) {
 
             List<SocialMember> friends = data.getParcelableArrayListExtra(CreateGroupFragment.RESULT_FRIENDS);
-            String desc = data.getStringExtra(CreateGroupFragment.RESULT_DESC);
-            String name = data.getStringExtra(CreateGroupFragment.RESULT_NAME);
+            String strDesc = data.getStringExtra(CreateGroupFragment.RESULT_DESC);
+            String strName = data.getStringExtra(CreateGroupFragment.RESULT_NAME);
 
-            makeNewGroup(name, desc, friends);
+            makeNewGroup(strName, strDesc, friends);
 
         } else if (requestCode != REQUEST_CREATE_GROUP &&
             Session.getActiveSession().isOpened()) {
@@ -285,7 +285,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
             @Override
             public void onSuccess(SocialMember response) {
 
-                String groupAdmin = String.valueOf(response.getId());
+                String strGroupAdmin = String.valueOf(response.getId());
                 FacebookProvider fbProvider = new FacebookProvider();
 
                 //TODO This line needs to be removed when/if API implements adding admin on group create
@@ -294,7 +294,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
                 fbProvider.createNewGroup(getActivity(),
                         groupName,
                         description,
-                        groupAdmin,
+                        strGroupAdmin,
                         createGroupCallback);
             }
 

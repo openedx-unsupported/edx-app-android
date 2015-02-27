@@ -156,7 +156,7 @@ public class DbTests extends BaseTestCase {
         lock();
 
         DownloadEntry de = getDummyVideoModel();
-        // avoid duplicate videoId
+        // avoid duplicate strVideoId
         de.downloaded = DownloadedState.DOWNLOADING;
         db.addVideoData(de, null);
 
@@ -356,8 +356,8 @@ public class DbTests extends BaseTestCase {
 
     public void testupdateVideoAsOnlineByVideoId() throws Exception {
         db.clearDataByUser(username);
-        String videoId="videoId";
-        //String videoId = "videoId-" + System.currentTimeMillis();
+        String videoId="strVideoId";
+        //String strVideoId = "strVideoId-" + System.currentTimeMillis();
         db.updateVideoAsOnlineByVideoId(videoId, new DataCallback<Integer>() {
 
             @Override
@@ -376,7 +376,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
         DownloadEntry de1=getDummyVideoModel();
-        de1.videoId = "videoId";
+        de1.videoId = "strVideoId";
         de1.downloaded=DownloadedState.ONLINE;
         db.addVideoData(de1, null);
         //String videoId1="" + System.currentTimeMillis();
@@ -805,7 +805,7 @@ public class DbTests extends BaseTestCase {
 
     public void testupdateVideoWatchedState() throws Exception {
         db.clearDataByUser(username);
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         WatchedState state = WatchedState.PARTIALLY_WATCHED;
         db.updateVideoWatchedState(videoId, state, new DataCallback<Integer>() {
 
@@ -825,7 +825,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
         DownloadEntry de=getDummyVideoModel();
-        String videoid = de.videoId = "videoId-" + System.currentTimeMillis();
+        String videoid = de.videoId = "strVideoId-" + System.currentTimeMillis();
         WatchedState State = WatchedState.WATCHED;
         db.addVideoData(de, null);
         db.updateVideoWatchedState(videoid, State, new DataCallback<Integer>() {
@@ -850,7 +850,7 @@ public class DbTests extends BaseTestCase {
 
     public void testupdateVideoLastPlayedOffset() throws Exception {
         db.clearDataByUser(username);
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         int offset = 1;
         db.updateVideoLastPlayedOffset(videoId, offset,
                 new DataCallback<Integer>() {
@@ -922,8 +922,8 @@ public class DbTests extends BaseTestCase {
 
     public void testGetVideoEntryByVideoId() throws Exception {
         db.clearDataByUser(username);
-        String videoId = "videoId";
-        //  String videoId = "videoId-" + System.currentTimeMillis();
+        String videoId = "strVideoId";
+        //  String strVideoId = "strVideoId-" + System.currentTimeMillis();
 
         db.getVideoEntryByVideoId(videoId, new DataCallback<IVideoModel>() {
 
@@ -942,8 +942,8 @@ public class DbTests extends BaseTestCase {
         });
         lock();
         DownloadEntry de=getDummyVideoModel();
-        //      de.videoId = "videoId-" + System.currentTimeMillis();
-        de.videoId="videoId";
+        //      de.strVideoId = "strVideoId-" + System.currentTimeMillis();
+        de.videoId="strVideoId";
         db.addVideoData(de, null);
         db.getVideoEntryByVideoId(videoId, new DataCallback<IVideoModel>() {
 
@@ -1075,7 +1075,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
         DownloadEntry de=getDummyVideoModel();
-        de.videoId="videoId";
+        de.videoId="strVideoId";
         de.downloaded=DownloadedState.DOWNLOADING;
         db.addVideoData(de, null);
         db.updateAsDownloadingByVideoId(de, new DataCallback<Integer>() {
@@ -1556,7 +1556,7 @@ public class DbTests extends BaseTestCase {
     }
     public void testgetWatchedStateForVideoId() throws Exception {
         db.clearDataByUser(username);
-        String videoId="videoId";
+        String videoId="strVideoId";
         db.getWatchedStateForVideoId(videoId, new DataCallback<DownloadEntry.WatchedState>() {
 
             @Override
@@ -1684,7 +1684,7 @@ public class DbTests extends BaseTestCase {
     }
     public void testgetDownloadedStateForVideoId() throws Exception {
         db.clearDataByUser(username);
-        String videoId="videoId";
+        String videoId="strVideoId";
 
         db.getDownloadedStateForVideoId(videoId, new DataCallback<DownloadEntry.DownloadedState>() {
 
@@ -1705,7 +1705,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
         DownloadEntry de=getDummyVideoModel();
-        de.videoId = "videoId-" + System.currentTimeMillis();
+        de.videoId = "strVideoId-" + System.currentTimeMillis();
         de.downloaded = DownloadedState.DOWNLOADED;
         db.addVideoData(de, null);
         db.getDownloadedStateForVideoId(de.videoId, new DataCallback<DownloadEntry.DownloadedState>() {
@@ -1744,7 +1744,7 @@ public class DbTests extends BaseTestCase {
         DownloadEntry de = new DownloadEntry();
         de.username = username;
         de.title = "title";
-        de.videoId = "videoId-" + System.currentTimeMillis();
+        de.videoId = "strVideoId-" + System.currentTimeMillis();
         de.size = 1024;
         de.duration = 3600;
         de.filepath = "/fakepath";

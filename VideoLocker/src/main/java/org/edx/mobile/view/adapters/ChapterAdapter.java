@@ -40,16 +40,16 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
     public void render(BaseViewHolder tag, final SectionEntry model) {
         final ViewHolder holder = (ViewHolder) tag;
 
-        holder.chapterName.setText(model.chapter);
+        holder.txtChapterName.setText(model.chapter);
         final int totalCount = model.getVideoCount();
-        holder.no_of_videos.setVisibility(View.VISIBLE);
-        holder.no_of_videos.setText("" + totalCount);
+        holder.txtNoOfVideos.setVisibility(View.VISIBLE);
+        holder.txtNoOfVideos.setText("" + totalCount);
         int inProcessCount = dbStore.getVideosCountByChapter(courseId, model.chapter, null);
         int videoCount = totalCount - inProcessCount;
         if (videoCount > 0) {
-            holder.progresslayout.setVisibility(View.GONE);
-            holder.bulk_download_videos.setVisibility(View.VISIBLE);
-            holder.bulk_download_videos
+            holder.layoutProgress.setVisibility(View.GONE);
+            holder.layoutBulkDownloadVideos.setVisibility(View.VISIBLE);
+            holder.layoutBulkDownloadVideos
             .setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View downloadView) {
@@ -57,19 +57,19 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                 }
             });
         } else {
-            holder.bulk_download_videos.setVisibility(View.INVISIBLE);
+            holder.layoutBulkDownloadVideos.setVisibility(View.INVISIBLE);
             if(dbStore.isVideoDownloadingInChapter(courseId, model.chapter, null)){
-                holder.download_pw.setVisibility(View.VISIBLE);
+                holder.progressDownloadWheel.setVisibility(View.VISIBLE);
                 storage.getAverageDownloadProgressInChapter(
                         courseId, model.chapter, new DataCallback<Integer>(true) {
                             @Override
                             public void onResult(Integer result) {
                                 int percent = result;
                                 if(percent>=0 && percent<100){
-                                    holder.progresslayout.setVisibility(View.VISIBLE);
-                                    holder.download_pw.setProgressPercent(percent);
+                                    holder.layoutProgress.setVisibility(View.VISIBLE);
+                                    holder.progressDownloadWheel.setProgressPercent(percent);
                                 }else{
-                                    holder.progresslayout.setVisibility(View.GONE);
+                                    holder.layoutProgress.setVisibility(View.GONE);
                                 }
                             }
                             @Override
@@ -78,37 +78,37 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                             }
                         });
             }else{
-                holder.progresslayout.setVisibility(View.GONE);
+                holder.layoutProgress.setVisibility(View.GONE);
             }
         }
 
         if (AppConstants.offline_flag) {
-            holder.progresslayout.setVisibility(View.GONE);
-            holder.no_of_videos.setVisibility(View.GONE);
-            holder.bulk_download_videos.setVisibility(View.GONE);
-            holder.download_pw.setVisibility(View.GONE);
-            holder.next_arrow.setVisibility(View.VISIBLE);
+            holder.layoutProgress.setVisibility(View.GONE);
+            holder.txtNoOfVideos.setVisibility(View.GONE);
+            holder.layoutBulkDownloadVideos.setVisibility(View.GONE);
+            holder.progressDownloadWheel.setVisibility(View.GONE);
+            holder.imgNextArrow.setVisibility(View.VISIBLE);
             boolean isVideoDownloaded = dbStore.isVideoDownloadedInChapter
                     (courseId, model.chapter, null);
             if(isVideoDownloaded)
             {
-                holder.next_arrow.setBackgroundResource(R.drawable.ic_next_default);
-                holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
-                holder.chapterName.setTextColor(getContext().getResources()
+                holder.imgNextArrow.setBackgroundResource(R.drawable.ic_next_default);
+                holder.layoutChapter.setBackgroundResource(R.drawable.list_selector);
+                holder.txtChapterName.setTextColor(getContext().getResources()
                         .getColor(R.color.grey_text_mycourse));
             }else{
-                holder.next_arrow
+                holder.imgNextArrow
                 .setBackgroundResource(R.drawable.ic_next_deactive);
-                holder.chapterLayout
+                holder.layoutChapter
                         .setBackgroundResource(R.color.disabled_chapter_list);
-                holder.chapterName.setTextColor(getContext().getResources()
+                holder.txtChapterName.setTextColor(getContext().getResources()
                         .getColor(R.color.light_gray));
             }
 
         } else {
-            holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
-            holder.next_arrow.setVisibility(View.GONE);
-            holder.chapterName.setTextColor(getContext().getResources().getColor(
+            holder.layoutChapter.setBackgroundResource(R.drawable.list_selector);
+            holder.imgNextArrow.setVisibility(View.GONE);
+            holder.txtChapterName.setTextColor(getContext().getResources().getColor(
                     R.color.grey_text_mycourse));
         }
     }
@@ -116,31 +116,31 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.chapterName = (TextView) convertView
+        holder.txtChapterName = (TextView) convertView
                 .findViewById(R.id.chapter_name);
-        holder.no_of_videos = (TextView) convertView
+        holder.txtNoOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
-        holder.bulk_download_videos = (LinearLayout) convertView
+        holder.layoutBulkDownloadVideos = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
-        holder.next_arrow = (ImageView) convertView
+        holder.imgNextArrow = (ImageView) convertView
                 .findViewById(R.id.next_arrow);
-        holder.chapterLayout = (RelativeLayout) convertView
+        holder.layoutChapter = (RelativeLayout) convertView
                 .findViewById(R.id.chapter_row_layout);
-        holder.download_pw = (ProgressWheel) convertView.
+        holder.progressDownloadWheel = (ProgressWheel) convertView.
                 findViewById(R.id.progress_wheel);
-        holder.progresslayout = (LinearLayout) convertView
+        holder.layoutProgress = (LinearLayout) convertView
                 .findViewById(R.id.download_progress);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView chapterName;
-        TextView no_of_videos;
-        LinearLayout bulk_download_videos;
-        ImageView next_arrow;
-        RelativeLayout chapterLayout;
-        ProgressWheel download_pw;
-        LinearLayout progresslayout;
+        TextView txtChapterName;
+        TextView txtNoOfVideos;
+        LinearLayout layoutBulkDownloadVideos;
+        ImageView imgNextArrow;
+        RelativeLayout layoutChapter;
+        ProgressWheel progressDownloadWheel;
+        LinearLayout layoutProgress;
     }
 
     @Override

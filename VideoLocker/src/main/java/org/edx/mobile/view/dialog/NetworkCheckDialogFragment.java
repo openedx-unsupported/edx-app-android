@@ -61,15 +61,15 @@ public class NetworkCheckDialogFragment extends DialogFragment {
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_wifi_confirm,
                 container, false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        TextView dialog_tv_1 = (TextView) v
+        TextView txTitle = (TextView) v.findViewById(R.id.tv_dialog_title);
+        TextView txtMessageOne = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        title_tv.setText(getArguments().getString(DIALOG_TITLE));
-        dialog_tv_1.setText(getArguments().getString(DIALOG_MESSAGE));
+        txTitle.setText(getArguments().getString(DIALOG_TITLE));
+        txtMessageOne.setText(getArguments().getString(DIALOG_MESSAGE));
 
-        Button positiveButton = (Button) v.findViewById(R.id.positiveButton);
-        positiveButton.setOnClickListener(new OnClickListener() {
+        Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 if (callback != null) {
                     callback.onPositiveClicked();
@@ -79,10 +79,10 @@ public class NetworkCheckDialogFragment extends DialogFragment {
         });
 
         if(getArguments().containsKey(DIALOG_POSITIVE_BUTTON))
-            positiveButton.setText(getArguments().getString(DIALOG_POSITIVE_BUTTON));
+            btnPositive.setText(getArguments().getString(DIALOG_POSITIVE_BUTTON));
 
-        Button negativeButton = (Button) v.findViewById(R.id.negativeButton);
-        negativeButton.setOnClickListener(new OnClickListener() {
+        Button btnNegative = (Button) v.findViewById(R.id.negativeButton);
+        btnNegative.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 if (callback != null) {
                     callback.onNegativeClicked();
@@ -92,7 +92,7 @@ public class NetworkCheckDialogFragment extends DialogFragment {
         });
 
         if(getArguments().containsKey(DIALOG_NEGATIVE_BUTTON))
-            negativeButton.setText(getArguments().getString(DIALOG_NEGATIVE_BUTTON));
+            btnNegative.setText(getArguments().getString(DIALOG_NEGATIVE_BUTTON));
 
 
         return v;

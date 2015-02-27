@@ -37,96 +37,97 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
 
         if (sectionItem != null) {
             if (sectionItem.isChapter()) {
-                holder.videolayout.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.GONE);
                 ChapterModel c = (ChapterModel) sectionItem;
-                holder.course_title.setText(c.name);
-                holder.course_title.setVisibility(View.VISIBLE);
-                holder.section_title.setVisibility(View.GONE);
+                holder.txtCourseTitle.setText(c.name);
+                holder.txtCourseTitle.setVisibility(View.VISIBLE);
+                holder.txtSectionTitle.setVisibility(View.GONE);
             } else if (sectionItem.isSection()) {
-                holder.videolayout.setVisibility(View.GONE);
-                holder.section_title.setVisibility(View.VISIBLE);
-                holder.course_title.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.GONE);
+                holder.txtSectionTitle.setVisibility(View.VISIBLE);
+                holder.txtCourseTitle.setVisibility(View.GONE);
                 SectionItemModel s = (SectionItemModel) sectionItem;
-                holder.section_title.setText(s.name);
+                holder.txtSectionTitle.setText(s.name);
             } else {
-                holder.course_title.setVisibility(View.GONE);
-                holder.section_title.setVisibility(View.GONE);
-                holder.videolayout.setVisibility(View.VISIBLE);
+                holder.txtCourseTitle.setVisibility(View.GONE);
+                holder.txtSectionTitle.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.VISIBLE);
 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
 
-                holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(getContext(),videoData.size));
-                holder.videoPlayingTime.setText(videoData.getDurationReadable());
+                holder.txtVideoTitle.setText(videoData.getTitle());
+                holder.txtVideoSize.setText(MemoryUtil.format(getContext(), videoData.size));
+                holder.txtVideoPlayingTime.setText(videoData.getDurationReadable());
 
-                dbStore.getWatchedStateForVideoId(videoData.videoId, 
+                dbStore.getWatchedStateForVideoId(videoData.videoId,
                         new DataCallback<DownloadEntry.WatchedState>(true) {
-                    @Override
-                    public void onResult(DownloadEntry.WatchedState result) {
-                        DownloadEntry.WatchedState ws = result;
-                        if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.cyan_circle);
-                        } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.ic_partially_watched);
-                        } else {
-                            holder.video_watched_status.setImageResource(R.drawable.grey_circle);
-                        }
-                    }
-                    @Override
-                    public void onFail(Exception ex) {
-                        logger.error(ex);
-                    }
-                });
+                            @Override
+                            public void onResult(DownloadEntry.WatchedState result) {
+                                DownloadEntry.WatchedState ws = result;
+                                if (ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.cyan_circle);
+                                } else if (ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.ic_partially_watched);
+                                } else {
+                                    holder.imgVideoWatchedStatus.setImageResource(R.drawable.grey_circle);
+                                }
+                            }
 
-                holder.download_pw.setVisibility(View.GONE);
-                holder.video_download_layout.setVisibility(View.GONE);
+                            @Override
+                            public void onFail(Exception ex) {
+                                logger.error(ex);
+                            }
+                        });
+
+                holder.progressWheelDownload.setVisibility(View.GONE);
+                holder.layoutVideoDownloadLayout.setVisibility(View.GONE);
 
                 String selectedVideoId = getVideoId();
 
                 //TODO : Need to check if this call to the db is required if we can get it from the above DS
-                //if(store.isDownloaded(videoData.videoId)) {
+                //if(store.isDownloaded(videoData.strVideoId)) {
                 if(videoData.isDownloaded()){
-                    holder.videoTitle.setTextColor(getContext().getResources()
+                    holder.txtVideoTitle.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_text_mycourse));
-                    holder.videoSize.setTextColor(getContext().getResources()
+                    holder.txtVideoSize.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_video_size_text));
-                    holder.videoPlayingTime.setTextColor(getContext().getResources()
+                    holder.txtVideoPlayingTime.setTextColor(getContext().getResources()
                             .getColor(R.color.grey_video_size_text));
 
                     if(selectedVideoId!=null){
                         if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
                             // mark this cell as selected and playing
-                            holder.videolayout.setBackgroundResource
-                            (R.color.cyan_text_navigation_20);
+                            holder.layoutVideo.setBackgroundResource
+                                    (R.color.cyan_text_navigation_20);
                         } else {
                             // mark this cell as non-selected
-                            holder.videolayout.setBackgroundResource
-                            (R.drawable.list_selector);
+                            holder.layoutVideo.setBackgroundResource
+                                    (R.drawable.list_selector);
                         }
                     }else{
-                        holder.videolayout.setBackgroundResource
-                        (R.drawable.list_selector);
+                        holder.layoutVideo.setBackgroundResource
+                                (R.drawable.list_selector);
                     }
 
                     if(AppConstants.videoListDeleteMode){
-                        holder.delete_checkbox.setVisibility(View.VISIBLE);
-                        holder.delete_checkbox.setChecked(isSelected(holder.position));
-                        holder.delete_checkbox.setTag(videoData);
+                        holder.checkBoxDelete.setVisibility(View.VISIBLE);
+                        holder.checkBoxDelete.setChecked(isSelected(holder.position));
+                        holder.checkBoxDelete.setTag(videoData);
                     } else {
-                        holder.delete_checkbox.setVisibility(View.GONE);
+                        holder.checkBoxDelete.setVisibility(View.GONE);
                     }
                 } else {
-                    holder.videolayout.setBackgroundResource(R.color.disabled_chapter_list);
-                    holder.delete_checkbox.setVisibility(View.GONE);
-                    holder.videoTitle.setTextColor(getContext().getResources()
+                    holder.layoutVideo.setBackgroundResource(R.color.disabled_chapter_list);
+                    holder.checkBoxDelete.setVisibility(View.GONE);
+                    holder.txtVideoTitle.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
-                    holder.videoSize.setTextColor(getContext().getResources()
+                    holder.txtVideoSize.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
-                    holder.videoPlayingTime.setTextColor(getContext().getResources()
+                    holder.txtVideoPlayingTime.setTextColor(getContext().getResources()
                             .getColor(R.color.light_gray));
                 }
                 //Hiding the video size in Video Listing
-                holder.videoSize.setVisibility(View.GONE);
+                holder.txtVideoSize.setVisibility(View.GONE);
             }
         }
     }
@@ -134,31 +135,31 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
     @Override
     public BaseViewHolder getTag(View convertView) {
         final ViewHolder holder = new ViewHolder();
-        holder.video_download_layout = (LinearLayout) convertView
+        holder.layoutVideoDownloadLayout = (LinearLayout) convertView
                 .findViewById(R.id.video_download_layout);
-        holder.download_pw = (ProgressWheel) convertView
+        holder.progressWheelDownload = (ProgressWheel) convertView
                 .findViewById(R.id.progress_wheel);
-        holder.videoTitle = (TextView) convertView
+        holder.txtVideoTitle = (TextView) convertView
                 .findViewById(R.id.video_title);
-        holder.videoPlayingTime = (TextView) convertView
+        holder.txtVideoPlayingTime = (TextView) convertView
                 .findViewById(R.id.video_playing_time);
-        holder.videoSize = (TextView) convertView
+        holder.txtVideoSize = (TextView) convertView
                 .findViewById(R.id.video_size);
-        holder.video_watched_status = (ImageView) convertView
+        holder.imgVideoWatchedStatus = (ImageView) convertView
                 .findViewById(R.id.video_watched_status);
-        holder.course_title = (TextView) convertView
+        holder.txtCourseTitle = (TextView) convertView
                 .findViewById(R.id.txt_course_title);
-        holder.section_title = (TextView) convertView
+        holder.txtSectionTitle = (TextView) convertView
                 .findViewById(R.id.txt_chapter_title);
-        holder.videolayout = (RelativeLayout) convertView
+        holder.layoutVideo = (RelativeLayout) convertView
                 .findViewById(R.id.video_row_layout);
-        holder.delete_checkbox = (CheckBox) convertView
+        holder.checkBoxDelete = (CheckBox) convertView
                 .findViewById(R.id.video_select_checkbox);
-        holder.delete_checkbox
+        holder.checkBoxDelete
         .setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
-                    boolean isChecked) {
+                                         boolean isChecked) {
                 if (isChecked) {
                     select(holder.position);
                     onSelectItem();
@@ -172,16 +173,16 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView videoTitle;
-        TextView videoPlayingTime;
-        TextView videoSize;
-        ImageView video_watched_status;
-        LinearLayout video_download_layout;
-        ProgressWheel download_pw;
-        CheckBox delete_checkbox;
-        TextView course_title;
-        TextView section_title;
-        RelativeLayout videolayout;
+        TextView txtVideoTitle;
+        TextView txtVideoPlayingTime;
+        TextView txtVideoSize;
+        ImageView imgVideoWatchedStatus;
+        LinearLayout layoutVideoDownloadLayout;
+        ProgressWheel progressWheelDownload;
+        CheckBox checkBoxDelete;
+        TextView txtCourseTitle;
+        TextView txtSectionTitle;
+        RelativeLayout layoutVideo;
     }
 
     @Override

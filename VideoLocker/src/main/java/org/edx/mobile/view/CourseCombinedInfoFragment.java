@@ -56,14 +56,14 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private final int LOADER_ID = 0x416BED;
 
     private CourseImageHeader headerImageView;
-    private TextView courseTextName;
-    private TextView courseTextDetails;
-    private LinearLayout announcementContainer;
-    private LinearLayout facePileContainer;
+    private TextView txtCourseName;
+    private TextView txtCourseDetails;
+    private LinearLayout layoutAnnouncementContainer;
+    private LinearLayout layoutFacePileContainer;
     private SocialFacePileView facePileView;
     private LayoutInflater inflater;
     private View certificateContainer;
-    private TextView groupLauncher;
+    private TextView txtGroupLauncher;
 
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
@@ -95,9 +95,9 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         View view = inflater.inflate(R.layout.fragment_course_combined_info, container, false);
 
-        courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        announcementContainer = (LinearLayout) view.findViewById(R.id.announcement_container);
+        txtCourseName = (TextView) view.findViewById(R.id.course_detail_name);
+        txtCourseDetails = (TextView) view.findViewById(R.id.course_detail_extras);
+        layoutAnnouncementContainer = (LinearLayout) view.findViewById(R.id.announcement_container);
         certificateContainer = view.findViewById(R.id.combined_course_certificate_container);
         likeButton = (SocialAffirmView) view.findViewById(R.id.course_affirm_btn);
 
@@ -107,19 +107,19 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         shareButton = (SocialShareView) view.findViewById(R.id.combined_course_social_share);
         shareButton.setOnClickListener(this);
 
-        TextView handoutText = (TextView) view.findViewById(R.id.combined_course_handout_text);
-        handoutText.setOnClickListener(this);
+        TextView txtHandout = (TextView) view.findViewById(R.id.combined_course_handout_text);
+        txtHandout.setOnClickListener(this);
 
-        TextView certificateButton = (TextView) view.findViewById(R.id.view_cert_button);
-        certificateButton.setOnClickListener(this);
+        TextView txtCertificateButton = (TextView) view.findViewById(R.id.view_cert_button);
+        txtCertificateButton.setOnClickListener(this);
 
-        facePileContainer = (LinearLayout) view.findViewById(R.id.social_face_pile_container);
-        facePileContainer.setOnClickListener(this);
+        layoutFacePileContainer = (LinearLayout) view.findViewById(R.id.social_face_pile_container);
+        layoutFacePileContainer.setOnClickListener(this);
 
-        facePileView = (SocialFacePileView) facePileContainer.findViewById(R.id.combined_course_facepile);
+        facePileView = (SocialFacePileView) layoutFacePileContainer.findViewById(R.id.combined_course_facepile);
 
-        groupLauncher = (TextView) view.findViewById(R.id.combined_course_social_group);
-        groupLauncher.setOnClickListener(this);
+        txtGroupLauncher = (TextView) view.findViewById(R.id.combined_course_social_group);
+        txtGroupLauncher.setOnClickListener(this);
 
         return view;
 
@@ -154,7 +154,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     populateAnnouncements(savedAnnouncements);
                 }
 
-                courseTextName.setText(courseData.getCourse().getName());
+                txtCourseName.setText(courseData.getCourse().getName());
                 CourseEntry course = courseData.getCourse();
 
                 StringBuilder detailBuilder = new StringBuilder();
@@ -178,7 +178,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     detailBuilder.append(" - ");
                     detailBuilder.append(dateFormat.format(endDate));
                 }
-                courseTextDetails.setText(detailBuilder.toString());
+                txtCourseDetails.setText(detailBuilder.toString());
 
                 String url = courseData.getCourse().getCourse_url();
 
@@ -279,11 +279,11 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         if(announcementsList !=null && announcementsList.size()>0){
             hideEmptyAnnouncementMessage();
 
-            announcementContainer.removeAllViews();
+            layoutAnnouncementContainer.removeAllViews();
 
             for (AnnouncementsModel m : announcementsList) {
                 View viewHolder = generateAnnouncementView(m);
-                announcementContainer.addView(viewHolder);
+                layoutAnnouncementContainer.addView(viewHolder);
             }
         } else {
             showEmptyAnnouncementMessage();
@@ -338,9 +338,9 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         facePileView.clearAvatars();
         if (courseFriends != null && courseFriends.size() > 0) {
             facePileView.setMemberList(courseFriends);
-            facePileContainer.setVisibility(View.VISIBLE);
+            layoutFacePileContainer.setVisibility(View.VISIBLE);
         } else {
-            facePileContainer.setVisibility(View.GONE);
+            layoutFacePileContainer.setVisibility(View.GONE);
         }
 
     }
@@ -349,16 +349,16 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         View convertView = inflater.inflate(R.layout.row_announcement_list, null);
 
-        TextView date = (TextView) convertView.findViewById(R.id.announcement_date);
-        TextView content = (TextView) convertView.findViewById(R.id.announcement_content);
+        TextView txtDate = (TextView) convertView.findViewById(R.id.announcement_date);
+        TextView txtContent = (TextView) convertView.findViewById(R.id.announcement_content);
 
-        date.setText(model.getDate());
+        txtDate.setText(model.getDate());
 
         Spanned text = Html.fromHtml(model.content);
 
         Spanned interceptedLinks = OutboundUrlSpan.interceptAllLinks(text);
-        content.setText(interceptedLinks);
-        content.setMovementMethod(LinkMovementMethod.getInstance());
+        txtContent.setText(interceptedLinks);
+        txtContent.setMovementMethod(LinkMovementMethod.getInstance());
 
         return convertView;
 
@@ -370,8 +370,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             certificateContainer.setVisibility((courseData != null && courseData.isCertificateEarned()) ? View.VISIBLE : View.GONE);
         }
 
-        if (groupLauncher != null) {
-            groupLauncher.setVisibility((courseData != null && courseData.getCourse().isGroupAvailable(SocialUtils.SocialType.FACEBOOK)) ? View.VISIBLE : View.GONE);
+        if (txtGroupLauncher != null) {
+            txtGroupLauncher.setVisibility((courseData != null && courseData.getCourse().isGroupAvailable(SocialUtils.SocialType.FACEBOOK)) ? View.VISIBLE : View.GONE);
         }
 
     }

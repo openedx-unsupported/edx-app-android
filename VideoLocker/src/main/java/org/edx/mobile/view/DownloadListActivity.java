@@ -69,7 +69,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 offlineBar.setVisibility(View.VISIBLE);
         }
 
-        ListView downloadListView = (ListView) findViewById(R.id.my_downloads_list);
+        ListView listViewDownload = (ListView) findViewById(R.id.my_downloads_list);
         adapter = new DownloadEntryAdapter(this) {
 
             @Override
@@ -100,7 +100,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
         };
 
         adapter.setStore(storage);
-        downloadListView.setAdapter(adapter);
+        listViewDownload.setAdapter(adapter);
         final ArrayList<DownloadEntry> list = new ArrayList<DownloadEntry>();
         db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
             @Override
@@ -142,25 +142,25 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
             if (count > 0) {
                 findViewById(R.id.download_header).setVisibility(View.VISIBLE);
-                TextView tvCount = (TextView) findViewById(R.id.text_download_msg_cnt);
-                tvCount.setText(String.valueOf(count));
+                TextView txtCount = (TextView) findViewById(R.id.text_download_msg_cnt);
+                txtCount.setText(String.valueOf(count));
 
-                TextView tvCountMsg = (TextView) findViewById(R.id.text_download_msg);
+                TextView txtCountMsg = (TextView) findViewById(R.id.text_download_msg);
                 if (count ==1) {
-                    tvCountMsg.setText(getString(R.string.text_download_msg_singular));
+                    txtCountMsg.setText(getString(R.string.text_download_msg_singular));
                 } else {
-                    tvCountMsg.setText(getString(R.string.text_download_msg_plural));
+                    txtCountMsg.setText(getString(R.string.text_download_msg_plural));
                 }
 
-                Button view_btnView = (Button) findViewById(R.id.button_view);
-                view_btnView.setOnClickListener(new OnClickListener() {
+                Button btnView = (Button) findViewById(R.id.button_view);
+                btnView.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                         Intent myDownloadIntent = new Intent(DownloadListActivity.this,
                                 MyVideosTabActivity.class);
                         myDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivity( myDownloadIntent);
+                        startActivity(myDownloadIntent);
                         finish();
                     }
                 });
@@ -214,11 +214,11 @@ public class DownloadListActivity extends BaseFragmentActivity {
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         menuItem.setVisible(false);
 
-        MenuItem offline_tvItem = menu.findItem(R.id.offline);
+        MenuItem menuItemOfflineText = menu.findItem(R.id.offline);
         if (AppConstants.offline_flag) {
-            offline_tvItem.setVisible(true);
+            menuItemOfflineText.setVisible(true);
         } else {
-            offline_tvItem.setVisible(false);
+            menuItemOfflineText.setVisible(false);
         }
         return true;
     }
@@ -228,8 +228,8 @@ public class DownloadListActivity extends BaseFragmentActivity {
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         menuItem.setVisible(false);
 
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
+        MenuItem menuItemCheckBox = menu.findItem(R.id.delete_checkbox);
+        menuItemCheckBox.setVisible(false);
 
         return true;
     }

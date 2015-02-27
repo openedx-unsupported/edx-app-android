@@ -43,8 +43,8 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
     private boolean showCourseLink;
 
     private ProgressBar progressBar;
-    private TextView courseLabel;
-    private TextView errorLabel;
+    private TextView txtCourseLabel;
+    private TextView txtErrorLabel;
     private SwipeRefreshLayout listContainer;
 
     private final int LOADER_ID = 0x416EEE;
@@ -91,18 +91,18 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
             }
         });
 
-        courseLabel = (TextView) rootView.findViewById(R.id.course_label);
-        courseLabel.setText(getString(R.string.friends_in_course, courseData.getName()));
+        txtCourseLabel = (TextView) rootView.findViewById(R.id.course_label);
+        txtCourseLabel.setText(getString(R.string.friends_in_course, courseData.getName()));
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-        errorLabel = (TextView) rootView.findViewById(R.id.label_error);
+        txtErrorLabel = (TextView) rootView.findViewById(R.id.label_error);
 
-        EButton courseBtn = (EButton) rootView.findViewById(R.id.btn_open_public_course);
+        EButton btnCourse = (EButton) rootView.findViewById(R.id.btn_open_public_course);
 
         if (showCourseLink) {
 
-            courseBtn.setVisibility(View.VISIBLE);
-            courseBtn.setOnClickListener( new View.OnClickListener() {
+            btnCourse.setVisibility(View.VISIBLE);
+            btnCourse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -110,7 +110,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
                 }
             });
-            courseLabel.setText(R.string.friends_in_this_course);
+            txtCourseLabel.setText(R.string.friends_in_this_course);
 
         }
 
@@ -140,14 +140,14 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
         adapter.setItems(members);
         if (adapter.isEmpty()) {
-            courseLabel.setVisibility(View.GONE);
+            txtCourseLabel.setVisibility(View.GONE);
             listContainer.setVisibility(View.GONE);
-            errorLabel.setVisibility(View.VISIBLE);
+            txtErrorLabel.setVisibility(View.VISIBLE);
         } else {
-            courseLabel.setVisibility(View.VISIBLE);
+            txtCourseLabel.setVisibility(View.VISIBLE);
 
             listContainer.setVisibility(View.VISIBLE);
-            errorLabel.setVisibility(View.GONE);
+            txtErrorLabel.setVisibility(View.GONE);
         }
 
     }
@@ -186,7 +186,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<AsyncTaskResult<List<SocialMember>>> objectLoader) {
-        errorLabel.setVisibility(View.GONE);
+        txtErrorLabel.setVisibility(View.GONE);
     }
 
 }

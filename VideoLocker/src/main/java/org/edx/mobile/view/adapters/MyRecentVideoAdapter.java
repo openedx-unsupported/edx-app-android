@@ -35,17 +35,17 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
         if (sectionItem != null) {
             if(sectionItem.isCourse()){
                 EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) sectionItem;
-                holder.section_title.setText(enrollment.getCourse().getName());
-                holder.section_title.setVisibility(View.VISIBLE);
-                holder.videolayout.setVisibility(View.GONE);
+                holder.txtSectionTitle.setText(enrollment.getCourse().getName());
+                holder.txtSectionTitle.setVisibility(View.VISIBLE);
+                holder.layoutVideo.setVisibility(View.GONE);
             }else if(sectionItem.isDownload()){
-                holder.section_title.setVisibility(View.GONE);
-                holder.videolayout.setVisibility(View.VISIBLE);
+                holder.txtSectionTitle.setVisibility(View.GONE);
+                holder.layoutVideo.setVisibility(View.VISIBLE);
 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
-                holder.videoTitle.setText(videoData.getTitle());
-                holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
-                holder.videoPlayingTime.setText(videoData.getDurationReadable());
+                holder.txtVideoTitle.setText(videoData.getTitle());
+                holder.txtVideoSize.setText(MemoryUtil.format(getContext(), videoData.size));
+                holder.txtVideoPlayingTime.setText(videoData.getDurationReadable());
 
                 dbStore.getWatchedStateForVideoId(videoData.videoId,
                         new DataCallback<DownloadEntry.WatchedState>(true) {
@@ -53,11 +53,11 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                     public void onResult(DownloadEntry.WatchedState result) {
                         DownloadEntry.WatchedState ws = result;
                         if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.cyan_circle);
+                            holder.imgVideoWatchedStatus.setImageResource(R.drawable.cyan_circle);
                         } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.ic_partially_watched);
+                            holder.imgVideoWatchedStatus.setImageResource(R.drawable.ic_partially_watched);
                         } else {
-                            holder.video_watched_status.setImageResource(R.drawable.grey_circle);
+                            holder.imgVideoWatchedStatus.setImageResource(R.drawable.grey_circle);
                         }
                     }
                     @Override
@@ -68,21 +68,21 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                 if(videoData.isDownloaded()){
                     if (holder.position == selectedPosition) {
                         // mark this cell as selected and playing
-                        holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                        holder.layoutVideo.setBackgroundResource(R.color.cyan_text_navigation_20);
                     } else {
                         // mark this cell as non-selected
-                        holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                        holder.layoutVideo.setBackgroundResource(R.drawable.list_selector);
                     }
 
                     if(AppConstants.myVideosDeleteMode){
-                        holder.delete_checkbox.setVisibility(View.VISIBLE);
-                        holder.delete_checkbox.setChecked(isSelected(holder.position));
+                        holder.checkBoxDelete.setVisibility(View.VISIBLE);
+                        holder.checkBoxDelete.setChecked(isSelected(holder.position));
                     }else{
-                        holder.delete_checkbox.setVisibility(View.GONE);
+                        holder.checkBoxDelete.setVisibility(View.GONE);
                     }
                 }else{
-                    holder.videolayout.setBackgroundResource(R.color.transparent_white);
-                    holder.delete_checkbox.setVisibility(View.GONE);
+                    holder.layoutVideo.setBackgroundResource(R.color.transparent_white);
+                    holder.checkBoxDelete.setVisibility(View.GONE);
                 }
             }
         }
@@ -91,21 +91,21 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     @Override
     public BaseViewHolder getTag(View convertView) {
         final ViewHolder holder = new ViewHolder();
-        holder.videoTitle = (TextView) convertView
+        holder.txtVideoTitle = (TextView) convertView
                 .findViewById(R.id.video_title);
-        holder.videoPlayingTime = (TextView) convertView
+        holder.txtVideoPlayingTime = (TextView) convertView
                 .findViewById(R.id.video_playing_time);
-        holder.videoSize = (TextView) convertView
+        holder.txtVideoSize = (TextView) convertView
                 .findViewById(R.id.video_size);
-        holder.video_watched_status = (ImageView) convertView
+        holder.imgVideoWatchedStatus = (ImageView) convertView
                 .findViewById(R.id.video_watched_status);
-        holder.section_title = (TextView) convertView
+        holder.txtSectionTitle = (TextView) convertView
                 .findViewById(R.id.txt_chapter_title);
-        holder.videolayout = (RelativeLayout) convertView
+        holder.layoutVideo = (RelativeLayout) convertView
                 .findViewById(R.id.video_row_layout);
-        holder.delete_checkbox  = (CheckBox) convertView
+        holder.checkBoxDelete = (CheckBox) convertView
                 .findViewById(R.id.video_select_checkbox);
-        holder.delete_checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        holder.checkBoxDelete.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -123,13 +123,13 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView videoTitle;
-        TextView videoPlayingTime;
-        TextView videoSize;
-        ImageView video_watched_status;
-        CheckBox delete_checkbox;
-        TextView section_title;
-        RelativeLayout videolayout;
+        TextView txtVideoTitle;
+        TextView txtVideoPlayingTime;
+        TextView txtVideoSize;
+        ImageView imgVideoWatchedStatus;
+        CheckBox checkBoxDelete;
+        TextView txtSectionTitle;
+        RelativeLayout layoutVideo;
     }
 
     @Override

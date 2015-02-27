@@ -36,23 +36,23 @@ public class LaunchActivity extends BaseFragmentActivity {
         //The onTick method need not be run in the LaunchActivity
         runOnTick = false;
 
-        ETextView sign_in_tv = (ETextView) findViewById(R.id.sign_in_tv);
-        sign_in_tv.setOnClickListener(new OnClickListener() {
+        ETextView txtSignIn = (ETextView) findViewById(R.id.sign_in_tv);
+        txtSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Router.getInstance().showLogin(LaunchActivity.this);
             }
         });
 
-        EButton sign_up_button = (EButton) findViewById(R.id.sign_up_btn);
+        EButton btnSignUp = (EButton) findViewById(R.id.sign_up_btn);
         if (Config.getInstance().isUseDeprecatedRegistrationAPI()) {
-            sign_up_button.setVisibility(View.VISIBLE);
-            sign_up_button.setOnClickListener(new OnClickListener() {
+            btnSignUp.setVisibility(View.VISIBLE);
+            btnSignUp.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         segIO.trackUserSignUpForAccount();
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         logger.error(e);
                     }
                     Router.getInstance().showRegistration(LaunchActivity.this);
@@ -60,7 +60,7 @@ public class LaunchActivity extends BaseFragmentActivity {
             });
         } else {
             // disable registration feature for deprecated API endpoint
-            sign_up_button.setVisibility(View.GONE);
+            btnSignUp.setVisibility(View.GONE);
         }
 
         try {

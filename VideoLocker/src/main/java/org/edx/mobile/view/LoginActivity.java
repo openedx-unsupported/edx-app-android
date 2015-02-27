@@ -41,18 +41,18 @@ import java.util.Map;
 
 public class LoginActivity extends BaseFragmentActivity {
 
-    private TextView login_tv;
-    private EditText email_et, password_et;
+    private TextView txtLogin;
+    private EditText edtEmail, edtPassword;
 
-    private SimpleAlertDialog NoNetworkFragment;
+    private SimpleAlertDialog noNetworkFragment;
 
     private ResetPasswordDialog resetDialog;
     private SuccessDialogFragment successFragment;
-    private ProgressBar progressbar;
+    private ProgressBar progressBar;
     private RelativeLayout loginButtonLayout;
-    public String emailStr;
-    private TextView forgotPassword_tv;
-    private TextView eulaTv;
+    public String strEmail;
+    private TextView txtForgotPassword;
+    private TextView txtEula;
     private ISocial google, facebook;
     
     @Override
@@ -71,11 +71,11 @@ public class LoginActivity extends BaseFragmentActivity {
         google.onActivityCreated(this, savedInstanceState);
         facebook.onActivityCreated(this, savedInstanceState);
 
-        email_et = (EditText) findViewById(R.id.email_et);
+        edtEmail = (EditText) findViewById(R.id.email_et);
 
-        password_et = (EditText) findViewById(R.id.password_et);
-        progressbar = (ProgressBar) findViewById(R.id.login_spinner);
-        login_tv = (TextView) findViewById(R.id.login_btn_tv);
+        edtPassword = (EditText) findViewById(R.id.password_et);
+        progressBar = (ProgressBar) findViewById(R.id.login_spinner);
+        txtLogin = (TextView) findViewById(R.id.login_btn_tv);
 
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
@@ -91,8 +91,8 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         });
 
-        forgotPassword_tv = (TextView) findViewById(R.id.forgot_password_tv);
-        forgotPassword_tv.setOnClickListener(new OnClickListener() {
+        txtForgotPassword = (TextView) findViewById(R.id.forgot_password_tv);
+        txtForgotPassword.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -105,8 +105,8 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         });
 
-        eulaTv = (TextView) findViewById(R.id.end_user_agreement_tv);
-        eulaTv.setOnClickListener(new OnClickListener() {
+        txtEula = (TextView) findViewById(R.id.end_user_agreement_tv);
+        txtEula.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEulaDialog();
@@ -122,10 +122,10 @@ public class LoginActivity extends BaseFragmentActivity {
         // enable login buttons at launch
         setLoginBtnEnabled();
 
-        RelativeLayout closeButtonLayout = (RelativeLayout)
+        RelativeLayout layoutCloseButton = (RelativeLayout)
                 findViewById(R.id.actionbar_close_btn_layout);
-        if(closeButtonLayout!=null){
-            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
+        if(layoutCloseButton!=null){
+            layoutCloseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
@@ -154,9 +154,9 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         }
 
-        TextView customTitle = (TextView) findViewById(R.id.activity_title);
-        if(customTitle!=null){
-            customTitle.setText(getString(R.string.login_title));
+        TextView txtCustomTitle = (TextView) findViewById(R.id.activity_title);
+        if(txtCustomTitle!=null){
+            txtCustomTitle.setText(getString(R.string.login_title));
         }
     }
     
@@ -178,7 +178,7 @@ public class LoginActivity extends BaseFragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("username", email_et.getText().toString().trim());
+        outState.putString("username", edtEmail.getText().toString().trim());
         
         google.onActivitySaveInstanceState(this, outState);
         facebook.onActivitySaveInstanceState(this, outState);
@@ -187,7 +187,7 @@ public class LoginActivity extends BaseFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(email_et.getText().toString().length()==0){
+        if(edtEmail.getText().toString().length()==0){
             displayLastEmailId();
         }
         
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseFragmentActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if(savedInstanceState!=null){
-            email_et.setText(savedInstanceState.getString("username"));
+            edtEmail.setText(savedInstanceState.getString("username"));
         }
     }
 
@@ -212,33 +212,33 @@ public class LoginActivity extends BaseFragmentActivity {
 
     private void displayLastEmailId() {
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-        String emailId = pref.getString("email");
-        email_et.setText(emailId);
+        String strEmailId = pref.getString("email");
+        edtEmail.setText(strEmailId);
     }
 
     public void callServerForLogin() {
 
         if (!AppConstants.offline_flag) {
-            emailStr = email_et.getText().toString().trim();
-            String passwordStr = password_et.getText().toString().trim();
+            strEmail = edtEmail.getText().toString().trim();
+            String strPassword = edtPassword.getText().toString().trim();
 
-            if (email_et != null && emailStr.length() == 0) {
+            if (edtEmail != null && strEmail.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_email));
-                email_et.requestFocus();
+                edtEmail.requestFocus();
             }
 
-            else if (password_et != null && passwordStr.length() == 0) {
+            else if (edtPassword != null && strPassword.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_password));
-                password_et.requestFocus();
+                edtPassword.requestFocus();
             }
 
             else {
-                email_et.setEnabled(false);
-                password_et.setEnabled(false);
-                forgotPassword_tv.setEnabled(false);
-                eulaTv.setEnabled(false);
+                edtEmail.setEnabled(false);
+                edtPassword.setEnabled(false);
+                txtForgotPassword.setEnabled(false);
+                txtEula.setEnabled(false);
 
                 clearDialogs();
 
@@ -269,9 +269,9 @@ public class LoginActivity extends BaseFragmentActivity {
                 };
 
                 setLoginBtnDisabled();
-                logintask.setProgressDialog(progressbar);
-                logintask.execute(email_et.getText().toString().trim(),
-                        password_et.getText().toString());
+                logintask.setProgressDialog(progressBar);
+                logintask.execute(edtEmail.getText().toString().trim(),
+                        edtPassword.getText().toString());
             }
         } else {
             showErrorMessage(getString(R.string.no_connectivity),
@@ -288,9 +288,9 @@ public class LoginActivity extends BaseFragmentActivity {
     }
 
     public String getEmail() {
-        String email = email_et.getText().toString().trim();
+        String strEmail = edtEmail.getText().toString().trim();
 
-        return email;
+        return strEmail;
     }
 
     private void showResetPasswordDialog() {
@@ -348,9 +348,9 @@ public class LoginActivity extends BaseFragmentActivity {
         args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
         args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
 
-        NoNetworkFragment = SimpleAlertDialog.newInstance(args);
-        NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
+        noNetworkFragment = SimpleAlertDialog.newInstance(args);
+        noNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        noNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
 
     private void setLoginBtnDisabled() {
@@ -358,7 +358,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
         loginButtonLayout.setEnabled(false);
-        login_tv.setText(getString(R.string.signing_in));
+        txtLogin.setText(getString(R.string.signing_in));
         
         ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
@@ -371,7 +371,7 @@ public class LoginActivity extends BaseFragmentActivity {
         
         loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
         loginButtonLayout.setEnabled(true);
-        login_tv.setText(getString(R.string.login));
+        txtLogin.setText(getString(R.string.login));
         
         ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
@@ -382,16 +382,16 @@ public class LoginActivity extends BaseFragmentActivity {
     }
 
     private void showErrorMessage(String header, String message) {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        TextView errorHeader = (TextView) findViewById(R.id.error_header);
-        TextView errorMessage = (TextView) findViewById(R.id.error_message);
-        errorHeader.setText(header);
+        LinearLayout layoutError = (LinearLayout) findViewById(R.id.error_layout);
+        TextView txtErrorHeader = (TextView) findViewById(R.id.error_header);
+        TextView txtErrorMessage = (TextView) findViewById(R.id.error_message);
+        txtErrorHeader.setText(header);
         if (message != null) {
-            errorMessage.setText(message);
+            txtErrorMessage.setText(message);
         } else {
-            errorMessage.setText(getString(R.string.login_failed));
+            txtErrorMessage.setText(getString(R.string.login_failed));
         }
-        UiUtil.animateLayouts(error_layout);
+        UiUtil.animateLayouts(layoutError);
     }
 
     @Override
@@ -459,7 +459,7 @@ public class LoginActivity extends BaseFragmentActivity {
 
         setLoginBtnDisabled();
         Task<?> task = new ProfileTask(LoginActivity.this);
-        task.setProgressDialog(progressbar);
+        task.setProgressDialog(progressBar);
         task.execute(accessToken, backend);
     }
     
@@ -475,12 +475,12 @@ public class LoginActivity extends BaseFragmentActivity {
 
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-        pref.put("email", email_et.getText().toString().trim());
+        pref.put("email", edtEmail.getText().toString().trim());
 
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
 
-        segIO.identifyUser(profile.id.toString(), profile.email , 
-                email_et.getText().toString().trim());
+        segIO.identifyUser(profile.id.toString(), profile.email,
+                edtEmail.getText().toString().trim());
         
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
         if(backendKey!=null){
@@ -494,10 +494,10 @@ public class LoginActivity extends BaseFragmentActivity {
     
     private void onUserLoginFailure(Exception ex) {
         setLoginBtnEnabled();
-        email_et.setEnabled(true);
-        password_et.setEnabled(true);
-        forgotPassword_tv.setEnabled(true);
-        eulaTv.setEnabled(true);
+        edtEmail.setEnabled(true);
+        edtPassword.setEnabled(true);
+        txtForgotPassword.setEnabled(true);
+        txtEula.setEnabled(true);
 
         // handle if this is a LoginException
         if (ex != null && ex instanceof LoginException) {

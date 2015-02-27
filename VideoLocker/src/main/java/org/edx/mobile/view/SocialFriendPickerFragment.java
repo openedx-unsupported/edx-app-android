@@ -58,11 +58,11 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
     private FriendListAdapter friendListAdapter;
 
     private ListView listView;
-    private EditText searchText;
+    private EditText edtSearchText;
     private ProgressBar progressBar;
-    private TextView errorMessage;
-    private MenuItem doneMenuItem;
-    private ImageButton cancelBtn;
+    private TextView txtErrorMessage;
+    private MenuItem menuItemDone;
+    private ImageButton btnCancel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,10 +97,10 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        doneMenuItem = menu.findItem(R.id.done_btn);
-        doneMenuItem.setVisible(true);
+        menuItemDone = menu.findItem(R.id.done_btn);
+        menuItemDone.setVisible(true);
 
-        doneMenuItem.getActionView().setOnClickListener(new View.OnClickListener() {
+        menuItemDone.getActionView().setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -158,15 +158,15 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
         View view = inflater.inflate(R.layout.fragment_social_friend_list, container, false);
 
         progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
-        errorMessage = (TextView) view.findViewById(R.id.social_friend_picker_message);
+        txtErrorMessage = (TextView) view.findViewById(R.id.social_friend_picker_message);
 
         listView = (ListView) view.findViewById(R.id.social_friend_picker_list_view);
         listView.setAdapter(friendListAdapter);
 
         final TextView searchHeader = (TextView) view.findViewById(R.id.search_list_header);
 
-        searchText = (EditText) view.findViewById(R.id.search_friends_edit_text);
-        searchText.addTextChangedListener(new TextWatcher() {
+        edtSearchText = (EditText) view.findViewById(R.id.search_friends_edit_text);
+        edtSearchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             }
@@ -181,23 +181,23 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
                 Filter filter = friendListAdapter.getFilter();
                 if (TextUtils.isEmpty(s)) {
                     filter.filter("");
-                    cancelBtn.setVisibility(View.INVISIBLE);
+                    btnCancel.setVisibility(View.INVISIBLE);
                     searchHeader.setText(R.string.friends_with_edx_accounts);
 
                 } else {
                     filter.filter(s);
-                    cancelBtn.setVisibility(View.VISIBLE);
+                    btnCancel.setVisibility(View.VISIBLE);
                     searchHeader.setText(R.string.search_results);
                 }
 
             }
         });
 
-        cancelBtn = (ImageButton) view.findViewById(R.id.cancel_search_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        btnCancel = (ImageButton) view.findViewById(R.id.cancel_search_btn);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchText.setText("");
+                edtSearchText.setText("");
             }
         });
 
@@ -206,7 +206,7 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
 
     private void refreshPage(State state) {
         progressBar.setVisibility(View.GONE);
-        errorMessage.setVisibility(View.GONE);
+        txtErrorMessage.setVisibility(View.GONE);
         listView.setVisibility(View.GONE);
         switch (state) {
             case LOADING:
@@ -214,18 +214,18 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
                 break;
             case LOADED:
                 if (friendListAdapter.isEmpty()) {
-                    errorMessage.setVisibility(View.VISIBLE);
+                    txtErrorMessage.setVisibility(View.VISIBLE);
 
-                    errorMessage.setText(R.string.error_no_friends_connected);
-                    searchText.setEnabled(false);
+                    txtErrorMessage.setText(R.string.error_no_friends_connected);
+                    edtSearchText.setEnabled(false);
                 } else {
                     listView.setVisibility(View.VISIBLE);
 
-                    searchText.setEnabled(true);
+                    edtSearchText.setEnabled(true);
                 }
                 break;
             case ERROR:
-                errorMessage.setVisibility(View.VISIBLE);
+                txtErrorMessage.setVisibility(View.VISIBLE);
                 break;
         }
         refreshMenu();
@@ -243,12 +243,12 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
     @Override
     public void onPause() {
         super.onPause();
-        searchText.clearFocus();
+        edtSearchText.clearFocus();
     }
 
     private void refreshMenu(){
-        if (doneMenuItem != null) {
-            TextView doneText = (TextView) doneMenuItem.getActionView();
+        if (menuItemDone != null) {
+            TextView doneText = (TextView) menuItemDone.getActionView();
             doneText.setEnabled(!friendListAdapter.getSelectedFriends().isEmpty());
         }
     }
@@ -283,7 +283,7 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
 
     @Override
     public void onError(SocialProvider.SocialError err) {
-        errorMessage.setText(getResources().getString(R.string.error_friends_list));
+        txtErrorMessage.setText(getResources().getString(R.string.error_friends_list));
         refreshPage(State.ERROR);
     }
 

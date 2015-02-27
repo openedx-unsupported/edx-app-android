@@ -55,7 +55,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     public void testVideoPlaying() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
@@ -75,7 +75,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     public void testVideoPause() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
@@ -96,7 +96,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     public void testVideoStop() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime = 10.2;
@@ -116,7 +116,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     public void testVideoLoading() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         Properties props = segment.trackVideoLoading(videoId, courseId, unitUrl);
@@ -136,7 +136,7 @@ public class SegmentTests extends BaseTestCase {
 
     public void testShowTranscript() throws Exception {
 
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime=10.11;
@@ -177,7 +177,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     public void testVideoSeek() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double oldTime = 10.2;
@@ -318,7 +318,7 @@ public class SegmentTests extends BaseTestCase {
     }
     
     public void testTranscriptLanguage() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
         double currentTime=10.11;
@@ -338,7 +338,7 @@ public class SegmentTests extends BaseTestCase {
     }
     
     public void testSingleVideoDownload() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
 
@@ -358,7 +358,7 @@ public class SegmentTests extends BaseTestCase {
     }
     
     public void testVideoOrientation() throws Exception {
-        String videoId = "videoId";
+        String videoId = "strVideoId";
         String courseId = "courseId";
         String unitUrl = "uniturl";
 

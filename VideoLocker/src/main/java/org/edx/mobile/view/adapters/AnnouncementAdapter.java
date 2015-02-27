@@ -21,28 +21,28 @@ public abstract class AnnouncementAdapter extends
     @Override
     public void render(BaseViewHolder tag, final AnnouncementsModel model) {
         ViewHolder holder = (ViewHolder) tag;
-        holder.date.setText(model.getDate());
+        holder.txtDate.setText(model.getDate());
         Spanned text = Html.fromHtml(model.content);
 
         Spanned intercepted = OutboundUrlSpan.interceptAllLinks(text);
-        holder.content.setText(intercepted);
-        holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.txtContent.setText(intercepted);
+        holder.txtContent.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.date = (TextView) convertView
+        holder.txtDate = (TextView) convertView
                 .findViewById(R.id.announcement_date);
         
-        holder.content = (TextView) convertView
+        holder.txtContent = (TextView) convertView
                 .findViewById(R.id.announcement_content);
         return holder;
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView date;
-        TextView content;
+        TextView txtDate;
+        TextView txtContent;
     }
     
 }

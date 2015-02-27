@@ -31,7 +31,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -1407,7 +1406,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                     ccAdaptor.add(lang);
                 }
             }
-            ccAdaptor.selectedLanguage = languageSubtitle;
+            ccAdaptor.strSelectedLanguage = languageSubtitle;
             ccAdaptor.notifyDataSetChanged();
 
             // Clear the default translucent background

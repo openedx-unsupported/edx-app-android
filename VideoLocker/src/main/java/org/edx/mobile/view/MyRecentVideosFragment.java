@@ -47,7 +47,7 @@ import java.util.Map;
 public class MyRecentVideosFragment extends Fragment {
 
     private MyRecentVideoAdapter adapter;
-    private ListView videoListView;
+    private ListView listViewVideo;
     protected IDatabase db;
     protected IStorage storage;
     private DeleteVideoDialogFragment deleteDialogFragment;
@@ -55,7 +55,7 @@ public class MyRecentVideosFragment extends Fragment {
     private VideoListCallback callback;
     private MyVideosTabActivity containerActivity;
     private DownloadEntry videoModel;
-    private Button deleteButton = null;
+    private Button btnDelete = null;
     private final Handler handler = new Handler();
     private ISegment segIO;
     protected final Logger logger = new Logger(getClass().getName());
@@ -82,9 +82,9 @@ public class MyRecentVideosFragment extends Fragment {
         restore(savedInstanceState);
 
         try{
-            videoListView = (ListView) getView().findViewById(R.id.list_video);
+            listViewVideo = (ListView) getView().findViewById(R.id.list_video);
 
-            if (videoListView != null) {
+            if (listViewVideo != null) {
                 adapter = new MyRecentVideoAdapter(getActivity(), db) {
 
                     @Override
@@ -111,8 +111,8 @@ public class MyRecentVideosFragment extends Fragment {
                 };
                 // videoAdaptor.setItems(sectionList);
                 adapter.setSelectedPosition(playingVideoIndex);
-                videoListView.setEmptyView(getView().findViewById(R.id.empty_list_view));
-                videoListView.setAdapter(adapter);
+                listViewVideo.setEmptyView(getView().findViewById(R.id.empty_list_view));
+                listViewVideo.setAdapter(adapter);
 
                 showDeletePanel(getView());
                 if (!(NetworkUtil.isConnected(getActivity().getBaseContext()))) {
@@ -121,7 +121,7 @@ public class MyRecentVideosFragment extends Fragment {
                     AppConstants.offline_flag = false;
                 }
 
-                videoListView.setOnItemClickListener(adapter);
+                listViewVideo.setOnItemClickListener(adapter);
             } else {
                 // probably the landscape player view, so hide action bar
                 ActionBar bar = getActivity().getActionBar();
@@ -178,7 +178,7 @@ public class MyRecentVideosFragment extends Fragment {
             if(adapter.getCount()<=0){
                 hideDeletePanel(view);
             }
-            videoListView.setOnItemClickListener(adapter);
+            listViewVideo.setOnItemClickListener(adapter);
         } catch (Exception e) {
             logger.error(e);
         }
@@ -247,7 +247,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             AppConstants.offline_flag = true;
             notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
+            listViewVideo.setOnItemClickListener(adapter);
         }catch(Exception e){
             logger.error(e);
         }
@@ -257,7 +257,7 @@ public class MyRecentVideosFragment extends Fragment {
         try{
             AppConstants.offline_flag = false;
             notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
+            listViewVideo.setOnItemClickListener(adapter);
         }catch(Exception e){
             logger.error(e);
         }
@@ -292,44 +292,44 @@ public class MyRecentVideosFragment extends Fragment {
     public void showDeletePanel(View view) {
         try {
             if (!isPlayerVisible()) {
-                LinearLayout deletePanel = (LinearLayout) view
+                LinearLayout layoutDeletePanel = (LinearLayout) view
                         .findViewById(R.id.delete_button_panel);
-                deletePanel.setVisibility(View.VISIBLE);
+                layoutDeletePanel.setVisibility(View.VISIBLE);
 
-                deleteButton = (Button) view
+                btnDelete = (Button) view
                         .findViewById(R.id.delete_btn);
-                final Button editButton = (Button) view
+                final Button btnEdit = (Button) view
                         .findViewById(R.id.edit_btn);
-                editButton.setVisibility(View.VISIBLE);
-                final Button cancelButton = (Button) view
+                btnEdit.setVisibility(View.VISIBLE);
+                final Button btnCancel = (Button) view
                         .findViewById(R.id.cancel_btn);
 
                 if(AppConstants.myVideosDeleteMode){
-                    deleteButton.setVisibility(View.VISIBLE);
-                    cancelButton.setVisibility(View.VISIBLE);
-                    editButton.setVisibility(View.GONE);
+                    btnDelete.setVisibility(View.VISIBLE);
+                    btnCancel.setVisibility(View.VISIBLE);
+                    btnEdit.setVisibility(View.GONE);
                 }else{
-                    deleteButton.setVisibility(View.GONE);
-                    cancelButton.setVisibility(View.GONE);
-                    editButton.setVisibility(View.VISIBLE);
+                    btnDelete.setVisibility(View.GONE);
+                    btnCancel.setVisibility(View.GONE);
+                    btnEdit.setVisibility(View.VISIBLE);
                 }
 
 
-                deleteButton.setOnClickListener(new OnClickListener() {
+                btnDelete.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ArrayList<SectionItemInterface> list = adapter
                                 .getSelectedItems();
-                        if (list != null && list.size() > 0) 
+                        if (list != null && list.size() > 0)
                             showConfirmDeleteDialog(list.size());
                     }
                 });
 
-                cancelButton.setOnClickListener(new OnClickListener() {
+                btnCancel.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        editButton.setVisibility(View.VISIBLE);
-                        videoListView.setOnItemClickListener(adapter);
+                        btnEdit.setVisibility(View.VISIBLE);
+                        listViewVideo.setOnItemClickListener(adapter);
                         AppConstants.myVideosDeleteMode = false;
                         if (getActivity() instanceof MyVideosTabActivity) {
                             ((MyVideosTabActivity) getActivity()).hideCheckBox();
@@ -337,22 +337,22 @@ public class MyRecentVideosFragment extends Fragment {
                         adapter.unselectAll();
                         AppConstants.myVideosDeleteMode = false;
                         notifyAdapter();
-                        deleteButton.setVisibility(View.GONE);
-                        cancelButton.setVisibility(View.GONE);
+                        btnDelete.setVisibility(View.GONE);
+                        btnCancel.setVisibility(View.GONE);
                     }
                 });
 
-                editButton.setOnClickListener(new OnClickListener() {
+                btnEdit.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        editButton.setVisibility(View.GONE);
+                        btnEdit.setVisibility(View.GONE);
                         AppConstants.myVideosDeleteMode = true;
                         notifyAdapter();
-                        videoListView.setOnItemClickListener(null);
+                        listViewVideo.setOnItemClickListener(null);
                         disableDeleteButton();
-                        deleteButton.setVisibility(View.VISIBLE);
-                        cancelButton.setVisibility(View.VISIBLE);
+                        btnDelete.setVisibility(View.VISIBLE);
+                        btnCancel.setVisibility(View.VISIBLE);
                         if (getActivity() instanceof MyVideosTabActivity) {
                             ((MyVideosTabActivity) getActivity()).showCheckBox();
                         }
@@ -420,7 +420,7 @@ public class MyRecentVideosFragment extends Fragment {
             }
             addToRecentAdapter(getView());
             notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
+            listViewVideo.setOnItemClickListener(adapter);
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
             getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
@@ -478,7 +478,7 @@ public class MyRecentVideosFragment extends Fragment {
     //Disabling Delete button until no video is checked
     private void disableDeleteButton(){
         try{
-            deleteButton.setEnabled(false);
+            btnDelete.setEnabled(false);
         }catch(Exception ex){
             logger.error(ex);
         }
@@ -487,7 +487,7 @@ public class MyRecentVideosFragment extends Fragment {
     //Enabling Delete button until no video is checked
     private void enableDeleteButton(){
         try{
-            deleteButton.setEnabled(true);
+            btnDelete.setEnabled(true);
         }catch(Exception ex){
             logger.error(ex);
         }

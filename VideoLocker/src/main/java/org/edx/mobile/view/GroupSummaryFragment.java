@@ -48,8 +48,8 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
 
     private AddFloatingActionButton addButton;
     private ProgressBar progressBar;
-    private TextView memberCountLabel;
-    private TextView errorLabel;
+    private TextView txtMemberCountLabel;
+    private TextView txtErrorLabel;
     private SwipeRefreshLayout listContainer;
 
     private SimpleAdapter<SocialMember> adapter;
@@ -98,9 +98,9 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
             }
         });
 
-        memberCountLabel = (TextView) rootView.findViewById(R.id.member_count);
+        txtMemberCountLabel = (TextView) rootView.findViewById(R.id.member_count);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-        errorLabel = (TextView) rootView.findViewById(R.id.label_error);
+        txtErrorLabel = (TextView) rootView.findViewById(R.id.label_error);
         addButton = (AddFloatingActionButton) rootView.findViewById(R.id.btn_add_to_group);
         addButton.setOnClickListener(this);
 
@@ -131,7 +131,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
 
     private void refresh() {
 
-        errorLabel.setVisibility(View.GONE);
+        txtErrorLabel.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
 
         SocialProvider facebookProvider = new FacebookProvider();
@@ -166,14 +166,14 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
 
         adapter.setItems(members);
         if (adapter.isEmpty()) {
-            memberCountLabel.setVisibility(View.GONE);
+            txtMemberCountLabel.setVisibility(View.GONE);
             listContainer.setVisibility(View.GONE);
-            errorLabel.setVisibility(View.VISIBLE);
+            txtErrorLabel.setVisibility(View.VISIBLE);
         } else {
-            memberCountLabel.setVisibility(View.VISIBLE);
-            memberCountLabel.setText(getString(R.string.group_summary_count, adapter.getCount()));
+            txtMemberCountLabel.setVisibility(View.VISIBLE);
+            txtMemberCountLabel.setText(getString(R.string.group_summary_count, adapter.getCount()));
             listContainer.setVisibility(View.VISIBLE);
-            errorLabel.setVisibility(View.GONE);
+            txtErrorLabel.setVisibility(View.GONE);
         }
 
     }
@@ -185,7 +185,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
         listContainer.setRefreshing(true);
         if (requestCode == REQUEST_ADD_FRIENDS && resultCode == Activity.RESULT_OK){
 
-            errorLabel.setVisibility(View.GONE);
+            txtErrorLabel.setVisibility(View.GONE);
             addButton.setVisibility(View.GONE);
 
             final List<SocialMember> toInvite = data.getParcelableArrayListExtra(SocialFriendPickerFragment.RESULT_FRIEND_LIST);

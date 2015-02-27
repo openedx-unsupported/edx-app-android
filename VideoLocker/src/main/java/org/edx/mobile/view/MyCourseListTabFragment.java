@@ -26,7 +26,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     private static final String TAG = MyCourseListTabFragment.class.getSimpleName();
 
     private final int MY_COURSE_LOADER_ID = 0x905000;
-    protected TextView noCourseText;
+    protected TextView txtNoCourse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        noCourseText = (TextView) view.findViewById(R.id.no_course_tv);
+        txtNoCourse = (TextView) view.findViewById(R.id.no_course_tv);
         return view;
     }
 

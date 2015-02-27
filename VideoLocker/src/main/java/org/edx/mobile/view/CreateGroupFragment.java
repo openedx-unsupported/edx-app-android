@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -45,13 +44,13 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
     private final Logger logger = new Logger(CreateGroupFragment.class);
 
-    private EditText editTextName;
-    private EditText editTextDesc;
-    private TextView connectedText;
-    private Button addButton;
-    private View errorLayout;
+    private EditText edtName;
+    private EditText edtDesc;
+    private TextView txtConnected;
+    private Button btnAdd;
+    private View layoutError;
     private View progress;
-    private View formLayout;
+    private View layoutForm;
 
     private SocialMember currentUser;
 
@@ -113,8 +112,8 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(RESULT_FRIENDS, friendsToInvite);
-                resultIntent.putExtra(RESULT_NAME, editTextName.getText().toString());
-                resultIntent.putExtra(RESULT_DESC, editTextDesc.getText().toString());
+                resultIntent.putExtra(RESULT_NAME, edtName.getText().toString());
+                resultIntent.putExtra(RESULT_DESC, edtDesc.getText().toString());
 
                 getActivity().setResult(Activity.RESULT_OK, resultIntent);
                 getActivity().finish();
@@ -154,24 +153,24 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_create_group, container, false);
 
-        editTextName = (EditText) rootView.findViewById(R.id.text_group_name);
-        editTextName.addTextChangedListener(textWatcher);
+        edtName = (EditText) rootView.findViewById(R.id.text_group_name);
+        edtName.addTextChangedListener(textWatcher);
 
-        editTextDesc = (EditText) rootView.findViewById(R.id.text_group_desc);
-        editTextDesc.addTextChangedListener(textWatcher);
+        edtDesc = (EditText) rootView.findViewById(R.id.text_group_desc);
+        edtDesc.addTextChangedListener(textWatcher);
 
-        addButton = (Button) rootView.findViewById(R.id.next_create_group);
-        addButton.setOnClickListener(this);
+        btnAdd = (Button) rootView.findViewById(R.id.next_create_group);
+        btnAdd.setOnClickListener(this);
 
         View shareAppButton = rootView.findViewById(R.id.btn_share_app);
         shareAppButton.setOnClickListener(this);
 
-        errorLayout = rootView.findViewById(R.id.error_layout);
+        layoutError = rootView.findViewById(R.id.error_layout);
         progress = rootView.findViewById(R.id.progress);
-        formLayout = rootView.findViewById(R.id.create_group_form);
+        layoutForm = rootView.findViewById(R.id.create_group_form);
 
-        connectedText = (TextView) rootView.findViewById(R.id.group_create_facebook_text);
-        connectedText.setOnClickListener(this);
+        txtConnected = (TextView) rootView.findViewById(R.id.group_create_facebook_text);
+        txtConnected.setOnClickListener(this);
         SocialProvider socialProvider = new FacebookProvider();
         socialProvider.getUser(getActivity(), new SocialProvider.Callback<SocialMember>() {
             @Override
@@ -179,13 +178,13 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
                 currentUser = response;
                 insertUserName(response.getFullName());
-                connectedText.setVisibility(View.VISIBLE);
+                txtConnected.setVisibility(View.VISIBLE);
 
             }
 
             @Override
             public void onError(SocialProvider.SocialError err) {
-                connectedText.setVisibility(View.GONE);
+                txtConnected.setVisibility(View.GONE);
             }
         });
 
@@ -203,15 +202,15 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
             return;
         }
 
-        errorLayout.setVisibility(View.GONE);
-        formLayout.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
+        layoutForm.setVisibility(View.GONE);
         progress.setVisibility(View.GONE);
 
         if (friendsConnectedToEdx != null) {
             if (friendsConnectedToEdx.size() == 0) {
-                errorLayout.setVisibility(View.VISIBLE);
+                layoutError.setVisibility(View.VISIBLE);
             } else {
-                formLayout.findViewById(R.id.create_group_form).setVisibility(View.VISIBLE);
+                layoutForm.findViewById(R.id.create_group_form).setVisibility(View.VISIBLE);
                 updateButtonValidity();
             }
         } else {
@@ -220,18 +219,18 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
     }
 
     private void updateButtonValidity() {
-        addButton.setEnabled(!TextUtils.isEmpty(editTextName.getText()));
+        btnAdd.setEnabled(!TextUtils.isEmpty(edtName.getText()));
     }
 
     private void insertUserName(String name){
 
         String display = getString(R.string.connected_as, name);
-        connectedText.setText(display, TextView.BufferType.SPANNABLE);
+        txtConnected.setText(display, TextView.BufferType.SPANNABLE);
 
         int start = display.indexOf(name);
         int end = start + name.length();
 
-        Spannable s = (Spannable) connectedText.getText();
+        Spannable s = (Spannable) txtConnected.getText();
         int colour = getActivity().getResources().getColor(R.color.facebook_blue);
         s.setSpan(new ForegroundColorSpan(colour), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

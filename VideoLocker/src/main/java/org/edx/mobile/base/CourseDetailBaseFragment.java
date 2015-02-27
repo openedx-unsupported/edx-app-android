@@ -57,12 +57,12 @@ public class CourseDetailBaseFragment extends Fragment {
             if(getView()!=null){
                 getView().findViewById(R.id.open_in_browser_panel).setVisibility(
                         View.VISIBLE);
-                TextView openInBrowserTv = (TextView) getView().findViewById
+                TextView txtOpenInBrowser = (TextView) getView().findViewById
                         (R.id.open_in_browser_btn);
-                openInBrowserTv.setOnClickListener(new OnClickListener() {
+                txtOpenInBrowser.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BrowserUtil.open(getActivity(), 
+                        BrowserUtil.open(getActivity(),
                                 urlStringBuffer.toString());
                     }
                 });
@@ -91,15 +91,15 @@ public class CourseDetailBaseFragment extends Fragment {
         storage = new Storage(getActivity());
 
         UserPrefs userprefs = new UserPrefs(getActivity());
-        String username = null;
+        String strUserName = null;
         if (userprefs != null) {
             ProfileModel profile = userprefs.getProfile();
             if(profile!=null){
-                username =profile.username;
+                strUserName =profile.username;
             }
         }
         db = DatabaseFactory.getInstance(getActivity(), 
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+                DatabaseFactory.TYPE_DATABASE_NATIVE, strUserName);
 
         segIO = SegmentFactory.getInstance();
     }

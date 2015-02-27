@@ -36,7 +36,7 @@ public class CourseAnnouncementFragment extends CourseDetailBaseFragment {
         View view = inflater.inflate(R.layout.fragment_announcement, container,
                 false);
 
-        ListView announcementList = (ListView) view
+        ListView listViewAnnouncement = (ListView) view
                 .findViewById(R.id.announcement_list);
         adapter = new AnnouncementAdapter(getActivity()) {
 
@@ -46,7 +46,7 @@ public class CourseAnnouncementFragment extends CourseDetailBaseFragment {
                 // nothing to do here
             }
         };
-        announcementList.setAdapter(adapter);
+        listViewAnnouncement.setAdapter(adapter);
         return view;
     }
 

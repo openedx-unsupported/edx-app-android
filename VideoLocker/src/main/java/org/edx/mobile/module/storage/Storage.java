@@ -385,7 +385,7 @@ public class Storage implements IStorage {
                                 // add section below this chapter
                                 list.add((DownloadEntry)de);
                                 break;
-                            }   // If condition for videoId
+                            }   // If condition for strVideoId
                         }       //for loop for downloadedvideos for CourseId
                     }           // for loop for VRM
                 }               //  For loop for lectures

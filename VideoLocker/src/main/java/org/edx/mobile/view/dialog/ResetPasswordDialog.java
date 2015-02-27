@@ -23,10 +23,10 @@ public class ResetPasswordDialog extends DialogFragment {
 
     private final Logger logger = new Logger(getClass().getName());
 
-    private EditText email_et;
-    private TextView error;
-    private ProgressBar progressbar;
-    private RelativeLayout resetLayout;
+    private EditText edtEmail;
+    private TextView txtError;
+    private ProgressBar progressBar;
+    private RelativeLayout layoutReset;
     private ResetPasswordTask resetPasswordTask;
     private boolean isResetSuccessful = false;
 
@@ -45,48 +45,48 @@ public class ResetPasswordDialog extends DialogFragment {
             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dialog, container, false);
         // Watch for button clicks.
-        email_et = (EditText) v.findViewById(R.id.email_edit);
-        error = (TextView) v.findViewById(R.id.dialog_error_message);
-        progressbar = (ProgressBar) v.findViewById(R.id.login_spinner);
-        resetLayout = (RelativeLayout) v.findViewById(R.id.reset_layout);
+        edtEmail = (EditText) v.findViewById(R.id.email_edit);
+        txtError = (TextView) v.findViewById(R.id.dialog_error_message);
+        progressBar = (ProgressBar) v.findViewById(R.id.login_spinner);
+        layoutReset = (RelativeLayout) v.findViewById(R.id.reset_layout);
 
-        Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
-        positiveBtn.setOnClickListener(new OnClickListener() {
+        Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                resetLayout.setVisibility(View.VISIBLE);
-                error.setVisibility(View.GONE);
+                layoutReset.setVisibility(View.VISIBLE);
+                txtError.setVisibility(View.GONE);
 
                 if (!NetworkUtil.isConnected(getActivity())) {
-                    email_et.requestFocus();
-                    // no network error
-                    error.setText(getResources().getString(
+                    edtEmail.requestFocus();
+                    // no network txtError
+                    txtError.setText(getResources().getString(
                             R.string.network_not_connected_short));
-                    error.setVisibility(View.VISIBLE);
-                    resetLayout.setVisibility(View.GONE);
+                    txtError.setVisibility(View.VISIBLE);
+                    layoutReset.setVisibility(View.GONE);
                     return;
                 }
 
-                String emailStr = email_et.getText().toString().trim();
+                String strEmail = edtEmail.getText().toString().trim();
 
-                if (InputValidationUtil.isValidEmail(emailStr)) {
+                if (InputValidationUtil.isValidEmail(strEmail)) {
                     try {
-                        resetPassword(emailStr);
+                        resetPassword(strEmail);
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
                 } else {
-                    email_et.requestFocus();
-                    // display error
-                    error.setVisibility(View.VISIBLE);
-                    resetLayout.setVisibility(View.GONE);
+                    edtEmail.requestFocus();
+                    // display txtError
+                    txtError.setVisibility(View.VISIBLE);
+                    layoutReset.setVisibility(View.GONE);
                 }
             }
         });
 
-        Button negativeBtn = (Button) v.findViewById(R.id.negativeButton);
-        negativeBtn.setOnClickListener(new OnClickListener() {
+        Button btnNegative = (Button) v.findViewById(R.id.negativeButton);
+        btnNegative.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // Stop the reset password task and close this dialog
                 stopResetPasswordTask();
@@ -102,7 +102,7 @@ public class ResetPasswordDialog extends DialogFragment {
      * @param email
      */
     private void resetPassword(String email) {
-        email_et.setEnabled(false);
+        edtEmail.setEnabled(false);
         resetPasswordTask = new ResetPasswordTask(getActivity()) {
             @Override
             public void onFinish(ResetPasswordResponse result) {
@@ -119,20 +119,20 @@ public class ResetPasswordDialog extends DialogFragment {
                     if(result!=null){
                         onResetFailed(result);
                     }
-                    email_et.setEnabled(true);
-                    resetLayout.setVisibility(View.GONE);
+                    edtEmail.setEnabled(true);
+                    layoutReset.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
-                email_et.setEnabled(true);
-                resetLayout.setVisibility(View.GONE);
+                edtEmail.setEnabled(true);
+                layoutReset.setVisibility(View.GONE);
                 isResetSuccessful = false;
             }
         };
-        resetPasswordTask.setProgressDialog(progressbar);
+        resetPasswordTask.setProgressDialog(progressBar);
         isResetSuccessful = false;
         resetPasswordTask.execute(email);
     }
@@ -141,17 +141,17 @@ public class ResetPasswordDialog extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        TextView title = (TextView) getView()
+        TextView txtTitle = (TextView) getView()
                 .findViewById(R.id.tv_dialog_title);
-        TextView message = (TextView) getView().findViewById(
+        TextView txtDialogMessage = (TextView) getView().findViewById(
                 R.id.tv_dialog_message1);
-        title.setText(getResources().getString(
+        txtTitle.setText(getResources().getString(
                 R.string.confirm_dialog_title_help));
-        message.setText(getResources().getString(
+        txtDialogMessage.setText(getResources().getString(
                 R.string.confirm_dialog_message_help));
 
-        String email_text = getArguments().getString("login_email");
-        email_et.setText(email_text);
+        String strEmailText = getArguments().getString("login_email");
+        edtEmail.setText(strEmailText);
     }
 
     protected void onResetSuccessful() {
@@ -171,8 +171,8 @@ public class ResetPasswordDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        email_et.setEnabled(true);
-        resetLayout.setVisibility(View.GONE);
+        edtEmail.setEnabled(true);
+        layoutReset.setVisibility(View.GONE);
         //Check if the password was reset successfully when in background.
         //If reset successfully then display the reset successful dialog and dismiss this dialog
         if(isResetSuccessful){

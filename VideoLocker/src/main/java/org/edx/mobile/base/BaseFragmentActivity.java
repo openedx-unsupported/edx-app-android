@@ -66,7 +66,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     private static final int MSG_TYPE_TICK = 9302;
 
     private ProgressWheel totalProgress;
-    private MenuItem progressMenuItem;
+    private MenuItem menuItemProgress;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean isOnline = false;
     private boolean applyPrevTransitionOnRestart = false;
@@ -307,18 +307,18 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        if(checkBox_menuItem!=null){
-            checkBox_menuItem.setVisible(false);
+        MenuItem menuItemCheckBox = menu.findItem(R.id.delete_checkbox);
+        if(menuItemCheckBox!=null){
+            menuItemCheckBox.setVisible(false);
         }
 
-        MenuItem offline_tvItem = menu.findItem(R.id.offline);
+        MenuItem menuItemOfflineTxt = menu.findItem(R.id.offline);
         MenuItem menuItem = menu.findItem(R.id.progress_download);
         if(AppConstants.offline_flag){
-            offline_tvItem.setVisible(true);
+            menuItemOfflineTxt.setVisible(true);
             menuItem.setVisible(false);
         }else{
-            offline_tvItem.setVisible(false);
+            menuItemOfflineTxt.setVisible(false);
             menuItem.setVisible(true);
             View view = menuItem.getActionView();
             view.setOnClickListener(new OnClickListener() {
@@ -338,7 +338,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (menu != null) {
-            progressMenuItem = menu.findItem(R.id.progress_download);
+            menuItemProgress = menu.findItem(R.id.progress_download);
             //Check if the the onTick method needs to be run
             //This has been done to handle unwanted call to onTick() from login screen
             if(runOnTick)
@@ -378,10 +378,10 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             if (bar != null && title!=null) {
                 Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Semibold.ttf");
                 int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-                TextView titleTextView = (TextView) findViewById(titleId);
-                if(titleTextView!=null){
-                    titleTextView.setTextColor(getResources().getColor(R.color.grey_text_mycourse));
-                    titleTextView.setTypeface(type);
+                TextView txtTitleView = (TextView) findViewById(titleId);
+                if(txtTitleView!=null){
+                    txtTitleView.setTextColor(getResources().getColor(R.color.grey_text_mycourse));
+                    txtTitleView.setTypeface(type);
                     bar.setTitle(title);
                 }
             }
@@ -436,10 +436,10 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
      * @return boolean - Returns true if message shown, false otherwise.
      */
     public boolean showInfoMessage(String message){
-        TextView infoMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(infoMessageTv!=null) {
-            infoMessageTv.setText(message);
-            animateLayouts(infoMessageTv);
+        TextView txtInfoMessage = (TextView) findViewById(R.id.downloadMessage);
+        if(txtInfoMessage!=null) {
+            txtInfoMessage.setText(message);
+            animateLayouts(txtInfoMessage);
             return true;
         } else {
             logger.warn("TextView not available, so couldn't show flying message");
@@ -469,15 +469,15 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     protected void onTick() {
         // this is a per second callback
         try {
-            if (progressMenuItem != null) {
+            if (menuItemProgress != null) {
                 if(AppConstants.offline_flag){
-                    progressMenuItem.setVisible(false);
+                    menuItemProgress.setVisible(false);
                 }else{
                     if(db!=null){
                         boolean downloading = db.isAnyVideoDownloading(null);
                         logger.debug("isDownloading "+downloading);
                         if(!downloading){
-                            progressMenuItem.setVisible(false);
+                            menuItemProgress.setVisible(false);
                         }else{
                             updateDownloadingProgress();
                         }
@@ -493,15 +493,15 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     private void updateDownloadingProgress() {
         if(storage!=null){
             try {
-                View view = progressMenuItem.getActionView();
+                View view = menuItemProgress.getActionView();
                 if (view != null) {
                     totalProgress = (ProgressWheel) view
                             .findViewById(R.id.progress_wheel);
                     if (totalProgress != null) {
-                        progressMenuItem.setVisible(true);
+                        menuItemProgress.setVisible(true);
                         storage.getAverageDownloadProgress(averageProgressCallback);
                     }else{
-                        progressMenuItem.setVisible(false);
+                        menuItemProgress.setVisible(false);
                     }
                 }
             } catch (Exception e) {
@@ -745,20 +745,20 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
     private boolean showErrorMessage(String header, String message) {
         try {
-            LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-            if(error_layout!=null){
-                TextView errorHeader = (TextView) findViewById(R.id.error_header);
-                TextView errorMessage = (TextView) findViewById(R.id.error_message);
+            LinearLayout layoutError = (LinearLayout) findViewById(R.id.error_layout);
+            if(layoutError!=null){
+                TextView txtErrorHeader = (TextView) findViewById(R.id.error_header);
+                TextView txtErrorMessage = (TextView) findViewById(R.id.error_message);
                 if(header==null || header.isEmpty()){
-                   errorHeader.setVisibility(View.GONE);
+                   txtErrorHeader.setVisibility(View.GONE);
                 }else{
-                    errorHeader.setVisibility(View.VISIBLE);
-                    errorHeader.setText(header);
+                    txtErrorHeader.setVisibility(View.VISIBLE);
+                    txtErrorHeader.setText(header);
                 }
                 if (message != null) {
-                    errorMessage.setText(message);
+                    txtErrorMessage.setText(message);
                 }
-                UiUtil.animateLayouts(error_layout);
+                UiUtil.animateLayouts(layoutError);
                 return true;
             }else{
                 logger.warn("Error Layout not available, so couldn't show flying message");
@@ -808,9 +808,9 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 }
 
                 else if (intent.getAction().equals(ACTION_SHOW_MESSAGE_ERROR)) {
-                    String header = intent.getStringExtra("header");
-                    String message = intent.getStringExtra("message");
-                    if (showErrorMessage(header, message)) {
+                    String strHeader = intent.getStringExtra("header");
+                    String strMessage = intent.getStringExtra("message");
+                    if (showErrorMessage(strHeader, strMessage)) {
                         // make this message one-shot
                         removeStickyBroadcast(intent);
                     } else {

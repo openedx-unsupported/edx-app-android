@@ -197,12 +197,12 @@ public class FriendListAdapter extends SimpleAdapter<SocialMember> implements Fi
 
         if (viewHolder == null) {
             viewHolder = new ViewHolder();
-            viewHolder.name = (TextView) view.findViewById(R.id.friend_name);
-            viewHolder.selectedBox = (CheckBox) view.findViewById(R.id.friend_selected_check);
+            viewHolder.txtName = (TextView) view.findViewById(R.id.friend_name);
+            viewHolder.checkBoxSelected = (CheckBox) view.findViewById(R.id.friend_selected_check);
             viewHolder.avatarContainer = (ViewGroup) view.findViewById(R.id.friend_avatar_container);
             view.setTag(viewHolder);
         }
-        viewHolder.name.setText(item.getFullName());
+        viewHolder.txtName.setText(item.getFullName());
 
         boolean hasAvatar = viewHolder.avatarContainer.getChildAt(0) != null;
         View avatarView = SocialUtils.getAvatarView(context, viewHolder.avatarContainer.getChildAt(0), String.valueOf(item.getId()));
@@ -213,9 +213,9 @@ public class FriendListAdapter extends SimpleAdapter<SocialMember> implements Fi
             viewHolder.avatarContainer.addView(avatarView, viewHolder.avatarContainer.getChildCount());
         }
 
-        if (viewHolder.selectedBox != null){
+        if (viewHolder.checkBoxSelected != null){
 
-            viewHolder.selectedBox.setChecked(selectedList.contains(item.getId()));
+            viewHolder.checkBoxSelected.setChecked(selectedList.contains(item.getId()));
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -233,7 +233,7 @@ public class FriendListAdapter extends SimpleAdapter<SocialMember> implements Fi
                 }
 
             };
-            viewHolder.selectedBox.setOnClickListener(onClickListener);
+            viewHolder.checkBoxSelected.setOnClickListener(onClickListener);
             view.setOnClickListener(onClickListener);
 
             //Make sure that the view is in the enabled state if it's recycled.
@@ -270,11 +270,11 @@ public class FriendListAdapter extends SimpleAdapter<SocialMember> implements Fi
     }
 
     private class ViewHolder {
-        private TextView name;
-        private CheckBox selectedBox;
+        private TextView txtName;
+        private CheckBox checkBoxSelected;
         //Using a facebook centric view here as it vastly simplifies image loading
         private ViewGroup avatarContainer;
-        private FrameLayout avatarScreen;
+        private FrameLayout layoutAvatarScreen;
     }
 
 }

@@ -59,8 +59,8 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
+        MenuItem menuItemCheckBox = menu.findItem(R.id.delete_checkbox);
+        menuItemCheckBox.setVisible(false);
 
         return true;
 

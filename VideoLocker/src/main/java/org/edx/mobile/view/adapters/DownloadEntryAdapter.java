@@ -38,29 +38,29 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             return;
         }
 
-        holder.title.setText(model.getTitle());
-        holder.duration.setText(model.getDurationReadable());
+        holder.txtTitle.setText(model.getTitle());
+        holder.txtDuration.setText(model.getDurationReadable());
         if (nativeModel != null) {
             if(model.size == 0){
-                holder.percent.setText(nativeModel.getDownloaded() + " / "
+                holder.txtPercent.setText(nativeModel.getDownloaded() + " / "
                         + nativeModel.getSize());
             }else{
-                holder.percent.setText(nativeModel.getDownloaded() + " / "
+                holder.txtPercent.setText(nativeModel.getDownloaded() + " / "
                         + MemoryUtil.format(getContext(), model.size));
             }
 
             holder.progress.setProgress(nativeModel.getPercent());
             if (nativeModel.status == DownloadManager.STATUS_FAILED) {
-                holder.error.setVisibility(View.VISIBLE);
-                holder.error.setTag(model);
-                holder.error.setText(getContext()
+                holder.txtError.setVisibility(View.VISIBLE);
+                holder.txtError.setTag(model);
+                holder.txtError.setText(getContext()
                         .getString(R.string.error_download_failed));
 
                 holder.progress.setProgressDrawable(getContext().getResources()
                         .getDrawable(
                                 R.drawable.custom_progress_bar_horizontal_red));
             } else {
-                holder.error.setVisibility(View.GONE);
+                holder.txtError.setVisibility(View.GONE);
 
                 holder.progress
                 .setProgressDrawable(getContext()
@@ -70,7 +70,7 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
             }
         }
 
-        holder.cross_image_layout.setOnClickListener(new OnClickListener() {
+        holder.layoutCrossImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onDeleteClicked(model);
@@ -81,16 +81,16 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.title = (TextView) convertView.findViewById(R.id.downloads_name);
-        holder.duration = (TextView) convertView
+        holder.txtTitle = (TextView) convertView.findViewById(R.id.downloads_name);
+        holder.txtDuration = (TextView) convertView
                 .findViewById(R.id.download_time);
-        holder.percent = (TextView) convertView
+        holder.txtPercent = (TextView) convertView
                 .findViewById(R.id.download_percentage);
-        holder.error = (TextView) convertView
+        holder.txtError = (TextView) convertView
                 .findViewById(R.id.txtDownloadFailed);
         holder.progress = (ProgressBar) convertView
                 .findViewById(R.id.progressBar);
-        holder.cross_image_layout = (LinearLayout) convertView
+        holder.layoutCrossImage = (LinearLayout) convertView
                 .findViewById(R.id.close_btn_layout);
         
 
@@ -98,11 +98,11 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        TextView title;
-        TextView duration;
-        TextView percent;
-        LinearLayout cross_image_layout;
-        TextView error;
+        TextView txtTitle;
+        TextView txtDuration;
+        TextView txtPercent;
+        LinearLayout layoutCrossImage;
+        TextView txtError;
         ProgressBar progress;
     }
 

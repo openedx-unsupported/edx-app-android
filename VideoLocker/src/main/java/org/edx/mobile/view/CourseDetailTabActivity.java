@@ -27,7 +27,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
     private int selectedTab = 0;
 
     Bundle bundle;
-    String activityTitle;
+    String strActivityTitle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         try{
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
                     .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
-            activityTitle = courseData.getCourse().getName();
+            strActivityTitle = courseData.getCourse().getName();
             try{
                 segIO.screenViewsTracking(courseData.getCourse().getName());
             }catch(Exception e){
@@ -86,7 +86,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
     protected void onStart() {
         super.onStart();
         try{
-            setTitle(activityTitle);
+            setTitle(strActivityTitle);
         }catch(Exception e){
             logger.error(e);
         }

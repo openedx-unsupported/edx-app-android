@@ -32,16 +32,16 @@ public class SimpleAlertDialog extends DialogFragment {
 
         View v = inflater.inflate(R.layout.dialog_single_button,
                 container, false);
-        TextView title_tv = (TextView) v.findViewById(R.id.tv_dialog_title);
-        TextView dialog_tv_1 = (TextView) v
+        TextView txtTitle = (TextView) v.findViewById(R.id.tv_dialog_title);
+        TextView txtDialogMessageOne = (TextView) v
                 .findViewById(R.id.tv_dialog_message1);
 
-        title_tv.setText(getArguments().getString(EXTRA_TITLE));
-        dialog_tv_1.setText(getArguments().getString(EXTRA_MESSAGE));
+        txtTitle.setText(getArguments().getString(EXTRA_TITLE));
+        txtDialogMessageOne.setText(getArguments().getString(EXTRA_MESSAGE));
         // Watch for button clicks.
 
-        Button button = (Button) v.findViewById(R.id.positiveButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dismiss();
             }

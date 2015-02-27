@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 
 import org.edx.mobile.R;
@@ -50,7 +49,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
     protected ISegment segIO;
     boolean showSocialFeatures;
 
-    private ETextView socialConnectedText;
+    private ETextView txtSocialConnected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
         updateWifiSwitch();
         updateVisibilitySwitch();
 
-        LinearLayout socialView = (LinearLayout) layout.findViewById(R.id.settings_social_layout);
+        LinearLayout layoutSocialView = (LinearLayout) layout.findViewById(R.id.settings_social_layout);
 
         if (showSocialFeatures) {
 
@@ -99,20 +98,20 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
             loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status", "user_friends"));
             loginButton.setFragment(this);
 
-            socialConnectedText = (ETextView) layout.findViewById(R.id.settings_fb_login_body);
+            txtSocialConnected = (ETextView) layout.findViewById(R.id.settings_fb_login_body);
 
             SocialProvider socialProvider = new FacebookProvider();
             if (socialProvider.isLoggedIn()) {
                 populateLoginText();
             } else {
-                socialConnectedText.setText(R.string.settings_facebook_login_body_logged_out);
+                txtSocialConnected.setText(R.string.settings_facebook_login_body_logged_out);
                 loginButton.setText(R.string.settings_facebook_login_btn);
             }
-            socialView.setVisibility(View.VISIBLE);
+            layoutSocialView.setVisibility(View.VISIBLE);
 
         } else {
 
-            socialView.setVisibility(View.GONE);
+            layoutSocialView.setVisibility(View.GONE);
 
         }
 //        uiHelper = new UiLifecycleHelper(getActivity(), facebookStatusCallback);
@@ -164,7 +163,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
 
         } else {
 
-            socialConnectedText.setText(R.string.settings_facebook_login_body_logged_out);
+            txtSocialConnected.setText(R.string.settings_facebook_login_body_logged_out);
         }
 
         setCourseVisibilitySwitchEnabled(isLoggedIn);
@@ -179,7 +178,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
 
     private void populateLoginText() {
 
-        socialConnectedText.setText(R.string.settings_facebook_login_fetch);
+        txtSocialConnected.setText(R.string.settings_facebook_login_fetch);
         SocialProvider socialProvider = new FacebookProvider();
         socialProvider.getUser(getActivity(), new SocialProvider.Callback<SocialMember>() {
 
@@ -188,8 +187,8 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
                 if(!isAdded())
                     return;
 
-                socialConnectedText.setText(getString(R.string.settings_facebook_login_body_logged_in, response.getFullName()));
-                socialConnectedText.setVisibility(View.VISIBLE);
+                txtSocialConnected.setText(getString(R.string.settings_facebook_login_body_logged_in, response.getFullName()));
+                txtSocialConnected.setVisibility(View.VISIBLE);
 
             }
 
@@ -198,7 +197,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
                 if(!isAdded())
                     return;
 
-                socialConnectedText.setText(R.string.settings_facebook_login_error);
+                txtSocialConnected.setText(R.string.settings_facebook_login_error);
             }
 
         });

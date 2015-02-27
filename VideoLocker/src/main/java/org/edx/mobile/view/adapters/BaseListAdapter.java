@@ -165,7 +165,7 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
      */
     public static class BaseViewHolder {
         public int position;
-        public String videoId;
+        public String strVideoId;
     }
     
 }

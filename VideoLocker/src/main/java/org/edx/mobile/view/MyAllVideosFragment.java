@@ -34,8 +34,8 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
             Bundle savedInstanceState) {
         View view       =   inflater.inflate(R.layout.fragment_my_all_videos, container, false);
 
-        ListView myCourseList = (ListView) view.findViewById(R.id.my_video_course_list);
-        myCourseList.setEmptyView(view.findViewById(R.id.empty_list_view));
+        ListView listViewMyCourse = (ListView) view.findViewById(R.id.my_video_course_list);
+        listViewMyCourse.setEmptyView(view.findViewById(R.id.empty_list_view));
 
         myCoursesAdaptor = new MyAllVideoCourseAdapter(getActivity()) {
             @Override
@@ -51,8 +51,8 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
         };
 
         addMyAllVideosData();
-        myCourseList.setAdapter(myCoursesAdaptor);
-        myCourseList.setOnItemClickListener(myCoursesAdaptor);
+        listViewMyCourse.setAdapter(myCoursesAdaptor);
+        listViewMyCourse.setOnItemClickListener(myCoursesAdaptor);
         
         return view;
     }

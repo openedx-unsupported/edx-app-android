@@ -227,9 +227,9 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                     // switch to "recent" tab
                     if(recentVideosFragment!=null){
                         setCurrentTab(1);
-                        String tabId = getString(R.string.tab_my_recent_videos);
-                        mCurrentTab = tabId;
-                        pushFragments(tabId, recentVideosFragment);
+                        String strTabId = getString(R.string.tab_my_recent_videos);
+                        mCurrentTab = strTabId;
+                        pushFragments(strTabId, recentVideosFragment);
 
                         // now also re-attach the recent fragment
                         FragmentManager fm = getSupportFragmentManager();
@@ -336,8 +336,8 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         try{
-            MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-            View checkBoxView = checkBox_menuItem.getActionView();
+            MenuItem menuItemCheckBox = menu.findItem(R.id.delete_checkbox);
+            View checkBoxView = menuItemCheckBox.getActionView();
             myVideocheckBox = (CheckBox) checkBoxView
                     .findViewById(R.id.select_checkbox);
             if(videoCheckListener==null) {
@@ -345,7 +345,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             }
             if (AppConstants.myVideosDeleteMode && !(mCurrentTab
                     .equalsIgnoreCase(getString(R.string.tab_my_all_videos)))) {
-                checkBox_menuItem.setVisible(true);
+                menuItemCheckBox.setVisible(true);
                 //checkBox.setVisibility(View.VISIBLE);
                 if (AppConstants.myVideosDeleteMode) {
                     myVideocheckBox.setOnCheckedChangeListener(videoCheckListener);
@@ -353,7 +353,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                     myVideocheckBox.setOnCheckedChangeListener(null);
                 }
             } else {
-                checkBox_menuItem.setVisible(false);
+                menuItemCheckBox.setVisible(false);
                 myVideocheckBox.setOnCheckedChangeListener(null);
             }
         }catch(Exception e){

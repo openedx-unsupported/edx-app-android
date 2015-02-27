@@ -52,16 +52,16 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
 
         boolean create = super.onCreateOptionsMenu(menu);
 
-        MenuItem unreadMenuItem = menu.findItem(R.id.unread_display);
+        MenuItem menuItemUnread = menu.findItem(R.id.unread_display);
 
         SocialGroup group = getIntent().getParcelableExtra(EXTRA_GROUP);
 
         if (group.getUnread() > 0) {
 
-            unreadMenuItem.setVisible(true);
-            View unreadTextView = unreadMenuItem.getActionView();
-            ETextView unreadTV = (ETextView) unreadTextView.findViewById(R.id.unread_tv);
-            unreadTV.setText(getString(R.string.unread_text, group.getUnread()));
+            menuItemUnread.setVisible(true);
+            View unreadTextView = menuItemUnread.getActionView();
+            ETextView txtUnread = (ETextView) unreadTextView.findViewById(R.id.unread_tv);
+            txtUnread.setText(getString(R.string.unread_text, group.getUnread()));
 
         }
 

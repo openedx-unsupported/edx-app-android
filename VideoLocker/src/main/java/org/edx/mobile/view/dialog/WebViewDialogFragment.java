@@ -21,18 +21,18 @@ public class WebViewDialogFragment extends DialogFragment {
 
     private static final String TAG = WebViewDialogFragment.class.getCanonicalName();
 
-    private String fileName;
+    private String strFileName;
     private boolean showTitle;
-    private String dialogTitle;
-    private ProgressBar progress;
+    private String strDialogTitle;
+    private ProgressBar progressBar;
     
     public WebViewDialogFragment() {
     }   
     
     public void setDialogContents(String fileName, boolean showTitle, String dialogTitle){
-        this.fileName = fileName;
+        this.strFileName = fileName;
         this.showTitle = showTitle;
-        this.dialogTitle = dialogTitle;
+        this.strDialogTitle = dialogTitle;
     }   
 
     @Override
@@ -42,7 +42,7 @@ public class WebViewDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.fragment_web_dialog,
                 container, false);
 
-        progress = (ProgressBar) v.findViewById(R.id.progress);
+        progressBar = (ProgressBar) v.findViewById(R.id.progress);
 
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
@@ -58,17 +58,17 @@ public class WebViewDialogFragment extends DialogFragment {
 
                 @Override
                 public void onPageStarted() {
-                    progress.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onPageFinished() {
-                    progress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onPageLoadError() {
-                    progress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -77,19 +77,19 @@ public class WebViewDialogFragment extends DialogFragment {
                 }
             });
 
-            if(fileName!=null){
-                webView.loadUrl(fileName);
+            if(strFileName !=null){
+                webView.loadUrl(strFileName);
             }
-            ETextView tv_dialog_title = (ETextView)v.findViewById(R.id.tv_dialog_title);
+            ETextView txtDialogTitle = (ETextView)v.findViewById(R.id.tv_dialog_title);
             View viewSeperator = v.findViewById(R.id.view_seperator);
             if(showTitle){
-                tv_dialog_title.setVisibility(View.VISIBLE);
+                txtDialogTitle.setVisibility(View.VISIBLE);
                 viewSeperator.setVisibility(View.VISIBLE);
-                if(dialogTitle!=null){
-                    tv_dialog_title.setText(dialogTitle);
+                if(strDialogTitle !=null){
+                    txtDialogTitle.setText(strDialogTitle);
                 }
             }else{
-                tv_dialog_title.setVisibility(View.INVISIBLE);
+                txtDialogTitle.setVisibility(View.INVISIBLE);
                 viewSeperator.setVisibility(View.INVISIBLE);
             }
         }catch(Exception e){
@@ -97,12 +97,12 @@ public class WebViewDialogFragment extends DialogFragment {
         }
 
         // Watch for button clicks.
-        Button button = (Button) v.findViewById(R.id.positiveButton);
-        button.setOnClickListener(new OnClickListener() {
+        Button btnPositive = (Button) v.findViewById(R.id.positiveButton);
+        btnPositive.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
-                if(!isRemoving() && isVisible())
+                if (!isRemoving() && isVisible())
                     dismiss();
             }
         });
