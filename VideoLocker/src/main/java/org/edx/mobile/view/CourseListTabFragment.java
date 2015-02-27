@@ -163,10 +163,15 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
         offlineBar = view.findViewById(R.id.offline_bar);
         offlinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
+        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                //Hide the progress bar as swipe functionality has its own Progress indicator
+                if(progressBar!=null){
+                    progressBar.setVisibility(View.GONE);
+                }
                 loadData(true,false);
             }
         });
@@ -174,8 +179,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
                 R.color.grey_act_background , R.color.grey_act_background ,
                 R.color.grey_act_background);
-
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
 
         myCourseList = (ListView) view.findViewById(R.id.my_course_list);
         myCourseList.setAdapter(adapter);
