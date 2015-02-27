@@ -9,11 +9,13 @@ import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.CourseHandoutFragment;
 
 public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
 
     public static final String FIRST_FRAG_TAG = "first_frag";
     private View offlineBar;
+    private Fragment singleFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
     }
 
     private void loadFirstFragment() throws Exception {
-        Fragment singleFragment = getFirstFragment();
+        singleFragment = getFirstFragment();
 
         //this activity will only ever hold this lone fragment, so we
         // can afford to retain the instance during activity recreation
@@ -53,7 +55,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
         fragmentTransaction.add(R.id.my_groups_list_container, singleFragment, FIRST_FRAG_TAG);
         fragmentTransaction.disallowAddToBackStack();
         fragmentTransaction.commit();
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,6 +81,11 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
         super.onOffline();
         showOfflineBar();
         invalidateOptionsMenu();
+
+        //If the Handouts screen goes offline, we need to show Offline message
+        if(singleFragment!=null && singleFragment instanceof CourseHandoutFragment){
+            ((CourseHandoutFragment) singleFragment).showHandoutsOffline();
+        }
     }
 
     private void showOfflineBar(){

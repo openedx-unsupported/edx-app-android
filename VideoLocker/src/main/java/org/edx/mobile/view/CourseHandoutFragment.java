@@ -24,6 +24,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.util.UiUtil;
 
 public class CourseHandoutFragment extends Fragment {
 
@@ -60,12 +61,6 @@ public class CourseHandoutFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_handout, container,
                 false);
 
-        if (!(NetworkUtil.isConnected(getActivity()))) {
-            AppConstants.offline_flag = true;
-        }else{
-            AppConstants.offline_flag = false;
-        }
-
         webview = (WebView) view.findViewById(R.id.webview);
 
 //        webview.getSettings().setPluginsEnabled(true);
@@ -92,6 +87,10 @@ public class CourseHandoutFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (!(NetworkUtil.isConnected(getActivity()))) {
+            showHandoutsOffline();
+        }
 
         try {
             final Bundle bundle = getArguments();
@@ -168,8 +167,8 @@ public class CourseHandoutFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
+    public void showHandoutsOffline(){
+        UiUtil.showMessage(CourseHandoutFragment.this.getView()
+                ,getString(R.string.offline_handouts_text));
     }
 }

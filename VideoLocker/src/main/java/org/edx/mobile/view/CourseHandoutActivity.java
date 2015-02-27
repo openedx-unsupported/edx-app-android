@@ -19,15 +19,14 @@ public class CourseHandoutActivity extends BaseSingleFragmentActivity {
     public Fragment getFirstFragment() {
 
         Fragment frag = new CourseHandoutFragment();
-
-        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent().getSerializableExtra(CourseHandoutFragment.ENROLLMENT);
+        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
+                .getSerializableExtra(CourseHandoutFragment.ENROLLMENT);
         if (courseData != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CourseHandoutFragment.ENROLLMENT, courseData);
             frag.setArguments(bundle);
         }
+
         return frag;
     }
 }
-
-
