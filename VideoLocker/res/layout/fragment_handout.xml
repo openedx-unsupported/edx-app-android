@@ -15,7 +15,8 @@
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_alignParentTop="true"/>
 
     <ProgressBar
         android:id="@+id/api_spinner"
