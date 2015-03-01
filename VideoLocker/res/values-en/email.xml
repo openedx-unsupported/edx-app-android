@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<resources>
-    
-    <!--  Send Feedback Messages -->
-	<string name="Email_subject">Customer Feedback</string>
-
-</resources>

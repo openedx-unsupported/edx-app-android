@@ -40,8 +40,8 @@
     <string name="video_offline_message">Please select a video that you\'ve downloaded onto your device.</string>
 
     <!-- Registration Error Messages -->
-    <string name="error_enter_field">Please enter your %1$s and try again.</string>
-    <string name="error_select_field">Please select your %1$s and try again.</string>
+    <string name="error_enter_field">Please enter your %1$s.</string>
+    <string name="error_select_field">Please select your %1$s.</string>
     <string name="error_min_length">%1$s must have at least %2$d characters.</string>
     <string name="error_max_length">%1$s cannot have more than %2$d characters.</string>
 
