@@ -970,25 +970,22 @@ public class VideoListFragment extends Fragment {
                     segIO.trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
+
+                if (storage.addDownload(downloadEntry) != -1) {
+                    ((VideoListActivity) getActivity())
+                            .showInfoMessage(getString(R.string.msg_started_one_video_download));
+                } else {
+                    ((VideoListActivity) getActivity())
+                            .showInfoMessage(getString(R.string.msg_video_not_downloaded));
+                }
+                ((VideoListActivity) getActivity()).updateProgress();
+
+                //If the video is already downloaded, dont reload the adapter
                 if (reloadListFlag) {
                     adapter.notifyDataSetChanged();
-
-                    if (storage.addDownload(downloadEntry) != -1) {
-                        ((VideoListActivity) getActivity())
-                                .showInfoMessage(getString(R.string.msg_started_one_video_download));
-                    } else {
-                        ((VideoListActivity) getActivity())
-                                .showInfoMessage(getString(R.string.msg_video_not_downloaded));
-                    }
-                    ((VideoListActivity) getActivity()).updateProgress();
-
-                    //If the video is already downloaded, dont reload the adapter
-                    if (reloadListFlag) {
-                        adapter.notifyDataSetChanged();
-                    }
-                    TranscriptManager transManager = new TranscriptManager(getActivity());
-                    transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
                 }
+                TranscriptManager transManager = new TranscriptManager(getActivity());
+                transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
         }catch(Exception e){
             logger.error(e);
