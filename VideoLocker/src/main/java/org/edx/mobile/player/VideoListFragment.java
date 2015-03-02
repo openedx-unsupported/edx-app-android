@@ -580,9 +580,7 @@ public class VideoListFragment extends Fragment {
             }
 
             hideOpenInBrowserPanel();
-            if (myVideosFlag) {
-                //addDataToMyVideoAdapter();
-            } else {
+            if (!myVideosFlag) {
                 handleDeleteView();
                 addDataToOfflineAdapter();
             }
@@ -600,8 +598,8 @@ public class VideoListFragment extends Fragment {
     }
 
     public void onOnline() {
+        AppConstants.offline_flag = false;
         if (!isLandscape) {
-            AppConstants.offline_flag = false;
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.GONE);
             }
@@ -611,6 +609,7 @@ public class VideoListFragment extends Fragment {
                 showOpenInBrowserPanel();
                 hideDeletePanel(getView());
                 hideConfirmDeleteDialog();
+                handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
             }
 
         }
