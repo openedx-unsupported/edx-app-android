@@ -3,8 +3,7 @@
     android:id="@+id/cc_layout_popup"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_roundedbg"
-    android:orientation="vertical" >
+    android:background="@drawable/white_roundedbg">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_header_cc"
@@ -36,4 +35,11 @@
         android:gravity="center_vertical|left"
         android:padding="10dp"
         android:text="@string/lbl_cc_cancel" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/tv_cc_cancel"
+        android:background="@color/grey_act_background" />
 </RelativeLayout>

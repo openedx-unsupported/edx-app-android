@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
-    android:gravity="center"
     android:orientation="vertical" >
 
     <WebView
@@ -11,6 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_act_background" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"/>
 
     <ProgressBar
         android:id="@+id/api_spinner"
