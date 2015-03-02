@@ -8,6 +8,7 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 public class CourseHandoutActivity extends BaseSingleFragmentActivity {
+    private Fragment fragment;
 
     @Override
     protected void onStart() {
@@ -18,16 +19,24 @@ public class CourseHandoutActivity extends BaseSingleFragmentActivity {
     @Override
     public Fragment getFirstFragment() {
 
-        Fragment frag = new CourseHandoutFragment();
-
-        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent().getSerializableExtra(CourseHandoutFragment.ENROLLMENT);
+        fragment = new CourseHandoutFragment();
+        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
+                .getSerializableExtra(CourseHandoutFragment.ENROLLMENT);
         if (courseData != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(CourseHandoutFragment.ENROLLMENT, courseData);
-            frag.setArguments(bundle);
+            fragment.setArguments(bundle);
         }
-        return frag;
+
+        return fragment;
+    }
+
+    @Override
+    protected void onOffline() {
+        super.onOffline();
+        //If the Handouts screen goes offline, we need to show Offline message
+        if(fragment!=null && fragment instanceof CourseHandoutFragment){
+            ((CourseHandoutFragment) fragment).showHandoutsOffline();
+        }
     }
 }
-
-
