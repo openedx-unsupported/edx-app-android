@@ -267,6 +267,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             reset();
             state = PlayerState.RESET;
+            bufferPercent = 0;
 
             setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -459,14 +460,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 playWhenPrepared = false;
             }
             lastCurrentPosition = getCurrentPosition();
-            // catch seconds, ignore milleseconds
-            if (lastCurrentPosition > 0) {
-                // if required, 
-                // also minus one second, as screen takes some time to go off when stopped??
-                lastCurrentPosition = lastCurrentPosition - (lastCurrentPosition % 1000);
-            }
             lastFreezePosition = lastCurrentPosition;
-            if(lastCurrentPosition!=0){
+            if (lastCurrentPosition > 0) {
                 seekToWhenPrepared = lastCurrentPosition;
             }
             logger.debug("FreezePosition=" + lastFreezePosition);
@@ -476,7 +471,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         public void unfreeze() {
             if (isFreeze) {
                 logger.debug("unFreezePosition=" + lastFreezePosition);
-                lastCurrentPosition = 0;
+                lastCurrentPosition = getCurrentPosition();
                 seekTo(lastFreezePosition);
                 if (freezeState == PlayerState.PLAYING
                         || freezeState == PlayerState.LAGGING) {
@@ -595,11 +590,11 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             if (msec > 0
                     && lastCurrentPosition > 0
-                    && (delta < 10)  ) {
+                    && (delta <= 1000)  ) {
                 // no need to perform seek if current position is almost same as seekTo
-                // %10 is used to skip the difference of 10 milliseconds
-                logger.debug("Skipping seek to " + msec + " from "
-                        + lastCurrentPosition + " ; state=" + state);
+                // Delta of 1000 is used to skip seek of 1 sec difference from current position
+                logger.debug(String.format("Skipping seek to %d from %d ; state=%s",
+                        msec, lastCurrentPosition, state.toString()));
                 return;
             }
 
@@ -613,8 +608,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                logger.debug("seeking to " + msec + " from "
-                        + lastCurrentPosition + " ; state=" + state);
+                logger.debug(String.format("seeking to %d from %d ; state=%s",
+                        msec, lastCurrentPosition, state.toString()));
                 super.seekTo(msec);
                 lastCurrentPosition = msec;
                 logger.debug("playback seeked");

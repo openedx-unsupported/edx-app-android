@@ -1,6 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -29,7 +30,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     }
 
     @Override
-    public void render(BaseViewHolder tag, SectionItemInterface sectionItem) {
+    public void render(BaseViewHolder tag, final SectionItemInterface sectionItem) {
         final ViewHolder holder = (ViewHolder) tag;
 
         if (sectionItem != null) {
@@ -41,6 +42,30 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
             }else if(sectionItem.isDownload()){
                 holder.section_title.setVisibility(View.GONE);
                 holder.videolayout.setVisibility(View.VISIBLE);
+
+                // mark as NOT selected
+                holder.videolayout.setSelected(false);
+                holder.videolayout.setOnTouchListener(new View.OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        holder.videolayout.setSelected(
+                                selectedPosition != holder.position
+                                        && (event.getAction() == MotionEvent.ACTION_DOWN
+                                        || event.getAction() == MotionEvent.ACTION_MOVE
+                                        || event.getAction() == MotionEvent.ACTION_UP));
+
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            // select this row if it is clicked (i.e. if it got ACTION_UP)
+                            selectedPosition = holder.position;
+                        }
+
+                        if (sectionItem != null)
+                            return onTouchEvent(sectionItem, holder.position, event);
+                        else
+                            return false;
+                    }
+                });
 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
                 holder.videoTitle.setText(videoData.getTitle());
@@ -134,11 +159,12 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-        selectedPosition=position;
-        SectionItemInterface model = getItem(position);
-        if(model!=null) onItemClicked(model, position);
+//        selectedPosition=position;
+//        SectionItemInterface model = getItem(position);
+//        if(model!=null) onItemClicked(model, position);
     }
 
-    public abstract void onItemClicked(SectionItemInterface model, int position);
+//    public abstract void onItemClicked(SectionItemInterface model, int position);
     public abstract void onSelectItem();
+    protected abstract boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event);
 }
