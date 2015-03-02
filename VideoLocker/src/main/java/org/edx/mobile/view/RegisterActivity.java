@@ -119,7 +119,7 @@ public class RegisterActivity extends BaseFragmentActivity {
             // show EULA license that is shipped with app
             showWebDialog(getString(R.string.eula_file_link),
                     true,
-                    agreement.getText());
+                    getString(R.string.end_user_title));
         }
         else {
             // for any other link, open agreement link in a webview container
