@@ -9,7 +9,6 @@ import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.CourseHandoutFragment;
 
 public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
 
