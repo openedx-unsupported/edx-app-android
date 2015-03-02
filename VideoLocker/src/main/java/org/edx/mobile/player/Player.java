@@ -267,6 +267,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             reset();
             state = PlayerState.RESET;
+            bufferPercent = 0;
 
             setAudioStreamType(AudioManager.STREAM_MUSIC);
 

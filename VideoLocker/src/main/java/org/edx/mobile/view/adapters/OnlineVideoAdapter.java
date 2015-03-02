@@ -58,7 +58,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                 final String selectedVideoId = getVideoId();
 
                 
-                holder.videoTitle.setText(videoData.title);
+                holder.videoTitle.setText(videoData.getTitle());
                 holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
