@@ -28,4 +28,7 @@
     <dimen name="switch_corner_radius">3dp</dimen>
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
+
+    <!-- row height for CC language options, NONE option and the header of popup -->
+    <dimen name="row_height_cc_option">40dp</dimen>
 </resources>
