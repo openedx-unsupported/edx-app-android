@@ -141,6 +141,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         isActivityStarted = true;
         adapter.setStore(db, storage);
         handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
+        if(!adapter.isEmpty()){
+            adapter.notifyDataSetChanged();
+        }
 
         fetchLastAccessed(getView());
     }
