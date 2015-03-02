@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -88,20 +89,38 @@ public class MyRecentVideosFragment extends Fragment {
                 adapter = new MyRecentVideoAdapter(getActivity(), db) {
 
                     @Override
-                    public void onItemClicked(SectionItemInterface model, int position) {
-                        if (model.isDownload()) {
+                    protected boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event) {
+                        logger.debug("event action: " + event.getAction());
+                        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            activity.setTabChangeEnabled(false);
+                        } else if (event.getAction() == MotionEvent.ACTION_UP
+                                || event.getAction() == MotionEvent.ACTION_CANCEL) {
 
-                            if ( !isPlayerVisible()) {
-                                // don't try to showPlayer() if already shown here
-                                // this will cause player to freeze
-                                showPlayer();
+                            if (model.isDownload() &&
+                                    event.getAction() == MotionEvent.ACTION_UP) {
+                                // ACTION_UP verifies a CLICK event
+
+                                if ( !isPlayerVisible()) {
+                                    // don't try to showPlayer() if already shown here
+                                    // this will cause player to freeze
+                                    showPlayer();
+                                }
+                                // initialize index for this model
+                                playingVideoIndex = position;
+
+                                play(model);
+                                notifyAdapter();
                             }
-                            // initialize index for this model
-                            playingVideoIndex = position;
 
-                            play(model);
-                            notifyAdapter();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (activity != null)   activity.setTabChangeEnabled(true);
+                                }
+                            }, 500);
                         }
+                        return true;
                     }
 
                     @Override
@@ -294,11 +313,11 @@ public class MyRecentVideosFragment extends Fragment {
                     try {
                         // hide checkbox in action bar
                         MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
-                        if (activity != null)   activity.hideCheckBox();
+                        if (activity != null) activity.hideCheckBox();
 
                         // hide checkboxes in list
                         notifyAdapter();
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         logger.error(ex);
                     }
                 }
