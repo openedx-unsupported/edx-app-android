@@ -430,12 +430,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     if(isActivityStarted) {
                         adapter.notifyDataSetChanged();
                         (getActivity()).invalidateOptionsMenu();
-                        if (result > 1) {
-                            String msg = String.format(getString(R.string.downloading_multiple), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
-                        } else if (result == 1) {
-                            String msg = String.format(getString(R.string.downloading_single), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
+                        if (result > 0) {
+                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), String.format(format, result));
                         } else {
                             UiUtil.showMessage(CourseChapterListFragment.this.getView(),
                                     getString(R.string.msg_video_not_downloaded));

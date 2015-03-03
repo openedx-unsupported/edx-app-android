@@ -142,8 +142,6 @@
 
     <!-- Video List -->
     <string name="video_title">Video Title</string>
-    <string name="video_playing_time">3:45</string>
-    <string name="video_size">200MB</string>
     <string name="started_downloading">Downloading</string>
     <string name="title_download">Downloads</string>
 
@@ -155,24 +153,18 @@
 
     <!-- My Downloads -->
     <string name="download_name">Engaging in Interaction</string>
-    <string name="download_time">53:59:21</string>
-    <string name="download_percentage">45.20/200MB</string>
-    <string name="text_download_msg_cnt">20</string>
-    <string name="text_download_msg_singular">Video Downloaded</string>
-    <string name="text_download_msg_plural">Videos Downloaded</string>
+    <plurals name="text_download_msg">
+        <item quantity="one">Video Downloaded</item>
+        <item quantity="other">Videos Downloaded</item>
+    </plurals>
     <string name="view_button_text">VIEW</string>
     <string name="download_failed_text">Download Failed</string>
-    <string name="video_title_label">Title</string>
-    <string name="video_section_label">Section</string>
-    <string name="video_subsection_label">Subsection</string>
-    <string name="videos_no">4 Videos</string>
-    <string name="size_of_videos">890 MB</string>
     <string name="announcement_date">Announcement date</string>
-    <string name="label_videos">videos</string>
-    <string name="label_video">video</string>
+    <plurals name="downloading_count_videos">
+        <item quantity="one">Downloading %1$d video</item>
+        <item quantity="other">Downloading %1$d videos</item>
+    </plurals>
     <string name="download_exceed_title">Large Download</string>
-    <string name="downloading_multiple">Downloading %1$s videos</string>
-    <string name="downloading_single">Downloading %1$s video</string>
 
     <!-- lecture complete dialog texts -->
     <string name="title_lecture_complete">You\'ve reached the end of this video.</string>
@@ -195,18 +187,6 @@
     <!-- Player Settings -->
     <string name="lbl_closed_caption">Closed Captions</string>
     <string name="lbl_video_speed">Video Speed</string>
-    <string name="cc_english_code">en</string>
-    <string name="lbl_cc_english">English</string>
-    <string name="cc_chinese_code">zh</string>
-    <string name="lbl_cc_chinese">Chinese</string>
-    <string name="cc_portugal_code">pt</string>
-    <string name="lbl_cc_portugal">Portugal</string>
-    <string name="cc_german_code">de</string>
-    <string name="lbl_cc_german">German</string>
-    <string name="cc_french_code">fr</string>
-    <string name="lbl_cc_french">French</string>
-    <string name="cc_spanish_code">es</string>
-    <string name="lbl_cc_spanish">Spanish</string>
     <string name="lbl_cc_cancel">None</string>
 
     <!-- My Group Strings -->
@@ -217,12 +197,6 @@
     <string name="create_group_disclaimer">Creating an edX group will also create a Facebook group. The group discussion can only be seen by group members.</string>
     <string name="create_group_next">Next</string>
 
-    <string name="label_group_privacy">Group Privacy</string>
-    <string name="label_group_privacy_open">Open</string>
-    <string name="label_group_privacy_close">Close</string>
-    <string name="button_add">Add</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="add_friends">Add Friends</string>
     <string name="connected_as">Connected as %1$s</string>
     <string name="open_study_group">Open study group in facebook</string>
 
@@ -249,7 +223,6 @@
     <string name="friends_search">Search</string>
     <string name="done_text">Done</string>
     <string name="unread_text">%s Unread</string>
-    <string name="back_text">Back</string>
     <string name="group_summary_count">Group Members (%1$s)</string>
     <string name="group_summary_no_friends">You do not have any friends in this group</string>
     <string name="dialog_fbinstall_title">Facebook Required</string>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cc_english_code">en</string>
+    <string name="lbl_cc_english">English</string>
+    <string name="cc_chinese_code">zh</string>
+    <string name="lbl_cc_chinese">Chinese</string>
+    <string name="cc_portugal_code">pt</string>
+    <string name="lbl_cc_portugal">Portugal</string>
+    <string name="cc_german_code">de</string>
+    <string name="lbl_cc_german">German</string>
+    <string name="cc_french_code">fr</string>
+    <string name="lbl_cc_french">French</string>
+    <string name="cc_spanish_code">es</string>
+    <string name="lbl_cc_spanish">Spanish</string>
+</resources>
