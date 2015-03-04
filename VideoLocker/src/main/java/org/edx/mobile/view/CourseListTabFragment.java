@@ -40,6 +40,7 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
@@ -127,7 +128,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         });
         uiHelper.onCreate(savedInstanceState);
         loadData(false,false);
-
     }
 
     public abstract void handleCourseClick( EnrolledCoursesResponse model);
@@ -185,6 +185,12 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         myCourseList.setOnItemClickListener(adapter);
 
         setupFooter(myCourseList);
+
+        if (!(NetworkUtil.isConnected(getActivity()))) {
+            onOffline();
+        } else {
+            onOnline();
+        }
 
         return view;
     }
@@ -246,11 +252,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     @Override
     public void onResume() {
         super.onResume();
-        if (AppConstants.offline_flag) {
-            onOffline();
-        } else {
-            onOnline();
-        }
 
         uiHelper.onResume();
 
