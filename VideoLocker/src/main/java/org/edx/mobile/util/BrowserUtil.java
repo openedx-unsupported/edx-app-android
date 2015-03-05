@@ -37,22 +37,8 @@ public class BrowserUtil {
         }
 
         // verify if the app is running on zero-rated network?
-        if (NetworkUtil.isOnZeroRatedNetwork(activity)) {
+        if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity)) {
             // inform user if they get may charged for this browsing this URL
-            Dialog d = DialogFactory.getChargesApplyConfirmationDialog(activity, url);
-            d.show();
-            return;
-        }
-
-        String baseUrl = new Api(activity).getBaseUrl();
-
-        if(url.indexOf(baseUrl) >= 0) {
-            openInBrowser(activity, url);
-        }
-        else if(url.startsWith("/")) {
-            openInBrowser(activity, String.format("%s%s", baseUrl, url));
-        }
-        else {
             IDialogCallback callback = new IDialogCallback() {
                 @Override
                 public void onPositiveClicked() {
@@ -65,6 +51,18 @@ public class BrowserUtil {
             };
 
             MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
+        }else{
+            String baseUrl = new Api(activity).getBaseUrl();
+
+            if(url.indexOf(baseUrl) >= 0) {
+                openInBrowser(activity, url);
+            }
+            else if(url.startsWith("/")) {
+                openInBrowser(activity, String.format("%s%s", baseUrl, url));
+            }
+            else {
+                openInBrowser(activity, url);
+            }
         }
     }
 
@@ -77,12 +75,6 @@ public class BrowserUtil {
             intent.setData(Uri.parse(url));
             context.startActivity(intent);
 
-/*          Intent intent = new Intent(context, WebviewActivity.class);
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse(url));
-            context.startActivity(intent);*/
-            
             try{
                 ISegment segIO = SegmentFactory.getInstance();
                 segIO.trackOpenInBrowser(url);

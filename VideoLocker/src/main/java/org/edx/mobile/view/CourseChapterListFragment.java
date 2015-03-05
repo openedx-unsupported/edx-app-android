@@ -205,10 +205,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
                             @Override
                             public void onNegativeClicked() {
-                                //
+                                ((CourseDetailTabActivity) getActivity())
+                                        .showInfoMessage(getString(R.string.wifi_off_message));
                             }
                         };
-                        MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                        MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
 
                     } catch (Exception e) {
                         logger.error(e);
