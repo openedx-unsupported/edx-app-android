@@ -7,11 +7,6 @@ file_filter = VideoLocker/res/values-<lang>/strings.xml
 source_file = VideoLocker/res/values/strings.xml
 source_lang = en
 
-[edx-mobile-apps.android-app-email]
-file_filter = VideoLocker/res/values-<lang>/email.xml
-source_file = VideoLocker/res/values/email.xml
-source_lang = en
-
 [edx-mobile-apps.android-app-errors]
 file_filter = VideoLocker/res/values-<lang>/errors.xml
 source_file = VideoLocker/res/values/errors.xml

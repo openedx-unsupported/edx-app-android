@@ -65,14 +65,11 @@
         and password are correct and try again.</string>
     <string name="login_failed_no_grant">This account has not been activated. Check your e-mail for activation instructions.</string>
     <string name="new_user">Need an account?</string>
-    <string name="sign_up">https://courses.edx.org/register</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">edX Terms of Service and Honor Code</string>
     <string name="login_title">Sign in to edX</string>
 
     <!-- Navigation Drawer Labels -->
-    <string name="name_default">Username</string>
-    <string name="email_default">user@domain.com</string>
     <string name="action_settings">Settings</string>
     <string name="label_my_courses">My Courses</string>
     <string name="label_my_videos">My Videos</string>
@@ -125,7 +122,6 @@
     <string name="course_friends_also_enrolled">Friends also enrolled in this course</string>
 
     <!-- Course Details -->
-    <string name="no_of_videos">0</string>
     <string name="course_content">Course Content</string>
     <string name="chapter_name">Course Name</string>
     <string name="tab_label_courseware">Courseware</string>
@@ -272,4 +268,7 @@
     <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
     <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the internet.</string>
+
+    <!--  Send Feedback Messages -->
+    <string name="email_subject">Customer Feedback</string>
 </resources>
