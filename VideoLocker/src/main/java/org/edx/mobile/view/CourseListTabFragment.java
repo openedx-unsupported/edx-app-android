@@ -198,10 +198,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         swipeLayout.setRefreshing(false);
     }
 
-    protected void validateSwipeFunctionality(){
-        swipeLayout.setRefreshing(true);
-    }
-
     @Override
     public void onOnline() {
         if (offlineBar != null && swipeLayout != null) {
