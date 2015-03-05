@@ -201,14 +201,6 @@ public class PlayerController extends FrameLayout {
             mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
-        mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
-        if (mFfwdButton != null) {
-            mFfwdButton.setOnClickListener(mFfwdListener);
-            if (!mFromXml) {
-                mFfwdButton.setVisibility(mUseFastForward ? View.VISIBLE : View.GONE);
-            }
-        }
-
         mRewButton = (ImageButton) v.findViewById(R.id.rew);
         if (mRewButton != null) {
             mRewButton.setOnClickListener(mRewListener);
