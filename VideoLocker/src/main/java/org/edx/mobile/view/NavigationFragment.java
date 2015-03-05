@@ -185,7 +185,7 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String to = Config.getInstance().getFeedbackEmailAddress();
-                String subject = getString(R.string.Email_subject);
+                String subject = getString(R.string.email_subject);
                 String email = "";
                 EmailUtil.sendEmail(getActivity(), to, subject, email);
             }

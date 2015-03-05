@@ -52,7 +52,8 @@
                     style="@style/regular_text"
                     android:textColor="@color/white"
                     android:textSize="13sp"
-                    tools:text="XX | XX | XXXXXX" />
+                    android:textAllCaps="true"
+                    tools:text="XX | xx | xxxxx" />
 
             </LinearLayout>
 
@@ -126,6 +127,7 @@
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:padding="10dp"
+                        android:textAllCaps="true"
                         android:text="@string/view_button_text" />
 
                 </LinearLayout>

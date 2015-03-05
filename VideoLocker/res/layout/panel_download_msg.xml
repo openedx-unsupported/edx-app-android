@@ -37,6 +37,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/logout_bg_selector"
         android:padding="5dp"
+        android:textAllCaps="true"
         android:text="@string/view_button_text"
         android:textSize="15sp" />
 
