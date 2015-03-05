@@ -1,6 +1,5 @@
 package org.edx.mobile.util;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
@@ -12,7 +11,6 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.view.dialog.DialogFactory;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -38,31 +36,29 @@ public class BrowserUtil {
 
         // verify if the app is running on zero-rated network?
         if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity)) {
-            // inform user if they get may charged for this browsing this URL
-            IDialogCallback callback = new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    openInBrowser(activity, url);
-                }
-
-                @Override
-                public void onNegativeClicked() {
-                }
-            };
-
-            MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
-        }else{
             String baseUrl = new Api(activity).getBaseUrl();
 
             if(url.indexOf(baseUrl) >= 0) {
                 openInBrowser(activity, url);
-            }
-            else if(url.startsWith("/")) {
+            }else if(url.startsWith("/")) {
                 openInBrowser(activity, String.format("%s%s", baseUrl, url));
+            }else {
+                // inform user they may get charged for browsing this URL
+                IDialogCallback callback = new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
+                        openInBrowser(activity, url);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+                    }
+                };
+
+                MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
             }
-            else {
-                openInBrowser(activity, url);
-            }
+        }else{
+            openInBrowser(activity, url);
         }
     }
 
