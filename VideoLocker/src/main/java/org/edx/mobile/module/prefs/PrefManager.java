@@ -165,6 +165,14 @@ public class PrefManager {
         put(PrefManager.Key.AUTH_JSON, null);
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
         put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+        put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
+    }
+
+    /**
+     *  check if app is currently logged in through Google/Facebook
+     */
+    public boolean hasAuthTokenSocialCookie(){
+        return  null !=  getString(Key.AUTH_TOKEN_SOCIAL_COOKIE);
     }
     
     /**
@@ -190,7 +198,8 @@ public class PrefManager {
         return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
                 .getBoolean(PrefManager.Key.LASTACCESSED_SYNCED_FLAG, true);
     }
-    
+
+
     /**
      * Returns last accessed subsection id for the given course. 
      * @return

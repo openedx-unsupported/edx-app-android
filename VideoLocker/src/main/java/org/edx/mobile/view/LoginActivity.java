@@ -562,11 +562,11 @@ public class LoginActivity extends BaseFragmentActivity {
                 Api api = new Api(context);
                 
                 // do SOCIAL LOGIN first
-                SocialLoginResponse social = null;
+                AuthResponse social = null;
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
                     social = api.loginByFacebook(accessToken);
 
-                    if (social.isAccountNotLinked()) {
+                    if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(
                                 context.getString(R.string.error_account_not_linked_title_fb),
                                 context.getString(R.string.error_account_not_linked_desc_fb)));
@@ -574,7 +574,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                     social = api.loginByGoogle(accessToken);
 
-                    if (social.isAccountNotLinked()) {
+                    if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(
                                 getString(R.string.error_account_not_linked_title_google),
                                 getString(R.string.error_account_not_linked_desc_google)));
@@ -582,8 +582,18 @@ public class LoginActivity extends BaseFragmentActivity {
                 }
 
                 if (social.isSuccess()) {
+
                     // we got a valid accessToken so profile can be fetched
-                    ProfileModel profile = api.getProfile();
+                        ProfileModel profile =  api.getProfile();
+
+                        // store profile json
+                        if (profile != null ) {
+                            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+                            pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
+                            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+                            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+                        }
+
                     if (profile.email != null) {
                         // we got valid profile information
                         return profile;

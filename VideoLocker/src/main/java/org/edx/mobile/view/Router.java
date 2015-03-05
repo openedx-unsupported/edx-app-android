@@ -1,10 +1,15 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -60,16 +65,16 @@ public class Router {
         sourceActivity.startActivity(settingsIntent);
     }
 
-    public void showLaunchScreen(Activity sourceActivity, boolean overrideAnimation) {
-        Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
+    public void showLaunchScreen(Context context, boolean overrideAnimation) {
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG,overrideAnimation);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        sourceActivity.startActivity(launchIntent);
+        context.startActivity(launchIntent);
     }
 
-    public void showLogin(Activity sourceActivity) {
-        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
-        sourceActivity.startActivity(launchIntent);
+    public void showLogin(Context context) {
+        Intent launchIntent = new Intent(context, LoginActivity.class);
+        context.startActivity(launchIntent);
     }
 
     public void showRegistration(Activity sourceActivity) {
@@ -103,5 +108,25 @@ public class Router {
         courseDetail.putExtra(CourseDetailTabActivity.EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
+    }
+
+    /**
+     *  this method can be called either through UI [ user clicks LOGOUT button],
+     *  or programmatically
+     */
+    public void forceLogout(Context context){
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        pref.clearAuth();
+        pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
+        Intent intent = new Intent();
+        intent.setAction(AppConstants.LOGOUT_CLICKED);
+        context.sendBroadcast(intent);
+
+        ISegment segIO = SegmentFactory.getInstance();
+        segIO.trackUserLogout();
+        segIO.resetIdentifyUser();
+
+        Router.getInstance().showLaunchScreen(context,true);
+        Router.getInstance().showLogin(context);
     }
 }
