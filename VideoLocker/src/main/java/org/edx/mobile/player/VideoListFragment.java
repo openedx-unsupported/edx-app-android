@@ -191,7 +191,9 @@ public class VideoListFragment extends Fragment {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
 
-                        if (!NetworkUtil.isConnected(getContext())) {
+                        if (NetworkUtil.isConnectedWifi(getContext())) {
+
+                        }else if (NetworkUtil.isConnectedMobile(getContext())) {
                             ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
                             notifyAdapter();
                         } else {
