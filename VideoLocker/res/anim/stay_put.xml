@@ -5,7 +5,7 @@
         android:toYDelta="0%"
         android:fromXDelta="0%"
         android:toXDelta="0%"
-        android:duration="300"
+        android:duration="@integer/activity_transition_animation"
         android:interpolator="@android:anim/accelerate_interpolator">
     </translate>
 </set>

@@ -174,11 +174,12 @@ class ISegmentImpl implements ISegment {
      * @param newTime
      * @param courseId
      * @param unitUrl
+     * @param skipSeek
      * @return 
      */
     @Override
     public Properties trackVideoSeek(String videoId,
-            Double oldTime, Double newTime, String courseId, String unitUrl){
+            Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek){
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
             aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -189,7 +190,8 @@ class ISegmentImpl implements ISegment {
             skipInterval = formatDoubleValue(skipInterval, 3);
             aEvent.data.putValue(Keys.OLD_TIME, oldTime);
             aEvent.data.putValue(Keys.NEW_TIME, newTime);
-            aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);
+            if (skipSeek){ aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);}
+            else {aEvent.data.putValue(Keys.SEEK_TYPE, Values.SLIDE);}
             aEvent.data.putValue(Keys.REQUESTED_SKIP_INTERVAL, skipInterval);
 
             tracker.track(Keys.SEEK_VIDEO, aEvent.properties);
@@ -438,7 +440,7 @@ class ISegmentImpl implements ISegment {
      * @param videoId  -  Video id for which download has started
      * @param courseId
      * @param unitUrl
-     * @return 
+     * @return
      */
     @Override
     public Properties trackSingleVideoDownload(String videoId, String courseId,

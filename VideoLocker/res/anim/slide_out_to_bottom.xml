@@ -3,5 +3,5 @@
   <translate
     android:fromYDelta="0"
     android:toYDelta="100%"
-    android:duration="500" />
+    android:duration="@integer/activity_transition_animation" />
 </set>

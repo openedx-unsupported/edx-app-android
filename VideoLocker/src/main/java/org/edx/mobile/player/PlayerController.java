@@ -201,14 +201,6 @@ public class PlayerController extends FrameLayout {
             mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
-        mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
-        if (mFfwdButton != null) {
-            mFfwdButton.setOnClickListener(mFfwdListener);
-            if (!mFromXml) {
-                mFfwdButton.setVisibility(mUseFastForward ? View.VISIBLE : View.GONE);
-            }
-        }
-
         mRewButton = (ImageButton) v.findViewById(R.id.rew);
         if (mRewButton != null) {
             mRewButton.setOnClickListener(mRewListener);
@@ -738,6 +730,9 @@ public class PlayerController extends FrameLayout {
         info.setClassName(PlayerController.class.getName());
     }
 
+    /**
+     * Listener for the rewind 30 seconds button in the media player
+     */
     private View.OnClickListener mRewListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (mPlayer == null) {
@@ -764,26 +759,6 @@ public class PlayerController extends FrameLayout {
         }
     };
 
-    private View.OnClickListener mFfwdListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (mPlayer == null) {
-                return;
-            }
-
-            int pos = mPlayer.getCurrentPosition();
-            // apply 30 seconds forward
-            pos += 30 * 1000; // milliseconds
-            mPlayer.seekTo(pos);
-            setProgress();
-
-            show(sDefaultTimeout);
-
-            // callback this event
-//          if (mEventListener != null) {
-//              mEventListener.onSeek(pos);
-//          }
-        }
-    };
 
     private void installPrevNextListeners() {
         if(mNextListener!=null){

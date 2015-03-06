@@ -291,6 +291,7 @@
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <string name="try_again">Try Again</string>
     <string name="you_are_now_enrolled">You have enrolled in this course</string>
+    <string name="already_enrolled">You are already enrolled in this course</string>
     <string name="msg_registration_successful"></string>
     <string name="sign_up_error">Your account could not be created. Try again later.</string>
 

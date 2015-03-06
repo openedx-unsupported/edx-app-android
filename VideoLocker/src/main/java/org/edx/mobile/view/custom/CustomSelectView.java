@@ -63,7 +63,6 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     private void showHint() {
         setText(hint);
         setTextColor(getResources().getColor(R.color.hint_grey_text));
-        setTextSize(UiUtil.getParamsInDP(getResources(), 4));
     }
 
     public void setPrompt(String prompt) {
@@ -124,7 +123,6 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         } else {
             setText(item.toString());
             setTextColor(getResources().getColor(R.color.grey_text));
-            setTextSize(UiUtil.getParamsInDP(getResources(), 4));
         }
     }
 
