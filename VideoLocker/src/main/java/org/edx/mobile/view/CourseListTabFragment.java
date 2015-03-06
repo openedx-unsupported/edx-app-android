@@ -193,7 +193,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     protected abstract void loadData(boolean forceRefresh, boolean showProgress);
 
-
     protected void invalidateSwipeFunctionality(){
         swipeLayout.setRefreshing(false);
     }
