@@ -1222,7 +1222,7 @@ public class Api {
         return form;
     }
 
-    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+    public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
         logger.debug("POST url for enrolling in a Course: " + enrollUrl);
 

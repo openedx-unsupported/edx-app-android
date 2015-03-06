@@ -22,8 +22,7 @@ public abstract class EnrollForCourseTask extends Task<Boolean> {
             if(courseId!=null){
                 Api api = new Api(context);
                 try {
-                    final boolean isCourseEnrolled = api.enrollInACourse(courseId,emailOptIn);
-                    return  isCourseEnrolled;
+                    return api.enrollInACourse(courseId,emailOptIn);
                 } catch(Exception ex) {
                     logger.error(ex);
                 }

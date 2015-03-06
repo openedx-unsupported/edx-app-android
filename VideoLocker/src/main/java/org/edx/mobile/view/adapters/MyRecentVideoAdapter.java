@@ -49,6 +49,9 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
+                        if(AppConstants.myVideosDeleteMode){
+                            return false;
+                        }
                         holder.videolayout.setSelected(
                                 selectedPosition != holder.position
                                         && (event.getAction() == MotionEvent.ACTION_DOWN
