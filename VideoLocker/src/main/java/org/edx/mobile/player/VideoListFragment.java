@@ -378,10 +378,8 @@ public class VideoListFragment extends Fragment {
                     if(downloadEntry.isDownloaded()){
                         downloadAvailable = true;
                     }
-                    // adapx.add(downloadEntry);
                 } else {
                     adapter.add(m);
-                    // adapx.add(m);
                 }
             }
 
@@ -581,8 +579,9 @@ public class VideoListFragment extends Fragment {
 
             hideOpenInBrowserPanel();
             if (!myVideosFlag) {
-                handleDeleteView();
                 addDataToOfflineAdapter();
+                //Call handleDeleteView only after adding data to adapter
+                handleDeleteView();
             }
         }
     }
@@ -649,14 +648,14 @@ public class VideoListFragment extends Fragment {
             if (isPlayerVisible()) {
                 hideDeletePanel(view);
             } else {
-                getView().findViewById(R.id.delete_button_panel).setVisibility(
+                view.findViewById(R.id.delete_button_panel).setVisibility(
                         View.VISIBLE);
 
-                deleteButton = (Button) getView().findViewById(
+                deleteButton = (Button) view.findViewById(
                         R.id.delete_btn);
-                final Button editButton = (Button) getView().findViewById(
+                final Button editButton = (Button) view.findViewById(
                         R.id.edit_btn);
-                final Button cancelButton = (Button) getView().findViewById(
+                final Button cancelButton = (Button) view.findViewById(
                         R.id.cancel_btn);
 
                 if (myVideosFlag) {
