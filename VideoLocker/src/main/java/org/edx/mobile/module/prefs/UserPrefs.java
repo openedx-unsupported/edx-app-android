@@ -4,13 +4,16 @@ package org.edx.mobile.module.prefs;
 import android.content.Context;
 import android.os.Environment;
 
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 
 import java.io.File;
+import java.io.IOException;
 
 public class UserPrefs {
 
     private Context context;
+    private final Logger logger = new Logger(getClass().getName());
 
     public UserPrefs(Context context) {
         this.context = context;
@@ -43,6 +46,12 @@ public class UserPrefs {
         File packDir = new File(downloadsDir, context.getPackageName());
         File edxDir = new File(packDir, profile.username);
         edxDir.mkdirs();
+        try {
+            File noMediaFile = new File(edxDir, ".nomedia");
+            noMediaFile.createNewFile();
+        }catch (IOException ioException){
+            logger.error(ioException);
+        }
         
         return edxDir;
     }

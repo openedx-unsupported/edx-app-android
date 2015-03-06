@@ -40,6 +40,7 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
@@ -127,7 +128,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         });
         uiHelper.onCreate(savedInstanceState);
         loadData(false,false);
-
     }
 
     public abstract void handleCourseClick( EnrolledCoursesResponse model);
@@ -186,6 +186,12 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
         setupFooter(myCourseList);
 
+        if (!(NetworkUtil.isConnected(getActivity()))) {
+            onOffline();
+        } else {
+            onOnline();
+        }
+
         return view;
     }
 
@@ -193,13 +199,8 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     protected abstract void loadData(boolean forceRefresh, boolean showProgress);
 
-
     protected void invalidateSwipeFunctionality(){
         swipeLayout.setRefreshing(false);
-    }
-
-    protected void validateSwipeFunctionality(){
-        swipeLayout.setRefreshing(true);
     }
 
     @Override
@@ -226,7 +227,9 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     public void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
         showOfflinePanel();
+        //Disable swipe functionality and hide the loading view
         swipeLayout.setEnabled(false);
+        invalidateSwipeFunctionality();
     }
 
     @Override
@@ -246,11 +249,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     @Override
     public void onResume() {
         super.onResume();
-        if (AppConstants.offline_flag) {
-            onOffline();
-        } else {
-            onOnline();
-        }
 
         uiHelper.onResume();
 
