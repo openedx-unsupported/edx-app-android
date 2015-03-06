@@ -48,9 +48,7 @@ public class UserPrefs {
         edxDir.mkdirs();
         try {
             File noMediaFile = new File(edxDir, ".nomedia");
-            if (!noMediaFile.createNewFile()) {
-                logger.debug(".NoMedia file not created");
-            }
+            noMediaFile.createNewFile();
         }catch (IOException ioException){
             logger.error(ioException);
         }
