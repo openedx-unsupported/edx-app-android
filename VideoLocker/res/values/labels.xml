@@ -14,7 +14,6 @@
     
     
     <!-- Dialog Fragment Labels -->
-    <string name="label_resetpassword">reset password</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_no">No</string>
     <string name="label_download">Download</string>

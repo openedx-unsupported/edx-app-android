@@ -16,6 +16,7 @@ import org.edx.mobile.view.adapters.DownloadEntryAdapter;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -146,11 +147,8 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 tvCount.setText(String.valueOf(count));
 
                 TextView tvCountMsg = (TextView) findViewById(R.id.text_download_msg);
-                if (count ==1) {
-                    tvCountMsg.setText(getString(R.string.text_download_msg_singular));
-                } else {
-                    tvCountMsg.setText(getString(R.string.text_download_msg_plural));
-                }
+                String countMessage = getResources().getQuantityString(R.plurals.text_download_msg, (int)count);
+                tvCountMsg.setText(countMessage);
 
                 Button view_btnView = (Button) findViewById(R.id.button_view);
                 view_btnView.setOnClickListener(new OnClickListener() {
