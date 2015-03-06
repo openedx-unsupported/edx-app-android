@@ -204,7 +204,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
             @Override
             public void onFinish(Boolean result) {
                 isTaskInProgress = false;
-
                 if(result!=null && result) {
                     logger.debug("Enrollment successful");
                     //If the course is successfully enrolled, send a broadcast
@@ -217,11 +216,15 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     // show flying message about the success of Enroll
                     Api api = new Api(context);
                     CourseEntry course = api.getCourseById(courseId);
+                    String msg;
                     if (course == null) {
                         // this means, you were not already enrolled to this course
-                        String msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                        sendBroadcastFlyingInfoMessage(msg);
+                        msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
+                    }else{
+                        // this means, you were already enrolled to this course
+                        msg = String.format("%s", context.getString(R.string.already_enrolled));
                     }
+                    sendBroadcastFlyingInfoMessage(msg);
                 }else{
                     showEnrollErrorMessage(courseId, emailOptIn);
                 }
