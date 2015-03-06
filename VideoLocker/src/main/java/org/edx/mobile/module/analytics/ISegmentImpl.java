@@ -610,6 +610,9 @@ class ISegmentImpl implements ISegment {
             aEvent.properties.putValue(Keys.NAME, Values.USER_FIND_COURSES);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                    Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
             tracker.track(Keys.FIND_COURSES, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -629,6 +632,8 @@ class ISegmentImpl implements ISegment {
             aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, "");
             tracker.track(Keys.CREATE_ACCOUNT_CLICKED, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -653,6 +658,8 @@ class ISegmentImpl implements ISegment {
             aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
             tracker.track(Keys.ENROLL_COURSES, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -878,7 +885,19 @@ class ISegmentImpl implements ISegment {
             logger.error(e);
         }
         return null;
+    }
 
+    /**
+     * This method sets category and labels to BI events
+     * @param props
+     * @param category
+     * @param label
+     * @return
+     */
+    private Properties addCategoryToBiEvents(Properties props, String category, String label){
+        props.put(Keys.CATEGORY, category);
+        props.put(Keys.LABEL, label);
+        return props;
     }
 
 }

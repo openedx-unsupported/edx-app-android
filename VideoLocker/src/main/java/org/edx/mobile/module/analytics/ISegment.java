@@ -165,6 +165,8 @@ public interface ISegment {
         public static final String SOCIAL_NETWORK = "social_network";
         public static final String SOCIAL_CONNECTION_STATE = "social_connection_state";
         public static final String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
+        public static final String CATEGORY = "category";
+        public static final String LABEL = "label";
 
         public static final String COURSE_GROUP_ACCESSED = "Course Group Accessed";
         public static final String GAME_GROUP_ACCESSED = "Game Group Accessed";
@@ -208,6 +210,9 @@ public interface ISegment {
         public static final String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
         public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
         public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
+        public static final String CONVERSION = "conversion";
+        public static final String USER_ENGAGEMENT = "user-engagement";
+        public static final String COURSE_DISCOVERY = "course-discovery";
 
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";

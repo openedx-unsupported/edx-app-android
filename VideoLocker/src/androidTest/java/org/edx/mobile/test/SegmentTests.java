@@ -182,7 +182,7 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         double oldTime = 10.2;
         double newTime = 10.22;
-        Boolean skipSeek = true
+        Boolean skipSeek = true;
         Properties props = segment.trackVideoSeek(videoId, oldTime,
                 newTime, courseId, unitUrl, skipSeek);
         // verify that the track method was called
@@ -407,7 +407,7 @@ public class SegmentTests extends BaseTestCase {
     }
     public void testtrackUserDoesNotHaveAccount() throws Exception {
 
-        Properties props = segment.trackUserDoesNotHaveAccount();
+        Properties props = segment.trackUserSignUpForAccount();
 
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SIGN_UP),
                 (Properties) Mockito.any());
@@ -428,6 +428,8 @@ public class SegmentTests extends BaseTestCase {
                 (Properties) Mockito.any());
             
         assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
 
         Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
         assertTrue(cxt.containsKey(ISegment.Keys.APP));
@@ -444,6 +446,8 @@ public class SegmentTests extends BaseTestCase {
                 (Properties) Mockito.any());
 
         assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
 
         Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
         assertTrue(cxt.containsKey(ISegment.Keys.APP));
@@ -461,6 +465,8 @@ public class SegmentTests extends BaseTestCase {
                 (Properties) Mockito.any());
 
         assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
 
         Properties dataProps = (Properties)props.get(ISegment.Keys.DATA);
         assertTrue(dataProps.containsKey(ISegment.Keys.COURSE_ID));
