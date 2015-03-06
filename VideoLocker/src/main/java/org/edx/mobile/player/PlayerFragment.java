@@ -1631,7 +1631,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             segIO.trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
-                    videoEntry.eid, videoEntry.lmsUrl);
+                    videoEntry.eid, videoEntry.lmsUrl,
+                    isRewindClicked);
         }catch(Exception e){
             logger.error(e);
         }
