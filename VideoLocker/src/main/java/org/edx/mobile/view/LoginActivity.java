@@ -28,6 +28,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
@@ -155,6 +156,21 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
         if(customTitle!=null){
             customTitle.setText(getString(R.string.login_title));
+        }
+
+        TextView version_tv = (TextView)  findViewById(R.id.tv_version_no);
+        try{
+            String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
+
+            if(envDisplayName != null && envDisplayName.length() > 0 ) {
+                version_tv.setVisibility(View.VISIBLE);
+                String versionName = PropertyUtil.getManifestVersionName(this);
+                String text = String.format("%s %s %s",
+                        getString(R.string.label_version), versionName, envDisplayName);
+                version_tv.setText(text);
+            }
+        }catch(Exception e) {
+            logger.error(e);
         }
     }
     
