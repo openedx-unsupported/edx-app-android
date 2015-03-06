@@ -122,10 +122,11 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onNegativeClicked() {
-                            //
+                            CourseLectureListActivity.this.showInfoMessage(getString(R.string.wifi_off_message));
+                            adapter.notifyDataSetChanged();
                         }
                     };
-                    MediaConsentUtils.consentToMediaDownload(CourseLectureListActivity.this, dialogCallback);
+                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this, dialogCallback);
                 }
             };
 

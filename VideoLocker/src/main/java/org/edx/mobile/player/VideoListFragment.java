@@ -191,10 +191,8 @@ public class VideoListFragment extends Fragment {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
 
-                        if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
-                            notifyAdapter();
-                        } else {
+                        DownloadEntry de = (DownloadEntry) model;
+                        if(!de.isDownloaded()){
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
                                 public void onPositiveClicked() {
@@ -203,10 +201,14 @@ public class VideoListFragment extends Fragment {
 
                                 @Override
                                 public void onNegativeClicked() {
-                                    //
+                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
+                                    notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+                        }else{
+                            //Video is downloaded. Hence play
+                            startOnlinePlay(model, position);
                         }
                     }
                 }
@@ -214,13 +216,7 @@ public class VideoListFragment extends Fragment {
                 @Override
                 public void download(final DownloadEntry videoData, final ProgressWheel progressWheel) {
                     try {
-                        if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
-                            notifyAdapter();
-                        } else {
-                            if (!(getActivity() instanceof VideoListActivity)) {
-                                return;
-                            }
+                        if (NetworkUtil.isConnected(getContext())) {
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
                                 public void onPositiveClicked() {
@@ -229,12 +225,12 @@ public class VideoListFragment extends Fragment {
 
                                 @Override
                                 public void onNegativeClicked() {
-                                    //
+                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
+                                    notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
                         }
-
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -851,7 +847,7 @@ public class VideoListFragment extends Fragment {
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                db.updateVideoLastPlayedOffset(v.videoId, offset, 
+                db.updateVideoLastPlayedOffset(v.videoId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
