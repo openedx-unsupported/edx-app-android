@@ -46,6 +46,7 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
+import org.edx.mobile.util.ListUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
@@ -1401,6 +1402,16 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             ccAdaptor.selectedLanguage = languageSubtitle;
             ccAdaptor.notifyDataSetChanged();
 
+            // for less number of list rows, update height to fit contents
+            // also add height NONE option and TITLE of the popup
+            int fullHeightInDp = ListUtil.getFullHeightofListView(lv_ccLang)
+                    + (ListUtil.getSingleRowHeight(lv_ccLang) * 2)
+                    + (lv_ccLang.getDividerHeight() * 4);
+            if (fullHeightInDp < popupHeight) {
+                popupHeight = fullHeightInDp;
+                cc_popup.setHeight(fullHeightInDp);
+            }
+
             // Clear the default translucent background
             cc_popup.setBackgroundDrawable(new BitmapDrawable());
 
@@ -1620,7 +1631,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             segIO.trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
-                    videoEntry.eid, videoEntry.lmsUrl);
+                    videoEntry.eid, videoEntry.lmsUrl,
+                    isRewindClicked);
         }catch(Exception e){
             logger.error(e);
         }

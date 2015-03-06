@@ -39,7 +39,7 @@ public interface ISegment {
     Properties trackVideoLoading(String videoId, String courseId, String unitUrl);
 
     Properties trackVideoSeek(String videoId, Double oldTime,
-            Double newTime, String courseId, String unitUrl);
+            Double newTime, String courseId, String unitUrl, Boolean skipSeek);
 
     void resetIdentifyUser();
 
@@ -179,6 +179,7 @@ public interface ISegment {
     
     public static interface Values{
         public static final String SKIP = "skip";
+        public static final String SLIDE = "slide";
         public static final String MOBILE = "mobile";
         public static final String VIDEOPLAYER = "videoplayer";
         public static final String PASSWORD = "Password";
