@@ -29,6 +29,9 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
         this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
 
+        // disable focus as this is text link
+        mInputView.setFocusable(false);
+
         // display label as HTML and text to be centered horizontally
         mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
         mInputView.setText(mField.getAgreement().getText());

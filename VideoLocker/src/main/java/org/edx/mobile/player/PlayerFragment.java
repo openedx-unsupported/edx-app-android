@@ -31,7 +31,6 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
@@ -47,6 +46,7 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
+import org.edx.mobile.util.ListUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
@@ -109,7 +109,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null){
+                    if(player!=null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -341,13 +341,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             orientation.stop();
             handler.removeCallbacks(unfreezeCallback);
-            if(player!=null){
-                player.freeze();
-                if (callback != null) {
-                    // mark last freeze position
-                    callback.saveCurrentPlaybackPosition(player.getLastFreezePosition());
-                }
-            }
+            freezePlayer();
         }catch(Exception e){
             logger.error(e);
         }
@@ -360,8 +354,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             audioManager.abandonAudioFocus(this);
         }
         if(player!=null){
-            player.freeze();
             handler.removeMessages(MSG_TYPE_TICK);
+            freezePlayer();
         }
     }
 
@@ -419,7 +413,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 player.setPausedOnUnfreeze();
             }
             
-            player.freeze();
+            freezePlayer();
             outState.putSerializable("player", player);
         }
         super.onSaveInstanceState(outState);
@@ -685,9 +679,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public void onPrepared() {
         if ( !isResumed() 
                 || !isVisible()) {
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
             return;
         }
 
@@ -785,9 +777,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (isPrepared) {
             // stop orientation updates before locking the screen
             orientation.stop();
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -802,8 +792,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     protected void showLandscape() {
         try{
-            if(player!=null){
-                player.freeze();
+            if(player!=null) {
+                freezePlayer();
 
                 Intent i = new Intent(getActivity(), LandscapePlayerActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -817,8 +807,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void enterFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
@@ -844,8 +835,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void exitFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
@@ -1410,6 +1402,16 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             ccAdaptor.selectedLanguage = languageSubtitle;
             ccAdaptor.notifyDataSetChanged();
 
+            // for less number of list rows, update height to fit contents
+            // also add height NONE option and TITLE of the popup
+            int fullHeightInDp = ListUtil.getFullHeightofListView(lv_ccLang)
+                    + (ListUtil.getSingleRowHeight(lv_ccLang) * 2)
+                    + (lv_ccLang.getDividerHeight() * 4);
+            if (fullHeightInDp < popupHeight) {
+                popupHeight = fullHeightInDp;
+                cc_popup.setHeight(fullHeightInDp);
+            }
+
             // Clear the default translucent background
             cc_popup.setBackgroundDrawable(new BitmapDrawable());
 
@@ -1617,13 +1619,20 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
         try{
+            if (callback != null) {
+                // mark last seeked position
+                callback.saveCurrentPlaybackPosition((int) newPosition);
+                logger.debug("Current position saved: " + newPosition);
+            }
+
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
             segIO.trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
-                    videoEntry.eid, videoEntry.lmsUrl);
+                    videoEntry.eid, videoEntry.lmsUrl,
+                    isRewindClicked);
         }catch(Exception e){
             logger.error(e);
         }
@@ -1674,5 +1683,18 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
      */
     public boolean isPlaying() {
         return (player != null && player.isPlaying());
+    }
+    
+    private void freezePlayer() {
+        if (player!=null) {
+            if (callback != null && player.isPlaying()) {
+                int pos = player.getCurrentPosition();
+                if (pos > 0) {
+                    callback.saveCurrentPlaybackPosition(pos);
+                }
+            }
+
+            player.freeze();
+        }
     }
 }

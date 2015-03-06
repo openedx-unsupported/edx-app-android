@@ -53,7 +53,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
         fragmentTransaction.add(R.id.my_groups_list_container, singleFragment, FIRST_FRAG_TAG);
         fragmentTransaction.disallowAddToBackStack();
         fragmentTransaction.commit();
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -221,6 +221,14 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         }
     }
 
+    public void setTabChangeEnabled(boolean enabled) {
+        for (int i=0; i<mTabHost.getTabWidget().getTabCount(); i++) {
+            View tab = mTabHost.getTabWidget().getChildTabViewAt(i);
+            tab.setEnabled(enabled);
+        }
+        mTabHost.setOnTabChangedListener(enabled ? listener : null);
+    }
+
     private void restorePlayerFragment() {
         try{
             if (playerFragment != null) {

@@ -4,36 +4,35 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/white_roundedbg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_header_cc"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/row_height_cc_option"
         android:background="@drawable/grey_rounded_top"
         android:gravity="center_vertical|left"
         android:padding="10dp"
         android:text="@string/lbl_closed_caption" />
 
-     <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/tv_cc_cancel"
-        android:background="@color/grey_act_background" /> 
-
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_cc_cancel"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/row_height_cc_option"
         android:layout_alignParentBottom="true"
         android:background="@drawable/grey_rounded_bottom"
         android:gravity="center_vertical|left"
         android:padding="8dp"
-        android:text="@string/lbl_cc_cancel"
-        />
+        android:text="@string/lbl_cc_cancel" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/tv_cc_cancel"
+        android:background="@color/grey_act_background" />
 
     <ListView
         android:id="@+id/cc_list"
@@ -45,6 +44,6 @@
         android:cacheColorHint="@color/white"
         android:divider="@color/grey_act_background"
         android:dividerHeight="1.0sp"
-         />
+        />
 
 </RelativeLayout>
