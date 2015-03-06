@@ -6,6 +6,6 @@
         android:toYDelta="100%"
         android:fromXDelta="0%"
         android:toXDelta="0%"
-        android:duration="@integer/activity_transition_animation">
+        android:duration="@integer/activity_transition_duration">
     </translate>
 </set>
