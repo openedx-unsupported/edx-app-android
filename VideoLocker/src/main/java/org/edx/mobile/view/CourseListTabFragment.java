@@ -198,10 +198,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
         swipeLayout.setRefreshing(false);
     }
 
-    protected void validateSwipeFunctionality(){
-        swipeLayout.setRefreshing(true);
-    }
-
     @Override
     public void onOnline() {
         if (offlineBar != null && swipeLayout != null) {
@@ -226,7 +222,9 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     public void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
         showOfflinePanel();
+        //Disable swipe functionality and hide the loading view
         swipeLayout.setEnabled(false);
+        invalidateSwipeFunctionality();
     }
 
     @Override
