@@ -196,6 +196,11 @@ public class Online_MyVideosTestSuite extends MyVideosTestSuiteBase {
 		return null;
 	}
 
+	@Override
+	public String getTxtMySettingsId() {
+		return txtMySettingsId;
+	}
+
 
 
 }

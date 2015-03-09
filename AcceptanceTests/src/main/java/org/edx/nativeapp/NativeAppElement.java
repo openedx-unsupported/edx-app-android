@@ -48,7 +48,7 @@ public class NativeAppElement extends RemoteWebElement{
 	public void click() {
 		try {
 			WebDriverWait wait = new WebDriverWait(this.nativeAppDriver, maxWaitTime, 500);
-			wait.until(ExpectedConditions.elementToBeClickable(this.getByLocator()));
+			wait.until(ExpectedConditions.presenceOfElementLocated(this.getByLocator()));
 			webElement.click();
 		} catch (Exception e) {
 			Reporter.log("Unable to click element by " + this.getByLocator().toString());
@@ -60,14 +60,7 @@ public class NativeAppElement extends RemoteWebElement{
 	@Override
 	public WebElement findElement(By loc) {
 		WebElement innerElement = webElement.findElement(loc);
-		/*try {
-			innerElement = (new WebDriverWait(cateredWebDriver.getDriver(), maxWaitTime)).until(ExpectedConditions
-					.presenceOfElementLocated(loc));
-		} catch (Throwable te) {
-			Reporter.log("Unable to find the element by locator: " + loc.toString());
-			cateredWebDriver.captureScreenshot();
-			throw new TimeoutException(te);
-		}*/
+		
 		((JavascriptExecutor) nativeAppDriver.getDriver()).executeScript("arguments[0].scrollIntoView();", innerElement);
 
 		return innerElement;

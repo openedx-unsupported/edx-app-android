@@ -66,6 +66,8 @@ public class CommonFunctionalities extends BaseTest {
 		}
 	}
 
+	// TODO - Ask the developers to add the code for popup
+	// (https://discuss.appium.io/t/android-app-not-able-to-read-elements-from-pop-up-menu/2343/3)
 	/**
 	 * Video player functionality
 	 * 
@@ -88,37 +90,37 @@ public class CommonFunctionalities extends BaseTest {
 	public void videoPlayer(NativeAppDriver driver, String fullscreenButton,
 			String lmsButton, String settingsButton, String rewindButton,
 			String seekBar, String playPauseButton, String videoPlayerId,
-			boolean downloaded,boolean isAndroid) throws InterruptedException {
+			boolean downloaded, boolean isAndroid) throws InterruptedException {
 
-		if (downloaded) {
-			Thread.sleep(4000);
-		} else {
+		if (!downloaded) {
 			driver.insertWait(settingsButton);
 		}
 		Thread.sleep(3500);
 		driver.clickElementById(videoPlayerId);
-		driver.verifyElementPresentById(settingsButton); // Failed here
+		driver.verifyElementPresentById(settingsButton); 
 		Thread.sleep(3500);
 		driver.clickElementById(videoPlayerId);
 		driver.verifyElementPresentById(rewindButton);
 		Thread.sleep(3500);
 		driver.clickElementById(videoPlayerId);
 		driver.verifyElementPresentById(lmsButton);
+		Thread.sleep(3500);
+		driver.clickElementById(videoPlayerId);
 		driver.verifyElementPresentById(playPauseButton);
 		Thread.sleep(3500);
 		driver.clickElementById(videoPlayerId);
 		driver.verifyElementPresentById(fullscreenButton);
 		Thread.sleep(3500);
-		if(isAndroid){
-		driver.clickElementById(videoPlayerId);
-		driver.clickElementById(fullscreenButton);
-		driver.clickElementById(videoPlayerId);
-		driver.verifyElementPresentById(rewindButton);
-		driver.verifyElementPresentById(lmsButton);
-		driver.verifyElementPresentById(playPauseButton);
-		driver.clickElementById(videoPlayerId);
-		driver.clickElementById(fullscreenButton);
-	}
+		if (isAndroid) {
+			driver.clickElementById(videoPlayerId);
+			driver.clickElementById(fullscreenButton);
+			driver.clickElementById(videoPlayerId);
+			driver.verifyElementPresentById(rewindButton);
+			driver.verifyElementPresentById(lmsButton);
+			driver.verifyElementPresentById(playPauseButton);
+			driver.clickElementById(videoPlayerId);
+			driver.clickElementById(fullscreenButton);
+		}
 	}
 
 	/**
@@ -134,7 +136,7 @@ public class CommonFunctionalities extends BaseTest {
 	 *            - Id of Delete Button
 	 * @param okButton
 	 *            - Id of ok Button
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public void deleteFuctionality(NativeAppDriver driver, String editButton,
 			String checkboxButton, String deleteButton, String okButton,
@@ -159,10 +161,9 @@ public class CommonFunctionalities extends BaseTest {
 	 * @param videoLength
 	 *            - Id of video length
 	 */
-	public void videoInformation(NativeAppDriver driver, String videoName,
-			String videoSize, String videoLength) {
+	public void videoInformation(NativeAppDriver driver, String videoName, String videoLength) {
 		driver.verifyElementPresentById(videoName);
 		driver.verifyElementPresentById(videoLength);
-		driver.verifyElementPresentById(videoSize);
 	}
+
 }
