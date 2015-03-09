@@ -626,14 +626,15 @@ class ISegmentImpl implements ISegment {
      * @return
      */
     @Override
-    public Properties trackCreateAccountClicked() {
+    public Properties trackCreateAccountClicked(String appVersion) {
         try{
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
             aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
             aEvent.setAppNameContext();
 
             //Add category for Google Analytics
-            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, "");
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                    Values.CONVERSION, appVersion);
             tracker.track(Keys.CREATE_ACCOUNT_CLICKED, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){

@@ -300,4 +300,5 @@
     <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
     <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the internet.</string>
+    <string name="android">Android</string>
 </resources>

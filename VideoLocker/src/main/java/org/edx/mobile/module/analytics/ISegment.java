@@ -75,7 +75,7 @@ public interface ISegment {
     
     Properties trackUserFindsCourses();
 
-    Properties trackCreateAccountClicked();
+    Properties trackCreateAccountClicked(String appVersion);
 
     Properties trackEnrollClicked(String courseId, boolean email_opt_in);
 

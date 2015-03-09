@@ -439,7 +439,8 @@ public class SegmentTests extends BaseTestCase {
 
     public void testTrackCreateAccountClicked() throws Exception {
 
-        Properties props = segment.trackCreateAccountClicked();
+        String appVersion = "Android v1.0.04";
+        Properties props = segment.trackCreateAccountClicked(appVersion);
 
         // verify that the identity method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.CREATE_ACCOUNT_CLICKED),

@@ -25,6 +25,7 @@ import org.edx.mobile.module.registration.view.IRegistrationFieldView;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -252,7 +253,11 @@ public class RegisterActivity extends BaseFragmentActivity {
             if (hasError) {  return;  }
 
             try {
-                segIO.trackCreateAccountClicked();
+                //Send app version in create event
+                String versionName = PropertyUtil.getManifestVersionName(this);
+                String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
+
+                segIO.trackCreateAccountClicked(appVersion);
             }catch(Exception e){
                 logger.error(e);
             }
