@@ -1,0 +1,12 @@
+bin
+gen
+build
+Test-Reports
+*runlog.log
+.DS_Store
+.project
+.settings
+target
+test-output
+index.html
+

@@ -1,9 +1,8 @@
 package org.edx.utils;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Properties;
-
-import com.google.common.base.Optional;
 
 public class PropertyLoader {
 

@@ -24,7 +24,7 @@
             android:maxWidth="200dp"
             android:paddingTop="10dp"
             android:textSize="20sp"
-            tools:text="@string/name_default" />
+            tools:text="Username" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/email_tv"
@@ -36,7 +36,7 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:textSize="13sp"
-            tools:text="@string/email_default" />
+            tools:text="user@domain.com" />
     </LinearLayout>
 
     <LinearLayout

@@ -19,7 +19,7 @@ public abstract class Offline_MyCoursesTestSuiteBase extends
 	}
 
 	/**
-	 * Todo - Verify offline message
+	 * TODO - Verify offline message
 	 * //driver.verifyElementPresentByName(getOfflineErrorMessageName()); Check
 	 * for offline mode message and offline label
 	 * 
@@ -42,25 +42,20 @@ public abstract class Offline_MyCoursesTestSuiteBase extends
 	@Test(priority = -5)
 	private void verifyEnabledAndDisabledSectionTest() throws Throwable {
 		gotoMyCoursesView();
-		driver.clickElementWithIndexById(getCourseListId(), 2);
+		driver.clickElementWithIndexById(getCourseListId(), 0);
 		// driver.verifyElementPresentByName(getOfflineLabelName());
 		driver.verifyElementPresentById(getOfflineBarId());
 		// Verification of last accessed and view on web
 		if (isAndroid()) {
 			driver.verifyElementNotPresntById(getLastAccessedBtnId());
-			if(driver.verifyElementId(getLastAccessedBtnId())){
-				
-			}
 			driver.verifyElementNotPresntById(getViewOnWebId());
 		}
 		// Disabled section test
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 2);
 		driver.verifyElementPresentByName(getDisabledSectionErrorMessage());
 		Thread.sleep(3 * 1000);
-		
 		// driver.verifyElementPresentByName(getOfflineLabelName());
 		driver.verifyElementPresentById(getOfflineBarId());
-
 		// Enabled section test
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
 		// driver.verifyElementPresentByName(getOfflineLabelName());
@@ -77,7 +72,7 @@ public abstract class Offline_MyCoursesTestSuiteBase extends
 	@Test(priority = -3)
 	private void verifyVideoPlayerTest() throws Throwable {
 		gotoMyCoursesView();
-		driver.clickElementWithIndexById(getCourseListId(), 2);
+		driver.clickElementWithIndexById(getCourseListId(), 0);
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
 		driver.clickElementWithIndexById(getVideoListId(), 2);
 		// driver.verifyElementPresentByName(getOfflineLabelName());
@@ -95,7 +90,7 @@ public abstract class Offline_MyCoursesTestSuiteBase extends
 	@Test
 	public void verifyDeleteFunctionalityTest() throws Throwable {
 		gotoMyCoursesView();
-		driver.clickElementWithIndexById(getCourseListId(), 2);
+		driver.clickElementWithIndexById(getCourseListId(), 0);
 		driver.clickElementWithIndexById(getSectionSubsectionListId(), 0);
 		if (isAndroid()) {
 			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
@@ -104,7 +99,6 @@ public abstract class Offline_MyCoursesTestSuiteBase extends
 			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
 					getBtnDeleteId(), getBtnDeletePopupId(), 2);
 		}
-
 	}
 
 	/**

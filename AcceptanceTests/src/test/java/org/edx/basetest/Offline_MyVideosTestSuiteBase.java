@@ -9,9 +9,8 @@ import org.testng.annotations.Test;
 public abstract class Offline_MyVideosTestSuiteBase extends
 		CommonFunctionalities implements IMyVideosLocators_Offline {
 
-	@Test(priority=-1)
+	@Test(priority = -1)
 	public void offline() throws InterruptedException {
-		//driver.setNetworkConnection(false, false,false);
 		driver.clickElementById(getHeaderId());
 		driver.clickElementById(getTxtMyVideosId());
 		Thread.sleep(3 * 1000);
@@ -19,42 +18,45 @@ public abstract class Offline_MyVideosTestSuiteBase extends
 
 	/**
 	 * Check for offline mode label present on My Videos screen
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
 	public void OfflineModeLabelTest() throws InterruptedException {
-		//Offline label cannot be verified
-		//driver.verifyElementPresentByName(getOfflineLabelName());
+		// Offline label cannot be verified
+		// driver.verifyElementPresentByName(getOfflineLabelName());
 		driver.verifyElementPresentById(getOfflineBarId());
 		Thread.sleep(3 * 1000);
 	}
 
 	/**
 	 * Verify that downloaded video can be played from All videos
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void verifyOfflineVideoPlayerAllVideosTest() throws InterruptedException {
+	public void verifyOfflineVideoPlayerAllVideosTest()
+			throws InterruptedException {
 		driver.clickElementByName(getTxtAllVideosName());
 		driver.clickElementWithIndexById(getLstCourseId(), 0);
 		Thread.sleep(3 * 1000);
 		driver.clickElementWithIndexById(getLstVideoId(), 0);
 		videoPlayer(driver, getFullScreenId(), getLMSId(),
 				getSettingsPopUpId(), getRewindId(), getSeekBarId(),
-				getPlayPauseId(), getVideoPlayerId(), true,isAndroid());
+				getPlayPauseId(), getVideoPlayerId(), true, isAndroid());
 		// Navigating back to the My Videos screen
 		driver.clickElementById(getHeaderId());
 		Thread.sleep(3 * 1000);
 	}
 
-
-
 	/**
 	 * Verify that downloaded video can be played from Recent videos
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void verifyOfflineVideoPlayerRecentVideosTest() throws InterruptedException {
+	public void verifyOfflineVideoPlayerRecentVideosTest()
+			throws InterruptedException {
 		driver.clickElementByName(getTxtRecentVideosName());
 		driver.clickElementWithIndexById(getLstVideoId(), 0);
 		videoPlayer(driver, getFullScreenId(), getLMSId(),
@@ -63,47 +65,47 @@ public abstract class Offline_MyVideosTestSuiteBase extends
 		Thread.sleep(3 * 1000);
 	}
 
-
-
 	/**
 	 * Verify that downloaded video can be deleted from All videos
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void verifyOfflineVideoDeletionOnAllVideosScreenTest() throws InterruptedException {
+	public void verifyOfflineVideoDeletionOnAllVideosScreenTest()
+			throws InterruptedException {
 		// Navigating to All Videos tab
-				driver.clickElementByName(getTxtAllVideosName());
-				driver.clickElementWithIndexById(getLstCourseId(), 0);
-				if(isAndroid()){
-				deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
-						getBtnDeleteId(), getOkPopupId(), 0);
-				}else{
-					deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
-							getBtnDeleteId(), getBtnDeletePopupId(), 0);
-				}
-				// Navigating Back to My Videos screen
-				driver.clickElementById(getHeaderId());
+		driver.clickElementByName(getTxtAllVideosName());
+		driver.clickElementWithIndexById(getLstCourseId(), 0);
+		if (isAndroid()) {
+			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
+					getBtnDeleteId(), getOkPopupId(), 0);
+		} else {
+			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
+					getBtnDeleteId(), getBtnDeletePopupId(), 0);
+		}
+		// Navigating Back to My Videos screen
+		driver.clickElementById(getHeaderId());
 	}
-
-
 
 	/**
 	 * Verify that downloaded video can be deleted from Recent videos
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void verifyOfflineVideoDeletionOnRecentVideosScreenTest() throws InterruptedException {
+	public void verifyOfflineVideoDeletionOnRecentVideosScreenTest()
+			throws InterruptedException {
 		driver.clickElementByName(getTxtRecentVideosName());
-		if(isAndroid()){
-		deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
-				getBtnDeleteId(), getOkPopupId(), 0);
-		}else{
+		if (isAndroid()) {
+			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
+					getBtnDeleteId(), getOkPopupId(), 0);
+		} else {
 			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
 					getBtnDeleteId(), getBtnDeletePopupId(), 0);
 		}
 		Thread.sleep(3 * 1000);
 	}
-	
+
 	/**
 	 * Recovery Scenario for My Videos screen if any of the test case fails
 	 * 
@@ -116,7 +118,5 @@ public abstract class Offline_MyVideosTestSuiteBase extends
 			gotoMyVideosView();
 		}
 	}
-	
 
-	
 }

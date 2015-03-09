@@ -18,9 +18,10 @@ public abstract class Offline_LoginTestSuiteBase extends CommonFunctionalities
 	/**
 	 * Check for offline error message if user tries to login with edx username
 	 * and password, facebook button and google button
+	 * @throws InterruptedException 
 	 */
 	@Test
-	public void OfflineModeMessageTest() {
+	public void OfflineModeMessageTest() throws InterruptedException {
 		driver.enterTextToElementById(getEmailLocatorId(), emailId);
 		if (isAndroid()) {
 			driver.hideKeyboard();
@@ -34,6 +35,7 @@ public abstract class Offline_LoginTestSuiteBase extends CommonFunctionalities
 		if (!isAndroid()) {
 			driver.tapOnWifi();
 		}
+		Thread.sleep(3*1000);
 		driver.clickElementById(getFaceBookBtnId());
 		driver.verifyElementPresentByName(getOfflineModeErrorMsg());
 		driver.clickElementById(getGmailBtnId());
@@ -65,14 +67,15 @@ public abstract class Offline_LoginTestSuiteBase extends CommonFunctionalities
 
 	/**
 	 * Verify facebook button, Gmail button, New user? Sign up button
+	 * @throws Throwable 
 	 */
 	@Test
-	private void verifyElementsPresentOnScreenTest() {
+	private void verifyElementsPresentOnScreenTest() throws Throwable {
 		driver.verifyElementPresentById(getFaceBookBtnId());
 		driver.verifyElementPresentById(getGmailBtnId());
-		driver.verifyElementPresentById(getNewUserSignUpId());
 		driver.verifyElementPresentByName(getTxtOrSignInWithName());
 		driver.verifyElementPresentByName(gettxtBySigningInName());
+		
 	}
 
 	/**

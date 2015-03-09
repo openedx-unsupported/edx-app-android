@@ -3,6 +3,7 @@ package org.edx.androidtestsuite;
 import org.edx.basetest.LoginTestSuiteBase;
 import org.testng.annotations.Test;
 
+
 @Test(groups = "Android", priority=-1)
 public class Online_LoginTestSuite extends LoginTestSuiteBase {
 
@@ -120,5 +121,21 @@ public class Online_LoginTestSuite extends LoginTestSuiteBase {
 	public String getSignINButtonChangeText() {
 		return btnSignInChangingName;
 	}
+
+	@Override
+	public String getPasswordResetEmailMessage() {
+		return msgForgotPasswordWithCorrectEmailId;
+	}
+
+	@Override
+	public String getSignInButtonId() {
+		return ANDROID_ID_btnSIGNINId;
+	}
+
+	@Override
+	public String getSignInTextName() {
+		return Android_Name_signinText;
+	}
+
 
 }

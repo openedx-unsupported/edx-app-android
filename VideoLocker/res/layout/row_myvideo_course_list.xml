@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/course_row_layout"
@@ -71,7 +72,7 @@
                     android:ellipsize="end"
                     android:maxWidth="150dp"
                     android:singleLine="true"
-                    android:text="@string/videos_no"
+                    tools:text="@string/videos_no"
                     android:textColor="@color/org_code_txt"
                     android:textSize="12sp" />
 
@@ -84,7 +85,7 @@
                     android:maxWidth="150dp"
                     android:paddingLeft="7dp"
                     android:singleLine="true"
-                    android:text="@string/size_of_videos"
+                    tools:text="890 MB"
                     android:textColor="@color/org_code_txt"
                     android:textSize="12sp" />
             </LinearLayout>

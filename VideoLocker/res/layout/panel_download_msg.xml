@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/include_layout"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:background="@color/include_msg_color" >
+    android:background="@color/include_msg_color">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/text_download_msg_cnt"
@@ -13,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="14dp"
         android:layout_marginRight="5dp"
-        android:text="@string/text_download_msg_cnt"
+        tools:text="20"
         android:textSize="18sp" />
 
     <org.edx.mobile.view.custom.ETextView
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/text_download_msg_cnt"
-        android:text="@string/text_download_msg_plural"
+        tools:text="Video Downloaded"
         android:textSize="16sp" />
 
     <org.edx.mobile.view.custom.EButton
@@ -36,6 +37,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/logout_bg_selector"
         android:padding="5dp"
+        android:textAllCaps="true"
         android:text="@string/view_button_text"
         android:textSize="15sp" />
 

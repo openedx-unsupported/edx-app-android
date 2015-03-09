@@ -1,0 +1,10 @@
+<html>
+ <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+
+	var data = google.visualization.arrayToDataTable([
+        ['Run','Passed', 'Failed', 'Skipped', { role: 'annotation' } ],

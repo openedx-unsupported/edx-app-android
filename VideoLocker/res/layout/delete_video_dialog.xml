@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_layout"
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:minWidth="250dp"
     android:orientation="vertical"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/tv_dialog_title"
@@ -18,6 +19,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        tools:text="@string/delete_single_video_dialog"
         android:textAllCaps="true"
         android:textSize="17sp" />
 
