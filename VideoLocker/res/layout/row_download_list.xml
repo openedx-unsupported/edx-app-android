@@ -20,7 +20,7 @@
         android:maxWidth="210dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="@string/download_name"
+        tools:text="Engaging in Interaction"
         android:textColor="@color/grey_text_mycourse"
         android:textSize="14sp" />
 
