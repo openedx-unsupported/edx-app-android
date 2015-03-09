@@ -24,6 +24,7 @@ import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 
 import java.io.File;
@@ -68,10 +69,16 @@ public class Storage implements IStorage {
         //IVideoModel videoById = db.getVideoEntryByVideoId(model.getVideoId(), null);
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
+            boolean downloadPreference = pref.isDownloadOverWifiOnly();
+            if(NetworkUtil.isOnZeroRatedNetwork(context)){
+                //If the device has zero rated network, then allow downloading
+                //on mobile network even if user has "Only on wifi" settings as ON
+                downloadPreference = false;
+            }
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
             long dmid = dm.addDownload(pref.getDownloadFolder(), model.getVideoUrl(),
-                    pref.isDownloadOverWifiOnly());
+                    downloadPreference);
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
                 return -1;
