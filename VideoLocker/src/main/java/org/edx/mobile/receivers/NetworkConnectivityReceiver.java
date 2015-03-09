@@ -33,7 +33,8 @@ public class NetworkConnectivityReceiver extends BroadcastReceiver {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null && activeNetwork.isAvailable();
 
-        if(isConnected) {
+        // do NOT test download speed on Zero-Rated network
+        if(isConnected && !NetworkUtil.isOnZeroRatedNetwork(context)) {
             logger.debug("Have reconnected, testing download speed.");
             //start an instance of the download speed service so it can run in the background
             Intent speedTestIntent = new Intent(context, DownloadSpeedService.class);
