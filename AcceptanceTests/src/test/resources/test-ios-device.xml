@@ -13,12 +13,7 @@
 			<class name="org.edx.iostestsuite.Offline_MyVideosTestSuite"></class>
 			<class name="org.edx.iostestsuite.Offline_LoginTestSuite"></class>
 		</classes>
-
 	</test>
-
-
 </suite>
- <listeners>
-        <listener class-name="com.saucelabs.testng.SauceOnDemandTestListener"/>
-    </listeners>
+ 
 

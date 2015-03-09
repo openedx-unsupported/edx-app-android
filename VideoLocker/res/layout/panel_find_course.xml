@@ -35,6 +35,7 @@
 			android:padding="10dp"
             android:background="@drawable/bt_blue"
             android:text="@string/find_course_btn_text"
+            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="15sp" />
         

@@ -24,7 +24,6 @@ public final class Config {
 			String appPath = PropertyLoader.loadProperty("appPath").get();
 			String osVersion = PropertyLoader.loadProperty("osVersion") .get();
 			String deviceName = PropertyLoader.loadProperty("deviceName").get();
-			String sauceBuildName = PropertyLoader.loadProperty("sauceBuildName").get();
 			
 			DesiredCapabilities cap = new DesiredCapabilities();
 			
@@ -41,15 +40,14 @@ public final class Config {
 			cap.setCapability("app", appPath);
 			cap.setCapability("platformVersion", osVersion);
 			
-			
-			cap.setCapability("passed", true);
 			cap.setCapability("capture-html", true);
-			cap.setCapability("name",sauceBuildName);
+			cap.setCapability("name","edX-Android-test");
 			
 			cap.setCapability("appPackage","org.edx.mobile");
 			cap.setCapability("appActivity","org.edx.mobile.view.SplashActivity");
+			cap.setCapability("newCommandTimeout", 10000);
 			cap.setCapability("command-timeout", 600);
-			cap.setCapability("idle-timeout", 1000);
+			cap.setCapability("idle-timeout", 800);
 			cap.setCapability("max-duration", 10800);
 			
 			return cap;
@@ -77,6 +75,7 @@ public final class Config {
 			
 			cap.setCapability("platformName", "iOS");
 			cap.setCapability("deviceName", deviceName);
+			cap.setCapability("name","edX-IOS-test");
 			cap.setCapability("bundleId", appPackage);
 			if (appPath.contains(".ipa")) {
 				cap.setCapability("udid", udid);

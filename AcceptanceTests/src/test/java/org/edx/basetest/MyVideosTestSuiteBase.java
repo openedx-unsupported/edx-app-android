@@ -15,31 +15,29 @@ public abstract class MyVideosTestSuiteBase extends CommonFunctionalities
 	public void login() {
 		login(driver, getEmailLocatorId(), getPasswordLocatorId(),
 				getSignInLocatorId(), isAndroid());
-		/*
-		 * driver.clickElementWithIndexById(getCourseListId(), 2);
-		 * driver.clickElementWithIndexById(getSectionSubsectionDownloadId(),
-		 * 0); // Downloading video from 3rd course and 0th section
-		 * driver.clickElementById(getHeaderId());
-		 */
+
 	}
 
 	/**
 	 * Navigating the elements present on left navigation panel
 	 * 
 	 * @throws IOException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	@Test(priority = -3)
-	public void verifyLeftNavigationPanelTest() throws IOException, InterruptedException {
+	public void verifyLeftNavigationPanelTest() throws IOException,
+			InterruptedException {
 		Thread.sleep(10000);
 		driver.clickElementById(getHeaderId());
 		driver.verifyElementPresentById(getSubmitFeedBackId());
 		driver.verifyElementPresentById(getVersion());
 		driver.verifyElementPresentById(getUserNameId());
 		driver.verifyElementPresentById(getEmailId());
-		driver.clickElementById(getSettingsBtnId());
+		driver.verifyElementPresentById(getTxtMySettingsId());
 		driver.clickElementById(getTxtMyVideosId());
 	}
+
+	
 
 	/**
 	 * Verifying that user can switch between the tabs
@@ -58,11 +56,7 @@ public abstract class MyVideosTestSuiteBase extends CommonFunctionalities
 	 */
 	@Test(priority = -1)
 	public void verifyVideoPlayerAllVideosTest() throws InterruptedException {
-		/*
-		 * driver.clickElementById(getBtnDownloadScreenId());
-		 * driver.insertWait(getLstDownloadId());
-		 * driver.clickElementById(getHeaderId());
-		 */
+
 		Thread.sleep(10000);
 		driver.clickElementById(getHeaderId());
 		driver.clickElementById(getTxtMyVideosId());
@@ -94,10 +88,12 @@ public abstract class MyVideosTestSuiteBase extends CommonFunctionalities
 
 	/**
 	 * Verifying that user can delete video from All Videos Screen
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test(priority = 20)
-	public void verifyVideoDeletionOnAllVideosScreenTest() throws InterruptedException {
+	public void verifyVideoDeletionOnAllVideosScreenTest()
+			throws InterruptedException {
 		// Navigating to All Videos tab
 		driver.clickElementByName(getTxtAllVideosName());
 		Thread.sleep(10000);
@@ -115,13 +111,14 @@ public abstract class MyVideosTestSuiteBase extends CommonFunctionalities
 
 	/**
 	 * Verifying that user can delete video from Recent Videos Screen
-	 * @throws InterruptedException 
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test(priority = 25)
-	public void verifyVideoDeletionOnRecentVideosScreenTest() throws InterruptedException {
+	public void verifyVideoDeletionOnRecentVideosScreenTest()
+			throws InterruptedException {
 		driver.clickElementByName(getTxtRecentVideosName());// Deleting any
-															// video from 2nd
-															// section
+
 		if (isAndroid()) {
 			deleteFuctionality(driver, getBtnEditId(), getCbVideoSelectId(),
 					getBtnDeleteId(), getOkPopupId(), 0);

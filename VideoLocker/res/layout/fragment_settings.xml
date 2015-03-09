@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:checked="true"
+                android:textAllCaps="true"
                 android:switchMinWidth="80dp"
                 android:switchTextAppearance="@style/default_switch"
                 android:textOff="@string/toggle_turn_off"

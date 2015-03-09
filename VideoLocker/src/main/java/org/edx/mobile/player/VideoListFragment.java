@@ -1015,13 +1015,8 @@ public class VideoListFragment extends Fragment {
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
         dialogMap.put("yes_button", getString(R.string.label_delete));
         dialogMap.put("no_button",  getString(R.string.label_cancel));
-        if (itemCount == 1) {
-            dialogMap.put("message_1",
-                    getString(R.string.delete_single_video_dialog));
-        } else {
-            dialogMap.put("message_1",
-                    getString(R.string.delete_multiple_video_dialog));
-        }
+        dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
+
         confirmDeleteFragment = DeleteVideoDialogFragment.newInstance(dialogMap,
                 new IDialogCallback() {
 

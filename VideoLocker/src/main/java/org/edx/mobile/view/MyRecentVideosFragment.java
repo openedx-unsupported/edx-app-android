@@ -411,11 +411,7 @@ public class MyRecentVideosFragment extends Fragment {
     protected void showConfirmDeleteDialog(int itemCount) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
-        if (itemCount == 1) {
-            dialogMap.put("message_1",  getString(R.string.delete_single_video_dialog));
-        } else {
-            dialogMap.put("message_1",  getString(R.string.delete_multiple_video_dialog));
-        }
+        dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
         dialogMap.put("yes_button", getString(R.string.label_delete));
         dialogMap.put("no_button",  getString(R.string.label_cancel));
         deleteDialogFragment = DeleteVideoDialogFragment.newInstance(dialogMap,

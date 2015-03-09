@@ -8,8 +8,18 @@ package org.edx.elementlocators;
  * 
  */
 public interface IMyCoursesLocators {
+	
+	public String getFindCourseWebView();
+	
+	public String getFindCourseHeaderName();
+
+	public String getMySettingsId();
+	
+	public String getShowingOnlyVideosName();
 
 	public String getOkPopupId();
+	
+	public String getAnnouncementsName();
 
 	public String getSettingsBtnId();
 
@@ -33,7 +43,7 @@ public interface IMyCoursesLocators {
 
 	public String getHandoutsName();
 
-	public String getAnnouncementsName();
+	public String getCourseInfoName();
 
 	public String getDownloadMessage();
 
@@ -136,11 +146,12 @@ public interface IMyCoursesLocators {
 
 	// Navigation through the course to the video id's
 	String btnCourseId = "org.edx.mobile:id/course_row_layout";
-	String btnSectionSubsectionDownloadId = "org.edx.mobile:id/bulk_download";
+	String btnSectionSubsectionDownloadId = "org.edx.mobile:id/bulk_download_layout";
 	String btnSectionSubsectionId = "org.edx.mobile:id/chapter_row_layout";
 	String btnCourseWareName = "Courseware";
-	String btnAnnouncementsName = "Announcements";
-	String btnHandOutsName = "Handouts";
+	String btnCourseInfoName = "Course Info";
+	String btnAnnouncementsName="Announcements";
+	String btnHandOutsName = "View course handouts";
 	String hlnkViewOnWebId = "org.edx.mobile:id/open_in_browser_btn";
 	String btnVideoId = "org.edx.mobile:id/video_row_layout";
 	String btnVideoDownloadId = "org.edx.mobile:id/video_start_download";
@@ -178,10 +189,19 @@ public interface IMyCoursesLocators {
 	String btnLastAccessedId = "org.edx.mobile:id/last_viewed_tv";
 
 	// Left Navigation Panel id's
-	String txtMyCourseId = "org.edx.mobile:id/my_contents";
+	String txtMyCourseId = "org.edx.mobile:id/drawer_option_my_courses";
 	String txtMyVideosName = "My Videos";
+	String txtMySettingsId="org.edx.mobile:id/drawer_option_my_settings";
+	String txtCellularDownloadName="ALLOW CELLULAR DOWNLOAD";
+	String txtCellularDownload1Name="Allow your device to download videos over your cellular connection when" 
++"Wi-Fi is not available. Data charges may apply.";
 	String btnOkPopupId = "org.edx.mobile:id/positiveButton";
 	String btnSettingsId = "org.edx.mobile:id/wifi_setting";
+	
+	//Find Courses
+	String txtFindCourseName="Find Courses";
+	String findACoursewebView="org.edx.mobile:id/webview";
+	
 
 	/*
 	 * IOS Locators id's
@@ -248,9 +268,12 @@ public interface IMyCoursesLocators {
 	String txtMyCourseIdiOS = "txtMyCoursesLNP";
 	String btnSwitchiOS = "btnSwitch";
 	String btnOkPopupIdiOS = "ALLOW";
+	String txtMySettingsIdiOS="";
 
 	/* Common Locators */
 	String txtMyCourseName = "My Courses";
 	String lbCourseWareIdiOS = "txtNoCourseWareAvailable";
 	String txtFindACourseName = "FIND A MOBILE-FRIENDLY COURSE";
+	String txtShowingOnlyVideos = "Showing only Videos";
+
 }
