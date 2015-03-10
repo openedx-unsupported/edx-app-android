@@ -83,6 +83,16 @@ public class LaunchActivity extends BaseFragmentActivity {
         fetchRegistrationDescription();
     }
 
+    protected void onResume(){
+        super.onResume();
+        PrefManager pm =new PrefManager(LaunchActivity.this, PrefManager.Pref.LOGIN);
+        //MOB-1343 : app enter here when user in the login window and lock the screen
+        if (pm.getCurrentUserProfile() != null) {
+            Intent intent = new Intent(LaunchActivity.this, MyCoursesListActivity.class);
+            startActivity(intent); 
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
