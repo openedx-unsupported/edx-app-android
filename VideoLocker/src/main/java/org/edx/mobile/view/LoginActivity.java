@@ -201,6 +201,18 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    protected void onResume(){
+        super.onResume();
+        PrefManager pm =new PrefManager(LoginActivity.this, PrefManager.Pref.LOGIN);
+        //MOB-1343 : app enter here when user in the login window and lock the screen
+        if (pm.getCurrentUserProfile() != null) {
+            Intent intent = new Intent(LoginActivity.this, MyCoursesListActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     private void displayLastEmailId() {
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         String emailId = pref.getString("email");
@@ -377,10 +389,9 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             Router.getInstance().showMyCourses(this);
+            // but finish this screen anyways as login is succeeded
+            finish();
         }
-        
-        // but finish this screen anyways as login is succeeded
-        finish();
     }
 
     private void clearDialogs(){
