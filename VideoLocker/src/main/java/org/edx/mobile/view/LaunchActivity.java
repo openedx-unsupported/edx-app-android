@@ -75,7 +75,7 @@ public class LaunchActivity extends BaseFragmentActivity {
         }
 
     }
-
+    
     protected void onResume(){
         super.onResume();
         PrefManager pm =new PrefManager(LaunchActivity.this, PrefManager.Pref.LOGIN);
