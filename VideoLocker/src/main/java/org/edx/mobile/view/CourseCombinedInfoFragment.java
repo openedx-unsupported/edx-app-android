@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,10 +18,10 @@ import com.facebook.Settings;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LikeView;
 
+import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.OutboundUrlSpan;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -35,6 +33,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.ImageCacheManager;
@@ -74,6 +73,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private ArrayList<SocialMember> courseFriends;
 
     private PrefManager featuresPref;
+    private List<AnnouncementView> announcementViewList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -222,12 +222,22 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     public void onResume() {
         super.onResume();
         uiHelper.onResume();
+
+        // render announcements
+        for (AnnouncementView view : announcementViewList) {
+            view.resume();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
+
+        // stop loading announcements
+        for (AnnouncementView view : announcementViewList) {
+            view.pause();
+        }
     }
 
     @Override
@@ -273,21 +283,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         task.setProgressDialog(progressBar);
         task.execute(enrollment);
 
-    }
-
-    private void populateAnnouncements(List<AnnouncementsModel> announcementsList) {
-        if(announcementsList !=null && announcementsList.size()>0){
-            hideEmptyAnnouncementMessage();
-
-            announcementContainer.removeAllViews();
-
-            for (AnnouncementsModel m : announcementsList) {
-                View viewHolder = generateAnnouncementView(m);
-                announcementContainer.addView(viewHolder);
-            }
-        } else {
-            showEmptyAnnouncementMessage();
-        }
     }
 
     private void showSocialEnabled(boolean enabled){
@@ -345,23 +340,71 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     }
 
-    private View generateAnnouncementView(AnnouncementsModel model){
+    private void populateAnnouncements(List<AnnouncementsModel> announcementsList) {
+        if(announcementsList !=null && announcementsList.size()>0) {
+            hideEmptyAnnouncementMessage();
 
-        View convertView = inflater.inflate(R.layout.row_announcement_list, null);
+            // stop existing views before we remove them from the layout
+            for (AnnouncementView view : announcementViewList) {
+                view.stop();
+            }
+            announcementViewList.clear();
+            announcementContainer.removeAllViews();
 
-        TextView date = (TextView) convertView.findViewById(R.id.announcement_date);
-        TextView content = (TextView) convertView.findViewById(R.id.announcement_content);
+            for (AnnouncementsModel m : announcementsList) {
+                AnnouncementView announcementView = generateAnnouncementView(m);
+                announcementViewList.add(announcementView);
 
-        date.setText(model.getDate());
+                announcementContainer.addView(announcementView.getView());
+            }
+        } else {
+            showEmptyAnnouncementMessage();
+        }
+    }
 
-        Spanned text = Html.fromHtml(model.content);
+    private AnnouncementView generateAnnouncementView(AnnouncementsModel model){
+        AnnouncementView view = new AnnouncementView(inflater, model);
+        view.render();
+        return view;
+    }
 
-        Spanned interceptedLinks = OutboundUrlSpan.interceptAllLinks(text);
-        content.setText(interceptedLinks);
-        content.setMovementMethod(LinkMovementMethod.getInstance());
+    private static class AnnouncementView {
+        private View convertView;
+        private TextView date;
+        private WebView webView;
+        private AnnouncementsModel model;
 
-        return convertView;
+        AnnouncementView(LayoutInflater inflater, AnnouncementsModel model) {
+            this.model = model;
+            this.convertView = inflater.inflate(R.layout.row_announcement_list, null);
+            this.date = (TextView) convertView.findViewById(R.id.announcement_date);
+            this.webView = (WebView) convertView.findViewById(R.id.announcement_content_webview);
+        }
 
+        void render() {
+            date.setText(model.getDate());
+            webView.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), model.content, "text/html", HTTP.UTF_8, null);
+        }
+
+        /**
+         * Stops loading of WebView.
+         */
+        void pause() {
+            webView.onPause();
+        }
+
+        void resume() {
+            webView.onResume();
+        }
+
+        void stop() {
+            webView.stopLoading();
+            webView.loadData(null, "text/html", HTTP.UTF_8);
+        }
+
+        public View getView() {
+            return convertView;
+        }
     }
 
     private void updateInteractiveVisibility() {
