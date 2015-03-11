@@ -243,14 +243,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
             load(uri, seekTo, true);
         }
 
+    @Override
+    public void restart(int seekTo) throws Exception {
+        logger.debug("RestartFreezePosition=" + seekTo);
+        lastCurrentPosition = 0;
+        // if seekTo=lastCurrentPosition then seekTo() method will not work
+        load(videoUri, seekTo, playWhenPrepared);
+    }
+
         @Override
         public void restart() throws Exception {
-            logger.debug("RestartFreezePosition=" + seekToWhenPrepared);
-//          int seekTo = lastCurrentPosition;
-            int seekTo = seekToWhenPrepared;
-            lastCurrentPosition = 0;
-            // if seekTo=lastCurrentPosition then seekTo() method will not work
-            load(videoUri, seekTo, playWhenPrepared);
+            restart(seekToWhenPrepared);
         }
 
         private void load(String videoUri, int seekTo, boolean playWhenPrepared) throws Exception {
@@ -307,6 +310,11 @@ OnCompletionListener, OnInfoListener, IPlayer {
         }
 
         @Override
+        public boolean isReset() {
+            return state == PlayerState.RESET;
+    }
+
+    @Override
         public void setFullScreen(boolean isFullScreen) {
             this.isFullScreen = isFullScreen;
         }
@@ -528,7 +536,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
          * Player Methods below.
          */
 
-        @Override
+    @Override
+    public void reset() {
+        super.reset();
+        state = PlayerState.RESET;
+    }
+
+    @Override
         public synchronized void start() throws IllegalStateException {
             if (state == PlayerState.PREPARED
                     || state == PlayerState.PAUSED
