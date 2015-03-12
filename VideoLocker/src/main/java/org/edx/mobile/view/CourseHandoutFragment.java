@@ -25,6 +25,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 public class CourseHandoutFragment extends Fragment {
 
@@ -62,24 +63,13 @@ public class CourseHandoutFragment extends Fragment {
                 false);
 
         webview = (WebView) view.findViewById(R.id.webview);
-
-//        webview.getSettings().setPluginsEnabled(true);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setLoadWithOverviewMode(true);
-        //This has been commented after Lou's comments of hiding the Zoom Controls
-        //webview.getSettings().setBuiltInZoomControls(true);
-        webview.getSettings().setSupportZoom(true);
-
-        webview.setWebViewClient(new WebViewClient() {
+        new URLInterceptorWebViewClient(webview) {
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public void onOpenExternalURL(String url) {
                 BrowserUtil.open(getActivity(), url);
-                return true; //the webview will not load the URL
             }
-        });
-        webview.setWebChromeClient(new WebChromeClient() {
-        });
+        };
 
         return view;
     }

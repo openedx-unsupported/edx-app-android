@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <WebView
+    <org.edx.mobile.view.custom.EdxWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
