@@ -46,30 +46,28 @@ public class BrowserUtil {
         if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity)) {
 
             // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-            for (String domain : Config.getInstance().getDomainWhiteListConfig().getDomains()) {
-                if (BrowserUtil.isUrlOfHost(url, domain)) {
-                    // this is white-listed URL
-                    logger.debug(String.format("opening white-listed URL: %s", url));
-                    openInBrowser(activity, url);
-                    return;
-                }
+            if (ConfigUtil.isWhiteListedURL(url)) {
+                // this is white-listed URL
+                logger.debug(String.format("opening white-listed URL: %s", url));
+                openInBrowser(activity, url);
             }
+            else {
+                // for non-white-listed URLs
 
-            // for non-white-listed URLs
+                // inform user they may get charged for browsing this URL
+                IDialogCallback callback = new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
+                        openInBrowser(activity, url);
+                    }
 
-            // inform user they may get charged for browsing this URL
-            IDialogCallback callback = new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    openInBrowser(activity, url);
-                }
+                    @Override
+                    public void onNegativeClicked() {
+                    }
+                };
 
-                @Override
-                public void onNegativeClicked() {
-                }
-            };
-
-            MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
+                MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
+            }
         }
         else {
             logger.debug(String.format("non-zero rated network, opening URL: %s", url));
