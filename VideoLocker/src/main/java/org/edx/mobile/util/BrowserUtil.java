@@ -36,12 +36,13 @@ public class BrowserUtil {
 
         // verify if the app is running on zero-rated network?
         if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity)) {
-            String baseUrl = new Api(activity).getBaseUrl();
 
-            if(url.indexOf(baseUrl) >= 0) {
+            String host = "edx.org";
+            if (isUrlOfHost(url, host)) {
+                // check if this is edx.org host
                 openInBrowser(activity, url);
             }else if(url.startsWith("/")) {
-                openInBrowser(activity, String.format("%s%s", baseUrl, url));
+                openInBrowser(activity, String.format("%s%s", Config.getInstance().getApiHostURL(), url));
             }else {
                 // inform user they may get charged for browsing this URL
                 IDialogCallback callback = new IDialogCallback() {
@@ -89,5 +90,16 @@ public class BrowserUtil {
         } catch(Exception ex) {
             logger.error(ex);
         }
+    }
+
+    public static boolean isUrlOfHost(String url, String host) {
+        try {
+            Uri uri = Uri.parse(url);
+            return (uri.getHost().toString().contains(host));
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
+
+        return false;
     }
 }

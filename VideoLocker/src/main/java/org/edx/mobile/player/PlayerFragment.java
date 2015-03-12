@@ -42,6 +42,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -51,6 +52,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
+import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
@@ -96,7 +98,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private ISegment segIO;
     private boolean isVideoMessageDisplayed;
     private boolean isNetworkMessageDisplayed;
+    private boolean isShownWifiSettingsMessage;
     private boolean isManualFullscreen = false;
+    private int currentPosition = 0;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -129,6 +133,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public PlayerFragment() {
         isVideoMessageDisplayed = false;
         isNetworkMessageDisplayed = false;
+        isShownWifiSettingsMessage = false;
     }
 
     public void setCallback(IPlayerEventCallback callback) {
@@ -308,6 +313,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 showVideoNotAvailable();
             }else if(isNetworkMessageDisplayed){
                 showNetworkError();
+            } else if(isShownWifiSettingsMessage){
+                showWifiSettingsMessage();
             }
         }catch(Exception e){
             logger.error(e);
@@ -322,7 +329,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
         setupController();
 
-        if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed){
+        if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed && !isShownWifiSettingsMessage){
             // display progress until playback actually starts
             showProgress();
         }
@@ -383,7 +390,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if(player!=null){
                 player.hideController();
             }
-            if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed){
+            if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed && !isShownWifiSettingsMessage){
                 getView().findViewById(R.id.progress).setVisibility(View.VISIBLE);
             }
         } catch(Exception ex) {
@@ -585,6 +592,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             View errorView = getView().findViewById(R.id.panel_network_error);
             errorView.setVisibility(View.GONE);
             isNetworkMessageDisplayed = false;
+            isShownWifiSettingsMessage = false;
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -905,27 +913,53 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     };
 
     public void onOnline() {
-        hideNetworkError();
-        try {
-            if(player!=null){
-                if(!isVideoMessageDisplayed){
-                    if(!player.isPaused() 
-                            && !player.isPlaying() && !player.isPlayingLocally()){
-                        showProgress();
-                    }
-                }
-                if (player.isInError()) {
-                    player.restart();
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        //Nothing to do
     }
 
     public void onOffline() {
         // nothing to do
         showNetworkError();
+    }
+
+    public void onConnectedToMobile(){
+        UserPrefs pref = new UserPrefs(getActivity());
+        boolean wifiPreference = pref.isDownloadOverWifiOnly();
+        if(!NetworkUtil.isOnZeroRatedNetwork(getActivity()) && wifiPreference){
+            //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
+            //then prompt user to set change his wifi settings
+            showWifiSettingsMessage();
+        }else{
+            handleNetworkChangeVideoPlayback();
+        }
+    }
+
+    public void onConnectedToWifi(){
+        //Start playing video is user is connected to wifi
+        handleNetworkChangeVideoPlayback();
+    }
+
+    /**
+     * This method handles video playback on network change callbacks
+     */
+    private void handleNetworkChangeVideoPlayback(){
+        hideNetworkError();
+        try {
+            if(player!=null){
+                if(!isVideoMessageDisplayed){
+                    if((!player.isPaused()
+                            && !player.isPlaying() && !player.isPlayingLocally())
+                            || (player.isInError() || player.isReset())){
+                        showProgress();
+                    }
+                }
+                if (player.isInError() || player.isReset()) {
+                    //If player is either in error state or has been reset, restart the player with current position
+                    player.restart(currentPosition);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 
     /**
@@ -1695,6 +1729,44 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             }
 
             player.freeze();
+        }
+    }
+
+    /**
+     * This method is called when we need to notify the user during playback that he has
+     * switched to mobile network and his current download settings is not allowed to download videos
+     */
+    private void showWifiSettingsMessage() {
+        try {
+            if (player != null) {
+                if (player.isPlayingLocally()) {
+                    hideNetworkError();
+                } else {
+                    if(!isVideoMessageDisplayed && !player.isInError()){
+                        unlockOrientation();
+                        hideCCPopUp();
+                        hideSettingsPopUp();
+                        if ( !player.isReset()) {
+                            if ( !player.isInError()) {
+                                currentPosition = player.getCurrentPosition();
+                            }
+                            player.reset();
+                        }
+                        player.hideController();
+
+                        clearAllErrors();
+                        View errorView = getView().findViewById(R.id.panel_network_error);
+                        errorView.setVisibility(View.VISIBLE);
+                        ETextView errorHeaderTextView = (ETextView) errorView.findViewById(R.id.error_header);
+                        errorHeaderTextView.setText(getString(R.string.wifi_off_message));
+                        errorView.findViewById(R.id.error_message).setVisibility(View.GONE);
+                        isShownWifiSettingsMessage = true;
+                    }
+                    resetClosedCaptioning();
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 }
