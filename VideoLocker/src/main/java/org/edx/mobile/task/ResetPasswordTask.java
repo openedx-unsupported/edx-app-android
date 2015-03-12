@@ -22,7 +22,7 @@ public abstract class ResetPasswordTask extends Task<ResetPasswordResponse> {
             }
         } catch (Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

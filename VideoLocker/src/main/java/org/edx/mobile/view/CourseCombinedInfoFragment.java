@@ -174,7 +174,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     }
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
                     Date endDate = DateUtil.convertToDate(course.getEnd());
-                    detailBuilder.append(getString(R.string.course_details_ending));
+                    detailBuilder.append(getString(R.string.label_ending_on));
                     detailBuilder.append(" - ");
                     detailBuilder.append(dateFormat.format(endDate));
                 }

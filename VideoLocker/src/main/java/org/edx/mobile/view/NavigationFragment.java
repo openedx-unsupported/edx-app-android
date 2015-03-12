@@ -207,23 +207,11 @@ public class NavigationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                pref.clearAuth();
-                pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, 
-                        getString(R.string.lbl_cc_cancel));
-
-                Intent intent = new Intent();
-                intent.setAction(AppConstants.LOGOUT_CLICKED);
-                getActivity().sendBroadcast(intent); 
-                
-                ISegment segIO = SegmentFactory.getInstance();
-                segIO.trackUserLogout();
-                segIO.resetIdentifyUser();
-
-                Router.getInstance().showLaunchScreen(getActivity(),true);
-                Router.getInstance().showLogin(getActivity());
-
+                Router.getInstance().forceLogout(getActivity());
             }
         });
+
+
         
 
         TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);

@@ -106,7 +106,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             if (startDate != null) {
                 startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + startDate + "</font>";
                 String courseScheduledText = getString(R.string.course_content_available_text);
-                courseScheduledText = courseScheduledText.replace("START_DATE", startDate);
+                courseScheduledText = String.format(courseScheduledText, startDate);
                 courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
                 courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
             }

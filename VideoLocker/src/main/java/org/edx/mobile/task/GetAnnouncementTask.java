@@ -40,7 +40,7 @@ public abstract class GetAnnouncementTask extends
             return api.getAnnouncement(enrollment.getCourse().getCourse_updates(), false);
         } catch (Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

@@ -3,6 +3,7 @@ package org.edx.mobile.base;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +91,18 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
     private void hideOfflineBar(){
         if(offlineBar!=null){
             offlineBar.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Call this function if you do not want to allow
+     * opening/showing the drawer(Navigation Fragment) on swiping left to right
+     */
+    protected void blockDrawerFromOpening(){
+        DrawerLayout drawerLayout = (DrawerLayout)
+                findViewById(R.id.drawer_layout);
+        if (drawerLayout != null) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 }

@@ -676,10 +676,7 @@ public class Api {
             // this might be a login with Facebook or Google
             String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             if (token != null) {
-                String cookie = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE);
-                
-                headers.putString("Authorization", token);
-                headers.putString("Cookie", cookie);
+                  headers.putString("Authorization", token); 
             } else {
                 logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
@@ -1067,55 +1064,56 @@ public class Api {
         return list;
     }
 
-    public SocialLoginResponse loginByFacebook(String accessToken) throws Exception {
+    public AuthResponse loginByFacebook(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
         
         return socialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
     }
 
-    public SocialLoginResponse loginByGoogle(String accessToken) throws Exception {
+    public AuthResponse loginByGoogle(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
         
         return socialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
     }
 
-    private SocialLoginResponse socialLogin(String accessToken, String backend) 
+    private AuthResponse socialLogin(String accessToken, String backend)
                                 throws Exception {
         Bundle headers = new Bundle();
         headers.putString("Content-Type", "application/x-www-form-urlencoded");
-        
+
+
+//        URL: /exchange_oauth_token
+//        Method: POST
+//        Request parameters (all strings):
+//        provider (required): Which third party provided the access token (value should be one of "Google" or "Facebook")
+//        access_token (required): The third-party access token
+//        client_id (required): The id for an OAuth client (which must be provisioned via admin interface)
+//        scope (optional): The requested scope for the first-party access token
+//        Example response:
+//        {"access_token": "<redacted>", "token_type": "Bearer", "expires_in": 2591999, "scope": ""}
+
         Bundle p = new Bundle();
         p.putString("access_token", accessToken);
+        p.putString("client_id",  Config.getInstance().getOAuthClientId());
 
-        String url = getBaseUrl() + "/login_oauth_token/" + backend + "/";
+        //oauth2/exchange_access_token/<backend>/
+        String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
         logger.debug("Url for social login: " + url);
-        
-        String json = http.post(url, p, headers);
 
-        if (json == null) {
-            return null;
-        } 
-        
-        if (json.length() == 0) {
-            // success gives empty response for this api call
-            json = "{}";
-        }
-        
-        logger.debug(backend + " login=" + json);
+
+        String json = http.post(url, p, null);
+        logger.debug("Auth response= " + json);
+
+        // store auth token response
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        pref.put(PrefManager.Key.AUTH_JSON, json);
+        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
 
         Gson gson = new GsonBuilder().create();
-        SocialLoginResponse res = gson.fromJson(json, SocialLoginResponse.class);
-        // hold the json string as it is
-        res.json = json;
-        
-        // FIXME: Should not use cookies ? 
-        // store cookie into preferences for later use in further API calls
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, res.cookie);
+        return gson.fromJson(json, AuthResponse.class);
 
-        return res;
     }
 
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
