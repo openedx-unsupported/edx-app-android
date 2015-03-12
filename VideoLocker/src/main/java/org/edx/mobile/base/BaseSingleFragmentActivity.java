@@ -99,10 +99,10 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
      * opening/showing the drawer(Navigation Fragment) on swiping left to right
      */
     protected void blockDrawerFromOpening(){
-        DrawerLayout mDrawerLayout = (DrawerLayout)
+        DrawerLayout drawerLayout = (DrawerLayout)
                 findViewById(R.id.drawer_layout);
-        if (mDrawerLayout != null) {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        if (drawerLayout != null) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 }
