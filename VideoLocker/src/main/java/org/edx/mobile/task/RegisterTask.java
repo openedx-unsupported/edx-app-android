@@ -36,7 +36,7 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
             return res;
         } catch (Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

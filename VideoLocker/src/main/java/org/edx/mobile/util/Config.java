@@ -42,6 +42,7 @@ public class Config {
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String USE_DEPRECATED_REGISTRATION_API = "USE_DEPRECATED_REGISTRATION_API";
+    private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
@@ -274,6 +275,15 @@ public class Config {
 
     public boolean isUseDeprecatedRegistrationAPI() {
         return getBoolean(USE_DEPRECATED_REGISTRATION_API, false);
+    }
+
+    /**
+     * Empty or no config returns false.
+     * Otherwise, returns the value from the config.
+     * @return
+     */
+    public boolean isSpeedTestEnabled() {
+        return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
     /**

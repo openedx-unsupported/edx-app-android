@@ -24,7 +24,7 @@ public abstract class EnrollForCourseTask extends Task<Boolean> {
                 try {
                     return api.enrollInACourse(courseId,emailOptIn);
                 } catch(Exception ex) {
-                    logger.error(ex);
+                    logger.error(ex, true);
                 }
             }
             return false;
