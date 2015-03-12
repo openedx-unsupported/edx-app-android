@@ -358,7 +358,7 @@
     <!-- Button label to bring up course finder -->
     <string name="find_course_btn_text">Find a mobile-friendly course</string>
     <!-- Button label to bring up course finder -->
-    <string name="signin_with_text">signing in to this app in with</string>
+    <string name="signin_with_text">Or Sign in with</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
