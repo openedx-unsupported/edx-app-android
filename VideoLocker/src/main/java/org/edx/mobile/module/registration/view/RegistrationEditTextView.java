@@ -62,6 +62,11 @@ class RegistrationEditTextView implements IRegistrationFieldView {
         mErrorView.setVisibility(View.GONE);
     }
 
+    public boolean setRawValue(String value){
+        mInputView.setText(value);
+        return true;
+    }
+
     @Override
     public JsonElement getCurrentValue() {
         // turn text view content into a JsonElement and return it
