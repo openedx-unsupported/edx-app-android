@@ -425,4 +425,10 @@
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
+
+    <!-- Message indicating videos deleted -->
+    <plurals name="deleted_videos">
+        <item quantity="one">%s video deleted</item>
+        <item quantity="other">%s videos deleted</item>
+    </plurals>
 </resources>

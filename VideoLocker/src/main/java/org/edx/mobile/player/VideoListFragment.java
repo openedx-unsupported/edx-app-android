@@ -875,6 +875,7 @@ public class VideoListFragment extends Fragment {
 
     public void onConfirmDelete() {
         ArrayList<SectionItemInterface> list;
+        int deletedVideoCount = 0;
         if (myVideosFlag) {
             list = adapter.getSelectedItems();
             if (list != null) {
@@ -882,6 +883,7 @@ public class VideoListFragment extends Fragment {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         storage.removeDownload(de);
+                        deletedVideoCount++;
                     }
                 }
             }
@@ -902,6 +904,7 @@ public class VideoListFragment extends Fragment {
                         DownloadEntry de = (DownloadEntry) section;
                         if(de.isDownloaded()){
                             storage.removeDownload(de);
+                            deletedVideoCount++;
                         }
                     }
                 }
@@ -912,6 +915,12 @@ public class VideoListFragment extends Fragment {
             videoListView.setOnItemClickListener(adapter);
             AppConstants.videoListDeleteMode = false;
             ((VideoListActivity) getActivity()).hideCheckBox();
+        }
+
+        if(deletedVideoCount>0){
+            String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+            ((VideoListActivity) getActivity())
+                    .showInfoMessage(String.format(format, deletedVideoCount));
         }
         getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
         getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);

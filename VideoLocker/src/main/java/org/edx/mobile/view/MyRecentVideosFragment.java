@@ -37,6 +37,7 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -445,12 +446,14 @@ public class MyRecentVideosFragment extends Fragment {
     //Deleting Downloaded videos on getting confirmation
     private void onConfirmDelete() {
         try{
+            int deletedVideoCount = 0;
             ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
             if (list != null) {
                 for (SectionItemInterface section : list) {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         storage.removeDownload(de);
+                        deletedVideoCount++;
                     }
                 }
             }
@@ -459,6 +462,11 @@ public class MyRecentVideosFragment extends Fragment {
             videoListView.setOnItemClickListener(adapter);
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
+            if(deletedVideoCount>0){
+                String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+                UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
+                        String.format(format, deletedVideoCount));
+            }
             getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
             getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);

@@ -58,12 +58,6 @@
         </LinearLayout>
     </LinearLayout>
     
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/downloadMessage"
-        style="@style/downloading_message"
-        android:text="@string/started_downloading"
-        android:visibility="gone" />
-    
     <LinearLayout
         android:id="@+id/container_player"
         android:layout_width="match_parent"
@@ -82,4 +76,9 @@
         style="@style/default_list"
         android:transcriptMode="disabled"/>
 
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/downloadMessage"
+        style="@style/downloading_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
 </RelativeLayout>
