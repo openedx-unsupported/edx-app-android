@@ -335,20 +335,15 @@ public class RegisterActivity extends BaseFragmentActivity {
      * @param fieldView
      * @return
      */
-    private int showErrorOnField(List<RegisterResponseFieldError> errors, IRegistrationFieldView fieldView) {
-        int errorCount = 0;
+    private void showErrorOnField(List<RegisterResponseFieldError> errors, IRegistrationFieldView fieldView) {
         if (errors != null && !errors.isEmpty()) {
             StringBuffer buffer = new StringBuffer();
             for (RegisterResponseFieldError e : errors) {
                 buffer.append(e.getUserMessage() + " ");
-
-                errorCount ++;
             }
 
             fieldView.handleError(buffer.toString());
         }
-
-        return errorCount;
     }
 
     /**

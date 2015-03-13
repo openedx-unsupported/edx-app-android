@@ -76,17 +76,4 @@ public interface IRegistrationFieldView {
         }
     }
 
-    public static final class FieldName {
-        public static final String EMAIL                = "email";
-        public static final String PASSWORD             = "password";
-        public static final String USERNAME             = "username";
-        public static final String NAME                 = "name";
-        public static final String COUNTRY              = "country";
-        public static final String GENDER               = "gender";
-        public static final String YEAR_OF_BIRTH        = "year_of_birth";
-        public static final String LEVEL_OF_EDUCATION   = "level_of_education";
-        public static final String MAILING_ADDRESS      = "mailing_address";
-        public static final String GOALS                = "goals";
-        public static final String HONOR_CODE           = "honor_code";
-    }
 }
