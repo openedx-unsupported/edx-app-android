@@ -53,6 +53,7 @@ public class Config {
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String WHITE_LIST = "WHITE_LIST";
 
     /**
      * Social Sharing configuration.
@@ -191,6 +192,22 @@ public class Config {
 
         public String getSegmentWriteKey() {
             return mSegmentWriteKey;
+        }
+    }
+
+    /**
+     * Domain White List configuration.
+     */
+    public class DomainWhiteListConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("DOMAINS") List<String> mDomains;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+
+        public List<String> getDomains() {
+            return mDomains != null ? mDomains : new ArrayList<String>();
         }
     }
 
@@ -391,6 +408,18 @@ public class Config {
         }
         else {
             return new SegmentConfig();
+        }
+    }
+
+    public DomainWhiteListConfig getDomainWhiteListConfig() {
+        JsonElement element = getObject(WHITE_LIST);
+        if(element != null) {
+            Gson gson = new Gson();
+            DomainWhiteListConfig config = gson.fromJson(element, DomainWhiteListConfig.class);
+            return config;
+        }
+        else {
+            return new DomainWhiteListConfig();
         }
     }
 }

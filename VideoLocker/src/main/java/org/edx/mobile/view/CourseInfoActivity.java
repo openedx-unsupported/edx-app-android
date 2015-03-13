@@ -1,18 +1,14 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 public class CourseInfoActivity extends FindCoursesBaseActivity {
 
@@ -39,6 +35,14 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
+        new URLInterceptorWebViewClient(webview) {
+
+            @Override
+            public void onOpenExternalURL(String url) {
+                BrowserUtil.open(CourseInfoActivity.this, url);
+            }
+        };
+
         webview.loadUrl(url);
     }
 }
