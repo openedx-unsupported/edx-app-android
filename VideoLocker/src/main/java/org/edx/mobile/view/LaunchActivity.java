@@ -74,7 +74,6 @@ public class LaunchActivity extends BaseFragmentActivity {
             logger.error(e);
         }
 
-        fetchRegistrationDescription();
     }
 
     @Override
@@ -103,21 +102,7 @@ public class LaunchActivity extends BaseFragmentActivity {
         unregisterReceiver(loginReceiver);
     }
 
-    private void fetchRegistrationDescription() {
-        Thread th = new Thread() {
 
-            @Override
-            public void run() {
-                try {
-                    Api api = new Api(getApplicationContext());
-                    api.downloadRegistrationDescription();
-                } catch(Exception ex) {
-                    logger.error(ex);
-                }
-            }
-        };
-        th.start();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

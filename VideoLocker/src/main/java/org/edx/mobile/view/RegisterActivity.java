@@ -15,6 +15,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.ISegment;
@@ -276,75 +277,29 @@ public class RegisterActivity extends BaseFragmentActivity {
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-
-                            // Response might contain error message for individual registration fields
-                            int errorCount = 0;
-
-                            for (IRegistrationFieldView fieldView : mFieldViews) {
-                                if (IRegistrationFieldView.FieldName.EMAIL
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getEmailErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.PASSWORD
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getPasswordErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.USERNAME
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getUsernameErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.NAME
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getNameErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.GENDER
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getGenderErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.COUNTRY
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getCountryErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.YEAR_OF_BIRTH
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getYearOfBirthErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.MAILING_ADDRESS
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getMailingAddressErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.LEVEL_OF_EDUCATION
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getLevelOfEducationErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.GOALS
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getGoalErrors(), fieldView);
-                                }
-
-                                if (IRegistrationFieldView.FieldName.HONOR_CODE
-                                        .equals(fieldView.getField().getName())) {
-                                    errorCount += showErrorOnField(result.getHonorCodeErrors(), fieldView);
-                                }
-                            }
-
+                            FormFieldMessageBody messageBody = result.getMessageBody();
                             // show general failure message if there wasn't any error for any of the input fields
-                            if (errorCount == 0) {
+                            if (messageBody == null || messageBody.isEmpty()) {
                                 String errorMessage = result.getValue();
                                 if (errorMessage == null || errorMessage.isEmpty()) {
                                     errorMessage = getString(R.string.sign_up_error);
                                 }
                                 sendBroadcastFlyingErrorMessage(null, errorMessage);
+                                return;
                             }
+
+                            for(String key : messageBody.keySet()) {
+                                if ( key == null )
+                                    continue;
+                                for (IRegistrationFieldView fieldView : mFieldViews) {
+                                    if (key.equalsIgnoreCase( fieldView.getField().getName()) ) {
+                                        List<RegisterResponseFieldError> error = messageBody.get(key);
+                                        showErrorOnField(error, fieldView);
+                                        break;
+                                    }
+                                }
+                            }
+
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
