@@ -350,6 +350,7 @@ public class RegisterActivity extends BaseFragmentActivity {
                             if (auth != null && auth.isSuccess()) {
                                 // launch my courses screen
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
+                                finish();
                             } else {
                                 sendBroadcastFlyingErrorMessage(null, getString(R.string.sign_up_error));
                             }
