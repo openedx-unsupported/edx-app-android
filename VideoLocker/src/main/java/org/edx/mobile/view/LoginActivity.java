@@ -26,6 +26,7 @@ import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.ISocial;
 import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.LoginTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
@@ -39,7 +40,7 @@ import org.edx.mobile.view.dialog.SuccessDialogFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseFragmentActivity {
+public class LoginActivity extends BaseFragmentActivity implements SocialLoginDelegate.SocialLoginCallback {
 
     private TextView login_tv;
     private EditText email_et, password_et;
@@ -53,7 +54,7 @@ public class LoginActivity extends BaseFragmentActivity {
     public String emailStr;
     private TextView forgotPassword_tv;
     private TextView eulaTv;
-    private ISocial google, facebook;
+    private SocialLoginDelegate socialLoginDelegate;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,8 @@ public class LoginActivity extends BaseFragmentActivity {
         runOnTick = false;
 
         // setup for social login
-        SocialLogin();
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this);
 
-        google.onActivityCreated(this, savedInstanceState);
-        facebook.onActivityCreated(this, savedInstanceState);
 
         email_et = (EditText) findViewById(R.id.email_et);
 
@@ -163,25 +162,18 @@ public class LoginActivity extends BaseFragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        google.onActivityDestroyed(this);
-        facebook.onActivityDestroyed(this);
+        socialLoginDelegate.onActivityDestroyed();
     }
 
-    private void SocialLogin() {
-        google = SocialFactory.getInstance(this, SocialFactory.TYPE_GOOGLE);
-        google.setCallback(googleCallback);
-        
-        facebook = SocialFactory.getInstance(this, SocialFactory.TYPE_FACEBOOK);
-        facebook.setCallback(facebookCallback);
-    }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("username", email_et.getText().toString().trim());
-        
-        google.onActivitySaveInstanceState(this, outState);
-        facebook.onActivitySaveInstanceState(this, outState);
+
+        socialLoginDelegate.onActivitySaveInstanceState(outState);
+
     }
 
     @Override
@@ -190,9 +182,9 @@ public class LoginActivity extends BaseFragmentActivity {
         if(email_et.getText().toString().length()==0){
             displayLastEmailId();
         }
-        
-        google.onActivityStarted(this);
-        facebook.onActivityStarted(this);
+
+        socialLoginDelegate.onActivityStarted();
+
     }
 
     @Override
@@ -207,8 +199,7 @@ public class LoginActivity extends BaseFragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setAllClicksEnabled(true);
-        google.onActivityResult(requestCode, resultCode, data);
-        facebook.onActivityResult(requestCode, resultCode, data);
+        socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
     private void displayLastEmailId() {
@@ -284,8 +275,7 @@ public class LoginActivity extends BaseFragmentActivity {
     protected void onStop() {
         super.onStop();
 
-        google.onActivityStopped(this);
-        facebook.onActivityStopped(this);
+        socialLoginDelegate.onActivityStopped();
     }
 
     public String getEmail() {
@@ -446,31 +436,14 @@ public class LoginActivity extends BaseFragmentActivity {
         return true;
     }
 
-    private ISocial.Callback googleCallback = new ISocial.Callback() {
-        
-        @Override
-        public void onLogin(String accessToken) {
-            logger.debug("Google logged in; token= " + accessToken);
-            startSocialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
-        }
 
-    };
-    
-    private ISocial.Callback facebookCallback = new ISocial.Callback() {
-        
-        @Override
-        public void onLogin(String accessToken) {
-            logger.debug("Facebook logged in; token= " + accessToken);
-            startSocialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
-        }
-    };
 
     /**
      * Starts fetching profile of the user after login by Facebook or Google.
      * @param accessToken
      * @param backend
      */
-    private void startSocialLogin(String accessToken, String backend) {
+    public void onSocialLoginSuccess(String accessToken, String backend) {
         PrefManager pref = new PrefManager(LoginActivity.this, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, accessToken);
         pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, backend);
@@ -624,7 +597,7 @@ public class LoginActivity extends BaseFragmentActivity {
                     @Override
                     protected Void doInBackground(Object... arg0) {
                         try {
-                            facebook.logout();
+                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_FACEBOOK);
                         } catch(Exception ex) {
                             // no need to handle this error
                             logger.error(ex);
@@ -634,7 +607,7 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onFinish(Void result) {
-                        facebook.login();
+                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_FACEBOOK);
                     }
                     
                     @Override
@@ -647,6 +620,7 @@ public class LoginActivity extends BaseFragmentActivity {
             }
         }
     };
+
     android.view.View.OnClickListener googleClickListener = new OnClickListener() {
 
         @Override
@@ -660,7 +634,7 @@ public class LoginActivity extends BaseFragmentActivity {
                     @Override
                     protected Void doInBackground(Object... arg0) {
                         try {
-                            google.logout();
+                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_GOOGLE);
                         } catch(Exception ex) {
                             // no need to handle this error
                             logger.error(ex);
@@ -670,7 +644,7 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onFinish(Void result) {
-                        google.login();
+                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_GOOGLE);
                     }
                     
                     @Override

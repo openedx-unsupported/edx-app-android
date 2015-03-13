@@ -1064,7 +1064,15 @@ public class Api {
         return list;
     }
 
+    public RegisterResponse registerByFaceBook(String accessToken)throws Exception {
+        return new RegisterResponse(0);
+    }
+    public RegisterResponse registerByGoogle(String accessToken)throws Exception {
+        return new RegisterResponse(0);
+    }
+
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
+
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
         

@@ -7,7 +7,7 @@ import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.util.Config;
 
 public class SocialFactory {
-
+    public static final int TYPE_UNKNOWN         = -1;
     public static final int TYPE_GOOGLE         = 100;
     public static final int TYPE_FACEBOOK       = 101;
     
@@ -28,5 +28,13 @@ public class SocialFactory {
             }
         } 
         return null;
+    }
+
+    public static int getSocialType(String source){
+        if ( "facebook".equalsIgnoreCase( source ) )
+            return TYPE_FACEBOOK;
+        if ( "google".equalsIgnoreCase( source ) )
+            return TYPE_GOOGLE;
+        return TYPE_UNKNOWN;
     }
 }

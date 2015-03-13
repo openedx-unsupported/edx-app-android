@@ -15,6 +15,7 @@ public class SocialMember implements Parcelable, Serializable {
     @SerializedName("name")
     protected String fullName;
     protected String pictureUrl;
+    protected String email;
 
     public SocialMember(long id, String fullName) {
         this.id = id;
@@ -29,6 +30,11 @@ public class SocialMember implements Parcelable, Serializable {
         this(id, firstName, lastName);
         this.pictureUrl = pictureUrl;
     }
+
+    public String getEmail(){  return email;  }
+
+    public void setEmail(String email){  this.email = email; }
+
 
     public long getId() {
         return id;

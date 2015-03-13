@@ -3,6 +3,12 @@
 
     <string name="app_name">edX</string>
 
+    <!-- Common values -->
+    <!-- Facebook login method -->
+    <string name="facebook_text">Facebook</string>
+    <!-- Google login method -->
+    <string name="google_text">Google</string>
+
     <!-- Button to visit course group on facebook -->
     <string name="course_details_fb_group">Official course Facebook group</string>
     <!-- Button to view handouts for course -->
@@ -359,10 +365,7 @@
     <string name="find_course_btn_text">Find a mobile-friendly course</string>
     <!-- Button label to bring up course finder -->
     <string name="signin_with_text">signing in to this app in with</string>
-    <!-- Facebook login method -->
-    <string name="facebook_text">Facebook</string>
-    <!-- Google login method -->
-    <string name="google_text">Google</string>
+
     <!-- Message on course list -->
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
     <!-- Message on course page for course that hasn't started -->
@@ -387,6 +390,10 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
     <string name="sign_up_and_learn">Sign up and start learning</string>
+    <!-- In Sign up screen -->
+    <string name="sign_up_with">Sign up with</string>
+    <!-- In Sign up screen -->
+    <string name="or_sign_up_with_email">or sign up with email</string>
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
@@ -401,7 +408,12 @@
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
     <string name="register_title">Sign up for edX</string>
-
+    <!-- Text for successful registration with social token  -->
+    <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook .</string>
+    <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google .</string>
+    <string name="sign_up_with_social_ok">We just need a little more information before you start learning with edX.</string>
+    <!-- Continue registration after social login -->
+    <string name="complete_registration">Complete your registration</string>
     <!-- Message shown when enrolling in a course fails-->
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->

@@ -21,5 +21,15 @@
         <attr name="overflowTextSize" format="dimension" />
         <attr name="avatarMaxSize" format="dimension" />
     </declare-styleable>
-    
+
+    <declare-styleable name="ETitleRowView">
+        <attr name="titleFontSize" format="dimension" />
+        <attr name="title" format="string" />
+        <attr name="decorationStyle" format="enum">
+            <enum name="center" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+    </declare-styleable>
+
 </resources>
