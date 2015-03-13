@@ -1175,7 +1175,7 @@ public class Api {
      */
     public RegisterResponse register(Bundle parameters)
             throws Exception {
-        String url = getBaseUrl() + "/user_api/v1/account/registration";
+        String url = getBaseUrl() + "/user_api/v1/account/registration/";
 
         String json = http.post(url, parameters, null);
 
