@@ -56,23 +56,17 @@ public class LaunchActivity extends BaseFragmentActivity {
         });
 
         EButton sign_up_button = (EButton) findViewById(R.id.sign_up_btn);
-        if (Config.getInstance().isUseDeprecatedRegistrationAPI()) {
-            sign_up_button.setVisibility(View.VISIBLE);
-            sign_up_button.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        segIO.trackUserSignUpForAccount();
-                    }catch(Exception e){
-                        logger.error(e);
-                    }
-                    Router.getInstance().showRegistration(LaunchActivity.this);
+        sign_up_button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    segIO.trackUserSignUpForAccount();
+                }catch(Exception e){
+                    logger.error(e);
                 }
-            });
-        } else {
-            // disable registration feature for deprecated API endpoint
-            sign_up_button.setVisibility(View.GONE);
-        }
+                Router.getInstance().showRegistration(LaunchActivity.this);
+            }
+        });
 
         try {
             segIO.screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
