@@ -75,4 +75,5 @@ public interface IRegistrationFieldView {
             }
         }
     }
+
 }

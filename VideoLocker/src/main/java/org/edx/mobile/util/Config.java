@@ -41,7 +41,6 @@ public class Config {
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
-    private static final String USE_DEPRECATED_REGISTRATION_API = "USE_DEPRECATED_REGISTRATION_API";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
 
     /* Composite configuration keys */
@@ -288,10 +287,6 @@ public class Config {
 
     public String getOAuthClientSecret() {
         return getString(OAUTH_CLIENT_SECRET);
-    }
-
-    public boolean isUseDeprecatedRegistrationAPI() {
-        return getBoolean(USE_DEPRECATED_REGISTRATION_API, false);
     }
 
     /**
