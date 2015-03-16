@@ -68,12 +68,17 @@ public class Router {
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG,overrideAnimation);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if ( context instanceof  Activity)
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        else
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
 
     public void showLogin(Context context) {
         Intent launchIntent = new Intent(context, LoginActivity.class);
+        if ( !(context instanceof  Activity) )
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
 
