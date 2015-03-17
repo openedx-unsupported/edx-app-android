@@ -623,6 +623,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         }
 
                         isNetworkMessageDisplayed = true;
+                        isShownWifiSettingsMessage = false;
                         resetClosedCaptioning();
                     }
                 }
@@ -1769,4 +1770,13 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             logger.error(ex);
         }
     }
+
+    /**
+     * This method returns true if message is displayed on player to change wifi settings.
+     * @return
+     */
+    public boolean isShownWifiSettingsMessage(){
+        return isShownWifiSettingsMessage;
+    }
+
 }

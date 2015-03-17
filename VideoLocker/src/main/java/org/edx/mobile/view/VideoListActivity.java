@@ -474,4 +474,17 @@ VideoListCallback, IPlayerEventCallback {
         }
         finish();
     };
+
+
+    @Override
+    public boolean showInfoMessage(String message) {
+        //If the wifi settings message is already shown on video player,
+        //then do not show the info message
+        if(playerFragment.isShownWifiSettingsMessage()
+                && message.equalsIgnoreCase(getString(R.string.wifi_off_message))){
+            return false;
+        }
+        return super.showInfoMessage(message);
+    }
+
 }
