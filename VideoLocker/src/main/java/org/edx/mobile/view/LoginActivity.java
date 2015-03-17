@@ -22,9 +22,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.ISocial;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.LoginTask;
@@ -40,7 +38,7 @@ import org.edx.mobile.view.dialog.SuccessDialogFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseFragmentActivity implements SocialLoginDelegate.SocialLoginCallback {
+public class LoginActivity extends BaseFragmentActivity implements SocialLoginDelegate.MobileLoginCallback {
 
     private TextView login_tv;
     private EditText email_et, password_et;
@@ -208,6 +206,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         email_et.setText(emailId);
     }
 
+    public ProgressBar getProgressBar(){
+        return this.progressbar;
+    }
+
     public void callServerForLogin() {
 
         if (!AppConstants.offline_flag) {
@@ -255,7 +257,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                     @Override
                     public void onException(Exception ex) {
-                        onUserLoginFailure(ex);
+                        onUserLoginFailure(ex, null, null);
                     }
 
                 };
@@ -443,26 +445,12 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
      * @param accessToken
      * @param backend
      */
-    public void onSocialLoginSuccess(String accessToken, String backend) {
-        PrefManager pref = new PrefManager(LoginActivity.this, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, accessToken);
-        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, backend);
-
+    public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
         setLoginBtnDisabled();
-        Task<?> task = new ProfileTask(LoginActivity.this);
         task.setProgressDialog(progressbar);
-        task.execute(accessToken, backend);
     }
     
-    private void onUserLoginSuccess(ProfileModel profile) throws LoginException {
-        if (profile.email == null) {
-            // handle this error, show error message
-            LoginErrorMessage errorMsg =
-                    new LoginErrorMessage(
-                            getString(R.string.login_error),
-                            getString(R.string.login_failed));
-            throw new LoginException(errorMsg);
-        }
+    public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
@@ -483,7 +471,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         myCourseScreen();
     }
     
-    private void onUserLoginFailure(Exception ex) {
+    public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
         setLoginBtnEnabled();
         email_et.setEnabled(true);
         password_et.setEnabled(true);
@@ -503,87 +491,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
     }
     
-    private class ProfileTask extends Task<ProfileModel> {
 
-        public ProfileTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onFinish(ProfileModel result) {
-            if (result != null) {
-                try {
-                    onUserLoginSuccess(result);
-                } catch (LoginException ex) {
-                    logger.error(ex);
-                    handle(ex);
-                }
-            } 
-        }
-
-        @Override
-        public void onException(Exception ex) {
-            onUserLoginFailure(ex);
-        }
-
-        @Override
-        protected ProfileModel doInBackground(Object... params) {
-            try {
-                String accessToken = (String) params[0];
-                String backend = (String) params[1];
-                
-                Api api = new Api(context);
-                
-                // do SOCIAL LOGIN first
-                AuthResponse social = null;
-                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                    social = api.loginByFacebook(accessToken);
-
-                    if ( social.error != null && social.error.equals("401") ) {
-                        throw new LoginException(new LoginErrorMessage(
-                                context.getString(R.string.error_account_not_linked_title_fb),
-                                context.getString(R.string.error_account_not_linked_desc_fb)));
-                    }
-                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                    social = api.loginByGoogle(accessToken);
-
-                    if ( social.error != null && social.error.equals("401") ) {
-                        throw new LoginException(new LoginErrorMessage(
-                                getString(R.string.error_account_not_linked_title_google),
-                                getString(R.string.error_account_not_linked_desc_google)));
-                    }
-                }
-
-                if (social.isSuccess()) {
-
-                    // we got a valid accessToken so profile can be fetched
-                        ProfileModel profile =  api.getProfile();
-
-                        // store profile json
-                        if (profile != null ) {
-                            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-                            pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
-                            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-                            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-                        }
-
-                    if (profile.email != null) {
-                        // we got valid profile information
-                        return profile;
-                    }
-                }
-                throw new LoginException(new LoginErrorMessage(
-                        getString(R.string.login_error),
-                        getString(R.string.login_failed)));
-            } catch (Exception e) {
-                logger.error(e);
-                handle(e);
-            }
-            return null;
-        }
-        
-    }
-    
     android.view.View.OnClickListener facebookClickListener = new OnClickListener() {
         
         @Override

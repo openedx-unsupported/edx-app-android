@@ -38,6 +38,7 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.UiUtil;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.Random;
 
 public class RegisterActivity extends BaseFragmentActivity
-        implements SocialLoginDelegate.SocialLoginCallback{
+        implements SocialLoginDelegate.MobileLoginCallback {
 
     private RelativeLayout createAccountBtn;
     private LinearLayout requiredFieldsLayout;
@@ -279,6 +280,17 @@ public class RegisterActivity extends BaseFragmentActivity
             parameters.putString("honor_code", "true");
             parameters.putString("terms_of_service", "true");
 
+            //set parameter required by social registration
+            PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
+            String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
+            if ( access_token != null && access_token.length() > 0 ) {
+                String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
+                parameters.putString("access_token", access_token);
+                parameters.putString("provider", backstore);
+                parameters.putString("client_id", Config.getInstance().getOAuthClientId());
+            }
+
+
             // do NOT proceed if validations are failed
             if (hasError) {  return;  }
 
@@ -426,7 +438,7 @@ public class RegisterActivity extends BaseFragmentActivity
        // UiUtil.animateLayouts(messageLayout);
     }
 
-    private void onSocialLoginSuccess(int socialType){
+    private void updateUIOnSocialLoginToEdxFailure(int socialType){
         //change UI.
         View signupWith = findViewById(R.id.signupWith);
         signupWith.setVisibility(View.INVISIBLE);
@@ -447,15 +459,12 @@ public class RegisterActivity extends BaseFragmentActivity
                 boolean success = field.setRawValue(value);
                 if ( success )
                     break;
-//                View view = field.getView();
-//                View valueField = view.findViewById(R.id.txt_input);
-//                if ( valueField instanceof  TextView ){
-//                    ((TextView)valueField).setText(value);
-//                    break;
-//                }
             }
         }
     }
+
+
+
 
     private void populateEmailFromSocialSite(int socialType){
         this.socialLoginDelegate.getUserInfo(socialType, new SocialLoginDelegate.SocialUserInfoCallback() {
@@ -465,6 +474,11 @@ public class RegisterActivity extends BaseFragmentActivity
                 if ( name != null && name.length() > 0 ) {
                     populateFormField("name", name);
                     populateFormField("username", name.replace(" ", "") + new Random(System.currentTimeMillis()).nextInt(9999));
+
+                    //Should we save the email here?
+                    PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
+                    pref.put("email", email);
+                    pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
                 }
             }
         });
@@ -521,23 +535,32 @@ public class RegisterActivity extends BaseFragmentActivity
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void onRegisterUsingSoicalTokenSuccess(ProfileModel profile) throws LoginException {
-        if (profile.email == null) {
-            // handle this error, show error message
-            LoginErrorMessage errorMsg =
-                    new LoginErrorMessage(
-                            getString(R.string.login_error),
-                            getString(R.string.login_failed));
-            throw new LoginException(errorMsg);
-        }
-
-        // save this email id
-
-
-        myCourseScreen();
+    /**
+     *   after login by Facebook or Google, the workflow is different from login page.
+     *   we need to adjust the register view
+     *   1. first we try to login,
+     *   2. if login return 200, redirect to course screen.
+     *   3. otherwise, go through the normal registration flow.
+     * @param accessToken
+     * @param backend
+     */
+    public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
+        //we should handle UI update here. but right now we do nothing in UI
     }
 
-    private void myCourseScreen() {
+    /*
+     *  callback if login to edx success using social access_token
+     */
+    public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
+
+        PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
+        segIO.identifyUser(profile.id.toString(), profile.email , "");
+
+        String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
+        if(backendKey!=null){
+            segIO.trackUserLogin(backendKey);
+        }
+
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             Router.getInstance().showMyCourses(this);
@@ -547,8 +570,14 @@ public class RegisterActivity extends BaseFragmentActivity
         finish();
     }
 
-    private void onRegisterUsingSocialTokenFailure(Exception ex) {
-
+    /**
+     * callback if login to edx failed using social access_token
+     * @param ex
+     */
+    public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
+        //we should redirect to current page.
+        //do nothing
+        //we need to add 1)access_token   2) provider 3) client_id
         // handle if this is a LoginException
         if (ex != null && ex instanceof LoginException) {
             LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
@@ -560,102 +589,88 @@ public class RegisterActivity extends BaseFragmentActivity
         } else {
             logger.error(ex);
         }
-    }
-    /**
-     *   after login by Facebook or Google, the workflow is different from login page.
-     *   we need to adjust the register view
-     * @param accessToken
-     * @param backend
-     */
-    public void onSocialLoginSuccess(String accessToken, String backend) {
-        PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, accessToken);
-        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, backend);
-
-        onSocialLoginSuccess( SocialFactory.getSocialType(backend) );
-
-//        Task<?> task = new RegisterUsingSocialTokenTask(RegisterActivity.this);
-//       // task.setProgressDialog(progressbar);
-//        task.execute(accessToken, backend);
-    }
-
-    private class RegisterUsingSocialTokenTask extends Task<ProfileModel> {
-
-        public RegisterUsingSocialTokenTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onFinish(ProfileModel result) {
-            if (result != null) {
-                try {
-                    onRegisterUsingSoicalTokenSuccess(result);
-                } catch (LoginException ex) {
-                    logger.error(ex);
-                    handle(ex);
-                }
-            }
-        }
-
-        @Override
-        public void onException(Exception ex) {
-            onRegisterUsingSocialTokenFailure(ex);
-        }
-
-        @Override
-        protected ProfileModel doInBackground(Object... params) {
-            try {
-                String accessToken = (String) params[0];
-                String backend = (String) params[1];
-
-                Api api = new Api(context);
-
-                // do SOCIAL LOGIN first
-                RegisterResponse social = null;
-                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                    social = api.registerByFaceBook(accessToken);
-
-                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
-                        throw new LoginException(new LoginErrorMessage(
-                                context.getString(R.string.error_account_not_linked_title_fb),
-                                context.getString(R.string.error_account_not_linked_desc_fb)));
-                    }
-                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                    social = api.registerByFaceBook(accessToken);
-
-                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
-                        throw new LoginException(new LoginErrorMessage(
-                                getString(R.string.error_account_not_linked_title_google),
-                                getString(R.string.error_account_not_linked_desc_google)));
-                    }
-                }
-                    // we got a valid accessToken so profile can be fetched
-                    ProfileModel profile =  api.getProfile();
-
-                    // store profile json
-                    if (profile != null ) {
-                        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-                        pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
-                        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-                        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-                    }
-
-                    if (profile.email != null) {
-                        // we got valid profile information
-                        return profile;
-                    }
-
-                throw new LoginException(new LoginErrorMessage(
-                        getString(R.string.login_error),
-                        getString(R.string.login_failed)));
-            } catch (Exception e) {
-                logger.error(e);
-                handle(e);
-            }
-            return null;
-        }
+        int socialType = SocialFactory.getSocialType(backend);
+        updateUIOnSocialLoginToEdxFailure(socialType);
 
     }
+
+//    private class RegisterUsingSocialTokenTask extends Task<ProfileModel> {
+//
+//        public RegisterUsingSocialTokenTask(Context context) {
+//            super(context);
+//        }
+//
+//        @Override
+//        public void onFinish(ProfileModel result) {
+//            if (result != null) {
+//                try {
+//                    onRegisterUsingSoicalTokenSuccess(result);
+//                } catch (LoginException ex) {
+//                    logger.error(ex);
+//                    handle(ex);
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void onException(Exception ex) {
+//            onRegisterUsingSocialTokenFailure(ex);
+//        }
+//
+//        @Override
+//        protected ProfileModel doInBackground(Object... params) {
+//            try {
+//                String accessToken = (String) params[0];
+//                String backend = (String) params[1];
+//
+//                Api api = new Api(context);
+//
+//                // do SOCIAL LOGIN first
+//                RegisterResponse social = null;
+//                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
+//                    social = api.registerByFaceBook(accessToken);
+//
+//                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
+//                        throw new LoginException(new LoginErrorMessage(
+//                                context.getString(R.string.error_account_not_linked_title_fb),
+//                                context.getString(R.string.error_account_not_linked_desc_fb)));
+//                    }
+//                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
+//                    social = api.registerByFaceBook(accessToken);
+//
+//                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
+//                        throw new LoginException(new LoginErrorMessage(
+//                                getString(R.string.error_account_not_linked_title_google),
+//                                getString(R.string.error_account_not_linked_desc_google)));
+//                    }
+//                }
+//                    // we got a valid accessToken so profile can be fetched
+//                    ProfileModel profile =  api.getProfile();
+//
+//                    // store profile json
+//                    if (profile != null ) {
+//                        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+//                        pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
+//                        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+//                        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+//                    }
+//
+//                    if (profile.email != null) {
+//                        // we got valid profile information
+//                        return profile;
+//                    }
+//
+//                throw new LoginException(new LoginErrorMessage(
+//                        getString(R.string.login_error),
+//                        getString(R.string.login_failed)));
+//            } catch (Exception e) {
+//                logger.error(e);
+//                handle(e);
+//            }
+//            return null;
+//        }
+//
+//    }
 
     android.view.View.OnClickListener facebookClickListener = new View.OnClickListener() {
 

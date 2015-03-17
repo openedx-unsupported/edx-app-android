@@ -1067,6 +1067,7 @@ public class Api {
     public RegisterResponse registerByFaceBook(String accessToken)throws Exception {
         return new RegisterResponse(0);
     }
+
     public RegisterResponse registerByGoogle(String accessToken)throws Exception {
         return new RegisterResponse(0);
     }
