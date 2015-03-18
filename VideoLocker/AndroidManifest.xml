@@ -3,27 +3,54 @@
     package="org.edx.mobile"
     android:installLocation="auto" >
 
+    <!-- Required by app for server communication and video download -->
+    <!-- Required by Segment -->
+    <!-- Required by NewRelic -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Optional but Recommended by Segment and most bundled integrations. -->
+    <!-- Required by NewRelic -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    
-    <!-- Google Permissions -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    
+
+    <!-- Optional but Recommended by Segment and most bundled integrations. -->
     <!-- Allow you to get LOGCAT information when a crash occurs. -->
     <uses-permission android:name="android.permission.READ_LOGS" />
 
+    <!-- Optional but Recommended by Segment and most bundled integrations. -->
     <!-- Allow you to see which activity was active when a crash occurs. -->
     <uses-permission android:name="android.permission.GET_TASKS" />
 
+    <!-- Optional but Recommended by Segment and most bundled integrations. -->
     <!-- Allows location to be tracked -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Optional but Recommended by Segment and most bundled integrations. -->
+    <!-- Allows location to be tracked -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Required by app for preventing screen lock while playing a video -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Required by app for detection of ONLINE or OFFLINE mode -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Required by app for performing downloads without showing download notification -->
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <!-- Required by app for storing downloaded videos to the external storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- Required by Google -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Required by Google -->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <!-- Required by Google -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+    <!-- Required by app to detect phone calls and manage playback accordingly -->
+    <!-- Required by telephony service to get mobile network information -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
@@ -40,7 +67,7 @@
             android:name="org.edx.mobile.view.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/Theme.CustomPreview">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

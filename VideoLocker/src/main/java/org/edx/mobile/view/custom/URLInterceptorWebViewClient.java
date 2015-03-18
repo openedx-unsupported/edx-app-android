@@ -1,12 +1,16 @@
 package org.edx.mobile.view.custom;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
 
 import java.util.HashMap;
@@ -64,11 +68,6 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
      * @param webView
      */
     private void setupWebView(WebView webView) {
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setBuiltInZoomControls(false);
-        settings.setSupportZoom(true);
         webView.setWebViewClient(this);
         //We need to hide the loading progress if the Page starts rendering.
         webView.setWebChromeClient(new WebChromeClient() {
@@ -150,7 +149,22 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
         return super.shouldOverrideUrlLoading(view, url);
     }
 
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        if (isExternalLink(url)) {
+            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        }
+        return super.shouldInterceptRequest(view, url);
+    }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+        if (isExternalLink(request.getUrl().toString())) {
+            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        }
+        return super.shouldInterceptRequest(view, request);
+    }
 
     /**
      * Checks if the URL pattern matches with that of COURSE_INFO URL.

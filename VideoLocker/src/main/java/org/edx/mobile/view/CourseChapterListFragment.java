@@ -70,6 +70,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private ETextView courseScheduleTv;
     private String startDate;
     private boolean isTaskRunning = false;
+    private GetCourseHierarchyTask getHeirarchyTask;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +106,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             if (startDate != null) {
                 startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + startDate + "</font>";
                 String courseScheduledText = getString(R.string.course_content_available_text);
-                courseScheduledText = courseScheduledText.replace("START_DATE", startDate);
+                courseScheduledText = String.format(courseScheduledText, startDate);
                 courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
                 courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
             }
@@ -140,6 +141,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         isActivityStarted = true;
         adapter.setStore(db, storage);
         handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
+        if(!adapter.isEmpty()){
+            adapter.notifyDataSetChanged();
+        }
 
         fetchLastAccessed(getView());
     }
@@ -201,10 +205,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
                             @Override
                             public void onNegativeClicked() {
-                                //
+                                ((CourseDetailTabActivity) getActivity())
+                                        .showInfoMessage(getString(R.string.wifi_off_message));
                             }
                         };
-                        MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                        MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
 
                     } catch (Exception e) {
                         logger.error(e);
@@ -277,10 +282,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     //Loading data to the Adapter
     private void loadData(final View view) {
         if (isTaskRunning) {
+            logger.debug("skipping a call to loadData, task is already running");
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+            progressBar.setVisibility(View.VISIBLE);
+            getHeirarchyTask.setProgressDialog(progressBar);
             return;
         }
 
-        GetCourseHierarchyTask task = new GetCourseHierarchyTask(getActivity()) {
+        getHeirarchyTask = new GetCourseHierarchyTask(getActivity()) {
 
             @Override
             public void onFinish(Map<String, SectionEntry> chapterMap) {
@@ -337,13 +346,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             }
         };
 
-        ProgressBar progressBar = (ProgressBar) view
-                .findViewById(R.id.api_spinner);
-        task.setProgressDialog(progressBar);
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        getHeirarchyTask.setProgressDialog(progressBar);
         //Initializing task call
         logger.debug("Initializing Chapter Task"+ DateUtil.getCurrentTimeStamp());
         isTaskRunning = true;
-        task.execute(courseId);
+        getHeirarchyTask.execute(courseId);
     }
 
     private void updateOpenInBrowserPanel() {
@@ -423,12 +431,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     if(isActivityStarted) {
                         adapter.notifyDataSetChanged();
                         (getActivity()).invalidateOptionsMenu();
-                        if (result > 1) {
-                            String msg = String.format(getString(R.string.downloading_multiple), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
-                        } else if (result == 1) {
-                            String msg = String.format(getString(R.string.downloading_single), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
+                        if (result > 0) {
+                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), String.format(format, result));
                         } else {
                             UiUtil.showMessage(CourseChapterListFragment.this.getView(),
                                     getString(R.string.msg_video_not_downloaded));

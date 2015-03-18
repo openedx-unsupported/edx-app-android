@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/announcement_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:ellipsize="end"
         android:maxWidth="200dp"
         android:singleLine="true"
-        android:text="@string/announcement_date"
+        tools:text="Announcement date"
         android:textColor="@color/grey_last_accessed"
         android:textSize="12sp" />
 

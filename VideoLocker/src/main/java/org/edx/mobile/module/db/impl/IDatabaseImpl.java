@@ -277,8 +277,9 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public IVideoModel getVideoByVideoUrl(String videoUrl,
             DataCallback<IVideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
-                DbStructure.Column.URL + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
-                new String[] { videoUrl, username}, null);
+                DbStructure.Column.URL + "=? AND "+DbStructure.Column.DOWNLOADED + "!=? AND "
+                + DbStructure.Column.USERNAME + "=?" ,
+                new String[] { videoUrl, String.valueOf(DownloadedState.ONLINE.ordinal()), username}, null);
         op.setCallback(callback);
         return enqueue(op);
     }

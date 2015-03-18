@@ -185,7 +185,7 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String to = Config.getInstance().getFeedbackEmailAddress();
-                String subject = getString(R.string.Email_subject);
+                String subject = getString(R.string.email_subject);
                 String email = "";
                 EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
@@ -207,23 +207,11 @@ public class NavigationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                pref.clearAuth();
-                pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, 
-                        getString(R.string.lbl_cc_cancel));
-
-                Intent intent = new Intent();
-                intent.setAction(AppConstants.LOGOUT_CLICKED);
-                getActivity().sendBroadcast(intent); 
-                
-                ISegment segIO = SegmentFactory.getInstance();
-                segIO.trackUserLogout();
-                segIO.resetIdentifyUser();
-
-                Router.getInstance().showLaunchScreen(getActivity(),true);
-                Router.getInstance().showLogin(getActivity());
-
+                Router.getInstance().forceLogout(getActivity());
             }
         });
+
+
         
 
         TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);

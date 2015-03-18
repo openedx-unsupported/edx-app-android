@@ -174,11 +174,12 @@ class ISegmentImpl implements ISegment {
      * @param newTime
      * @param courseId
      * @param unitUrl
+     * @param skipSeek
      * @return 
      */
     @Override
     public Properties trackVideoSeek(String videoId,
-            Double oldTime, Double newTime, String courseId, String unitUrl){
+            Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek){
         try{
             SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
             aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -189,7 +190,8 @@ class ISegmentImpl implements ISegment {
             skipInterval = formatDoubleValue(skipInterval, 3);
             aEvent.data.putValue(Keys.OLD_TIME, oldTime);
             aEvent.data.putValue(Keys.NEW_TIME, newTime);
-            aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);
+            if (skipSeek){ aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);}
+            else {aEvent.data.putValue(Keys.SEEK_TYPE, Values.SLIDE);}
             aEvent.data.putValue(Keys.REQUESTED_SKIP_INTERVAL, skipInterval);
 
             tracker.track(Keys.SEEK_VIDEO, aEvent.properties);
@@ -438,7 +440,7 @@ class ISegmentImpl implements ISegment {
      * @param videoId  -  Video id for which download has started
      * @param courseId
      * @param unitUrl
-     * @return 
+     * @return
      */
     @Override
     public Properties trackSingleVideoDownload(String videoId, String courseId,
@@ -608,6 +610,9 @@ class ISegmentImpl implements ISegment {
             aEvent.properties.putValue(Keys.NAME, Values.USER_FIND_COURSES);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                    Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
             tracker.track(Keys.FIND_COURSES, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -621,12 +626,15 @@ class ISegmentImpl implements ISegment {
      * @return
      */
     @Override
-    public Properties trackCreateAccountClicked() {
+    public Properties trackCreateAccountClicked(String appVersion) {
         try{
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
             aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                    Values.CONVERSION, appVersion);
             tracker.track(Keys.CREATE_ACCOUNT_CLICKED, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -651,6 +659,8 @@ class ISegmentImpl implements ISegment {
             aEvent.properties.putValue(Keys.NAME, Values.USER_COURSE_ENROLL);
             aEvent.setAppNameContext();
 
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
             tracker.track(Keys.ENROLL_COURSES, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
@@ -876,7 +886,19 @@ class ISegmentImpl implements ISegment {
             logger.error(e);
         }
         return null;
+    }
 
+    /**
+     * This method sets category and labels to BI events
+     * @param props
+     * @param category
+     * @param label
+     * @return
+     */
+    private Properties addCategoryToBiEvents(Properties props, String category, String label){
+        props.put(Keys.CATEGORY, category);
+        props.put(Keys.LABEL, label);
+        return props;
     }
 
 }

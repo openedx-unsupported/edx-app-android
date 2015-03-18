@@ -7,6 +7,7 @@ public class AppConstants {
     public static boolean myVideosDeleteMode  = false;
     public static boolean videoListDeleteMode  = false;
 
+    public static final String APP_LAUNCH_FROM_BACKGROUND = "app_launch_from_background";
     public static final String LOGOUT_CLICKED = "user_logout_clicked";
     public static final String VIDEOLIST_BACK_PRESSED = "offline_video_back_pressed";
 

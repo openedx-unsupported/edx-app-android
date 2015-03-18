@@ -279,5 +279,33 @@ public class Online_MyCoursesTestSuite extends MyCoursesTestSuiteBase {
 		return btnSwitchiOS;
 	}
 
+	@Override
+	public String getShowingOnlyVideosName() {
+		return txtShowingOnlyVideos;
+	}
+
+	@Override
+	public String getCourseInfoName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getMySettingsId() {
+		return txtMySettingsIdiOS;
+	}
+
+	@Override
+	public String getFindCourseHeaderName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFindCourseWebView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/cc_layout_popup"
-        android:layout_width="wrap_content"
+    android:id="@+id/cc_layout_popup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_roundedbg">
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_header_cc"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_cc_option"
+        android:background="@drawable/grey_top_roundedbg"
+        android:gravity="center_vertical|left"
+        android:padding="10dp"
+        android:text="@string/lbl_closed_caption" />
+
+    <ListView
+        android:id="@+id/cc_list"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/white_roundedbg"
-        android:orientation="vertical" >
+        android:layout_below="@id/tv_header_cc"
+        android:background="@android:color/white"
+        android:cacheColorHint="@color/white"
+        android:divider="@color/grey_act_background"
+        android:dividerHeight="1.0sp" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/tv_header_cc"
-            style="@style/regular_grey_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/grey_top_roundedbg"
-            android:gravity="center_vertical|left"
-            android:padding="10dp"
-            android:text="@string/lbl_closed_caption" />
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/tv_cc_cancel"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_cc_option"
+        android:layout_below="@id/cc_list"
+        android:background="@color/grey_act_background"
+        android:gravity="center_vertical|left"
+        android:padding="10dp"
+        android:text="@string/lbl_cc_cancel" />
 
-        <ListView
-            android:id="@+id/cc_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_header_cc"
-            android:background="@android:color/white"
-            android:cacheColorHint="@color/white"
-            android:divider="@color/grey_act_background"
-            android:dividerHeight="1.0sp" />
-
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/tv_cc_cancel"
-            style="@style/regular_grey_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cc_list"
-            android:background="@color/grey_act_background"
-            android:gravity="center_vertical|left"
-            android:padding="10dp"
-            android:text="@string/lbl_cc_cancel" />
-    </RelativeLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/tv_cc_cancel"
+        android:background="@color/grey_act_background" />
+</RelativeLayout>

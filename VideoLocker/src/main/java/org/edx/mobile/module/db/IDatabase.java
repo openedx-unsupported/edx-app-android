@@ -171,7 +171,7 @@ public interface IDatabase {
     public IVideoModel getVideoEntryByVideoId(String videoId, DataCallback<IVideoModel> callback);
     
     /**
-     * Returns {@link IVideoModel} for given videoUrl.
+     * Returns {@link IVideoModel} which is downloaded or download is in progress for given videoUrl.
      * @param videoUrl
      * @param callback
      * @return

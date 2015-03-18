@@ -40,7 +40,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
             }
         } catch (Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

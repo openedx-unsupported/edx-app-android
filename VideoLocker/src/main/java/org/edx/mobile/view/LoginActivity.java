@@ -206,6 +206,7 @@ public class LoginActivity extends BaseFragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        setAllClicksEnabled(true);
         google.onActivityResult(requestCode, resultCode, data);
         facebook.onActivityResult(requestCode, resultCode, data);
     }
@@ -351,6 +352,23 @@ public class LoginActivity extends BaseFragmentActivity {
         NoNetworkFragment = SimpleAlertDialog.newInstance(args);
         NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    private void setAllClicksEnabled(boolean enabled) {
+        loginButtonLayout.setEnabled(enabled);
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setClickable(enabled);
+        imgFacebook.setEnabled(enabled);
+        imgGoogle.setClickable(enabled);
+        imgGoogle.setEnabled(enabled);
+
+        email_et.setEnabled(enabled);
+        password_et.setEnabled(enabled);
+
+        forgotPassword_tv.setEnabled(enabled);
+        eulaTv.setEnabled(enabled);
     }
 
     private void setLoginBtnDisabled() {
@@ -544,11 +562,11 @@ public class LoginActivity extends BaseFragmentActivity {
                 Api api = new Api(context);
                 
                 // do SOCIAL LOGIN first
-                SocialLoginResponse social = null;
+                AuthResponse social = null;
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
                     social = api.loginByFacebook(accessToken);
 
-                    if (social.isAccountNotLinked()) {
+                    if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(
                                 context.getString(R.string.error_account_not_linked_title_fb),
                                 context.getString(R.string.error_account_not_linked_desc_fb)));
@@ -556,7 +574,7 @@ public class LoginActivity extends BaseFragmentActivity {
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
                     social = api.loginByGoogle(accessToken);
 
-                    if (social.isAccountNotLinked()) {
+                    if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(
                                 getString(R.string.error_account_not_linked_title_google),
                                 getString(R.string.error_account_not_linked_desc_google)));
@@ -564,8 +582,18 @@ public class LoginActivity extends BaseFragmentActivity {
                 }
 
                 if (social.isSuccess()) {
+
                     // we got a valid accessToken so profile can be fetched
-                    ProfileModel profile = api.getProfile();
+                        ProfileModel profile =  api.getProfile();
+
+                        // store profile json
+                        if (profile != null ) {
+                            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+                            pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
+                            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+                            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+                        }
+
                     if (profile.email != null) {
                         // we got valid profile information
                         return profile;
@@ -611,8 +639,10 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onException(Exception ex) {
+                        setAllClicksEnabled(true);
                     }
                 };
+                setAllClicksEnabled(false);
                 logout.execute();
             }
         }
@@ -645,8 +675,10 @@ public class LoginActivity extends BaseFragmentActivity {
                     
                     @Override
                     public void onException(Exception ex) {
+                        setAllClicksEnabled(true);
                     }
                 };
+                setAllClicksEnabled(false);
                 logout.execute();
             }
         }

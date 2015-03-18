@@ -203,4 +203,9 @@ public class Online_MyVideosTestSuite extends MyVideosTestSuiteBase {
 		return btnDeletePopupIdiOS;
 	}
 
+	@Override
+	public String getTxtMySettingsId() {
+		return txtMySettingsIdiOS;
+	}
+
 }

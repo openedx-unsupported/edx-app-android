@@ -35,8 +35,7 @@ before_script:
   - adb wait-for-device
   - adb shell input keyevent 82 &
   - chmod +x gradlew
-  - chmod +x travis-build.sh
-  - chmod +x travis-acceptance-tests.sh
+#  - chmod +x travis-acceptance-tests.sh
 
 script: 
   - ./gradlew uninstallAll createProdDebugCoverageReport copyUnitTestBuildArtifacts

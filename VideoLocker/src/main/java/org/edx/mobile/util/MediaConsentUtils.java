@@ -7,6 +7,7 @@ import android.util.Log;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
@@ -23,55 +24,32 @@ public class MediaConsentUtils {
     private static final Logger logger = new Logger(MediaConsentUtils.class);
 
     /**
-     * Shows any needed dialogs to the user when consent is required.
-     * If no consent is required, dialogCallback.onPositiveClicked is invoked directly
-     *
-     * This method <b>does not</b> handle the case where no network is available (offline mode)
+     * Handles playback by checking user preferences and network connectivity.
+     * If the device is connected to the following, return positive callback
+     * 1. WIFI
+     * 2. Is connected to mobile and on zero rated network
+     * 3. Is connected to mobile network and wifi preference is off
      */
-    public static void consentToMediaDownload(FragmentActivity activity, IDialogCallback consentCallback) {
-        PrefManager wifiPrefManager = new PrefManager(activity, PrefManager.Pref.WIFI);
-        boolean showOnDataDialog = wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG, true);
+    public static void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback) {
+        // init pref file
+        UserPrefs pref = new UserPrefs(activity);
+        boolean wifiPreference = pref.isDownloadOverWifiOnly();
+
         boolean connectedToWifi = NetworkUtil.isConnectedWifi(activity);
         boolean connectedMobile = NetworkUtil.isConnectedMobile(activity);
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(activity);
 
-        if (connectedToWifi || NetworkUtil.isOnZeroRatedNetwork(activity) || !showOnDataDialog) {
-            //no consent needed, kick off download now
+        if (connectedToWifi || (connectedMobile && isOnZeroRatedNetwork)
+                || (connectedMobile && !wifiPreference)) {
+            //no consent needed, continue playback
             consentCallback.onPositiveClicked();
-        } else if (connectedMobile && showOnDataDialog) {
-            showOnlyAllowingWifiDialog(activity, consentCallback);
         } else {
-            logger.warn("No appropriate dialog to show. Cannot start video");
+            consentCallback.onNegativeClicked();
         }
     }
 
     private static void showDialog(FragmentActivity activity, DialogFragment dialogFragment, String tag) {
         dialogFragment.show(activity.getSupportFragmentManager(), tag);
-    }
-
-    private static void showOnlyAllowingWifiDialog(final FragmentActivity activity, final IDialogCallback listener) {
-        final IDialogCallback enableMobileDownloadsListener = new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                //enable wifi before continuing
-                PrefManager wifiPrefManager = new PrefManager(activity.getBaseContext(),PrefManager.Pref.WIFI);
-                wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false);
-                wifiPrefManager.put(PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG, false);
-                listener.onPositiveClicked();
-            }
-
-            @Override
-            public void onNegativeClicked() {
-                listener.onNegativeClicked();
-            }
-        };
-
-        String title = activity.getString(R.string.download_data_dialog_title);
-        String message = activity.getString(R.string.download_data_dialog_message);
-
-        NetworkCheckDialogFragment dialogFragment =
-                NetworkCheckDialogFragment.newInstance(title, message, enableMobileDownloadsListener);
-
-        showDialog(activity, dialogFragment, DIALOG_TAG_CONFIRM_WIFI_OFF);
     }
 
     public static void showLeavingAppDataDialog(final FragmentActivity activity, final IDialogCallback consentCallback){

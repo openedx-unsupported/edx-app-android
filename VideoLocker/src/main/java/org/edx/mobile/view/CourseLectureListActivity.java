@@ -122,10 +122,11 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onNegativeClicked() {
-                            //
+                            CourseLectureListActivity.this.showInfoMessage(getString(R.string.wifi_off_message));
+                            adapter.notifyDataSetChanged();
                         }
                     };
-                    MediaConsentUtils.consentToMediaDownload(CourseLectureListActivity.this, dialogCallback);
+                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this, dialogCallback);
                 }
             };
 
@@ -321,12 +322,9 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     if(isActivityStarted()){
                         adapter.notifyDataSetChanged();
                         invalidateOptionsMenu();
-                        if(result>1){
-                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
-                                    " "+getString(R.string.label_videos));
-                        }else if (result==1){
-                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
-                                    " "+getString(R.string.label_video));
+                        if(result>0){
+                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
+                            showInfoMessage(String.format(format, result));
                         } else {
                             showInfoMessage(getString(R.string.msg_video_not_downloaded));
                         }

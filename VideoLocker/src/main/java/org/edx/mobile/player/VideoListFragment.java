@@ -187,10 +187,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
 
-                        if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
-                            notifyAdapter();
-                        } else {
+                        DownloadEntry de = (DownloadEntry) model;
+                        if(!de.isDownloaded()){
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
                                 public void onPositiveClicked() {
@@ -199,10 +197,14 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
                                 @Override
                                 public void onNegativeClicked() {
-                                    //
+                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
+                                    notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+                        }else{
+                            //Video is downloaded. Hence play
+                            startOnlinePlay(model, position);
                         }
                     }
                 }
@@ -210,13 +212,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 @Override
                 public void download(final DownloadEntry videoData, final ProgressWheel progressWheel) {
                     try {
-                        if (!NetworkUtil.isConnected(getContext())) {
-                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.need_data));
-                            notifyAdapter();
-                        } else {
-                            if (!(getActivity() instanceof VideoListActivity)) {
-                                return;
-                            }
+                        if (NetworkUtil.isConnected(getContext())) {
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
                                 public void onPositiveClicked() {
@@ -225,12 +221,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
                                 @Override
                                 public void onNegativeClicked() {
-                                    //
+                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
+                                    notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
                         }
-
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -374,10 +370,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     if(downloadEntry.isDownloaded()){
                         downloadAvailable = true;
                     }
-                    // adapx.add(downloadEntry);
                 } else {
                     adapter.add(m);
-                    // adapx.add(m);
                 }
             }
 
@@ -576,11 +570,10 @@ public class VideoListFragment extends MyVideosBaseFragment {
             }
 
             hideOpenInBrowserPanel();
-            if (myVideosFlag) {
-                //addDataToMyVideoAdapter();
-            } else {
-                handleDeleteView();
+            if (!myVideosFlag) {
                 addDataToOfflineAdapter();
+                //Call handleDeleteView only after adding data to adapter
+                handleDeleteView();
             }
         }
     }
@@ -596,8 +589,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
     }
 
     public void onOnline() {
+        AppConstants.offline_flag = false;
         if (!isLandscape) {
-            AppConstants.offline_flag = false;
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.GONE);
             }
@@ -607,6 +600,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 showOpenInBrowserPanel();
                 hideDeletePanel(getView());
                 hideConfirmDeleteDialog();
+                handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
             }
 
         }
@@ -646,14 +640,14 @@ public class VideoListFragment extends MyVideosBaseFragment {
             if (isPlayerVisible()) {
                 hideDeletePanel(view);
             } else {
-                getView().findViewById(R.id.delete_button_panel).setVisibility(
+                view.findViewById(R.id.delete_button_panel).setVisibility(
                         View.VISIBLE);
 
-                deleteButton = (Button) getView().findViewById(
+                deleteButton = (Button) view.findViewById(
                         R.id.delete_btn);
-                final Button editButton = (Button) getView().findViewById(
+                final Button editButton = (Button) view.findViewById(
                         R.id.edit_btn);
-                final Button cancelButton = (Button) getView().findViewById(
+                final Button cancelButton = (Button) view.findViewById(
                         R.id.cancel_btn);
 
                 if (myVideosFlag) {
@@ -849,7 +843,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                db.updateVideoLastPlayedOffset(v.videoId, offset, 
+                db.updateVideoLastPlayedOffset(v.videoId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
@@ -877,6 +871,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void onConfirmDelete() {
         ArrayList<SectionItemInterface> list;
+        int deletedVideoCount = 0;
         if (myVideosFlag) {
             list = adapter.getSelectedItems();
             if (list != null) {
@@ -884,6 +879,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         storage.removeDownload(de);
+                        deletedVideoCount++;
                     }
                 }
             }
@@ -904,6 +900,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                         DownloadEntry de = (DownloadEntry) section;
                         if(de.isDownloaded()){
                             storage.removeDownload(de);
+                            deletedVideoCount++;
                         }
                     }
                 }
@@ -914,6 +911,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
             videoListView.setOnItemClickListener(adapter);
             AppConstants.videoListDeleteMode = false;
             ((VideoListActivity) getActivity()).hideCheckBox();
+        }
+
+        if(deletedVideoCount>0){
+            String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+            ((VideoListActivity) getActivity())
+                    .showInfoMessage(String.format(format, deletedVideoCount));
         }
         getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
         getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
@@ -966,25 +969,22 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     segIO.trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
+
+                if (storage.addDownload(downloadEntry) != -1) {
+                    ((VideoListActivity) getActivity())
+                            .showInfoMessage(getString(R.string.msg_started_one_video_download));
+                } else {
+                    ((VideoListActivity) getActivity())
+                            .showInfoMessage(getString(R.string.msg_video_not_downloaded));
+                }
+                ((VideoListActivity) getActivity()).updateProgress();
+
+                //If the video is already downloaded, dont reload the adapter
                 if (reloadListFlag) {
                     adapter.notifyDataSetChanged();
-
-                    if (storage.addDownload(downloadEntry) != -1) {
-                        ((VideoListActivity) getActivity())
-                                .showInfoMessage(getString(R.string.msg_started_one_video_download));
-                    } else {
-                        ((VideoListActivity) getActivity())
-                                .showInfoMessage(getString(R.string.msg_video_not_downloaded));
-                    }
-                    ((VideoListActivity) getActivity()).updateProgress();
-
-                    //If the video is already downloaded, dont reload the adapter
-                    if (reloadListFlag) {
-                        adapter.notifyDataSetChanged();
-                    }
-                    TranscriptManager transManager = new TranscriptManager(getActivity());
-                    transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
                 }
+                TranscriptManager transManager = new TranscriptManager(getActivity());
+                transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
         }catch(Exception e){
             logger.error(e);
@@ -1020,13 +1020,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
         dialogMap.put("yes_button", getString(R.string.label_delete));
         dialogMap.put("no_button",  getString(R.string.label_cancel));
-        if (itemCount == 1) {
-            dialogMap.put("message_1",
-                    getString(R.string.delete_single_video_dialog));
-        } else {
-            dialogMap.put("message_1",
-                    getString(R.string.delete_multiple_video_dialog));
-        }
+        dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
+
         confirmDeleteFragment = DeleteVideoDialogFragment.newInstance(dialogMap,
                 new IDialogCallback() {
 

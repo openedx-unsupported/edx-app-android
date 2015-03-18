@@ -46,7 +46,7 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
             logger.error(ex);
         } catch(Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

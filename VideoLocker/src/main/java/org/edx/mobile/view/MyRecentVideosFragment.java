@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -85,20 +87,38 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 adapter = new MyRecentVideoAdapter(getActivity(), db) {
 
                     @Override
-                    public void onItemClicked(SectionItemInterface model, int position) {
-                        if (model.isDownload()) {
+                    protected boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event) {
+                        logger.debug("event action: " + event.getAction());
+                        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            activity.setTabChangeEnabled(false);
+                        } else if (event.getAction() == MotionEvent.ACTION_UP
+                                || event.getAction() == MotionEvent.ACTION_CANCEL) {
 
-                            if ( !isPlayerVisible()) {
-                                // don't try to showPlayer() if already shown here
-                                // this will cause player to freeze
-                                showPlayer();
+                            if (model.isDownload() &&
+                                    event.getAction() == MotionEvent.ACTION_UP) {
+                                // ACTION_UP verifies a CLICK event
+
+                                if ( !isPlayerVisible()) {
+                                    // don't try to showPlayer() if already shown here
+                                    // this will cause player to freeze
+                                    showPlayer();
+                                }
+                                // initialize index for this model
+                                playingVideoIndex = position;
+
+                                play(model);
+                                notifyAdapter();
                             }
-                            // initialize index for this model
-                            playingVideoIndex = position;
 
-                            play(model);
-                            notifyAdapter();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (activity != null)   activity.setTabChangeEnabled(true);
+                                }
+                            }, 500);
                         }
+                        return true;
                     }
 
                     @Override
@@ -207,6 +227,14 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     }
 
     private void showPlayer() {
+        if (!isResumed() || isRemoving()) {
+            logger.warn("not showing player because fragment is being stopped");
+            return;
+        }
+
+        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+        activity.setTabChangeEnabled(false);
+
         hideDeletePanel(getView());
         try {
             View container = getView().findViewById(R.id.container_player);
@@ -219,7 +247,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             }
 
             // this is for INLINE player only
-            if (isResumed() && !isLandscape()) {
+            if (isResumed() && !isLandscape() && !isRemoving()) {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 if (containerActivity.playerFragment.isAdded()) {
@@ -237,6 +265,18 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
         } catch (Exception ex) {
             logger.error(ex);
             logger.warn("Error in showing player");
+        } finally {
+            /*
+            After a while, enable tabs.
+            300 milliseconds is enough time for player view to be shown.
+            Enabling the tabs immediately will allow simultaneous taps and will let the player play in background.
+            */
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (activity != null)   activity.setTabChangeEnabled(true);
+                }
+            }, 300);
         }
     }
 
@@ -270,11 +310,12 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 public void run() {
                     try {
                         // hide checkbox in action bar
-                        ((MyVideosTabActivity) getActivity()).hideCheckBox();
+                        MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
+                        if (activity != null) activity.hideCheckBox();
 
                         // hide checkboxes in list
                         notifyAdapter();
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         logger.error(ex);
                     }
                 }
@@ -368,11 +409,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     protected void showConfirmDeleteDialog(int itemCount) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
-        if (itemCount == 1) {
-            dialogMap.put("message_1",  getString(R.string.delete_single_video_dialog));
-        } else {
-            dialogMap.put("message_1",  getString(R.string.delete_multiple_video_dialog));
-        }
+        dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
         dialogMap.put("yes_button", getString(R.string.label_delete));
         dialogMap.put("no_button",  getString(R.string.label_cancel));
         deleteDialogFragment = DeleteVideoDialogFragment.newInstance(dialogMap,
@@ -406,12 +443,14 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     //Deleting Downloaded videos on getting confirmation
     private void onConfirmDelete() {
         try{
+            int deletedVideoCount = 0;
             ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
             if (list != null) {
                 for (SectionItemInterface section : list) {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         storage.removeDownload(de);
+                        deletedVideoCount++;
                     }
                 }
             }
@@ -420,6 +459,11 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             videoListView.setOnItemClickListener(adapter);
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
+            if(deletedVideoCount>0){
+                String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+                UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
+                        String.format(format, deletedVideoCount));
+            }
             getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
             getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);

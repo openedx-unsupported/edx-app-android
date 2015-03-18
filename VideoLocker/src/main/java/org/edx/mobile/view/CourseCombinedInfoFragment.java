@@ -174,7 +174,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     }
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
                     Date endDate = DateUtil.convertToDate(course.getEnd());
-                    detailBuilder.append(getString(R.string.course_details_ending));
+                    detailBuilder.append(getString(R.string.label_ending_on));
                     detailBuilder.append(" - ");
                     detailBuilder.append(dateFormat.format(endDate));
                 }
@@ -405,10 +405,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_handout_text:
 
                 if (courseData != null) {
-                    Intent handoutIntent = new Intent(getActivity(),
-                            CourseHandoutActivity.class);
-                    handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
-                    startActivity(handoutIntent);
+                    Router.getInstance().showHandouts(getActivity(), courseData);
                 }
 
                 break;

@@ -9,6 +9,10 @@ package org.edx.elementlocators;
  */
 public interface IMyCoursesLocators_Offline {
 	
+	public String getVideosNotAvailableMsg();
+
+	public String getBtnHeaderNameId();
+
 	public String getMyCoursesHeaderId();
 
 	public String getOfflineLabelName();
@@ -68,12 +72,12 @@ public interface IMyCoursesLocators_Offline {
 	public String getVideoPlayerSettings();
 
 	public String getOfflineBarId();
-	
+
 	public String getBtnDeletePopupId();
 
 	// Android id
 	String btnHeaderId = "android:id/up";
-	String btnHeaderNameId="android:id/action_bar_title";
+	String btnHeaderNameId = "android:id/action_bar_title";
 	String btnCourseId = "org.edx.mobile:id/course_row_layout";
 	String btnCourseWareName = "Courseware";
 	String btnSectionSubsectionId = "org.edx.mobile:id/chapter_row_layout";
@@ -81,7 +85,8 @@ public interface IMyCoursesLocators_Offline {
 	String btnVideoId = "org.edx.mobile:id/video_row_layout";
 	String txtMyCourseName = "My Courses";
 	String vpVideoPlayerId = "org.edx.mobile:id/preview";
-	String txtMyCourseId = "org.edx.mobile:id/my_contents";
+	
+	String txtMyCourseId = "org.edx.mobile:id/drawer_option_my_courses";
 	String btnLastAccessedId = "org.edx.mobile:id/last_viewed_tv";
 	String btnLMS = "org.edx.mobile:id/lms_btn";
 	String btnPlayPause = "org.edx.mobile:id/pause";
@@ -92,6 +97,7 @@ public interface IMyCoursesLocators_Offline {
 	String popupCC = "org.edx.mobile:id/tv_closedcaption";
 	String popupLanguages = "org.edx.mobile:id/cc_list";
 	String popupLanguagesCancel = "org.edx.mobile:id/tv_cc_cancel";
+	String txtSectionName="org.edx.mobile:id/txt_chapter_title";
 
 	// offline
 	String btnOkPopupId = "org.edx.mobile:id/positiveButton";
@@ -104,7 +110,7 @@ public interface IMyCoursesLocators_Offline {
 	String btnHeaderIdiOS = "btnNavigation";
 	String headerMyCoursesIdiOS = "myCoursesHeader";
 	String btnHeaderNameIdiOS = "txtHeader";
-	
+
 	String btnCourseIdiOS = "lbCourseTitle";
 	String lbVideoName = "lbVideoName";
 	String lbVideoSize = "lbVideoSize";
@@ -141,6 +147,6 @@ public interface IMyCoursesLocators_Offline {
 	String txtOfflineName = "OFFLINE MODE";
 	String txtOfflineMessageName = "In offline mode, you can only view videos that are saved on your device.";
 	String txtDisabledSectionMessage = "This section is not available in offline mode";
-	String txtVideoNotDownloadedName = "This video is not available offline.";
-	String getBtnHeaderNameId();
+	String txtDisabledVideoMessage="This video is not available offline.";
+	String txtDisabledVideoMessage1="Please select a video that you've downloaded onto your device.";
 }
