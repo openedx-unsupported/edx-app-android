@@ -561,13 +561,14 @@ public class RegisterActivity extends BaseFragmentActivity
             segIO.trackUserLogin(backendKey);
         }
 
+        // but finish this screen anyways as login is succeeded
+        finish();
+
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             Router.getInstance().showMyCourses(this);
         }
 
-        // but finish this screen anyways as login is succeeded
-        finish();
     }
 
     /**
@@ -579,16 +580,8 @@ public class RegisterActivity extends BaseFragmentActivity
         //do nothing
         //we need to add 1)access_token   2) provider 3) client_id
         // handle if this is a LoginException
-        if (ex != null && ex instanceof LoginException) {
-            LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
 
-            showErrorMessage(
-                    error.getMessageLine1(),
-                    (error.getMessageLine2() != null) ?
-                            error.getMessageLine2() : getString(R.string.login_failed));
-        } else {
-            logger.error(ex);
-        }
+        logger.error(ex);
         int socialType = SocialFactory.getSocialType(backend);
         updateUIOnSocialLoginToEdxFailure(socialType);
 
