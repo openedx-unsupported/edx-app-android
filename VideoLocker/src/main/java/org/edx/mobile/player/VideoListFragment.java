@@ -800,10 +800,12 @@ public class VideoListFragment extends Fragment {
             if (msg.what == MSG_UPDATE_PROGRESS) {
                 if (isActivityStarted()) {
                     if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.setSelectedPosition(playingVideoIndex);
-                            adapter.notifyDataSetChanged();
-                            logger.debug("Download list reloaded");
+                        if (adapter != null && enrollment!=null && chapterName!=null && lecture!=null) {
+                            if(db.isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
+                                adapter.setSelectedPosition(playingVideoIndex);
+                                adapter.notifyDataSetChanged();
+                                logger.debug("Download list reloaded");
+                            }
                         }
                         sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }

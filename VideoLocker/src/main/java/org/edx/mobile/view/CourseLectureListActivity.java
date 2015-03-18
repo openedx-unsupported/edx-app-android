@@ -46,6 +46,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private boolean isActivityVisible;
     private static final int MSG_UPDATE_PROGRESS = 1026;
     private EnrolledCoursesResponse enrollment;
+    private SectionEntry chapter;
     private String activityTitle;
 
     @Override
@@ -165,7 +166,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
 
     private void loadData() {
-        SectionEntry chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
+        chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
         setTitle(chapter.chapter);
         activityTitle = chapter.chapter;
 
@@ -354,13 +355,15 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
+                if (isActivityStarted()){
+                    if(!AppConstants.offline_flag) {
+                        if (adapter != null && chapter != null && enrollment != null) {
+                            if (db.isAnyVideoDownloadingInSection(null, enrollment.getCourse().getId(), chapter.chapter)){
+                                adapter.notifyDataSetChanged();
+                            }
                         }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
+                    sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
             }
         }

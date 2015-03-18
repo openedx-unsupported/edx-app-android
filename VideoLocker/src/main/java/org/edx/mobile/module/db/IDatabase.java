@@ -328,5 +328,27 @@ public interface IDatabase {
      */
     DownloadedState getDownloadedStateForVideoId(String videoId,
             DataCallback<DownloadedState> dataCallback);
+
+    /**
+     * Return true if any Video is marked as Downloading for the courseId in the database for logged in user
+     * Used to handle reloading of Section listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInCourse(DataCallback<Boolean> callback, String courseId);
+
+    /**
+     * Return true if any Video is marked as Downloading for a section in the database for logged in user
+     * Used to handle reloading of subsection listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInSection(DataCallback<Boolean> callback, String courseId, String section);
+
+    /**
+     * Return true if any Video is marked as Downloading for a subsection in the database for logged in user
+     * Used to handle reloading of Video listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInSubSection(DataCallback<Boolean> callback, String courseId,
+                                                     String section, String subSection);
     
 }

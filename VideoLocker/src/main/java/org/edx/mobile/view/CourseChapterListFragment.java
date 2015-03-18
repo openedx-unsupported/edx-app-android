@@ -121,7 +121,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             } catch (Exception ex) {
                 logger.error(ex);
             }
-
         }
 
         chapterListView = (ListView) view
@@ -481,13 +480,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
+                if (isActivityStarted()){
+                    if(!AppConstants.offline_flag) {
+                        if (adapter != null && enrollment != null) {
+                            if (db.isAnyVideoDownloadingInCourse(null, enrollment.getCourse().getId()))
+                                adapter.notifyDataSetChanged();
                         }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
+                    sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
             }
         }
