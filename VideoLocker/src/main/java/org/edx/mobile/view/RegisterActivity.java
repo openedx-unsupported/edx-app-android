@@ -25,7 +25,9 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
@@ -317,11 +319,29 @@ public class RegisterActivity extends BaseFragmentActivity
                         hideProgress();
 
                         if ( !result.isSuccess()) {
-                            String errorMessage = result.getValue();
-                            if(errorMessage == null || errorMessage.isEmpty()){
-                                errorMessage = getString(R.string.sign_up_error);
+                            FormFieldMessageBody messageBody = result.getMessageBody();
+                            // show general failure message if there wasn't any error for any of the input fields
+                            if (messageBody == null || messageBody.isEmpty()) {
+                                String errorMessage = result.getValue();
+                                if (errorMessage == null || errorMessage.isEmpty()) {
+                                    errorMessage = getString(R.string.sign_up_error);
+                                }
+                                sendBroadcastFlyingErrorMessage(null, errorMessage);
+                                return;
                             }
-                            sendBroadcastFlyingErrorMessage(null,errorMessage);
+
+                            for(String key : messageBody.keySet()) {
+                                if ( key == null )
+                                    continue;
+                                for (IRegistrationFieldView fieldView : mFieldViews) {
+                                    if (key.equalsIgnoreCase( fieldView.getField().getName()) ) {
+                                        List<RegisterResponseFieldError> error = messageBody.get(key);
+                                        showErrorOnField(error, fieldView);
+                                        break;
+                                    }
+                                }
+                            }
+
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
@@ -346,6 +366,7 @@ public class RegisterActivity extends BaseFragmentActivity
                                 // launch my courses screen
                                 Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show(); 
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
+                                finish();
                             } else {
                                 sendBroadcastFlyingErrorMessage(null, getString(R.string.sign_up_error));
                             }
@@ -366,6 +387,23 @@ public class RegisterActivity extends BaseFragmentActivity
             task.execute();
         }else {
             sendBroadcastFlyingErrorMessage(getString(R.string.no_connectivity),getString(R.string.network_not_connected));
+        }
+    }
+
+    /**
+     * Displays given errors on the given registration field.
+     * @param errors
+     * @param fieldView
+     * @return
+     */
+    private void showErrorOnField(List<RegisterResponseFieldError> errors, IRegistrationFieldView fieldView) {
+        if (errors != null && !errors.isEmpty()) {
+            StringBuffer buffer = new StringBuffer();
+            for (RegisterResponseFieldError e : errors) {
+                buffer.append(e.getUserMessage() + " ");
+            }
+
+            fieldView.handleError(buffer.toString());
         }
     }
 

@@ -405,10 +405,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_handout_text:
 
                 if (courseData != null) {
-                    Intent handoutIntent = new Intent(getActivity(),
-                            CourseHandoutActivity.class);
-                    handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
-                    startActivity(handoutIntent);
+                    Router.getInstance().showHandouts(getActivity(), courseData);
                 }
 
                 break;

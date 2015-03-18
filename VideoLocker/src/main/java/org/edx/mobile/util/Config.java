@@ -41,7 +41,7 @@ public class Config {
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
-    private static final String USE_DEPRECATED_REGISTRATION_API = "USE_DEPRECATED_REGISTRATION_API";
+    private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
@@ -52,6 +52,7 @@ public class Config {
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String WHITE_LIST = "WHITE_LIST";
 
     /**
      * Social Sharing configuration.
@@ -193,6 +194,22 @@ public class Config {
         }
     }
 
+    /**
+     * Domain White List configuration.
+     */
+    public class DomainWhiteListConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("DOMAINS") List<String> mDomains;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+
+        public List<String> getDomains() {
+            return mDomains != null ? mDomains : new ArrayList<String>();
+        }
+    }
+
     Config(Context context) {
         try {
             InputStream in = context.getAssets().open("config/config.json");
@@ -272,8 +289,13 @@ public class Config {
         return getString(OAUTH_CLIENT_SECRET);
     }
 
-    public boolean isUseDeprecatedRegistrationAPI() {
-        return getBoolean(USE_DEPRECATED_REGISTRATION_API, false);
+    /**
+     * Empty or no config returns false.
+     * Otherwise, returns the value from the config.
+     * @return
+     */
+    public boolean isSpeedTestEnabled() {
+        return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
     /**
@@ -381,6 +403,18 @@ public class Config {
         }
         else {
             return new SegmentConfig();
+        }
+    }
+
+    public DomainWhiteListConfig getDomainWhiteListConfig() {
+        JsonElement element = getObject(WHITE_LIST);
+        if(element != null) {
+            Gson gson = new Gson();
+            DomainWhiteListConfig config = gson.fromJson(element, DomainWhiteListConfig.class);
+            return config;
+        }
+        else {
+            return new DomainWhiteListConfig();
         }
     }
 }

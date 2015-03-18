@@ -314,6 +314,20 @@ VideoListCallback, IPlayerEventCallback {
     }
 
     @Override
+    protected void onConnectedToMobile() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToMobile();
+        }
+    }
+
+    @Override
+    protected void onConnectedToWifi() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToWifi();
+        }
+    }
+
+    @Override
     protected void onOnline() {
         View offlineBar = findViewById(R.id.offline_bar);
         if (offlineBar != null) {

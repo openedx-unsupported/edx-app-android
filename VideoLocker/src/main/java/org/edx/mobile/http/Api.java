@@ -22,6 +22,7 @@ import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -1184,7 +1185,7 @@ public class Api {
      */
     public RegisterResponse register(Bundle parameters)
             throws Exception {
-        String url = getBaseUrl() + "/create_account";
+        String url = getBaseUrl() + "/user_api/v1/account/registration/";
 
         String json = http.post(url, parameters, null);
 
@@ -1193,7 +1194,18 @@ public class Api {
         }
         logger.debug("Register response= " + json);
 
+        //the server side response format is not client friendly ... so..
         Gson gson = new GsonBuilder().create();
+        try {
+            FormFieldMessageBody body = gson.fromJson(json, FormFieldMessageBody.class);
+            if( body != null && body.size() > 0 ){
+                RegisterResponse res = new RegisterResponse();
+                res.setMessageBody(body);
+                return res;
+            }
+        }catch (Exception ex){
+            //normal workflow , ignore it.
+        }
         RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
 
         return res;
@@ -1206,23 +1218,6 @@ public class Api {
      */
     public RegistrationDescription getRegistrationDescription() throws Exception {
         Gson gson = new Gson();
-
-        // check if we have a cached version of registration description
-        try {
-            String url = getBaseUrl() + "/user_api/v1/account/registration/";
-            String json = cache.get(url);
-            // TODO: let the form be rendered by JSON in assets for testing, but delete below line for prod
-            json = null;
-            if (json != null) {
-                RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
-                logger.debug("picking up registration description (form) from cache, not from assets");
-                return form;
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
-
-        // if not cached, read the in-app registration description
         InputStream in = context.getAssets().open("config/registration_form.json");
         RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
         logger.debug("picking up registration description (form) from assets, not from cache");
@@ -1255,10 +1250,4 @@ public class Api {
         return false;
     }
 
-    public String downloadRegistrationDescription() throws Exception {
-        String url = getBaseUrl() + "/user_api/v1/account/registration/";
-        String json = http.get(url, null);
-        cache.put(url, json);
-        return json;
-    }
 }

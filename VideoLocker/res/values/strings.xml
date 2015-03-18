@@ -4,11 +4,6 @@
     <string name="app_name">edX</string>
 
     <!-- Common values -->
-    <!-- Facebook login method -->
-    <string name="facebook_text">Facebook</string>
-    <!-- Google login method -->
-    <string name="google_text">Google</string>
-
     <!-- Button to visit course group on facebook -->
     <string name="course_details_fb_group">Official course Facebook group</string>
     <!-- Button to view handouts for course -->
@@ -365,7 +360,12 @@
     <string name="find_course_btn_text">Find a mobile-friendly course</string>
     <!-- Button label to bring up course finder -->
     <string name="signin_with_text">signing in to this app in with</string>
-
+    <!-- Message between sign in button and social login buttons -->
+    <string name="or_signin_with">Or Sign in with</string>
+    <!-- Facebook login method -->
+    <string name="facebook_text">Facebook</string>
+    <!-- Google login method -->
+    <string name="google_text">Google</string>
     <!-- Message on course list -->
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
     <!-- Message on course page for course that hasn't started -->
@@ -437,4 +437,10 @@
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
+
+    <!-- Message indicating videos deleted. Argument is number of videos deleted -->
+    <plurals name="deleted_videos">
+        <item quantity="one">%s video deleted</item>
+        <item quantity="other">%s videos deleted</item>
+    </plurals>
 </resources>

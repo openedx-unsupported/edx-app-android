@@ -2,6 +2,10 @@ package org.edx.mobile.model.api;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.edx.mobile.module.registration.view.IRegistrationFieldView;
+
+import java.util.List;
+
 /**
  * Created by rohan on 2/11/15.
  */
@@ -14,6 +18,8 @@ public class RegisterResponse {
     private @SerializedName("value") String value;
     //for local dummy test
     private @SerializedName("status") int status = 0;
+
+    private FormFieldMessageBody messageBody;
 
     public boolean isSuccess() {
         return success;
@@ -31,6 +37,7 @@ public class RegisterResponse {
         return value;
     }
 
+ 
     public RegisterResponse(){}
     //for local dummy testing
     public RegisterResponse(int status){
@@ -40,4 +47,14 @@ public class RegisterResponse {
     public Status getStatus() {
         return  Status.values()[status];
     }
+
+    public FormFieldMessageBody getMessageBody() {
+        return messageBody;
+    }
+
+    public void setMessageBody(FormFieldMessageBody messageBody) {
+        this.messageBody = messageBody;
+    }
+
+
 }
