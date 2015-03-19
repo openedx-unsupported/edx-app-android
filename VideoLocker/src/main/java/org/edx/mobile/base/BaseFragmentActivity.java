@@ -122,6 +122,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         }catch(Exception ex){
             logger.error(ex);
         }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         enableNetworkStateChangeCallback();
         enableLogoutCallback();
         updateActionBarShadow();
