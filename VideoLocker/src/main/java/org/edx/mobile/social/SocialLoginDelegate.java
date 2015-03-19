@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
@@ -17,6 +18,8 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.view.ICommonUI;
 
 /**
  * Code refactored from Login Activity, for the logic of login to social site are the same
@@ -254,12 +257,60 @@ public class SocialLoginDelegate {
 
     }
 
+    public SocialButtonClickHandler createSocialButtonClickHandler(int socialType){
+        return new SocialButtonClickHandler(socialType);
+    }
+
+    public  class SocialButtonClickHandler implements View.OnClickListener{
+        private  int socialType;
+        private SocialButtonClickHandler(int socialType){
+            this.socialType = socialType;
+        }
+        @Override
+        public void onClick(View v) {
+            if (AppConstants.offline_flag) {
+                callback.showErrorMessage(activity.getString(R.string.no_connectivity),
+                        activity.getString(R.string.network_not_connected));
+            } else {
+                Task<Void> logout = new Task<Void>(activity) {
+
+                    @Override
+                    protected Void doInBackground(Object... arg0) {
+                        try {
+                            socialLogout(socialType);
+                        } catch(Exception ex) {
+                            // no need to handle this error
+                            logger.error(ex);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public void onFinish(Void result) {
+                        socialLogin(socialType);
+                    }
+
+                    @Override
+                    public void onException(Exception ex) {
+                        logger.error(ex);
+                        if ( activity instanceof ICommonUI)
+                            ((ICommonUI)activity).setUIInteraction(true);
+                    }
+                };
+                if ( activity instanceof ICommonUI)
+                    ((ICommonUI)activity).setUIInteraction(false);
+                logout.execute();
+            }
+        }
+    }
+
 
 
     public interface MobileLoginCallback {
         void onSocialLoginSuccess(String accessToken, String backend, Task task);
         void onUserLoginFailure(Exception ex, String accessToken, String backend);
         void onUserLoginSuccess(ProfileModel profile) throws LoginException;
+        void showErrorMessage(String header, String message);
     }
 
     public interface SocialUserInfoCallback{

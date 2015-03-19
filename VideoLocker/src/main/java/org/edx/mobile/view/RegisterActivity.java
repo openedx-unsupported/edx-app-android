@@ -63,6 +63,8 @@ public class RegisterActivity extends BaseFragmentActivity
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +87,8 @@ public class RegisterActivity extends BaseFragmentActivity
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
         imgFacebook.setClickable(true);
         imgGoogle.setClickable(true);
-        imgFacebook.setOnClickListener(facebookClickListener);
-        imgGoogle.setOnClickListener(googleClickListener);
+        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_FACEBOOK ) );
+        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_GOOGLE ) ) ;
 
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
@@ -353,6 +355,8 @@ public class RegisterActivity extends BaseFragmentActivity
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
+                                //in the future we will show different messages based on different registration
+                                //condition
 //                                //show different message based on server side status.
 //                                //or maybe server side return the detailed message?
 //                                RegisterResponse social = null;
@@ -539,7 +543,7 @@ public class RegisterActivity extends BaseFragmentActivity
         });
     }
 
-    private void showErrorMessage(String header, String message) {
+    public void showErrorMessage(String header, String message) {
         LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
         TextView errorHeader = (TextView) findViewById(R.id.error_header);
         TextView errorMessage = (TextView) findViewById(R.id.error_message);
@@ -618,14 +622,13 @@ public class RegisterActivity extends BaseFragmentActivity
             segIO.trackUserLogin(backendKey);
         }
 
-        // but finish this screen anyways as login is succeeded
-        finish();
 
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             Router.getInstance().showMyCourses(this);
         }
-
+        // but finish this screen anyways as login is succeeded
+        finish();
     }
 
     /**
@@ -646,154 +649,6 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
 
-//    private class RegisterUsingSocialTokenTask extends Task<ProfileModel> {
-//
-//        public RegisterUsingSocialTokenTask(Context context) {
-//            super(context);
-//        }
-//
-//        @Override
-//        public void onFinish(ProfileModel result) {
-//            if (result != null) {
-//                try {
-//                    onRegisterUsingSoicalTokenSuccess(result);
-//                } catch (LoginException ex) {
-//                    logger.error(ex);
-//                    handle(ex);
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void onException(Exception ex) {
-//            onRegisterUsingSocialTokenFailure(ex);
-//        }
-//
-//        @Override
-//        protected ProfileModel doInBackground(Object... params) {
-//            try {
-//                String accessToken = (String) params[0];
-//                String backend = (String) params[1];
-//
-//                Api api = new Api(context);
-//
-//                // do SOCIAL LOGIN first
-//                RegisterResponse social = null;
-//                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-//                    social = api.registerByFaceBook(accessToken);
-//
-//                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
-//                        throw new LoginException(new LoginErrorMessage(
-//                                context.getString(R.string.error_account_not_linked_title_fb),
-//                                context.getString(R.string.error_account_not_linked_desc_fb)));
-//                    }
-//                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-//                    social = api.registerByFaceBook(accessToken);
-//
-//                    if ( social.getStatus() == RegisterResponse.Status.ERROR ) {
-//                        throw new LoginException(new LoginErrorMessage(
-//                                getString(R.string.error_account_not_linked_title_google),
-//                                getString(R.string.error_account_not_linked_desc_google)));
-//                    }
-//                }
-//                    // we got a valid accessToken so profile can be fetched
-//                    ProfileModel profile =  api.getProfile();
-//
-//                    // store profile json
-//                    if (profile != null ) {
-//                        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-//                        pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
-//                        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-//                        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-//                    }
-//
-//                    if (profile.email != null) {
-//                        // we got valid profile information
-//                        return profile;
-//                    }
-//
-//                throw new LoginException(new LoginErrorMessage(
-//                        getString(R.string.login_error),
-//                        getString(R.string.login_failed)));
-//            } catch (Exception e) {
-//                logger.error(e);
-//                handle(e);
-//            }
-//            return null;
-//        }
-//
-//    }
 
-    android.view.View.OnClickListener facebookClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (AppConstants.offline_flag) {
-                showErrorMessage(getString(R.string.no_connectivity),
-                        getString(R.string.network_not_connected));
-            } else {
-                Task<Void> logout = new Task<Void>(RegisterActivity.this) {
-
-                    @Override
-                    protected Void doInBackground(Object... arg0) {
-                        try {
-                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_FACEBOOK);
-                        } catch(Exception ex) {
-                            // no need to handle this error
-                            logger.error(ex);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    public void onFinish(Void result) {
-                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_FACEBOOK);
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-
-                    }
-                };
-                logout.execute();
-            }
-        }
-    };
-
-    android.view.View.OnClickListener googleClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (AppConstants.offline_flag) {
-                showErrorMessage(getString(R.string.no_connectivity),
-                        getString(R.string.network_not_connected));
-            } else {
-                Task<Void> logout = new Task<Void>(RegisterActivity.this) {
-
-                    @Override
-                    protected Void doInBackground(Object... arg0) {
-                        try {
-                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_GOOGLE);
-                        } catch(Exception ex) {
-                            // no need to handle this error
-                            logger.error(ex);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    public void onFinish(Void result) {
-                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_GOOGLE);
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-
-                    }
-                };
-                logout.execute();
-            }
-        }
-    };
 
 }

@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -18,7 +17,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -66,6 +64,11 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this);
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_FACEBOOK ) );
+        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_GOOGLE ) ) ;
 
 
         email_et = (EditText) findViewById(R.id.email_et);
@@ -116,8 +119,6 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             logger.error(e);
         }
 
-        // enable login buttons at launch
-        setLoginBtnEnabled();
 
         RelativeLayout closeButtonLayout = (RelativeLayout)
                 findViewById(R.id.actionbar_close_btn_layout);
@@ -131,7 +132,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
         // enable login buttons at launch
-        setLoginBtnEnabled();
+        setUIInteraction(true);
 
         // check if third party traffic is enabled
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
@@ -196,7 +197,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setAllClicksEnabled(true);
+        setUIInteraction(true);
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -262,7 +263,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                 };
 
-                setLoginBtnDisabled();
+                setUIInteraction(false);
                 logintask.setProgressDialog(progressbar);
                 logintask.execute(email_et.getText().toString().trim(),
                         password_et.getText().toString());
@@ -346,52 +347,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
 
-    private void setAllClicksEnabled(boolean enabled) {
-        loginButtonLayout.setEnabled(enabled);
 
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setClickable(enabled);
-        imgFacebook.setEnabled(enabled);
-        imgGoogle.setClickable(enabled);
-        imgGoogle.setEnabled(enabled);
-
-        email_et.setEnabled(enabled);
-        password_et.setEnabled(enabled);
-
-        forgotPassword_tv.setEnabled(enabled);
-        eulaTv.setEnabled(enabled);
-    }
-
-    private void setLoginBtnDisabled() {
-        blockTouch();
-        
-        loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
-        loginButtonLayout.setEnabled(false);
-        login_tv.setText(getString(R.string.signing_in));
-        
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setClickable(false);
-        imgGoogle.setClickable(false);
-    }
-
-    private void setLoginBtnEnabled() {
-        unblockTouch();
-        
-        loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
-        loginButtonLayout.setEnabled(true);
-        login_tv.setText(getString(R.string.login));
-        
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setClickable(true);
-        imgGoogle.setClickable(true);
-        imgFacebook.setOnClickListener(facebookClickListener);
-        imgGoogle.setOnClickListener(googleClickListener);
-    }
-
-    private void showErrorMessage(String header, String message) {
+    public void showErrorMessage(String header, String message) {
         LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
         TextView errorHeader = (TextView) findViewById(R.id.error_header);
         TextView errorMessage = (TextView) findViewById(R.id.error_message);
@@ -446,7 +403,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
      * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
-        setLoginBtnDisabled();
+        setUIInteraction(false);
         task.setProgressDialog(progressbar);
     }
     
@@ -472,11 +429,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
     
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
-        setLoginBtnEnabled();
-        email_et.setEnabled(true);
-        password_et.setEnabled(true);
-        forgotPassword_tv.setEnabled(true);
-        eulaTv.setEnabled(true);
+        setUIInteraction(true);
+
 
         // handle if this is a LoginException
         if (ex != null && ex instanceof LoginException) {
@@ -490,85 +444,42 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             logger.error(ex);
         }
     }
-    
 
-    android.view.View.OnClickListener facebookClickListener = new OnClickListener() {
-        
-        @Override
-        public void onClick(View v) {
-            if (AppConstants.offline_flag) {
-                showErrorMessage(getString(R.string.no_connectivity),
-                        getString(R.string.network_not_connected));
-            } else {
-                Task<Void> logout = new Task<Void>(LoginActivity.this) {
-                    
-                    @Override
-                    protected Void doInBackground(Object... arg0) {
-                        try {
-                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_FACEBOOK);
-                        } catch(Exception ex) {
-                            // no need to handle this error
-                            logger.error(ex);
-                        }
-                        return null;
-                    }
-                    
-                    @Override
-                    public void onFinish(Void result) {
-                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_FACEBOOK);
-                    }
-                    
-                    @Override
-                    public void onException(Exception ex) {
-                        setAllClicksEnabled(true);
-                    }
-                };
-                setAllClicksEnabled(false);
-                logout.execute();
-            }
-        }
-    };
-
-    android.view.View.OnClickListener googleClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (AppConstants.offline_flag) {
-                showErrorMessage(getString(R.string.no_connectivity),
-                        getString(R.string.network_not_connected));
-            } else {
-                Task<Void> logout = new Task<Void>(LoginActivity.this) {
-                    
-                    @Override
-                    protected Void doInBackground(Object... arg0) {
-                        try {
-                            socialLoginDelegate.socialLogout(SocialFactory.TYPE_GOOGLE);
-                        } catch(Exception ex) {
-                            // no need to handle this error
-                            logger.error(ex);
-                        }
-                        return null;
-                    }
-                    
-                    @Override
-                    public void onFinish(Void result) {
-                        socialLoginDelegate.socialLogin(SocialFactory.TYPE_GOOGLE);
-                    }
-                    
-                    @Override
-                    public void onException(Exception ex) {
-                        setAllClicksEnabled(true);
-                    }
-                };
-                setAllClicksEnabled(false);
-                logout.execute();
-            }
-        }
-    };
 
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
     }
+
+
+    @Override
+    public boolean setUIInteraction(boolean enable){
+        if ( enable ){
+            unblockTouch();
+            loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
+            loginButtonLayout.setEnabled(enable);
+            login_tv.setText(getString(R.string.login));
+        } else {
+            blockTouch();
+            loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
+            loginButtonLayout.setEnabled(enable);
+            login_tv.setText(getString(R.string.signing_in));
+        }
+
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setClickable(enable);
+        imgGoogle.setClickable(enable);
+
+        email_et.setEnabled(enable);
+        password_et.setEnabled(enable);
+
+        forgotPassword_tv.setEnabled(enable);
+        eulaTv.setEnabled(enable);
+
+        return true;
+    }
+
 }

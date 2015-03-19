@@ -48,6 +48,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -56,7 +57,7 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
+public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
 
     public static final String EXTRA_ENROLLMENT = "enrollment";
 
@@ -869,4 +870,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             }
         }
     };
+
+
+    @Override
+    public boolean setUIInteraction(boolean enable){
+        return false;
+    }
+
 }
