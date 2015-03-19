@@ -58,6 +58,7 @@ public class RegisterActivity extends BaseFragmentActivity
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
     private LinearLayout agreementLayout;
+    private LinearLayout registrationLayout;
     private ETextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
@@ -121,10 +122,16 @@ public class RegisterActivity extends BaseFragmentActivity
             closeButtonLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //if user cancel the registration, do the clean up
+                    PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
+                    pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+                    pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+
                     finish();
                 }
             });
         }
+        registrationLayout = (LinearLayout)findViewById(R.id.registrationLayout);
 
         ETextView customTitle = (ETextView) findViewById(R.id.activity_title);
         if(customTitle!=null){
@@ -285,8 +292,8 @@ public class RegisterActivity extends BaseFragmentActivity
             //set parameter required by social registration
             PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
             String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
+            String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
             if ( access_token != null && access_token.length() > 0 ) {
-                String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
                 parameters.putString("client_id", Config.getInstance().getOAuthClientId());
@@ -309,7 +316,8 @@ public class RegisterActivity extends BaseFragmentActivity
             setElementsDisabled();
             showProgress();
 
-            RegisterTask task = new RegisterTask(this, parameters) {
+            int backsourceType = SocialFactory.getSocialType(backstore);
+            RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
 
                 @Override
                 public void onFinish(RegisterResponse result) {
@@ -345,26 +353,26 @@ public class RegisterActivity extends BaseFragmentActivity
                         } else {
                             AuthResponse auth = getAuth();
                             if (auth != null && auth.isSuccess()) {
-                                //show different message based on server side status.
-                                //or maybe server side return the detailed message?
-                                RegisterResponse social = null;
-                                PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-                                String socialToken = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
-                                String message = "";
-                                if ( socialToken != null ){
-                                    if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_LINKED ){
-                                        message = "You have successfully linked with existing account!";
-                                    } else if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_NOT_LINKED ){
-                                        message = "You have successfully created edX account!";
-                                    } else if ( result.getStatus() == RegisterResponse.Status.NEW_ACCOUNT ){
-                                        message = "You have successfully created edX account!";
-                                    }
-                                } else {
-                                    message = "You have successfully created edX account!";
-                                }
-
-                                // launch my courses screen
-                                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show(); 
+//                                //show different message based on server side status.
+//                                //or maybe server side return the detailed message?
+//                                RegisterResponse social = null;
+//                                PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
+//                                String socialToken = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
+//                                String message = "";
+//                                if ( socialToken != null ){
+//                                    if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_LINKED ){
+//                                        message = "You have successfully linked with existing account!";
+//                                    } else if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_NOT_LINKED ){
+//                                        message = "You have successfully created edX account!";
+//                                    } else if ( result.getStatus() == RegisterResponse.Status.NEW_ACCOUNT ){
+//                                        message = "You have successfully created edX account!";
+//                                    }
+//                                } else {
+//                                    message = "You have successfully created edX account!";
+//                                }
+//
+//                                // launch my courses screen
+//                                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
@@ -479,16 +487,25 @@ public class RegisterActivity extends BaseFragmentActivity
     private void updateUIOnSocialLoginToEdxFailure(int socialType){
         //change UI.
         View signupWith = findViewById(R.id.signupWith);
-        signupWith.setVisibility(View.INVISIBLE);
+        signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
-        socialPanel.setVisibility(View.INVISIBLE);
+        socialPanel.setVisibility(View.GONE);
         ETitleRowView signupWithEmailTitle = (ETitleRowView)findViewById(R.id.signupWithEmailTitle);
         signupWithEmailTitle.setTitle( getString(R.string.complete_registration) );
         //help method
         showRegularMessage(socialType);
         //populate the field with value from social site
         populateEmailFromSocialSite(socialType);
-
+        //hide email and password field
+        for (IRegistrationFieldView field : this.mFieldViews ){
+            String fieldname = field.getField().getName();
+            if ( "password".equalsIgnoreCase(fieldname) ) {
+                 field.getView().setVisibility(View.GONE);
+                 this.mFieldViews.remove(field);
+                 break;
+            }
+        }
+       // registrationLayout.requestLayout();
     }
 
     protected void populateFormField(String fieldName, String value){
@@ -558,7 +575,9 @@ public class RegisterActivity extends BaseFragmentActivity
     protected void onStop() {
         super.onStop();
         socialLoginDelegate.onActivityStopped();
+
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -624,6 +643,8 @@ public class RegisterActivity extends BaseFragmentActivity
         updateUIOnSocialLoginToEdxFailure(socialType);
 
     }
+
+
 
 //    private class RegisterUsingSocialTokenTask extends Task<ProfileModel> {
 //

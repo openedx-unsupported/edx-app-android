@@ -15,11 +15,21 @@
         android:background="@android:color/white">
 
         <LinearLayout
+            android:id="@+id/registrationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp">
+
+            <LinearLayout
+                android:id="@+id/message_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/panel_login_message" />
+            </LinearLayout>
 
             <org.edx.mobile.view.custom.ETitleRowView
                 android:id="@+id/signupWith"
@@ -145,14 +155,6 @@
         <include layout="@layout/panel_login_error" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/message_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <include layout="@layout/panel_login_message" />
-    </LinearLayout>
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/downloadMessage"

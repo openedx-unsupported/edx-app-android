@@ -120,6 +120,10 @@ public class SocialLoginDelegate {
         pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, accessToken);
         pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, backend);
 
+        //for debug purpose.
+   //     Exception  ex = new RuntimeException( );
+   //     callback.onUserLoginFailure(ex, accessToken, backend);
+
         Task<?> task = new ProfileTask(activity);
         callback.onSocialLoginSuccess(accessToken, backend, task);
         task.execute(accessToken, backend);
