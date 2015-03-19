@@ -84,6 +84,10 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             videoListView = (ListView) getView().findViewById(R.id.list_video);
 
             if (videoListView != null) {
+                String selectedId = null;
+                if(adapter!=null){
+                    selectedId = adapter.getVideoId();
+                }
                 adapter = new MyRecentVideoAdapter(getActivity(), db) {
 
                     @Override
@@ -106,7 +110,9 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                                 }
                                 // initialize index for this model
                                 playingVideoIndex = position;
-
+                                //Set videoId to adaptor to determine the currently playing video
+                                DownloadEntry downloadEntry = (DownloadEntry) model;
+                                adapter.setVideoId(downloadEntry.videoId);
                                 play(model);
                                 notifyAdapter();
                             }
@@ -127,6 +133,9 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                     }
                 };
                 // videoAdaptor.setItems(sectionList);
+                if(selectedId!=null){
+                    adapter.setVideoId(selectedId);
+                }
                 adapter.setSelectedPosition(playingVideoIndex);
                 videoListView.setEmptyView(getView().findViewById(R.id.empty_list_view));
                 videoListView.setAdapter(adapter);
@@ -183,6 +192,10 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     private void addToRecentAdapter(View view) {
         try {
             logger.debug("reloading adapter...");
+            String selectedId = null;
+            if(adapter!=null){
+                selectedId = adapter.getVideoId();
+            }
 
             ArrayList<SectionItemInterface> list = storage.getRecentDownloadedVideosList();
             if (list != null) {
@@ -196,6 +209,9 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 hideDeletePanel(view);
             }
             videoListView.setOnItemClickListener(adapter);
+            if(selectedId!=null){
+                adapter.setVideoId(selectedId);
+            }
         } catch (Exception e) {
             logger.error(e);
         }
@@ -219,6 +235,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                         .setRecentNextPrevListeners(getNextListener(), getPreviousListener());
                     }
                     callback.playVideoModel(v);
+                    adapter.setVideoId(videoModel.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -653,6 +670,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
+                        adapter.setVideoId(videoModel.videoId);
                         play(videoModel);
                         break;
                     }
@@ -694,6 +712,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
+                        adapter.setVideoId(videoModel.videoId);
                         play(videoModel);
                         //callback.playVideoModel(videoModel);
                         break;
