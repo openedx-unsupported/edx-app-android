@@ -175,8 +175,8 @@ android {
         // minimum version is Android 4.0
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 57
-        versionName "1.0.05"
+        versionCode 58
+        versionName "1.0.06"
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
