@@ -178,8 +178,11 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
     @Override
     public void onClickCourseInfo(String pathId) {
-        logger.debug("PathId" +pathId);
-        Router.getInstance().showCourseInfo(this, pathId);
+        //If Path id is not null or empty then call CourseInfoActivity
+        if(pathId!=null && !pathId.isEmpty()){
+            logger.debug("PathId" +pathId);
+            Router.getInstance().showCourseInfo(this, pathId);
+        }
     }
 
     @Override
