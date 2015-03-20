@@ -1,5 +1,6 @@
 package org.edx.mobile.player;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -9,6 +10,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.PowerManager;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View.OnClickListener;
@@ -320,7 +322,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         }
 
         @Override
-        public void setPreview(Preview preview) {
+        public void setPreview(final Preview preview) {
             if (preview == null) {
                 return;
             }
@@ -332,9 +334,12 @@ OnCompletionListener, OnInfoListener, IPlayer {
                         logger.debug("Player state=" + state);
                         Surface surface = new Surface(surfaceTexture);
                         setSurface(surface);
-                        // keep screen ON
-                        setScreenOnWhilePlaying(true);
-                        logger.debug("Surface created, holder set");
+
+                        // Keep screen ON while playing
+                        // if using SurfaceHolder, just call setScreenOnWhilePlaying(true);
+                        // When not using SurfaceHolder, need to use WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+
+                        logger.debug("Surface created and set to the player");
 
                         // preview last shown frame if not playing
                         if (!isPlaying()) {

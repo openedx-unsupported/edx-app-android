@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -550,6 +551,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (callback != null) {
             callback.onError();
         }
+
+        setScreenOnWhilePlaying(false);
     }
 
     @Override
@@ -566,12 +569,15 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     @Override
     public void onPreparing() {
+        setScreenOnWhilePlaying(true);
         hideNetworkError();
         showProgress();
     }
 
     @Override
     public void onPlaybackPaused() {
+        setScreenOnWhilePlaying(false);
+
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
@@ -715,6 +721,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         // request audio focus, as playback has started
         requestAudioFocus();
 
+        // keep screen ON
+        setScreenOnWhilePlaying(true);
+
         if (callback != null) {
             callback.onPlaybackStarted();
             updateController("playback started");
@@ -735,6 +744,21 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             }
         }catch(Exception e){
             logger.error(e);
+        }
+    }
+
+    private void setScreenOnWhilePlaying(boolean screenOn) {
+        try {
+            if (screenOn) {
+                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                logger.debug("KEEP SCREEN ON is set while playing, flag added");
+            }
+            else {
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                logger.debug("KEEP SCREEN ON is unset, flag removed");
+            }
+        } catch(Exception ex) {
+            logger.error(ex, true);
         }
     }
 
@@ -1720,6 +1744,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     }
     
     private void freezePlayer() {
+        setScreenOnWhilePlaying(false);
+
         if (player!=null) {
             if (callback != null && player.isPlaying()) {
                 int pos = player.getCurrentPosition();
