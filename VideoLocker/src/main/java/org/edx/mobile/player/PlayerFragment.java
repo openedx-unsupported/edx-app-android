@@ -439,9 +439,6 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
      */
     public synchronized void play(String path, int seekTo, String title, 
             TranscriptModel trModel, DownloadEntry video) {
-        // clear the window flag
-        setScreenOnWhilePlaying(false);
-
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
@@ -554,6 +551,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (callback != null) {
             callback.onError();
         }
+
+        setScreenOnWhilePlaying(false);
     }
 
     @Override
@@ -570,6 +569,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     @Override
     public void onPreparing() {
+        setScreenOnWhilePlaying(true);
         hideNetworkError();
         showProgress();
     }
