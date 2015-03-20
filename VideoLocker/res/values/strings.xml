@@ -361,7 +361,7 @@
     <!-- Button label to bring up course finder -->
     <string name="signin_with_text">signing in to this app in with</string>
     <!-- Message between sign in button and social login buttons -->
-    <string name="or_sign_in_with">Or Sign in with</string>
+    <string name="or_sign_in_with">Or sign in with</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
