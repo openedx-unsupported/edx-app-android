@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -113,9 +114,19 @@
                         android:id="@+id/panel_login_social"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/social_margin_top">
+                        android:orientation="vertical">
 
+                        <org.edx.mobile.view.custom.TitleRowView
+                            android:id="@+id/signInWith"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            app:title="@string/signin_with_text"
+                            app:titleFontSize="6sp"
+                            />
                         <include layout="@layout/panel_login_social" />
                     </LinearLayout>
 
