@@ -22,7 +22,7 @@
         <attr name="avatarMaxSize" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="ETitleRowView">
+    <declare-styleable name="TitleRowView">
         <attr name="titleFontSize" format="dimension" />
         <attr name="title" format="string" />
         <attr name="decorationStyle" format="enum">

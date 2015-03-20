@@ -21,19 +21,19 @@ import static org.edx.mobile.R.*;
  *   app:titleFontSize="8sp"
  *   app:decorationStyle="left"  -- decorationStyle is enum type, with values {center,left, right}, default is center
  */
-public class ETitleRowView extends LinearLayout {
+public class TitleRowView extends LinearLayout {
 
     public static enum DecorationStyle {CENTER, LEFT, RIGHT}
 
     private ETextView titleView;
 
-    public ETitleRowView(Context context, AttributeSet attrs) {
+    public TitleRowView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setAttributes(context, attrs);
     }
 
-    public ETitleRowView(Context context, AttributeSet attrs, int defStyle) {
+    public TitleRowView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         setAttributes(context, attrs);
@@ -43,10 +43,10 @@ public class ETitleRowView extends LinearLayout {
 
         if (isInEditMode()){return;}
 
-        TypedArray attrArray = context.obtainStyledAttributes(attrs, styleable.ETitleRowView);
-        String title = attrArray.getString(styleable.ETitleRowView_title );
-        float fontSize = attrArray.getDimension(styleable.ETitleRowView_titleFontSize, getResources().getDimension(R.dimen.default_row_text));
-        DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.ETitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
+        TypedArray attrArray = context.obtainStyledAttributes(attrs, styleable.TitleRowView);
+        String title = attrArray.getString(styleable.TitleRowView_title);
+        float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, getResources().getDimension(R.dimen.default_row_text));
+        DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.TitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
 
 
         if ( decorationStyle !=  DecorationStyle.LEFT ) {

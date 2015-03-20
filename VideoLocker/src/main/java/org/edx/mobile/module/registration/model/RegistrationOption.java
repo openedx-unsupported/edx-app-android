@@ -28,6 +28,8 @@ public class RegistrationOption {
     }
 
     public int hashCode(){
+        //we will use this method after we upgrade to jdk 1.7
+      //  return super.hashCode(name, value);
         int hashcode = name == null ? 0 : name.hashCode() / 2;
         return  hashcode += ( value == null ? 0 : value.hashCode()/2 );
     }

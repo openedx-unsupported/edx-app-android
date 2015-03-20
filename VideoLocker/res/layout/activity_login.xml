@@ -116,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <org.edx.mobile.view.custom.ETitleRowView
+                        <org.edx.mobile.view.custom.TitleRowView
                             android:id="@+id/signInWith"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

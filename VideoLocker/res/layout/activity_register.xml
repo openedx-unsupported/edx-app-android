@@ -31,7 +31,7 @@
                 <include layout="@layout/panel_login_message" />
             </LinearLayout>
 
-            <org.edx.mobile.view.custom.ETitleRowView
+            <org.edx.mobile.view.custom.TitleRowView
                 android:id="@+id/signupWith"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 
             <include layout="@layout/panel_login_social" />
 
-            <org.edx.mobile.view.custom.ETitleRowView
+            <org.edx.mobile.view.custom.TitleRowView
                 android:id="@+id/signupWithEmailTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:orientation="vertical"
                 android:layout_marginTop="5dp"/>
 
-            <org.edx.mobile.view.custom.ETitleRowView
+            <org.edx.mobile.view.custom.TitleRowView
                 android:id="@+id/optional_field_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

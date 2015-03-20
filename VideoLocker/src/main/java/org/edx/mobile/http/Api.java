@@ -1066,11 +1066,11 @@ public class Api {
         return list;
     }
 
-    public AuthResponse socialLogin(String accessToken, int socialType)
+    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
             throws Exception{
-        if ( socialType == SocialFactory.TYPE_FACEBOOK )
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
             return loginByFacebook( accessToken );
-        if ( socialType == SocialFactory.TYPE_GOOGLE )
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
             return loginByGoogle( accessToken );
         return null;
     }

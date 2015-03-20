@@ -67,8 +67,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_FACEBOOK ) );
-        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_GOOGLE ) ) ;
+        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
+        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
 
 
         email_et = (EditText) findViewById(R.id.email_et);
@@ -132,7 +132,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
         // enable login buttons at launch
-        setUIInteraction(true);
+        tryToSetUIInteraction(true);
 
         // check if third party traffic is enabled
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
@@ -197,7 +197,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setUIInteraction(true);
+        tryToSetUIInteraction(true);
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -263,7 +263,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                 };
 
-                setUIInteraction(false);
+                tryToSetUIInteraction(false);
                 logintask.setProgressDialog(progressbar);
                 logintask.execute(email_et.getText().toString().trim(),
                         password_et.getText().toString());
@@ -403,7 +403,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
      * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
-        setUIInteraction(false);
+        tryToSetUIInteraction(false);
         task.setProgressDialog(progressbar);
     }
     
@@ -429,7 +429,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
     
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
-        setUIInteraction(true);
+        tryToSetUIInteraction(true);
 
 
         // handle if this is a LoginException
@@ -454,7 +454,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
 
     @Override
-    public boolean setUIInteraction(boolean enable){
+    public boolean tryToSetUIInteraction(boolean enable){
         if ( enable ){
             unblockTouch();
             loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);

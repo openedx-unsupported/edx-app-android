@@ -12,10 +12,10 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
 
     private Bundle parameters;
     private AuthResponse auth;
-    private int backstoreType;
+    private SocialFactory.SOCIAL_SOURCE_TYPE backstoreType;
     private String accessToken;
 
-    public RegisterTask(Context context, Bundle parameters, String accessToken, int backstoreType) {
+    public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE backstoreType) {
         super(context);
         this.parameters = parameters;
         this.accessToken = accessToken;
@@ -30,8 +30,8 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
 
             if (res.isSuccess()) {
                 switch ( backstoreType ){
-                    case SocialFactory.TYPE_GOOGLE :
-                    case SocialFactory.TYPE_FACEBOOK :
+                    case  TYPE_GOOGLE :
+                    case  TYPE_FACEBOOK :
                         //skip auth for social registration, as we use the same
                         //access_token for registration already.
                         auth = new AuthResponse();

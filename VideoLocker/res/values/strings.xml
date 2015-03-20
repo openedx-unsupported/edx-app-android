@@ -361,7 +361,7 @@
     <!-- Button label to bring up course finder -->
     <string name="signin_with_text">signing in to this app in with</string>
     <!-- Message between sign in button and social login buttons -->
-    <string name="or_signin_with">Or Sign in with</string>
+    <string name="or_sign_in_with">Or Sign in with</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
@@ -409,8 +409,8 @@
     <!-- Registration screen title -->
     <string name="register_title">Sign up for edX</string>
     <!-- Text for successful registration with social token  -->
-    <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook .</string>
-    <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google .</string>
+    <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook.</string>
+    <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google.</string>
     <string name="sign_up_with_social_ok">We just need a little more information before you start learning with edX.</string>
     <!-- Continue registration after social login -->
     <string name="complete_registration">Complete your registration</string>

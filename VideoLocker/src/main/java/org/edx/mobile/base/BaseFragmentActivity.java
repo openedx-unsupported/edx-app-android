@@ -873,7 +873,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
 
     @Override
-    public boolean setUIInteraction(boolean enable){
+    public boolean tryToSetUIInteraction(boolean enable){
         return false;
     }
 

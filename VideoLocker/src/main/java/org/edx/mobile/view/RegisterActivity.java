@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -16,11 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
@@ -45,7 +42,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.custom.ETitleRowView;
+import org.edx.mobile.view.custom.TitleRowView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +84,8 @@ public class RegisterActivity extends BaseFragmentActivity
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
         imgFacebook.setClickable(true);
         imgGoogle.setClickable(true);
-        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_FACEBOOK ) );
-        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.TYPE_GOOGLE ) ) ;
+        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
+        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
 
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
@@ -103,7 +100,7 @@ public class RegisterActivity extends BaseFragmentActivity
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
         agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
-        final ETitleRowView optional_text=(ETitleRowView)findViewById(R.id.optional_field_tv);
+        final TitleRowView optional_text=(TitleRowView)findViewById(R.id.optional_field_tv);
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,7 +315,7 @@ public class RegisterActivity extends BaseFragmentActivity
             setElementsDisabled();
             showProgress();
 
-            int backsourceType = SocialFactory.getSocialType(backstore);
+            SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
             RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
 
                 @Override
@@ -464,14 +461,14 @@ public class RegisterActivity extends BaseFragmentActivity
      * we can create enum for strong type, but lose the extensibility.
      * @param socialType
      */
-    private void showRegularMessage(int socialType){
+    private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
         LinearLayout messageLayout = (LinearLayout) findViewById(R.id.message_layout);
         ETextView messageView = (ETextView) findViewById(R.id.message_body);
         //we replace facebook and google programmatically here
         //in order to make localization work
         String socialTypeString = "";
         String signUpSuccessString = "";
-        if ( socialType == SocialFactory.TYPE_FACEBOOK ){
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ){
             socialTypeString = getString(R.string.facebook_text);
             signUpSuccessString = getString(R.string.sign_up_with_facebook_ok);
         } else {  //google
@@ -488,13 +485,13 @@ public class RegisterActivity extends BaseFragmentActivity
        // UiUtil.animateLayouts(messageLayout);
     }
 
-    private void updateUIOnSocialLoginToEdxFailure(int socialType){
+    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
         //change UI.
         View signupWith = findViewById(R.id.signupWith);
         signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
         socialPanel.setVisibility(View.GONE);
-        ETitleRowView signupWithEmailTitle = (ETitleRowView)findViewById(R.id.signupWithEmailTitle);
+        TitleRowView signupWithEmailTitle = (TitleRowView)findViewById(R.id.signupWithEmailTitle);
         signupWithEmailTitle.setTitle( getString(R.string.complete_registration) );
         //help method
         showRegularMessage(socialType);
@@ -525,7 +522,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
 
-    private void populateEmailFromSocialSite(int socialType){
+    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
         this.socialLoginDelegate.getUserInfo(socialType, new SocialLoginDelegate.SocialUserInfoCallback() {
             @Override
             public void setSocialUserInfo(String email, String name) {
@@ -642,7 +639,7 @@ public class RegisterActivity extends BaseFragmentActivity
         // handle if this is a LoginException
 
         logger.error(ex);
-        int socialType = SocialFactory.getSocialType(backend);
+        SocialFactory.SOCIAL_SOURCE_TYPE socialType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backend);
         updateUIOnSocialLoginToEdxFailure(socialType);
 
     }

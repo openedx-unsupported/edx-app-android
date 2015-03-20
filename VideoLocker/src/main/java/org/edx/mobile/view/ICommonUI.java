@@ -9,5 +9,5 @@ public interface ICommonUI {
      * @param enable
      * @return operation failed or not
      */
-    boolean setUIInteraction(boolean enable);
+    boolean tryToSetUIInteraction(boolean enable);
 }

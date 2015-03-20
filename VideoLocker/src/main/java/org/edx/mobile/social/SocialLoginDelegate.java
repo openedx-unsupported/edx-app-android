@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.LoginErrorMessage;
@@ -20,6 +19,8 @@ import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.ICommonUI;
+
+
 
 /**
  * Code refactored from Login Activity, for the logic of login to social site are the same
@@ -64,10 +65,10 @@ public class SocialLoginDelegate {
         this.activity = activity;
         this.callback = callback;
 
-        google = SocialFactory.getInstance(activity, SocialFactory.TYPE_GOOGLE);
+        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE);
         google.setCallback(googleCallback);
 
-        facebook = SocialFactory.getInstance(activity, SocialFactory.TYPE_FACEBOOK);
+        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK);
         facebook.setCallback(facebookCallback);
 
         google.onActivityCreated(activity, savedInstanceState);
@@ -99,17 +100,17 @@ public class SocialLoginDelegate {
         facebook.onActivityStopped(activity);
     }
 
-    public void socialLogin(int socialType){
-        if ( socialType == SocialFactory.TYPE_FACEBOOK )
+    public void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
            facebook.login();
-        else if ( socialType == SocialFactory.TYPE_GOOGLE )
+        else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
             google.login();
     }
 
-    public void socialLogout(int socialType){
-        if ( socialType == SocialFactory.TYPE_FACEBOOK )
+    public void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
             facebook.logout();
-        else if ( socialType == SocialFactory.TYPE_GOOGLE )
+        else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
             google.logout();
     }
 
@@ -142,9 +143,9 @@ public class SocialLoginDelegate {
     }
 
 
-    public void getUserInfo(int socialType, final SocialUserInfoCallback userInfoCallback){
+    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, final SocialUserInfoCallback userInfoCallback){
 
-        if ( socialType == SocialFactory.TYPE_FACEBOOK ) {
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
             SocialProvider socialProvider = new FacebookProvider();
             socialProvider.getUser(activity, new SocialProvider.Callback<SocialMember>() {
                 @Override
@@ -157,7 +158,7 @@ public class SocialLoginDelegate {
                     //TODO - should we pass error to UI?
                 }
             });
-        } else if ( socialType == SocialFactory.TYPE_GOOGLE ) {
+        } else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
             userInfoCallback.setSocialUserInfo(((GoogleOauth2)google).getEmail(), null);
         }
 
@@ -257,13 +258,13 @@ public class SocialLoginDelegate {
 
     }
 
-    public SocialButtonClickHandler createSocialButtonClickHandler(int socialType){
+    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
         return new SocialButtonClickHandler(socialType);
     }
 
     public  class SocialButtonClickHandler implements View.OnClickListener{
-        private  int socialType;
-        private SocialButtonClickHandler(int socialType){
+        private SocialFactory.SOCIAL_SOURCE_TYPE socialType;
+        private SocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
             this.socialType = socialType;
         }
         @Override
@@ -294,11 +295,11 @@ public class SocialLoginDelegate {
                     public void onException(Exception ex) {
                         logger.error(ex);
                         if ( activity instanceof ICommonUI)
-                            ((ICommonUI)activity).setUIInteraction(true);
+                            ((ICommonUI)activity).tryToSetUIInteraction(true);
                     }
                 };
                 if ( activity instanceof ICommonUI)
-                    ((ICommonUI)activity).setUIInteraction(false);
+                    ((ICommonUI)activity).tryToSetUIInteraction(false);
                 logout.execute();
             }
         }
