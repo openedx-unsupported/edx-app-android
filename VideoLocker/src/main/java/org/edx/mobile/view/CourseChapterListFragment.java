@@ -112,6 +112,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             }
         }
 
+        //Initialize the adapter
+        initializeAdapter();
+
         ArrayList<SectionEntry> savedEntries = null;
         if (savedInstanceState != null) {
 
@@ -127,7 +130,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         chapterListView = (ListView) view
                 .findViewById(R.id.chapter_list);
 
-        initializeAdapter();
         chapterListView.setAdapter(adapter);
         chapterListView.setOnItemClickListener(adapter);
         lastClickTime = 0;
@@ -273,10 +275,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         super.onSaveInstanceState(outState);
 
         ArrayList<SectionEntry> saveEntries = new ArrayList<SectionEntry>();
-        for(int i = 0; i < adapter.getCount(); i++)
-            saveEntries.add(adapter.getItem(i));
+        if(adapter!=null){
+            for(int i = 0; i < adapter.getCount(); i++)
+                saveEntries.add(adapter.getItem(i));
 
-        outState.putSerializable(SECTION_ENTRIES, saveEntries);
+            outState.putSerializable(SECTION_ENTRIES, saveEntries);
+        }
     }
 
     //Loading data to the Adapter
