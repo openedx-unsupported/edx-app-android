@@ -8,8 +8,8 @@ package org.edx.mobile.module.db;
 public final class DbStructure {
     
     public static final String NAME = "downloads.db";
-    //Updated to Version 3 to add different encoding Urls
-    public static final int VERSION = 3;
+    //Updated to Version 4 to add flag to indicate that video is only available for web
+    public static final int VERSION = 4;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
@@ -38,5 +38,6 @@ public final class DbStructure {
         public static final String LAST_PLAYED_OFFSET = "last_played_offset";
         public static final String IS_COURSE_ACTIVE = "is_course_active";
         public static final String UNIT_URL = "unit_url";
+        public static final String VIDEO_FOR_WEB_ONLY = "video_for_web_only";
     }
 }

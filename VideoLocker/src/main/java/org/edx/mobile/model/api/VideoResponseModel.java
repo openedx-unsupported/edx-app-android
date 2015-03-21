@@ -11,6 +11,7 @@ public class VideoResponseModel implements SectionItemInterface {
     private String courseId;
     public String section_url;
     public String unit_url;
+    public int webOnly;
 
     /**
      * Returns chapter object of this model. The chapter object is found

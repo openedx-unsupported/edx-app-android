@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -187,11 +188,18 @@ public class VideoListFragment extends Fragment {
             adapter = new OnlineVideoAdapter(getActivity(), db , storage) {
                 @Override
                 public void onItemClicked(final SectionItemInterface model, final int position) {
+
                     if (model.isDownload()) {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
-
                         DownloadEntry de = (DownloadEntry) model;
+
+                        if ( de.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                            startOnlinePlay(model, position);
+                            return;
+                        }
+
                         if(!de.isDownloaded()){
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
@@ -330,7 +338,10 @@ public class VideoListFragment extends Fragment {
                     if (model.isDownload()) {
 
                         DownloadEntry downloadEntry = (DownloadEntry) model;
-                        if (downloadEntry.isDownloaded()) {
+                        if ( downloadEntry.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (downloadEntry.isDownloaded()) {
                             adapter.setVideoId(downloadEntry.videoId);
                             // hide delete panel first, so that multiple-tap is blocked
                             hideDeletePanel(VideoListFragment.this.getView());
@@ -403,8 +414,11 @@ public class VideoListFragment extends Fragment {
                 public void onItemClicked(SectionItemInterface model,
                         int position) {
                     if (!AppConstants.myVideosDeleteMode) {
+                        DownloadEntry downloadEntry = (DownloadEntry) model;
+                        if ( downloadEntry.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                        }
                         if (model.isDownload()) {
-                            DownloadEntry downloadEntry = (DownloadEntry) model;
                             if (downloadEntry.isDownloaded()) {
                                 adapter.setVideoId(downloadEntry.videoId);
                                 // hide delete panel first, so that multiple-tap is blocked
@@ -417,6 +431,9 @@ public class VideoListFragment extends Fragment {
                                 notifyAdapter();
                             }
                         }
+//                        if(downloadEntry.isVideoForWebOnly){
+//                            showPlayer();
+//                        }
                     }
                 }
 

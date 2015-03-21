@@ -44,6 +44,7 @@ public class DownloadEntry implements SectionItemInterface, IVideoModel {
     public long downloadedOn;
     public int lastPlayedOffset;
     public int isCourseActive = 1; // default is TRUE
+    public boolean isVideoForWebOnly; //default is FALSE
     public String lmsUrl;
     public TranscriptModel transcript;
     
@@ -77,6 +78,7 @@ public class DownloadEntry implements SectionItemInterface, IVideoModel {
         downloadedOn = c.getLong(c.getColumnIndex(DbStructure.Column.DOWNLOADED_ON));
         lastPlayedOffset = c.getInt(c.getColumnIndex(DbStructure.Column.LAST_PLAYED_OFFSET));
         isCourseActive = c.getInt(c.getColumnIndex(DbStructure.Column.IS_COURSE_ACTIVE));
+        isVideoForWebOnly = c.getInt(c.getColumnIndex(DbStructure.Column.VIDEO_FOR_WEB_ONLY)) == 1;
         try{
             lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
             if(lmsUrl==null || lmsUrl.trim().length()==0){
@@ -243,6 +245,9 @@ public class DownloadEntry implements SectionItemInterface, IVideoModel {
     public boolean isCourseActive() {
         return (isCourseActive == 1);
     }
+
+    @Override
+    public boolean  isVideoForWebOnly() { return isVideoForWebOnly; }
 
     @Override
     public long getDuration() {

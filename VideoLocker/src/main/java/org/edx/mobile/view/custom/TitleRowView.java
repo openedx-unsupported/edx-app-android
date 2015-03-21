@@ -58,7 +58,9 @@ public class TitleRowView extends LinearLayout {
         titleView = new ETextView(context);
         titleView.setText(title);
         titleView.setTextSize(fontSize);
-        addView(titleView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        params.setMargins(5,0, 5, 0);
+        addView(titleView, params);
 
         if ( decorationStyle != DecorationStyle.RIGHT ) {
             View rightDashView = new View(context);
