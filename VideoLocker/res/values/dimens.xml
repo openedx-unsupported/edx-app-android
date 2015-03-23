@@ -15,6 +15,7 @@
     <dimen name="group_avatar_overflow_text">24sp</dimen>
     <dimen name="course_detail_margin_left">20dp</dimen>
     <dimen name="course_detail_margin">12dp</dimen>
+    <dimen name="default_row_text">12sp</dimen>
 
     <dimen name="width_video_text">200dp</dimen>
     <dimen name="checkbox_margin">10dp</dimen>
