@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -292,7 +293,8 @@ public class RegisterActivity extends BaseFragmentActivity
             PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
             String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
-            if ( access_token != null && access_token.length() > 0 ) {
+            boolean fromSocialNet = TextUtils.isEmpty( access_token );
+            if ( fromSocialNet ) {
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
                 parameters.putString("client_id", Config.getInstance().getOAuthClientId());
@@ -307,7 +309,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 String versionName = PropertyUtil.getManifestVersionName(this);
                 String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
-                segIO.trackCreateAccountClicked(appVersion);
+                segIO.trackCreateAccountClicked(appVersion, backstore);
             }catch(Exception e){
                 logger.error(e);
             }
