@@ -19,6 +19,7 @@ import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.StringUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -179,7 +180,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     @Override
     public void onClickCourseInfo(String pathId) {
         //If Path id is not null or empty then call CourseInfoActivity
-        if(pathId!=null && !pathId.isEmpty()){
+        if(!StringUtil.isStringEmpty(pathId)){
             logger.debug("PathId" +pathId);
             Router.getInstance().showCourseInfo(this, pathId);
         }
