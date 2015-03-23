@@ -392,10 +392,6 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             // but finish this screen anyways as login is succeeded
             finish();
         }
-        else {
-
-        }
-
     }
 
     private void clearDialogs(){
