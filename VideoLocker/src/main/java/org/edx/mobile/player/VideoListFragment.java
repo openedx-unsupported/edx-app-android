@@ -195,7 +195,7 @@ public class VideoListFragment extends Fragment {
                         DownloadEntry de = (DownloadEntry) model;
 
                         if ( de.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short), Toast.LENGTH_SHORT).show();
                             startOnlinePlay(model, position);
                             return;
                         }
@@ -339,7 +339,7 @@ public class VideoListFragment extends Fragment {
 
                         DownloadEntry downloadEntry = (DownloadEntry) model;
                         if ( downloadEntry.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
                         }
                         else if (downloadEntry.isDownloaded()) {
                             adapter.setVideoId(downloadEntry.videoId);
@@ -416,7 +416,7 @@ public class VideoListFragment extends Fragment {
                     if (!AppConstants.myVideosDeleteMode) {
                         DownloadEntry downloadEntry = (DownloadEntry) model;
                         if ( downloadEntry.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), "The video is available for web only", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
                         }
                         if (model.isDownload()) {
                             if (downloadEntry.isDownloaded()) {
@@ -431,9 +431,6 @@ public class VideoListFragment extends Fragment {
                                 notifyAdapter();
                             }
                         }
-//                        if(downloadEntry.isVideoForWebOnly){
-//                            showPlayer();
-//                        }
                     }
                 }
 

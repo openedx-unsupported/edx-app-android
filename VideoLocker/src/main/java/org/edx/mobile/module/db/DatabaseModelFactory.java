@@ -73,7 +73,7 @@ public class DatabaseModelFactory {
         e.videoId = vrm.getSummary().getId();
         e.transcript = vrm.getSummary().getTranscripts();
         e.lmsUrl = vrm.unit_url;
-        e.isVideoForWebOnly =  new Random().nextBoolean();//vrm.webOnly == 1;
+        e.isVideoForWebOnly = vrm.getSummary().isOnly_on_web(); // new Random().nextBoolean();//
         return e;
     }
 }
