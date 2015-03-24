@@ -185,7 +185,7 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
                 }
 
                 //String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
-                if (pathId.isEmpty()) {
+                if (pathId==null || pathId.isEmpty()) {
                     return false;
                 }
 
