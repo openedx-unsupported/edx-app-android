@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
@@ -19,6 +20,7 @@ import com.facebook.widget.FacebookDialog;
 import com.google.gson.Gson;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.json.FriendListResponse;
 import org.edx.mobile.model.json.GroupListResponse;
@@ -36,6 +38,7 @@ import java.util.List;
 
 public class FacebookProvider implements SocialProvider {
 
+    protected final Logger logger = new Logger(getClass().getName());
     private static final String TAG = FacebookProvider.class.getCanonicalName();
 
     private SocialMember userProfile;
@@ -94,15 +97,24 @@ public class FacebookProvider implements SocialProvider {
         }
 
         Session session = Session.getActiveSession();
-        Request.newMeRequest(session, new Request.GraphUserCallback() {
+        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
             @Override
             public void onCompleted(GraphUser user, Response response) {
                 if (!notifyIfError(response, callback)) {
-                    callback.onSuccess(new SocialMember(Long.parseLong(user.getId()), user.getFirstName(), user.getLastName(), null));
+                    logger.debug(user.getUsername() + ":" + user.getName() + ":" + user.getFirstName()
+                            + ":" + user.getLastName() + ":" + user.getId());
+                    logger.debug( user.getProperty("email") + "");
+                    SocialMember member = new SocialMember(Long.parseLong(user.getId()), user.getName());
+                    member.setEmail(user.getProperty("email") + "");
+                    callback.onSuccess( member );
 
                 }
             }
-        }).executeAsync();
+        });
+        Bundle params = request.getParameters();
+        params.putString("fields", "email,id,name");
+        request.setParameters(params);
+        request.executeAsync();
     }
 
     @Override

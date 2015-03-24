@@ -41,6 +41,7 @@ import org.edx.mobile.model.json.SuccessResponse;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
@@ -1065,21 +1066,31 @@ public class Api {
         return list;
     }
 
+    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
+            throws Exception{
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
+            return loginByFacebook( accessToken );
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
+            return loginByGoogle( accessToken );
+        return null;
+    }
+
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
+
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
         
-        return socialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
+        return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
     }
 
     public AuthResponse loginByGoogle(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
         
-        return socialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
+        return socialLogin2(accessToken, PrefManager.Value.BACKEND_GOOGLE);
     }
 
-    private AuthResponse socialLogin(String accessToken, String backend)
+    private AuthResponse socialLogin2(String accessToken, String backend)
                                 throws Exception {
         Bundle headers = new Bundle();
         headers.putString("Content-Type", "application/x-www-form-urlencoded");
@@ -1100,6 +1111,8 @@ public class Api {
         p.putString("client_id",  Config.getInstance().getOAuthClientId());
 
         //oauth2/exchange_access_token/<backend>/
+        logger.debug("access_token: " + accessToken);
+        logger.debug("client_id: " + Config.getInstance().getOAuthClientId());
         String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
         logger.debug("Url for social login: " + url);
 
