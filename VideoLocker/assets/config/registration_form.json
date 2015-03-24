@@ -22,7 +22,7 @@
         "errorMessages": {},
         "placeholder": "",
         "defaultValue": "",
-        "instructions": "The name that will appear on your certificates",
+        "instructions": "This name will appear on certificates you own",
         "type": "text",
         "label": "Full name"
     }, {
@@ -35,7 +35,7 @@
         "errorMessages": {},
         "placeholder": "",
         "defaultValue": "",
-        "instructions": "The name that will identify you in your courses",
+        "instructions": "This name will identify you in your courses and <b>can not be changed</b>",
         "type": "text",
         "label": "Public username"
     }, {

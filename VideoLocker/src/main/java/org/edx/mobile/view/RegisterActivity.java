@@ -77,16 +77,34 @@ public class RegisterActivity extends BaseFragmentActivity
         }catch(Exception e){
             logger.error(e);
         }
-
-        // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this);
 
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setClickable(true);
-        imgGoogle.setClickable(true);
-        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
-        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
+        boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN);
+
+        if ( !isSocialEnabled ){
+            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+        }
+        else {
+            ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+            ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+
+            if ( !Config.getInstance().getFacebookConfig().isEnabled() ){
+                findViewById(R.id.img_facebook).setVisibility(View.GONE);
+            }
+            else {
+                imgFacebook.setClickable(true);
+                imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
+            }
+
+            if ( !Config.getInstance().getGoogleConfig().isEnabled() ){
+                findViewById(R.id.img_google).setVisibility(View.GONE);
+            }
+            else {
+                imgGoogle.setClickable(true);
+                imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
+            }
+        }
+
 
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
