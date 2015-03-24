@@ -30,6 +30,9 @@
             <enum name="left" value="1"/>
             <enum name="right" value="2"/>
         </attr>
+        <attr name="leftColor" format="dimension"/>
+        <attr name="android:textColor"/>
+        <attr name="rightColor" format="dimension"/>
     </declare-styleable>
 
 </resources>
