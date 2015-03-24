@@ -247,7 +247,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             DownloadEntry de = (DownloadEntry) storage
                     .getDownloadEntryfromVideoResponseModel(v);
             if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED) {
+                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
+                    || de.isVideoForWebOnly ) {
                 continue;
             } else {
                 downloadSize = downloadSize

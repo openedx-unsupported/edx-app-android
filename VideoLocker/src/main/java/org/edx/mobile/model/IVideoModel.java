@@ -54,6 +54,8 @@ public interface IVideoModel {
     
     boolean isCourseActive();
 
+    boolean isVideoForWebOnly();
+
     long getDownloadedOn();
     
     TranscriptModel getTranscripts();

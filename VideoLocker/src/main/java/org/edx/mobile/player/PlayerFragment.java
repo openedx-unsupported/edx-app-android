@@ -61,6 +61,7 @@ import org.edx.mobile.view.dialog.InstallFacebookDialog;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -71,6 +72,8 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends Fragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
+
+    private enum VideoNotPlayMessageType {IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB, IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE}
 
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME = 1000;
@@ -97,9 +100,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
     private ISegment segIO;
-    private boolean isVideoMessageDisplayed;
-    private boolean isNetworkMessageDisplayed;
-    private boolean isShownWifiSettingsMessage;
+    private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
+
     private boolean isManualFullscreen = false;
     private int currentPosition = 0;
 
@@ -132,9 +134,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     };
 
     public PlayerFragment() {
-        isVideoMessageDisplayed = false;
-        isNetworkMessageDisplayed = false;
-        isShownWifiSettingsMessage = false;
+        curMessageTypes.clear();
     }
 
     public void setCallback(IPlayerEventCallback callback) {
@@ -213,7 +213,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if (savedInstanceState != null
                     && savedInstanceState.containsKey("isMessageDisplayed")){
                 if(savedInstanceState.getBoolean("isMessageDisplayed")){
-                    showVideoNotAvailable();
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                 }
             }
             reAttachPlayEventListener();
@@ -259,6 +259,22 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                     isLastRotationOn = isRotationOn;
                 }
             };
+            getView().findViewById(R.id.panel_video_only_on_web).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final StringBuffer urlStringBuffer = new StringBuffer();
+                        if (! videoEntry.url.startsWith("http://") && ! videoEntry.url.startsWith("https://")) {
+                            urlStringBuffer.append("http://");
+                            urlStringBuffer.append( videoEntry.url);
+                        } else {
+                            urlStringBuffer.append( videoEntry.url);
+                        }
+                        BrowserUtil.open(getActivity(),
+                                urlStringBuffer.toString());
+                    }
+
+            });
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -310,11 +326,13 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 // setup the flat if player is fullscreen
                 player.setFullScreen(isScreenLandscape());
             }
-            if(isVideoMessageDisplayed){
-                showVideoNotAvailable();
-            }else if(isNetworkMessageDisplayed){
+            if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB)) {
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
+            } if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+            }else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED)){
                 showNetworkError();
-            } else if(isShownWifiSettingsMessage){
+            } else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE)){
                 showWifiSettingsMessage();
             }
         }catch(Exception e){
@@ -330,7 +348,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
         setupController();
 
-        if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed && !isShownWifiSettingsMessage){
+        if(curMessageTypes.isEmpty()){
             // display progress until playback actually starts
             showProgress();
         }
@@ -391,7 +409,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if(player!=null){
                 player.hideController();
             }
-            if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed && !isShownWifiSettingsMessage){
+            if( this.curMessageTypes.isEmpty() ){
                 getView().findViewById(R.id.progress).setVisibility(View.VISIBLE);
             }
         } catch(Exception ex) {
@@ -478,15 +496,21 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         requestAudioFocus();
 
         try {
-            // show loading indicator as player will prepare now
-            showProgress();
-
-            if (path == null || path.trim().length() == 0) {
-                showVideoNotAvailable();
-                //return;
+            if ( video.isVideoForWebOnly ){
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
+                path = "";
             } else {
-                hideVideoNotAvailable();
+                // show loading indicator as player will prepare now
+                showProgress();
+
+                if (path == null || path.trim().length() == 0) {
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                    //return;
+                } else {
+                    hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                }
             }
+
             this.transcript = trModel;
             player.setLMSUrl(video.lmsUrl);
             player.setVideoTitle(title);
@@ -597,8 +621,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             unlockOrientation();
             View errorView = getView().findViewById(R.id.panel_network_error);
             errorView.setVisibility(View.GONE);
-            isNetworkMessageDisplayed = false;
-            isShownWifiSettingsMessage = false;
+            curMessageTypes.remove(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+            curMessageTypes.remove(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
+
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -610,7 +635,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 if (player.isPlayingLocally() || player.isPlaying() ) {
                     hideNetworkError();
                 } else {
-                    if(!isVideoMessageDisplayed){
+                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
                         //This has been commented after Lou's suggestion
                         unlockOrientation();
                         //lockOrientation();
@@ -622,20 +647,19 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         // if network is available , this must be video-corrupt-error
                         if (NetworkUtil.isConnected(getActivity())) {
                             // video might be corrupt
-                            showVideoNotAvailable();
+                            showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                         } else {
                             View errorView = getView().findViewById(R.id.panel_network_error);
                             errorView.setVisibility(View.VISIBLE);
                         }
-
-                        isNetworkMessageDisplayed = true;
+                        curMessageTypes.add(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
                         resetClosedCaptioning();
                     }
                 }
             }else{
                 if (NetworkUtil.isConnected(getActivity())) {
                     // video might be corrupt
-                    showVideoNotAvailable();
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                 } else {
                     View errorView = getView().findViewById(R.id.panel_network_error);
                     errorView.setVisibility(View.VISIBLE);
@@ -646,7 +670,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }
     }
 
-    private void showVideoNotAvailable() {
+    private void showVideoNotAvailable( VideoNotPlayMessageType reason ){
         try {
             if(player!=null){
                 hideCCPopUp();
@@ -662,10 +686,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
                 hideProgress();
 
-                View errorView = getView().findViewById(R.id.panel_video_not_available);
+                View errorView;
+                if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
+                    errorView = getView().findViewById(R.id.panel_video_not_available);
+                else
+                    errorView = getView().findViewById(R.id.panel_video_only_on_web);
                 errorView.setVisibility(View.VISIBLE);
 
-                isVideoMessageDisplayed = true;
+                curMessageTypes.add(reason);
                 hideClosedCaptioning();
             }
         } catch(Exception ex) {
@@ -673,19 +701,25 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }
     }
 
-    private void hideVideoNotAvailable() {
+    private void hideVideoNotPlayInfo(VideoNotPlayMessageType reason) {
         try {
-            View errorView = getView().findViewById(R.id.panel_video_not_available);
+            View errorView;
+            if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
+                errorView = getView().findViewById(R.id.panel_video_not_available);
+            else
+                errorView = getView().findViewById(R.id.panel_video_only_on_web);
             errorView.setVisibility(View.GONE);
-            isVideoMessageDisplayed = false;
-        } catch(Exception ex) {
+            curMessageTypes.remove(reason);
+         } catch(Exception ex) {
             logger.error(ex);
         }
     }
 
+
     private void clearAllErrors() {
         hideNetworkError();
-        hideVideoNotAvailable();
+        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
         hideProgress();
     }
 
@@ -969,7 +1003,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         hideNetworkError();
         try {
             if(player!=null){
-                if(!isVideoMessageDisplayed){
+                if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
                     if((!player.isPaused()
                             && !player.isPlaying() && !player.isPlayingLocally())
                             || (player.isInError() || player.isReset())){
@@ -1768,7 +1802,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 if (player.isPlayingLocally()) {
                     hideNetworkError();
                 } else {
-                    if(!isVideoMessageDisplayed && !player.isInError()){
+                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED) && !player.isInError()){
                         unlockOrientation();
                         hideCCPopUp();
                         hideSettingsPopUp();
@@ -1786,7 +1820,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         ETextView errorHeaderTextView = (ETextView) errorView.findViewById(R.id.error_header);
                         errorHeaderTextView.setText(getString(R.string.wifi_off_message));
                         errorView.findViewById(R.id.error_message).setVisibility(View.GONE);
-                        isShownWifiSettingsMessage = true;
+                        curMessageTypes.add(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
                     }
                     resetClosedCaptioning();
                 }
