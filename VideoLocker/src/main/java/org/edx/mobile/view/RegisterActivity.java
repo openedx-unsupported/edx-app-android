@@ -284,7 +284,7 @@ public class RegisterActivity extends BaseFragmentActivity
             PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
             String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
-            boolean fromSocialNet = TextUtils.isEmpty(access_token);
+            boolean fromSocialNet = !TextUtils.isEmpty(access_token);
             if ( fromSocialNet ) {
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
