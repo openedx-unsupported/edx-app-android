@@ -87,8 +87,17 @@ public interface IDatabase {
      */
     public Integer getVideosCountByChapter(String enrollmentId, 
             String chapter, DataCallback<Integer> callback);
-    
-    
+
+    /**
+     * Return number of videos marked as web_view_only inChapter for logged in user
+     * @param enrollmentId
+     * @param chapter
+     * @param callback
+     * @return
+     */
+    public Integer getWebOnlyVideosCountByChapter(String enrollmentId, String chapter,
+                                                  final DataCallback<Integer> callback);
+
     /**
      * Returns true if any video downloading is in progress for chapter
      * @param enrollmentId - course which has the chapter
@@ -328,5 +337,27 @@ public interface IDatabase {
      */
     DownloadedState getDownloadedStateForVideoId(String videoId,
             DataCallback<DownloadedState> dataCallback);
+
+    /**
+     * Return true if any Video is marked as Downloading for the courseId in the database for logged in user
+     * Used to handle reloading of Section listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInCourse(DataCallback<Boolean> callback, String courseId);
+
+    /**
+     * Return true if any Video is marked as Downloading for a section in the database for logged in user
+     * Used to handle reloading of subsection listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInSection(DataCallback<Boolean> callback, String courseId, String section);
+
+    /**
+     * Return true if any Video is marked as Downloading for a subsection in the database for logged in user
+     * Used to handle reloading of Video listing
+     * @return boolean flag if download is in progress
+     */
+    public Boolean isAnyVideoDownloadingInSubSection(DataCallback<Boolean> callback, String courseId,
+                                                     String section, String subSection);
     
 }

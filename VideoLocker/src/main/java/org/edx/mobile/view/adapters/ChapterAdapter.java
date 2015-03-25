@@ -45,7 +45,8 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         holder.no_of_videos.setVisibility(View.VISIBLE);
         holder.no_of_videos.setText("" + totalCount);
         int inProcessCount = dbStore.getVideosCountByChapter(courseId, model.chapter, null);
-        int videoCount = totalCount - inProcessCount;
+        int webOnlyCount = dbStore.getWebOnlyVideosCountByChapter(courseId,model.chapter,null);
+        int videoCount = totalCount - inProcessCount - webOnlyCount;
         if (videoCount > 0) {
             holder.progresslayout.setVisibility(View.INVISIBLE);
             holder.bulk_download_videos.setVisibility(View.VISIBLE);

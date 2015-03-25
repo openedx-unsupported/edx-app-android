@@ -6,6 +6,8 @@ import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 
+import java.util.Random;
+
 /**
  * Model Factory class for the database models.
  * @author rohan
@@ -41,6 +43,7 @@ public class DatabaseModelFactory {
         de.downloadedOn = c.getLong(c.getColumnIndex(DbStructure.Column.DOWNLOADED_ON));
         de.lastPlayedOffset = c.getInt(c.getColumnIndex(DbStructure.Column.LAST_PLAYED_OFFSET));
         de.isCourseActive = c.getInt(c.getColumnIndex(DbStructure.Column.IS_COURSE_ACTIVE));
+        de.isVideoForWebOnly = c.getInt(c.getColumnIndex(DbStructure.Column.VIDEO_FOR_WEB_ONLY)) == 1;
         de.lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
         
         return de;
@@ -70,6 +73,7 @@ public class DatabaseModelFactory {
         e.videoId = vrm.getSummary().getId();
         e.transcript = vrm.getSummary().getTranscripts();
         e.lmsUrl = vrm.unit_url;
+        e.isVideoForWebOnly = vrm.getSummary().isOnly_on_web(); // new Random().nextBoolean();//
         return e;
     }
 }

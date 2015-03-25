@@ -36,11 +36,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:textColor="@color/grey_video_size_text"
                 app:title="@string/sign_up_with"
-                app:titleFontSize="8sp"
-                app:decorationStyle="center"
+                app:titleFontSize="6sp"
+                app:decorationStyle="left"
+                app:rightColor="@color/edx_white"
                 />
 
             <include layout="@layout/panel_login_social" />
@@ -53,9 +57,11 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/grey_video_size_text"
                 app:title="@string/or_sign_up_with_email"
-                app:titleFontSize="8sp"
-                app:decorationStyle="center"
+                app:titleFontSize="6sp"
+                app:decorationStyle="left"
+                app:rightColor="@color/edx_white"
                 />
 
             <LinearLayout
@@ -72,10 +78,11 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/grey_video_size_text"
                 app:title="@string/show_optional_text"
-                app:titleFontSize="8sp"
-                app:decorationStyle="center"
+                app:titleFontSize="6sp"
+                app:decorationStyle="left"
                 />
 
             <LinearLayout
@@ -89,7 +96,7 @@
                 android:id="@+id/createAccount_button_layout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bt_signin_active">
 
                 <org.edx.mobile.view.custom.ETextView

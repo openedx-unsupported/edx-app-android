@@ -1,10 +1,12 @@
 package org.edx.mobile.social;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 
 public class SocialFactory {
 
@@ -31,14 +33,14 @@ public class SocialFactory {
     
     public static ISocial getInstance(Activity activity, SOCIAL_SOURCE_TYPE type) {
         if (type == SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
-            if (Config.getInstance().getGoogleConfig().isEnabled()) {
+            if ( isSocialFeatureEnabled(activity.getApplicationContext(), type) ) {
                 return new GoogleOauth2(activity);
             }
             else {
                 return new ISocialEmptyImpl();
             }
         } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
-            if (Config.getInstance().getFacebookConfig().isEnabled()) {
+            if ( isSocialFeatureEnabled(activity.getApplicationContext(),type)) {
                 return new FacebookAuth(activity);
             }
             else {
@@ -48,5 +50,16 @@ public class SocialFactory {
         return null;
     }
 
+    public static boolean isSocialFeatureEnabled(Context context, SOCIAL_SOURCE_TYPE type) {
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(context);
+        if ( isOnZeroRatedNetwork )
+            return false;
+        if (type == SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
+            return Config.getInstance().getGoogleConfig().isEnabled();
+        } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
+            return Config.getInstance().getFacebookConfig().isEnabled();
+        }
+        return true;
+    }
 
 }

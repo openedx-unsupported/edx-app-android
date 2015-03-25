@@ -2,6 +2,7 @@ package org.edx.mobile.view.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,25 +46,33 @@ public class TitleRowView extends LinearLayout {
 
         TypedArray attrArray = context.obtainStyledAttributes(attrs, styleable.TitleRowView);
         String title = attrArray.getString(styleable.TitleRowView_title);
-        float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, getResources().getDimension(R.dimen.default_row_text));
+        float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, 12.0f);
         DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.TitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
-
+        int textColor = attrArray.getColor(styleable.TitleRowView_android_textColor, Color.BLACK);
+        int leftColor = attrArray.getColor(styleable.TitleRowView_leftColor, color.grey_act_background);
+        int rightColor = attrArray.getColor(styleable.TitleRowView_rightColor, color.grey_act_background);
 
         if ( decorationStyle !=  DecorationStyle.LEFT ) {
             View leftDashView = new View(context);
-            leftDashView.setBackgroundColor(color.grey_act_background);
-            addView(leftDashView, new LinearLayout.LayoutParams(0, 1, 1));
+            leftDashView.setBackgroundColor(leftColor);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 1, 1);
+            params.setMargins(0, 0, 10, 0); //substitute parameters for left, top, right, bottom
+            addView(leftDashView, params);
         }
 
         titleView = new ETextView(context);
         titleView.setText(title);
         titleView.setTextSize(fontSize);
+        titleView.setTextColor(textColor);
         addView(titleView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+
 
         if ( decorationStyle != DecorationStyle.RIGHT ) {
             View rightDashView = new View(context);
-            rightDashView.setBackgroundColor(color.grey_act_background);
-            addView(rightDashView, new LinearLayout.LayoutParams(0, 1, 1));
+            rightDashView.setBackgroundColor(rightColor);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 1, 1);
+            params.setMargins(10, 0, 0, 0); //substitute parameters for left, top, right, bottom
+            addView(rightDashView, params);
         }
 
         attrArray.recycle();
