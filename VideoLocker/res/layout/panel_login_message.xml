@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dip"
-        android:gravity="center"
+        android:gravity="start"
         android:text="@string/error_message"
         android:textSize="12sp" />
 </LinearLayout>

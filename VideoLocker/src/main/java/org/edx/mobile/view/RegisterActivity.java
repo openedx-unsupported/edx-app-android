@@ -102,7 +102,7 @@ public class RegisterActivity extends BaseFragmentActivity
             else {
                 imgGoogle.setClickable(true);
                 imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
-            }
+             }
         }
 
 
@@ -160,6 +160,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
         setupRegistrationForm();
         hideSoftKeypad();
+        tryToSetUIInteraction(true);
+
     }
 
     public void showAgreement(RegistrationAgreement agreement) {
@@ -194,35 +196,6 @@ public class RegisterActivity extends BaseFragmentActivity
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
     }
 
-    //Enable all the Fields(Views) which were disabled
-    private void setElementsEnabled(){
-        createButtonEnabled();
-        for (IRegistrationFieldView v : mFieldViews) {
-            v.setEnabled(true);
-        }
-    }
-
-    //Disable the Fields(Views) when doing server call
-    private void setElementsDisabled(){
-        createButtonDisabled();
-        for (IRegistrationFieldView v : mFieldViews) {
-            v.setEnabled(false);
-        }
-    }
-
-    //Disable the Create button during server call
-    private void createButtonDisabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.new_bt_signin_active);
-        createAccountBtn.setEnabled(false);
-        createAccountTv.setText(getString(R.string.creating_account_text));
-    }
-
-    //Enable the Create button during server call
-    private void createButtonEnabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.bt_signin_active);
-        createAccountBtn.setEnabled(true);
-        createAccountTv.setText(getString(R.string.create_account_text));
-    }
 
     private void setupRegistrationForm() {
         try {
@@ -274,7 +247,7 @@ public class RegisterActivity extends BaseFragmentActivity
             agreementLayout.requestLayout();
 
             // enable all the views
-            setElementsEnabled();
+            tryToSetUIInteraction(true);
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -311,7 +284,7 @@ public class RegisterActivity extends BaseFragmentActivity
             PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
             String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
-            boolean fromSocialNet = TextUtils.isEmpty( access_token );
+            boolean fromSocialNet = TextUtils.isEmpty(access_token);
             if ( fromSocialNet ) {
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
@@ -332,7 +305,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 logger.error(e);
             }
 
-            setElementsDisabled();
             showProgress();
 
             SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
@@ -342,7 +314,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 public void onFinish(RegisterResponse result) {
                     if(result!=null){
                         logger.debug("registration success=" + result.isSuccess());
-                        setElementsEnabled();
                         hideProgress();
 
                         if ( !result.isSuccess()) {
@@ -374,26 +345,6 @@ public class RegisterActivity extends BaseFragmentActivity
                             if (auth != null && auth.isSuccess()) {
                                 //in the future we will show different messages based on different registration
                                 //condition
-//                                //show different message based on server side status.
-//                                //or maybe server side return the detailed message?
-//                                RegisterResponse social = null;
-//                                PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-//                                String socialToken = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
-//                                String message = "";
-//                                if ( socialToken != null ){
-//                                    if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_LINKED ){
-//                                        message = "You have successfully linked with existing account!";
-//                                    } else if ( result.getStatus() == RegisterResponse.Status.EXISTING_ACCOUNT_NOT_LINKED ){
-//                                        message = "You have successfully created edX account!";
-//                                    } else if ( result.getStatus() == RegisterResponse.Status.NEW_ACCOUNT ){
-//                                        message = "You have successfully created edX account!";
-//                                    }
-//                                } else {
-//                                    message = "You have successfully created edX account!";
-//                                }
-//
-//                                // launch my courses screen
-//                                Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
@@ -401,7 +352,6 @@ public class RegisterActivity extends BaseFragmentActivity
                             }
                         }
                     }else{
-                        setElementsEnabled();
                         hideProgress();
                     }
                 }
@@ -409,7 +359,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 @Override
                 public void onException(Exception ex) {
                     logger.error(ex);
-                    setElementsEnabled();
                     hideProgress();
                 }
             };
@@ -459,17 +408,6 @@ public class RegisterActivity extends BaseFragmentActivity
         }
     }
 
-    private void showProgress() {
-        View progress = findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
-        createAccountTv.setText(getString(R.string.creating_account_text));
-    }
-
-    private void hideProgress() {
-        View progress = findViewById(R.id.progress);
-        progress.setVisibility(View.GONE);
-        createAccountTv.setText(getString(R.string.create_account_text));
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -505,7 +443,7 @@ public class RegisterActivity extends BaseFragmentActivity
        // UiUtil.animateLayouts(messageLayout);
     }
 
-    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken){
         //change UI.
         View signupWith = findViewById(R.id.signupWith);
         signupWith.setVisibility(View.GONE);
@@ -516,7 +454,7 @@ public class RegisterActivity extends BaseFragmentActivity
         //help method
         showRegularMessage(socialType);
         //populate the field with value from social site
-        populateEmailFromSocialSite(socialType);
+        populateEmailFromSocialSite(socialType, accessToken);
         //hide email and password field
         for (IRegistrationFieldView field : this.mFieldViews ){
             String fieldname = field.getField().getName();
@@ -542,8 +480,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
 
-    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
-        this.socialLoginDelegate.getUserInfo(socialType, new SocialLoginDelegate.SocialUserInfoCallback() {
+    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken){
+        this.socialLoginDelegate.getUserInfo(socialType, accessToken, new SocialLoginDelegate.SocialUserInfoCallback() {
             @Override
             public void setSocialUserInfo(String email, String name) {
                 populateFormField("email", email);
@@ -611,6 +549,7 @@ public class RegisterActivity extends BaseFragmentActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
+        tryToSetUIInteraction(true);
     }
 
     /**
@@ -657,15 +596,65 @@ public class RegisterActivity extends BaseFragmentActivity
         //do nothing
         //we need to add 1)access_token   2) provider 3) client_id
         // handle if this is a LoginException
-
+        tryToSetUIInteraction(true);
         logger.error(ex);
         SocialFactory.SOCIAL_SOURCE_TYPE socialType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backend);
-        updateUIOnSocialLoginToEdxFailure(socialType);
+        updateUIOnSocialLoginToEdxFailure(socialType, accessToken);
 
     }
 
+    //help functions for UI enable/disable states
+
+    private void showProgress() {
+        tryToSetUIInteraction(false);
+        View progress = findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+        createAccountTv.setText(getString(R.string.creating_account_text));
+    }
+
+    private void hideProgress() {
+        tryToSetUIInteraction(true);
+        View progress = findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
+        createAccountTv.setText(getString(R.string.create_account_text));
+    }
 
 
+    //Disable the Create button during server call
+    private void createButtonDisabled() {
+        createAccountBtn.setBackgroundResource(R.drawable.new_bt_signin_active);
+        createAccountBtn.setEnabled(false);
+        createAccountTv.setText(getString(R.string.create_account_text));
+    }
 
+    //Enable the Create button during server call
+    private void createButtonEnabled() {
+        createAccountBtn.setBackgroundResource(R.drawable.bt_signin_active);
+        createAccountBtn.setEnabled(true);
+        createAccountTv.setText(getString(R.string.create_account_text));
+    }
+
+
+    @Override
+    public boolean tryToSetUIInteraction(boolean enable){
+        if ( enable ){
+            unblockTouch();
+            createButtonEnabled();
+        } else {
+            blockTouch();
+            createButtonDisabled();
+        }
+
+        for (IRegistrationFieldView v : mFieldViews) {
+            v.setEnabled(enable);
+        }
+
+        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
+        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        imgFacebook.setClickable(enable);
+        imgGoogle.setClickable(enable);
+
+        return true;
+    }
 
 }
