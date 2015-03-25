@@ -4,20 +4,28 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
+import org.edx.mobile.social.google.GoogleProvider;
+import org.edx.mobile.social.google.GoogleUserProfile;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.view.ICommonUI;
 
 
@@ -73,6 +81,10 @@ public class SocialLoginDelegate {
 
         google.onActivityCreated(activity, savedInstanceState);
         facebook.onActivityCreated(activity, savedInstanceState);
+    }
+
+    public void init(){
+
     }
 
     public void onActivityDestroyed(){
@@ -143,26 +155,20 @@ public class SocialLoginDelegate {
     }
 
 
-    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, final SocialUserInfoCallback userInfoCallback){
-
+    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback){
+        SocialProvider socialProvider = null;
         if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
-            SocialProvider socialProvider = new FacebookProvider();
-            socialProvider.getUser(activity, new SocialProvider.Callback<SocialMember>() {
-                @Override
-                public void onSuccess(SocialMember response) {
-                    userInfoCallback.setSocialUserInfo(response.email, response.fullName);
-                }
-
-                @Override
-                public void onError(SocialProvider.SocialError err) {
-                    //TODO - should we pass error to UI?
-                }
-            });
+            socialProvider = new FacebookProvider();
         } else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
-            userInfoCallback.setSocialUserInfo(((GoogleOauth2)google).getEmail(), null);
+            socialProvider = new GoogleProvider((GoogleOauth2) google);
+        }
+
+        if ( socialProvider != null ) {
+            socialProvider.getUserInfo(activity, socialType, accessToken, userInfoCallback);
         }
 
     }
+
 
 
     private class ProfileTask extends Task<ProfileModel> {
