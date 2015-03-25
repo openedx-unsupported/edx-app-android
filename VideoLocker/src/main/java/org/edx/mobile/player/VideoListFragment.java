@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -183,11 +184,18 @@ public class VideoListFragment extends MyVideosBaseFragment {
             adapter = new OnlineVideoAdapter(getActivity(), db , storage) {
                 @Override
                 public void onItemClicked(final SectionItemInterface model, final int position) {
+
                     if (model.isDownload()) {
                         // hide delete panel first, so that multiple-tap is blocked
                         hideDeletePanel(VideoListFragment.this.getView());
-
                         DownloadEntry de = (DownloadEntry) model;
+
+                        if ( de.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short), Toast.LENGTH_SHORT).show();
+                            startOnlinePlay(model, position);
+                            return;
+                        }
+
                         if(!de.isDownloaded()){
                             IDialogCallback dialogCallback = new IDialogCallback() {
                                 @Override
@@ -326,7 +334,10 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     if (model.isDownload()) {
 
                         DownloadEntry downloadEntry = (DownloadEntry) model;
-                        if (downloadEntry.isDownloaded()) {
+                        if ( downloadEntry.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
+                        }
+                        else if (downloadEntry.isDownloaded()) {
                             adapter.setVideoId(downloadEntry.videoId);
                             // hide delete panel first, so that multiple-tap is blocked
                             hideDeletePanel(VideoListFragment.this.getView());
@@ -399,8 +410,11 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 public void onItemClicked(SectionItemInterface model,
                         int position) {
                     if (!AppConstants.myVideosDeleteMode) {
+                        DownloadEntry downloadEntry = (DownloadEntry) model;
+                        if ( downloadEntry.isVideoForWebOnly ){
+                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
+                        }
                         if (model.isDownload()) {
-                            DownloadEntry downloadEntry = (DownloadEntry) model;
                             if (downloadEntry.isDownloaded()) {
                                 adapter.setVideoId(downloadEntry.videoId);
                                 // hide delete panel first, so that multiple-tap is blocked
@@ -796,10 +810,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
             if (msg.what == MSG_UPDATE_PROGRESS) {
                 if (isActivityStarted()) {
                     if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.setSelectedPosition(playingVideoIndex);
-                            adapter.notifyDataSetChanged();
-                            logger.debug("Download list reloaded");
+                        if (adapter != null && enrollment!=null && chapterName!=null && lecture!=null) {
+                            if(db.isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
+                                adapter.setSelectedPosition(playingVideoIndex);
+                                adapter.notifyDataSetChanged();
+                                logger.debug("Download list reloaded");
+                            }
                         }
                         sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }

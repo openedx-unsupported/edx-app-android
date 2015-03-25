@@ -1,6 +1,7 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
@@ -626,10 +627,12 @@ class ISegmentImpl implements ISegment {
      * @return
      */
     @Override
-    public Properties trackCreateAccountClicked(String appVersion) {
+    public Properties trackCreateAccountClicked(String appVersion, String source) {
         try{
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
             aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
+            if ( !TextUtils.isEmpty( source ) )
+                aEvent.properties.putValue( Keys.PROVIDER, source );
             aEvent.setAppNameContext();
 
             //Add category for Google Analytics

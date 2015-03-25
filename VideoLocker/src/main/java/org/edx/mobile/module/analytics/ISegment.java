@@ -75,7 +75,7 @@ public interface ISegment {
     
     Properties trackUserFindsCourses();
 
-    Properties trackCreateAccountClicked(String appVersion);
+    Properties trackCreateAccountClicked(String appVersion, String source);
 
     Properties trackEnrollClicked(String courseId, boolean email_opt_in);
 
@@ -150,6 +150,7 @@ public interface ISegment {
         public static final String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
         public static final String ENROLL_COURSES = "Enroll Course Clicked";
         public static final String EMAIL_OPT_IN = "email_opt_in";
+        public static final String PROVIDER = "provider";
 
         public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
         public static final String CELL_CARRIER = "cell_carrier";

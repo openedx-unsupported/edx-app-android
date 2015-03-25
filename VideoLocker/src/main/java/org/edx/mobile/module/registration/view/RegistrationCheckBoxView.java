@@ -52,6 +52,16 @@ class RegistrationCheckBoxView implements IRegistrationFieldView {
         return new JsonPrimitive(mInputView.isChecked());
     }
 
+    public boolean setRawValue(String value){
+        try{
+            boolean boolValue = Boolean.valueOf(value);
+            mInputView.setChecked(boolValue);
+            return true;
+        }catch(Exception ex){
+            return false;
+        }
+    }
+
     @Override
     public boolean hasValue() {
         // being checkbox, this always has a value

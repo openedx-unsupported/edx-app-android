@@ -11,6 +11,7 @@ public class SummaryModel implements Serializable {
     private String video_url;
     private String video_thumbnail_url;
     private double duration;
+    public boolean only_on_web;
     private String id;
     private long size;
     private TranscriptModel transcripts;
@@ -48,6 +49,14 @@ public class SummaryModel implements Serializable {
 
     public void setVideo_thumbnail_url(String video_thumbnail_url) {
         this.video_thumbnail_url = video_thumbnail_url;
+    }
+
+    public boolean isOnly_on_web() {
+        return only_on_web;
+    }
+
+    public void setOnly_on_web(boolean only_on_web) {
+        this.only_on_web = only_on_web;
     }
 
     public void setDuration(int duration) {

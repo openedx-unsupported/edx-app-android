@@ -16,4 +16,5 @@ class RegistrationPasswordView extends RegistrationEditTextView {
                 | InputType.TYPE_TEXT_VARIATION_PASSWORD
                 | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
     }
+
 }

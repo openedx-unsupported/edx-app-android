@@ -62,6 +62,14 @@ class RegistrationSelectView implements IRegistrationFieldView {
         return new JsonPrimitive(mInputView.getSelectedItem().getValue());
     }
 
+    public boolean setRawValue(String value){
+        if ( mInputView.hasValue( value ) ){
+            mInputView.select( value );
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean hasValue() {
         return (mInputView.getSelectedItem() != null

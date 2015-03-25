@@ -112,6 +112,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             }
         }
 
+        //Initialize the adapter
+        initializeAdapter();
+
         ArrayList<SectionEntry> savedEntries = null;
         if (savedInstanceState != null) {
 
@@ -121,13 +124,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             } catch (Exception ex) {
                 logger.error(ex);
             }
-
         }
 
         chapterListView = (ListView) view
                 .findViewById(R.id.chapter_list);
 
-        initializeAdapter();
         chapterListView.setAdapter(adapter);
         chapterListView.setOnItemClickListener(adapter);
         lastClickTime = 0;
@@ -245,7 +246,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             DownloadEntry de = (DownloadEntry) storage
                     .getDownloadEntryfromVideoResponseModel(v);
             if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED) {
+                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
+                    || de.isVideoForWebOnly ) {
                 continue;
             } else {
                 downloadSize = downloadSize
@@ -273,10 +275,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         super.onSaveInstanceState(outState);
 
         ArrayList<SectionEntry> saveEntries = new ArrayList<SectionEntry>();
-        for(int i = 0; i < adapter.getCount(); i++)
-            saveEntries.add(adapter.getItem(i));
+        if(adapter!=null){
+            for(int i = 0; i < adapter.getCount(); i++)
+                saveEntries.add(adapter.getItem(i));
 
-        outState.putSerializable(SECTION_ENTRIES, saveEntries);
+            outState.putSerializable(SECTION_ENTRIES, saveEntries);
+        }
     }
 
     //Loading data to the Adapter
@@ -481,13 +485,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
+                if (isActivityStarted()){
+                    if(!AppConstants.offline_flag) {
+                        if (adapter != null && enrollment != null) {
+                            if (db.isAnyVideoDownloadingInCourse(null, enrollment.getCourse().getId()))
+                                adapter.notifyDataSetChanged();
                         }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
+                    sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
             }
         }

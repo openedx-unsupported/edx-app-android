@@ -22,4 +22,24 @@ public class RegistrationOptionSpinner extends CustomSelectView<RegistrationOpti
     public RegistrationOptionSpinner(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
+    public boolean hasValue(String value){
+        if ( value == null || items == null )
+            return false;
+        for ( RegistrationOption option : items ) {
+            if ( value.equals(option.getValue()) )
+                return true;
+        }
+        return false;
+    }
+
+    public void select(String value){
+        if ( value == null || items == null )
+            return;
+        for ( RegistrationOption option : items ) {
+            if ( value.equals(option.getValue()) ){
+                super.select(option);
+            }
+        }
+    }
 }
