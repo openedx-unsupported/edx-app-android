@@ -119,7 +119,7 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackCreateAccountClicked(String appVersion) {
+    public Properties trackCreateAccountClicked(String appVersion, String source) {
             return null;
     }
 

@@ -50,7 +50,6 @@ public class GoogleOauth2 extends ISocialImpl {
                 logger.debug("Launching google account picker ...");
             } else {
                 // display user friendly error message
-
                 logger.debug("Play services are missing ...");
                 GooglePlayServicesUtil.getErrorDialog(result, activity.get(), 100).show();
             }
@@ -225,6 +224,10 @@ public class GoogleOauth2 extends ISocialImpl {
                 logger.error(e);
             }
         }
+    }
+
+    public String getEmail(){
+        return mEmail;
     }
 
     private String getScopes() {

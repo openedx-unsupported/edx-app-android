@@ -3,6 +3,7 @@
 
     <string name="app_name">edX</string>
 
+    <!-- Common values -->
     <!-- Button to visit course group on facebook -->
     <string name="course_details_fb_group">Official course Facebook group</string>
     <!-- Button to view handouts for course -->
@@ -258,6 +259,10 @@
     <string name="msg_video_not_downloaded">"Unable to download video"</string>
     <!-- Error shown when video download fails -->
     <string name="msg_video_not_available">This video is currently unavailable.\nCheck back again later.</string>
+    <!-- Error shown when video has flag to indicate it is not available for mobile app -->
+    <string name="video_only_on_web_label">This video is currently only on web. Click to view on web.</string>
+    <!-- Message to indicate the it is not available for mobile app  -->
+    <string name="video_only_on_web_short">This video can only be played in a browser</string>
     <!-- Alert dialog title when login fails -->
     <string name="login_error">Sign-in Error</string>
     <!-- Alert dialog title when login fails due to lack of internet -->
@@ -357,8 +362,10 @@
     <string name="find_course_text">Looking for a new challenge?</string>
     <!-- Button label to bring up course finder -->
     <string name="find_course_btn_text">Find a mobile-friendly course</string>
+    <!-- Button label to bring up course finder -->
+    <string name="signin_with_text">signing in to this app in with</string>
     <!-- Message between sign in button and social login buttons -->
-    <string name="signin_with_text">Or Sign in with</string>
+    <string name="or_sign_in_with">Or sign in with</string>
     <!-- Facebook login method -->
     <string name="facebook_text">Facebook</string>
     <!-- Google login method -->
@@ -387,6 +394,10 @@
     <string name="already_have_an_account">Already have an account? Sign in</string>
     <!-- Prompt leading user to create account screen -->
     <string name="sign_up_and_learn">Sign up and start learning</string>
+    <!-- In Sign up screen -->
+    <string name="sign_up_with">Sign up with</string>
+    <!-- In Sign up screen -->
+    <string name="or_sign_up_with_email">or sign up with email</string>
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
@@ -401,7 +412,12 @@
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
     <string name="register_title">Sign up for edX</string>
-
+    <!-- Text for successful registration with social token  -->
+    <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook.</string>
+    <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google.</string>
+    <string name="sign_up_with_social_ok">We just need a little more information before you start learning with edX.</string>
+    <!-- Continue registration after social login -->
+    <string name="complete_registration">Complete your registration</string>
     <!-- Message shown when enrolling in a course fails-->
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->

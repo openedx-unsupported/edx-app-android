@@ -87,8 +87,17 @@ public interface IDatabase {
      */
     public Integer getVideosCountByChapter(String enrollmentId, 
             String chapter, DataCallback<Integer> callback);
-    
-    
+
+    /**
+     * Return number of videos marked as web_view_only inChapter for logged in user
+     * @param enrollmentId
+     * @param chapter
+     * @param callback
+     * @return
+     */
+    public Integer getWebOnlyVideosCountByChapter(String enrollmentId, String chapter,
+                                                  final DataCallback<Integer> callback);
+
     /**
      * Returns true if any video downloading is in progress for chapter
      * @param enrollmentId - course which has the chapter
@@ -171,7 +180,7 @@ public interface IDatabase {
     public IVideoModel getVideoEntryByVideoId(String videoId, DataCallback<IVideoModel> callback);
     
     /**
-     * Returns {@link IVideoModel} for given videoUrl.
+     * Returns {@link IVideoModel} which is downloaded or download is in progress for given videoUrl.
      * @param videoUrl
      * @param callback
      * @return

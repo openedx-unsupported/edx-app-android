@@ -68,6 +68,11 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         return true;
     }
 
+    public boolean setRawValue(String value){
+        mInputView.setText(value);
+        return true;
+    }
+
     @Override
     public RegistrationFormField getField() {
         return mField;
