@@ -160,6 +160,7 @@ VideoListCallback, IPlayerEventCallback {
             }
         } catch(Exception ex) {}
 
+
         try{
             View container = findViewById(R.id.container_player);
             container.setVisibility(View.VISIBLE);
@@ -202,7 +203,10 @@ VideoListCallback, IPlayerEventCallback {
 
             String filepath = null;
             // check if file available on local
-            if (video.filepath != null && video.filepath.length()>0) {
+            if( video.isVideoForWebOnly ){
+                //don't download anything
+            }
+            else if (video.filepath != null && video.filepath.length()>0) {
                 if (video.isDownloaded()) {
                     File f = new File(video.filepath);
                     if (f.exists()) {
