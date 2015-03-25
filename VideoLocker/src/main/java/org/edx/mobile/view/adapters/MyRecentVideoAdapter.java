@@ -71,6 +71,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                 });
 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
+                String selectedVideoId = getVideoId();
                 holder.videoTitle.setText(videoData.getTitle());
                 holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
@@ -93,25 +94,31 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                         logger.error(ex);
                     }
                 });
-                if(videoData.isDownloaded()){
-                    if (holder.position == selectedPosition) {
-                        // mark this cell as selected and playing
-                        holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+
+                if(videoData.isDownloaded()) {
+                    if (selectedVideoId != null) {
+                        if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
+                            // mark this cell as selected and playing
+                            holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                        } else {
+                            // mark this cell as non-selected
+                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                        }
                     } else {
-                        // mark this cell as non-selected
                         holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     }
 
-                    if(AppConstants.myVideosDeleteMode){
+                    if (AppConstants.myVideosDeleteMode) {
                         holder.delete_checkbox.setVisibility(View.VISIBLE);
                         holder.delete_checkbox.setChecked(isSelected(holder.position));
-                    }else{
+                    } else {
                         holder.delete_checkbox.setVisibility(View.GONE);
                     }
                 }else{
-                    holder.videolayout.setBackgroundResource(R.color.transparent_white);
+                    holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     holder.delete_checkbox.setVisibility(View.GONE);
                 }
+
             }
         }
     }

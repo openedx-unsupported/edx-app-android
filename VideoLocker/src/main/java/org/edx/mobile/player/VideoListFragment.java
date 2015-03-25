@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -53,7 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VideoListFragment extends Fragment {
+public class VideoListFragment extends MyVideosBaseFragment {
 
     public static View offlineBar;
     private boolean isLandscape = false;
@@ -61,8 +62,6 @@ public class VideoListFragment extends Fragment {
     private ListView videoListView;
     private boolean myVideosFlag = false;
     private boolean isActivityStarted;
-    protected IDatabase db;
-    protected IStorage storage;
     private static final int MSG_UPDATE_PROGRESS = 1022;
     private DeleteVideoDialogFragment confirmDeleteFragment, downloadSizeExceedDialog;
     private String openInBrowserUrl;
@@ -74,7 +73,6 @@ public class VideoListFragment extends Fragment {
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
-    private ISegment segIO;
     private Api api;
     private final Logger logger = new Logger(getClass().getName());
 
@@ -82,8 +80,6 @@ public class VideoListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        initDB();
-        segIO = SegmentFactory.getInstance();
         api = new Api(getActivity());
     }
 
@@ -1281,20 +1277,11 @@ public class VideoListFragment extends Fragment {
         }
     }
 
-    private void initDB() {
-        storage = new Storage(getActivity());
-
-        UserPrefs userprefs = new UserPrefs(getActivity());
-        String username = null;
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if(profile!=null){
-                username =profile.username;
-            }
+    @Override
+    public void reloadList() {
+        if(myVideosFlag){
+            addDataToMyVideoAdapter();
         }
-        db = DatabaseFactory.getInstance(getActivity(), 
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
-
     }
 
     private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
