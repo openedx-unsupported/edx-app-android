@@ -652,6 +652,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                             View errorView = getView().findViewById(R.id.panel_network_error);
                             errorView.setVisibility(View.VISIBLE);
                         }
+
                         curMessageTypes.add(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
                         resetClosedCaptioning();
                     }
@@ -1829,4 +1830,13 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             logger.error(ex);
         }
     }
+
+    /**
+     * This method returns true if message is displayed on player to change wifi settings.
+     * @return
+     */
+    public boolean isShownWifiSettingsMessage(){
+        return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+    }
+
 }
