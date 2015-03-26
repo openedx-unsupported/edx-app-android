@@ -23,6 +23,13 @@ public interface IRegistrationFieldView {
     void setEnabled(boolean enabled);
     void setActionListener(IActionListener actionListener);
 
+    /**
+     * used to programmatically set the value
+     * return false if not implemented yet, or can not set the value
+     *
+     */
+    boolean setRawValue(String value);
+
     public static interface IActionListener {
         void onClickAgreement(RegistrationAgreement agreement);
     }
@@ -75,4 +82,5 @@ public interface IRegistrationFieldView {
             }
         }
     }
+
 }

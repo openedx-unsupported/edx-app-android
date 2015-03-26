@@ -48,6 +48,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -56,7 +57,7 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
+public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
 
     public static final String EXTRA_ENROLLMENT = "enrollment";
 
@@ -69,6 +70,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     private MenuItem progressMenuItem;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean isOnline = false;
+    private boolean isConnectedToWifi = false;
     private boolean applyPrevTransitionOnRestart = false;
     private boolean isActivityStarted = false;
     protected IDatabase db;
@@ -572,6 +574,29 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                         }
                     });
                 }
+
+                if (NetworkUtil.isConnectedWifi(context)) {
+                    if(!isConnectedToWifi){
+                        isConnectedToWifi = true;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onConnectedToWifi();
+                            }
+                        });
+                    }
+                } else if (NetworkUtil.isConnectedMobile(context)) {
+                    if(isConnectedToWifi){
+                        isConnectedToWifi = false;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onConnectedToMobile();
+                            }
+                        });
+                    }
+                }
+
             } else {
                 if (isOnline) {
                     isOnline = false;
@@ -618,6 +643,20 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         logger.debug ("You are now offline");
     }
 
+    /**
+     * Gets called whenever network state is changed and device is now connected to mobile data.
+     * Sub-classes may override this method to handle when mobile data is connected.
+     * This method is called after {@link #onOnline()} method.
+     */
+    protected void onConnectedToMobile() {}
+
+    /**
+     * Gets called whenever network state is changed and device is now connected to wifi.
+     * Sub-classes may override this method to handle when wifi is connected.
+     * This method is called after {@link #onOnline()} method.
+     */
+    protected void onConnectedToWifi() {}
+
     private void applyTransitionNext() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
@@ -629,7 +668,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
         logger.debug( "prev transition animation applied");
     }
-
 
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
@@ -832,4 +870,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             }
         }
     };
+
+
+    @Override
+    public boolean tryToSetUIInteraction(boolean enable){
+        return false;
+    }
+
 }

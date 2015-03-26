@@ -37,7 +37,7 @@ public abstract class GetCourseInfoTask extends Task<CourseInfoModel> {
             }
         } catch (Exception ex) {
             handle(ex);
-            logger.error(ex);
+            logger.error(ex, true);
         }
         return null;
     }

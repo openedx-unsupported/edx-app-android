@@ -16,7 +16,7 @@
             android:visibility="gone"
             android:layout_alignParentTop="true"/>
 
-        <WebView
+        <org.edx.mobile.view.custom.EdxWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

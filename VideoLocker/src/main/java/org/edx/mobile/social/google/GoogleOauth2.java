@@ -16,8 +16,13 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.plus.People;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.Person;
 
-public class GoogleOauth2 extends ISocialImpl {
+public class GoogleOauth2 extends ISocialImpl{
     
     private String accessToken;
     private String mEmail; // Received from newChooseAccountIntent(); passed to getToken()
@@ -37,6 +42,11 @@ public class GoogleOauth2 extends ISocialImpl {
 
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
 
+
+    //TODO - should we merg GoogleApiActivity code with this class?
+    /* Client used to interact with Google APIs. */
+    private GoogleApiClient mGoogleApiClient;
+
     private void pickUserAccount() {
         try {
             String[] accountTypes = new String[]{"com.google"};
@@ -50,7 +60,6 @@ public class GoogleOauth2 extends ISocialImpl {
                 logger.debug("Launching google account picker ...");
             } else {
                 // display user friendly error message
-
                 logger.debug("Play services are missing ...");
                 GooglePlayServicesUtil.getErrorDialog(result, activity.get(), 100).show();
             }
@@ -68,16 +77,16 @@ public class GoogleOauth2 extends ISocialImpl {
         if (mEmail == null) {
             pickUserAccount();
         } else {
-            new GetUsernameTask(activity.get(), mEmail, getScopes()).execute();
+            new FetchGoogleTokenTask(activity.get(), mEmail, getScopes()).execute();
         }
     }
 
-    public class GetUsernameTask extends AsyncTask<Object, Object, Object> {
+    public class FetchGoogleTokenTask extends AsyncTask<Object, Object, Object> {
         Activity mActivity;
         String mScope;
         String mEmail;
 
-        GetUsernameTask(Activity activity, String name, String scope) {
+        FetchGoogleTokenTask(Activity activity, String name, String scope) {
             this.mActivity = activity;
             this.mScope = scope;
             this.mEmail = name;
@@ -154,6 +163,7 @@ public class GoogleOauth2 extends ISocialImpl {
             // Receiving a result from the AccountPicker
             if (resultCode == Activity.RESULT_OK) {
                 mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                logger.debug(data.toString());
                 // With the account name acquired, go get the auth token
                 getUsername();
             } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -170,6 +180,8 @@ public class GoogleOauth2 extends ISocialImpl {
             }
         }
     }
+
+
     
     @Override
     public void onActivityCreated(Activity arg0, Bundle arg1) {
@@ -227,10 +239,21 @@ public class GoogleOauth2 extends ISocialImpl {
         }
     }
 
+    public String getEmail(){
+        return mEmail;
+    }
+
     private String getScopes() {
+
+
         String login = "https://www.googleapis.com/auth/plus.login";
 //      String email = "https://www.googleapis.com/auth/plus.profile.emails.read";
+
+        //TODO-  this scope is deprecated
+        //see document - https://developers.google.com/+/api/oauth
         String email = "https://www.googleapis.com/auth/userinfo.email";
+
+
 
 //      String clientId = activity.get().getString(R.string.google_server_client_id);
 //      String scope = "oauth2:server:client_id:" + clientId + ":api_scope:" + login + " " + email;
@@ -239,4 +262,11 @@ public class GoogleOauth2 extends ISocialImpl {
         logger.debug("Scopes= " + scope);
         return scope;
     }
+
+
+
+
+
+
+
 }

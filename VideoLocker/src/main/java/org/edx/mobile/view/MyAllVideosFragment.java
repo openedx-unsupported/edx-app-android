@@ -10,6 +10,7 @@ import android.widget.ListView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
@@ -18,7 +19,8 @@ import java.util.ArrayList;
 
 public class MyAllVideosFragment extends MyVideosBaseFragment {
     private MyAllVideoCourseAdapter myCoursesAdaptor;
-    
+    protected final Logger logger = new Logger(getClass().getName());
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +30,12 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
             logger.error(e);
         }
     }
-    
+
+    @Override
+    public void reloadList() {
+        addMyAllVideosData();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -71,14 +78,16 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
     
     private void addMyAllVideosData(){
         try{
-        myCoursesAdaptor.clear();
-        ArrayList<EnrolledCoursesResponse> coursesList = storage
-                .getDownloadedCoursesWithVideoCountAndSize(); 
-        for (EnrolledCoursesResponse m : coursesList) {
-            if(m.isIs_active()){
-                myCoursesAdaptor.add(m);
+            if(myCoursesAdaptor!=null){
+                myCoursesAdaptor.clear();
+                ArrayList<EnrolledCoursesResponse> coursesList = storage
+                        .getDownloadedCoursesWithVideoCountAndSize();
+                for (EnrolledCoursesResponse m : coursesList) {
+                    if(m.isIs_active()){
+                        myCoursesAdaptor.add(m);
+                    }
+                }
             }
-        }
         }catch(Exception e){
             logger.error(e);
         }

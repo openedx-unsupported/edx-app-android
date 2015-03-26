@@ -89,6 +89,7 @@ class IDownloadManagerImpl implements IDownloadManager {
             Request request = new Request(Uri.parse(url));
             request.setDestinationUri(target);
             request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+            request.setVisibleInDownloadsUi(false);
 
             if (wifiOnly) {
                 request.setAllowedNetworkTypes(Request.NETWORK_WIFI);

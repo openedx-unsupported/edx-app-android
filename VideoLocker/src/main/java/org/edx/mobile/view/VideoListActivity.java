@@ -160,6 +160,7 @@ VideoListCallback, IPlayerEventCallback {
             }
         } catch(Exception ex) {}
 
+
         try{
             View container = findViewById(R.id.container_player);
             container.setVisibility(View.VISIBLE);
@@ -202,7 +203,10 @@ VideoListCallback, IPlayerEventCallback {
 
             String filepath = null;
             // check if file available on local
-            if (video.filepath != null && video.filepath.length()>0) {
+            if( video.isVideoForWebOnly ){
+                //don't download anything
+            }
+            else if (video.filepath != null && video.filepath.length()>0) {
                 if (video.isDownloaded()) {
                     File f = new File(video.filepath);
                     if (f.exists()) {
@@ -311,6 +315,20 @@ VideoListCallback, IPlayerEventCallback {
         }
 
         invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onConnectedToMobile() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToMobile();
+        }
+    }
+
+    @Override
+    protected void onConnectedToWifi() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToWifi();
+        }
     }
 
     @Override
@@ -460,4 +478,17 @@ VideoListCallback, IPlayerEventCallback {
         }
         finish();
     };
+
+
+    @Override
+    public boolean showInfoMessage(String message) {
+        //If the wifi settings message is already shown on video player,
+        //then do not show the info message
+        if(playerFragment.isShownWifiSettingsMessage()
+                && message.equalsIgnoreCase(getString(R.string.wifi_off_message))){
+            return false;
+        }
+        return super.showInfoMessage(message);
+    }
+
 }

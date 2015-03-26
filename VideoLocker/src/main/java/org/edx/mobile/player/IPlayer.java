@@ -12,6 +12,7 @@ public interface IPlayer extends Serializable {
     public void setUri(String uri, int seekTo) throws Exception;
     public void setUriAndPlay(String uri, int seekTo) throws Exception;
     public void restart() throws Exception;
+    public void restart(int seekTo) throws Exception;
     public boolean isInError();
     public boolean isPlayingLocally();
     public void start();
@@ -37,6 +38,7 @@ public interface IPlayer extends Serializable {
     public void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked);
     public PlayerController getController();
     boolean isPaused();
+    public boolean isReset();
 
     public void setShareEnabled(Boolean shareEnabled);
     public void setShareVideoListener(PlayerController.ShareVideoListener shareVideoListener);

@@ -33,14 +33,17 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
+import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.SocialAffirmView;
 import org.edx.mobile.view.custom.SocialFacePileView;
 import org.edx.mobile.view.custom.SocialShareView;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.text.SimpleDateFormat;
@@ -57,7 +60,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private CourseImageHeader headerImageView;
     private TextView courseTextName;
     private TextView courseTextDetails;
-    private LinearLayout announcementContainer;
+    private EdxWebView announcementWebView;
     private LinearLayout facePileContainer;
     private SocialFacePileView facePileView;
     private LayoutInflater inflater;
@@ -69,11 +72,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private SocialAffirmView likeButton;
     private SocialShareView shareButton;
     private IUiLifecycleHelper uiHelper;
-
-    private ArrayList<SocialMember> courseFriends;
-
     private PrefManager featuresPref;
-    private List<AnnouncementView> announcementViewList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,7 +96,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
         courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
-        announcementContainer = (LinearLayout) view.findViewById(R.id.announcement_container);
         certificateContainer = view.findViewById(R.id.combined_course_certificate_container);
         likeButton = (SocialAffirmView) view.findViewById(R.id.course_affirm_btn);
 
@@ -120,6 +118,15 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         groupLauncher = (TextView) view.findViewById(R.id.combined_course_social_group);
         groupLauncher.setOnClickListener(this);
+
+        announcementWebView = (EdxWebView) view.findViewById(R.id.announcement_webview);
+        new URLInterceptorWebViewClient(announcementWebView) {
+
+            @Override
+            public void onOpenExternalURL(String url) {
+                BrowserUtil.open(getActivity(), url);
+            }
+        };
 
         return view;
 
@@ -222,22 +229,12 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     public void onResume() {
         super.onResume();
         uiHelper.onResume();
-
-        // render announcements
-        for (AnnouncementView view : announcementViewList) {
-            view.resume();
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         uiHelper.onPause();
-
-        // stop loading announcements
-        for (AnnouncementView view : announcementViewList) {
-            view.pause();
-        }
     }
 
     @Override
@@ -327,7 +324,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     }
 
     private void populateFacePile(){
-
         List<SocialMember> courseFriends = courseData.getCourse().getMembers_list();
 
         facePileView.clearAvatars();
@@ -344,66 +340,17 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         if(announcementsList !=null && announcementsList.size()>0) {
             hideEmptyAnnouncementMessage();
 
-            // stop existing views before we remove them from the layout
-            for (AnnouncementView view : announcementViewList) {
-                view.stop();
-            }
-            announcementViewList.clear();
-            announcementContainer.removeAllViews();
+            final String divider = "<div style='height:2px; width:100%; background-color: #E2E3E5'></div>";
 
+            StringBuffer buff = new StringBuffer();
             for (AnnouncementsModel m : announcementsList) {
-                AnnouncementView announcementView = generateAnnouncementView(m);
-                announcementViewList.add(announcementView);
-
-                announcementContainer.addView(announcementView.getView());
+                String entry = String.format("%s <br/><br/> %s <br/> %s <br/><br/>", m.getDate(), divider, m.getContent());
+                buff.append(entry);
             }
+
+            announcementWebView.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
         } else {
             showEmptyAnnouncementMessage();
-        }
-    }
-
-    private AnnouncementView generateAnnouncementView(AnnouncementsModel model){
-        AnnouncementView view = new AnnouncementView(inflater, model);
-        view.render();
-        return view;
-    }
-
-    private static class AnnouncementView {
-        private View convertView;
-        private TextView date;
-        private WebView webView;
-        private AnnouncementsModel model;
-
-        AnnouncementView(LayoutInflater inflater, AnnouncementsModel model) {
-            this.model = model;
-            this.convertView = inflater.inflate(R.layout.row_announcement_list, null);
-            this.date = (TextView) convertView.findViewById(R.id.announcement_date);
-            this.webView = (WebView) convertView.findViewById(R.id.announcement_content_webview);
-        }
-
-        void render() {
-            date.setText(model.getDate());
-            webView.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), model.content, "text/html", HTTP.UTF_8, null);
-        }
-
-        /**
-         * Stops loading of WebView.
-         */
-        void pause() {
-            webView.onPause();
-        }
-
-        void resume() {
-            webView.onResume();
-        }
-
-        void stop() {
-            webView.stopLoading();
-            webView.loadData(null, "text/html", HTTP.UTF_8);
-        }
-
-        public View getView() {
-            return convertView;
         }
     }
 
@@ -448,10 +395,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_handout_text:
 
                 if (courseData != null) {
-                    Intent handoutIntent = new Intent(getActivity(),
-                            CourseHandoutActivity.class);
-                    handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
-                    startActivity(handoutIntent);
+                    Router.getInstance().showHandouts(getActivity(), courseData);
                 }
 
                 break;

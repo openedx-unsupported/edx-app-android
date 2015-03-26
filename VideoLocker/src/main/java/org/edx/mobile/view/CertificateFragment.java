@@ -25,6 +25,7 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.SocialUtils;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 public class CertificateFragment extends Fragment {
@@ -79,21 +80,13 @@ public class CertificateFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
 
         webview = (WebView) view.findViewById(R.id.webview);
-
-        webview.getSettings().setPluginState(WebSettings.PluginState.ON);
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setLoadWithOverviewMode(true);
-
-        webview.setWebChromeClient(new WebChromeClient());
-
-        webview.setWebViewClient(new WebViewClient() {
+        new URLInterceptorWebViewClient(webview) {
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public void onOpenExternalURL(String url) {
                 BrowserUtil.open(getActivity(), url);
-                return true; //the webview will not load the URL
             }
-        });
+        };
 
         facebookShare = (LinearLayout) view.findViewById(R.id.share_certificate);
         facebookShare.setOnClickListener( new View.OnClickListener() {

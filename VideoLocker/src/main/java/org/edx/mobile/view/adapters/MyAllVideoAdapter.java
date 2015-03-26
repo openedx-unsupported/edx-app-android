@@ -54,6 +54,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                 holder.videolayout.setVisibility(View.VISIBLE);
                 
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
+                String selectedVideoId = getVideoId();
                 holder.videoTitle.setText(videoData.getTitle());
                 
                 holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
@@ -79,11 +80,15 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                 });
                 
                 if(videoData.isDownloaded()){
-                    if (holder.position == selectedPosition) {
-                        // mark this cell as selected and playing
-                        holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                    if (selectedVideoId != null) {
+                        if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
+                            // mark this cell as selected and playing
+                            holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                        } else {
+                            // mark this cell as non-selected
+                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                        }
                     } else {
-                        // mark this cell as non-selected
                         holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     }
 
@@ -94,7 +99,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                         holder.delete_checkbox.setVisibility(View.GONE);
                     }
                 }else{
-                    holder.videolayout.setBackgroundResource(R.color.transparent_white);
+                    holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     holder.delete_checkbox.setVisibility(View.GONE);
                 }
             }

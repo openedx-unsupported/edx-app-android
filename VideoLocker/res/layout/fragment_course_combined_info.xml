@@ -315,8 +315,8 @@
                     android:background="@color/grey_2"
                     android:textSize="14dp" />
 
-                <LinearLayout
-                    android:id="@+id/announcement_container"
+                <org.edx.mobile.view.custom.EdxWebView
+                    android:id="@+id/announcement_webview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />

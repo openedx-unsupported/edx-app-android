@@ -6,7 +6,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 /**
- * Created by rohan on 3/11/15.
+ * Created by rohan on 3/12/15.
  */
 public class EdxWebView extends WebView {
 

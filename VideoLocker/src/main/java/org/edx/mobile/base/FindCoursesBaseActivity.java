@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -178,8 +179,11 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
     @Override
     public void onClickCourseInfo(String pathId) {
-        logger.debug("PathId" +pathId);
-        Router.getInstance().showCourseInfo(this, pathId);
+        //If Path id is not null or empty then call CourseInfoActivity
+        if(!TextUtils.isEmpty(pathId)){
+            logger.debug("PathId" +pathId);
+            Router.getInstance().showCourseInfo(this, pathId);
+        }
     }
 
     @Override

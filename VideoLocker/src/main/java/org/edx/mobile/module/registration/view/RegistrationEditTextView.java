@@ -1,6 +1,9 @@
 package org.edx.mobile.module.registration.view;
 
+import android.text.Html;
 import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -53,13 +56,24 @@ class RegistrationEditTextView implements IRegistrationFieldView {
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
             mInstructionView.setVisibility(View.VISIBLE);
-            mInstructionView.setText(mField.getInstructions());
+            String text = mField.getInstructions();
+            if (TextUtils.isEmpty( text ) ){
+                mInstructionView.setText( text );
+            } else {
+                Spanned result = Html.fromHtml(text);
+                mInstructionView.setText(result);
+            }
         } else {
             mInstructionView.setVisibility(View.GONE);
         }
 
         // hide error text view
         mErrorView.setVisibility(View.GONE);
+    }
+
+    public boolean setRawValue(String value){
+        mInputView.setText(value);
+        return true;
     }
 
     @Override
@@ -85,9 +99,10 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
     @Override
     public void handleError(String error) {
-        if (error != null && !error.isEmpty()) {
+        if (!TextUtils.isEmpty(error)) {
             mErrorView.setVisibility(View.VISIBLE);
-            mErrorView.setText(error);
+            Spanned result = Html.fromHtml(error.toString());
+            mErrorView.setText(result);
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");

@@ -21,7 +21,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
 
     private String hint;
     private String prompt;
-    private List<T> items;
+    protected List<T> items;
     private T selectedItem;
     private int checkedItemIndex = 0;
 
@@ -91,6 +91,17 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         }
     }
 
+
+    public boolean has(T item){
+        if ( item == null || items == null )
+            return false;
+        for(T value : items){
+            if ( item.equals( item ) )
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -113,7 +124,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
      * Call this function when a value is selected in the Dialog for custom select
      * @param item - Selected Item
      */
-    private void select(T item) {
+    protected void select(T item) {
         //Check if the selected options value is empty
         //The current json contains '--' as the first value
         //and hence show the hint text instead of '--' in the select view

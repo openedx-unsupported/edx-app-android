@@ -1,5 +1,6 @@
 package org.edx.mobile.player;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
@@ -9,6 +10,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.PowerManager;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View.OnClickListener;
@@ -243,14 +245,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
             load(uri, seekTo, true);
         }
 
+    @Override
+    public void restart(int seekTo) throws Exception {
+        logger.debug("RestartFreezePosition=" + seekTo);
+        lastCurrentPosition = 0;
+        // if seekTo=lastCurrentPosition then seekTo() method will not work
+        load(videoUri, seekTo, playWhenPrepared);
+    }
+
         @Override
         public void restart() throws Exception {
-            logger.debug("RestartFreezePosition=" + seekToWhenPrepared);
-//          int seekTo = lastCurrentPosition;
-            int seekTo = seekToWhenPrepared;
-            lastCurrentPosition = 0;
-            // if seekTo=lastCurrentPosition then seekTo() method will not work
-            load(videoUri, seekTo, playWhenPrepared);
+            restart(seekToWhenPrepared);
         }
 
         private void load(String videoUri, int seekTo, boolean playWhenPrepared) throws Exception {
@@ -307,12 +312,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
         }
 
         @Override
+        public boolean isReset() {
+            return state == PlayerState.RESET;
+    }
+
+    @Override
         public void setFullScreen(boolean isFullScreen) {
             this.isFullScreen = isFullScreen;
         }
 
         @Override
-        public void setPreview(Preview preview) {
+        public void setPreview(final Preview preview) {
             if (preview == null) {
                 return;
             }
@@ -324,9 +334,12 @@ OnCompletionListener, OnInfoListener, IPlayer {
                         logger.debug("Player state=" + state);
                         Surface surface = new Surface(surfaceTexture);
                         setSurface(surface);
-                        // keep screen ON
-                        setScreenOnWhilePlaying(true);
-                        logger.debug("Surface created, holder set");
+
+                        // Keep screen ON while playing
+                        // if using SurfaceHolder, just call setScreenOnWhilePlaying(true);
+                        // When not using SurfaceHolder, need to use WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+
+                        logger.debug("Surface created and set to the player");
 
                         // preview last shown frame if not playing
                         if (!isPlaying()) {
@@ -528,7 +541,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
          * Player Methods below.
          */
 
-        @Override
+    @Override
+    public void reset() {
+        super.reset();
+        state = PlayerState.RESET;
+    }
+
+    @Override
         public synchronized void start() throws IllegalStateException {
             if (state == PlayerState.PREPARED
                     || state == PlayerState.PAUSED

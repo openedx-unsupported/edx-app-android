@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -37,6 +38,7 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -45,12 +47,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyRecentVideosFragment extends Fragment {
+public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
     private MyRecentVideoAdapter adapter;
     private ListView videoListView;
-    protected IDatabase db;
-    protected IStorage storage;
     private DeleteVideoDialogFragment deleteDialogFragment;
     private int playingVideoIndex = -1;
     private VideoListCallback callback;
@@ -58,14 +58,12 @@ public class MyRecentVideosFragment extends Fragment {
     private DownloadEntry videoModel;
     private Button deleteButton = null;
     private final Handler handler = new Handler();
-    private ISegment segIO;
     protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        initDB();
         View view = inflater.inflate(R.layout.fragment_video_list_with_player_container,
                 null);
         try{
@@ -86,6 +84,10 @@ public class MyRecentVideosFragment extends Fragment {
             videoListView = (ListView) getView().findViewById(R.id.list_video);
 
             if (videoListView != null) {
+                String selectedId = null;
+                if(adapter!=null){
+                    selectedId = adapter.getVideoId();
+                }
                 adapter = new MyRecentVideoAdapter(getActivity(), db) {
 
                     @Override
@@ -108,7 +110,9 @@ public class MyRecentVideosFragment extends Fragment {
                                 }
                                 // initialize index for this model
                                 playingVideoIndex = position;
-
+                                //Set videoId to adaptor to determine the currently playing video
+                                DownloadEntry downloadEntry = (DownloadEntry) model;
+                                adapter.setVideoId(downloadEntry.videoId);
                                 play(model);
                                 notifyAdapter();
                             }
@@ -129,6 +133,9 @@ public class MyRecentVideosFragment extends Fragment {
                     }
                 };
                 // videoAdaptor.setItems(sectionList);
+                if(selectedId!=null){
+                    adapter.setVideoId(selectedId);
+                }
                 adapter.setSelectedPosition(playingVideoIndex);
                 videoListView.setEmptyView(getView().findViewById(R.id.empty_list_view));
                 videoListView.setAdapter(adapter);
@@ -185,6 +192,10 @@ public class MyRecentVideosFragment extends Fragment {
     private void addToRecentAdapter(View view) {
         try {
             logger.debug("reloading adapter...");
+            String selectedId = null;
+            if(adapter!=null){
+                selectedId = adapter.getVideoId();
+            }
 
             ArrayList<SectionItemInterface> list = storage.getRecentDownloadedVideosList();
             if (list != null) {
@@ -198,6 +209,9 @@ public class MyRecentVideosFragment extends Fragment {
                 hideDeletePanel(view);
             }
             videoListView.setOnItemClickListener(adapter);
+            if(selectedId!=null){
+                adapter.setVideoId(selectedId);
+            }
         } catch (Exception e) {
             logger.error(e);
         }
@@ -221,6 +235,7 @@ public class MyRecentVideosFragment extends Fragment {
                         .setRecentNextPrevListeners(getNextListener(), getPreviousListener());
                     }
                     callback.playVideoModel(v);
+                    adapter.setVideoId(videoModel.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -445,12 +460,14 @@ public class MyRecentVideosFragment extends Fragment {
     //Deleting Downloaded videos on getting confirmation
     private void onConfirmDelete() {
         try{
+            int deletedVideoCount = 0;
             ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
             if (list != null) {
                 for (SectionItemInterface section : list) {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         storage.removeDownload(de);
+                        deletedVideoCount++;
                     }
                 }
             }
@@ -459,6 +476,11 @@ public class MyRecentVideosFragment extends Fragment {
             videoListView.setOnItemClickListener(adapter);
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
+            if(deletedVideoCount>0){
+                String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+                UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
+                        String.format(format, deletedVideoCount));
+            }
             getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
             getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
@@ -648,6 +670,7 @@ public class MyRecentVideosFragment extends Fragment {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
+                        adapter.setVideoId(videoModel.videoId);
                         play(videoModel);
                         break;
                     }
@@ -689,6 +712,7 @@ public class MyRecentVideosFragment extends Fragment {
                     videoModel = (DownloadEntry) i;
                     if (callback != null) {
                         adapter.setSelectedPosition(playingVideoIndex);
+                        adapter.setVideoId(videoModel.videoId);
                         play(videoModel);
                         //callback.playVideoModel(videoModel);
                         break;
@@ -730,6 +754,14 @@ public class MyRecentVideosFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public void reloadList() {
+        if(getView()!=null){
+            addToRecentAdapter(getView());
+            notifyAdapter();
+        }
+    }
+
     private class NextClickListener implements OnClickListener{
         @Override
         public void onClick(View v) {
@@ -742,23 +774,6 @@ public class MyRecentVideosFragment extends Fragment {
         public void onClick(View v) {
             playPrevious();
         }
-    }
-
-    private void initDB() {
-        storage = new Storage(getActivity());
-
-        UserPrefs userprefs = new UserPrefs(getActivity());
-        String username = null;
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if(profile!=null){
-                username =profile.username;
-            }
-        }
-        db = DatabaseFactory.getInstance(getActivity(), 
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
-
-        segIO = SegmentFactory.getInstance();
     }
 
     private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
@@ -792,6 +807,15 @@ public class MyRecentVideosFragment extends Fragment {
     protected ProfileModel getProfile() {
         PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
         return prefManager.getCurrentUserProfile();
+    }
+
+    /**
+     * Set the current playing videoId as null in adapter
+     */
+    public void setCurrentPlayingVideoIdAsNull(){
+        if(adapter!=null){
+            adapter.setVideoId(null);
+        }
     }
 
 }

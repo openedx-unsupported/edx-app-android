@@ -43,7 +43,7 @@ public class FacebookAuth extends ISocialImpl {
                     .setPermissions(Arrays.asList("public_profile", "email"))
                     .setCallback(statusCallback));
         } else {
-            Session.openActiveSession(activity.get(), true, statusCallback);
+            Session.openActiveSession(activity.get(), true, Arrays.asList("public_profile", "email"), statusCallback);
         }
     }
 
