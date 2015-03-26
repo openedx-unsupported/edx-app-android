@@ -578,4 +578,36 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         });
         return enqueue(op);
     }
+
+    @Override
+    public Boolean isAnyVideoDownloadingInCourse(final DataCallback<Boolean> callback, String courseId) {
+        DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND "+ DbStructure.Column.USERNAME + "=? AND "
+                        + DbStructure.Column.DOWNLOADED + "=?",
+                new String[] {courseId, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Boolean isAnyVideoDownloadingInSection(final DataCallback<Boolean> callback, String courseId, String section) {
+        DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND "+ DbStructure.Column.CHAPTER + "=? AND "+
+                DbStructure.Column.USERNAME + "=? AND "+ DbStructure.Column.DOWNLOADED + "=?",
+                new String[] {courseId, section, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Boolean isAnyVideoDownloadingInSubSection(final DataCallback<Boolean> callback, String courseId,
+                                                     String section, String subSection) {
+        DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null,
+                DbStructure.Column.EID + "=? AND "+ DbStructure.Column.CHAPTER + "=? AND "+
+                        DbStructure.Column.SECTION + "=? AND "+ DbStructure.Column.USERNAME + "=? AND "+
+                        DbStructure.Column.DOWNLOADED + "=?",
+                new String[] {courseId, section, subSection, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,6 @@ import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.StringUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -180,7 +180,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     @Override
     public void onClickCourseInfo(String pathId) {
         //If Path id is not null or empty then call CourseInfoActivity
-        if(!StringUtil.isStringEmpty(pathId)){
+        if(!TextUtils.isEmpty(pathId)){
             logger.debug("PathId" +pathId);
             Router.getInstance().showCourseInfo(this, pathId);
         }

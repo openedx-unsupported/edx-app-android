@@ -15,6 +15,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.util.AppConstants;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
     private final Logger logger = new Logger(getClass().getName());
@@ -59,6 +60,10 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                                 }
                                 count ++;
                                 p.put(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED, count);
+
+                                Intent intent = new Intent();
+                                intent.setAction(AppConstants.DOWNLOAD_COMPLETE);
+                                context.sendBroadcast(intent);
                             }
                         }
 

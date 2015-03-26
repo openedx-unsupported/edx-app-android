@@ -43,6 +43,10 @@ public interface SocialProvider {
     public void getUser(Context context, Callback<SocialMember> callback);
 
     /**
+     *   Gets the user object for the current logged in user
+     */
+    public void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,  SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
+    /**
      * Gets the list of registered groups this user is a member of
      */
     public void getMyGroups(Context context, Callback<List<SocialGroup>> callback);

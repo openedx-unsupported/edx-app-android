@@ -47,7 +47,7 @@
                 app:rightColor="@color/edx_white"
                 />
 
-            <include layout="@layout/panel_login_social" />
+            <include layout="@layout/panel_signup_social" />
 
             <org.edx.mobile.view.custom.TitleRowView
                 android:id="@+id/signupWithEmailTitle"
