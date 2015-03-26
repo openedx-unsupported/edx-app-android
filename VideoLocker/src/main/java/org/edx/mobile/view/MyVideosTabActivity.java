@@ -300,6 +300,10 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
                     }
                     if(playerFragment!=null){
                         playerFragment.unlockOrientation();
+                    }else{
+                        //Set the current playing videoId as null to the adapter only if tab switch was done
+                        //not on orientation change during the video was being played
+                        recentVideosFragment.setCurrentPlayingVideoIdAsNull();
                     }
                     pushFragments(tabId, recentVideosFragment);
                     if(recentVideosFragment!=null){

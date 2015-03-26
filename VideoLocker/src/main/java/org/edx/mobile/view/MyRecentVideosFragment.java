@@ -758,6 +758,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     public void reloadList() {
         if(getView()!=null){
             addToRecentAdapter(getView());
+            notifyAdapter();
         }
     }
 
@@ -807,4 +808,14 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
         PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
         return prefManager.getCurrentUserProfile();
     }
+
+    /**
+     * Set the current playing videoId as null in adapter
+     */
+    public void setCurrentPlayingVideoIdAsNull(){
+        if(adapter!=null){
+            adapter.setVideoId(null);
+        }
+    }
+
 }
