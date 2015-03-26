@@ -43,7 +43,6 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.custom.TitleRowView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,17 +118,17 @@ public class RegisterActivity extends BaseFragmentActivity
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
         agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
-        final TitleRowView optional_text=(TitleRowView)findViewById(R.id.optional_field_tv);
+        final ETextView optional_text=(ETextView)findViewById(R.id.optional_field_tv);
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(optionalFieldsLayout.getVisibility() == View.VISIBLE) {
                     optionalFieldsLayout.setVisibility(v.GONE);
-                    optional_text.setTitle(getString(R.string.show_optional_text));
+                    optional_text.setText(getString(R.string.show_optional_text));
                 }
                 else{
                     optionalFieldsLayout.setVisibility(v.VISIBLE);
-                    optional_text.setTitle(getString(R.string.hide_optional_text));
+                    optional_text.setText(getString(R.string.hide_optional_text));
                 }
             }
         });
@@ -445,12 +444,12 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken){
         //change UI.
-        View signupWith = findViewById(R.id.signupWith);
+        View signupWith = findViewById(R.id.signup_with_row);
         signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
         socialPanel.setVisibility(View.GONE);
-        TitleRowView signupWithEmailTitle = (TitleRowView)findViewById(R.id.signupWithEmailTitle);
-        signupWithEmailTitle.setTitle( getString(R.string.complete_registration) );
+        ETextView signupWithEmailTitle = (ETextView)findViewById(R.id.or_signup_with_email_title);
+        signupWithEmailTitle.setText( getString(R.string.complete_registration) );
         //help method
         showRegularMessage(socialType);
         //populate the field with value from social site
