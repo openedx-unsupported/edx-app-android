@@ -17,7 +17,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     public IDatabaseImpl(Context context, String username) {
         super(context);
-        this.username = username;
+        this.username = username == null ? "" : username;
     }
 
     @Override

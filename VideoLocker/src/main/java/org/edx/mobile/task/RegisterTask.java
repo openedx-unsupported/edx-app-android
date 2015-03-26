@@ -3,10 +3,16 @@ package org.edx.mobile.task;
 import android.content.Context;
 import android.os.Bundle;
 
+import org.edx.mobile.R;
+import org.edx.mobile.exception.LoginErrorMessage;
+import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
+
 
 public abstract class RegisterTask extends Task<RegisterResponse> {
 
@@ -32,13 +38,22 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
                 switch ( backstoreType ){
                     case  TYPE_GOOGLE :
                     case  TYPE_FACEBOOK :
-                        //skip auth for social registration, as we use the same
-                        //access_token for registration already.
-                        auth = new AuthResponse();
-                        auth.access_token = this.accessToken;
-                      //  auth = api.socialLogin(accessToken, backstoreType);
-                         if (auth.isSuccess()) {
-                             logger.debug("login succeeded after social registration");
+                         // do SOCIAL LOGIN first
+                        if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
+                            auth = api.loginByFacebook(accessToken);
+                        } else if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
+                            auth = api.loginByGoogle(accessToken);
+                        }
+                        if (auth != null && auth.isSuccess()) {
+                            // we got a valid accessToken so profile can be fetched
+                            ProfileModel profile =  api.getProfile();
+                            // store profile json
+                            if (profile != null ) {
+                                PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+                                pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
+                                pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+                                pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+                            }
                         }
                         break;
                     default: //normal email addrss login
