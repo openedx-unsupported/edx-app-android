@@ -150,7 +150,7 @@ public class PrefManager {
         if (json == null) {
             return null;
         }
-        
+
         Gson gson = new GsonBuilder().create();
         AuthResponse res = gson.fromJson(json, AuthResponse.class);
         
@@ -248,6 +248,7 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
+        //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
         public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";
