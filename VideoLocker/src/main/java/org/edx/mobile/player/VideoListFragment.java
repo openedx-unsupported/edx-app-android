@@ -410,11 +410,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 public void onItemClicked(SectionItemInterface model,
                         int position) {
                     if (!AppConstants.myVideosDeleteMode) {
-                        DownloadEntry downloadEntry = (DownloadEntry) model;
-                        if ( downloadEntry.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
-                        }
+                        //Check if the model is a DownloadEntry
                         if (model.isDownload()) {
+                            DownloadEntry downloadEntry = (DownloadEntry) model;
+                            if ( downloadEntry.isVideoForWebOnly ){
+                                Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
+                            }
                             if (downloadEntry.isDownloaded()) {
                                 adapter.setVideoId(downloadEntry.videoId);
                                 // hide delete panel first, so that multiple-tap is blocked
