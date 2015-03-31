@@ -70,9 +70,11 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
     private ISegment segIO;
 
     private void launchGroup(SocialGroup group){
-        Intent intent = new Intent(getActivity(), GroupSummaryActivity.class);
-        intent.putExtra(GroupSummaryActivity.EXTRA_GROUP, group);
-        startActivityForResult(intent, REQUEST_GROUP_SUMMARY);
+        if(group!=null){
+            Intent intent = new Intent(getActivity(), GroupSummaryActivity.class);
+            intent.putExtra(GroupSummaryActivity.EXTRA_GROUP, group);
+            startActivityForResult(intent, REQUEST_GROUP_SUMMARY);
+        }
     }
 
     @Override
