@@ -89,8 +89,11 @@ public class PrefManager {
      * @return boolean
      */
     public boolean getBoolean(String key, boolean defaultValue) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getBoolean(key, defaultValue);
+        if(context!=null) {
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getBoolean(key, defaultValue);
+        }
+        return defaultValue;
     }
     
     /**
@@ -99,8 +102,11 @@ public class PrefManager {
      * @return long
      */
     public long getLong(String key) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getLong(key, -1);
+        if(context!=null){
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getLong(key, -1);
+        }
+        return -1;
     }
     
     /**
@@ -120,8 +126,11 @@ public class PrefManager {
      * @return float
      */
     public float getFloat(String key, float defaultValue) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getFloat(key, defaultValue);
+        if(context!=null){
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getFloat(key, defaultValue);
+        }
+        return defaultValue;
     }
 
     /**
