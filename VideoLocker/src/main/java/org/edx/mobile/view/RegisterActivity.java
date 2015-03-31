@@ -344,6 +344,7 @@ public class RegisterActivity extends BaseFragmentActivity
                             if (auth != null && auth.isSuccess()) {
                                 //in the future we will show different messages based on different registration
                                 //condition
+                                showProgress();
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
@@ -486,7 +487,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 populateFormField("email", email);
                 if ( name != null && name.length() > 0 ) {
                     populateFormField("name", name);
-                    populateFormField("username", name.replace(" ", "") + new Random(System.currentTimeMillis()).nextInt(9999));
 
                     //Should we save the email here?
                     PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
@@ -580,6 +580,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
+            showProgress();
             Router.getInstance().showMyCourses(this);
         }
         // but finish this screen anyways as login is succeeded
