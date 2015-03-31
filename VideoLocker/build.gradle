@@ -149,6 +149,9 @@ dependencies {
     }
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    // library for webserver mocking
+    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.0.0'
+    androidTestCompile 'com.squareup.okio:okio:1.1.0'
 }
 
 configurations {
