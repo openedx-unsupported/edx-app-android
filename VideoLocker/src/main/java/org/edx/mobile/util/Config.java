@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -34,27 +35,33 @@ public class Config {
     protected final Logger logger = new Logger(getClass().getName());
     private JsonObject mProperties;
 
+    /* Individual configuration keys */
     private static final String API_HOST_URL = "API_HOST_URL";
-    private static final String FABRIC_KEY = "FABRIC_KEY";
     private static final String ENVIRONMENT_DISPLAY_NAME = "ENVIRONMENT_DISPLAY_NAME";
-    private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
-    private static final String GOOGLE_PLUS_KEY = "GOOGLE_PLUS_KEY";
-    private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
-    private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
-    private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
+    private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
+    private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
+
+    /* Composite configuration keys */
+    private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
-    private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
-    private static final String THIRD_PARTY_TRAFFIC = "THIRD_PARTY_TRAFFIC";
-    private static final String REGISTRATION_API_DEPRECATED = "REGISTRATION_API_DEPRECATED";
+    private static final String FACEBOOK = "FACEBOOK";
+    private static final String GOOGLE = "GOOGLE";
+    private static final String FABRIC = "FABRIC";
+    private static final String NEW_RELIC = "NEW_RELIC";
+    private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String WHITE_LIST = "WHITE_LIST";
 
+    /**
+     * Social Sharing configuration.
+     */
     public class SocialSharingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("DISABLED_CARRIERS") List<String> mDisabledCarriers;
 
-        public boolean getEnabled() {
+        public boolean isEnabled() {
             return mEnabled;
         }
 
@@ -63,11 +70,14 @@ public class Config {
         }
     }
 
+    /**
+     * Zero Rating configuration.
+     */
     public class ZeroRatingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("CARRIERS") List<String> mCarriers;
 
-        public boolean getEnabled() {
+        public boolean isEnabled() {
             return mEnabled;
         }
 
@@ -76,17 +86,25 @@ public class Config {
         }
     }
 
+    /**
+     * Course Enrollment configuration.
+     */
     public class EnrollmentConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("SEARCH_URL") String mSearchUrl;
+        private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
+        private @SerializedName("EXTERNAL_COURSE_SEARCH_URL") String mExternalSearchUrl;
         private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
-        public boolean getEnabled() {
+        public boolean isEnabled() {
             return mEnabled;
         }
 
-        public String getSearchUrl() {
+        public String getCourseSearchUrl() {
             return mSearchUrl;
+        }
+
+        public String getExternalCourseSearchUrl() {
+            return mExternalSearchUrl;
         }
 
         public String getCourseInfoUrlTemplate() {
@@ -95,35 +113,100 @@ public class Config {
     }
 
     /**
-     * Third party service calls are enabled by default, if no configuration is provided.
-     * Providing empty configuration disables all the services.
-     * Providing complete configuration allows to enable or disable the calls to individual service.
+     * Facebook configuration.
      */
-    public class ThirdPartyTrafficConfig {
-        private @SerializedName("GOOGLE_ENABLED") boolean googleEnabled = true;
-        private @SerializedName("FACEBOOK_ENABLED") boolean facebookEnabled = true;
-        private @SerializedName("NEW_RELIC_ENABLED") boolean newRelicEnabled = true;
-        private @SerializedName("FABRIC_ENABLED") boolean fabricEnabled = true;
-        private @SerializedName("SEGMENTIO_ENABLED") boolean segmentEnabled = true;
+    public class FacebookConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("FACEBOOK_APP_ID") String mFacebookAppId;
 
-        public boolean isGoogleEnabled() {
-            return googleEnabled;
+        public boolean isEnabled() {
+            return mEnabled && !TextUtils.isEmpty(mFacebookAppId);
         }
 
-        public boolean isFacebookEnabled() {
-            return facebookEnabled;
+        public String getFacebookAppId() {
+            return mFacebookAppId;
+        }
+    }
+
+    /**
+     * Google configuration.
+     */
+    public class GoogleConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+    }
+
+    /**
+     * Fabric configuration.
+     */
+    public class FabricConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("FABRIC_KEY") String mFabricKey;
+        private @SerializedName("FABRIC_BUILD_SECRET") String mFabricBuildSecret;
+
+        public boolean isEnabled() {
+            return mEnabled
+                    && !TextUtils.isEmpty(mFabricKey)
+                    && !TextUtils.isEmpty(mFabricBuildSecret);
         }
 
-        public boolean isNewRelicEnabled() {
-            return newRelicEnabled;
+        public String getFabricKey() {
+            return mFabricKey;
         }
 
-        public boolean isFabricEnabled() {
-            return fabricEnabled;
+        public String getFabricBuildSecret() {
+            return mFabricBuildSecret;
+        }
+    }
+
+    /**
+     * New Relic configuration.
+     */
+    public class NewRelicConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("NEW_RELIC_KEY") String mNewRelicKey;
+
+        public boolean isEnabled() {
+            return mEnabled && !TextUtils.isEmpty(mNewRelicKey);
         }
 
-        public boolean isSegmentEnabled() {
-            return segmentEnabled;
+        public String getNewRelicKey() {
+            return mNewRelicKey;
+        }
+    }
+
+    /**
+     * SegmentIO configuration.
+     */
+    public class SegmentConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("SEGMENT_IO_WRITE_KEY") String mSegmentWriteKey;
+
+        public boolean isEnabled() {
+            return mEnabled && !TextUtils.isEmpty(mSegmentWriteKey);
+        }
+
+        public String getSegmentWriteKey() {
+            return mSegmentWriteKey;
+        }
+    }
+
+    /**
+     * Domain White List configuration.
+     */
+    public class DomainWhiteListConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("DOMAINS") List<String> mDomains;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+
+        public List<String> getDomains() {
+            return mDomains != null ? mDomains : new ArrayList<String>();
         }
     }
 
@@ -143,7 +226,7 @@ public class Config {
         mProperties = properties;
     }
 
-    String getString(String key) {
+    private String getString(String key) {
         return getString(key, null);
     }
 
@@ -194,24 +277,8 @@ public class Config {
         return getString(ENVIRONMENT_DISPLAY_NAME);
     }
 
-    public String getFabricKey() {
-        return getString(FABRIC_KEY);
-    }
-
-    public String getFacebookAppId() {
-        return getString(FACEBOOK_APP_ID);
-    }
-
     public String getFeedbackEmailAddress() {
         return getString(FEEDBACK_EMAIL_ADDRESS);
-    }
-
-    public String getGooglePlusKey() {
-        return getString(GOOGLE_PLUS_KEY);
-    }
-
-    public String getNewRelicKey() {
-        return getString(NEW_RELIC_KEY);
     }
 
     public String getOAuthClientId() {
@@ -222,43 +289,20 @@ public class Config {
         return getString(OAUTH_CLIENT_SECRET);
     }
 
-    public String getSegmentIOWriteKey() {
-        return getString(SEGMENT_IO_WRITE_KEY);
-    }
-
-    public boolean isRegistrationAPIDeprecated() {
-        return getBoolean(REGISTRATION_API_DEPRECATED, true);
-    }
-
-    public SocialSharingConfig getSocialSharing() {
-        JsonElement element = getObject(SOCIAL_SHARING);
-        if(element != null) {
-            Gson gson = new Gson();
-            SocialSharingConfig config = gson.fromJson(element, SocialSharingConfig.class);
-            return config;
-        }
-        else {
-            return new SocialSharingConfig();
-        }
-    }
-
-    public ZeroRatingConfig getZeroRating() {
-        JsonElement element = getObject(ZERO_RATING);
-        if(element != null) {
-            Gson gson = new Gson();
-            ZeroRatingConfig config = gson.fromJson(element, ZeroRatingConfig.class);
-            return config;
-        }
-        else {
-            return new ZeroRatingConfig();
-        }
+    /**
+     * Empty or no config returns false.
+     * Otherwise, returns the value from the config.
+     * @return
+     */
+    public boolean isSpeedTestEnabled() {
+        return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
     /**
-     * Returns configuration for Enrollments.
+     * Returns Course Enrollment configuration.
      * @return
      */
-    public EnrollmentConfig getEnrollment() {
+    public EnrollmentConfig getEnrollmentConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
         if(element != null) {
             Gson gson = new Gson();
@@ -271,18 +315,106 @@ public class Config {
     }
 
     /**
-     * Returns configuration for third party traffic (network requests).
+     * Returns Social Sharing configuration.
      * @return
      */
-    public ThirdPartyTrafficConfig getThirdPartyTraffic() {
-        JsonElement element = getObject(THIRD_PARTY_TRAFFIC);
+    public SocialSharingConfig getSocialSharingConfig() {
+        JsonElement element = getObject(SOCIAL_SHARING);
         if(element != null) {
             Gson gson = new Gson();
-            ThirdPartyTrafficConfig config = gson.fromJson(element, ThirdPartyTrafficConfig.class);
+            SocialSharingConfig config = gson.fromJson(element, SocialSharingConfig.class);
             return config;
         }
         else {
-            return new ThirdPartyTrafficConfig();
+            return new SocialSharingConfig();
+        }
+    }
+
+    /**
+     * Returns Zero Rating configuration.
+     * @return
+     */
+    public ZeroRatingConfig getZeroRatingConfig() {
+        JsonElement element = getObject(ZERO_RATING);
+        if(element != null) {
+            Gson gson = new Gson();
+            ZeroRatingConfig config = gson.fromJson(element, ZeroRatingConfig.class);
+            return config;
+        }
+        else {
+            return new ZeroRatingConfig();
+        }
+    }
+
+    public FacebookConfig getFacebookConfig() {
+        JsonElement element = getObject(FACEBOOK);
+        if(element != null) {
+            Gson gson = new Gson();
+            FacebookConfig config = gson.fromJson(element, FacebookConfig.class);
+            return config;
+        }
+        else {
+            return new FacebookConfig();
+        }
+    }
+
+    public GoogleConfig getGoogleConfig() {
+        JsonElement element = getObject(GOOGLE);
+        if(element != null) {
+            Gson gson = new Gson();
+            GoogleConfig config = gson.fromJson(element, GoogleConfig.class);
+            return config;
+        }
+        else {
+            return new GoogleConfig();
+        }
+    }
+
+    public FabricConfig getFabricConfig() {
+        JsonElement element = getObject(FABRIC);
+        if(element != null) {
+            Gson gson = new Gson();
+            FabricConfig config = gson.fromJson(element, FabricConfig.class);
+            return config;
+        }
+        else {
+            return new FabricConfig();
+        }
+    }
+
+    public NewRelicConfig getNewRelicConfig() {
+        JsonElement element = getObject(NEW_RELIC);
+        if(element != null) {
+            Gson gson = new Gson();
+            NewRelicConfig config = gson.fromJson(element, NewRelicConfig.class);
+            return config;
+        }
+        else {
+            return new NewRelicConfig();
+        }
+    }
+
+    public SegmentConfig getSegmentConfig() {
+        JsonElement element = getObject(SEGMENT_IO);
+        if(element != null) {
+            Gson gson = new Gson();
+            SegmentConfig config = gson.fromJson(element, SegmentConfig.class);
+            return config;
+        }
+        else {
+            return new SegmentConfig();
+        }
+    }
+
+    public DomainWhiteListConfig getDomainWhiteListConfig() {
+        JsonElement element = getObject(WHITE_LIST);
+        if(element != null) {
+            Gson gson = new Gson();
+            DomainWhiteListConfig config = gson.fromJson(element, DomainWhiteListConfig.class);
+            return config;
+        }
+        else {
+            return new DomainWhiteListConfig();
         }
     }
 }

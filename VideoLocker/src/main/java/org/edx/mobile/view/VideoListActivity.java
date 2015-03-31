@@ -25,6 +25,7 @@ import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+
 import java.io.File;
 
 @SuppressWarnings("serial")
@@ -150,6 +151,16 @@ VideoListCallback, IPlayerEventCallback {
     }
 
     public synchronized void playVideoModel(final DownloadEntry video) {
+        try {
+            if (playerFragment.isPlaying()) {
+                if (video.getVideoId().equals(playerFragment.getPlayingVideo().getVideoId())) {
+                    logger.debug("this video is already being played, skipping play event");
+                    return;
+                }
+            }
+        } catch(Exception ex) {}
+
+
         try{
             View container = findViewById(R.id.container_player);
             container.setVisibility(View.VISIBLE);
@@ -192,7 +203,10 @@ VideoListCallback, IPlayerEventCallback {
 
             String filepath = null;
             // check if file available on local
-            if (video.filepath != null && video.filepath.length()>0) {
+            if( video.isVideoForWebOnly ){
+                //don't download anything
+            }
+            else if (video.filepath != null && video.filepath.length()>0) {
                 if (video.isDownloaded()) {
                     File f = new File(video.filepath);
                     if (f.exists()) {
@@ -223,9 +237,8 @@ VideoListCallback, IPlayerEventCallback {
 
                 filepath = video.getBestEncodingUrl(this);
             }
-            
-            logger.debug("playing from URL: " + filepath);
-            playerFragment.play(filepath, video.lastPlayedOffset, 
+
+            playerFragment.play(filepath, video.lastPlayedOffset,
                     video.getTitle(), transcript, video);
         }catch(Exception ex){
             logger.error(ex);
@@ -302,6 +315,20 @@ VideoListCallback, IPlayerEventCallback {
         }
 
         invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onConnectedToMobile() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToMobile();
+        }
+    }
+
+    @Override
+    protected void onConnectedToWifi() {
+        if (playerFragment != null) {
+            playerFragment.onConnectedToWifi();
+        }
     }
 
     @Override
@@ -451,4 +478,17 @@ VideoListCallback, IPlayerEventCallback {
         }
         finish();
     };
+
+
+    @Override
+    public boolean showInfoMessage(String message) {
+        //If the wifi settings message is already shown on video player,
+        //then do not show the info message
+        if(playerFragment.isShownWifiSettingsMessage()
+                && message.equalsIgnoreCase(getString(R.string.wifi_off_message))){
+            return false;
+        }
+        return super.showInfoMessage(message);
+    }
+
 }

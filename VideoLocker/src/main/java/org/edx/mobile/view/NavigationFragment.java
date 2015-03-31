@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -113,9 +112,15 @@ public class NavigationFragment extends Fragment {
             tvFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    try {
+                        ISegment segIO = SegmentFactory.getInstance();
+                        segIO.trackUserFindsCourses();
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
-                    if (Config.getInstance().getEnrollment().getEnabled()) {
+                    if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
                         if (!(act instanceof FindCoursesActivity)) {
                             Router.getInstance().showFindCourses(act);
 
@@ -180,7 +185,7 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String to = Config.getInstance().getFeedbackEmailAddress();
-                String subject = getString(R.string.Email_subject);
+                String subject = getString(R.string.email_subject);
                 String email = "";
                 EmailUtil.sendEmail(getActivity(), to, subject, email);
             }
@@ -202,23 +207,11 @@ public class NavigationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                pref.clearAuth();
-                pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, 
-                        getString(R.string.lbl_cc_cancel));
-
-                Intent intent = new Intent();
-                intent.setAction(AppConstants.LOGOUT_CLICKED);
-                getActivity().sendBroadcast(intent); 
-                
-                ISegment segIO = SegmentFactory.getInstance();
-                segIO.trackUserLogout();
-                segIO.resetIdentifyUser();
-
-                Router.getInstance().showLaunchScreen(getActivity());
-                Router.getInstance().showLogin(getActivity());
-
+                Router.getInstance().forceLogout(getActivity());
             }
         });
+
+
         
 
         TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);

@@ -50,7 +50,7 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <WebView
+    <org.edx.mobile.view.custom.EdxWebView
         android:id="@+id/eula_webView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

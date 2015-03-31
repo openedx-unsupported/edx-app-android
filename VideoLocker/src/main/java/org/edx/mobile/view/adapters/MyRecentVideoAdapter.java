@@ -1,6 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -29,7 +30,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
     }
 
     @Override
-    public void render(BaseViewHolder tag, SectionItemInterface sectionItem) {
+    public void render(BaseViewHolder tag, final SectionItemInterface sectionItem) {
         final ViewHolder holder = (ViewHolder) tag;
 
         if (sectionItem != null) {
@@ -42,7 +43,35 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                 holder.section_title.setVisibility(View.GONE);
                 holder.videolayout.setVisibility(View.VISIBLE);
 
+                // mark as NOT selected
+                holder.videolayout.setSelected(false);
+                holder.videolayout.setOnTouchListener(new View.OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if(AppConstants.myVideosDeleteMode){
+                            return false;
+                        }
+                        holder.videolayout.setSelected(
+                                selectedPosition != holder.position
+                                        && (event.getAction() == MotionEvent.ACTION_DOWN
+                                        || event.getAction() == MotionEvent.ACTION_MOVE
+                                        || event.getAction() == MotionEvent.ACTION_UP));
+
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            // select this row if it is clicked (i.e. if it got ACTION_UP)
+                            selectedPosition = holder.position;
+                        }
+
+                        if (sectionItem != null)
+                            return onTouchEvent(sectionItem, holder.position, event);
+                        else
+                            return false;
+                    }
+                });
+
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
+                String selectedVideoId = getVideoId();
                 holder.videoTitle.setText(videoData.getTitle());
                 holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
@@ -65,25 +94,31 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                         logger.error(ex);
                     }
                 });
-                if(videoData.isDownloaded()){
-                    if (holder.position == selectedPosition) {
-                        // mark this cell as selected and playing
-                        holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+
+                if(videoData.isDownloaded()) {
+                    if (selectedVideoId != null) {
+                        if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
+                            // mark this cell as selected and playing
+                            holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
+                        } else {
+                            // mark this cell as non-selected
+                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                        }
                     } else {
-                        // mark this cell as non-selected
                         holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     }
 
-                    if(AppConstants.myVideosDeleteMode){
+                    if (AppConstants.myVideosDeleteMode) {
                         holder.delete_checkbox.setVisibility(View.VISIBLE);
                         holder.delete_checkbox.setChecked(isSelected(holder.position));
-                    }else{
+                    } else {
                         holder.delete_checkbox.setVisibility(View.GONE);
                     }
                 }else{
-                    holder.videolayout.setBackgroundResource(R.color.transparent_white);
+                    holder.videolayout.setBackgroundResource(R.drawable.list_selector);
                     holder.delete_checkbox.setVisibility(View.GONE);
                 }
+
             }
         }
     }
@@ -134,11 +169,12 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-        selectedPosition=position;
-        SectionItemInterface model = getItem(position);
-        if(model!=null) onItemClicked(model, position);
+//        selectedPosition=position;
+//        SectionItemInterface model = getItem(position);
+//        if(model!=null) onItemClicked(model, position);
     }
 
-    public abstract void onItemClicked(SectionItemInterface model, int position);
+//    public abstract void onItemClicked(SectionItemInterface model, int position);
     public abstract void onSelectItem();
+    protected abstract boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event);
 }

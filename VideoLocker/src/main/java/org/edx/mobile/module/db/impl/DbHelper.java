@@ -46,7 +46,8 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.DOWNLOADED_ON          + " INTEGER, "
                 + DbStructure.Column.LAST_PLAYED_OFFSET     + " INTEGER, "
                 + DbStructure.Column.IS_COURSE_ACTIVE       + " BOOLEAN, "
-                + DbStructure.Column.UNIT_URL               + " TEXT "
+                + DbStructure.Column.UNIT_URL               + " TEXT, "
+                + DbStructure.Column.VIDEO_FOR_WEB_ONLY     + " BOOLEAN "
                 + ")";
         db.execSQL(sql);
         
@@ -62,9 +63,6 @@ class DbHelper extends SQLiteOpenHelper {
 
             String[] upgradeToV3 = new String[] {
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
-                                      + DbStructure.Column.UNIT_URL + " TEXT ",
-
-                    "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                                       + DbStructure.Column.URL_HIGH_QUALITY + " TEXT ",
 
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
@@ -73,16 +71,25 @@ class DbHelper extends SQLiteOpenHelper {
                     "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
                                       + DbStructure.Column.URL_YOUTUBE + " TEXT "};
 
-            if (oldVersion == 1 && newVersion == 2) {
+            String upgradeToV4 =
+                    "ALTER TABLE "    + DbStructure.Table.DOWNLOADS + " ADD COLUMN "
+                            + DbStructure.Column.VIDEO_FOR_WEB_ONLY + " BOOLEAN ";
+
+            if ( oldVersion == 1 ) {
                 // upgrade from 1 to 2
                 db.execSQL(upgradeToV2);
             }
 
-            if (oldVersion == 1 && newVersion == 3) {
-                // upgrade from 1 to 3
+            if ( oldVersion < 3 ) {
+                // upgrade to version 3
                 for (String query : upgradeToV3) {
                     db.execSQL(query);
                 }
+            }
+
+            if ( oldVersion < 4 ) {
+                // upgrade to version 4
+                db.execSQL(upgradeToV4);
             }
 
             logger.debug("Database upgraded from " + oldVersion + " to " + newVersion);

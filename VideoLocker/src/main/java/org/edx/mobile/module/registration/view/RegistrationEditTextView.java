@@ -1,6 +1,9 @@
 package org.edx.mobile.module.registration.view;
 
+import android.text.Html;
 import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -11,6 +14,8 @@ import com.google.gson.JsonPrimitive;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
+
+import java.util.Locale;
 
 class RegistrationEditTextView implements IRegistrationFieldView {
 
@@ -51,13 +56,24 @@ class RegistrationEditTextView implements IRegistrationFieldView {
         // display instructions if available
         if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
             mInstructionView.setVisibility(View.VISIBLE);
-            mInstructionView.setText(mField.getInstructions());
+            String text = mField.getInstructions();
+            if (TextUtils.isEmpty( text ) ){
+                mInstructionView.setText( text );
+            } else {
+                Spanned result = Html.fromHtml(text);
+                mInstructionView.setText(result);
+            }
         } else {
             mInstructionView.setVisibility(View.GONE);
         }
 
         // hide error text view
         mErrorView.setVisibility(View.GONE);
+    }
+
+    public boolean setRawValue(String value){
+        mInputView.setText(value);
+        return true;
     }
 
     @Override
@@ -83,9 +99,10 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
     @Override
     public void handleError(String error) {
-        if (error != null && !error.isEmpty()) {
+        if (!TextUtils.isEmpty(error)) {
             mErrorView.setVisibility(View.VISIBLE);
-            mErrorView.setText(error);
+            Spanned result = Html.fromHtml(error.toString());
+            mErrorView.setText(result);
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");
@@ -99,19 +116,34 @@ class RegistrationEditTextView implements IRegistrationFieldView {
 
         // check if this is required field and has an input value
         if (mField.isRequired() && !hasValue()) {
-            handleError(mField.getErrorMessage().getRequired());
+            String errorMessage = mField.getErrorMessage().getRequired();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_enter_field,
+                        mField.getLabel());
+            }
+            handleError(errorMessage);
             return false;
         }
 
         // check if length restrictions are followed
         int inputLength = getCurrentValue().getAsString().length();
         if (inputLength < mField.getRestriction().getMinLength()) {
-            handleError(mField.getErrorMessage().getMinLength());
+            String errorMessage = mField.getErrorMessage().getMinLength();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_min_length,
+                        mField.getLabel(), mField.getRestriction().getMinLength());
+            }
+            handleError(errorMessage);
             return false;
         }
         if (mField.getRestriction().getMaxLength() > 0
                 && inputLength > mField.getRestriction().getMaxLength()) {
-            handleError(mField.getErrorMessage().getMaxLength());
+            String errorMessage = mField.getErrorMessage().getMaxLength();
+            if(errorMessage==null || errorMessage.isEmpty()){
+                errorMessage = getView().getResources().getString(R.string.error_max_length,
+                        mField.getLabel(), mField.getRestriction().getMaxLength());
+            }
+            handleError(errorMessage);
             return false;
         }
 

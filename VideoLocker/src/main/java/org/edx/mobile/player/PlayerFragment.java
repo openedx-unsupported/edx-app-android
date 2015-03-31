@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,25 +32,28 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.IVideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
+import org.edx.mobile.util.ListUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
+import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
@@ -57,6 +61,7 @@ import org.edx.mobile.view.dialog.InstallFacebookDialog;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -67,6 +72,8 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends Fragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
+
+    private enum VideoNotPlayMessageType {IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB, IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE}
 
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME = 1000;
@@ -93,9 +100,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
     private ISegment segIO;
-    private boolean isVideoMessageDisplayed;
-    private boolean isNetworkMessageDisplayed;
+    private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
+
     private boolean isManualFullscreen = false;
+    private int currentPosition = 0;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -108,7 +116,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_TYPE_TICK) {
                 if (callback != null) {
-                    if(player!=null){
+                    if(player!=null && player.isPlaying()) {
                         // mark last current position
                         int pos = player.getCurrentPosition();
                         if (pos > 0 && pos != lastSavedPosition) {
@@ -126,8 +134,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     };
 
     public PlayerFragment() {
-        isVideoMessageDisplayed = false;
-        isNetworkMessageDisplayed = false;
+        curMessageTypes.clear();
     }
 
     public void setCallback(IPlayerEventCallback callback) {
@@ -206,7 +213,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if (savedInstanceState != null
                     && savedInstanceState.containsKey("isMessageDisplayed")){
                 if(savedInstanceState.getBoolean("isMessageDisplayed")){
-                    showVideoNotAvailable();
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                 }
             }
             reAttachPlayEventListener();
@@ -252,6 +259,22 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                     isLastRotationOn = isRotationOn;
                 }
             };
+            getView().findViewById(R.id.panel_video_only_on_web).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final StringBuffer urlStringBuffer = new StringBuffer();
+                        if (! videoEntry.url.startsWith("http://") && ! videoEntry.url.startsWith("https://")) {
+                            urlStringBuffer.append("http://");
+                            urlStringBuffer.append( videoEntry.url);
+                        } else {
+                            urlStringBuffer.append( videoEntry.url);
+                        }
+                        BrowserUtil.open(getActivity(),
+                                urlStringBuffer.toString());
+                    }
+
+            });
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -303,10 +326,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 // setup the flat if player is fullscreen
                 player.setFullScreen(isScreenLandscape());
             }
-            if(isVideoMessageDisplayed){
-                showVideoNotAvailable();
-            }else if(isNetworkMessageDisplayed){
+            if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB)) {
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
+            } if(curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+            }else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED)){
                 showNetworkError();
+            } else if(curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE)){
+                showWifiSettingsMessage();
             }
         }catch(Exception e){
             logger.error(e);
@@ -321,7 +348,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
         setupController();
 
-        if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed){
+        if(curMessageTypes.isEmpty()){
             // display progress until playback actually starts
             showProgress();
         }
@@ -340,13 +367,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             orientation.stop();
             handler.removeCallbacks(unfreezeCallback);
-            if(player!=null){
-                player.freeze();
-                if (callback != null) {
-                    // mark last freeze position
-                    callback.saveCurrentPlaybackPosition(player.getLastFreezePosition());
-                }
-            }
+            freezePlayer();
         }catch(Exception e){
             logger.error(e);
         }
@@ -359,8 +380,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             audioManager.abandonAudioFocus(this);
         }
         if(player!=null){
-            player.freeze();
             handler.removeMessages(MSG_TYPE_TICK);
+            freezePlayer();
         }
     }
 
@@ -388,7 +409,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if(player!=null){
                 player.hideController();
             }
-            if(!isNetworkMessageDisplayed && !isVideoMessageDisplayed){
+            if( this.curMessageTypes.isEmpty() ){
                 getView().findViewById(R.id.progress).setVisibility(View.VISIBLE);
             }
         } catch(Exception ex) {
@@ -418,7 +439,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 player.setPausedOnUnfreeze();
             }
             
-            player.freeze();
+            freezePlayer();
             outState.putSerializable("player", player);
         }
         super.onSaveInstanceState(outState);
@@ -475,15 +496,21 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         requestAudioFocus();
 
         try {
-            // show loading indicator as player will prepare now
-            showProgress();
-
-            if (path == null || path.trim().length() == 0) {
-                showVideoNotAvailable();
-                //return;
+            if ( video.isVideoForWebOnly ){
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
+                path = "";
             } else {
-                hideVideoNotAvailable();
+                // show loading indicator as player will prepare now
+                showProgress();
+
+                if (path == null || path.trim().length() == 0) {
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                    //return;
+                } else {
+                    hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+                }
             }
+
             this.transcript = trModel;
             player.setLMSUrl(video.lmsUrl);
             player.setVideoTitle(title);
@@ -548,6 +575,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (callback != null) {
             callback.onError();
         }
+
+        setScreenOnWhilePlaying(false);
     }
 
     @Override
@@ -564,12 +593,15 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     @Override
     public void onPreparing() {
+        setScreenOnWhilePlaying(true);
         hideNetworkError();
         showProgress();
     }
 
     @Override
     public void onPlaybackPaused() {
+        setScreenOnWhilePlaying(false);
+
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
@@ -589,7 +621,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             unlockOrientation();
             View errorView = getView().findViewById(R.id.panel_network_error);
             errorView.setVisibility(View.GONE);
-            isNetworkMessageDisplayed = false;
+            curMessageTypes.remove(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+            curMessageTypes.remove(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
+
         } catch(Exception ex) {
             logger.error(ex);
         }
@@ -601,7 +635,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 if (player.isPlayingLocally() || player.isPlaying() ) {
                     hideNetworkError();
                 } else {
-                    if(!isVideoMessageDisplayed){
+                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
                         //This has been commented after Lou's suggestion
                         unlockOrientation();
                         //lockOrientation();
@@ -613,20 +647,20 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         // if network is available , this must be video-corrupt-error
                         if (NetworkUtil.isConnected(getActivity())) {
                             // video might be corrupt
-                            showVideoNotAvailable();
+                            showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                         } else {
                             View errorView = getView().findViewById(R.id.panel_network_error);
                             errorView.setVisibility(View.VISIBLE);
                         }
 
-                        isNetworkMessageDisplayed = true;
+                        curMessageTypes.add(VideoNotPlayMessageType.IS_NETWORK_MESSAGE_DISPLAYED);
                         resetClosedCaptioning();
                     }
                 }
             }else{
                 if (NetworkUtil.isConnected(getActivity())) {
                     // video might be corrupt
-                    showVideoNotAvailable();
+                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
                 } else {
                     View errorView = getView().findViewById(R.id.panel_network_error);
                     errorView.setVisibility(View.VISIBLE);
@@ -637,7 +671,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }
     }
 
-    private void showVideoNotAvailable() {
+    private void showVideoNotAvailable( VideoNotPlayMessageType reason ){
         try {
             if(player!=null){
                 hideCCPopUp();
@@ -653,10 +687,14 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
                 hideProgress();
 
-                View errorView = getView().findViewById(R.id.panel_video_not_available);
+                View errorView;
+                if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
+                    errorView = getView().findViewById(R.id.panel_video_not_available);
+                else
+                    errorView = getView().findViewById(R.id.panel_video_only_on_web);
                 errorView.setVisibility(View.VISIBLE);
 
-                isVideoMessageDisplayed = true;
+                curMessageTypes.add(reason);
                 hideClosedCaptioning();
             }
         } catch(Exception ex) {
@@ -664,19 +702,25 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }
     }
 
-    private void hideVideoNotAvailable() {
+    private void hideVideoNotPlayInfo(VideoNotPlayMessageType reason) {
         try {
-            View errorView = getView().findViewById(R.id.panel_video_not_available);
+            View errorView;
+            if ( reason == VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)
+                errorView = getView().findViewById(R.id.panel_video_not_available);
+            else
+                errorView = getView().findViewById(R.id.panel_video_only_on_web);
             errorView.setVisibility(View.GONE);
-            isVideoMessageDisplayed = false;
-        } catch(Exception ex) {
+            curMessageTypes.remove(reason);
+         } catch(Exception ex) {
             logger.error(ex);
         }
     }
 
+
     private void clearAllErrors() {
         hideNetworkError();
-        hideVideoNotAvailable();
+        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
+        hideVideoNotPlayInfo(VideoNotPlayMessageType.IS_VIDEO_ONLY_ON_WEB);
         hideProgress();
     }
 
@@ -684,9 +728,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public void onPrepared() {
         if ( !isResumed() 
                 || !isVisible()) {
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
             return;
         }
 
@@ -714,6 +756,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         // request audio focus, as playback has started
         requestAudioFocus();
 
+        // keep screen ON
+        setScreenOnWhilePlaying(true);
+
         if (callback != null) {
             callback.onPlaybackStarted();
             updateController("playback started");
@@ -734,6 +779,21 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             }
         }catch(Exception e){
             logger.error(e);
+        }
+    }
+
+    private void setScreenOnWhilePlaying(boolean screenOn) {
+        try {
+            if (screenOn) {
+                getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                logger.debug("KEEP SCREEN ON is set while playing, flag added");
+            }
+            else {
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                logger.debug("KEEP SCREEN ON is unset, flag removed");
+            }
+        } catch(Exception ex) {
+            logger.error(ex, true);
         }
     }
 
@@ -784,9 +844,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (isPrepared) {
             // stop orientation updates before locking the screen
             orientation.stop();
-            if(player!=null){
-                player.freeze();
-            }
+            freezePlayer();
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -801,8 +859,8 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     protected void showLandscape() {
         try{
-            if(player!=null){
-                player.freeze();
+            if(player!=null) {
+                freezePlayer();
 
                 Intent i = new Intent(getActivity(), LandscapePlayerActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -816,8 +874,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void enterFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
@@ -843,8 +902,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     private void exitFullScreen() {
         try {
-            getActivity().setRequestedOrientation(
-                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            if (getActivity() != null) {
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
             if (isPrepared) {
                 if (segIO == null) {
                     logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
@@ -912,27 +972,53 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     };
 
     public void onOnline() {
-        hideNetworkError();
-        try {
-            if(player!=null){
-                if(!isVideoMessageDisplayed){
-                    if(!player.isPaused() 
-                            && !player.isPlaying() && !player.isPlayingLocally()){
-                        showProgress();
-                    }
-                }
-                if (player.isInError()) {
-                    player.restart();
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        //Nothing to do
     }
 
     public void onOffline() {
         // nothing to do
         showNetworkError();
+    }
+
+    public void onConnectedToMobile(){
+        UserPrefs pref = new UserPrefs(getActivity());
+        boolean wifiPreference = pref.isDownloadOverWifiOnly();
+        if(!NetworkUtil.isOnZeroRatedNetwork(getActivity()) && wifiPreference){
+            //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
+            //then prompt user to set change his wifi settings
+            showWifiSettingsMessage();
+        }else{
+            handleNetworkChangeVideoPlayback();
+        }
+    }
+
+    public void onConnectedToWifi(){
+        //Start playing video is user is connected to wifi
+        handleNetworkChangeVideoPlayback();
+    }
+
+    /**
+     * This method handles video playback on network change callbacks
+     */
+    private void handleNetworkChangeVideoPlayback(){
+        hideNetworkError();
+        try {
+            if(player!=null){
+                if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED)){
+                    if((!player.isPaused()
+                            && !player.isPlaying() && !player.isPlayingLocally())
+                            || (player.isInError() || player.isReset())){
+                        showProgress();
+                    }
+                }
+                if (player.isInError() || player.isReset()) {
+                    //If player is either in error state or has been reset, restart the player with current position
+                    player.restart(currentPosition);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e);
+        }
     }
 
     /**
@@ -1113,32 +1199,32 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             TextView subTitlesTv = (TextView) getActivity().findViewById(R.id.txtSubtitles_tv);
             if(subTitlesTv!=null ){
                 if(text!=null){
-                    int twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
-                    int ten_dp = (int) UiUtil.getParamsInDP(getResources(),20);
+                    int margin_twenty_dp = (int) UiUtil.getParamsInDP(getResources(),20);
+                    int margin_ten_dp = (int) UiUtil.getParamsInDP(getResources(),10);
                     if(player!=null){
                         LayoutParams lp = (LayoutParams) subTitlesLayout.getLayoutParams();
                         if (player.getController()!=null && player.getController().isShown()){
                             if(player.isFullScreen()){
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp, (int)UiUtil.getParamsInDP(getResources(),50));
                             }else{
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),42));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }else{
                             if(player.isFullScreen()){
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp, ten_dp);
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp, margin_ten_dp);
                             }else{
-                                lp.setMargins(twenty_dp, 0,
-                                        twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
+                                lp.setMargins(margin_twenty_dp, 0,
+                                        margin_twenty_dp,(int)UiUtil.getParamsInDP(getResources(),5));
                             }
                             subTitlesLayout.setLayoutParams(lp);
                         }
                     }
-                    subTitlesTv.setPadding(ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
-                            ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
+                    subTitlesTv.setPadding(margin_ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
+                            margin_ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
                     
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />
@@ -1409,6 +1495,16 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             ccAdaptor.selectedLanguage = languageSubtitle;
             ccAdaptor.notifyDataSetChanged();
 
+            // for less number of list rows, update height to fit contents
+            // also add height NONE option and TITLE of the popup
+            int fullHeightInDp = ListUtil.getFullHeightofListView(lv_ccLang)
+                    + (ListUtil.getSingleRowHeight(lv_ccLang) * 2)
+                    + (lv_ccLang.getDividerHeight() * 4);
+            if (fullHeightInDp < popupHeight) {
+                popupHeight = fullHeightInDp;
+                cc_popup.setHeight(fullHeightInDp);
+            }
+
             // Clear the default translucent background
             cc_popup.setBackgroundDrawable(new BitmapDrawable());
 
@@ -1616,13 +1712,20 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void callPlayerSeeked(long lastPostion, long newPosition, boolean isRewindClicked) {
         try{
+            if (callback != null) {
+                // mark last seeked position
+                callback.saveCurrentPlaybackPosition((int) newPosition);
+                logger.debug("Current position saved: " + newPosition);
+            }
+
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
             segIO.trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
-                    videoEntry.eid, videoEntry.lmsUrl);
+                    videoEntry.eid, videoEntry.lmsUrl,
+                    isRewindClicked);
         }catch(Exception e){
             logger.error(e);
         }
@@ -1658,4 +1761,82 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             }
         }
     }
+
+    /**
+     * Returns the video model that this fragment is supposed to play.
+     * @return
+     */
+    public IVideoModel getPlayingVideo() {
+        return videoEntry;
+    }
+
+    /**
+     * Returns true if playback is ongoing, false otherwise.
+     * @return
+     */
+    public boolean isPlaying() {
+        return (player != null && player.isPlaying());
+    }
+    
+    private void freezePlayer() {
+        setScreenOnWhilePlaying(false);
+
+        if (player!=null) {
+            if (callback != null && player.isPlaying()) {
+                int pos = player.getCurrentPosition();
+                if (pos > 0) {
+                    callback.saveCurrentPlaybackPosition(pos);
+                }
+            }
+
+            player.freeze();
+        }
+    }
+
+    /**
+     * This method is called when we need to notify the user during playback that he has
+     * switched to mobile network and his current download settings is not allowed to download videos
+     */
+    private void showWifiSettingsMessage() {
+        try {
+            if (player != null) {
+                if (player.isPlayingLocally()) {
+                    hideNetworkError();
+                } else {
+                    if(!curMessageTypes.contains(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED) && !player.isInError()){
+                        unlockOrientation();
+                        hideCCPopUp();
+                        hideSettingsPopUp();
+                        if ( !player.isReset()) {
+                            if ( !player.isInError()) {
+                                currentPosition = player.getCurrentPosition();
+                            }
+                            player.reset();
+                        }
+                        player.hideController();
+
+                        clearAllErrors();
+                        View errorView = getView().findViewById(R.id.panel_network_error);
+                        errorView.setVisibility(View.VISIBLE);
+                        ETextView errorHeaderTextView = (ETextView) errorView.findViewById(R.id.error_header);
+                        errorHeaderTextView.setText(getString(R.string.wifi_off_message));
+                        errorView.findViewById(R.id.error_message).setVisibility(View.GONE);
+                        curMessageTypes.add(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+                    }
+                    resetClosedCaptioning();
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
+    }
+
+    /**
+     * This method returns true if message is displayed on player to change wifi settings.
+     * @return
+     */
+    public boolean isShownWifiSettingsMessage(){
+        return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
+    }
+
 }

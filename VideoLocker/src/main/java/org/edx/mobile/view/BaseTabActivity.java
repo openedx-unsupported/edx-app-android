@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
+import android.view.View;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
@@ -45,8 +46,7 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
         for (int i = 0; i < tabs.size(); i ++){
             TabModel tab = tabs.get(i);
             tabHost.addTab(
-                    tabHost.newTabSpec(tab.getTag())
-                            .setIndicator(tab.getName(), null),
+                    tabHost.newTabSpec(tab.getTag()).setIndicator(tab.getName(), null),
                     tab.getFragmentClass(),
                     tab.getFragmentArgs());
         }
@@ -60,6 +60,39 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
                     R.color.tab_selector));
             tv.setSingleLine(true);
             tv.setAllCaps(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        /*
+         We need to enable tab-change only when screen is visible.
+         This fixes the simultaneous tap issues and avoid crash.
+          */
+        setTabChangeEnabled(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // disable tab-change when leaving the screen
+        setTabChangeEnabled(false);
+    }
+
+    /**
+     * If enabled is true, enables the tab change, otherwise disables tab change.
+     * When disabled, clicking does not change the tab.
+     * @param enabled
+     */
+    protected void setTabChangeEnabled(boolean enabled) {
+        if (tabHost != null) {
+            for (int i = 0; i < tabHost.getTabWidget().getTabCount(); i++) {
+                View tab = tabHost.getTabWidget().getChildTabViewAt(i);
+                tab.setEnabled(enabled);
+            }
         }
     }
 
@@ -111,6 +144,4 @@ public abstract class BaseTabActivity extends BaseFragmentActivity {
     protected abstract List<TabModel> tabsToAdd();
 
     protected  abstract int getDefaultTab();
-
-
 }

@@ -1,11 +1,8 @@
 package org.edx.mobile.player;
 
-import java.io.File;
-import java.io.FileInputStream;
-
-import org.edx.mobile.logger.Logger;
-import org.edx.mobile.view.OnSwipeListener;
+import android.content.Context;
 import android.graphics.Point;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
@@ -13,8 +10,16 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.view.SurfaceHolder;
+import android.os.PowerManager;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View.OnClickListener;
+
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.view.OnSwipeListener;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 @SuppressWarnings("serial")
 public class Player extends MediaPlayer implements OnErrorListener,
@@ -240,14 +245,17 @@ OnCompletionListener, OnInfoListener, IPlayer {
             load(uri, seekTo, true);
         }
 
+    @Override
+    public void restart(int seekTo) throws Exception {
+        logger.debug("RestartFreezePosition=" + seekTo);
+        lastCurrentPosition = 0;
+        // if seekTo=lastCurrentPosition then seekTo() method will not work
+        load(videoUri, seekTo, playWhenPrepared);
+    }
+
         @Override
         public void restart() throws Exception {
-            logger.debug("RestartFreezePosition=" + seekToWhenPrepared);
-//          int seekTo = lastCurrentPosition;
-            int seekTo = seekToWhenPrepared;
-            lastCurrentPosition = 0;
-            // if seekTo=lastCurrentPosition then seekTo() method will not work
-            load(videoUri, seekTo, playWhenPrepared);
+            restart(seekToWhenPrepared);
         }
 
         private void load(String videoUri, int seekTo, boolean playWhenPrepared) throws Exception {
@@ -255,6 +263,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
             this.seekToWhenPrepared = seekTo;
             this.playWhenPrepared = playWhenPrepared;
             this.isFreeze = false;
+            this.lastCurrentPosition = 0; // reset last seek position
 
             // re-display controller, so that it shows latest data
             if (this.controller != null) {
@@ -263,6 +272,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             reset();
             state = PlayerState.RESET;
+            bufferPercent = 0;
 
             setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -302,44 +312,58 @@ OnCompletionListener, OnInfoListener, IPlayer {
         }
 
         @Override
+        public boolean isReset() {
+            return state == PlayerState.RESET;
+    }
+
+    @Override
         public void setFullScreen(boolean isFullScreen) {
             this.isFullScreen = isFullScreen;
         }
 
         @Override
-        public void setPreview(Preview preview) {
+        public void setPreview(final Preview preview) {
             if (preview == null) {
                 return;
             }
-            preview.getHolder().addCallback(new SurfaceHolder.Callback() {
+            preview.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
 
                 @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    // nothing to be done here
-                }
-
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
+                public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                     try {
                         logger.debug("Player state=" + state);
-                        setDisplay(holder);
-                        // keep screen ON
-                        setScreenOnWhilePlaying(true);
-                        logger.debug("Surface created, holder set");
+                        Surface surface = new Surface(surfaceTexture);
+                        setSurface(surface);
+
+                        // Keep screen ON while playing
+                        // if using SurfaceHolder, just call setScreenOnWhilePlaying(true);
+                        // When not using SurfaceHolder, need to use WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+
+                        logger.debug("Surface created and set to the player");
 
                         // preview last shown frame if not playing
                         if (!isPlaying()) {
                             seekTo(lastCurrentPosition);
                         }
-                    } catch(Exception ex) {
-                        logger.error(ex);;
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                        ;
                     }
                 }
 
                 @Override
-                public void surfaceChanged(SurfaceHolder holder, int format,
-                        int width, int height) {
-                    // nothing to be done here
+                public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+                }
+
+                @Override
+                public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                    return true;
+                }
+
+                @Override
+                public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
                 }
             });
             preview.setOnTouchListener(new OnSwipeListener(preview.getContext()) {
@@ -449,14 +473,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
                 playWhenPrepared = false;
             }
             lastCurrentPosition = getCurrentPosition();
-            // catch seconds, ignore milleseconds
-            if (lastCurrentPosition > 0) {
-                // if required, 
-                // also minus one second, as screen takes some time to go off when stopped??
-                lastCurrentPosition = lastCurrentPosition - (lastCurrentPosition % 1000);
-            }
             lastFreezePosition = lastCurrentPosition;
-            if(lastCurrentPosition!=0){
+            if (lastCurrentPosition > 0) {
                 seekToWhenPrepared = lastCurrentPosition;
             }
             logger.debug("FreezePosition=" + lastFreezePosition);
@@ -466,7 +484,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
         public void unfreeze() {
             if (isFreeze) {
                 logger.debug("unFreezePosition=" + lastFreezePosition);
-                lastCurrentPosition = 0;
+                lastCurrentPosition = getCurrentPosition();
                 seekTo(lastFreezePosition);
                 if (freezeState == PlayerState.PLAYING
                         || freezeState == PlayerState.LAGGING) {
@@ -523,7 +541,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
          * Player Methods below.
          */
 
-        @Override
+    @Override
+    public void reset() {
+        super.reset();
+        state = PlayerState.RESET;
+    }
+
+    @Override
         public synchronized void start() throws IllegalStateException {
             if (state == PlayerState.PREPARED
                     || state == PlayerState.PAUSED
@@ -585,11 +609,11 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
             if (msec > 0
                     && lastCurrentPosition > 0
-                    && (delta < 10)  ) {
+                    && (delta <= 1000)  ) {
                 // no need to perform seek if current position is almost same as seekTo
-                // %10 is used to skip the difference of 10 milliseconds
-                logger.debug("Skipping seek to " + msec + " from "
-                        + lastCurrentPosition + " ; state=" + state);
+                // Delta of 1000 is used to skip seek of 1 sec difference from current position
+                logger.debug(String.format("Skipping seek to %d from %d ; state=%s",
+                        msec, lastCurrentPosition, state.toString()));
                 return;
             }
 
@@ -603,8 +627,8 @@ OnCompletionListener, OnInfoListener, IPlayer {
                     || state == PlayerState.STOPPED
                     || state == PlayerState.PLAYBACK_COMPLETE
                     || state == PlayerState.LAGGING) {
-                logger.debug("seeking to " + msec + " from "
-                        + lastCurrentPosition + " ; state=" + state);
+                logger.debug(String.format("seeking to %d from %d ; state=%s",
+                        msec, lastCurrentPosition, state.toString()));
                 super.seekTo(msec);
                 lastCurrentPosition = msec;
                 logger.debug("playback seeked");

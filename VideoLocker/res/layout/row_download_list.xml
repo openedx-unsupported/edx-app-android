@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/downloads_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:padding="10dp" >
+    android:padding="10dp">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/downloads_name"
@@ -19,7 +20,7 @@
         android:maxWidth="210dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="@string/download_name"
+        tools:text="Engaging in Interaction"
         android:textColor="@color/grey_text_mycourse"
         android:textSize="14sp" />
 
@@ -50,7 +51,7 @@
         android:layout_marginLeft="18dp"
         android:lines="1"
         android:singleLine="true"
-        android:text="@string/download_time"
+        tools:text="53:59:21"
         android:textColor="@color/grey_video_size_text"
         android:textSize="12sp" />
 
@@ -64,7 +65,7 @@
         android:layout_toRightOf="@+id/download_time"
         android:lines="1"
         android:singleLine="true"
-        android:text="@string/download_percentage"
+        tools:text="45.20/200MB"
         android:textColor="@color/grey_video_size_text"
         android:textSize="12sp" />
 

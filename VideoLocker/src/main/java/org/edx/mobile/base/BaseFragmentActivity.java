@@ -48,6 +48,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -56,7 +57,9 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject {
+public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
+
+    public static final String EXTRA_ENROLLMENT = "enrollment";
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
@@ -67,6 +70,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     private MenuItem progressMenuItem;
     private ActionBarDrawerToggle mDrawerToggle;
     private boolean isOnline = false;
+    private boolean isConnectedToWifi = false;
     private boolean applyPrevTransitionOnRestart = false;
     private boolean isActivityStarted = false;
     protected IDatabase db;
@@ -170,6 +174,8 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             //If activity is in landscape, hide the Action bar
             if (isLandscape()) {
                 bar.hide();
+            }else{
+                bar.show();
             }
         }
     }
@@ -252,6 +258,17 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     public void finish() {
         super.finish();
         applyTransitionPrev();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try {
+            // App crashes on a few devices (mostly 4.0.+) on super method call
+            // This is a workaround to avoid app crash, app still works even if Exception occurs
+            super.onRestoreInstanceState(savedInstanceState);
+        } catch(Exception ex) {
+            logger.error(ex);
+        }
     }
 
     //this is configure the Navigation Drawer of the application
@@ -471,7 +488,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 }else{
                     if(db!=null){
                         boolean downloading = db.isAnyVideoDownloading(null);
-                        logger.debug("isDownloading "+downloading);
                         if(!downloading){
                             progressMenuItem.setVisible(false);
                         }else{
@@ -558,6 +574,29 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                         }
                     });
                 }
+
+                if (NetworkUtil.isConnectedWifi(context)) {
+                    if(!isConnectedToWifi){
+                        isConnectedToWifi = true;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onConnectedToWifi();
+                            }
+                        });
+                    }
+                } else if (NetworkUtil.isConnectedMobile(context)) {
+                    if(isConnectedToWifi){
+                        isConnectedToWifi = false;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                onConnectedToMobile();
+                            }
+                        });
+                    }
+                }
+
             } else {
                 if (isOnline) {
                     isOnline = false;
@@ -604,6 +643,20 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         logger.debug ("You are now offline");
     }
 
+    /**
+     * Gets called whenever network state is changed and device is now connected to mobile data.
+     * Sub-classes may override this method to handle when mobile data is connected.
+     * This method is called after {@link #onOnline()} method.
+     */
+    protected void onConnectedToMobile() {}
+
+    /**
+     * Gets called whenever network state is changed and device is now connected to wifi.
+     * Sub-classes may override this method to handle when wifi is connected.
+     * This method is called after {@link #onOnline()} method.
+     */
+    protected void onConnectedToWifi() {}
+
     private void applyTransitionNext() {
         // apply slide transition animation
         overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
@@ -615,7 +668,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
         logger.debug( "prev transition animation applied");
     }
-
 
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
@@ -650,7 +702,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         @Override
         public void onResult(Integer result) {
             int progressPercent = result;
-            logger.debug("Progress Percentage "+progressPercent);
             if(progressPercent >= 0 && progressPercent <= 100){
                 totalProgress.setProgressPercent(progressPercent);
             }
@@ -745,7 +796,12 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             if(error_layout!=null){
                 TextView errorHeader = (TextView) findViewById(R.id.error_header);
                 TextView errorMessage = (TextView) findViewById(R.id.error_message);
-                errorHeader.setText(header);
+                if(header==null || header.isEmpty()){
+                   errorHeader.setVisibility(View.GONE);
+                }else{
+                    errorHeader.setVisibility(View.VISIBLE);
+                    errorHeader.setText(header);
+                }
                 if (message != null) {
                     errorMessage.setText(message);
                 }
@@ -814,4 +870,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             }
         }
     };
+
+
+    @Override
+    public boolean tryToSetUIInteraction(boolean enable){
+        return false;
+    }
+
 }

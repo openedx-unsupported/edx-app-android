@@ -185,5 +185,10 @@ public class Offline_MyCoursesTestSuite extends Offline_MyCoursesTestSuiteBase {
 		return headerMyCoursesIdiOS;
 	}
 
+	@Override
+	public String getVideosNotAvailableMsg() {
+		return txtDisabledVideoMessage;
+	}
+
 	
 }

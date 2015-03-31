@@ -58,6 +58,7 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
+        <item name="android:textColorHint">@color/hint_grey_text</item>
     </style>
 
     <style name="downloading_message">
@@ -188,7 +189,9 @@
         <item name="android:textColor">@color/red_error_text</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:textSize">11sp</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingTop">5dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
     </style>
 

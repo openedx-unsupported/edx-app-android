@@ -40,6 +40,7 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
@@ -110,13 +111,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
             @Override
             public void onAnnouncementClicked(EnrolledCoursesResponse model) {
-                Bundle courseBundle = new Bundle();
-                courseBundle.putBoolean("announcemnts", true);
-                courseBundle.putSerializable("CourseDetail", model);
-
-                Intent courseDetail = new Intent(getContext(), CourseDetailTabActivity.class);
-                courseDetail.putExtra("CourseDetail", courseBundle);
-                getContext().startActivity(courseDetail);
+                Router.getInstance().showCourseDetailTabs(getActivity(), model, true);
             }
         };
 
@@ -132,8 +127,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
             }
         });
         uiHelper.onCreate(savedInstanceState);
-        loadData(false);
-
+        loadData(false,false);
     }
 
     public abstract void handleCourseClick( EnrolledCoursesResponse model);
@@ -169,11 +163,16 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
         offlineBar = view.findViewById(R.id.offline_bar);
         offlinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
+        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData(true);
+                //Hide the progress bar as swipe functionality has its own Progress indicator
+                if(progressBar!=null){
+                    progressBar.setVisibility(View.GONE);
+                }
+                loadData(true,false);
             }
         });
 
@@ -181,28 +180,27 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                 R.color.grey_act_background , R.color.grey_act_background ,
                 R.color.grey_act_background);
 
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
-
         myCourseList = (ListView) view.findViewById(R.id.my_course_list);
         myCourseList.setAdapter(adapter);
         myCourseList.setOnItemClickListener(adapter);
 
         setupFooter(myCourseList);
 
+        if (!(NetworkUtil.isConnected(getActivity()))) {
+            onOffline();
+        } else {
+            onOnline();
+        }
+
         return view;
     }
 
     protected abstract int getViewResourceID();
 
-    protected abstract void loadData(boolean forceRefresh);
-
+    protected abstract void loadData(boolean forceRefresh, boolean showProgress);
 
     protected void invalidateSwipeFunctionality(){
         swipeLayout.setRefreshing(false);
-    }
-
-    protected void validateSwipeFunctionality(){
-        swipeLayout.setRefreshing(true);
     }
 
     @Override
@@ -229,7 +227,9 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     public void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
         showOfflinePanel();
+        //Disable swipe functionality and hide the loading view
         swipeLayout.setEnabled(false);
+        invalidateSwipeFunctionality();
     }
 
     @Override
@@ -249,11 +249,6 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     @Override
     public void onResume() {
         super.onResume();
-        if (AppConstants.offline_flag) {
-            onOffline();
-        } else {
-            onOnline();
-        }
 
         uiHelper.onResume();
 
@@ -282,7 +277,7 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                     }
 
                     try {
-                        if (Config.getInstance().getEnrollment().getEnabled()) {
+                        if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
                             //Call the Find courses activity
                             Router.getInstance().showFindCourses(getActivity());
                         } else {

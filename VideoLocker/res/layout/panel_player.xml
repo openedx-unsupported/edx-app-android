@@ -9,6 +9,7 @@
         android:id="@+id/preview_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
         android:visibility="visible" >
 
         <org.edx.mobile.player.Preview
@@ -32,8 +33,8 @@
             android:visibility="gone" />
 
         <include
-            android:id="@+id/panel_video_not_available"
-            layout="@layout/panel_video_not_available"
+            android:id="@+id/panel_video_only_on_web"
+            layout="@layout/panel_video_only_on_web"
             android:visibility="gone" />
 
     </FrameLayout>

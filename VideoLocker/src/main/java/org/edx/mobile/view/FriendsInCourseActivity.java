@@ -12,27 +12,26 @@ public class FriendsInCourseActivity extends BaseSingleFragmentActivity {
     private static final String TAG = FriendsInCourseActivity.class.getCanonicalName();
     public static final String EXTRA_COURSE = TAG + ".course";
     public static final String EXTRA_FRIENDS_TAB_LINK = TAG + ".showLink";
+    private CourseEntry course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CourseEntry course = (CourseEntry) getIntent().getSerializableExtra(FriendsInCourseActivity.EXTRA_COURSE);
+        course = (CourseEntry) getIntent().getSerializableExtra(FriendsInCourseActivity.EXTRA_COURSE);
         if (course == null) {
             throw new IllegalArgumentException("missing course");
         }
+    }
 
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
+    @Override
+    protected void onStart() {
+        super.onStart();
         if (getIntent().getBooleanExtra(FriendsInCourseActivity.EXTRA_FRIENDS_TAB_LINK, false)) {
             setTitle(course.getName());
         } else {
             setTitle(getString(R.string.friends_in_this_course));
         }
-
-
     }
 
     @Override

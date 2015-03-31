@@ -22,6 +22,7 @@ import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -40,6 +41,7 @@ import org.edx.mobile.model.json.SuccessResponse;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
@@ -676,10 +678,7 @@ public class Api {
             // this might be a login with Facebook or Google
             String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             if (token != null) {
-                String cookie = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE);
-                
-                headers.putString("Authorization", token);
-                headers.putString("Cookie", cookie);
+                  headers.putString("Authorization", token); 
             } else {
                 logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
@@ -1067,55 +1066,68 @@ public class Api {
         return list;
     }
 
-    public SocialLoginResponse loginByFacebook(String accessToken) throws Exception {
+    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
+            throws Exception{
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
+            return loginByFacebook( accessToken );
+        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
+            return loginByGoogle( accessToken );
+        return null;
+    }
+
+    public AuthResponse loginByFacebook(String accessToken) throws Exception {
+
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
         
-        return socialLogin(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
+        return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
     }
 
-    public SocialLoginResponse loginByGoogle(String accessToken) throws Exception {
+    public AuthResponse loginByGoogle(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
         
-        return socialLogin(accessToken, PrefManager.Value.BACKEND_GOOGLE);
+        return socialLogin2(accessToken, PrefManager.Value.BACKEND_GOOGLE);
     }
 
-    private SocialLoginResponse socialLogin(String accessToken, String backend) 
+    private AuthResponse socialLogin2(String accessToken, String backend)
                                 throws Exception {
         Bundle headers = new Bundle();
         headers.putString("Content-Type", "application/x-www-form-urlencoded");
-        
+
+
+//        URL: /exchange_oauth_token
+//        Method: POST
+//        Request parameters (all strings):
+//        provider (required): Which third party provided the access token (value should be one of "Google" or "Facebook")
+//        access_token (required): The third-party access token
+//        client_id (required): The id for an OAuth client (which must be provisioned via admin interface)
+//        scope (optional): The requested scope for the first-party access token
+//        Example response:
+//        {"access_token": "<redacted>", "token_type": "Bearer", "expires_in": 2591999, "scope": ""}
+
         Bundle p = new Bundle();
         p.putString("access_token", accessToken);
+        p.putString("client_id",  Config.getInstance().getOAuthClientId());
 
-        String url = getBaseUrl() + "/login_oauth_token/" + backend + "/";
+        //oauth2/exchange_access_token/<backend>/
+        logger.debug("access_token: " + accessToken);
+        logger.debug("client_id: " + Config.getInstance().getOAuthClientId());
+        String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
         logger.debug("Url for social login: " + url);
-        
-        String json = http.post(url, p, headers);
 
-        if (json == null) {
-            return null;
-        } 
-        
-        if (json.length() == 0) {
-            // success gives empty response for this api call
-            json = "{}";
-        }
-        
-        logger.debug(backend + " login=" + json);
+
+        String json = http.post(url, p, null);
+        logger.debug("Auth response= " + json);
+
+        // store auth token response
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        pref.put(PrefManager.Key.AUTH_JSON, json);
+        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
 
         Gson gson = new GsonBuilder().create();
-        SocialLoginResponse res = gson.fromJson(json, SocialLoginResponse.class);
-        // hold the json string as it is
-        res.json = json;
-        
-        // FIXME: Should not use cookies ? 
-        // store cookie into preferences for later use in further API calls
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, res.cookie);
+        return gson.fromJson(json, AuthResponse.class);
 
-        return res;
     }
 
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
@@ -1177,7 +1189,7 @@ public class Api {
      */
     public RegisterResponse register(Bundle parameters)
             throws Exception {
-        String url = getBaseUrl() + "/create_account";
+        String url = getBaseUrl() + "/user_api/v1/account/registration/";
 
         String json = http.post(url, parameters, null);
 
@@ -1186,7 +1198,18 @@ public class Api {
         }
         logger.debug("Register response= " + json);
 
+        //the server side response format is not client friendly ... so..
         Gson gson = new GsonBuilder().create();
+        try {
+            FormFieldMessageBody body = gson.fromJson(json, FormFieldMessageBody.class);
+            if( body != null && body.size() > 0 ){
+                RegisterResponse res = new RegisterResponse();
+                res.setMessageBody(body);
+                return res;
+            }
+        }catch (Exception ex){
+            //normal workflow , ignore it.
+        }
         RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
 
         return res;
@@ -1199,30 +1222,13 @@ public class Api {
      */
     public RegistrationDescription getRegistrationDescription() throws Exception {
         Gson gson = new Gson();
-
-        // check if we have a cached version of registration description
-        try {
-            String url = getBaseUrl() + "/user_api/v1/account/registration/";
-            String json = cache.get(url);
-            // TODO: let the form be rendered by JSON in assets for testing, but delete below line for prod
-            json = null;
-            if (json != null) {
-                RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
-                logger.debug("picking up registration description (form) from cache, not from assets");
-                return form;
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
-
-        // if not cached, read the in-app registration description
         InputStream in = context.getAssets().open("config/registration_form.json");
         RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
         logger.debug("picking up registration description (form) from assets, not from cache");
         return form;
     }
 
-    public boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+    public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
         logger.debug("POST url for enrolling in a Course: " + enrollUrl);
 
@@ -1248,10 +1254,4 @@ public class Api {
         return false;
     }
 
-    public String downloadRegistrationDescription() throws Exception {
-        String url = getBaseUrl() + "/user_api/v1/account/registration/";
-        String json = http.get(url, null);
-        cache.put(url, json);
-        return json;
-    }
 }

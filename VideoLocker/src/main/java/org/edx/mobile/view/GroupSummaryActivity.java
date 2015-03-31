@@ -18,20 +18,22 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
 
     private static final String TAG = GroupSummaryFragment.class.getCanonicalName();
     public static final String EXTRA_GROUP = TAG + ".group";
+    private SocialGroup group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SocialGroup group = getIntent().getParcelableExtra(EXTRA_GROUP);
+        group = getIntent().getParcelableExtra(EXTRA_GROUP);
         if (group == null) {
             throw new IllegalArgumentException("missing group");
         }
 
-        getActionBar().show();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(android.R.color.transparent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setTitle(group.getName());
     }
 

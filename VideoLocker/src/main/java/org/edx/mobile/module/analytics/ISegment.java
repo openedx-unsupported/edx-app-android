@@ -39,7 +39,7 @@ public interface ISegment {
     Properties trackVideoLoading(String videoId, String courseId, String unitUrl);
 
     Properties trackVideoSeek(String videoId, Double oldTime,
-            Double newTime, String courseId, String unitUrl);
+            Double newTime, String courseId, String unitUrl, Boolean skipSeek);
 
     void resetIdentifyUser();
 
@@ -71,9 +71,13 @@ public interface ISegment {
     Properties trackVideoOrientation(String videoId, Double currentTime,
             boolean isLandscape, String courseId, String unitUrl);
     
-    Properties trackUserDoesNotHaveAccount();
+    Properties trackUserSignUpForAccount();
     
     Properties trackUserFindsCourses();
+
+    Properties trackCreateAccountClicked(String appVersion, String source);
+
+    Properties trackEnrollClicked(String courseId, boolean email_opt_in);
 
     /**
      * Sets given tracker instance and uses it for analytics.
@@ -141,8 +145,12 @@ public interface ISegment {
         public static final String USER_LOGOUT = "User Logout";
         public static final String BROWSER_LAUNCHED = "Browser Launched";
         public static final String LANGUAGE_CLICKED = "Language Clicked";
-        public static final String USER_NO_ACCOUNT = "User Has No Account Clicked";
+        public static final String SIGN_UP = "Sign up Clicked";
         public static final String FIND_COURSES = "Find Courses Clicked";
+        public static final String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
+        public static final String ENROLL_COURSES = "Enroll Course Clicked";
+        public static final String EMAIL_OPT_IN = "email_opt_in";
+        public static final String PROVIDER = "provider";
 
         public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
         public static final String CELL_CARRIER = "cell_carrier";
@@ -158,6 +166,8 @@ public interface ISegment {
         public static final String SOCIAL_NETWORK = "social_network";
         public static final String SOCIAL_CONNECTION_STATE = "social_connection_state";
         public static final String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
+        public static final String CATEGORY = "category";
+        public static final String LABEL = "label";
 
         public static final String COURSE_GROUP_ACCESSED = "Course Group Accessed";
         public static final String GAME_GROUP_ACCESSED = "Game Group Accessed";
@@ -172,6 +182,7 @@ public interface ISegment {
     
     public static interface Values{
         public static final String SKIP = "skip";
+        public static final String SLIDE = "slide";
         public static final String MOBILE = "mobile";
         public static final String VIDEOPLAYER = "videoplayer";
         public static final String PASSWORD = "Password";
@@ -196,8 +207,13 @@ public interface ISegment {
         public static final String USERLOGOUT = "edx.bi.app.user.logout";
         public static final String USERLOGIN = "edx.bi.app.user.login";
         public static final String APP_NAME = "edx.mobileapp.android";
-        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.no_account";
-        public static final String USER_FIND_COURSES = "edx.bi.app.find_courses";
+        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
+        public static final String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
+        public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
+        public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
+        public static final String CONVERSION = "conversion";
+        public static final String USER_ENGAGEMENT = "user-engagement";
+        public static final String COURSE_DISCOVERY = "course-discovery";
 
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";

@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,32 +19,32 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.interfaces.NetworkObserver;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.GetLastAccessedTask;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.util.UiUtil;
-import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
+import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ChapterAdapter;
+import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,14 +69,18 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private EnrolledCoursesResponse enrollment;
     private ETextView courseScheduleTv;
     private String startDate;
+    private boolean isTaskRunning = false;
+    private GetCourseHierarchyTask getHeirarchyTask;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        logger.debug("created: " + getClass().getName());
+
         final Bundle bundle = getArguments();
         if(bundle!=null){
             enrollment = (EnrolledCoursesResponse) bundle
-                    .getSerializable("enrollment");
+                    .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             if(enrollment!=null) {
                 courseId = enrollment.getCourse().getId();
                 try {
@@ -103,11 +106,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             if (startDate != null) {
                 startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + startDate + "</font>";
                 String courseScheduledText = getString(R.string.course_content_available_text);
-                courseScheduledText = courseScheduledText.replace("START_DATE", startDate);
+                courseScheduledText = String.format(courseScheduledText, startDate);
                 courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
                 courseScheduleTv.setText(Html.fromHtml(courseScheduledText));
             }
         }
+
+        //Initialize the adapter
+        initializeAdapter();
 
         ArrayList<SectionEntry> savedEntries = null;
         if (savedInstanceState != null) {
@@ -118,16 +124,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             } catch (Exception ex) {
                 logger.error(ex);
             }
-
         }
 
         chapterListView = (ListView) view
                 .findViewById(R.id.chapter_list);
 
-        initializeAdapter();
         chapterListView.setAdapter(adapter);
         chapterListView.setOnItemClickListener(adapter);
-        loadData(view);
         lastClickTime = 0;
 
         return view;
@@ -139,9 +142,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         isActivityStarted = true;
         adapter.setStore(db, storage);
         handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-        if (!adapter.isEmpty()) {
-            fetchLastAccessed(getView());
+        if(!adapter.isEmpty()){
+            adapter.notifyDataSetChanged();
         }
+
+        fetchLastAccessed(getView());
     }
 
     @Override
@@ -151,89 +156,89 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         //We need to cancel the getLastAccessed task if the fragment is stopped
         if(getLastAccessedTask!=null){
             getLastAccessedTask.cancel(true);
+            isFetchingLastAccessed = false;
         }
     }
 
     private void initializeAdapter(){
-        adapter = new ChapterAdapter(getActivity(), courseId) {
+        if (adapter == null) {
+            // creating adapter just once
 
-            @Override
-            public void onItemClicked(final SectionEntry model) {
-                // handle click
-                try{
-                    if (AppConstants.offline_flag) {
-                        boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId,
-                                model.chapter, null);
-                        if(isVideoDownloaded){
-                            Intent videoIntent = new Intent(getActivity(),
-                                    VideoListActivity.class);
-                            videoIntent.putExtra("enrollment", enrollment);
-                            videoIntent.putExtra("chapter", model.chapter);
-                            videoIntent.putExtra("FromMyVideos", false);
-                            startActivity(videoIntent);
+            adapter = new ChapterAdapter(getActivity(), courseId) {
+
+                @Override
+                public void onItemClicked(final SectionEntry model) {
+                    // handle click
+                    try {
+                        if (AppConstants.offline_flag) {
+                            boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId,
+                                    model.chapter, null);
+                            if (isVideoDownloaded) {
+                                Intent videoIntent = new Intent(getActivity(),
+                                        VideoListActivity.class);
+                                videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                                videoIntent.putExtra("chapter", model.chapter);
+                                videoIntent.putExtra("FromMyVideos", false);
+                                startActivity(videoIntent);
+                            } else {
+                                UiUtil.showOfflineAccessMessage(CourseChapterListFragment.this.getView());
+                            }
                         } else {
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(),
-                                    getString(R.string.section_offline_header));
+                            Intent lectureIntent = new Intent(getActivity(),
+                                    CourseLectureListActivity.class);
+                            lectureIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                            lectureIntent.putExtra("lecture", model);
+                            getActivity().startActivity(lectureIntent);
                         }
-                    } else {
-                        Intent lectureIntent = new Intent(getActivity(),
-                                CourseLectureListActivity.class);
-                        lectureIntent.putExtra("enrollment", enrollment);
-                        lectureIntent.putExtra("lecture", model);
-                        getActivity().startActivity(lectureIntent);
+                    } catch (Exception ex) {
+                        logger.error(ex);
                     }
-                }catch(Exception ex){
-                    logger.error(ex);
-                }
-            }
-
-            @Override
-            public void download(final SectionEntry model) {
-                try{
-                    IDialogCallback dialogCallback = new IDialogCallback() {
-                        @Override
-                        public void onPositiveClicked() {
-                            startChapterDownload(model);
-                        }
-
-                        @Override
-                        public void onNegativeClicked() {
-                            //
-                        }
-                    };
-                    MediaConsentUtils.consentToMediaDownload(getActivity(), dialogCallback);
-
-                } catch (Exception e) {
-                    logger.error(e);
                 }
 
-            }
-        };
+                @Override
+                public void download(final SectionEntry model) {
+                    try {
+                        IDialogCallback dialogCallback = new IDialogCallback() {
+                            @Override
+                            public void onPositiveClicked() {
+                                startChapterDownload(model);
+                            }
+
+                            @Override
+                            public void onNegativeClicked() {
+                                ((CourseDetailTabActivity) getActivity())
+                                        .showInfoMessage(getString(R.string.wifi_off_message));
+                            }
+                        };
+                        MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+
+                    } catch (Exception e) {
+                        logger.error(e);
+                    }
+
+                }
+            };
+        }
 
         if (!(NetworkUtil.isConnected(getActivity()))) {
             AppConstants.offline_flag = true;
         } else {
             AppConstants.offline_flag = false;
         }
-
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        updateOpenInBrowserPanel();
 
-        refreshShowInWebPanel();
-
-        if (adapter.getCount() == 0) {
-
-            loadData(view);
-
+        if (adapter.isEmpty()) {
+            logger.debug("adapter is empty, loading data ...");
+            loadData(getView());
         }
-
     }
 
     private void startChapterDownload(SectionEntry model) {
-
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         int downloadCount = 0;
@@ -241,7 +246,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             DownloadEntry de = (DownloadEntry) storage
                     .getDownloadEntryfromVideoResponseModel(v);
             if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED) {
+                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
+                    || de.isVideoForWebOnly ) {
                 continue;
             } else {
                 downloadSize = downloadSize
@@ -269,15 +275,26 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         super.onSaveInstanceState(outState);
 
         ArrayList<SectionEntry> saveEntries = new ArrayList<SectionEntry>();
-        for(int i = 0; i < adapter.getCount(); i++)
-            saveEntries.add(adapter.getItem(i));
+        if(adapter!=null){
+            for(int i = 0; i < adapter.getCount(); i++)
+                saveEntries.add(adapter.getItem(i));
 
-        outState.putSerializable(SECTION_ENTRIES, saveEntries);
+            outState.putSerializable(SECTION_ENTRIES, saveEntries);
+        }
     }
 
     //Loading data to the Adapter
     private void loadData(final View view) {
-        GetCourseHierarchyTask task = new GetCourseHierarchyTask(getActivity()) {
+        if (isTaskRunning) {
+            logger.debug("skipping a call to loadData, task is already running");
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+            progressBar.setVisibility(View.VISIBLE);
+            getHeirarchyTask.setProgressDialog(progressBar);
+            return;
+        }
+
+        getHeirarchyTask = new GetCourseHierarchyTask(getActivity()) {
+
             @Override
             public void onFinish(Map<String, SectionEntry> chapterMap) {
                 // display these chapters
@@ -297,13 +314,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                         chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                     }
                     adapter.notifyDataSetChanged();
-                    refreshShowInWebPanel();
+                    updateOpenInBrowserPanel();
 
-                    if (AppConstants.offline_flag) {
-                        hideOpenInBrowserPanel();
-                    } else {
+                    if ( !AppConstants.offline_flag) {
                         fetchLastAccessed(getView());
-                        showOpenInBrowserPanel(openInBrowserUrl);
                     }
                 }
 
@@ -320,6 +334,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                 }
 
                 logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());
+                isTaskRunning = false;
             }
 
             @Override
@@ -330,23 +345,23 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                     chapterListView.setEmptyView(view.findViewById(R.id.no_chapter_tv));
                 }
+
+                isTaskRunning = false;
             }
         };
 
-        ProgressBar progressBar = (ProgressBar) view
-                .findViewById(R.id.api_spinner);
-        task.setProgressDialog(progressBar);
+        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        getHeirarchyTask.setProgressDialog(progressBar);
         //Initializing task call
         logger.debug("Initializing Chapter Task"+ DateUtil.getCurrentTimeStamp());
-        task.execute(courseId);
-
+        isTaskRunning = true;
+        getHeirarchyTask.execute(courseId);
     }
 
-    private void refreshShowInWebPanel() {
-        if (AppConstants.offline_flag) {
+    private void updateOpenInBrowserPanel() {
+        if (AppConstants.offline_flag || adapter.isEmpty()) {
             hideOpenInBrowserPanel();
         } else {
-            fetchLastAccessed(getView());
             showOpenInBrowserPanel(openInBrowserUrl);
         }
     }
@@ -358,7 +373,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
         hideLastAccessedView(getView());
         if (chapterListView != null) {
-            hideOpenInBrowserPanel();
+            updateOpenInBrowserPanel();
         }
     }
 
@@ -369,7 +384,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
         if (chapterListView != null && openInBrowserUrl != null) {
             fetchLastAccessed(getView());
-            showOpenInBrowserPanel(openInBrowserUrl);
+            updateOpenInBrowserPanel();
         }
     }
 
@@ -420,12 +435,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     if(isActivityStarted) {
                         adapter.notifyDataSetChanged();
                         (getActivity()).invalidateOptionsMenu();
-                        if (result > 1) {
-                            String msg = String.format(getString(R.string.downloading_multiple), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
-                        } else if (result == 1) {
-                            String msg = String.format(getString(R.string.downloading_single), result);
-                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), msg);
+                        if (result > 0) {
+                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
+                            UiUtil.showMessage(CourseChapterListFragment.this.getView(), String.format(format, result));
                         } else {
                             UiUtil.showMessage(CourseChapterListFragment.this.getView(),
                                     getString(R.string.msg_video_not_downloaded));
@@ -455,15 +467,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
+        if(!hidden) {
+            updateOpenInBrowserPanel();
+
             if(AppConstants.offline_flag){
                 hideLastAccessedView(getView());
-                hideOpenInBrowserPanel();
             }else{
                 fetchLastAccessed(getView());
-                if(chapterListView!=null && openInBrowserUrl!=null){
-                    showOpenInBrowserPanel(openInBrowserUrl);
-                }
             }
         }
     }
@@ -475,13 +485,14 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
+                if (isActivityStarted()){
+                    if(!AppConstants.offline_flag) {
+                        if (adapter != null && enrollment != null) {
+                            if (db.isAnyVideoDownloadingInCourse(null, enrollment.getCourse().getId()))
+                                adapter.notifyDataSetChanged();
                         }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
+                    sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
             }
         }
@@ -558,7 +569,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                         lastClickTime = currentTime;
                                         Bundle bundle = getArguments();
                                         EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) 
-                                                bundle.getSerializable("enrollment");
+                                                bundle.getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
                                         try {
                                             LectureModel lecture = api.getLecture(courseId,
                                                     videoModel.getChapterName(), 
@@ -569,7 +580,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                             Intent videoIntent = new Intent(
                                                     getActivity(),
                                                     VideoListActivity.class);
-                                            videoIntent.putExtra("enrollment", enrollment);
+                                            videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
                                             videoIntent.putExtra("lecture", lecture);
                                             videoIntent.putExtra("FromMyVideos", false);
                                             
@@ -606,12 +617,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
-
-
     private void fetchLastAccessed(final View view){
         try{
-            if(!isFetchingLastAccessed){
-                isFetchingLastAccessed = true;
+            if(!isFetchingLastAccessed) {
                 if(courseId!=null && getProfile()!=null && getProfile().username!=null){
                     String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                             .username, courseId);
@@ -659,6 +667,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                             logger.error(ex);
                         }
                     };
+
+                    isFetchingLastAccessed = true;
                     getLastAccessedTask.execute(courseId);
                 }   
             }
@@ -681,12 +691,11 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                         lastAccessed_subSectionId = result.getLastVisitedModuleId();
                         showLastAccessedView(view);
                     }
-                    isFetchingLastAccessed = false;
                 }
+
                 @Override
                 public void onException(Exception ex) {
                     logger.error(ex);
-                    isFetchingLastAccessed = false;
                 }
             };
             syncLastAccessTask.execute(courseId, prefModuleId);

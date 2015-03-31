@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -42,10 +43,20 @@ public class WebViewDialogFragment extends DialogFragment {
                 container, false);
 
         progress = (ProgressBar) v.findViewById(R.id.progress);
+        progress.setVisibility(View.GONE);
 
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webView);
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webView) {
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    progress.setVisibility(View.GONE);
+
+                    // open URL in external browser
+                    BrowserUtil.open(getActivity(), url);
+                }
+            };
             client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
 
                 @Override
@@ -60,6 +71,11 @@ public class WebViewDialogFragment extends DialogFragment {
 
                 @Override
                 public void onPageLoadError() {
+                    progress.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onPagePartiallyLoaded() {
                     progress.setVisibility(View.GONE);
                 }
             });

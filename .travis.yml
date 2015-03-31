@@ -35,13 +35,19 @@ before_script:
   - adb wait-for-device
   - adb shell input keyevent 82 &
   - chmod +x gradlew
-  - chmod +x travis-build.sh
-  - chmod +x travis-acceptance-tests.sh
+#  - chmod +x travis-acceptance-tests.sh
 
 script: 
-   - ./gradlew clean assembleProdDebug assembleProdDebugTest
-#  - ./travis-build.sh
+  - ./gradlew uninstallAll createProdDebugCoverageReport copyUnitTestBuildArtifacts
 #  - ./travis-acceptance-tests.sh
+
+after_script:
+  - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
+  - ~/bin/artifacts upload artifacts
+
+branches:
+  only:
+    - master
 
 # Enable caching to speed up the build
 cache:

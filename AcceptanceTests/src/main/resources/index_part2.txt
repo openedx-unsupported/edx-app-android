@@ -1,0 +1,32 @@
+  ]);
+
+        var options = {
+        width: 600,
+        height: data.getNumberOfRows() * 40,
+        legend: { position: 'top', maxLines: 3 },
+        bar: { groupWidth: '75%' },
+        isStacked: true
+      };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+
+     google.visualization.events.addListener(chart, 'click', function(e) {
+        var match = e.targetID.match(/vAxis#\d#label#(\d)/);
+        if (match != null && match.length) {
+          var rowIndex = parseInt(match[1]);
+          // get the value from column 0 in the clicked row
+          var label = data.getValue(rowIndex, 0);
+          var url = label+'/index.html';     
+          window.location = url;
+        //alert('You clicked on ' + label);
+        }
+      });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

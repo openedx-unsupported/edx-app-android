@@ -182,8 +182,9 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         double oldTime = 10.2;
         double newTime = 10.22;
+        Boolean skipSeek = true;
         Properties props = segment.trackVideoSeek(videoId, oldTime,
-                newTime, courseId, unitUrl);
+                newTime, courseId, unitUrl, skipSeek);
         // verify that the track method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SEEK_VIDEO),
                 (Properties) Mockito.any());
@@ -193,12 +194,11 @@ public class SegmentTests extends BaseTestCase {
         Properties dataProps = (Properties)props.get(ISegment.Keys.DATA);
         testCommonProperties(dataProps);
         assertTrue(props.containsKey(ISegment.Keys.NAME));
-
         assertTrue(dataProps.containsKey(ISegment.Keys.SEEK_TYPE));
+        assertTrue(dataProps.containsValue(ISegment.Values.SKIP));
         assertTrue(dataProps.containsKey(ISegment.Keys.NEW_TIME));
         assertTrue(dataProps.containsKey(ISegment.Keys.OLD_TIME));
         assertTrue(dataProps.containsKey(ISegment.Keys.REQUESTED_SKIP_INTERVAL));
-
         testAnalyticsContext((Properties)props.get(ISegment.Keys.CONTEXT));
 
         print(props.toString());
@@ -407,10 +407,9 @@ public class SegmentTests extends BaseTestCase {
     }
     public void testtrackUserDoesNotHaveAccount() throws Exception {
 
-        Properties props = segment.trackUserDoesNotHaveAccount();
+        Properties props = segment.trackUserSignUpForAccount();
 
-        // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_NO_ACCOUNT),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SIGN_UP),
                 (Properties) Mockito.any());
             
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -429,12 +428,57 @@ public class SegmentTests extends BaseTestCase {
                 (Properties) Mockito.any());
             
         assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
 
         Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
         assertTrue(cxt.containsKey(ISegment.Keys.APP));
 
         print(props.toString());
     }
+
+    public void testTrackCreateAccountClicked() throws Exception {
+
+        String appVersion = "Android v1.0.04";
+        Properties props = segment.trackCreateAccountClicked(appVersion);
+
+        // verify that the identity method was called
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.CREATE_ACCOUNT_CLICKED),
+                (Properties) Mockito.any());
+
+        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
+
+        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+
+        print(props.toString());
+    }
+
+    public void testtrackEnrollClicked() throws Exception {
+        String courseId = "courseId";
+        boolean email_opt_in = true;
+        Properties props = segment.trackEnrollClicked(courseId, email_opt_in);
+
+        // verify that the identity method was called
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SIGN_UP),
+                (Properties) Mockito.any());
+
+        assertTrue(props.containsKey(ISegment.Keys.NAME));
+        assertTrue(props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue(props.containsKey(ISegment.Keys.LABEL));
+
+        Properties dataProps = (Properties)props.get(ISegment.Keys.DATA);
+        assertTrue(dataProps.containsKey(ISegment.Keys.COURSE_ID));
+        assertTrue(dataProps.containsKey(ISegment.Keys.EMAIL_OPT_IN));
+
+        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+
+        print(props.toString());
+    }
+
 
     @Override
     protected void tearDown() throws Exception {

@@ -45,11 +45,10 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         holder.no_of_videos.setVisibility(View.VISIBLE);
         holder.no_of_videos.setText("" + totalCount);
         int inProcessCount = dbStore.getVideosCountByChapter(courseId, model.chapter, null);
-        logger.debug("In Process Count" + inProcessCount);
-        int videoCount = totalCount - inProcessCount;
-        logger.debug("Video Count"+videoCount);
+        int webOnlyCount = dbStore.getWebOnlyVideosCountByChapter(courseId,model.chapter,null);
+        int videoCount = totalCount - inProcessCount - webOnlyCount;
         if (videoCount > 0) {
-            holder.progresslayout.setVisibility(View.GONE);
+            holder.progresslayout.setVisibility(View.INVISIBLE);
             holder.bulk_download_videos.setVisibility(View.VISIBLE);
             holder.bulk_download_videos
             .setOnClickListener(new OnClickListener() {
@@ -71,7 +70,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                                     holder.progresslayout.setVisibility(View.VISIBLE);
                                     holder.download_pw.setProgressPercent(percent);
                                 }else{
-                                    holder.progresslayout.setVisibility(View.GONE);
+                                    holder.progresslayout.setVisibility(View.INVISIBLE);
                                 }
                             }
                             @Override
@@ -80,15 +79,15 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
                             }
                         });
             }else{
-                holder.progresslayout.setVisibility(View.GONE);
+                holder.progresslayout.setVisibility(View.INVISIBLE);
             }
         }
 
         if (AppConstants.offline_flag) {
-            holder.progresslayout.setVisibility(View.GONE);
+            holder.progresslayout.setVisibility(View.INVISIBLE);
             holder.no_of_videos.setVisibility(View.GONE);
             holder.bulk_download_videos.setVisibility(View.GONE);
-            holder.download_pw.setVisibility(View.GONE);
+            holder.download_pw.setVisibility(View.INVISIBLE);
             holder.next_arrow.setVisibility(View.VISIBLE);
             boolean isVideoDownloaded = dbStore.isVideoDownloadedInChapter
                     (courseId, model.chapter, null);

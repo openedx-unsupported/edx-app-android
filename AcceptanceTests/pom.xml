@@ -19,19 +19,24 @@
 		<outputPath>Test-Reports/${env}/${timestamp}</outputPath>
 		<testngXml>android.xml</testngXml>
 		<sauceUser></sauceUser>
-		<sauceKey></sauceKey>
+		<sauceKeys></sauceKeys>
 		<sauceBuildName></sauceBuildName>
-		<deviceOS>android</deviceOS>
-		<appPath>sauce-storage:edxDebug.apk</appPath>
-		<osVersion>4.4</osVersion>
-		<deviceName>Android Emulator</deviceName>
-		<appPackage>org.edx.mobile</appPackage>
-		<emailId>divakar.patil@claricetechnologies.com</emailId>
-		<password>edx1</password>
+		<deviceOS></deviceOS>
+		<appPath></appPath>
+		<osVersion></osVersion>
+		<deviceName></deviceName>
+		<appPackage></appPackage>
+		<emailId></emailId>
+		<password></password>
 		<udid></udid>
 	</properties>
 
 	<dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>

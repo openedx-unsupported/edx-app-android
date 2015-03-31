@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,6 +15,7 @@
         android:background="@android:color/white">
 
         <LinearLayout
+            android:id="@+id/registrationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -21,11 +23,59 @@
             android:layout_marginRight="20dp">
 
             <LinearLayout
+                android:id="@+id/message_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/panel_login_message" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/signup_with_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/signup_social_title_margin_large"
+                android:layout_marginBottom="@dimen/signup_social_title_margin_bottom"
+                android:gravity="left" >
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/signup_with_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_with"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/panel_signup_social" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/signup_social_title_margin"
+                android:layout_marginBottom="@dimen/signup_social_title_margin_bottom"
+                android:gravity="left" >
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/or_signup_with_email_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/or_sign_up_with_email"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/required_fields_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="5dp"/>
 
             <LinearLayout
                 android:id="@+id/field_seperator"
@@ -34,18 +84,11 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center">
 
-                <View
-                    android:id="@+id/view1"
-                    android:layout_width="100dp"
-                    android:layout_height="1dp"
-                    android:background="@color/grey_act_background" />
-
-               <org.edx.mobile.view.custom.ETextView
+                <org.edx.mobile.view.custom.ETextView
                     android:id="@+id/optional_field_tv"
                     style="@style/semibold_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
                     android:text="@string/show_optional_text"
                     android:textColor="@color/grey_hide_optional_text"
@@ -53,7 +96,8 @@
 
                 <View
                     android:id="@+id/view2"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="1dp"
                     android:background="@color/grey_act_background" />
             </LinearLayout>
@@ -69,7 +113,7 @@
                 android:id="@+id/createAccount_button_layout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bt_signin_active">
 
                 <org.edx.mobile.view.custom.ETextView
@@ -134,6 +178,7 @@
 
         <include layout="@layout/panel_login_error" />
     </LinearLayout>
+
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/downloadMessage"

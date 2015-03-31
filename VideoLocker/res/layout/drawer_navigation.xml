@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_nav_background" >
+    android:background="@color/grey_nav_background">
 
     <LinearLayout
         android:id="@+id/name_layout"
@@ -11,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/grey_name_background"
         android:orientation="vertical"
-        android:padding="15dp" >
+        android:padding="15dp">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/name_tv"
@@ -22,8 +23,8 @@
             android:inputType="textCapWords"
             android:maxWidth="200dp"
             android:paddingTop="10dp"
-            android:text="@string/name_default"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:text="Username" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/email_tv"
@@ -34,8 +35,8 @@
             android:maxWidth="200dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:text="@string/email_default"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:text="user@domain.com" />
     </LinearLayout>
 
     <LinearLayout

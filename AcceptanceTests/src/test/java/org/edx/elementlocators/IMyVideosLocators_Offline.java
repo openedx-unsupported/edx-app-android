@@ -66,7 +66,7 @@ public interface IMyVideosLocators_Offline {
 	String btnHeaderNameId = "android:id/action_bar_title";
 	String btnCourseId = "org.edx.mobile:id/course_row_layout";
 	String txtMyVideosName = "My Videos";
-	String txtMyVideosId = "org.edx.mobile:id/my_assets";
+	String txtMyVideosId = "org.edx.mobile:id/drawer_option_my_videos";
 	String txtAllVideosName = "All Videos";
 
 	String btnOkPopupId = "org.edx.mobile:id/positiveButton";

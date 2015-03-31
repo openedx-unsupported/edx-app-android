@@ -1,8 +1,15 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import org.edx.mobile.R;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -58,15 +65,21 @@ public class Router {
         sourceActivity.startActivity(settingsIntent);
     }
 
-    public void showLaunchScreen(Activity sourceActivity) {
-        Intent launchIntent = new Intent(sourceActivity, LaunchActivity.class);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        sourceActivity.startActivity(launchIntent);
+    public void showLaunchScreen(Context context, boolean overrideAnimation) {
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG,overrideAnimation);
+        if ( context instanceof  Activity)
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        else
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(launchIntent);
     }
 
-    public void showLogin(Activity sourceActivity) {
-        Intent launchIntent = new Intent(sourceActivity, LoginActivity.class);
-        sourceActivity.startActivity(launchIntent);
+    public void showLogin(Context context) {
+        Intent launchIntent = new Intent(context, LoginActivity.class);
+        if ( !(context instanceof  Activity) )
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(launchIntent);
     }
 
     public void showRegistration(Activity sourceActivity) {
@@ -76,12 +89,56 @@ public class Router {
 
     public void showMyCourses(Activity sourceActivity) {
         Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        /*
+        Using CLEAR_TOP flag, causes the activity to be re-created every time.
+        This reloads the list of courses. We don't want that.
+        Using REORDER_TO_FRONT solves this problem
+         */
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(intent);
 
         // let login screens be ended
         Intent loginIntent = new Intent();
         loginIntent.setAction(AppConstants.USER_LOG_IN);
         sourceActivity.sendBroadcast(loginIntent);
+    }
+
+    public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
+                                     boolean announcements) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(CourseDetailTabActivity.EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(CourseDetailTabActivity.EXTRA_ANNOUNCEMENTS, announcements);
+
+        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra(CourseDetailTabActivity.EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
+    /**
+     *  this method can be called either through UI [ user clicks LOGOUT button],
+     *  or programmatically
+     */
+    public void forceLogout(Context context){
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        pref.clearAuth();
+        pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
+        Intent intent = new Intent();
+        intent.setAction(AppConstants.LOGOUT_CLICKED);
+        context.sendBroadcast(intent);
+
+        ISegment segIO = SegmentFactory.getInstance();
+        segIO.trackUserLogout();
+        segIO.resetIdentifyUser();
+
+        Router.getInstance().showLaunchScreen(context,true);
+        Router.getInstance().showLogin(context);
+    }
+
+    public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
+        Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
+        handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
+        handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(handoutIntent);
     }
 }

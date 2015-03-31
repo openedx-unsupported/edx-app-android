@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp">
+    android:paddingBottom="2dp">
 
     <org.edx.mobile.module.registration.view.RegistrationOptionSpinner
         android:id="@+id/input_spinner"

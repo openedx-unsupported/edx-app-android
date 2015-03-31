@@ -150,7 +150,7 @@ public class PrefManager {
         if (json == null) {
             return null;
         }
-        
+
         Gson gson = new GsonBuilder().create();
         AuthResponse res = gson.fromJson(json, AuthResponse.class);
         
@@ -165,6 +165,14 @@ public class PrefManager {
         put(PrefManager.Key.AUTH_JSON, null);
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
         put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+        put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
+    }
+
+    /**
+     *  check if app is currently logged in through Google/Facebook
+     */
+    public boolean hasAuthTokenSocialCookie(){
+        return  null !=  getString(Key.AUTH_TOKEN_SOCIAL_COOKIE);
     }
     
     /**
@@ -190,7 +198,8 @@ public class PrefManager {
         return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
                 .getBoolean(PrefManager.Key.LASTACCESSED_SYNCED_FLAG, true);
     }
-    
+
+
     /**
      * Returns last accessed subsection id for the given course. 
      * @return
@@ -239,6 +248,7 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
+        //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
         public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";

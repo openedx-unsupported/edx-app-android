@@ -49,7 +49,7 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackVideoSeek(String videoId, Double oldTime, Double newTime, String courseId, String unitUrl) {
+    public Properties trackVideoSeek(String videoId, Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
         return null;
     }
 
@@ -109,12 +109,22 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackUserDoesNotHaveAccount() {
+    public Properties trackUserSignUpForAccount() {
         return null;
     }
 
     @Override
     public Properties trackUserFindsCourses() {
+        return null;
+    }
+
+    @Override
+    public Properties trackCreateAccountClicked(String appVersion, String source) {
+            return null;
+    }
+
+    @Override
+    public Properties trackEnrollClicked(String courseId, boolean email_opt_in) {
         return null;
     }
 

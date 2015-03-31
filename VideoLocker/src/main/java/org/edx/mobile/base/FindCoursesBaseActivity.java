@@ -1,12 +1,12 @@
 package org.edx.mobile.base;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +19,10 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
-import org.edx.mobile.view.dialog.DialogFactory;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
@@ -77,7 +75,14 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     private void setupWebView() {
         if(webview!=null){
             isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview);
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview) {
+
+                @Override
+                public void onOpenExternalURL(String url) {
+                    // open URL in external browser
+                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
+                }
+            };
             client.setActionListener(this);
             client.setPageStatusListener(this);
         }
@@ -174,8 +179,11 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
     @Override
     public void onClickCourseInfo(String pathId) {
-        logger.debug("PathId" +pathId);
-        Router.getInstance().showCourseInfo(this, pathId);
+        //If Path id is not null or empty then call CourseInfoActivity
+        if(!TextUtils.isEmpty(pathId)){
+            logger.debug("PathId" +pathId);
+            Router.getInstance().showCourseInfo(this, pathId);
+        }
     }
 
     @Override
@@ -186,6 +194,12 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
             return;
         }
 
+        try {
+            segIO.trackEnrollClicked(courseId, emailOptIn);
+        }catch(Exception e){
+            logger.error(e);
+        }
+
         isTaskInProgress = true;
 
         logger.debug("CourseId - "+courseId);
@@ -194,7 +208,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
             @Override
             public void onFinish(Boolean result) {
                 isTaskInProgress = false;
-
                 if(result!=null && result) {
                     logger.debug("Enrollment successful");
                     //If the course is successfully enrolled, send a broadcast
@@ -207,11 +220,15 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     // show flying message about the success of Enroll
                     Api api = new Api(context);
                     CourseEntry course = api.getCourseById(courseId);
+                    String msg;
                     if (course == null) {
                         // this means, you were not already enrolled to this course
-                        String msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                        sendBroadcastFlyingInfoMessage(msg);
+                        msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
+                    }else{
+                        // this means, you were already enrolled to this course
+                        msg = String.format("%s", context.getString(R.string.already_enrolled));
                     }
+                    sendBroadcastFlyingInfoMessage(msg);
                 }else{
                     showEnrollErrorMessage(courseId, emailOptIn);
                 }
@@ -227,21 +244,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
         enrollForCourseTask.execute(courseId,emailOptIn);
-    }
-
-    @Override
-    public void onOpenExternalURL(String url) {
-        // verify if the app is running on zero-rated network?
-        if (Config.getInstance().getZeroRating().getEnabled()
-                && NetworkUtil.isOnZeroRatedNetwork(this)) {
-            // inform user if they get may charged for this browsing this URL
-            Dialog d = DialogFactory.getChargesApplyConfirmationDialog(this, url);
-            d.show();
-        }
-        else {
-            // open URL in external browser
-            BrowserUtil.open(this, url);
-        }
     }
 
     @Override
@@ -304,5 +306,10 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     public void onPageLoadError() {
         isWebViewLoaded = false;
         showOfflineMessage();
+    }
+
+    @Override
+    public void onPagePartiallyLoaded() {
+        hideLoadingProgress();
     }
 }

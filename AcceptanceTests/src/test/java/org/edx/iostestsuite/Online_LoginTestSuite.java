@@ -120,4 +120,21 @@ public class Online_LoginTestSuite extends LoginTestSuiteBase {
 	public String getSignINButtonChangeText() {
 		return btnSignInChangingName;
 	}
+
+	@Override
+	public String getPasswordResetEmailMessage() {
+		return msgForgotPasswordWithCorrectEmailId;
+	}
+
+	@Override
+	public String getSignInButtonId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getSignInTextName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -22,7 +22,7 @@
         "errorMessages": {},
         "placeholder": "",
         "defaultValue": "",
-        "instructions": "The name that will appear on your certificates",
+        "instructions": "This name appears on certificates you earn",
         "type": "text",
         "label": "Full name"
     }, {
@@ -35,7 +35,7 @@
         "errorMessages": {},
         "placeholder": "",
         "defaultValue": "",
-        "instructions": "The name that will identify you in your courses",
+        "instructions": "This name identifies you in courses and <b>cannot be changed</b>",
         "type": "text",
         "label": "Public username"
     }, {
@@ -1284,8 +1284,8 @@
             "required": "You must agree to the edX <a href=\"https://www.edx.org/terms\">Terms of Service and Honor Code</a>."
         },
         "agreement" : {
-            "url" : "https://www.edx.org/terms",
-            "text" : "edX End User Licensing Agreement"
+            "url" : "edxapp://show_eula",
+            "text" : "edX Terms of Service and Honor Code"
         },
         "placeholder" : "",
         "defaultValue": false,

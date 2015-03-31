@@ -21,6 +21,7 @@ import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LikeView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.OutboundUrlSpan;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -28,13 +29,13 @@ import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
@@ -78,13 +79,14 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        logger.debug("created: " + getClass().getName());
+
         featuresPref = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
 
         Settings.sdkInitialize(getActivity());
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -139,7 +141,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         try {
             final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle.getSerializable("enrollment");
+            courseData = (EnrolledCoursesResponse) bundle.getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
             FacebookProvider fbProvider = new FacebookProvider();
 
             if(courseData != null) {
@@ -172,7 +174,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     }
                     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
                     Date endDate = DateUtil.convertToDate(course.getEnd());
-                    detailBuilder.append(getString(R.string.course_details_ending));
+                    detailBuilder.append(getString(R.string.label_ending_on));
                     detailBuilder.append(" - ");
                     detailBuilder.append(dateFormat.format(endDate));
                 }
@@ -403,10 +405,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_handout_text:
 
                 if (courseData != null) {
-                    Intent handoutIntent = new Intent(getActivity(),
-                            CourseHandoutActivity.class);
-                    handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
-                    startActivity(handoutIntent);
+                    Router.getInstance().showHandouts(getActivity(), courseData);
                 }
 
                 break;

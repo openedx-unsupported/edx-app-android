@@ -171,15 +171,4 @@ public class ApiTests extends BaseTestCase {
         print("test: finished: reset password");
     }
 
-    public void testDownloadRegistrationDescription() throws Exception {
-        String json = api.downloadRegistrationDescription();
-        assertNotNull(json);
-        Gson gson = new Gson();
-        RegistrationDescription form = gson.fromJson(json, RegistrationDescription.class);
-        assertNotNull(form);
-        assertNotNull(form.getEndpoint());
-        assertNotNull(form.getMethod());
-        assertNotNull(form.getFields());
-        assertTrue(form.getFields().size() > 0);
-    }
 }

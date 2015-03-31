@@ -23,6 +23,13 @@ public interface IRegistrationFieldView {
     void setEnabled(boolean enabled);
     void setActionListener(IActionListener actionListener);
 
+    /**
+     * used to programmatically set the value
+     * return false if not implemented yet, or can not set the value
+     *
+     */
+    boolean setRawValue(String value);
+
     public static interface IActionListener {
         void onClickAgreement(RegistrationAgreement agreement);
     }
@@ -56,7 +63,7 @@ public interface IRegistrationFieldView {
             }
             else if (fieldType.equals(RegistrationFieldType.MULTI)) {
                 View view = inflater.inflate(R.layout.view_register_spinner, null);
-                return new RegistrationSpinnerView(field, view);
+                return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
                 if (field.getAgreement() != null) {
@@ -75,4 +82,5 @@ public interface IRegistrationFieldView {
             }
         }
     }
+
 }

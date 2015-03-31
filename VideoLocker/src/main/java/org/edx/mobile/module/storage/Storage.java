@@ -3,6 +3,7 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -23,6 +24,7 @@ import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 
 import java.io.File;
@@ -61,16 +63,27 @@ public class Storage implements IStorage {
         if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
             return -1;
         }
+
         IVideoModel videoByUrl = db.getVideoByVideoUrl(model.getVideoUrl(), null);
 
         db.addVideoData(model, null);
+
+        if(model.isVideoForWebOnly())
+            return -1;  //we may need to return different error code.
+                        //but for now we show same generic error message
         //IVideoModel videoById = db.getVideoEntryByVideoId(model.getVideoId(), null);
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
+            boolean downloadPreference = pref.isDownloadOverWifiOnly();
+            if(NetworkUtil.isOnZeroRatedNetwork(context)){
+                //If the device has zero rated network, then allow downloading
+                //on mobile network even if user has "Only on wifi" settings as ON
+                downloadPreference = false;
+            }
             // there is no any download ever marked for this URL
             // so, add a download and map download info to given video
             long dmid = dm.addDownload(pref.getDownloadFolder(), model.getVideoUrl(),
-                    pref.isDownloadOverWifiOnly());
+                    downloadPreference);
             if(dmid==-1){
                 //Download did not start for the video because of an issue in DownloadManager
                 return -1;
@@ -500,6 +513,39 @@ public class Storage implements IStorage {
                 }
             });
             maintenanceThread.start();
+        }
+    }
+
+    @Override
+    public void markVideoPlaying(DownloadEntry videoModel, final DataCallback<Integer> watchedStateCallback) {
+        try {
+            final DownloadEntry v = videoModel;
+            if (v != null) {
+                if (v.watched == DownloadEntry.WatchedState.UNWATCHED) {
+                    videoModel.watched = DownloadEntry.WatchedState.PARTIALLY_WATCHED;
+
+                    // video entry might not exist in the database, add it
+                    db.addVideoData(videoModel, new DataCallback<Long>() {
+                        @Override
+                        public void onResult(Long result) {
+                            try {
+                                // mark this as partially watches, as playing has started
+                                db.updateVideoWatchedState(v.getVideoId(), DownloadEntry.WatchedState.PARTIALLY_WATCHED,
+                                        watchedStateCallback);
+                            } catch (Exception ex) {
+                                logger.error(ex);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                        }
+                    });
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 }

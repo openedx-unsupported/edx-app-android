@@ -27,6 +27,14 @@
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <!-- use window background for preview to avoid showing black screen -->
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Custom Preview Screen Theme -->
+    <style name="Theme.CustomPreview" parent="@android:style/Theme.NoTitleBar">
+        <!-- use window background for preview to avoid showing black screen -->
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
@@ -86,7 +94,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">40dp</item>
         <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

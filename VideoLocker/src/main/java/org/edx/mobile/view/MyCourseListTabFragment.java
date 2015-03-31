@@ -40,33 +40,17 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public void handleCourseClick(EnrolledCoursesResponse model) {
-        try {
-            Bundle courseBundle = new Bundle();
-            courseBundle.putSerializable("enrollment", model);
-            courseBundle.putBoolean("announcemnts", false);
-
-            Intent courseDetail = new Intent(getActivity(),
-                    CourseDetailTabActivity.class);
-            courseDetail.putExtra("bundle", courseBundle);
-            startActivity(courseDetail);
-
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
+        Router.getInstance().showCourseDetailTabs(getActivity(), model, false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = super.onCreateView(inflater, container, savedInstanceState);
         noCourseText = (TextView) view.findViewById(R.id.no_course_tv);
-
         return view;
-
     }
 
-
-    protected void loadData(boolean forceRefresh) {
+    protected void loadData(boolean forceRefresh, boolean showProgress) {
         if(forceRefresh){
             Intent clearFriends = new Intent(getActivity(), FetchCourseFriendsService.class);
 
@@ -75,9 +59,13 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
             getActivity().startService(clearFriends);
         }
 
+        //This Show progress is used to display the progress when a user enrolls in a Course
+        if(showProgress && progressBar!=null){
+                progressBar.setVisibility(View.VISIBLE);
+        }
+
         Bundle args = new Bundle();
         args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
         getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, args, this);
     }
 

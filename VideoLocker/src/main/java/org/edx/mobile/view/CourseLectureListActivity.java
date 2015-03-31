@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
@@ -18,8 +16,7 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -29,13 +26,12 @@ import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
+import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.LectureAdapter;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.ProgressDialogFragment;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
+import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +46,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private boolean isActivityVisible;
     private static final int MSG_UPDATE_PROGRESS = 1026;
     private EnrolledCoursesResponse enrollment;
+    private SectionEntry chapter;
     private String activityTitle;
 
     @Override
@@ -67,7 +64,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         }
 
 
-        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra("enrollment");
+        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra(BaseFragmentActivity.EXTRA_ENROLLMENT);
 
         ArrayList<LectureModel> lectureList = new ArrayList<LectureModel>();
 
@@ -102,7 +99,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                     Intent videoIntent = new Intent(CourseLectureListActivity.this,
                             VideoListActivity.class);
-                    videoIntent.putExtra("enrollment", enrollment);
+                    videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
                     videoIntent.putExtra("lecture", model);
                     videoIntent.putExtra("FromMyVideos", false);
                     startActivity(videoIntent);
@@ -126,10 +123,11 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                         @Override
                         public void onNegativeClicked() {
-                            //
+                            CourseLectureListActivity.this.showInfoMessage(getString(R.string.wifi_off_message));
+                            adapter.notifyDataSetChanged();
                         }
                     };
-                    MediaConsentUtils.consentToMediaDownload(CourseLectureListActivity.this, dialogCallback);
+                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this, dialogCallback);
                 }
             };
 
@@ -168,7 +166,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
 
     private void loadData() {
-        SectionEntry chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
+        chapter = (SectionEntry) getIntent().getSerializableExtra("lecture");
         setTitle(chapter.chapter);
         activityTitle = chapter.chapter;
 
@@ -325,12 +323,9 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     if(isActivityStarted()){
                         adapter.notifyDataSetChanged();
                         invalidateOptionsMenu();
-                        if(result>1){
-                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
-                                    " "+getString(R.string.label_videos));
-                        }else if (result==1){
-                            showInfoMessage(getString(R.string.started_downloading)+" "+result+
-                                    " "+getString(R.string.label_video));
+                        if(result>0){
+                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
+                            showInfoMessage(String.format(format, result));
                         } else {
                             showInfoMessage(getString(R.string.msg_video_not_downloaded));
                         }
@@ -360,13 +355,15 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
-                        if (adapter != null) {
-                            adapter.notifyDataSetChanged();
+                if (isActivityStarted()){
+                    if(!AppConstants.offline_flag) {
+                        if (adapter != null && chapter != null && enrollment != null) {
+                            if (db.isAnyVideoDownloadingInSection(null, enrollment.getCourse().getId(), chapter.chapter)){
+                                adapter.notifyDataSetChanged();
+                            }
                         }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }
+                    sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                 }
             }
         }
