@@ -22,7 +22,7 @@ public class ConfigTests extends BaseTestCase {
     private static final String FABRIC                  = "FABRIC";
     private static final String NEW_RELIC               = "NEW_RELIC";
     private static final String SEGMENT_IO              = "SEGMENT_IO";
-    private static final String WHITE_LIST              = "WHITE_LIST";
+    private static final String WHITE_LIST_OF_DOMAINS   = "WHITE_LIST_OF_DOMAINS";
 
     private static final String ENABLED                 = "ENABLED";
     private static final String DISABLED_CARRIERS       = "DISABLED_CARRIERS";
@@ -107,9 +107,19 @@ public class ConfigTests extends BaseTestCase {
         }
         zeroRatingConfig.add(CARRIERS, carriers);
 
+        ArrayList<String> domainList = new ArrayList<>();
+        domainList.add("domain1");
+        domainList.add("domain2");
+        JsonArray domains = new JsonArray();
+        for(String domain : domainList) {
+            domains.add(new JsonPrimitive(domain));
+        }
+        zeroRatingConfig.add(WHITE_LIST_OF_DOMAINS, domains);
+
         Config config = new Config(configBase);
         assertTrue(config.getZeroRatingConfig().isEnabled());
         assertEquals(carrierList, config.getZeroRatingConfig().getCarriers());
+        assertEquals(domainList, config.getZeroRatingConfig().getWhiteListedDomains());
     }
 
     public void testEnrollmentNoConfig() {
@@ -311,45 +321,5 @@ public class ConfigTests extends BaseTestCase {
         Config config = new Config(configBase);
         assertTrue(config.getSegmentConfig().isEnabled());
         assertEquals(key, config.getSegmentConfig().getSegmentWriteKey());
-    }
-
-    public void testDomainWhiteListNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getDomainWhiteListConfig().isEnabled());
-        assertEquals(config.getDomainWhiteListConfig().getDomains().size(), 0);
-    }
-
-    public void testDomainWhiteListEmptyConfig() {
-        JsonObject whiteListConfig = new JsonObject();
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(WHITE_LIST, whiteListConfig);
-
-        Config config = new Config(configBase);
-        assertFalse(config.getDomainWhiteListConfig().isEnabled());
-        assertEquals(config.getDomainWhiteListConfig().getDomains().size(), 0);
-    }
-
-    public void testDomainWhiteListConfig() {
-        JsonObject configBase = new JsonObject();
-
-        JsonObject whiteListConfig = new JsonObject();
-        configBase.add(WHITE_LIST, whiteListConfig);
-
-        whiteListConfig.add(ENABLED, new JsonPrimitive(true));
-
-        ArrayList<String> domainList = new ArrayList<>();
-        domainList.add("domain1");
-        domainList.add("domain2");
-        JsonArray domains = new JsonArray();
-        for(String domain : domainList) {
-            domains.add(new JsonPrimitive(domain));
-        }
-        whiteListConfig.add(DOMAINS, domains);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getDomainWhiteListConfig().isEnabled());
-        assertEquals(domainList, config.getDomainWhiteListConfig().getDomains());
     }
 }
