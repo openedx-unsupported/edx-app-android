@@ -14,12 +14,12 @@ import android.widget.ProgressBar;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCourseInfoTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 public class CourseInfoFragment extends CourseDetailBaseFragment {
@@ -92,7 +92,7 @@ public class CourseInfoFragment extends CourseDetailBaseFragment {
                 try {
                     if(result!=null && (!result.overview.equalsIgnoreCase(""))){
                         hideEmptyInfoMessage();
-                        webview.loadDataWithBaseURL(new Api(context).getBaseUrl(), result.overview, "text/html",
+                        webview.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), result.overview, "text/html",
                                 Encoding.UTF_8.toString(), null);
                     }else{
                         showEmptyInfoMessage(); 

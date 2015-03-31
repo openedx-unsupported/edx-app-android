@@ -3,21 +3,22 @@ package org.edx.mobile.task;
 import android.content.Context;
 
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCoursesResponse>> {
+public abstract class GetEnrolledCoursesTask extends Task<List<EnrolledCoursesResponse>> {
 
     public GetEnrolledCoursesTask(Context context) {
         super(context);
     }
 
     @Override
-    protected ArrayList<EnrolledCoursesResponse> doInBackground(Object... params) {
+    protected List<EnrolledCoursesResponse> doInBackground(Object... params) {
         try { 
-            Api api = new Api(context);
+            IApi api = ApiFactory.getCacheApiInstance(context);
 
             // TODO Handle below response, navigate to login?
             /* 
@@ -26,7 +27,7 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
             
             // return instant cached data
             try {
-                final ArrayList<EnrolledCoursesResponse> list = api
+                final List<EnrolledCoursesResponse> list = api
                         .getEnrolledCourses(true);
                 if (list != null) {
                     handler.post(new Runnable() {

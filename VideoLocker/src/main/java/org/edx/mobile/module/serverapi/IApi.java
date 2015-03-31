@@ -241,7 +241,7 @@ public interface IApi {
 
     List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception;
 
-    void setUserCourseShareConsent(boolean consent) throws Exception;
+    boolean setUserCourseShareConsent(boolean consent) throws Exception;
 
     boolean getUserCourseShareConsent() throws Exception;
 
@@ -263,4 +263,12 @@ public interface IApi {
      * @throws Exception
      */
     RegistrationDescription getRegistrationDescription() throws Exception;
+
+    /**
+     * Http GET request.
+     * @param url
+     * @param parameters
+     * @return
+     */
+    String get(String url, Bundle parameters) throws Exception;
 }

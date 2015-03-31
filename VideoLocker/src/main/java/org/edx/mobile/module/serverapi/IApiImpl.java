@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
-import org.edx.mobile.http.serialization.ShareCourseResult;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -41,6 +39,8 @@ import org.edx.mobile.module.serverapi.http.HttpFactory;
 import org.edx.mobile.module.serverapi.http.IHttp;
 import org.edx.mobile.module.serverapi.parser.IParser;
 import org.edx.mobile.module.serverapi.parser.ParserFactory;
+import org.edx.mobile.module.serverapi.serialization.JsonBooleanDeserializer;
+import org.edx.mobile.module.serverapi.serialization.ShareCourseResult;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
@@ -58,7 +58,7 @@ import java.util.Map;
 /**
  * Created by rohan on 2/6/15.
  */
-class IApiImpl extends Endpoint implements IApi {
+class IApiImpl implements IApi {
 
     private Context mContext;
     private IHttp http = HttpFactory.getInstance();
@@ -809,7 +809,7 @@ class IApiImpl extends Endpoint implements IApi {
     }
 
     @Override
-    public void setUserCourseShareConsent(boolean consent) throws Exception {
+    public boolean setUserCourseShareConsent(boolean consent) throws Exception {
         IRequest request = new IRequestImpl();
         request.setEndpoint(Endpoint.userCourseShareConsent());
         request.setHeaders(getAuthHeaders());
@@ -818,7 +818,8 @@ class IApiImpl extends Endpoint implements IApi {
         IResponse response = http.post(request);
         logger.debug("course_share_consent=" + response.getResponse());
         Gson gson = JsonBooleanDeserializer.getCaseInsensitiveBooleanGson();
-        gson.fromJson(response.getResponse(), ShareCourseResult.class);
+        ShareCourseResult r = gson.fromJson(response.getResponse(), ShareCourseResult.class);
+        return r.isSuccess();
     }
 
     @Override
@@ -986,5 +987,14 @@ class IApiImpl extends Endpoint implements IApi {
             headers.putString("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
         }
         return headers;
+    }
+
+    @Override
+    public String get(String endpoint, Bundle parameters) throws Exception {
+        IRequest request = new IRequestImpl();
+        request.setEndpoint(endpoint);
+        request.setParameters(parameters);
+        IResponse response = http.get(request);
+        return response.getResponse();
     }
 }

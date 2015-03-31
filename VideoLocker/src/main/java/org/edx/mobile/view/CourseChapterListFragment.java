@@ -21,7 +21,6 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
@@ -30,6 +29,8 @@ import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.GetLastAccessedTask;
@@ -546,7 +547,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessed_subSectionId!=null){
-                        final Api api = new Api(getActivity());
+                        final IApi api = ApiFactory.getCacheApiInstance(getActivity());
                         final VideoResponseModel videoModel = api.getSubsectionById(courseId, 
                                 lastAccessed_subSectionId);
                         if (videoModel != null) {

@@ -4,8 +4,9 @@ import android.content.Context;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 import java.io.IOException;
 
@@ -22,9 +23,9 @@ public abstract class TranscriptDownloader implements Runnable {
 
     @Override
     public void run() {
-        Api localApi = new Api(context);
+        IApi api = ApiFactory.getCacheApiInstance(context);
         try {
-            String response = localApi.downloadTranscript(srtUrl);
+            String response = api.doDownloadTranscript(srtUrl);
             onDownloadComplete(response);
         } catch (ParseException localParseException) {
             handle(localParseException);

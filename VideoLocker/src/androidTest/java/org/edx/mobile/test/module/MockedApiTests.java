@@ -35,7 +35,7 @@ public class MockedApiTests extends BaseTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        api = ApiFactory.getInstance(getInstrumentation().getTargetContext());
+        api = ApiFactory.getCacheApiInstance(getInstrumentation().getTargetContext());
         server = new MockWebServer();
 
         Environment env = new Environment();

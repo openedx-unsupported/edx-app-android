@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.loader.AsyncTaskResult;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialMember;
 
 import java.util.HashMap;
@@ -60,8 +61,8 @@ public class FetchCourseFriendsService extends IntentService {
     }
 
     private void fetchFriends(String courseID, String oauthToken){
+        IApi api = ApiFactory.getCacheApiInstance(this);
 
-        Api api = new Api(this);
         if (TextUtils.isEmpty(courseID) || TextUtils.isEmpty(oauthToken)){
             return;
         }

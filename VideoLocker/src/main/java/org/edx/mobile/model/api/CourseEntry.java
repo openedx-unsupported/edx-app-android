@@ -2,14 +2,13 @@ package org.edx.mobile.model.api;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.social.SocialMember;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import android.content.Context;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -49,7 +48,7 @@ public class CourseEntry implements Serializable {
     }
 
     public String getCourse_image(Context context) {
-        return new Api(context).getBaseUrl() + course_image;
+        return Config.getInstance().getApiHostURL() + course_image;
     }
 
     public void setCourse_image(String course_image) {

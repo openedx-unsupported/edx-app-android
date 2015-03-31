@@ -8,7 +8,6 @@ import com.squareup.okhttp.OkHttpClient;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.serverapi.retrofit.IRestApi;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.NetworkUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,15 +22,16 @@ import retrofit.client.OkClient;
 public class ApiFactory {
 
     private static final Logger logger = new Logger(ApiFactory.class);
-    private static IRestApi api = null;
+    private static IRestApi restApi = null;
+    private static IApi cacheApi = null;
 
     /**
      * Returns new instance of {@link org.edx.mobile.module.serverapi.retrofit.IRestApi} class.
      * @param context
      * @return
      */
-    public static IRestApi getInstance(Context context) {
-        if (api == null) {
+    public static IRestApi getRestApiInstance(Context context) {
+        if (restApi == null) {
             OkHttpClient client = new OkHttpClient();
 
             try {
@@ -59,9 +59,17 @@ public class ApiFactory {
                     })
                     .build();
 
-            api = restAdapter.create(IRestApi.class);
+            restApi = restAdapter.create(IRestApi.class);
         }
 
-        return api;
+        return restApi;
+    }
+
+    public static IApi getCacheApiInstance(Context context) {
+        if (cacheApi == null) {
+            cacheApi = new IApiImpl(context);
+        }
+
+        return cacheApi;
     }
 }
