@@ -35,7 +35,11 @@ class ISegmentTrackerImpl implements ISegmentTracker {
             if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
 
-                // enable GA integration
+                /*
+                Enable GA integration.
+                If the integration’s value is set to false, that means that the data is being sent
+                directly from the device to the integration’s servers. Not through segment server.
+                 */
                 Options options = new Options();
                 options.setIntegration(Analytics.BundledIntegration.GOOGLE_ANALYTICS, false);
 
