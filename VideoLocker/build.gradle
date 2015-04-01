@@ -143,6 +143,16 @@ dependencies {
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:4.+'
 
+    // Segment integration
+    compile('com.segment.analytics.android:analytics-core:3.0.1') {
+        transitive = true
+    }
+    compile('com.segment.analytics.android:analytics-integration-google-analytics:3.0.1') {
+        // this also adds play-services library, exclude it as it is already added
+        transitive = true
+        exclude group: "com.google.android.gms"
+    }
+
     // test project configuration
     androidTestCompile("org.mockito:mockito-core:1.9.5") {
         exclude group: 'org.hamcrest'
