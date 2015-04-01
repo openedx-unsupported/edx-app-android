@@ -343,6 +343,10 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             final String divider = "<div style='height:2px; width:100%; background-color: #E2E3E5'></div>";
 
             StringBuffer buff = new StringBuffer();
+
+            // add meta viewport
+            buff.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+
             for (AnnouncementsModel m : announcementsList) {
                 String entry = String.format("%s <br/><br/> %s <br/> %s <br/><br/>", m.getDate(), divider, m.getContent());
                 buff.append(entry);
