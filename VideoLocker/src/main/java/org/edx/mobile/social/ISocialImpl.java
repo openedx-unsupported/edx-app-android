@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference;
 public abstract class ISocialImpl implements ISocial {
     
     protected ISocial.Callback callback;
-    protected WeakReference<Activity> activity;
+    private WeakReference<Activity> activity;
     
     public ISocialImpl(Activity activity) {
         this.activity = new WeakReference<Activity>(activity);
@@ -16,5 +16,13 @@ public abstract class ISocialImpl implements ISocial {
     @Override
     public void setCallback(Callback callback) {
         this.callback = callback;
+    }
+
+    public Activity getActivity(){
+        Activity wrapped = activity.get();
+        if ( wrapped != null ){
+            return wrapped.isFinishing() || wrapped.isDestroyed() ? null : wrapped;
+        }
+        return wrapped;
     }
 }

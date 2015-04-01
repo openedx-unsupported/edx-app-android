@@ -52,16 +52,18 @@ public class GoogleOauth2 extends ISocialImpl{
             String[] accountTypes = new String[]{"com.google"};
             Intent intent = AccountPicker.newChooseAccountIntent(null, null,
                     accountTypes, true, null, null, null, null);
-
+            Activity activity = getActivity();
+            if ( activity == null )
+                return;
             // check if play-services are installed
-            int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity.get());
+            int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
             if (ConnectionResult.SUCCESS == result) {
-                activity.get().startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+                activity.startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
                 logger.debug("Launching google account picker ...");
             } else {
                 // display user friendly error message
                 logger.debug("Play services are missing ...");
-                GooglePlayServicesUtil.getErrorDialog(result, activity.get(), 100).show();
+                GooglePlayServicesUtil.getErrorDialog(result, activity, 100).show();
             }
         } catch (ActivityNotFoundException ex) {
             logger.debug("Google-play-services are missing? cannot login by google");
@@ -77,7 +79,10 @@ public class GoogleOauth2 extends ISocialImpl{
         if (mEmail == null) {
             pickUserAccount();
         } else {
-            new FetchGoogleTokenTask(activity.get(), mEmail, getScopes()).execute();
+            Activity activity = getActivity();
+            if ( activity == null )
+                return;
+            new FetchGoogleTokenTask(activity, mEmail, getScopes()).execute();
         }
     }
 
@@ -131,9 +136,12 @@ public class GoogleOauth2 extends ISocialImpl{
          * GoogleAuthException that may occur.
          */
         protected String fetchToken() throws IOException {
+            Activity activity = getActivity();
+            if ( activity == null )
+                return null;
             try {
                 logger.debug("Fetching google oauth2 token ...");
-                return GoogleAuthUtil.getToken(activity.get(), mEmail, mScope);
+                return GoogleAuthUtil.getToken(activity, mEmail, mScope);
             } catch (UserRecoverableAuthException userRecoverableException) {
                 // GooglePlayServices.apk is either old, disabled, or not present
                 // so we need to show the user some UI in the activity to recover.
@@ -146,7 +154,7 @@ public class GoogleOauth2 extends ISocialImpl{
                   // consent is granted control is returned to your activity in onActivityResult
                   // and the second call to GoogleAuthUtil.getToken will succeed.
                 
-                activity.get().startActivityForResult(userRecoverableException.getIntent(), REQUEST_AUTHORIZATION);
+                activity.startActivityForResult(userRecoverableException.getIntent(), REQUEST_AUTHORIZATION);
             } catch (GoogleAuthException fatalException) {
                 logger.warn("google auth error occurred");
                 // Some other type of unrecoverable exception has occurred.
@@ -227,7 +235,10 @@ public class GoogleOauth2 extends ISocialImpl{
     public void logout() {
         if (accessToken != null) {
             try {
-                GoogleAuthUtil.clearToken(activity.get(), accessToken);
+                Activity activity = getActivity();
+                if ( activity == null )
+                    return;
+                GoogleAuthUtil.clearToken(activity, accessToken);
                 logger.debug("Google logged out");
             } catch (GooglePlayServicesAvailabilityException e) {
                 logger.error(e);
