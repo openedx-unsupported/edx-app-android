@@ -153,12 +153,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        Context context = view.getContext().getApplicationContext();
+        try {
+            Context context = view.getContext().getApplicationContext();
 
-        if (isExternalLink(url)
-                && NetworkUtil.isOnZeroRatedNetwork(context)
-                && NetworkUtil.isConnectedMobile(context)) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            if (isExternalLink(url)
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, url);
     }
@@ -166,12 +170,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        Context context = view.getContext().getApplicationContext();
-
-        if (isExternalLink(request.getUrl().toString())
-                && NetworkUtil.isOnZeroRatedNetwork(context)
-                && NetworkUtil.isConnectedMobile(context)) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        try {
+            Context context = view.getContext().getApplicationContext();
+    
+            if (isExternalLink(request.getUrl().toString())
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, request);
     }
