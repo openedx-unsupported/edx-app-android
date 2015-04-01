@@ -2,7 +2,8 @@ package org.edx.mobile.task.social;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.task.Task;
 
@@ -22,7 +23,7 @@ public abstract class GetGroupMembersTask extends Task<List<SocialMember>> {
 
     @Override
     protected List<SocialMember> doInBackground(Object... objects) {
-        Api api = new Api(context);
+        IApi api = ApiFactory.getCacheApiInstance(context);
         try {
             return api.getGroupMembers(false, groupId);
         } catch (Exception e) {

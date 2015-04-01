@@ -1,4 +1,4 @@
-package org.edx.mobile.http.serialization;
+package org.edx.mobile.module.serverapi.serialization;
 
 import com.google.gson.annotations.SerializedName;
 

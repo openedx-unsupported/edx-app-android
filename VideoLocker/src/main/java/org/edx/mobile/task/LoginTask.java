@@ -2,9 +2,10 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 /**
  * This task represents Task for login by edX username and password.
@@ -33,8 +34,8 @@ public abstract class LoginTask extends Task<AuthResponse> {
     }
 
     public static AuthResponse getAuthResponse(Context context, String username, String password) throws Exception {
-        Api api = new Api(context);
-        AuthResponse res = api.auth(username, password);
+        IApi api = ApiFactory.getCacheApiInstance(context);
+        AuthResponse res = api.doLogin(username, password);
 
         // get profile of this user
         if (res.isSuccess()) {

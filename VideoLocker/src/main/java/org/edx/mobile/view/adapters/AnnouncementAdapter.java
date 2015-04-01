@@ -1,7 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.http.OutboundUrlSpan;
-
 import android.content.Context;
 import android.text.Html;
 import android.text.Spanned;
@@ -11,6 +9,8 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.AnnouncementsModel;
+import org.edx.mobile.module.serverapi.OutboundUrlSpan;
+
 public abstract class AnnouncementAdapter extends
         BaseListAdapter<AnnouncementsModel> {
 

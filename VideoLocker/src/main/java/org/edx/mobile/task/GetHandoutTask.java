@@ -2,9 +2,10 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 public abstract class GetHandoutTask extends Task<HandoutModel> {
 
@@ -17,7 +18,7 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
         try {
             EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) params[0];
             if(enrollment!=null){
-                Api api = new Api(context);
+                IApi api = ApiFactory.getCacheApiInstance(context);
 
                 try {
                     // return instant data from cache

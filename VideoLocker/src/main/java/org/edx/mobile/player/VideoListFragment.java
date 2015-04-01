@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MyVideosBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -26,15 +24,10 @@ import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -52,6 +45,7 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VideoListFragment extends MyVideosBaseFragment {
@@ -73,14 +67,14 @@ public class VideoListFragment extends MyVideosBaseFragment {
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
-    private Api api;
+    private IApi api;
     private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        api = new Api(getActivity());
+        api = ApiFactory.getCacheApiInstance(getActivity());
     }
 
     @Override
@@ -262,7 +256,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             } else {
                 setActivityTitle(chapterName);
 
-                ArrayList<SectionItemInterface> list = api
+                List<SectionItemInterface> list = api
                         .getLiveOrganizedVideosByChapter(enrollment.getCourse()
                                 .getId(), chapterName);
                 for (SectionItemInterface m : list) {
@@ -368,7 +362,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
             setActivityTitle(chapterName);
 
-            ArrayList<SectionItemInterface> list = api
+            List<SectionItemInterface> list = api
                     .getLiveOrganizedVideosByChapter(enrollment.getCourse()
                             .getId(), chapterName);
             downloadAvailable = false;

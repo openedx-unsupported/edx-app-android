@@ -1,4 +1,4 @@
-package org.edx.mobile.http;
+package org.edx.mobile.module.serverapi;
 
 import android.content.Context;
 import android.os.Parcel;

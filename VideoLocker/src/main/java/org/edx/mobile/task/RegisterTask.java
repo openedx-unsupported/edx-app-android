@@ -3,23 +3,23 @@ package org.edx.mobile.task;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.edx.mobile.R;
-import org.edx.mobile.exception.LoginErrorMessage;
-import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialFactory;
 
 
 public abstract class RegisterTask extends Task<RegisterResponse> {
 
     private Bundle parameters;
-    private AuthResponse auth;
     private SocialFactory.SOCIAL_SOURCE_TYPE backstoreType;
     private String accessToken;
+    private AuthResponse authResponse;
+    private SocialLoginResponse socialLoginResponse;
 
     public RegisterTask(Context context, Bundle parameters, String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE backstoreType) {
         super(context);
@@ -31,20 +31,21 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
     @Override
     protected RegisterResponse doInBackground(Object... params) {
         try {
-            Api api = new Api(context);
-            RegisterResponse res = api.register(parameters);
+            IApi api = ApiFactory.getCacheApiInstance(context);
+            RegisterResponse res = api.doRegister(parameters);
 
             if (res.isSuccess()) {
                 switch ( backstoreType ){
                     case  TYPE_GOOGLE :
                     case  TYPE_FACEBOOK :
+
                          // do SOCIAL LOGIN first
                         if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
-                            auth = api.loginByFacebook(accessToken);
+                            socialLoginResponse = api.doLoginByFacebook(accessToken);
                         } else if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
-                            auth = api.loginByGoogle(accessToken);
+                            socialLoginResponse = api.doLoginByGoogle(accessToken);
                         }
-                        if (auth != null && auth.isSuccess()) {
+                        if (socialLoginResponse != null && socialLoginResponse.isSuccess()) {
                             // we got a valid accessToken so profile can be fetched
                             ProfileModel profile =  api.getProfile();
                             // store profile json
@@ -60,8 +61,8 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
                         String username = parameters.getString("username");
                         String password = parameters.getString("password");
 
-                        auth = LoginTask.getAuthResponse(context, username, password);
-                        if (auth.isSuccess()) {
+                        authResponse = LoginTask.getAuthResponse(context, username, password);
+                        if (authResponse.isSuccess()) {
                             logger.debug("login succeeded after email registration");
                         }
                 }
@@ -75,7 +76,11 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
         return null;
     }
 
-    public AuthResponse getAuth() {
-        return auth;
+    public AuthResponse getAuthResponse() {
+        return authResponse;
+    }
+
+    public SocialLoginResponse getSocialLoginResponse() {
+        return socialLoginResponse;
     }
 }

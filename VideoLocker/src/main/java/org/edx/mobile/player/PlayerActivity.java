@@ -9,9 +9,10 @@ import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 import java.io.File;
 
@@ -152,7 +153,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             }
 
             TranscriptModel transcript = null;
-            Api api = new Api(this);
+            IApi api = ApiFactory.getCacheApiInstance(this);
             try {
                 transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);
             } catch (Exception e) {

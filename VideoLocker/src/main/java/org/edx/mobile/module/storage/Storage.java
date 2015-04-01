@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IVideoModel;
@@ -24,6 +23,8 @@ import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 
@@ -259,10 +260,10 @@ public class Storage implements IStorage {
 
     @Override
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() {
-        Api api = new Api(context);
+        IApi api = ApiFactory.getCacheApiInstance(context);
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<EnrolledCoursesResponse>();
         try {
-            ArrayList<EnrolledCoursesResponse> enrolledCourses = api.getEnrolledCourses(true);
+            List<EnrolledCoursesResponse> enrolledCourses = api.getEnrolledCourses(true);
             if(enrolledCourses!=null && enrolledCourses.size()>0){
                 for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
                     int videoCount = db.getDownloadedVideoCountByCourse(
@@ -286,8 +287,8 @@ public class Storage implements IStorage {
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() {
         try {
             ArrayList<SectionItemInterface> recentVideolist = new ArrayList<SectionItemInterface>();
-            Api api = new Api(context);
-            ArrayList<EnrolledCoursesResponse> courseList = null;
+            IApi api = ApiFactory.getCacheApiInstance(context);
+            List<EnrolledCoursesResponse> courseList = null;
 
             courseList = api.getEnrolledCourses(true);
 
@@ -363,7 +364,7 @@ public class Storage implements IStorage {
             return list;
         }
 
-        Api api = new Api(context);
+        IApi api = ApiFactory.getCacheApiInstance(context);
         try {
             Map<String, SectionEntry> courseHeirarchyMap = (LinkedHashMap<String, SectionEntry>) api
                     .getCourseHierarchy(courseId, true);

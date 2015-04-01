@@ -2,11 +2,8 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-
-import java.util.ArrayList;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 public abstract class EnrollForCourseTask extends Task<Boolean> {
 
@@ -20,9 +17,9 @@ public abstract class EnrollForCourseTask extends Task<Boolean> {
             String courseId = (String) (params[0]);
             boolean emailOptIn = (boolean) (params[1]);
             if(courseId!=null){
-                Api api = new Api(context);
+                IApi api = ApiFactory.getCacheApiInstance(context);
                 try {
-                    return api.enrollInACourse(courseId,emailOptIn);
+                    return api.doEnrollInACourse(courseId,emailOptIn);
                 } catch(Exception ex) {
                     logger.error(ex, true);
                 }

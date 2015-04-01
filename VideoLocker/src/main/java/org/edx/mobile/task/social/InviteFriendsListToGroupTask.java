@@ -2,7 +2,8 @@ package org.edx.mobile.task.social;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.JavaUtil;
 
@@ -23,11 +24,11 @@ public abstract class InviteFriendsListToGroupTask extends Task<Void> {
         Long groupId = (Long) params[1];
         String oauthToken = (String) params[2];
 
-        Api api = new Api(context);
+        IApi api = ApiFactory.getCacheApiInstance(context);
 
         try {
 
-            api.inviteFriendsToGroup(primitiveList, groupId, oauthToken);
+            api.doInviteFriendsToGroup(primitiveList, groupId, oauthToken);
             return null;
 
 

@@ -7,6 +7,7 @@ import android.widget.TabWidget;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.google.gson.internal.LinkedTreeMap;
 
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -160,7 +161,8 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
             for (int i = 0; i < list.size(); i++) {
                 //Check if the flag of isIs_active is marked to true,
                 //then activate all videos
-                if (list.get(i).isIs_active()) {
+                EnrolledCoursesResponse entry = list.get(i);
+                if (entry.isIs_active()) {
                     //update all videos for a course fetched in the API as Activated
                     db.updateVideosActivatedForCourse(list.get(i).getCourse().getId(),
                             dataCallback);

@@ -14,8 +14,9 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -218,7 +219,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     sendBroadcast(intent);
 
                     // show flying message about the success of Enroll
-                    Api api = new Api(context);
+                    IApi api = ApiFactory.getCacheApiInstance(context);
                     CourseEntry course = api.getCourseById(courseId);
                     String msg;
                     if (course == null) {

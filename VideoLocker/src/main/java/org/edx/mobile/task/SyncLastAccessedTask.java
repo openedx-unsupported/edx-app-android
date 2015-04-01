@@ -2,8 +2,9 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 public abstract class SyncLastAccessedTask extends Task<SyncLastAccessedSubsectionResponse> {
 
@@ -17,8 +18,8 @@ public abstract class SyncLastAccessedTask extends Task<SyncLastAccessedSubsecti
             String courseId = (String)params[0];
             String lastVisitedModuleId = (String)params[1];
             if(courseId!=null && lastVisitedModuleId !=null){
-                Api api = new Api(context);
-                SyncLastAccessedSubsectionResponse res = api.syncLastAccessedSubsection(
+                IApi api = ApiFactory.getCacheApiInstance(context);
+                SyncLastAccessedSubsectionResponse res = api.doSyncLastAccessedSubsection(
                         courseId, lastVisitedModuleId);
                 return res;
             }
