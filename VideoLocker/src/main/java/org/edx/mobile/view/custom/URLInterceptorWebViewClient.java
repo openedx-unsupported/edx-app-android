@@ -1,6 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -151,8 +153,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        if (isExternalLink(url)) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        try {
+            Context context = view.getContext().getApplicationContext();
+
+            if (isExternalLink(url)
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, url);
     }
@@ -160,8 +170,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        if (isExternalLink(request.getUrl().toString())) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        try {
+            Context context = view.getContext().getApplicationContext();
+    
+            if (isExternalLink(request.getUrl().toString())
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, request);
     }
