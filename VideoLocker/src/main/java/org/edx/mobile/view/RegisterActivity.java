@@ -81,7 +81,9 @@ public class RegisterActivity extends BaseFragmentActivity
         boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN);
 
         if ( !isSocialEnabled ){
-            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
+            findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
+            findViewById(R.id.or_signup_with_email_title).setVisibility(View.GONE);
+            findViewById(R.id.signup_with_row).setVisibility(View.GONE);
         }
         else {
             ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
