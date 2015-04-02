@@ -329,7 +329,7 @@
                 style="@style/api_progress_style"
                 android:visibility="gone" />
 
-            <TextView
+            <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/no_announcement_tv"
                 style="@style/bold_text"
                 android:layout_marginTop="80dp"
