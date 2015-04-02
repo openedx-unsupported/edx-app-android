@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.logger.Logger;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,21 +7,20 @@ import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.task.GetHandoutTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.task.GetHandoutTask;
+import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -100,7 +97,7 @@ public class CourseHandoutFragment extends Fragment {
                 try {
                     if(result!=null&&(!result.handouts_html.equalsIgnoreCase(""))){
                         hideEmptyHandoutMessage();
-                        webview.loadDataWithBaseURL(new Api(context).getBaseUrl(), result.handouts_html,
+                        webview.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), result.handouts_html,
                                 "text/html",Encoding.UTF_8.toString(),null);
                         webview.setWebViewClient(new WebViewClient(){
                             @Override

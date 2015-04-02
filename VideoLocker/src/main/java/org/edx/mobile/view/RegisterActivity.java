@@ -20,12 +20,12 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
+import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
@@ -33,6 +33,8 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
@@ -46,7 +48,6 @@ import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
@@ -198,7 +199,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void setupRegistrationForm() {
         try {
-            RegistrationDescription form = new Api(this).getRegistrationDescription();
+            IApi api = ApiFactory.getCacheApiInstance(this);
+            RegistrationDescription form = api.getRegistrationDescription();
 
             LayoutInflater inflater = getLayoutInflater();
 
@@ -340,8 +342,11 @@ public class RegisterActivity extends BaseFragmentActivity
                             }
 
                         } else {
-                            AuthResponse auth = getAuth();
-                            if (auth != null && auth.isSuccess()) {
+                            AuthResponse auth = getAuthResponse();
+                            SocialLoginResponse socialAuth = getSocialLoginResponse();
+
+                            if ( (auth != null && auth.isSuccess())
+                                    || (socialAuth != null && socialAuth.isSuccess()) ) {
                                 //in the future we will show different messages based on different registration
                                 //condition
                                 showProgress();

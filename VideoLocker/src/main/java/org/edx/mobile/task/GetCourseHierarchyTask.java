@@ -2,8 +2,9 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ Task<Map<String, SectionEntry>> {
             String courseId = (String) (params[0]);
             //String url = (String) (params[1]);
             if(courseId!=null){
-                Api api = new Api(context);
+                IApi api = ApiFactory.getCacheApiInstance(context);
                 try {
                     // return instant data from cache
                     final Map<String, SectionEntry> map = api.getCourseHierarchy(courseId, true);

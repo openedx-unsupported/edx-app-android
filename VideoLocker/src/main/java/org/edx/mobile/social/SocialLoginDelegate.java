@@ -4,28 +4,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
-import org.edx.mobile.social.google.GoogleUserProfile;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.view.ICommonUI;
 
 
@@ -212,12 +206,12 @@ public class SocialLoginDelegate {
                 this.accessToken = (String) params[0];
                 this.backend = (String) params[1];
 
-                Api api = new Api(context);
+                IApi api = ApiFactory.getCacheApiInstance(context);
 
                 // do SOCIAL LOGIN first
-                AuthResponse social = null;
+                SocialLoginResponse social = null;
                 if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                    social = api.loginByFacebook(accessToken);
+                    social = api.doLoginByFacebook(accessToken);
 
                     if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(
@@ -225,7 +219,7 @@ public class SocialLoginDelegate {
                                 context.getString(R.string.error_account_not_linked_desc_fb)));
                     }
                 } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                    social = api.loginByGoogle(accessToken);
+                    social = api.doLoginByGoogle(accessToken);
 
                     if ( social.error != null && social.error.equals("401") ) {
                         throw new LoginException(new LoginErrorMessage(

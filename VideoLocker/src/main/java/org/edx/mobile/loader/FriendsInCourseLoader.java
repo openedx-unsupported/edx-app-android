@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialMember;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class FriendsInCourseLoader extends AsyncTaskLoader<AsyncTaskResult<List<
     @Override
     public AsyncTaskResult<List<SocialMember>> loadInBackground() {
 
-        Api api = new Api(getContext());
+        IApi api = ApiFactory.getCacheApiInstance(getContext());
         if (TextUtils.isEmpty(courseID) || TextUtils.isEmpty(this.oauthToken)){
             return null;
         }

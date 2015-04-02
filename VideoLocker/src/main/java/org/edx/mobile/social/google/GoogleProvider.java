@@ -8,8 +8,9 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -139,7 +140,8 @@ public class GoogleProvider implements SocialProvider{
             Bundle p = new Bundle();
             String url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
             try {
-                String json = new HttpManager().get(url, p);
+                IApi api = ApiFactory.getCacheApiInstance(context);
+                String json = api.get(url, p);
                 logger.debug(json);
                 Gson gson = new GsonBuilder().create();
                 GoogleUserProfile userProfile = gson.fromJson(json, GoogleUserProfile.class);

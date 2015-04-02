@@ -1,8 +1,5 @@
 package org.edx.mobile.test;
 
-import com.google.gson.Gson;
-
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -13,6 +10,8 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.util.Environment;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.Map.Entry;
  */
 public class ApiTests extends BaseTestCase {
 
-    private Api api;
+    private IApi api;
 
     @Override
     protected void setUp() throws Exception {
@@ -35,7 +34,7 @@ public class ApiTests extends BaseTestCase {
         Environment env = new Environment();
         env.setupEnvironment(getInstrumentation().getTargetContext());
 
-        api = new Api(getInstrumentation().getTargetContext());
+        api = ApiFactory.getCacheApiInstance(getInstrumentation().getTargetContext());
     }
     
     public void testSyncLastSubsection() throws Exception {
@@ -57,7 +56,7 @@ public class ApiTests extends BaseTestCase {
         // TODO: lastVisitedModuleId must be section.id (id is now available)
         
         
-        SyncLastAccessedSubsectionResponse model = api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
+        SyncLastAccessedSubsectionResponse model = api.doSyncLastAccessedSubsection(courseId, lastVisitedModuleId);
         assertNotNull(model);
         print("sync returned: " + model.last_visited_module_id);
     }
@@ -79,7 +78,7 @@ public class ApiTests extends BaseTestCase {
     
     public void testResetPassword() throws Exception {
         print("test: reset password");
-        ResetPasswordResponse model = api.resetPassword("user@edx.org");
+        ResetPasswordResponse model = api.doResetPassword("user@edx.org");
         assertTrue(model != null);
         print(model.value);
         print("test: finished: reset password");
@@ -121,7 +120,7 @@ public class ApiTests extends BaseTestCase {
     }
     
     public void login() throws Exception {
-        AuthResponse res = api.auth("user@edx.org", "****");
+        AuthResponse res = api.doLogin("user@edx.org", "****");
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
@@ -165,7 +164,7 @@ public class ApiTests extends BaseTestCase {
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         String courseId = e.getCourse().getId();
-        boolean success = api.enrollInACourse(courseId, true);
+        boolean success = api.doEnrollInACourse(courseId, true);
         assertTrue(success);
         print("success");
         print("test: finished: reset password");

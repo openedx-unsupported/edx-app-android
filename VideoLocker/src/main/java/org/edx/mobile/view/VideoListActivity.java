@@ -16,9 +16,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment;
@@ -191,7 +192,7 @@ VideoListCallback, IPlayerEventCallback {
                     listFragment.getPreviousListener());
 
             TranscriptModel transcript = null;
-            Api api = new Api(this);
+            IApi api = ApiFactory.getCacheApiInstance(this);
             try {
                 if(video.videoId!=null){
                     transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);

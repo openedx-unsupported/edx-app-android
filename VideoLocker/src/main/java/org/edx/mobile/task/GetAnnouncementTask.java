@@ -2,9 +2,10 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public abstract class GetAnnouncementTask extends
     protected List<AnnouncementsModel> doInBackground(Object... params) {
         try {
             EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) params[0];
-            Api api = new Api(context);
+            IApi api = ApiFactory.getCacheApiInstance(context);
             
             try {
                 // return instant data from cache

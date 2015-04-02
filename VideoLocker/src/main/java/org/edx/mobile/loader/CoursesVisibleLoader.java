@@ -1,11 +1,12 @@
 package org.edx.mobile.loader;
 
-import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.serverapi.ApiFactory;
+import org.edx.mobile.module.serverapi.IApi;
 
 /**
  * Created by yervant on 1/19/15.
@@ -34,7 +35,7 @@ public class CoursesVisibleLoader extends AsyncTaskLoader<AsyncTaskResult<Boolea
     @Override
     public AsyncTaskResult<Boolean> loadInBackground() {
         AsyncTaskResult<Boolean> result = new AsyncTaskResult<>();
-        Api api = new Api(getContext());
+        IApi api = ApiFactory.getCacheApiInstance(getContext());
 
         try {
             if(fetchValue && setToValue == null){

@@ -1,8 +1,11 @@
-package org.edx.mobile.http.cache;
+package org.edx.mobile.module.serverapi.cache;
 
 import android.content.Context;
+
 import org.apache.commons.io.IOUtils;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Sha1Util;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,7 +13,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
-import org.edx.mobile.logger.Logger;
 
 public class CacheManager {
 

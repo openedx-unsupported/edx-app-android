@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.serverapi.IApi;
+import org.edx.mobile.services.FetchCourseFriendsService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
         return new CoursesAsyncLoader(getActivity(), bundle){
             @Override
-            protected List<EnrolledCoursesResponse> getCourses(Api api) throws Exception {
+            protected List<EnrolledCoursesResponse> getCourses(IApi api) throws Exception {
                 return api.getEnrolledCourses();
             }
         };
@@ -108,7 +108,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         } else if (result.getResult() != null) {
             invalidateSwipeFunctionality();
 
-            ArrayList<EnrolledCoursesResponse> newItems = new ArrayList<EnrolledCoursesResponse>(result.getResult());
+            ArrayList<EnrolledCoursesResponse> newItems = new ArrayList<>(result.getResult());
 
             ((MyCoursesListActivity)getActivity()).updateDatabaseAfterDownload(newItems);
 
