@@ -31,38 +31,44 @@
                 <include layout="@layout/panel_login_message" />
             </LinearLayout>
 
-            <org.edx.mobile.view.custom.TitleRowView
-                android:id="@+id/signupWith"
+
+            <LinearLayout
+                android:id="@+id/signup_with_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:textColor="@color/grey_video_size_text"
-                app:title="@string/sign_up_with"
-                app:titleFontSize="6sp"
-                app:decorationStyle="left"
-                app:rightColor="@color/edx_white"
-                />
+                android:layout_marginTop="@dimen/signup_social_title_margin_large"
+                android:layout_marginBottom="@dimen/signup_social_title_margin_bottom"
+                android:gravity="left" >
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/signup_with_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_up_with"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <include layout="@layout/panel_signup_social" />
 
-            <org.edx.mobile.view.custom.TitleRowView
-                android:id="@+id/signupWithEmailTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/grey_video_size_text"
-                app:title="@string/or_sign_up_with_email"
-                app:titleFontSize="6sp"
-                app:decorationStyle="left"
-                app:rightColor="@color/edx_white"
-                />
+                android:layout_marginTop="@dimen/signup_social_title_margin"
+                android:layout_marginBottom="@dimen/signup_social_title_margin_bottom"
+                android:gravity="left" >
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/or_signup_with_email_title"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/or_sign_up_with_email"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/required_fields_layout"
@@ -71,19 +77,30 @@
                 android:orientation="vertical"
                 android:layout_marginTop="5dp"/>
 
-            <org.edx.mobile.view.custom.TitleRowView
-                android:id="@+id/optional_field_tv"
+            <LinearLayout
+                android:id="@+id/field_seperator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="horizontal"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/grey_video_size_text"
-                app:title="@string/show_optional_text"
-                app:titleFontSize="6sp"
-                app:decorationStyle="left"
-                />
+                android:gravity="center">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/optional_field_tv"
+                    style="@style/semibold_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="12dp"
+                    android:text="@string/show_optional_text"
+                    android:textColor="@color/grey_hide_optional_text"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_act_background" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/optional_fields_layout"

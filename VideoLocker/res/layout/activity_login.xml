@@ -116,19 +116,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <org.edx.mobile.view.custom.TitleRowView
-                            android:id="@+id/signInWith"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="10dp"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:textColor="@color/grey_text"
-                            app:title="@string/or_sign_in_with"
-                            app:titleFontSize="6sp"
-                            />
+                        <include layout="@layout/view_signin_title_row" />
+
                         <include layout="@layout/panel_login_social" />
                     </LinearLayout>
 

@@ -89,8 +89,11 @@ public class PrefManager {
      * @return boolean
      */
     public boolean getBoolean(String key, boolean defaultValue) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getBoolean(key, defaultValue);
+        if(context!=null) {
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getBoolean(key, defaultValue);
+        }
+        return defaultValue;
     }
     
     /**
@@ -99,8 +102,11 @@ public class PrefManager {
      * @return long
      */
     public long getLong(String key) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getLong(key, -1);
+        if(context!=null){
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getLong(key, -1);
+        }
+        return -1;
     }
     
     /**
@@ -120,8 +126,11 @@ public class PrefManager {
      * @return float
      */
     public float getFloat(String key, float defaultValue) {
-        return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-                .getFloat(key, defaultValue);
+        if(context!=null){
+            return context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+                    .getFloat(key, defaultValue);
+        }
+        return defaultValue;
     }
 
     /**
@@ -150,7 +159,7 @@ public class PrefManager {
         if (json == null) {
             return null;
         }
-        
+
         Gson gson = new GsonBuilder().create();
         AuthResponse res = gson.fromJson(json, AuthResponse.class);
         
@@ -248,6 +257,7 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
+        //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
         public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";

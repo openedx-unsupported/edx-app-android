@@ -32,4 +32,8 @@
 
     <!-- row height for CC language options, NONE option and the header of popup -->
     <dimen name="row_height_cc_option">40dp</dimen>
+
+    <dimen name="signup_social_title_margin">5dp</dimen>
+    <dimen name="signup_social_title_margin_large">8dp</dimen>
+    <dimen name="signup_social_title_margin_bottom">1dp</dimen>
 </resources>

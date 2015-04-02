@@ -1,6 +1,7 @@
 package org.edx.mobile.view.custom;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -152,9 +153,17 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        // supress external links on ZeroRated network
-        if (NetworkUtil.isOnZeroRatedNetwork(view.getContext().getApplicationContext()) && isExternalLink(url)) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        try {
+            Context context = view.getContext().getApplicationContext();
+
+            // suppress external links on ZeroRated network
+            if (isExternalLink(url)
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, url);
     }
@@ -162,9 +171,17 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        // supress external links on ZeroRated network
-        if (NetworkUtil.isOnZeroRatedNetwork(view.getContext().getApplicationContext()) && isExternalLink(request.getUrl().toString())) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+        try {
+            Context context = view.getContext().getApplicationContext();
+
+            // suppress external links on ZeroRated network
+            if (isExternalLink(request.getUrl().toString())
+                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && NetworkUtil.isConnectedMobile(context)) {
+                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
         return super.shouldInterceptRequest(view, request);
     }

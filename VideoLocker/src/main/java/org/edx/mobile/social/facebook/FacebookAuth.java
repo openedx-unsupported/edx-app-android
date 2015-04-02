@@ -38,12 +38,15 @@ public class FacebookAuth extends ISocialImpl {
     @Override
     public void login() {
         Session session = Session.getActiveSession();
+        Activity activity = getActivity();
+        if ( activity == null )
+            return;
         if (session != null && !session.isOpened() && !session.isClosed()) {
-            session.openForRead(new Session.OpenRequest(activity.get())
+            session.openForRead(new Session.OpenRequest(activity)
                     .setPermissions(Arrays.asList("public_profile", "email"))
                     .setCallback(statusCallback));
         } else {
-            Session.openActiveSession(activity.get(), true, Arrays.asList("public_profile", "email"), statusCallback);
+            Session.openActiveSession(activity, true, Arrays.asList("public_profile", "email"), statusCallback);
         }
     }
 
@@ -112,10 +115,12 @@ public class FacebookAuth extends ISocialImpl {
 
     private void keyHash() {
         try {
+            Activity activity = getActivity();
+            if ( activity == null )
+                return;
             PackageInfo info = activity
-                    .get()
                     .getPackageManager()
-                    .getPackageInfo(activity.get().getPackageName(),
+                    .getPackageInfo(activity.getPackageName(),
                             PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
@@ -139,7 +144,10 @@ public class FacebookAuth extends ISocialImpl {
                 //clear your preferences if saved
             }
         } else {
-            session = new Session(activity.get());
+            Activity activity = getActivity();
+            if ( activity == null )
+                return;
+            session = new Session(activity);
             Session.setActiveSession(session);
 
             session.closeAndClearTokenInformation();

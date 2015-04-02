@@ -38,9 +38,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
         configureDrawer();
 
         setTitle(getString(R.string.label_my_courses));
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-        configureDrawer();
+        
 
         try{
             segIO.screenViewsTracking(getString(R.string.label_my_courses));
