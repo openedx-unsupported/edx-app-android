@@ -42,6 +42,10 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     private IActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
+    /*
+    To help a few views (like Announcements) to treat every link as external link and open outside the view.
+     */
+    private boolean isAllLinksExternal = false;
 
     public URLInterceptorWebViewClient(WebView webView) {
         setupWebView(webView);
@@ -133,7 +137,7 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
             } else if(isEnrollLink(url)) {
                 // we handled this URL
                 return true;
-            } else if (isExternalLink(url)) {
+            } else if (isAllLinksExternal || isExternalLink(url)) {
                 // open URL in external web browser
                 // return true means the host application handles the url
                 // this should open the URL in the browser with user's confirmation
@@ -151,11 +155,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
         return super.shouldOverrideUrlLoading(view, url);
     }
 
+    public void setAllLinksAsExternal(boolean isAllLinksExternal) {
+        this.isAllLinksExternal = isAllLinksExternal;
+    }
+
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
         try {
             Context context = view.getContext().getApplicationContext();
 
+            // suppress external links on ZeroRated network
             if (isExternalLink(url)
                     && NetworkUtil.isOnZeroRatedNetwork(context)
                     && NetworkUtil.isConnectedMobile(context)) {
@@ -172,7 +181,8 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
         try {
             Context context = view.getContext().getApplicationContext();
-    
+
+            // suppress external links on ZeroRated network
             if (isExternalLink(request.getUrl().toString())
                     && NetworkUtil.isOnZeroRatedNetwork(context)
                     && NetworkUtil.isConnectedMobile(context)) {
