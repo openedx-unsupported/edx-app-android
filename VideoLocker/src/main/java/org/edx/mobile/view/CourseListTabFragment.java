@@ -181,10 +181,10 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                 R.color.grey_act_background);
 
         myCourseList = (ListView) view.findViewById(R.id.my_course_list);
+        //As per docs, the footer needs to be added before adapter is set to the ListView
+        setupFooter(myCourseList);
         myCourseList.setAdapter(adapter);
         myCourseList.setOnItemClickListener(adapter);
-
-        setupFooter(myCourseList);
 
         if (!(NetworkUtil.isConnected(getActivity()))) {
             onOffline();
