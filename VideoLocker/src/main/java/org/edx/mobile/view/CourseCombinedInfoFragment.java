@@ -120,13 +120,15 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         groupLauncher.setOnClickListener(this);
 
         announcementWebView = (EdxWebView) view.findViewById(R.id.announcement_webview);
-        new URLInterceptorWebViewClient(announcementWebView) {
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(announcementWebView) {
 
             @Override
             public void onOpenExternalURL(String url) {
                 BrowserUtil.open(getActivity(), url);
             }
         };
+        // treat every link as external link in this view, so that all links will open in external browser
+        client.setAllLinksAsExternal(true);
 
         return view;
 
