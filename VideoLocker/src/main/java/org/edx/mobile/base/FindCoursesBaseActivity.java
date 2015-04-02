@@ -83,6 +83,10 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     BrowserUtil.open(FindCoursesBaseActivity.this, url);
                 }
             };
+
+            // if all the links are to be treated as external
+            client.setAllLinksAsExternal(isAllLinksExternal());
+
             client.setActionListener(this);
             client.setPageStatusListener(this);
         }
@@ -306,6 +310,15 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     public void onPageLoadError() {
         isWebViewLoaded = false;
         showOfflineMessage();
+    }
+
+    /**
+     * By default, all links will not be treated as external.
+     * Depends on host, as long as the links have same host, they are treated as non-external links.
+     * @return
+     */
+    protected boolean isAllLinksExternal() {
+        return false;
     }
 
     @Override

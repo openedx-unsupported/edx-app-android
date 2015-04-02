@@ -35,14 +35,12 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(webview) {
-
-            @Override
-            public void onOpenExternalURL(String url) {
-                BrowserUtil.open(CourseInfoActivity.this, url);
-            }
-        };
-
         webview.loadUrl(url);
+    }
+
+    @Override
+    protected boolean isAllLinksExternal() {
+        // treat all links on this screen as external links, so that they open in external browser
+        return true;
     }
 }
