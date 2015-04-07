@@ -48,14 +48,7 @@ public class DateParseTests extends BaseTestCase {
         print("started=" + started);
     }
 
-    public void testEmail() throws Exception {
-        String to = "user@edx.org";
-        String subject = "edX Test Email";
-        String email = "hi, this is test email";
-        EmailUtil.sendEmail(getInstrumentation()
-                .getTargetContext(), to, subject, email);
-        print("sending email...");
-    }
+
 
     /**
      * This tests the formatted start date of a course

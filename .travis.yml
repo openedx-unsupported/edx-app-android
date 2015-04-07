@@ -26,7 +26,7 @@ android:
 
 # Disable travis email notifications until builds work properly
 notifications:
-  email: false
+  email: true
 
 before_script:
   # Create and start emulator if you want to run tests
