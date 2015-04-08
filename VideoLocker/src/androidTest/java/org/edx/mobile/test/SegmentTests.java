@@ -5,8 +5,11 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.analytics.ISegmentImpl;
 import org.edx.mobile.module.analytics.ISegmentTracker;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.util.Config;
 import org.mockito.Mockito;
 
 public class SegmentTests extends BaseTestCase {
@@ -25,10 +28,13 @@ public class SegmentTests extends BaseTestCase {
         if (segment == null) {
             // create mocked instance of SegmentTracker
             tracker = Mockito.mock(ISegmentTracker.class);
+            //The issue with the implemenation of Singleton for ISegment is that
+            //some times the singleton is a dummy object. which causes
+            // the Mocito failed here.
 
-            // initialize segment
-            SegmentFactory.makeInstance(getInstrumentation().getTargetContext());
-            segment = SegmentFactory.getInstance();
+            // I dont want to change the implementation for now, just create ISegment
+            // object directly
+            segment = new ISegmentImpl(getInstrumentation().getTargetContext());
             // use mocked tracker
             segment.setTracker(tracker);
         }
@@ -440,7 +446,8 @@ public class SegmentTests extends BaseTestCase {
     public void testTrackCreateAccountClicked() throws Exception {
 
         String appVersion = "Android v1.0.04";
-        Properties props = segment.trackCreateAccountClicked(appVersion);
+        String source = "";
+        Properties props = segment.trackCreateAccountClicked(appVersion, source);
 
         // verify that the identity method was called
         Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.CREATE_ACCOUNT_CLICKED),
@@ -460,10 +467,6 @@ public class SegmentTests extends BaseTestCase {
         String courseId = "courseId";
         boolean email_opt_in = true;
         Properties props = segment.trackEnrollClicked(courseId, email_opt_in);
-
-        // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SIGN_UP),
-                (Properties) Mockito.any());
 
         assertTrue(props.containsKey(ISegment.Keys.NAME));
         assertTrue(props.containsKey(ISegment.Keys.CATEGORY));

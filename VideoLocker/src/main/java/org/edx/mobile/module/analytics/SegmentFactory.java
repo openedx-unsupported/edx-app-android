@@ -28,16 +28,17 @@ public class SegmentFactory {
      * If configuration does not allow third party traffic, then this method makes
      * an instance of {@link org.edx.mobile.module.analytics.ISegmentEmptyImpl} class
      * which does not capture any data.
+     *
+     * this method is only called from initialization of MainApplication.
+     * [also unit testing code]
      * @param context
      */
     public static void makeInstance(Context context) {
-        if (sInstance == null) {
             if (Config.getInstance().getSegmentConfig().isEnabled()) {
                 sInstance = new ISegmentImpl(context);
             }
             else {
                 sInstance = new ISegmentEmptyImpl();
             }
-        }
     }
 }

@@ -12,7 +12,7 @@ import org.edx.mobile.logger.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-class ISegmentImpl implements ISegment {
+public class ISegmentImpl implements ISegment {
 
     private ISegmentTracker tracker;
     private final Logger logger = new Logger(getClass().getName());
@@ -22,7 +22,7 @@ class ISegmentImpl implements ISegment {
      * that is used to submit analytics data.
      * @param context
      */
-    ISegmentImpl(Context context) {
+    public ISegmentImpl(Context context) {
         this.tracker = new ISegmentTrackerImpl(context);
     }
 
