@@ -1,0 +1,54 @@
+import org.ajoberstar.grgit.*
+
+buildscript {
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.0.0'
+    }
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: "groovy"
+
+    rootProject.dependencies {
+        it.runtime project(path)
+    }
+
+    it.repositories {
+        mavenCentral()
+    }
+
+    it.dependencies {
+        // These should really be under the projects themselves,
+        // but when building on travis
+        // the per project dependencies didn't seem to
+        // get picked up. We only have one buildSrc plugin
+        // so it doesn't really matter, but if we ever get more
+        // we should figure this out
+        compile 'org.codehaus.groovy:groovy-all:2.+'
+        compile gradleApi()
+        compile 'org.yaml:snakeyaml:1.14'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def edXAppPluginSetup(url, ref) {
+    def buildSrc = project.file('plugins/')
+    buildSrc.mkdirs()
+    def dest = buildSrc.getAbsolutePath() + "/edx-app-gradle-plugin"
+
+    if(!new File(dest).exists()) {
+        Grgit.clone(dir: dest, uri: url, refToCheckout : ref)
+    }
+
+    def grgit = Grgit.open(dir : dest)
+    grgit.fetch()
+    grgit.checkout(branch : ref)
+}
+
+edXAppPluginSetup('https://github.com/edx/edx-app-gradle-plugin', '2e0516c8b3c4e0d60bff01491bc66c9f0f2eedf4')

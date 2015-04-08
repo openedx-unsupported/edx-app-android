@@ -1,14 +1,4 @@
-import org.yaml.snakeyaml.*
-
-apply plugin: 'com.android.application'
-apply plugin: "jacoco"
-apply plugin: 'io.fabric'
-apply plugin: 'newrelic'
-
-repositories {
-    mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
-}
+import org.edx.builder.TaskHelper
 
 buildscript {
     repositories {
@@ -30,60 +20,37 @@ buildscript {
     }
 }
 
-class Configuration {
-    def dir = 'default_config'
-    def projectDir = '.'
-    def configFiles = []
 
-    def ios(setup) {
-        // do nothing. This is an android app. This is just to be compatible with
-        // the iOS config setup.
-    }
+apply plugin: 'edxapp'
+edx {
+    platform = ANDROID
+}
 
-    def android(setup) {
-        setup.delegate = this
-        setup()
-    }
+apply plugin: 'com.android.application'
+apply plugin: "jacoco"
+apply plugin: 'io.fabric'
+apply plugin: 'newrelic'
 
-    def getConfigPaths() {
-        def result = []
-        for(configName in configFiles) {
-            result.add(projectDir + '/' + dir + '/' + configName)
-        }
-        return result
-    }
 
-    // Loads our config YAML files, overwriting keys found in multiple files
-    // with the latest one in the list
-    def loadConfig() {
-        def yaml = new Yaml()
-        def properties = [:]
-        for(path in configPaths) {
-            try {
-                def dict = yaml.load(new FileInputStream(path))
-                if(dict != null) {
-                    properties = properties + dict
-                }
-            }
-            catch(FileNotFoundException e) {
-                println path + " not found. Skipping."
-            }
-        }
-        return properties
-    }
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+}
 
-    def saveProcessedConfig(config) {
-        def path = projectDir + '/assets/config'
-        new File(path).mkdirs()
-        def jsonWriter = new FileWriter(path + '/config.json')
+
+class AndroidHelper {
+
+    def saveProcessedConfig(project, config) {
+        def path = project.file('assets/config')
+        path.mkdirs()
+        def jsonWriter = new FileWriter(path.absolutePath + '/config.json')
         def builder = new groovy.json.JsonBuilder(config)
         jsonWriter.withWriter {
             builder.writeTo(it)
         }
     }
 
-    def saveResources(config) {
-
+    def saveResources(project, config) {
         // Fabric requires you to populate a key file
         // Using 'apiKey' instead of passing it in the meta-data
         // is undocumented, but is necessary because it tries to read
@@ -93,10 +60,10 @@ class Configuration {
             def fabric_key = fabric.get('FABRIC_KEY')
             def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
             if (fabric_key != null && fabric_secret != null) {
-                def crashlyticsPath = projectDir + '/crashlytics.properties'
-                def writer = new FileWriter(crashlyticsPath)
+                def crashlyticsFile = project.file('crashlytics.properties')
+                def writer = new FileWriter(crashlyticsFile)
                 writer.write(
-                        """
+"""
 apiSecret=$fabric_secret
 apiKey=$fabric_key
 """)
@@ -105,25 +72,6 @@ apiKey=$fabric_key
         }
     }
 
-}
-
-project.ext.edx = new Configuration()
-project.ext.edx.projectDir = projectDir.path
-
-try {
-    apply from: projectDir.path + '/edx.properties'
-}
-catch(GradleException e) {
-    println "Could not load edx.properties, using default configuration."
-}
-
-def configPath = projectDir.path + '/' + (edx.dir + '/' + 'edx.properties') 
-try {
-    apply from: configPath 
-}
-catch(GradleException e) {
-    println "Configuration in " + configPath + " is malformed."
-    throw new GradleException(e);
 }
 
 dependencies {
@@ -221,7 +169,7 @@ android {
 
     productFlavors {
         prod {
-            def config = edx.loadConfig()
+            def config = new TaskHelper().loadConfig(project)
             def fabric = config.get('FABRIC')
             if (fabric != null) {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
@@ -247,36 +195,16 @@ android {
     }
 }
 
-task printConfigPath << {
-    println "Your current configuration path is " + edx.dir
-}
-
-task printConfigFiles << {
-    println "You are loading configuration data from the following:"
-    for(path in edx.configPaths) {
-        println "\t" + path
-    }
-}
-
-task printConfig << {
-    def config = edx.loadConfig()
-
-    def options = new DumperOptions()
-    options.prettyFlow = true
-
-    def yaml = new Yaml(options)
-
-    println "Your current configuration is:"
-    println yaml.dump(config)
-}
 
 android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()
     def taskName = "applyConfig" + variantName
     def configureTask = project.task(taskName) << {
-        def config = edx.loadConfig()
-        edx.saveProcessedConfig(config)
-        edx.saveResources(config)
+        def taskHelper = new TaskHelper()
+        def helper = new AndroidHelper()
+        def config = taskHelper.loadConfig(project)
+        helper.saveProcessedConfig(project, config)
+        helper.saveResources(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
     generateTask.dependsOn(configureTask)
