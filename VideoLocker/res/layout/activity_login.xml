@@ -142,6 +142,18 @@
                         android:text="@string/licensing_agreement"
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="11sp" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/tv_version_no"
+                        style="@style/regular_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center_horizontal"
+                        android:text=""
+                        android:textColor="@color/transparent_black_80"
+                        android:visibility="invisible"
+                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
