@@ -9,6 +9,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 
@@ -130,6 +131,8 @@ public class Router {
         ISegment segIO = SegmentFactory.getInstance();
         segIO.trackUserLogout();
         segIO.resetIdentifyUser();
+
+        UserNotificationManager.instance.unsubscribeAll();
 
         Router.getInstance().showLaunchScreen(context,true);
         Router.getInstance().showLogin(context);

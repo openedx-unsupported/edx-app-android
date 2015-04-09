@@ -10,6 +10,11 @@ import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -93,6 +98,13 @@ public class MainApplication extends Application{
         if ( !isOnZeroRatedNetwork
                 && Config.getInstance().getFacebookConfig().isEnabled()) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookConfig().getFacebookAppId());
+        }
+
+        // initialize Parse notification
+        Config.ParseNotificationConfig parseNotificationConfig =
+                Config.getInstance().getParseNotificationConfig();
+        if ( parseNotificationConfig.isEnabled() ) {
+            Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
         }
 
         // try repair of download data if app version is updated

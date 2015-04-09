@@ -37,6 +37,10 @@ public class ConfigTests extends BaseTestCase {
     private static final String SEGMENT_IO_WRITE_KEY    = "SEGMENT_IO_WRITE_KEY";
     private static final String DOMAINS                 = "DOMAINS";
 
+    private static final String PARSE = "PARSE";
+    private static final String PARSE_APPLICATION_ID = "PARSE_APPLICATION_ID";
+    private static final String PARSE_CLIENT_KEY = "PARSE_CLIENT_KEY";
+
 
     public void testSocialSharingNoConfig() {
         JsonObject configBase = new JsonObject();
@@ -217,6 +221,33 @@ public class ConfigTests extends BaseTestCase {
 
         Config config = new Config(configBase);
         assertTrue(config.getGoogleConfig().isEnabled());
+    }
+
+
+    public void testParseNoConfig() {
+        JsonObject configBase = new JsonObject();
+        Config config = new Config(configBase);
+        assertFalse(config.getParseNotificationConfig().isEnabled());
+        assertNull(config.getParseNotificationConfig().getParseApplicationId());
+        assertNull(config.getParseNotificationConfig().getParseClientKey());
+    }
+
+    public void testParseConfig() {
+        String key = "fake-key";
+        String secret = "fake-secret";
+
+        JsonObject parseConfig = new JsonObject();
+        parseConfig.add(ENABLED, new JsonPrimitive(true));
+        parseConfig.add(PARSE_APPLICATION_ID, new JsonPrimitive(key));
+        parseConfig.add(PARSE_CLIENT_KEY, new JsonPrimitive(secret));
+
+        JsonObject configBase = new JsonObject();
+        configBase.add(PARSE, parseConfig);
+
+        Config config = new Config(configBase);
+        assertTrue(config.getParseNotificationConfig().isEnabled());
+        assertEquals(key, config.getParseNotificationConfig().getParseApplicationId());
+        assertEquals(secret, config.getParseNotificationConfig().getParseClientKey());
     }
 
     public void testFabricNoConfig() {

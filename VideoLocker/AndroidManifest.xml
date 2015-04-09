@@ -55,6 +55,15 @@
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+
+    <!-- Permission required by Parse push notification service -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:protectionLevel="signature"
+        android:name="org.edx.mobile.permission.C2D_MESSAGE" />
+    <uses-permission android:name="org.edx.mobile.permission.C2D_MESSAGE" />
+
     
     <application
         android:allowBackup="true"
@@ -216,6 +225,33 @@
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
         <service android:name="org.edx.mobile.services.FetchCourseFriendsService"/>
+
+
+        <!--   Parse Setup -->
+        <!--  https://www.parse.com/apps/quickstart#parse_push/android/existing  -->
+        <service android:name="com.parse.PushService" />
+        <receiver android:name="com.parse.ParseBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="org.edx.mobile.module.notification.EdxParsePushBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="org.edx.mobile" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

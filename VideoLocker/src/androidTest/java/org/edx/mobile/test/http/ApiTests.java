@@ -135,8 +135,9 @@ public class ApiTests extends HttpBaseTestCase {
 
     public void login() throws Exception {
         if( shouldSkipTest ) return;
+        Config.TestAccountConfig config  = Config.getInstance().getTestAccountConfig();
 
-        AuthResponse res = api.auth("user@edx.org", "****");
+        AuthResponse res = api.auth(config.getName(), config.getPassword());
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);

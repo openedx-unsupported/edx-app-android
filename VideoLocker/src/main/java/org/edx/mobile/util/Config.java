@@ -52,7 +52,15 @@ public class Config {
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String PARSE = "PARSE";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
+
+    private static final String PARSE_APPLICATION_ID = "PARSE_APPLICATION_ID";
+    private static final String PARSE_CLIENT_KEY = "PARSE_CLIENT_KEY";
+
+    private static final String TEST_ACCOUNT = "TEST_ACCOUNT";
+    public static final String TEST_ACCOUNT_NAME = "NAME";
+    public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
 
     /**
      * Social Sharing configuration.
@@ -180,6 +188,36 @@ public class Config {
 
         public String getNewRelicKey() {
             return mNewRelicKey;
+        }
+    }
+
+    /**
+     * Testing account - we may need a better solution in the future.
+     */
+    public class TestAccountConfig {
+        private @SerializedName("NAME") String mName;
+        private @SerializedName("PASSWORD") String mPassword;
+
+        public String getName() { return mName; }
+        public String getPassword() { return mPassword; }
+    }
+
+    /**
+     * Parse Notification
+     */
+    public class ParseNotificationConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("PARSE_APPLICATION_ID") String mParseApplicationId;
+        private @SerializedName("PARSE_CLIENT_KEY") String mParseClientKey;
+
+        public boolean isEnabled() {
+            return mEnabled && !TextUtils.isEmpty(mParseClientKey);
+        }
+
+        public String getParseApplicationId() { return mParseApplicationId; }
+
+        public String getParseClientKey() {
+            return mParseClientKey;
         }
     }
 
@@ -399,6 +437,18 @@ public class Config {
         }
     }
 
+    public ParseNotificationConfig getParseNotificationConfig() {
+        JsonElement element = getObject(PARSE);
+        if(element != null) {
+            Gson gson = new Gson();
+            ParseNotificationConfig config = gson.fromJson(element, ParseNotificationConfig.class);
+            return config;
+        }
+        else {
+            return new ParseNotificationConfig();
+        }
+    }
+
     public SegmentConfig getSegmentConfig() {
         JsonElement element = getObject(SEGMENT_IO);
         if(element != null) {
@@ -408,6 +458,18 @@ public class Config {
         }
         else {
             return new SegmentConfig();
+        }
+    }
+
+    public TestAccountConfig getTestAccountConfig() {
+        JsonElement element = getObject(TEST_ACCOUNT);
+        if(element != null) {
+            Gson gson = new Gson();
+            TestAccountConfig config = gson.fromJson(element, TestAccountConfig.class);
+            return config;
+        }
+        else {
+            return new TestAccountConfig();
         }
     }
 }

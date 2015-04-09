@@ -3,6 +3,7 @@ package org.edx.mobile.module.prefs;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.notification.NotificationPreference;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Sha1Util;
 
@@ -165,7 +166,7 @@ public class PrefManager {
         
         return res;
     }
-    
+
     /**
      * Clears auth token info and current profile information from preferences.
      */
@@ -273,6 +274,8 @@ public class PrefManager {
         public static final String SHARE_COURSES = "share_courses";
         public static final String SPEED_TEST_KBPS = "speed_test_kbps";
         public static final String APP_VERSION = "app_version_name";
+        public static final String NOTIFICATION_PROFILE_JSON = "notification_profile_json";
+
     }
     
     public static final class Value {
