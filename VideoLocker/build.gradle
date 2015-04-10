@@ -17,6 +17,7 @@ buildscript {
 
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:4.+"
+
     }
 }
 
@@ -90,6 +91,10 @@ dependencies {
 
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:4.+'
+
+    //Included for Parse/notification service
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
 
     // test project configuration
     androidTestCompile("org.mockito:mockito-core:1.9.5") {

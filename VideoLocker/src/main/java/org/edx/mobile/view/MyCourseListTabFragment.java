@@ -14,6 +14,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
@@ -80,7 +81,9 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         return new CoursesAsyncLoader(getActivity(), bundle){
             @Override
             protected List<EnrolledCoursesResponse> getCourses(Api api) throws Exception {
-                return api.getEnrolledCourses();
+                List<EnrolledCoursesResponse> response =  api.getEnrolledCourses();
+                UserNotificationManager.instance.checkCourseEnrollment(response);
+                return response;
             }
         };
 

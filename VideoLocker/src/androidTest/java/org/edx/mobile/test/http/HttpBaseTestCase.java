@@ -16,6 +16,7 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,10 @@ public class HttpBaseTestCase extends BaseTestCase {
 
         api = new Api(getInstrumentation().getTargetContext());
         String oAuthClientId = Config.getInstance().getOAuthClientId();
-        shouldSkipTest = TextUtils.isEmpty( oAuthClientId );
+        String testAccount = Config.getInstance().getTestAccountConfig().getName();
+        shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);
+
+
     }
 
 }

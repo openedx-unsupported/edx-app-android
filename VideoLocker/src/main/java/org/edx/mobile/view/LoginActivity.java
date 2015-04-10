@@ -20,6 +20,7 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -451,6 +452,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
         //segIO.trackDeviceDetails();
+        UserNotificationManager.instance.resubscribeAll();
 
         myCourseScreen();
     }
