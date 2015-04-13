@@ -40,13 +40,6 @@ public abstract class LoginTask extends Task<AuthResponse> {
         if (res.isSuccess()) {
             res.profile = api.getProfile();
 
-            // store profile json
-            if (res.profile != null) {
-                PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-                pref.put(PrefManager.Key.PROFILE_JSON, res.profile.json);
-                pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-                pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-            }
         }
         return res;
     }

@@ -5,18 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 
 /**
  * Created by aleffert on 1/30/15.
  */
 public class Router {
+
+    public static final String EXTRA_ANNOUNCEMENTS = "announcemnts";
+    public static final String EXTRA_BUNDLE = "bundle";
+    public static final String EXTRA_COURSE_ID = "course_id";
+    public static final String EXTRA_ENROLLMENT = "enrollment";
 
     static private Router sInstance;
 
@@ -107,13 +112,14 @@ public class Router {
     public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
                                      boolean announcements) {
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(CourseDetailTabActivity.EXTRA_ENROLLMENT, model);
-        courseBundle.putBoolean(CourseDetailTabActivity.EXTRA_ANNOUNCEMENTS, announcements);
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
 
         Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
-        courseDetail.putExtra(CourseDetailTabActivity.EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
+
     }
 
     /**

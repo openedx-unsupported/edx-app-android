@@ -5,19 +5,29 @@ import android.content.Context;
 import java.util.List;
 
 import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.prefs.UserPrefs;
 
 class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     private String username;
 
-    public IDatabaseImpl(Context context, String username) {
+    public IDatabaseImpl( Context context ) {
         super(context);
-        this.username = username == null ? "" : username;
+        UserPrefs userprefs = new UserPrefs(context);
+        String username = "";
+        if (userprefs != null) {
+            ProfileModel profile = userprefs.getProfile();
+            if (profile != null) {
+                username = profile.username;
+            }
+        }
+        this.username =  username;
     }
 
     @Override
@@ -609,5 +619,10 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 new String[] {courseId, section, subSection, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
         op.setCallback(callback);
         return enqueue(op);
+    }
+
+    @Override
+    public void setUserName(String userName){
+        this.username = userName;
     }
 }

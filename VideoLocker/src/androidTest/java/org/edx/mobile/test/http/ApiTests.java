@@ -111,6 +111,20 @@ public class ApiTests extends HttpBaseTestCase {
         print(model.handouts_html);
     }
 
+    public void testChannelId() throws Exception {
+        if( shouldSkipTest ) return;
+
+        login();
+
+        // get a course id for this test
+        List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
+        assertTrue("Must have enrolled to at least one course",
+                courses != null && courses.size() > 0);
+        String channelId = courses.get(0).getCourse().getChannel_id();
+        //should the channelId be mandatory?
+        assertTrue(channelId != null);
+    }
+
     public void testCourseStructure() throws Exception {
         if( shouldSkipTest ) return;
         login();

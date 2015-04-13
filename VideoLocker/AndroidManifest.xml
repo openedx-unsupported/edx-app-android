@@ -112,6 +112,13 @@
             android:screenOrientation="portrait"
             >
         </activity>
+
+        <activity
+            android:name="org.edx.mobile.view.CourseDashboardTabActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
         
         <activity
             android:name="org.edx.mobile.view.CourseLectureListActivity"

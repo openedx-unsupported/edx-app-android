@@ -13,13 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -29,12 +30,14 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
@@ -80,7 +83,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         final Bundle bundle = getArguments();
         if(bundle!=null){
             enrollment = (EnrolledCoursesResponse) bundle
-                    .getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
+                    .getSerializable(Router.EXTRA_ENROLLMENT);
             if(enrollment!=null) {
                 courseId = enrollment.getCourse().getId();
                 try {
@@ -99,7 +102,22 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chapter_list, container,
                 false);
+        final CheckBox checkbox = (CheckBox)view.findViewById(R.id.channel_subscribed_check);
 
+        if (Config.getInstance().isNotificationEnabled() ){
+            checkbox.setVisibility(View.VISIBLE);
+            boolean isSubscribed = UserNotificationManager.instance.isSubscribedByCourseId(courseId);
+            checkbox.setChecked(isSubscribed);
+            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                    UserNotificationManager.instance.changeNotificationSetting(
+                            courseId, enrollment.getCourse().getChannel_id(), isChecked);
+                }
+            });
+        } else {
+            checkbox.setVisibility(View.GONE);
+        }
         //Initialize the Course not started text view.
         if (!enrollment.getCourse().isStarted()) {
             startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());
@@ -176,7 +194,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                             if (isVideoDownloaded) {
                                 Intent videoIntent = new Intent(getActivity(),
                                         VideoListActivity.class);
-                                videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                                videoIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
                                 videoIntent.putExtra("chapter", model.chapter);
                                 videoIntent.putExtra("FromMyVideos", false);
                                 startActivity(videoIntent);
@@ -186,7 +204,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                         } else {
                             Intent lectureIntent = new Intent(getActivity(),
                                     CourseLectureListActivity.class);
-                            lectureIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                            lectureIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
                             lectureIntent.putExtra("lecture", model);
                             getActivity().startActivity(lectureIntent);
                         }
@@ -569,7 +587,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                         lastClickTime = currentTime;
                                         Bundle bundle = getArguments();
                                         EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) 
-                                                bundle.getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
+                                                bundle.getSerializable(Router.EXTRA_ENROLLMENT);
                                         try {
                                             LectureModel lecture = api.getLecture(courseId,
                                                     videoModel.getChapterName(), 
@@ -580,7 +598,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                                             Intent videoIntent = new Intent(
                                                     getActivity(),
                                                     VideoListActivity.class);
-                                            videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                                            videoIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
                                             videoIntent.putExtra("lecture", lecture);
                                             videoIntent.putExtra("FromMyVideos", false);
                                             

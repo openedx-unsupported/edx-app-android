@@ -359,5 +359,10 @@ public interface IDatabase {
      */
     public Boolean isAnyVideoDownloadingInSubSection(DataCallback<Boolean> callback, String courseId,
                                                      String section, String subSection);
-    
+
+    /**
+     *
+     * @param userName
+     */
+    public void setUserName(String userName);
 }

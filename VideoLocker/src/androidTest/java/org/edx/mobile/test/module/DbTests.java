@@ -20,9 +20,9 @@ public class DbTests extends BaseTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        db = DatabaseFactory.getInstance(getInstrumentation()
-                .getTargetContext().getApplicationContext(),
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, getInstrumentation()
+                        .getTargetContext().getApplicationContext() );
+        db.setUserName(username);
     }
 
     @Override

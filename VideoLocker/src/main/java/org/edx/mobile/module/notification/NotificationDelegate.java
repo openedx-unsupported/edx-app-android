@@ -34,7 +34,7 @@ public interface NotificationDelegate {
      * @param courseId  also the channel id
      * @param subscribe subscribe or unsubscribe to courseId channel
      */
-    public void changeNotificationSetting(String courseId, boolean subscribe);
+    public void changeNotificationSetting(String courseId, String channelId, boolean subscribe);
 
 
     /**
@@ -43,4 +43,11 @@ public interface NotificationDelegate {
      * @param subscribe
      */
     public void toggleSubscribeToNotificationServer(final String channel, boolean subscribe);
+
+    /**
+     *
+     * @param channel
+     * @return
+     */
+    public boolean isSubscribedByCourseId(String channel);
 }

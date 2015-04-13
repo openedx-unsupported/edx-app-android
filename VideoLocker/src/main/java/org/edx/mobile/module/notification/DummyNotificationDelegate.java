@@ -26,12 +26,17 @@ public class DummyNotificationDelegate implements NotificationDelegate{
     }
 
     @Override
-    public void changeNotificationSetting(String courseId, boolean subscribe) {
+    public void changeNotificationSetting(String courseId, String channelId, boolean subscribe) {
 
     }
 
     @Override
     public void toggleSubscribeToNotificationServer(String channel, boolean subscribe) {
 
+    }
+
+    @Override
+    public boolean isSubscribedByCourseId(String channel){
+        return false;
     }
 }

@@ -37,4 +37,6 @@ public interface ICourse {
     String getCourse_updates();
 
     String getCourse_handouts();
+
+    String getChannel_id();
 }
