@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.util.HashMap;
@@ -166,6 +167,7 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
             // suppress external links on ZeroRated network
             if (isExternalLink(url)
+                    && !ConfigUtil.isWhiteListedURL(url)
                     && NetworkUtil.isOnZeroRatedNetwork(context)
                     && NetworkUtil.isConnectedMobile(context)) {
                 return new WebResourceResponse("text/html", HTTP.UTF_8, null);
@@ -183,7 +185,9 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
             Context context = view.getContext().getApplicationContext();
 
             // suppress external links on ZeroRated network
-            if (isExternalLink(request.getUrl().toString())
+            String url = request.getUrl().toString();
+            if (isExternalLink(url)
+                    && !ConfigUtil.isWhiteListedURL(url)
                     && NetworkUtil.isOnZeroRatedNetwork(context)
                     && NetworkUtil.isConnectedMobile(context)) {
                 return new WebResourceResponse("text/html", HTTP.UTF_8, null);
