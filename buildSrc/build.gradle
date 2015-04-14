@@ -1,4 +1,5 @@
 import org.ajoberstar.grgit.*
+import org.ajoberstar.grgit.exception.*
 
 buildscript {
     dependencies {
@@ -47,7 +48,12 @@ def edXAppPluginSetup(url, ref) {
     }
 
     def grgit = Grgit.open(dir : dest)
-    grgit.fetch()
+    try {
+        grgit.fetch()
+    }
+    catch(GrgitException e) {
+        println("Could not fetch. This is probably due to lack of an internet connection. Skipping")
+    }
     grgit.checkout(branch : ref)
 }
 
