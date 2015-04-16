@@ -31,7 +31,7 @@ public class ParseNotificationDelegate implements NotificationDelegate{
             public void onFinish(Void result) {
                 if (subscribedChannels != null) {
                     for (String channel : subscribedChannels) {
-                        UserNotificationManager.instance.subscribeAndUnsubscribeToParse(channel, false);
+                        toggleSubscribeToNotificationServer(channel, false);
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class ParseNotificationDelegate implements NotificationDelegate{
         NotificationPreference preference = prefManager.getNotificationPreference();
         List<CourseEntry> newCourseList = preference.filterForNewCourses(activeList);
         for (CourseEntry courseEntry : newCourseList) {
-            EdxLocalParseChannel pc = new EdxLocalParseChannel(courseEntry.getId(), true);
+            EdxLocalParseChannel pc = new EdxLocalParseChannel(courseEntry.getId(), courseEntry.getChannel_id(), true);
             toggleSubscribeToNotificationServer(pc.getChannelId(), true);
             preference.add(pc);
         }
@@ -110,16 +110,24 @@ public class ParseNotificationDelegate implements NotificationDelegate{
 
     }
 
+    @Override
+    public boolean isSubscribedByCourseId(String courseId){
+        UserBasedPrefManager prefManager = UserBasedPrefManager.getInstance(UserBasedPrefManager.UserPrefType.NOTIFICATION);
+        NotificationPreference preference = prefManager.getNotificationPreference();
+        EdxLocalParseChannel pc = preference.getByCourseId(courseId);
+        return pc == null ? false : pc.isSubscribed();
+    }
+
     /**
      * @param courseId  also the channel id
      * @param subscribe subscribe or unsubscribe to courseId channel
      */
-    public void changeNotificationSetting(String courseId, boolean subscribe) {
+    public void changeNotificationSetting(String courseId, String channelId, boolean subscribe) {
         UserBasedPrefManager prefManager = UserBasedPrefManager.getInstance(UserBasedPrefManager.UserPrefType.NOTIFICATION);
         NotificationPreference preference = prefManager.getNotificationPreference();
         EdxLocalParseChannel pc = preference.getByCourseId(courseId);
         if (pc == null) {
-            pc = new EdxLocalParseChannel(courseId, subscribe);
+            pc = new EdxLocalParseChannel(courseId, channelId, subscribe);
             preference.add(pc);
         } else {
             pc.setSubscribed(subscribe);

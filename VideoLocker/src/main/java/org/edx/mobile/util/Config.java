@@ -52,11 +52,12 @@ public class Config {
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String PARSE = "PARSE";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
-    private static final String PARSE_APPLICATION_ID = "PARSE_APPLICATION_ID";
-    private static final String PARSE_CLIENT_KEY = "PARSE_CLIENT_KEY";
+    private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
+    private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
 
     private static final String TEST_ACCOUNT = "TEST_ACCOUNT";
     public static final String TEST_ACCOUNT_NAME = "NAME";
@@ -206,9 +207,9 @@ public class Config {
      * Parse Notification
      */
     public class ParseNotificationConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("PARSE_APPLICATION_ID") String mParseApplicationId;
-        private @SerializedName("PARSE_CLIENT_KEY") String mParseClientKey;
+        private @SerializedName("NOTIFICATIONS_ENABLED") boolean mEnabled;
+        private @SerializedName("APPLICATION_ID") String mParseApplicationId;
+        private @SerializedName("CLIENT_KEY") String mParseClientKey;
 
         public boolean isEnabled() {
             return mEnabled && !TextUtils.isEmpty(mParseClientKey);
@@ -330,6 +331,10 @@ public class Config {
 
     public String getOAuthClientSecret() {
         return getString(OAUTH_CLIENT_SECRET);
+    }
+
+    public boolean isNotificationEnabled() {
+        return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
 
     /**

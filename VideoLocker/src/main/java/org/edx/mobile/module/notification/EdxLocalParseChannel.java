@@ -13,9 +13,9 @@ public class EdxLocalParseChannel implements Serializable{
 
     public EdxLocalParseChannel(){}
 
-    public EdxLocalParseChannel(String courseId, boolean subscribed){
+    public EdxLocalParseChannel(String courseId, String channelId, boolean subscribed){
         this.courseId = courseId;
-        this.channelId = courseId.replaceAll("[^A-Za-z0-9]", "");
+        this.channelId = channelId;
         this.subscribed = subscribed;
     }
 

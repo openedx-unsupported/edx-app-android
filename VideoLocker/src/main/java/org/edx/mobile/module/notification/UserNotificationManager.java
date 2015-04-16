@@ -2,6 +2,7 @@ package org.edx.mobile.module.notification;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.Config;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  *
  */
 public class UserNotificationManager {
+
     private static final Logger logger = new Logger(UserNotificationManager.class.getName());
 
     public static final UserNotificationManager instance = new UserNotificationManager();
@@ -23,7 +25,16 @@ public class UserNotificationManager {
     private NotificationDelegate delegate;
 
     private UserNotificationManager(){
-        delegate = new ParseNotificationDelegate();
+        if ( Config.getInstance().isNotificationEnabled() ) {
+            Config.ParseNotificationConfig parseNotificationConfig =
+                    Config.getInstance().getParseNotificationConfig();
+            if (parseNotificationConfig.isEnabled()) {
+                delegate = new ParseNotificationDelegate();
+            }
+        }
+        if ( delegate == null ){
+            delegate = new DummyNotificationDelegate();
+        }
     }
 
     /**
@@ -61,8 +72,8 @@ public class UserNotificationManager {
      * @param courseId  also the channel id
      * @param subscribe subscribe or unsubscribe to courseId channel
      */
-    public void changeNotificationSetting(String courseId, boolean subscribe){
-        delegate.changeNotificationSetting(courseId, subscribe);
+    public void changeNotificationSetting(String courseId, String channelId, boolean subscribe){
+        delegate.changeNotificationSetting(courseId, channelId, subscribe);
     }
 
     /**
@@ -70,8 +81,16 @@ public class UserNotificationManager {
      * @param channel
      * @param subscribe
      */
-    public void subscribeAndUnsubscribeToParse(String channel, boolean subscribe){
+    public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe){
         delegate.toggleSubscribeToNotificationServer(channel, subscribe);
     }
 
+    /**
+     *
+     * @param courseId
+     * @return
+     */
+    public boolean isSubscribedByCourseId(String courseId){
+        return delegate.isSubscribedByCourseId( courseId );
+    }
 }

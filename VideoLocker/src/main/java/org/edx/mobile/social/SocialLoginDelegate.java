@@ -239,14 +239,6 @@ public class SocialLoginDelegate {
                     // we got a valid accessToken so profile can be fetched
                     ProfileModel profile =  api.getProfile();
 
-                    // store profile json
-                    if (profile != null ) {
-                        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-                        pref.put(PrefManager.Key.PROFILE_JSON,  profile.json);
-                        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-                        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-                    }
-
                     if (profile.email != null) {
                         // we got valid profile information
                         return profile;

@@ -59,8 +59,6 @@ import java.util.List;
 
 public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
 
-    public static final String EXTRA_ENROLLMENT = "enrollment";
-
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
     // per second callback
@@ -692,8 +690,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         if(profile!=null){
             username =profile.username;
         }
-        db = DatabaseFactory.getInstance(this,
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
 
         segIO = SegmentFactory.getInstance();
     }

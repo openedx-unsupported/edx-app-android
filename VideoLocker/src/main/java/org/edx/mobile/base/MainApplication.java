@@ -101,11 +101,18 @@ public class MainApplication extends Application{
         }
 
         // initialize Parse notification
-        Config.ParseNotificationConfig parseNotificationConfig =
-                Config.getInstance().getParseNotificationConfig();
-        if ( parseNotificationConfig.isEnabled() ) {
-            Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
+        // it maybe good to support multiple notification providers running
+        // at the same time, as it is less like to be the case in the future,
+        // we at two level of controls just for easy change of different providers.
+        if ( Config.getInstance().isNotificationEnabled() ){
+            Config.ParseNotificationConfig parseNotificationConfig =
+                    Config.getInstance().getParseNotificationConfig();
+            if ( parseNotificationConfig.isEnabled() ) {
+                Parse.enableLocalDatastore(this);
+                Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
+            }
         }
+
 
         // try repair of download data if app version is updated
         new Storage(this).repairDownloadCompletionData();

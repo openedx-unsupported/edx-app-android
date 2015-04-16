@@ -64,7 +64,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         }
 
 
-        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra(BaseFragmentActivity.EXTRA_ENROLLMENT);
+        enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra(Router.EXTRA_ENROLLMENT);
 
         ArrayList<LectureModel> lectureList = new ArrayList<LectureModel>();
 
@@ -99,7 +99,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
                     Intent videoIntent = new Intent(CourseLectureListActivity.this,
                             VideoListActivity.class);
-                    videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, enrollment);
+                    videoIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
                     videoIntent.putExtra("lecture", model);
                     videoIntent.putExtra("FromMyVideos", false);
                     startActivity(videoIntent);

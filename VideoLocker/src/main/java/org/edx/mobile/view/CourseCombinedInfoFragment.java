@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,7 +19,6 @@ import com.facebook.widget.LikeView;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
@@ -150,7 +148,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         try {
             final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle.getSerializable(BaseFragmentActivity.EXTRA_ENROLLMENT);
+            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
             FacebookProvider fbProvider = new FacebookProvider();
 
             if(courseData != null) {

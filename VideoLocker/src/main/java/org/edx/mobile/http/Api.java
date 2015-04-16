@@ -38,6 +38,7 @@ import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -222,6 +223,18 @@ public class Api {
 
         // hold the json string as it is
         res.json = json;
+
+
+        // store profile json
+        if (json != null ) {
+            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+            pref.put(PrefManager.Key.PROFILE_JSON, json);
+            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+
+            //it is the routine for login
+            DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).setUserName( res.username );
+        }
 
         return res;
     }
@@ -458,11 +471,11 @@ public class Api {
      * @param courseId
      * @return
      */
-    public CourseEntry getCourseById(String courseId) {
+    public EnrolledCoursesResponse getCourseById(String courseId) {
         try {
             for (EnrolledCoursesResponse r : getEnrolledCourses(true)) {
                 if (r.getCourse().getId().equals(courseId)) {
-                    return r.getCourse();
+                    return r;
                 }
             }
         } catch(Exception ex) {

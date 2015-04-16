@@ -50,10 +50,7 @@ public class Storage implements IStorage {
         this.pref = new UserPrefs(context);
 
         // init database manager
-        UserPrefs pref = new UserPrefs(context);
-
-        String username = pref.getProfile() == null ? null : pref.getProfile().username;
-        this.db = DatabaseFactory.getInstance(context, DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+        this.db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
 
         // init download manager
         this.dm = DownloadFactory.getInstance(context);
@@ -195,8 +192,7 @@ public class Storage implements IStorage {
 
     @Override
     public void getAverageDownloadProgress(final DataCallback<Integer> callback) {
-        String username = pref.getProfile().username;
-        IDatabase db = DatabaseFactory.getInstance(context, DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+        IDatabase db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
         db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
 
             @Override
@@ -483,8 +479,8 @@ public class Storage implements IStorage {
 
                         IDownloadManager dm = DownloadFactory.getInstance(context);
                         IStorage storage = new Storage(context);
-                        IDatabase db = DatabaseFactory.getInstance(context,
-                                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+                        IDatabase db = DatabaseFactory.getInstance(
+                                DatabaseFactory.TYPE_DATABASE_NATIVE );
 
                         List<Long> dmidList = db.getAllDownloadingVideosDmidList(null);
                         for (Long d : dmidList) {

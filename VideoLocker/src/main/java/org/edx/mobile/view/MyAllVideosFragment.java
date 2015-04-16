@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -50,7 +49,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
                 AppConstants.myVideosDeleteMode = false;
                 
                 Intent videoIntent = new Intent(getActivity(), VideoListActivity.class);
-                videoIntent.putExtra(BaseFragmentActivity.EXTRA_ENROLLMENT, model);
+                videoIntent.putExtra(Router.EXTRA_ENROLLMENT, model);
                 videoIntent.putExtra("FromMyVideos", true);
                 //videoIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(videoIntent);

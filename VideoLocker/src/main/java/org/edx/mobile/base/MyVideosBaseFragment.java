@@ -46,8 +46,7 @@ public abstract class MyVideosBaseFragment extends Fragment {
                 username =profile.username;
             }
         }
-        db = DatabaseFactory.getInstance(getActivity(), 
-                DatabaseFactory.TYPE_DATABASE_NATIVE, username);
+        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
         
         segIO = SegmentFactory.getInstance();
     }

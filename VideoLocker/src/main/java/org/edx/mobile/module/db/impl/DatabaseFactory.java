@@ -1,5 +1,6 @@
 package org.edx.mobile.module.db.impl;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.db.IDatabase;
 
@@ -21,25 +22,24 @@ public class DatabaseFactory {
     /**
      * Returns singleton instance of the {@link IDatabase} for the given type.
      * The only supported type is TYPE_DATABASE_NATIVE. 
-     * @param context
-     * @param type
-     * @return
+     *
      * @throws IllegalArgumentException if the type is invalid.
      */
-    public static IDatabase getInstance(Context context, int type, String username) {
+    public static IDatabase getInstance(int type) {
+        return getInstance(type, MainApplication.instance());
+    }
+
+    public static IDatabase getInstance(int type, Context context){
         IDatabaseImpl db = null;
         
         if (type == TYPE_DATABASE_NATIVE) {
             // manage singleton object
             if (dbMap.get(type) == null) {
-                db = new IDatabaseImpl(context, username);
+                db = new IDatabaseImpl(context);
                 dbMap.put(type, db);
                 logger.debug("Database object created");
             }
-            
-            // update username everytime
             db = (IDatabaseImpl) dbMap.get(type);
-            db.setUsername(username);
 
             return db;
         } 
@@ -47,4 +47,5 @@ public class DatabaseFactory {
         throw new IllegalArgumentException("Database type " + type + 
                 " is not supported");
     }
+
 }

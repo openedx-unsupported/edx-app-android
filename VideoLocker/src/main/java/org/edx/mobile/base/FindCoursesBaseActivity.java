@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -223,9 +224,9 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
                     // show flying message about the success of Enroll
                     Api api = new Api(context);
-                    CourseEntry course = api.getCourseById(courseId);
+                    EnrolledCoursesResponse course = api.getCourseById(courseId);
                     String msg;
-                    if (course == null) {
+                    if (course == null || course.getCourse() == null ) {
                         // this means, you were not already enrolled to this course
                         msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
                     }else{

@@ -2,13 +2,12 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
@@ -16,32 +15,31 @@ import org.edx.mobile.util.NetworkUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseDetailTabActivity extends BaseTabActivity {
+public class CourseDashboardTabActivity extends BaseTabActivity {
 
-    //TODO - it is out of sync here. the logic should be in TabModel.
-    private final int coursewareTabIndex = 0;
-    private final int courseInfoTabIndex = 1;
+    protected Logger logger = new Logger(getClass().getSimpleName());
 
-    public static String TAG = CourseDetailTabActivity.class.getCanonicalName();
+
+    public static String TAG = CourseDashboardTabActivity.class.getCanonicalName();
     static final String TAB_ID = TAG + ".tabID";
 
     private View offlineBar;
 
-    private int selectedTab = coursewareTabIndex;
+    private int selectedTab = 0;
 
     Bundle bundle;
     String activityTitle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coursedetail_tab);
+        setContentView(R.layout.activity_course_dashboard_tab);
 
         if (savedInstanceState != null) {
             selectedTab = savedInstanceState.getInt(TAB_ID);
         }
 
         setApplyPrevTransitionOnRestart(true);
-        
+
         bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
@@ -55,33 +53,11 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         try{
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
                     .getSerializable(Router.EXTRA_ENROLLMENT);
-
-            if ( courseData == null ){
-                //this is from notification
-                String courseId = bundle.getString(Router.EXTRA_COURSE_ID);
-                if (!TextUtils.isEmpty(courseId)){
-                    Api api = new Api(this);
-                    courseData = api.getCourseById(courseId);
-                    if (courseData != null && courseData.getCourse() != null ) {
-                        bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
-                        selectedTab = courseInfoTabIndex;
-                    }
-                }
-
-            }
-            //check courseData again, it may be fetched from local cache
-            if ( courseData != null ) {
-                activityTitle = courseData.getCourse().getName();
-                try{
-                    segIO.screenViewsTracking(courseData.getCourse().getName());
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            } else {
-                //it is a good idea to go to the my course page. as loading of my courses
-                //take a while to load. that the only way to get anouncement link
-                Router.getInstance().showMyCourses(this);
-                finish();
+            activityTitle = courseData.getCourse().getName();
+            try{
+                segIO.screenViewsTracking(courseData.getCourse().getName());
+            }catch(Exception e){
+                logger.error(e);
             }
 
         }catch(Exception ex){
@@ -170,4 +146,6 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(TAB_ID, tabHost.getCurrentTab());
     }
+
+
 }

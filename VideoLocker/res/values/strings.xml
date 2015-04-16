@@ -447,4 +447,9 @@
         <item quantity="one">%s video deleted</item>
         <item quantity="other">%s videos deleted</item>
     </plurals>
+
+
+    <!-- Notification related -->
+    <!-- Template for notification title -->
+    <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">Course Announcement</string>
 </resources>
