@@ -112,7 +112,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                     UserNotificationManager.instance.changeNotificationSetting(
-                            courseId, enrollment.getCourse().getChannel_id(), isChecked);
+                            courseId, enrollment.getCourse().getSubscription_id(), isChecked);
                 }
             });
         } else {

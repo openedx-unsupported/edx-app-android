@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
@@ -47,6 +48,8 @@ import org.edx.mobile.view.custom.ETextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import de.greenrobot.event.EventBus;
 
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
@@ -325,7 +328,7 @@ public class RegisterActivity extends BaseFragmentActivity
                                 if (errorMessage == null || errorMessage.isEmpty()) {
                                     errorMessage = getString(R.string.sign_up_error);
                                 }
-                                sendBroadcastFlyingErrorMessage(null, errorMessage);
+                                EventBus.getDefault().postSticky(new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR, null, errorMessage));
                                 return;
                             }
 
@@ -350,7 +353,8 @@ public class RegisterActivity extends BaseFragmentActivity
                                 Router.getInstance().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
-                                sendBroadcastFlyingErrorMessage(null, getString(R.string.sign_up_error));
+                                EventBus.getDefault().postSticky(
+                                        new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR, null, getString(R.string.sign_up_error)));
                             }
                         }
                     }else{
@@ -366,7 +370,9 @@ public class RegisterActivity extends BaseFragmentActivity
             };
             task.execute();
         }else {
-            sendBroadcastFlyingErrorMessage(getString(R.string.no_connectivity),getString(R.string.network_not_connected));
+            EventBus.getDefault().postSticky(
+                    new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR,
+                            getString(R.string.no_connectivity),getString(R.string.network_not_connected)));
         }
     }
 

@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -29,6 +30,8 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class FindCoursesBaseActivity extends BaseFragmentActivity
         implements URLInterceptorWebViewClient.IActionListener, URLInterceptorWebViewClient.IPageStatusListener {
@@ -233,7 +236,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                         // this means, you were already enrolled to this course
                         msg = String.format("%s", context.getString(R.string.already_enrolled));
                     }
-                    sendBroadcastFlyingInfoMessage(msg);
+                    EventBus.getDefault().postSticky(new FlyingMessageEvent(msg));
                 }else{
                     showEnrollErrorMessage(courseId, emailOptIn);
                 }

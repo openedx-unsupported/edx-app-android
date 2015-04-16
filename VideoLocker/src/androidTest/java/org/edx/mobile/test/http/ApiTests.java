@@ -120,9 +120,9 @@ public class ApiTests extends HttpBaseTestCase {
         List<EnrolledCoursesResponse> courses = api.getEnrolledCourses();
         assertTrue("Must have enrolled to at least one course",
                 courses != null && courses.size() > 0);
-        String channelId = courses.get(0).getCourse().getChannel_id();
+        String subscription_id = courses.get(0).getCourse().getSubscription_id();
         //should the channelId be mandatory?
-        assertTrue(channelId != null);
+        assertTrue(subscription_id != null);
     }
 
     public void testCourseStructure() throws Exception {

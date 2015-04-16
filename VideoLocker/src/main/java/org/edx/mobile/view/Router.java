@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -12,6 +13,8 @@ import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by aleffert on 1/30/15.
@@ -130,9 +133,8 @@ public class Router {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.clearAuth();
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
-        Intent intent = new Intent();
-        intent.setAction(AppConstants.LOGOUT_CLICKED);
-        context.sendBroadcast(intent);
+
+        EventBus.getDefault().post(new LogoutEvent());
 
         ISegment segIO = SegmentFactory.getInstance();
         segIO.trackUserLogout();
