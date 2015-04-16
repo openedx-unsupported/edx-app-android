@@ -38,7 +38,7 @@ public class ConfigTests extends BaseTestCase {
     private static final String DOMAINS                 = "DOMAINS";
 
     private static final String PARSE = "PARSE";
-    private static final String PARSE_ENEBLED           = "NOTIFICATIONS_ENABLED";
+    private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
     private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
     private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
 
@@ -238,7 +238,7 @@ public class ConfigTests extends BaseTestCase {
         String secret = "fake-secret";
 
         JsonObject parseConfig = new JsonObject();
-        parseConfig.add(PARSE_ENEBLED, new JsonPrimitive(true));
+        parseConfig.add(PARSE_ENABLED, new JsonPrimitive(true));
         parseConfig.add(PARSE_APPLICATION_ID, new JsonPrimitive(key));
         parseConfig.add(PARSE_CLIENT_KEY, new JsonPrimitive(secret));
 

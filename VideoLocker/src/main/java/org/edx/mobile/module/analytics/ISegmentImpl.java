@@ -8,6 +8,7 @@ import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.PrefManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -714,6 +715,44 @@ public class ISegmentImpl implements ISegment {
         }
         return null;
 
+    }
+
+    @Override
+    public Properties trackNotificationReceived(String courseId){
+        try {
+
+            SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+            aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_RECEIVED);
+            aEvent.setAppNameContext();
+
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION_RECEIVED, courseId);
+            tracker.track(Values.NOTIFICATION_RECEIVED, aEvent.properties);
+            return aEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
+    }
+
+    @Override
+    public Properties trackNotificationTapped(String courseId){
+        try {
+
+            SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+            aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_TAPPED);
+            aEvent.setAppNameContext();
+
+            //Add category for Google Analytics
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION_TAPPED, courseId);
+            tracker.track(Values.NOTIFICATION_TAPPED, aEvent.properties);
+            return aEvent.properties;
+
+        } catch(Exception e){
+            logger.error(e);
+        }
+        return null;
     }
 
     @Override

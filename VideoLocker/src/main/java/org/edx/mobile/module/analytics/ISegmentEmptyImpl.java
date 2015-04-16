@@ -129,6 +129,16 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
+    public Properties trackNotificationReceived(String courseId){
+        return null;
+    }
+
+    @Override
+    public Properties trackNotificationTapped(String courseId){
+        return null;
+    }
+
+    @Override
     public void setTracker(ISegmentTracker tracker) {
     }
 

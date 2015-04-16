@@ -10,6 +10,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -60,6 +61,8 @@ public class CourseDetailTabActivity extends BaseTabActivity {
                 //this is from notification
                 String courseId = bundle.getString(Router.EXTRA_COURSE_ID);
                 if (!TextUtils.isEmpty(courseId)){
+                    SegmentFactory.getInstance().trackNotificationTapped(courseId);
+
                     Api api = new Api(this);
                     courseData = api.getCourseById(courseId);
                     if (courseData != null && courseData.getCourse() != null ) {

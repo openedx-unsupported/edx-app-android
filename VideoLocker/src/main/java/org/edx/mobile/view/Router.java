@@ -140,7 +140,7 @@ public class Router {
         segIO.trackUserLogout();
         segIO.resetIdentifyUser();
 
-        UserNotificationManager.instance.unsubscribeAll();
+        UserNotificationManager.getInstance().unsubscribeAll();
 
         Router.getInstance().showLaunchScreen(context,true);
         Router.getInstance().showLogin(context);

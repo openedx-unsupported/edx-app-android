@@ -452,7 +452,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
         //segIO.trackDeviceDetails();
-        UserNotificationManager.instance.resubscribeAll();
+        UserNotificationManager.getInstance().resubscribeAll();
 
         myCourseScreen();
     }

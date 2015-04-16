@@ -1,7 +1,9 @@
 package org.edx.mobile.module.notification;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.usage.UsageEvents;
 import android.content.Context;
 
 import com.google.gson.Gson;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.CourseDetailTabActivity;
@@ -22,6 +25,9 @@ import org.edx.mobile.view.MyCoursesListActivity;
 import org.edx.mobile.view.Router;
 
 import java.util.List;
+import java.util.Random;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * subclass ParsePushBroadcastReceiver to provide fine control of
@@ -34,65 +40,29 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
         super.onReceive(context,intent);
      }
 
-    protected void onPushReceive(android.content.Context context, android.content.Intent intent) {
+    private CourseUpdateNotificationPayload extractPayload(android.content.Intent intent) {
         try {
-            String action = intent.getAction();
-            String channel = intent.getExtras().getString("com.parse.Channel");
             String payloadStr = intent.getExtras().getString("com.parse.Data");
-            logger.debug("channel ----- " +  channel  + "  payload = " + payloadStr);
             Gson gson = new GsonBuilder().create();
-            CourseUpdateNotificationPayload payload = gson.fromJson(payloadStr, CourseUpdateNotificationPayload.class);
-            if ( payload.isValid() ){
-                String titleTemplateName = payload.getTitleLocKey();
-                String titleTemplate = "";
-                if ( titleTemplateName != null) {
-                    titleTemplate = ResourceUtil.getResourceString(titleTemplateName);
-                    payload.setTitle(titleTemplate);
-                }
-                List<String> args = payload.getLocArgs();
-                if ( args != null && args.size() > 0 ){
-                    String alert = args.get(0);
-                    payload.setAlert(alert);
-
-                    Bundle courseBundle = new Bundle();
-                    courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
-                    courseBundle.putString(Router.EXTRA_COURSE_ID, payload.getCourseId());
-
-
-                    Intent resultIntent = new Intent(context, CourseDetailTabActivity.class);
-                    resultIntent.putExtra( Router.EXTRA_BUNDLE, courseBundle);
-
-                    // Because clicking the notification opens a new ("special") activity, there's
-                    // no need to create an artificial back stack.
-                    PendingIntent resultPendingIntent =  PendingIntent.getActivity(
-                                    context,
-                                    0,
-                                    resultIntent,
-                                    PendingIntent.FLAG_UPDATE_CURRENT
-                            );
-
-                    NotificationManager notificationManager =
-                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                    builder.setContentTitle(payload.getTitle());
-                    builder.setContentText(payload.getAlert());
-                    builder.setSmallIcon(R.drawable.app_icon);
-                    builder.setContentIntent(resultPendingIntent);
-                    builder.setAutoCancel(true);
-
-                    Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    builder.setSound(uri);
-
-                    int mNotificationId = RemoteNotificationTypes.COURSE_ANNOUNCEMENT.ordinal();
-                    notificationManager.notify(mNotificationId, builder.build());
-                    return;
-                }
-            }
-
-        } catch (Exception e) {
-            super.onPushReceive(context, intent);
+            return gson.fromJson(payloadStr, CourseUpdateNotificationPayload.class);
+        } catch (Exception ex) {
+            logger.debug(ex.toString());
+            return null;
         }
+    }
+
+    private java.lang.Class<? extends android.app.Activity> getActivityClass(CourseUpdateNotificationPayload payload){
+        if ( payload == null ){
+            return MyCoursesListActivity.class;
+        }
+        List<String> args = payload.getLocArgs();
+        if ( args != null && args.size() > 0 && UserNotificationManager.appCanHandleFormat(payload)) {
+            return CourseDetailTabActivity.class;
+        }
+        return MyCoursesListActivity.class;
+    }
+
+    protected void onPushReceive(android.content.Context context, android.content.Intent intent) {
         super.onPushReceive(context, intent);
     }
 
@@ -106,10 +76,69 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
     }
 
     protected java.lang.Class<? extends android.app.Activity> getActivity(android.content.Context context, android.content.Intent intent) {
-        return MyCoursesListActivity.class;
+        CourseUpdateNotificationPayload payload = extractPayload(intent);
+        return getActivityClass(payload);
     }
 
     protected android.app.Notification getNotification(android.content.Context context, android.content.Intent intent) {
-        return super.getNotification(context,intent);
+        try {
+
+            CourseUpdateNotificationPayload payload = extractPayload(intent);
+            Class activity = getActivityClass(payload);
+            if( activity == CourseDetailTabActivity.class ){
+                String titleTemplateName = payload.getTitleLocKey();
+                String titleTemplate = "";
+                if ( titleTemplateName != null) {
+                    titleTemplate = ResourceUtil.getResourceString(titleTemplateName);
+                    payload.setTitle(titleTemplate);
+                }
+                List<String> args = payload.getLocArgs();
+                EventBus.getDefault().postSticky(new CourseAnnouncementEvent(
+                        CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED, payload.getCourseId()));
+
+                String alert = args.get(0);
+                payload.setAlert(alert);
+
+                Bundle courseBundle = new Bundle();
+                courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
+                courseBundle.putString(Router.EXTRA_COURSE_ID, payload.getCourseId());
+
+
+                Intent resultIntent = new Intent(context, CourseDetailTabActivity.class);
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                resultIntent.putExtra( Router.EXTRA_BUNDLE, courseBundle);
+
+                // Because clicking the notification opens a new ("special") activity, there's
+                // no need to create an artificial back stack.
+                PendingIntent resultPendingIntent =  PendingIntent.getActivity(
+                        context,
+                        0,
+                        resultIntent,
+                        0
+                );
+
+                NotificationManager notificationManager =
+                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+                builder.setContentTitle(payload.getTitle());
+                builder.setContentText(payload.getAlert());
+                builder.setSmallIcon(R.drawable.app_icon);
+                builder.setContentIntent(resultPendingIntent);
+                builder.setAutoCancel(true);
+
+                Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                builder.setSound(uri);
+
+               // int mNotificationId = RemoteNotificationTypes.COURSE_ANNOUNCEMENT.ordinal();
+                //notificationManager.notify(mNotificationId, builder.build());
+                return builder.build();
+            } else {
+                return super.getNotification(context,intent);
+            }
+
+        } catch (Exception e) {
+            return super.getNotification(context, intent);
+        }
     }
 }
