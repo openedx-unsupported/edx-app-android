@@ -20,9 +20,19 @@ public class UserNotificationManager {
 
     private static final Logger logger = new Logger(UserNotificationManager.class.getName());
 
-    public static final UserNotificationManager instance = new UserNotificationManager();
+    private static UserNotificationManager instance;
 
     private NotificationDelegate delegate;
+
+    public static synchronized UserNotificationManager getInstance(){
+        if ( instance == null )
+            instance = new UserNotificationManager();
+        return instance;
+    }
+
+    public static boolean appCanHandleFormat(BaseNotificationPayload payload){
+        return true;
+    }
 
     private UserNotificationManager(){
         if ( Config.getInstance().isNotificationEnabled() ) {

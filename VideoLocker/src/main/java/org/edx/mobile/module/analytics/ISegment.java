@@ -79,6 +79,11 @@ public interface ISegment {
 
     Properties trackEnrollClicked(String courseId, boolean email_opt_in);
 
+    Properties trackNotificationReceived(String courseId);
+
+    Properties trackNotificationTapped(String courseId);
+
+
     /**
      * Sets given tracker instance and uses it for analytics.
      * This method is useful in some cases where a given tracker is to be used.
@@ -106,6 +111,8 @@ public interface ISegment {
     Properties socialConnectionEvent(boolean connected, String socialNetwork);
 
     Properties coursesVisibleToFriendsChange(boolean visible);
+
+
 
     public static interface Keys{
         public static final String NAME = "name";
@@ -178,6 +185,7 @@ public interface ISegment {
         public static final String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
         public static final String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
 
+
     }
     
     public static interface Values{
@@ -215,8 +223,16 @@ public interface ISegment {
         public static final String USER_ENGAGEMENT = "user-engagement";
         public static final String COURSE_DISCOVERY = "course-discovery";
 
+        public static final String PUSH_NOTIFICATION_RECEIVED = "notification-received";
+        public static final String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
+        public static final String ANNOUNCEMENT = "announcement";
+
+
         public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
         public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";
+
+        public static final String NOTIFICATION_RECEIVED = "edx.bi.app.notification.received";
+        public static final String NOTIFICATION_TAPPED = "edx.bi.app.notification.tapped";
 
         public static final String ACCESS_COURSE_GROUP = "edx.bi.app.groups.course_access";
         public static final String ACCESS_GAME_GROUP = "edx.bi.app.groups.game_access";

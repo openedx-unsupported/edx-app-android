@@ -106,13 +106,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
         if (Config.getInstance().isNotificationEnabled() ){
             checkbox.setVisibility(View.VISIBLE);
-            boolean isSubscribed = UserNotificationManager.instance.isSubscribedByCourseId(courseId);
+            boolean isSubscribed = UserNotificationManager.getInstance().isSubscribedByCourseId(courseId);
             checkbox.setChecked(isSubscribed);
             checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                    UserNotificationManager.instance.changeNotificationSetting(
-                            courseId, enrollment.getCourse().getChannel_id(), isChecked);
+                    UserNotificationManager.getInstance().changeNotificationSetting(
+                            courseId, enrollment.getCourse().getSubscription_id(), isChecked);
                 }
             });
         } else {

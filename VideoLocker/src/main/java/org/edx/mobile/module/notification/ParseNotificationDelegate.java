@@ -92,7 +92,7 @@ public class ParseNotificationDelegate implements NotificationDelegate{
         NotificationPreference preference = prefManager.getNotificationPreference();
         List<CourseEntry> newCourseList = preference.filterForNewCourses(activeList);
         for (CourseEntry courseEntry : newCourseList) {
-            EdxLocalParseChannel pc = new EdxLocalParseChannel(courseEntry.getId(), courseEntry.getChannel_id(), true);
+            EdxLocalParseChannel pc = new EdxLocalParseChannel(courseEntry.getId(), courseEntry.getSubscription_id(), true);
             toggleSubscribeToNotificationServer(pc.getChannelId(), true);
             preference.add(pc);
         }

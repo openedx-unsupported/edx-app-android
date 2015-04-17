@@ -21,7 +21,7 @@ import java.util.List;
         "title-loc-args": []
         }
  **/
-public class CourseUpdateNotificationPayload {
+public class CourseUpdateNotificationPayload extends BaseNotificationPayload{
 
     private @SerializedName("push_hash") String pushHash;
     private @SerializedName("title") String title;

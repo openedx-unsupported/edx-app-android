@@ -31,6 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.FlyingMessageEvent;
+import org.edx.mobile.event.LogoutEvent;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
@@ -56,6 +59,8 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
 
@@ -121,8 +126,8 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         }catch(Exception ex){
             logger.error(ex);
         }
-        enableNetworkStateChangeCallback();
-        enableLogoutCallback();
+
+
         updateActionBarShadow();
 
         logger.debug( "created");
@@ -151,12 +156,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
-        // register receiver for showing flying message
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_SHOW_MESSAGE_INFO);
-        filter.addAction(ACTION_SHOW_MESSAGE_ERROR);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(showFlyingMessageReceiver, filter);
 
         //Check if the the onTick method needs to be run
         //This has been done to handle unwanted call to onTick() from login screen
@@ -181,6 +180,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().registerSticky(this);
         try{
             DrawerLayout mDrawerLayout = (DrawerLayout)
                     findViewById(R.id.drawer_layout);
@@ -230,7 +230,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
-        unregisterReceiver(showFlyingMessageReceiver);
     }
 
     @Override
@@ -246,9 +245,13 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     }
 
     @Override
+    protected void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
-        disableNetworkStateChangedCallback();
-        disableLogoutCallback();
         super.onDestroy();
     }
 
@@ -521,25 +524,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     }
 
 
-    //Broadcast Receiver to notify all activities to finish if user logs out
-    private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            finish();
-        }
-    };
 
-    protected void enableLogoutCallback() {
-        // register for logout click listener
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(AppConstants.LOGOUT_CLICKED);
-        registerReceiver(logoutReceiver, filter);
+    public void onEvent(LogoutEvent event){
+        finish();
     }
 
-    protected void disableLogoutCallback() {
-        // un-register logoutReceiver
-        unregisterReceiver(logoutReceiver);
-    }
 
     /**
      * Returns true if current orientation is LANDSCAPE, false otherwise.
@@ -555,74 +544,60 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         this.applyPrevTransitionOnRestart = applyPrevTransitionOnRestart;
     }
 
-    //Broadcast receiver to notify app for network change
-    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            logger.debug("network state changed");
-            if (NetworkUtil.isConnected(context)) {
-                if ( !isOnline) {
-                    // only notify if previous state was NOT same
-                    isOnline = true;
+
+    /**
+     * callback from EventBus
+     * @param event
+     */
+    public void onEvent(NetworkConnectivityChangeEvent event){
+
+        logger.debug("network state changed");
+        if (NetworkUtil.isConnected(this)) {
+            if ( !isOnline) {
+                // only notify if previous state was NOT same
+                isOnline = true;
+                handler.post(new Runnable() {
+                    public void run() {
+                        AppConstants.offline_flag = false;
+                        onOnline();
+                        notifyNetworkConnect();
+                    }
+                });
+            }
+
+            if (NetworkUtil.isConnectedWifi(this)) {
+                if(!isConnectedToWifi){
+                    isConnectedToWifi = true;
                     handler.post(new Runnable() {
+                        @Override
                         public void run() {
-                            AppConstants.offline_flag = false;
-                            onOnline();
-                            notifyNetworkConnect();
+                            onConnectedToWifi();
                         }
                     });
                 }
-
-                if (NetworkUtil.isConnectedWifi(context)) {
-                    if(!isConnectedToWifi){
-                        isConnectedToWifi = true;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onConnectedToWifi();
-                            }
-                        });
-                    }
-                } else if (NetworkUtil.isConnectedMobile(context)) {
-                    if(isConnectedToWifi){
-                        isConnectedToWifi = false;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onConnectedToMobile();
-                            }
-                        });
-                    }
-                }
-
-            } else {
-                if (isOnline) {
-                    isOnline = false;
+            } else if (NetworkUtil.isConnectedMobile(this)) {
+                if(isConnectedToWifi){
+                    isConnectedToWifi = false;
                     handler.post(new Runnable() {
+                        @Override
                         public void run() {
-                            AppConstants.offline_flag = true;
-                            onOffline();
-                            notifyNetworkDisconnect();
+                            onConnectedToMobile();
                         }
                     });
                 }
             }
+        } else {
+            if (isOnline) {
+                isOnline = false;
+                handler.post(new Runnable() {
+                    public void run() {
+                        AppConstants.offline_flag = true;
+                        onOffline();
+                        notifyNetworkDisconnect();
+                    }
+                });
+            }
         }
-
-    };
-
-    protected void enableNetworkStateChangeCallback() {
-        // register for network state change receiver
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        registerReceiver(networkStateReceiver, filter);
-    }
-
-    protected void disableNetworkStateChangedCallback() {
-        // un-register network state receiver
-        unregisterReceiver(networkStateReceiver);
     }
 
     /**
@@ -759,33 +734,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    /**
-     * Sends a sticky broadcast info message which will be displayed by any activity which receives this
-     * broadcast.
-     * Message is one-shot and gets removed when it is shown by any activity.
-     * @param message
-     */
-    protected void sendBroadcastFlyingInfoMessage(String message) {
-        Intent intent = new Intent();
-        intent.putExtra("message", message);
-        intent.setAction(ACTION_SHOW_MESSAGE_INFO);
-        sendStickyBroadcast(intent);
-    }
-
-    /**
-     * Sends a sticky broadcast error message which will be displayed by any activity which receives this
-     * broadcast.
-     * Message is one-shot and gets removed when it is shown by any activity.
-     * @param header
-     * @param message
-     */
-    protected void sendBroadcastFlyingErrorMessage(String header, String message) {
-        Intent intent = new Intent();
-        intent.putExtra("header", header);
-        intent.putExtra("message", message);
-        intent.setAction(ACTION_SHOW_MESSAGE_ERROR);
-        sendStickyBroadcast(intent);
-    }
 
     private boolean showErrorMessage(String header, String message) {
         try {
@@ -823,50 +771,46 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     }
 
     /**
+     * callback from eventbus
      * Receives the sticky broadcast message and attempts showing flying message.
-     * If message gets shown then removes this sticky broadcast.
-     */
-    private BroadcastReceiver showFlyingMessageReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                if (intent.getAction().equals(ACTION_SHOW_MESSAGE_INFO)) {
-                    String message = intent.getStringExtra("message");
-                    if (showInfoMessage(message)) {
-                        // make this message one-shot
-                        removeStickyBroadcast(intent);
-                    } else {
-                        // may be some other screen will display this message
-                        // do nothing here, do NOT remove broadcast
-                    }
-
-                    if (message.equalsIgnoreCase(getString(R.string.you_are_now_enrolled))) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                reloadMyCoursesData();
-                            }
-                        });
-                    }
+     **/
+    public void onEvent(FlyingMessageEvent event){
+        try {
+            if (event.type == FlyingMessageEvent.MessageType.INFO) {
+                String message = event.message;
+                if (showInfoMessage(message)) {
+                    // make this message one-shot
+                    EventBus.getDefault().removeStickyEvent(event);
+                } else {
+                    // may be some other screen will display this message
+                    // do nothing here, do NOT remove broadcast
                 }
 
-                else if (intent.getAction().equals(ACTION_SHOW_MESSAGE_ERROR)) {
-                    String header = intent.getStringExtra("header");
-                    String message = intent.getStringExtra("message");
-                    if (showErrorMessage(header, message)) {
-                        // make this message one-shot
-                        removeStickyBroadcast(intent);
-                    } else {
-                        // may be some other screen will display this message
-                        // do nothing here, do NOT remove broadcast
-                    }
+                if (message.equalsIgnoreCase(getString(R.string.you_are_now_enrolled))) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            reloadMyCoursesData();
+                        }
+                    });
                 }
-            } catch(Exception ex) {
-                logger.error(ex);
             }
+
+            else if (event.type == FlyingMessageEvent.MessageType.ERROR) {
+                String header = event.title;
+                String message = event.message;
+                if (showErrorMessage(header, message)) {
+                    // make this message one-shot
+                    EventBus.getDefault().removeStickyEvent(event);
+                } else {
+                    // may be some other screen will display this message
+                    // do nothing here, do NOT remove broadcast
+                }
+            }
+        } catch(Exception ex) {
+            logger.error(ex);
         }
-    };
+    }
 
 
     @Override

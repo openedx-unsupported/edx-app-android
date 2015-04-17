@@ -27,7 +27,7 @@ public class CourseEntry implements Serializable {
     private String course_about;
     private String course_updates;
     private String course_handouts;
-    private String channel_id;
+    private String subscription_id;
     private String course_url;
     private String id;
     private String number;
@@ -174,12 +174,12 @@ public class CourseEntry implements Serializable {
      * the unique channel id, for notification service
      * @return
      */
-    public String getChannel_id() {
-        return channel_id;
+    public String getSubscription_id() {
+        return subscription_id;
     }
 
-    public void setChannel_id(String channel_id) {
-        this.channel_id = channel_id;
+    public void setSubscription_id(String subscription_id) {
+        this.subscription_id = subscription_id;
     }
 
     public String getCourse_url() {

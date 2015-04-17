@@ -3,25 +3,18 @@ package org.edx.mobile.base;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.ParsePush;
-import com.parse.SaveCallback;
 
+import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
-import org.edx.mobile.receivers.NetworkConnectivityReceiver;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
@@ -29,9 +22,8 @@ import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -40,8 +32,6 @@ import io.fabric.sdk.android.Fabric;
 public class MainApplication extends Application{
 
     protected final Logger logger = new Logger(getClass().getName());
-
-    NetworkConnectivityReceiver connectivityReceiver;
 
     private static MainApplication application;
 
@@ -117,12 +107,14 @@ public class MainApplication extends Application{
         // try repair of download data if app version is updated
         new Storage(this).repairDownloadCompletionData();
 
-        // register connectivity receiver
-        connectivityReceiver = new NetworkConnectivityReceiver();
-        registerReceiver(connectivityReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-
+        //TODO - ideally this should belong to SegmentFactory, but code refactoring is need because of the way it constructs new instances
+        EventBus.getDefault().registerSticky(this);
     }
 
+    public void onEvent(CourseAnnouncementEvent event) {
+        SegmentFactory.getInstance().trackNotificationReceived(event.courseId);
+        EventBus.getDefault().removeStickyEvent(event);
+    }
     
     /**
      * Create the image cache. Uses Memory Cache by default. 
