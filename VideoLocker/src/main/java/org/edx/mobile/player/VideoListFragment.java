@@ -32,6 +32,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.VideoListActivity;
 import org.edx.mobile.view.adapters.MyAllVideoAdapter;
@@ -923,7 +924,9 @@ public class VideoListFragment extends MyVideosBaseFragment {
         }
 
         if(deletedVideoCount>0){
-            String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+            String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
+                     "video_num", deletedVideoCount).toString();
+
             ((VideoListActivity) getActivity())
                     .showInfoMessage(String.format(format, deletedVideoCount));
         }

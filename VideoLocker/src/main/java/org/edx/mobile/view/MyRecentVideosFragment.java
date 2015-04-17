@@ -38,6 +38,7 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
@@ -477,7 +478,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
             if(deletedVideoCount>0){
-                String format = getResources().getQuantityString(R.plurals.deleted_videos, deletedVideoCount);
+                String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video, "{video_count}", deletedVideoCount).toString();
                 UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
                         String.format(format, deletedVideoCount));
             }

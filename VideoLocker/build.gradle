@@ -84,6 +84,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.squareup.phrase:phrase:1.0.3'
 
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {

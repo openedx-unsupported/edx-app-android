@@ -28,6 +28,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.LectureAdapter;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -323,12 +324,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     if(isActivityStarted()){
                         adapter.notifyDataSetChanged();
                         invalidateOptionsMenu();
-                        if(result>0){
-                            String format = getResources().getQuantityString(R.plurals.downloading_count_videos, result.intValue());
-                            showInfoMessage(String.format(format, result));
-                        } else {
-                            showInfoMessage(getString(R.string.msg_video_not_downloaded));
-                        }
+                        String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
+                        showInfoMessage( content );
                     }
                 }catch(Exception e){
                     logger.error(e);

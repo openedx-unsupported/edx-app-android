@@ -1,12 +1,14 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.social.SocialGroup;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.custom.SocialFacePileView;
 
 import java.util.List;
@@ -66,7 +68,7 @@ public class GroupListAdapter extends SimpleAdapter<SocialGroup>  {
                     groupFriendsListener.fetchGroupFriends(item);
                 }
             } else {
-                String details = context.getResources().getString(R.string.group_list_members, item.getMembers().size());
+                String details = ResourceUtil.getFormattedStringForQuantity(R.string.group_list_members, "members", item.getMembers().size()).toString();
                 viewHolder.details.setText(details);
                 viewHolder.facePileView.setMemberList(item.getMembers());
             }

@@ -17,7 +17,7 @@
     <!-- Message for user who has successfully completed a certificate course -->
     <string name="course_details_earned_cert">You\'ve earned a certificate</string>
     <!-- Header for list of friends in a given course. Argument is a course name -->
-    <string name="friends_in_course">Friends in %1$s</string>
+    <string name="friends_in_course">Friends in {courseName}</string>
     <!-- Link to web course page -->
     <string name="open_course_page">Open Course Page</string>
     <!-- Title of friends in course screen -->
@@ -41,7 +41,7 @@
     <!-- Label for facebook login section -->
     <string name="settings_facebook_login">Facebook login</string>
     <!-- Label for facebook login section. Argument is a user name -->
-    <string name="settings_facebook_login_body_logged_in">Currently logged in as %s</string>
+    <string name="settings_facebook_login_body_logged_in">Currently logged in as {username}</string>
     <!-- Label for button allowing user to connect a facebook account -->
     <string name="settings_facebook_login_body_logged_out">Log in with your Facebook account</string>
     <!-- Error shown attempting to connect a facebook accoutn fails -->
@@ -65,7 +65,7 @@
     <!-- Groups Page -->
 
     <!-- Label on cell in list of groups. Argument is number of members -->
-    <string name="group_list_members">Members %1$s</string>
+    <string name="group_list_members">Members {members}</string>
 
     <!-- Data Usage Dialog -->
     <!-- Alert dialog error message shown when using a feature with a required internet connection -->
@@ -242,8 +242,9 @@
     <string name="download_failed_text">Download Failed</string>
     <!-- Message indicating a number of videos has begun. Argument is a number -->
     <plurals name="downloading_count_videos">
-        <item quantity="one">Downloading %1$d video</item>
-        <item quantity="other">Downloading %1$d videos</item>
+        <item quantity="zero">Download Failed</item>
+        <item quantity="one">Downloading {quantity} video</item>
+        <item quantity="other">Downloading {quantity} videos</item>
     </plurals>
     <!-- Alert dialog title to confirm download of a large quantity of data -->
     <string name="download_exceed_title">Large Download</string>
@@ -298,7 +299,7 @@
     <!-- Next button for creating a study group -->
     <string name="create_group_next">Next</string>
     <!-- Label indicating social feature provider (like facebook) username when creating a study group -->
-    <string name="connected_as">Connected as %1$s</string>
+    <string name="connected_as">Connected as {username}</string>
     <!-- Button allowing a user to open a study group from within facebook -->
     <string name="open_study_group">Open study group in facebook</string>
 
@@ -314,7 +315,7 @@
     <!-- Alert dialog title for unknown type of error -->
     <string name="error_unknown">Unknown Error</string>
     <!-- Alert dialog error shown when inviting a user to a study group fails -->
-    <string name="error_group_invite">Error inviting user %1$s to group</string>
+    <string name="error_group_invite">Error inviting user {username} to group</string>
     <!-- Error message shown accessing Facebook -->
     <string name="error_contact_FB">Error contacting Facebook</string>
     <!-- Error message shown when loading a users friends from a social provider (like facebook) failes -->
@@ -344,9 +345,9 @@
     <!-- Button text to complete an action -->
     <string name="done_text">Done</string>
     <!-- Label indicating unread actions. Argument is a count -->
-    <string name="unread_text">%s Unread</string>
+    <string name="unread_text">{unread_count} Unread</string>
     <!-- Label indicating number of members in a study group Argument is a count -->
-    <string name="group_summary_count">Group Members (%1$s)</string>
+    <string name="group_summary_count">Group Members ({members})</string>
     <!-- Label indicating a user has no friends in a study group -->
     <string name="group_summary_no_friends">You do not have any friends in this group</string>
     <!-- Alert dialog title when a user without facebook performs an action that requires Facebook -->
@@ -373,7 +374,7 @@
     <!-- Message on course list -->
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
     <!-- Message on course page for course that hasn't started -->
-    <string name="course_content_available_text">This course hasn\'t started yet. Come back on %s to see your videos.</string>
+    <string name="course_content_available_text">This course hasn\'t started yet. Come back on {start_time} to see your videos.</string>
     <!-- Button text, allowing user to open the edx website in a web browser -->
     <string name="open_edx_btn_text">Open edx.org in my browser</string>
     <!-- Message shown when linking to the external course list when in app course registration is not enabled -->
@@ -442,12 +443,14 @@
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
 
-    <!-- Message indicating videos deleted. Argument is number of videos deleted -->
-    <plurals name="deleted_videos">
-        <item quantity="one">%s video deleted</item>
-        <item quantity="other">%s videos deleted</item>
+    <!-- Message indicating num of video deleted-->
+    <plurals
+        name="deleted_video">
+        <!-- Message indicating one video deleted. {video_count} is 1-->
+        <item quantity="one">{video_count} video deleted </item>
+        <!-- Message indicating more than one video deleted. {video_count} is number of videos deleted-->
+        <item quantity="other">{{video_count}} videos deleted</item>
     </plurals>
-
 
     <!-- Notification related -->
     <!-- Template for notification title -->

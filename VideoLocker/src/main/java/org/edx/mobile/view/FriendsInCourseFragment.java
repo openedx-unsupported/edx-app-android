@@ -23,6 +23,7 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FriendsInCourseAdapter;
 import org.edx.mobile.view.adapters.SimpleAdapter;
@@ -92,7 +93,8 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
         });
 
         courseLabel = (TextView) rootView.findViewById(R.id.course_label);
-        courseLabel.setText(getString(R.string.friends_in_course, courseData.getName()));
+        String content = ResourceUtil.getFormattedString(R.string.friends_in_course, "courseName", courseData.getName()).toString();
+        courseLabel.setText( content );
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
         errorLabel = (TextView) rootView.findViewById(R.id.label_error);

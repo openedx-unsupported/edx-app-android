@@ -9,6 +9,7 @@ import android.view.View;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.social.SocialGroup;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 /**
@@ -61,7 +62,9 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
             unreadMenuItem.setVisible(true);
             View unreadTextView = unreadMenuItem.getActionView();
             ETextView unreadTV = (ETextView) unreadTextView.findViewById(R.id.unread_tv);
-            unreadTV.setText(getString(R.string.unread_text, group.getUnread()));
+            CharSequence formatted =  ResourceUtil.getFormattedStringForQuantity(R.string.unread_text,
+                    "unread_count", group.getUnread());
+            unreadTV.setText( formatted );
 
         }
 
