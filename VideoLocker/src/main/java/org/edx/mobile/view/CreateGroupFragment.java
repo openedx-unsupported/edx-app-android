@@ -29,6 +29,7 @@ import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.util.ArrayList;
@@ -225,7 +226,8 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
 
     private void insertUserName(String name){
 
-        String display = getString(R.string.connected_as, name);
+        String display = ResourceUtil.getFormattedString(R.string.connected_as, "username", name).toString();
+
         connectedText.setText(display, TextView.BufferType.SPANNABLE);
 
         int start = display.indexOf(name);

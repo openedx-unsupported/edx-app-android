@@ -3,12 +3,14 @@ package org.edx.mobile.base;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
+import com.parse.PushService;
 
 import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
@@ -97,7 +99,7 @@ public class MainApplication extends Application{
         if ( Config.getInstance().isNotificationEnabled() ){
             Config.ParseNotificationConfig parseNotificationConfig =
                     Config.getInstance().getParseNotificationConfig();
-            if ( parseNotificationConfig.isEnabled() ) {
+            if ( parseNotificationConfig.isEnabled() ) { 
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
             }

@@ -17,6 +17,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
+import com.squareup.phrase.Phrase;
 
 import org.edx.mobile.R;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -29,6 +30,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -187,8 +189,9 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
             public void onSuccess(SocialMember response) {
                 if(!isAdded())
                     return;
-
-                socialConnectedText.setText(getString(R.string.settings_facebook_login_body_logged_in, response.getFullName()));
+                CharSequence formatted =  ResourceUtil.getFormattedString(R.string.settings_facebook_login_body_logged_in,
+                         "username", response.getFullName());
+                socialConnectedText.setText(formatted);
                 socialConnectedText.setVisibility(View.VISIBLE);
 
             }

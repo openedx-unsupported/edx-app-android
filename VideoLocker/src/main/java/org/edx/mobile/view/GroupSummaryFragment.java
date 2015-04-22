@@ -26,6 +26,7 @@ import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.GroupSummaryAdapter;
@@ -171,7 +172,8 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
             errorLabel.setVisibility(View.VISIBLE);
         } else {
             memberCountLabel.setVisibility(View.VISIBLE);
-            memberCountLabel.setText(getString(R.string.group_summary_count, adapter.getCount()));
+            String content = ResourceUtil.getFormattedStringForQuantity(R.string.group_summary_count, "members", adapter.getCount()).toString();
+            memberCountLabel.setText(content);
             listContainer.setVisibility(View.VISIBLE);
             errorLabel.setVisibility(View.GONE);
         }

@@ -245,7 +245,7 @@
         <!--   Parse Setup -->
         <!--  https://www.parse.com/apps/quickstart#parse_push/android/existing  -->
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <receiver android:name="org.edx.mobile.module.notification.EdxParseBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
