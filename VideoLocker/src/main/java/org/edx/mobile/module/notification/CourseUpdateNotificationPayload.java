@@ -24,7 +24,6 @@ import java.util.List;
 public class CourseUpdateNotificationPayload extends BaseNotificationPayload{
 
     private @SerializedName("push_hash") String pushHash;
-    private @SerializedName("title") String title;
     private @SerializedName("loc-args") List<String> locArgs;
     private @SerializedName("action-loc-key") String actionLocKey;
     private @SerializedName("loc-key") String localKey;
@@ -33,14 +32,6 @@ public class CourseUpdateNotificationPayload extends BaseNotificationPayload{
     private @SerializedName("title-loc-args") List<String> titleLocArgs;
     private @SerializedName("course-id") String courseId;
     private @SerializedName("alert") String alert;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public List<String> getLocArgs() {
         return locArgs;

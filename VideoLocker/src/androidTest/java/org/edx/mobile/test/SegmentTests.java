@@ -267,6 +267,7 @@ public class SegmentTests extends BaseTestCase {
 
         print(props.toString());
     }
+
     public void testSectionBulkVideoDownload() throws Exception {
         String enrollmentId = "testEnrollmentId";
         String section = "testSection";
@@ -482,6 +483,39 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    public void testPushNotificationReceived() throws Exception {
+        String courseId = "a_courseId";
+        Properties props = segment.trackNotificationReceived(courseId);
+
+        assertTrue("has ISegment.Keys.NAME", props.containsKey(ISegment.Keys.NAME));
+        assertTrue("has ISegment.Keys.CATEGORY", props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue("has ISegment.Keys.LABEL", props.containsKey(ISegment.Keys.LABEL));
+        assertTrue("ISegment.Keys.NAME", props.get(ISegment.Keys.NAME).equals(ISegment.Values.NOTIFICATION_RECEIVED));
+        assertTrue("ISegment.Keys.CATEGORY", props.get(ISegment.Keys.CATEGORY).equals(ISegment.Values.PUSH_NOTIFICATION));
+        assertTrue("ISegment.Keys.LABEL", props.get(ISegment.Keys.LABEL).equals(courseId));
+
+        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+
+        print(props.toString());
+    }
+
+    public void testPushNotificationTapped() throws Exception {
+        String courseId = "a_courseId";
+        Properties props = segment.trackNotificationTapped(courseId);
+
+        assertTrue("has ISegment.Keys.NAME", props.containsKey(ISegment.Keys.NAME));
+        assertTrue("has ISegment.Keys.CATEGORY", props.containsKey(ISegment.Keys.CATEGORY));
+        assertTrue("has ISegment.Keys.LABEL", props.containsKey(ISegment.Keys.LABEL));
+        assertTrue("ISegment.Keys.NAME", props.get(ISegment.Keys.NAME).equals(ISegment.Values.NOTIFICATION_TAPPED));
+        assertTrue("ISegment.Keys.CATEGORY", props.get(ISegment.Keys.CATEGORY).equals(ISegment.Values.PUSH_NOTIFICATION));
+        assertTrue("ISegment.Keys.LABEL", props.get(ISegment.Keys.LABEL).equals(courseId));
+
+        Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
+        assertTrue(cxt.containsKey(ISegment.Keys.APP));
+
+        print(props.toString());
+    }
 
     @Override
     protected void tearDown() throws Exception {

@@ -9,8 +9,11 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.facebook.Settings;
@@ -27,6 +30,7 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
@@ -64,6 +68,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private LayoutInflater inflater;
     private View certificateContainer;
     private TextView groupLauncher;
+    private View notificationSettingRow;
+    private Switch notificationSwitch;
 
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
@@ -128,8 +134,10 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 
-        return view;
+        notificationSettingRow = view.findViewById(R.id.notificaton_setting_row);
+        notificationSwitch =  (Switch) view.findViewById(R.id.notification_switch);
 
+        return view;
     }
 
     @Override
@@ -208,7 +216,24 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             }
             showSocialEnabled(fbProvider.isLoggedIn());
 
-
+            if ( Config.getInstance().isNotificationEnabled()
+                    && courseData != null && courseData.getCourse() != null){
+                notificationSettingRow.setVisibility(View.VISIBLE);
+                final String courseId = courseData.getCourse().getId();
+                final String subscriptionId = courseData.getCourse().getSubscription_id();
+                boolean isSubscribed = UserNotificationManager.getInstance().isSubscribedByCourseId(courseId);
+                notificationSwitch.setChecked(isSubscribed);
+                notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                        UserNotificationManager.getInstance().changeNotificationSetting(
+                                courseId, subscriptionId, isChecked);
+                    }
+                });
+            } else {
+                notificationSwitch.setOnCheckedChangeListener(null);
+                notificationSettingRow.setVisibility(View.GONE);
+            }
         } catch (Exception ex) {
             logger.error(ex);
         }

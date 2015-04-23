@@ -89,8 +89,11 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
                 String titleTemplateName = payload.getTitleLocKey();
                 String titleTemplate = "";
                 if ( titleTemplateName != null) {
-                    titleTemplate = ResourceUtil.getResourceString(titleTemplateName);
-                    payload.setTitle(titleTemplate);
+                    try {
+                        titleTemplate = ResourceUtil.getResourceString(titleTemplateName);
+                    }catch (Exception ex){
+                        logger.error(ex);
+                    }
                 }
                 List<String> args = payload.getLocArgs();
                 EventBus.getDefault().postSticky(new CourseAnnouncementEvent(
@@ -121,7 +124,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
                         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-                builder.setContentTitle(payload.getTitle());
+                builder.setContentTitle(titleTemplate);
                 builder.setContentText(payload.getAlert());
                 builder.setSmallIcon(R.drawable.app_icon);
                 builder.setContentIntent(resultPendingIntent);
