@@ -315,6 +315,49 @@
                     android:background="@color/grey_2"
                     android:textSize="14dp" />
 
+                <LinearLayout
+                    android:id="@+id/notificaton_setting_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:background="@drawable/rectangle_with_bottom_border"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+                        <org.edx.mobile.view.custom.ETextView
+                            android:id="@+id/settingsText"
+                            style="@style/regular_text"
+                            android:layout_marginLeft="15dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/notification_toggle"
+                            android:textColor="@color/grey_6"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/notification_switch"
+                        android:layout_width="90dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:checked="true"
+                        android:textAllCaps="true"
+                        android:switchMinWidth="80dp"
+                        android:switchTextAppearance="@style/default_switch"
+                        android:textOff="@string/toggle_turn_off"
+                        android:textOn="@string/toggle_turn_on"
+                        android:thumb="@drawable/switch_inner"
+                        android:thumbTextPadding="8dp"
+                        android:track="@drawable/switch_track" />
+                </LinearLayout>
+
+
+
                 <org.edx.mobile.view.custom.EdxWebView
                     android:id="@+id/announcement_webview"
                     android:layout_width="match_parent"
@@ -332,7 +375,7 @@
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/no_announcement_tv"
                 style="@style/bold_text"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="120dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

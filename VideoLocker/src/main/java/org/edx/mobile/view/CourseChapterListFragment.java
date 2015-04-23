@@ -103,22 +103,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chapter_list, container,
                 false);
-        final CheckBox checkbox = (CheckBox)view.findViewById(R.id.channel_subscribed_check);
 
-        if (Config.getInstance().isNotificationEnabled() ){
-            checkbox.setVisibility(View.VISIBLE);
-            boolean isSubscribed = UserNotificationManager.getInstance().isSubscribedByCourseId(courseId);
-            checkbox.setChecked(isSubscribed);
-            checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                    UserNotificationManager.getInstance().changeNotificationSetting(
-                            courseId, enrollment.getCourse().getSubscription_id(), isChecked);
-                }
-            });
-        } else {
-            checkbox.setVisibility(View.GONE);
-        }
         //Initialize the Course not started text view.
         if (!enrollment.getCourse().isStarted()) {
             startDate = DateUtil.formatCourseNotStartedDate(enrollment.getCourse().getStart());

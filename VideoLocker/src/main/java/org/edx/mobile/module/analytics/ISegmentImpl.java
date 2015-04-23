@@ -726,7 +726,7 @@ public class ISegmentImpl implements ISegment {
             aEvent.setAppNameContext();
 
             //Add category for Google Analytics
-            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION_RECEIVED, courseId);
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
             tracker.track(Values.NOTIFICATION_RECEIVED, aEvent.properties);
             return aEvent.properties;
 
@@ -745,7 +745,7 @@ public class ISegmentImpl implements ISegment {
             aEvent.setAppNameContext();
 
             //Add category for Google Analytics
-            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION_TAPPED, courseId);
+            aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
             tracker.track(Values.NOTIFICATION_TAPPED, aEvent.properties);
             return aEvent.properties;
 

@@ -18,6 +18,11 @@ public class NotificationPreference extends ArrayList<EdxLocalParseChannel>{
 
     }
 
+    /**
+     *
+     * @param courseId
+     * @return <code>null</code> if no record found
+     */
     public EdxLocalParseChannel getByCourseId(String courseId){
         for(EdxLocalParseChannel c : this ){
             if ( courseId.equals(c.getCourseId()) )
@@ -26,6 +31,11 @@ public class NotificationPreference extends ArrayList<EdxLocalParseChannel>{
         return null;
     }
 
+    /**
+     *
+     * @param channelId
+     * @return <code>null</code> if no record found
+     */
     public EdxLocalParseChannel getByChannelId(String channelId){
         for(EdxLocalParseChannel c : this ){
             if ( channelId.equals(c.getChannelId()) )
@@ -34,23 +44,42 @@ public class NotificationPreference extends ArrayList<EdxLocalParseChannel>{
         return null;
     }
 
-    public void removeByCourseId(String courseId){
-        EdxLocalParseChannel pc = this.getByChannelId(courseId);
+    /**
+     *
+     * @param courseId
+     *  @return <code>false</code> if operation fails
+     */
+    public boolean removeByCourseId(String courseId){
+        EdxLocalParseChannel pc = this.getByCourseId(courseId);
         if ( pc != null )
-            this.remove(pc);
+           return this.remove(pc);
+        return false;
     }
 
-    public void removeByChannelId(String channelId){
+    /**
+     *
+     * @param channelId
+     *  @return <code>false</code> if operation fails
+     */
+    public boolean removeByChannelId(String channelId){
         EdxLocalParseChannel pc = this.getByChannelId(channelId);
         if ( pc != null )
-            this.remove(pc);
+           return this.remove(pc);
+        return false;
     }
 
-
+    /**
+     *
+     * @param channel
+     * @return  <code>false</code> if operation fails
+     */
+    public boolean add(EdxLocalParseChannel channel){
+        return super.add( channel );
+    }
     /**
      * find a list of courseId which is not in the dictionary
      * @param courseEntryList
-     * @return
+     * @return empty list if no record found
      */
     public List<CourseEntry> filterForNewCourses(List<CourseEntry> courseEntryList){
         List<CourseEntry>  newCourseList = new ArrayList<>();
@@ -65,8 +94,8 @@ public class NotificationPreference extends ArrayList<EdxLocalParseChannel>{
     /**
      * find all the course entry in saved preference which are not in the current active
      * course list
-     * @param courseEntryList
-     * @return
+     * @param courseEntryList a list of course entries which are in active status
+     * @return empty list if no record found
      */
     public List<EdxLocalParseChannel> filterForInactiveCourses(List<CourseEntry> courseEntryList){
         Set<String> activeCourseList = new HashSet<>();

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
-    android:orientation="vertical" 
+    android:orientation="vertical"
     android:splitMotionEvents="false">
 
     <LinearLayout
@@ -13,13 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
-
-        <CheckBox
-            android:id="@+id/channel_subscribed_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="left"  />
 
         <LinearLayout
             android:id="@+id/last_viewed_layout"
@@ -32,7 +25,6 @@
             android:paddingTop="20dp"
             android:visibility="gone"
             tools:visibility="visible">
-
 
             <org.edx.mobile.view.custom.ETextView
                 style="@style/semibold_text"
@@ -55,13 +47,11 @@
                 android:singleLine="true"
                 android:textColor="@color/grey_last_accessed"
                 android:textSize="15sp" />
-
-
         </LinearLayout>
         <View android:layout_height="1dp"
             android:layout_width="match_parent"
             android:background="@color/grey_act_background"/>
-            
+
     </LinearLayout>
 
     <LinearLayout
@@ -111,8 +101,8 @@
         android:text="@string/no_chapter_text"
         android:padding="10dp"
         android:layout_centerInParent="true"
-       	android:textColor="@color/empty_list_text"
-       	android:textSize="20sp"
+        android:textColor="@color/empty_list_text"
+        android:textSize="20sp"
         android:visibility="gone"
         android:gravity="center" />
 

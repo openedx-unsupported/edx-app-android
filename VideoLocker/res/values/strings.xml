@@ -455,4 +455,6 @@
     <!-- Notification related -->
     <!-- Template for notification title -->
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">Course Announcement</string>
+    <!-- toggle between subscribe and unsubscribe to course announcement -->
+    <string name="notification_toggle">Notifications</string>
 </resources>
