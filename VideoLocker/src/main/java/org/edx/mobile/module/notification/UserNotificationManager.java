@@ -63,7 +63,7 @@ public class UserNotificationManager {
 
     //check if local subscribed is not in parse server
     //then try to subscribe it
-    public void syncWithParse(){
+    public void syncWithServer(){
         delegate.syncWithNotificationServer();
     }
 
@@ -102,5 +102,15 @@ public class UserNotificationManager {
      */
     public boolean isSubscribedByCourseId(String courseId){
         return delegate.isSubscribedByCourseId( courseId );
+    }
+
+    /**
+     * NOTE - FOR TESTING purpose only.
+     * TODO - we will create a Test Environment Object as
+     * the context for running testing code
+     * @param delegate
+     */
+    public void setDelegate(NotificationDelegate delegate){
+        this.delegate = delegate;
     }
 }

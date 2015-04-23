@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -68,6 +70,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
                     if (courseData != null && courseData.getCourse() != null ) {
                         bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
                         selectedTab = courseInfoTabIndex;
+
                     }
                 }
 

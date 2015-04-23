@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'org.yaml:snakeyaml:1.14'
 
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
         classpath 'io.fabric.tools:gradle:1.+'
