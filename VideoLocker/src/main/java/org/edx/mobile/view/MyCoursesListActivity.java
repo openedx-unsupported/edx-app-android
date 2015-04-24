@@ -13,6 +13,7 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
@@ -120,7 +121,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
         invalidateOptionsMenu();
         uiLifecycleHelper.onResume();
         changeSocialMode(new FacebookProvider().isLoggedIn());
-
+        UserNotificationManager.getInstance().checkAppUpgrade();
     }
 
     @Override

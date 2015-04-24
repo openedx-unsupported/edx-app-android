@@ -10,75 +10,30 @@ import java.util.List;
 
 /**
 {
-        "title": "Course Announcement",
-        "loc-args": [
-        "VAL video"
-        ],
-        "action-loc-key": "VIEW_BUTTON",
-        "loc-key": "COURSE_ANNOUNCEMENT_NOTIFICATION_BODY",
-        "action": "course.announcement",
-        "title-loc-key": "COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE",
-        "title-loc-args": []
-        }
+     "action": "course.announcement",
+     "course-name": "edX Demonstration Course",
+     "course-id": "edX/DemoX/Demo_Course",
+     "push_hash": "d41d8cd98f00b204e9800998ecf8427e",
+     "aps": {
+     "content-available": 1,
+     "alert": ""
+     },
+     "notification-id": "742e9881-e224-4ba9-b4d0-8a1f8b62b276"
+}
  **/
 public class CourseUpdateNotificationPayload extends BaseNotificationPayload{
 
-    private @SerializedName("push_hash") String pushHash;
-    private @SerializedName("loc-args") List<String> locArgs;
-    private @SerializedName("action-loc-key") String actionLocKey;
-    private @SerializedName("loc-key") String localKey;
-    private @SerializedName("action") String action;
-    private @SerializedName("title-loc-key") String titleLocKey;
-    private @SerializedName("title-loc-args") List<String> titleLocArgs;
+
+    private @SerializedName("course-name") String courseName;
     private @SerializedName("course-id") String courseId;
-    private @SerializedName("alert") String alert;
 
-    public List<String> getLocArgs() {
-        return locArgs;
+
+    public String getCourseName() {
+        return courseName;
     }
 
-    public void setLocArgs(List<String> locArgs) {
-        this.locArgs = locArgs;
-    }
-
-    public String getActionLocKey() {
-        return actionLocKey;
-    }
-
-    public void setActionLocKey(String actionLocKey) {
-        this.actionLocKey = actionLocKey;
-    }
-
-    public String getLocalKey() {
-        return localKey;
-    }
-
-    public void setLocalKey(String localKey) {
-        this.localKey = localKey;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public String getTitleLocKey() {
-        return titleLocKey;
-    }
-
-    public void setTitleLocKey(String titleLocKey) {
-        this.titleLocKey = titleLocKey;
-    }
-
-    public List<String> getTitleLocArgs() {
-        return titleLocArgs;
-    }
-
-    public void setTitleLocArgs(List<String> titleLocArgs) {
-        this.titleLocArgs = titleLocArgs;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
     public String getCourseId() {
@@ -89,21 +44,6 @@ public class CourseUpdateNotificationPayload extends BaseNotificationPayload{
         this.courseId = courseId;
     }
 
-    public String getAlert() {
-        return alert;
-    }
-
-    public void setAlert(String alert) {
-        this.alert = alert;
-    }
-
-    public String getPushHash() {
-        return pushHash;
-    }
-
-    public void setPushHash(String pushHash) {
-        this.pushHash = pushHash;
-    }
 
     public boolean isValid(){
         return !TextUtils.isEmpty(courseId);

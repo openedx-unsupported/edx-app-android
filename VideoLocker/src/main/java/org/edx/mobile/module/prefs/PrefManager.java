@@ -238,7 +238,43 @@ public class PrefManager {
         }
         return raw;
     }
-    
+
+    public static class AppInfoPrefManager extends PrefManager{
+        public AppInfoPrefManager(Context context){
+            super(context, PrefManager.Pref.APP_INFO);
+        }
+        public long getAppVersionCode(){
+            return getLong(Key.APP_VERSION_CODE);
+        }
+        public void setAppVersionCode(long code){
+            super.put(Key.APP_VERSION_CODE, code);
+        }
+        public String getAppVersionName(){
+            return getString(Key.APP_VERSION_NAME);
+        }
+        public void setAppVersionName(String code){
+            super.put(Key.APP_VERSION_NAME, code);
+        }
+        public boolean isNotificationEnabled(){
+            return getBoolean(Key.NOTIFICATION, false);
+        }
+        public void setNotificationEnabled(boolean enabled){
+            super.put(Key.NOTIFICATION, enabled);
+        }
+        public boolean isAppUpgradeNeedSyncWithParse(){
+            return getBoolean(Key.AppUpgradeNeedSyncWithParse, false);
+        }
+        public void setAppUpgradeNeedSyncWithParse(boolean enabled){
+            super.put(Key.AppUpgradeNeedSyncWithParse, enabled);
+        }
+        public String getPrevNotificationHashKey(){
+            return getString(Key.AppNotificationPushHash);
+        }
+        public void setPrevNotificationHashKey(String code){
+            super.put(Key.AppNotificationPushHash, code);
+        }
+    }
+
     /**
      * Contains preference name constants.
      *
@@ -273,9 +309,12 @@ public class PrefManager {
         public static final String SEGMENT_KEY_BACKEND = "segment_backend";
         public static final String SHARE_COURSES = "share_courses";
         public static final String SPEED_TEST_KBPS = "speed_test_kbps";
-        public static final String APP_VERSION = "app_version_name";
+        public static final String APP_VERSION_NAME = "app_version_name";
+        public static final String APP_VERSION_CODE = "app_version_code";
         public static final String NOTIFICATION_PROFILE_JSON = "notification_profile_json";
-
+        private static final String NOTIFICATION = "notification";
+        public static final String AppNotificationPushHash = "AppNotificationPushHash";
+        public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
     }
     
     public static final class Value {
