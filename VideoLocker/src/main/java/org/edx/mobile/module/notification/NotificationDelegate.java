@@ -42,7 +42,7 @@ public interface NotificationDelegate {
      * @param channel
      * @param subscribe
      */
-    public void toggleSubscribeToNotificationServer(final String channel, boolean subscribe);
+    public void subscribeAndUnsubscribeToServer(final String channel, boolean subscribe);
 
     /**
      *

@@ -30,6 +30,8 @@ import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
 
 
+import java.util.Locale;
+
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
@@ -171,9 +173,10 @@ public class MainApplication extends Application{
         if (  previousVersion < curVersion ){
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
 
-            String  android_id = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
-            installation.put("UniqueId",android_id);
+            String language = Locale.getDefault().getLanguage();
+            installation.put("preferredLanguage",language);
             if ( hadNotification ) {
+
                 pmanager.setAppUpgradeNeedSyncWithParse(true);
             }
 

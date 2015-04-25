@@ -120,7 +120,7 @@ public class UserNotificationManager {
      * @param subscribe
      */
     public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe){
-        delegate.toggleSubscribeToNotificationServer(channel, subscribe);
+        delegate.subscribeAndUnsubscribeToServer(channel, subscribe);
     }
 
     /**
