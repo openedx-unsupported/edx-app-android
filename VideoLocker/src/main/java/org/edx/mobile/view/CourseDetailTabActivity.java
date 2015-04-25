@@ -91,6 +91,8 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             }
 
         }catch(Exception ex){
+            Router.getInstance().showMyCourses(this);
+            finish();
             logger.error(ex);
         }
 

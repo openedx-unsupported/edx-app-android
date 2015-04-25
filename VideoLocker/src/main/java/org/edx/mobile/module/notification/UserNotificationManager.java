@@ -1,7 +1,12 @@
 package org.edx.mobile.module.notification;
 
+import android.content.Context;
+import android.text.TextUtils;
+
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 
 import java.util.List;
@@ -17,6 +22,8 @@ import java.util.List;
  *
  */
 public class UserNotificationManager {
+    public static final String COURSE_ANNOUNCEMENT_ACTION = "course.announcement";
+
 
     private static final Logger logger = new Logger(UserNotificationManager.class.getName());
 
@@ -28,6 +35,17 @@ public class UserNotificationManager {
         if ( instance == null )
             instance = new UserNotificationManager();
         return instance;
+    }
+
+    public static boolean hasNotificationHash(Context context, String notificationId){
+        PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
+        String prevHashCode = pmanager.getPrevNotificationHashKey();
+        pmanager.setPrevNotificationHashKey(notificationId);
+        if ( TextUtils.isEmpty(notificationId) && TextUtils.isEmpty(prevHashCode) )
+            return true;
+        if ( notificationId != null && notificationId.equals(prevHashCode) )
+            return true;
+        return false;
     }
 
     public static boolean appCanHandleFormat(BaseNotificationPayload payload){
@@ -44,6 +62,16 @@ public class UserNotificationManager {
         }
         if ( delegate == null ){
             delegate = new DummyNotificationDelegate();
+        }
+    }
+
+    public void checkAppUpgrade(){
+        PrefManager.AppInfoPrefManager pmanager =
+                new PrefManager.AppInfoPrefManager(MainApplication.instance());
+        boolean needResync = pmanager.isAppUpgradeNeedSyncWithParse();
+        if ( needResync ){
+            pmanager.setAppUpgradeNeedSyncWithParse(false);
+            resubscribeAll();
         }
     }
 

@@ -22,4 +22,19 @@ public class PropertyUtil {
         }
         return null;
     }
+
+    /**
+     * check version number is a better approach comparing with Version Name.
+     * @return Application's version code from the {@code PackageManager}.
+     */
+    public static int getManifestVersionCode(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            return -1;
+        }
+    }
 }

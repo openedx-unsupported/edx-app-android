@@ -457,11 +457,12 @@ public class Storage implements IStorage {
      * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
      */
     public void repairDownloadCompletionData() {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.APP_INFO);
-        String lastSavedVersionName = pref.getString(PrefManager.Key.APP_VERSION);
-        if (lastSavedVersionName == null || !lastSavedVersionName.equals(PropertyUtil.getManifestVersionName(context))) {
+        PrefManager.AppInfoPrefManager pref = new PrefManager.AppInfoPrefManager(context);
+        String lastSavedVersionName = pref.getAppVersionName();
+        String curVersionName = PropertyUtil.getManifestVersionName(context);
+        if (lastSavedVersionName == null || !lastSavedVersionName.equals(curVersionName)) {
             // current version not matching with the last saved version
-            pref.put(PrefManager.Key.APP_VERSION, PropertyUtil.getManifestVersionName(context));
+            pref.setAppVersionName(curVersionName);
 
             // attempt to repair the data
             Thread maintenanceThread = new Thread(new Runnable() {

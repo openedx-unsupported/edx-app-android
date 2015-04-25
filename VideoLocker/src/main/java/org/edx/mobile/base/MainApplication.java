@@ -3,23 +3,28 @@ package org.edx.mobile.base;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
-import com.parse.PushService;
+import com.parse.ParseInstallation;
 
 import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
@@ -27,6 +32,8 @@ import org.edx.mobile.view.Router;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
+
+import static android.provider.Settings.Secure;
 
 /**
  * This class initializes the modules of the app based on the configuration.
@@ -102,6 +109,7 @@ public class MainApplication extends Application{
             if ( parseNotificationConfig.isEnabled() ) { 
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
+                tryToUpdateParseForAppUpgrade(this);
             }
         }
 
@@ -149,6 +157,31 @@ public class MainApplication extends Application{
         }
     }
 
+
+    /**
+     * if app is launched from upgrading, we need to resync with parse server.
+     * @param context
+     */
+    private void tryToUpdateParseForAppUpgrade(Context context){
+
+        PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
+        Long previousVersion = pmanager.getAppVersionCode();
+        boolean hadNotification = pmanager.isNotificationEnabled();
+        int  curVersion = PropertyUtil.getManifestVersionCode(context);
+        if (  previousVersion < curVersion ){
+            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+
+            String  android_id = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
+            installation.put("UniqueId",android_id);
+            if ( hadNotification ) {
+                pmanager.setAppUpgradeNeedSyncWithParse(true);
+            }
+
+            installation.saveInBackground();
+        }
+        pmanager.setAppVersionCode(curVersion);
+        pmanager.setNotificationEnabled(true);
+    }
 
     private final class MyActivityLifecycleCallbacks
             implements Application.ActivityLifecycleCallbacks{
