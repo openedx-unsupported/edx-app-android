@@ -31,7 +31,7 @@ public class DummyNotificationDelegate implements NotificationDelegate{
     }
 
     @Override
-    public void toggleSubscribeToNotificationServer(String channel, boolean subscribe) {
+    public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe) {
 
     }
 

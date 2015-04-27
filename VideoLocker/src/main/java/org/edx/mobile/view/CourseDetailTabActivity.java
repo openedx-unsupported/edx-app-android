@@ -44,7 +44,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         }
 
         setApplyPrevTransitionOnRestart(true);
-        
+
         bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
