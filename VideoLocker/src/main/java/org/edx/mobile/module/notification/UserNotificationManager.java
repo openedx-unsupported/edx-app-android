@@ -8,6 +8,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.List;
 
@@ -48,10 +49,6 @@ public class UserNotificationManager {
         return false;
     }
 
-    public static boolean appCanHandleFormat(BaseNotificationPayload payload){
-        return true;
-    }
-
     private UserNotificationManager(){
         if ( Config.getInstance().isNotificationEnabled() ) {
             Config.ParseNotificationConfig parseNotificationConfig =
@@ -66,12 +63,17 @@ public class UserNotificationManager {
     }
 
     public void checkAppUpgrade(){
+        if (!NetworkUtil.isConnected(MainApplication.instance()))
+            return;
         PrefManager.AppInfoPrefManager pmanager =
                 new PrefManager.AppInfoPrefManager(MainApplication.instance());
-        boolean needResync = pmanager.isAppUpgradeNeedSyncWithParse();
-        if ( needResync ){
+        if ( pmanager.isAppUpgradeNeedSyncWithParse() ){
             pmanager.setAppUpgradeNeedSyncWithParse(false);
             resubscribeAll();
+        }
+        if ( pmanager.isAppSettingNeedSyncWithParse() ){
+            pmanager.setAppSettingNeedSyncWithParse(false);
+            ParseHandleHelper.tryToSaveLanguageSetting();
         }
     }
 
@@ -91,8 +93,8 @@ public class UserNotificationManager {
 
     //check if local subscribed is not in parse server
     //then try to subscribe it
-    public void syncWithServer(){
-        delegate.syncWithNotificationServer();
+    public void syncWithServerForFailure(){
+        delegate.syncWithServerForFailure();
     }
 
     /**
@@ -114,14 +116,7 @@ public class UserNotificationManager {
         delegate.changeNotificationSetting(courseId, channelId, subscribe);
     }
 
-    /**
-     *
-     * @param channel
-     * @param subscribe
-     */
-    public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe){
-        delegate.subscribeAndUnsubscribeToServer(channel, subscribe);
-    }
+
 
     /**
      *

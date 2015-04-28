@@ -5,8 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.parse.ParsePushBroadcastReceiver;
 
 import android.content.Intent;
@@ -20,7 +18,6 @@ import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.CourseDetailTabActivity;
-import org.edx.mobile.view.MyCoursesListActivity;
 import org.edx.mobile.view.Router;
 
 import de.greenrobot.event.EventBus;
@@ -32,37 +29,25 @@ import de.greenrobot.event.EventBus;
 public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
     protected final Logger logger = new Logger(getClass().getName());
 
+    //TODO - we wont enable fly-in window for remote notification for now.
+    //UI and animation time need to get from production team.
+    private boolean enableFlyinWindow = false;
+
     public void onReceive(android.content.Context context, android.content.Intent intent) {
         super.onReceive(context,intent);
      }
 
-    private CourseUpdateNotificationPayload extractPayload(android.content.Intent intent) {
-        try {
-            String payloadStr = intent.getExtras().getString("com.parse.Data");
-            Gson gson = new GsonBuilder().create();
-            return gson.fromJson(payloadStr, CourseUpdateNotificationPayload.class);
-        } catch (Exception ex) {
-            logger.debug(ex.toString());
-            return null;
-        }
-    }
-
-    private java.lang.Class<? extends android.app.Activity> getActivityClass(BaseNotificationPayload payload){
-        if ( payload == null ){
-            return MyCoursesListActivity.class;
-        }
-        String action = payload.getAction();
-        if ( UserNotificationManager.COURSE_ANNOUNCEMENT_ACTION.equals(action) ) {
-            return CourseDetailTabActivity.class;
-        }
-        return MyCoursesListActivity.class;
-    }
 
     protected void onPushReceive(android.content.Context context, android.content.Intent intent) {
         try{
-            CourseUpdateNotificationPayload payload = extractPayload(intent);
+            CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
             if ( payload != null && UserNotificationManager.hasNotificationHash(context, payload.getIdentifier()) )
                 return;
+            if( enableFlyinWindow ) {
+                Intent intent2 = new Intent(context, NotificationFlyinService.class);
+                intent2.putExtra("com.parse.Data", intent.getExtras().getString("com.parse.Data"));
+                context.startService(intent2);
+            }
         }catch (Exception ex){
             logger.debug(ex.toString());
         }
@@ -76,18 +61,22 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
 
     protected void onPushOpen(android.content.Context context, android.content.Intent intent) {
         super.onPushOpen(context, intent);
+        CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
+         String courseId = payload == null ? "" : payload.getCourseId();
+        EventBus.getDefault().postSticky(new CourseAnnouncementEvent(
+            CourseAnnouncementEvent.EventType.MESSAGE_TAPPED, courseId));
     }
 
     protected java.lang.Class<? extends android.app.Activity> getActivity(android.content.Context context, android.content.Intent intent) {
-        CourseUpdateNotificationPayload payload = extractPayload(intent);
-        return getActivityClass(payload);
+        CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
+        return ParseHandleHelper.getActivityClass(payload);
     }
 
     protected android.app.Notification getNotification(android.content.Context context, android.content.Intent intent) {
         try {
 
-            CourseUpdateNotificationPayload payload = extractPayload(intent);
-            Class activity = getActivityClass(payload);
+            CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
+            Class activity = ParseHandleHelper.getActivityClass(payload);
             if( activity == CourseDetailTabActivity.class ){
                 String titleTemplate =  ResourceUtil.getResourceString(R.string.COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE);
 
@@ -100,6 +89,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
 
 
                 Intent resultIntent = new Intent(context, CourseDetailTabActivity.class);
+                resultIntent.setAction(Long.toString(System.currentTimeMillis()));
                 //if user launch the app from recent list, activity will still get this intent.
                 //this is one way to avoid it.
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
@@ -111,7 +101,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
                         context,
                         0,
                         resultIntent,
-                        0
+                        PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
                 NotificationManager notificationManager =
@@ -131,6 +121,8 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
                 notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 return notification;
             } else {
+                EventBus.getDefault().postSticky(new CourseAnnouncementEvent(
+                    CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED, ""));
                 return super.getNotification(context,intent);
             }
 

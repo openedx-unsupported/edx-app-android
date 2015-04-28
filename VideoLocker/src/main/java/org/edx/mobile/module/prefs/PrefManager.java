@@ -267,6 +267,12 @@ public class PrefManager {
         public void setAppUpgradeNeedSyncWithParse(boolean enabled){
             super.put(Key.AppUpgradeNeedSyncWithParse, enabled);
         }
+        public boolean isAppSettingNeedSyncWithParse(){
+            return getBoolean(Key.AppSettingNeedSyncWithParse, false);
+        }
+        public void setAppSettingNeedSyncWithParse(boolean enabled){
+            super.put(Key.AppSettingNeedSyncWithParse, enabled);
+        }
         public String getPrevNotificationHashKey(){
             return getString(Key.AppNotificationPushHash);
         }
@@ -315,6 +321,8 @@ public class PrefManager {
         private static final String NOTIFICATION = "notification";
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
+        public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
+
     }
     
     public static final class Value {

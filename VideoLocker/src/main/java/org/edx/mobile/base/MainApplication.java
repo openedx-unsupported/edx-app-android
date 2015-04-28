@@ -4,11 +4,8 @@ package org.edx.mobile.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
-import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
@@ -18,7 +15,6 @@ import com.parse.ParseInstallation;
 import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.Config;
@@ -34,8 +30,6 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
-
-import static android.provider.Settings.Secure;
 
 /**
  * This class initializes the modules of the app based on the configuration.
@@ -124,8 +118,14 @@ public class MainApplication extends Application{
     }
 
     public void onEvent(CourseAnnouncementEvent event) {
-        SegmentFactory.getInstance().trackNotificationReceived(event.courseId);
-        EventBus.getDefault().removeStickyEvent(event);
+        if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED ) {
+            SegmentFactory.getInstance().trackNotificationReceived(event.courseId);
+            EventBus.getDefault().removeStickyEvent(event);
+        }
+        if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_TAPPED ) {
+            SegmentFactory.getInstance().trackNotificationTapped(event.courseId);
+            EventBus.getDefault().removeStickyEvent(event);
+        }
     }
     
     /**
@@ -171,17 +171,35 @@ public class MainApplication extends Application{
         boolean hadNotification = pmanager.isNotificationEnabled();
         int  curVersion = PropertyUtil.getManifestVersionCode(context);
         if (  previousVersion < curVersion ){
-            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-
-            String language = Locale.getDefault().getLanguage();
-            installation.put("preferredLanguage",language);
             if ( hadNotification ) {
-
                 pmanager.setAppUpgradeNeedSyncWithParse(true);
             }
-
-            installation.saveInBackground();
         }
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        final String languageKey = "preferredLanguage";
+        final String countryKey = "preferredLanguage";
+        String savedPreferredLanguage = installation.getString(languageKey);
+        String savedPreferredCountry = installation.getString(countryKey);
+        Locale locale = Locale.getDefault();
+        String currentPreferredLanguage = locale.getLanguage();
+        String currentPreferredCountry = locale.getCountry();
+        boolean dirty = false;
+        if (!currentPreferredLanguage.equals(savedPreferredLanguage) ) {
+            installation.put(languageKey, currentPreferredLanguage);
+            dirty = true;
+        }
+        if (!currentPreferredCountry.equals(savedPreferredCountry) ) {
+            installation.put(countryKey, currentPreferredCountry);
+            dirty = true;
+        }
+        if ( dirty ) {
+            try {
+                installation.saveInBackground();
+            }catch (Exception ex){
+                logger.error(ex);
+            }
+        }
+
         pmanager.setAppVersionCode(curVersion);
         pmanager.setNotificationEnabled(true);
     }

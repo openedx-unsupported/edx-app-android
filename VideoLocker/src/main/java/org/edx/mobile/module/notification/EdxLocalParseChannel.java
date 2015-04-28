@@ -10,6 +10,7 @@ public class EdxLocalParseChannel implements Serializable{
     private String courseId;
     private String channelId;
     private boolean subscribed;
+    private boolean operationFailed;
 
     public EdxLocalParseChannel(){}
 
@@ -41,5 +42,13 @@ public class EdxLocalParseChannel implements Serializable{
 
     public void setSubscribed(boolean subscribed) {
         this.subscribed = subscribed;
+    }
+
+    public boolean isOperationFailed() {
+        return operationFailed;
+    }
+
+    public void setOperationFailed(boolean operationFailed) {
+        this.operationFailed = operationFailed;
     }
 }

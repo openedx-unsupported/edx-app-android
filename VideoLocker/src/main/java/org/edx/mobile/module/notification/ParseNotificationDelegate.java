@@ -3,6 +3,7 @@ package org.edx.mobile.module.notification;
 import android.text.TextUtils;
 
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
 
@@ -11,6 +12,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.UserBasedPrefManager;
+import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class ParseNotificationDelegate implements NotificationDelegate{
             public void onFinish(Void result) {
                 if (subscribedChannels != null) {
                     for (String channel : subscribedChannels) {
-                        subscribeAndUnsubscribeToServer(channel, false);
+                        changeSubscriptionToNotificationServer(channel, false, false);
                     }
                 }
             }
@@ -48,29 +50,26 @@ public class ParseNotificationDelegate implements NotificationDelegate{
         NotificationPreference preference = prefManager.getNotificationPreference();
         for (EdxLocalParseChannel pc : preference) {
             if (pc.isSubscribed())
-                subscribeAndUnsubscribeToServer(pc.getChannelId(), true);
+                changeSubscriptionToNotificationServer(pc, true);
         }
     }
 
     //check if local subscribed is not in parse server
     //then try to subscribe it
-    public void syncWithNotificationServer() {
-        new ParseSyncTask(MainApplication.instance().getApplicationContext()) {
-            @Override
-            public void onFinish(Void result) {
-                UserBasedPrefManager prefManager = UserBasedPrefManager.getInstance(UserBasedPrefManager.UserPrefType.NOTIFICATION);
-                NotificationPreference preference = prefManager.getNotificationPreference();
-                for (EdxLocalParseChannel pc : preference) {
-                    if (pc.isSubscribed() && subscribedChannels != null &&
-                            !subscribedChannels.contains(pc.getChannelId()))
-                        subscribeAndUnsubscribeToServer(pc.getChannelId(), true);
-                    if (!pc.isSubscribed() && subscribedChannels != null &&
-                            subscribedChannels.contains(pc.getChannelId()))
-                        subscribeAndUnsubscribeToServer(pc.getChannelId(), false);
-                }
-            }
-        }.execute();
+    public void syncWithServerForFailure() {
+        if (!NetworkUtil.isConnected(MainApplication.instance()))
+            return;
+        List<String> subscribedChannels = ParseInstallation.getCurrentInstallation().getList("channels");
 
+        UserBasedPrefManager prefManager = UserBasedPrefManager.getInstance(UserBasedPrefManager.UserPrefType.NOTIFICATION);
+        NotificationPreference preference = prefManager.getNotificationPreference();
+        List<EdxLocalParseChannel> failedOps = preference.getAllFailedUpdate();
+        if ( failedOps.size() > 0 ){
+            for (EdxLocalParseChannel pc : failedOps) {
+                changeSubscriptionToNotificationServer(pc, pc.isSubscribed());
+            }
+            prefManager.saveNotificationPreference(preference);
+        }
     }
 
     /**
@@ -98,15 +97,14 @@ public class ParseNotificationDelegate implements NotificationDelegate{
             if (TextUtils.isEmpty( subscriptionId ) )
                 continue;
             EdxLocalParseChannel pc = new EdxLocalParseChannel(courseEntry.getId(), subscriptionId, true);
-            changeSubscriptionToNotificationServer(pc.getChannelId(), true, true);
+            changeSubscriptionToNotificationServer(pc, true);
             preference.add(pc);
         }
 
         List<EdxLocalParseChannel> inactiveCourseList = preference.filterForInactiveCourses(activeList);
         for (EdxLocalParseChannel pc : inactiveCourseList) {
             if (pc.isSubscribed()) {
-                changeSubscriptionToNotificationServer(pc.getChannelId(), false, true);
-                pc.setSubscribed(false);
+                changeSubscriptionToNotificationServer(pc, false);
             }
         }
 
@@ -138,30 +136,29 @@ public class ParseNotificationDelegate implements NotificationDelegate{
             pc.setSubscribed(subscribe);
         }
         prefManager.saveNotificationPreference(preference);
-        changeSubscriptionToNotificationServer(pc.getChannelId(), subscribe, true);
+        changeSubscriptionToNotificationServer(pc, subscribe);
     }
 
     /**
-     * try to subscribe and unsubscribe to the parser server.
-     * it is used when local cached data wont change regardless of the result of
-     * the operation. 
+     * this api handle the failure case for sync with parse server
      * @param channel
      * @param subscribe
      */
-    public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe) {
-        //false means if failed, we won't change the locale cache.
-        changeSubscriptionToNotificationServer(channel, subscribe, false);
+    private void changeSubscriptionToNotificationServer(EdxLocalParseChannel channel, boolean subscribe) {
+         channel.setOperationFailed(false);
+        changeSubscriptionToNotificationServer(channel.getChannelId(), subscribe, true);
     }
-
     /**
      * if subscription fails, we may need to update local cache.
-     * @param channel
+     * @param channelId
      * @param subscribe
      * @param updateCacheOnError if operation fails, we should update the local cache
      */
-    private void changeSubscriptionToNotificationServer(final String channel, boolean subscribe, final boolean updateCacheOnError) {
+    private void changeSubscriptionToNotificationServer(final String channelId, boolean subscribe, final boolean updateCacheOnError) {
+
         if (subscribe) {
-            ParsePush.subscribeInBackground(channel, new SaveCallback() {
+
+            ParsePush.subscribeInBackground(channelId, new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
@@ -169,13 +166,14 @@ public class ParseNotificationDelegate implements NotificationDelegate{
                     } else {
                         logger.error(e);
                         if ( updateCacheOnError ){
-                            deleteLocalRecordForSubscription(channel);
+                            markFailureForSubscriptionOp(channelId);
                         }
                     }
                 }
             });
+
         } else {
-            ParsePush.unsubscribeInBackground(channel, new SaveCallback() {
+            ParsePush.unsubscribeInBackground(channelId, new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
@@ -183,7 +181,7 @@ public class ParseNotificationDelegate implements NotificationDelegate{
                     } else {
                         logger.error(e);
                         if (updateCacheOnError) {
-                            deleteLocalRecordForSubscription(channel);
+                            markFailureForSubscriptionOp(channelId);
                         }
                     }
                 }
@@ -196,11 +194,14 @@ public class ParseNotificationDelegate implements NotificationDelegate{
      * is to clear the record in the cache.
      * @param channelId
      */
-    private void deleteLocalRecordForSubscription(String channelId){
+    private void markFailureForSubscriptionOp(String channelId){
         UserBasedPrefManager prefManager = UserBasedPrefManager.getInstance(UserBasedPrefManager.UserPrefType.NOTIFICATION);
         NotificationPreference preference = prefManager.getNotificationPreference();
-        if ( preference.removeByChannelId(channelId) )
+        EdxLocalParseChannel channel = preference.getByChannelId(channelId);
+        if ( channel != null ){
+            channel.setOperationFailed(true);
             prefManager.saveNotificationPreference(preference);
+        }
     }
 
 

@@ -59,22 +59,6 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
                     .getSerializable(Router.EXTRA_ENROLLMENT);
 
-            if ( courseData == null ){
-                //this is from notification
-                String courseId = bundle.getString(Router.EXTRA_COURSE_ID);
-                if (!TextUtils.isEmpty(courseId)){
-                    SegmentFactory.getInstance().trackNotificationTapped(courseId);
-
-                    Api api = new Api(this);
-                    courseData = api.getCourseById(courseId);
-                    if (courseData != null && courseData.getCourse() != null ) {
-                        bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
-                        selectedTab = courseInfoTabIndex;
-
-                    }
-                }
-
-            }
             //check courseData again, it may be fetched from local cache
             if ( courseData != null ) {
                 activityTitle = courseData.getCourse().getName();
@@ -84,10 +68,15 @@ public class CourseDetailTabActivity extends BaseTabActivity {
                     logger.error(e);
                 }
             } else {
-                //it is a good idea to go to the my course page. as loading of my courses
-                //take a while to load. that the only way to get anouncement link
-                Router.getInstance().showMyCourses(this);
-                finish();
+
+                boolean handleFromNotification = handleIntentFromNotification();
+                //this is not from notification
+                if (!handleFromNotification) {
+                    //it is a good idea to go to the my course page. as loading of my courses
+                    //take a while to load. that the only way to get anouncement link
+                    Router.getInstance().showMyCourses(this);
+                    finish();
+                }
             }
 
         }catch(Exception ex){
@@ -125,9 +114,36 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         }
     }
 
+    /**
+     * @return <code>true</code> if handle intent from notification successfully
+     */
+    private boolean handleIntentFromNotification(){
+        if ( bundle != null ){
+            String courseId = bundle.getString(Router.EXTRA_COURSE_ID);
+            //this is from notification
+            if (!TextUtils.isEmpty(courseId)){
+                try{
+                    bundle.remove(Router.EXTRA_COURSE_ID);
+                    Api api = new Api(this);
+                    EnrolledCoursesResponse courseData = api.getCourseById(courseId);
+                    if (courseData != null && courseData.getCourse() != null ) {
+                        bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+                        activityTitle = courseData.getCourse().getName();
+                        selectedTab = courseInfoTabIndex;
+                        return true;
+                    }
+                }catch (Exception ex){
+                    logger.error(ex);
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        handleIntentFromNotification();
         invalidateOptionsMenu();
     }
 

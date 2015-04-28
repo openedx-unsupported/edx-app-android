@@ -111,4 +111,44 @@ public class NotificationPreference extends ArrayList<EdxLocalParseChannel>{
         return inactiveCourseList;
     }
 
+    /**
+     * get all the subscribed channels. it is not the same as
+     * total number of elements in this collection
+     * @return
+     */
+    public List<String> getAllSubscribedChannels(){
+        List<String> channels = new ArrayList<>();
+        for( EdxLocalParseChannel pc : this ){
+            if ( pc.isSubscribed()  ){
+                channels.add(pc.getChannelId());
+            }
+        }
+        return channels;
+    }
+
+    /**
+     * get all the channels which failed to sync with parse server
+     * @return
+     */
+    public List<EdxLocalParseChannel> getAllFailedUpdate(){
+
+        List<EdxLocalParseChannel> channelList = new LinkedList<EdxLocalParseChannel>( );
+        for( EdxLocalParseChannel pc : this ){
+            if ( pc.isOperationFailed() ){
+                channelList.add(pc);
+            }
+        }
+        return channelList;
+    }
+
+    /**
+     * mark all the records failed for update. it happens when doing th bulk update
+     */
+    public void markAllFailedUpdate(){
+        for( EdxLocalParseChannel pc : this ){
+            pc.setOperationFailed(true);
+        }
+    }
+
+
 }

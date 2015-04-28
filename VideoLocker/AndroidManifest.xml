@@ -64,7 +64,11 @@
         android:name="org.edx.mobile.permission.C2D_MESSAGE" />
     <uses-permission android:name="org.edx.mobile.permission.C2D_MESSAGE" />
 
-    
+    <!-- Permission for floating window. used for notification -->
+    <!--
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    -->
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -268,6 +272,12 @@
             </intent-filter>
         </receiver>
 
+       <!-- Used for Flyin window of remote notification -->
+        <!--
+        <service
+            android:name=".module.notification.NotificationFlyinService"
+            android:exported="true" />
+         -->
     </application>
 
 </manifest>

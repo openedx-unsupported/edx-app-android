@@ -1,15 +1,11 @@
 package org.edx.mobile.test;
 
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.notification.EdxLocalParseChannel;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.notification.NotificationPreference;
 import org.edx.mobile.module.notification.UserNotificationManager;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class NotificationTest extends BaseTestCase {
 
@@ -45,9 +41,8 @@ public class NotificationTest extends BaseTestCase {
         manager.checkCourseEnrollment(new ArrayList<EnrolledCoursesResponse>());
         manager.isSubscribedByCourseId(courseId1);
         manager.resubscribeAll( );
-        manager.subscribeAndUnsubscribeToServer(channelId1,true);
         manager.unsubscribeAll();
-        manager.syncWithServer();
+        manager.syncWithServerForFailure();
     }
 
 
