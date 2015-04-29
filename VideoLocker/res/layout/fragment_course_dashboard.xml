@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/grey_act_background"
+                android:orientation="vertical" >
+    <View
+        android:id="@+id/offline_bar"
+        style="@style/offline_bar_style"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"/>
+
+    <org.edx.mobile.view.custom.CourseImageHeader
+        android:id="@+id/header_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="144dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:background="@color/grey_4" />
+
+    <RelativeLayout
+        android:id="@+id/course_dashboard_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+       <Button
+           android:id="@+id/course_videos_btn"
+           android:layout_width="match_parent"
+           android:layout_height="120dp"
+
+           android:text="Watch Videos"
+           />
+
+        <Button
+            android:id="@+id/course_forum_btn"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Discussions"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/course_videos_btn"
+            />
+
+        <Button
+            android:id="@+id/course_handout_btn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Handouts"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/course_forum_btn"
+            />
+
+
+
+        <Button
+            android:id="@+id/course_announcement_btn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Announcements"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/course_forum_btn"
+            />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_spinner"
+        style="@style/api_progress_style"
+        android:visibility="gone" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/offline_mode_message"
+        style="@style/offline_mode_message"/>
+
+</LinearLayout>
+
+

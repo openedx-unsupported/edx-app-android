@@ -35,6 +35,10 @@ import io.fabric.sdk.android.Fabric;
  * This class initializes the modules of the app based on the configuration.
  */
 public class MainApplication extends Application{
+    //FIXME - temporary solution
+    public static final boolean Q4_ASSESSMENT_FLAG = true;
+    //FIXME - temporary solution
+    public static final boolean ForumEnabled = false;
 
     protected final Logger logger = new Logger(getClass().getName());
 

@@ -165,6 +165,9 @@
     <string name="end_user_title">End User License Agreement</string>
 
     <!-- My Courses -->
+    <!-- Title of course dashboard screen -->
+    <string name="course_dashboard">Dashboard</string>
+
     <!-- Accessible content description of image for a course -->
     <string name="course_image">Course Image</string>
     <!-- Accessible content description of school code label a course -->

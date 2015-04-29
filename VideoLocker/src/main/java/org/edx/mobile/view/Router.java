@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
@@ -114,11 +115,64 @@ public class Router {
 
     public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
                                      boolean announcements) {
+
+        if (MainApplication.Q4_ASSESSMENT_FLAG ){
+            showCourseDashboard(activity, model, announcements);
+            return;
+        }
+
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
 
         Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
+    /**
+     * FIXME - it will bring to different view in the future
+     * @param activity
+     * @param model
+     */
+    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model ) {
+
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
+
+        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
+
+    /**
+     * FIXME - it will bring to different view in the future
+     * @param activity
+     * @param model
+     */
+    public void showCourseAssessment(Activity activity, EnrolledCoursesResponse model ) {
+
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, false);
+
+        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
+    public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
+                                     boolean announcements) {
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
+
+        Intent courseDetail = new Intent(activity, CourseDashboardActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
