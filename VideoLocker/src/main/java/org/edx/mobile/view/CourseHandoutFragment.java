@@ -5,6 +5,7 @@ import org.edx.mobile.logger.Logger;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +99,7 @@ public class CourseHandoutFragment extends Fragment {
             @Override
             public void onFinish(HandoutModel result) {
                 try {
-                    if(result!=null&&(!result.handouts_html.equalsIgnoreCase(""))){
+                    if(result!=null&&(!TextUtils.isEmpty(result.handouts_html))){
                         hideEmptyHandoutMessage();
                         webview.loadDataWithBaseURL(new Api(context).getBaseUrl(), result.handouts_html,
                                 "text/html",Encoding.UTF_8.toString(),null);

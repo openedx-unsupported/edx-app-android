@@ -62,6 +62,9 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             //check courseData again, it may be fetched from local cache
             if ( courseData != null ) {
                 activityTitle = courseData.getCourse().getName();
+                boolean isAnnouncement = bundle.getBoolean(Router.EXTRA_ANNOUNCEMENTS, false);
+                if ( isAnnouncement )
+                    selectedTab = courseInfoTabIndex;
                 try{
                     segIO.screenViewsTracking(courseData.getCourse().getName());
                 }catch(Exception e){
