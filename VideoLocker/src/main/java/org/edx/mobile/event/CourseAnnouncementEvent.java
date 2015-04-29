@@ -11,6 +11,6 @@ public class CourseAnnouncementEvent extends BaseEvent{
 
     public CourseAnnouncementEvent(EventType type, String courseId){
         this.type = type;
-        this.courseId = courseId;
+        this.courseId = courseId == null ? "" : courseId;
     }
 }

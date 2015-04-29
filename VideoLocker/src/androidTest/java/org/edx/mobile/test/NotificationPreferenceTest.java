@@ -73,9 +73,51 @@ public class NotificationPreferenceTest extends BaseTestCase {
         courseEntryList.add(courseEntry1);
         List<EdxLocalParseChannel> inactiveCourses = pref.filterForInactiveCourses(courseEntryList);
 
+
         assertTrue("filterForInactiveCourses", inactiveCourses.size() == 1 );
 
         assertTrue("filterForInactiveCourses", inactiveCourses.get(0).getCourseId().equals(courseId2));
+
+        List<String> subscribedChannels = pref.getAllSubscribedChannels();
+        assertTrue("getAllSubscribedChannels", subscribedChannels.size() == 1);
+        assertTrue("getAllSubscribedChannels", subscribedChannels.get(0).equals(channelId1));
+
+    }
+
+    public void testFailedOp() throws Exception {
+
+        NotificationPreference pref = new NotificationPreference();
+        EdxLocalParseChannel failedChannel1 = new EdxLocalParseChannel( courseId1, channelId1, true);
+        failedChannel1.setOperationFailed(true);
+        EdxLocalParseChannel failedChannel2 = new EdxLocalParseChannel( courseId1, channelId1, true);
+        failedChannel2.setOperationFailed(true);
+        EdxLocalParseChannel normalChannel1 = new EdxLocalParseChannel( courseId1, channelId1, true);
+
+        pref.add(failedChannel1);
+        pref.add(failedChannel2);
+        pref.add(normalChannel1);
+
+        List<EdxLocalParseChannel> result = pref.getAllFailedUpdate();
+        assertTrue("getAllFailedUpdate", result.size() == 2);
+    }
+
+    public void testMarkFailedOp() throws Exception {
+
+        NotificationPreference pref = new NotificationPreference();
+        EdxLocalParseChannel c1 = new EdxLocalParseChannel( courseId1, channelId1, true);
+         EdxLocalParseChannel c2 = new EdxLocalParseChannel( courseId1, channelId1, true);
+        c2.setOperationFailed(true);
+        EdxLocalParseChannel c3 = new EdxLocalParseChannel( courseId1, channelId1, true);
+
+        pref.add(c1);
+        pref.add(c2);
+        pref.add(c3);
+
+        List<EdxLocalParseChannel> result = pref.getAllFailedUpdate();
+        assertTrue("getAllFailedUpdate", result.size() == 1);
+        pref.markAllFailedUpdate();
+        result = pref.getAllFailedUpdate();
+        assertTrue("markAllFailedUpdate", result.size() == 3);
     }
 
     public void testRemoveOp() throws Exception {

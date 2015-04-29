@@ -16,7 +16,7 @@ public class DummyNotificationDelegate implements NotificationDelegate{
     }
 
     @Override
-    public void syncWithNotificationServer() {
+    public void syncWithServerForFailure() {
 
     }
 
@@ -30,10 +30,6 @@ public class DummyNotificationDelegate implements NotificationDelegate{
 
     }
 
-    @Override
-    public void subscribeAndUnsubscribeToServer(String channel, boolean subscribe) {
-
-    }
 
     @Override
     public boolean isSubscribedByCourseId(String channel){

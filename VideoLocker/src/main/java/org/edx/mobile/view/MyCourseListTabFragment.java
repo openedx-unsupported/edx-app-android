@@ -82,6 +82,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
             @Override
             protected List<EnrolledCoursesResponse> getCourses(Api api) throws Exception {
                 List<EnrolledCoursesResponse> response =  api.getEnrolledCourses();
+                UserNotificationManager.getInstance().syncWithServerForFailure();
                 UserNotificationManager.getInstance().checkCourseEnrollment(response);
                 return response;
             }

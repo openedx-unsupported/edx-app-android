@@ -19,7 +19,7 @@ public interface NotificationDelegate {
 
     //check if local subscribed is not in notification server
     //then try to subscribe it
-    public void syncWithNotificationServer();
+    public void syncWithServerForFailure();
 
     /**
      * sync with current course enrollment.
@@ -36,13 +36,6 @@ public interface NotificationDelegate {
      */
     public void changeNotificationSetting(String courseId, String channelId, boolean subscribe);
 
-
-    /**
-     *
-     * @param channel
-     * @param subscribe
-     */
-    public void subscribeAndUnsubscribeToServer(final String channel, boolean subscribe);
 
     /**
      *
