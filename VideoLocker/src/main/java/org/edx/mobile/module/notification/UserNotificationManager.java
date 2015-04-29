@@ -67,10 +67,14 @@ public class UserNotificationManager {
             return;
         PrefManager.AppInfoPrefManager pmanager =
                 new PrefManager.AppInfoPrefManager(MainApplication.instance());
-        if ( pmanager.isAppUpgradeNeedSyncWithParse() ){
-            pmanager.setAppUpgradeNeedSyncWithParse(false);
-            resubscribeAll();
-        }
+        //TODO - not sure if we need to resync with parse server.
+        //there is a bug that parse server can send duplicated message
+        //if user uninstall and reinstall the app. but we handle it
+        //already by checking the notification-id. 
+//        if ( pmanager.isAppUpgradeNeedSyncWithParse() ){
+//            pmanager.setAppUpgradeNeedSyncWithParse(false);
+//            resubscribeAll();
+//        }
         if ( pmanager.isAppSettingNeedSyncWithParse() ){
             pmanager.setAppSettingNeedSyncWithParse(false);
             ParseHandleHelper.tryToSaveLanguageSetting();
