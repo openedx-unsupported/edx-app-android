@@ -181,7 +181,7 @@ public class MainApplication extends Application{
         }
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         final String languageKey = "preferredLanguage";
-        final String countryKey = "preferredLanguage";
+        final String countryKey =  "preferredCountry";
         String savedPreferredLanguage = installation.getString(languageKey);
         String savedPreferredCountry = installation.getString(countryKey);
         Locale locale = Locale.getDefault();
