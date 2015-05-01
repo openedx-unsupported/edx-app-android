@@ -24,7 +24,7 @@
 
     <declare-styleable name="TitleRowView">
         <attr name="titleFontSize" format="dimension" />
-        <attr name="title" format="string" />
+        <attr name="titleText" format="string" />
         <attr name="decorationStyle" format="enum">
             <enum name="center" value="0"/>
             <enum name="left" value="1"/>

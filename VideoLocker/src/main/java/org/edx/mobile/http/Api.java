@@ -19,7 +19,6 @@ import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthErrorResponse;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ChapterModel;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
@@ -30,7 +29,6 @@ import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
-import org.edx.mobile.model.api.SocialLoginResponse;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -38,10 +36,10 @@ import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
 import org.edx.mobile.model.json.GetGroupMembersResponse;
 import org.edx.mobile.model.json.SuccessResponse;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
@@ -552,12 +550,13 @@ public class Api {
     public ArrayList<VideoResponseModel> getVideosByCourseId(String courseId, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
-        p.putString("format", "json");
         String url = getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
         String json = null;
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
-            json = http.post(url, p, getAuthHeaders());
+            //Change from post to get. as post is not supported
+            //FIXME -  it does not check the return code before it cache the result.
+            json = http.get(url, getAuthHeaders());
             // cache the response
             cache.put(url, json);
         } else {

@@ -28,7 +28,7 @@ public class PathModel implements Serializable {
      * Returns true if this is a VERTICAL.
      * This is not to be used in the mobile app.
      */
-    private boolean isVertical() {
+    public boolean isVertical() {
         return category.equalsIgnoreCase("vertical");
     }
 }

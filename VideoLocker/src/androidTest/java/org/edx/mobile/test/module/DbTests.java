@@ -1,6 +1,6 @@
 package org.edx.mobile.test.module;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
@@ -42,7 +42,7 @@ public class DbTests extends BaseTestCase {
         assertNotNull(rowId);
         assertTrue("Row Id must be non zero positive number", rowId > 0);
 
-        IVideoModel video = db.getVideoEntryByVideoId(videoId, null);
+        VideoModel video = db.getVideoEntryByVideoId(videoId, null);
         assertNotNull("Shoud have got one video object", video);
 
         Integer count = db.deleteVideoByVideoId(video, null);
@@ -73,12 +73,12 @@ public class DbTests extends BaseTestCase {
     }
 
     public void testPrintTable() throws Exception {
-        db.getAllVideos("shahid", new DataCallback<List<IVideoModel>>() {
+        db.getAllVideos("shahid", new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 print( "got results for all videos");
-                for (IVideoModel v : result) {
+                for (VideoModel v : result) {
                     print( v.getTitle());
                     print( "ID : " + v.getVideoId()+ " isDownloaded : "
                             + v.getDownloadedStateOrdinal());
@@ -98,9 +98,9 @@ public class DbTests extends BaseTestCase {
     public void testgetVideoEntryByVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoid="videoid";
-        db.getVideoEntryByVideoId(videoid, new DataCallback<IVideoModel>() {
+        db.getVideoEntryByVideoId(videoid, new DataCallback<VideoModel>() {
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertTrue(result == null);
                 print( "result for get VideoEntryByVideoId is:" + result);
                 unlock();
@@ -118,10 +118,10 @@ public class DbTests extends BaseTestCase {
         de.videoId="videoid";
         db.addVideoData(de, null);
 
-        db.getVideoEntryByVideoId(videoid, new DataCallback<IVideoModel>() {
+        db.getVideoEntryByVideoId(videoid, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertTrue(result != null);
                 print( "result for get VideoEntryByVideoId in AssertTrue:" + result);
                 unlock();
@@ -314,10 +314,10 @@ public class DbTests extends BaseTestCase {
 
     public void testgetAllDeactivatedVideos() throws Exception {
         db.clearDataByUser(username);
-        db.getAllDeactivatedVideos(new DataCallback<List<IVideoModel>>() {
+        db.getAllDeactivatedVideos(new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 //assertNotNull(result);
                 assertTrue(result.isEmpty());
                 print( "Result for getAllDeactivatedVideos for size 0 is" + result);
@@ -334,10 +334,10 @@ public class DbTests extends BaseTestCase {
         de.isCourseActive = 0; // inactive video
         db.addVideoData(de, null);
 
-        db.getAllDeactivatedVideos(new DataCallback<List<IVideoModel>>() {
+        db.getAllDeactivatedVideos(new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue("result size = " + result.size(), result.size() == 1);
                 print( "Result for getAllDeactivatedVideos for size 1 is" + result.toString());
@@ -925,10 +925,10 @@ public class DbTests extends BaseTestCase {
         String videoId = "videoId";
         //  String videoId = "videoId-" + System.currentTimeMillis();
 
-        db.getVideoEntryByVideoId(videoId, new DataCallback<IVideoModel>() {
+        db.getVideoEntryByVideoId(videoId, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertTrue(result == null);
                 print("Result for Video Entry By VideoId= "+ result);
                 unlock();
@@ -945,10 +945,10 @@ public class DbTests extends BaseTestCase {
         //      de.videoId = "videoId-" + System.currentTimeMillis();
         de.videoId="videoId";
         db.addVideoData(de, null);
-        db.getVideoEntryByVideoId(videoId, new DataCallback<IVideoModel>() {
+        db.getVideoEntryByVideoId(videoId, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertTrue(result != null);
                 print("Result for Video Entry By VideoId in AssertTrue= "+ result.getVideoId());
                 unlock();
@@ -1102,13 +1102,13 @@ public class DbTests extends BaseTestCase {
 
     public void testgetListOfOngoingDownloads() throws Exception {
         db.clearDataByUser(username);
-        db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
+        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue(result.size() == 0);
-                for (IVideoModel model : result) {
+                for (VideoModel model : result) {
                     print( model.getChapterName());
                     print( "ID : " + model.getVideoId());
                     print( "result for get ListOfOngoingDownloads is:"
@@ -1127,13 +1127,13 @@ public class DbTests extends BaseTestCase {
         lock();
         DownloadEntry de=getDummyVideoModel();
         db.addVideoData(de, null);
-        db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
+        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue(result.size() == 1);
-                for (IVideoModel model : result) {
+                for (VideoModel model : result) {
                     print( model.getChapterName());
                     print( "ID : " + model.getVideoId());
                     print( "result for get ListOfOngoingDownloads is:"
@@ -1309,10 +1309,10 @@ public class DbTests extends BaseTestCase {
     public void testgetIVideoModelByVideoUrl() throws Exception {
         db.clearDataByUser(username);
         final String videoUrl ="url";
-        db.getIVideoModelByVideoUrl(videoUrl, new DataCallback<IVideoModel>() {
+        db.getIVideoModelByVideoUrl(videoUrl, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertNull("result should be null", result);
                 unlock();
             }
@@ -1327,10 +1327,10 @@ public class DbTests extends BaseTestCase {
         DownloadEntry de=getDummyVideoModel();
         de.url="http://fake/url";
         db.addVideoData(de, null);
-        db.getIVideoModelByVideoUrl(de.url, new DataCallback<IVideoModel>() {
+        db.getIVideoModelByVideoUrl(de.url, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertNotNull(result);
                 print( "VideoModel  present for url= "+ result.getVideoUrl());
                 unlock();
@@ -1435,10 +1435,10 @@ public class DbTests extends BaseTestCase {
 
     public void testgetAllVideos() throws Exception {
         db.clearDataByUser(username);
-        db.getAllVideos(username, new DataCallback<List<IVideoModel>>() {
+        db.getAllVideos(username, new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue("there should not be any video present in cleared database", result.size()==0);
                 unlock();
@@ -1453,10 +1453,10 @@ public class DbTests extends BaseTestCase {
         lock();
         DownloadEntry de=getDummyVideoModel();
         db.addVideoData(de, null);
-        db.getAllVideos(username, new DataCallback<List<IVideoModel>>() {
+        db.getAllVideos(username, new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue(result.size() == 1);
                 // assertFalse("something is downloading", result);
@@ -1476,10 +1476,10 @@ public class DbTests extends BaseTestCase {
     public void testgetDownloadEntryByDmId() throws Exception {
         db.clearDataByUser(username);
         long dmId=1;
-        db.getDownloadEntryByDmId(dmId, new DataCallback<IVideoModel>() {
+        db.getDownloadEntryByDmId(dmId, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertNull("result should be null", result);
                 unlock();
 
@@ -1495,10 +1495,10 @@ public class DbTests extends BaseTestCase {
         DownloadEntry de=getDummyVideoModel();
         de.dmId=1;
         db.addVideoData(de, null);
-        db.getDownloadEntryByDmId(de.dmId, new DataCallback<IVideoModel>() {
+        db.getDownloadEntryByDmId(de.dmId, new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertTrue(result!=null);
                 print( "result for getDownloadEntryByDmId for not null is:" + result);
                 unlock();
@@ -1599,10 +1599,10 @@ public class DbTests extends BaseTestCase {
     public void testgetVideoByVideoUrl() throws Exception {
         db.clearDataByUser(username);
         String videoUrl="url";
-        db.getVideoByVideoUrl(videoUrl,new DataCallback<IVideoModel>() {
+        db.getVideoByVideoUrl(videoUrl,new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertNull("result should be null", result);
                 unlock();
             }
@@ -1617,10 +1617,10 @@ public class DbTests extends BaseTestCase {
         DownloadEntry de=getDummyVideoModel();
         de.url="http://fake/url";
         db.addVideoData(de, null);
-        db.getVideoByVideoUrl(de.url,new DataCallback<IVideoModel>() {
+        db.getVideoByVideoUrl(de.url,new DataCallback<VideoModel>() {
 
             @Override
-            public void onResult(IVideoModel result) {
+            public void onResult(VideoModel result) {
                 assertNotNull(result);
                 //assertTrue(result == 1);
                 print("Result for getVideoByVideoUrl for not null:"+ result);
@@ -1639,10 +1639,10 @@ public class DbTests extends BaseTestCase {
     public void testgetDownloadedVideoListForCourse() throws Exception {
         db.clearDataByUser(username);
         String courseId="courseId";
-        db.getDownloadedVideoListForCourse(courseId, new DataCallback<List<IVideoModel>>() {
+        db.getDownloadedVideoListForCourse(courseId, new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue(result.isEmpty());
                 print( "Result for getDownloadedVideoListForCourse for size 0 is" + result);
@@ -1660,10 +1660,10 @@ public class DbTests extends BaseTestCase {
         de.downloaded = DownloadedState.DOWNLOADED;
         db.addVideoData(de, null);
 
-        db.getDownloadedVideoListForCourse(de.eid, new DataCallback<List<IVideoModel>>() {
+        db.getDownloadedVideoListForCourse(de.eid, new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 assertNotNull(result);
                 assertTrue("result size = " + result.size(), result.size() == 1);
                 print( "Result for getAllDeactivatedVideos for size 1 is" + result.toString());

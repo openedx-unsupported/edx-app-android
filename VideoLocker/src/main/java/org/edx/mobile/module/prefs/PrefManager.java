@@ -281,6 +281,19 @@ public class PrefManager {
         }
     }
 
+    public static class UserPrefManager extends PrefManager {
+
+        public UserPrefManager(Context context) {
+            super(context, Pref.USER_PREF);
+        }
+
+        public boolean isUserPrefVideoModel(){
+            return getBoolean(Key.UserPrefVideoModel, false);
+        }
+        public void setUserPrefVideoModel(boolean enabled){
+            super.put(Key.UserPrefVideoModel, enabled);
+        }
+    }
     /**
      * Contains preference name constants.
      *
@@ -291,6 +304,8 @@ public class PrefManager {
         public static final String VIDEOS = "pref_videos";
         public static final String FEATURES = "features";
         public static final String APP_INFO = "pref_app_info";
+        public static final String USER_PREF = "pref_user";
+
     }
     
     /**
@@ -322,6 +337,9 @@ public class PrefManager {
         public static final String AppNotificationPushHash = "AppNotificationPushHash";
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
+        public static final String UserPrefVideoModel = "UserPrefVideoModel";
+
+
 
     }
     

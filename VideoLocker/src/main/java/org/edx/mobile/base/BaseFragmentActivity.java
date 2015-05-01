@@ -3,22 +3,17 @@ package org.edx.mobile.base;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -280,18 +275,20 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
 
-            /* This is commented because of issue on 4.4 devices on Action Bar
-             R.string.label_my_courses, // nav drawer open - description for accessibility
-             R.string.label_my_courses // nav drawer close - description for accessibility
+            /*
+             * we want to disable the animation for ActionBarDrawerToggle V7
+             *  http://stackoverflow.com/questions/27117243/disable-hamburger-to-back-arrow-animation-on-toolbar
              */
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, //nav menu toggle icon
-                    0,0) {
+                R.string.label_close,  R.string.label_close ) {
                 public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
                     invalidateOptionsMenu();
                 }
 
                 public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    super.onDrawerSlide(drawerView,0);
                     Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
                     if(frag==null){
                         getSupportFragmentManager().beginTransaction()
@@ -299,6 +296,10 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                                 .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
                     }
                     invalidateOptionsMenu();
+                }
+
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    super.onDrawerSlide(drawerView, 0); // this disables the animation
                 }
             };
             mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -317,6 +318,17 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        createOptionMenu(menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     * TODO - we will refactor the base class, so we can use onCreateOptionsMenu()
+     * directly
+     * @param menu
+     * @return
+     */
+    protected boolean createOptionMenu(Menu menu){
         // inflate menu from xml
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);

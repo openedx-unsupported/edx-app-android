@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'org.yaml:snakeyaml:1.14'
 
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.2.0'
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
         classpath 'io.fabric.tools:gradle:1.+'
@@ -64,7 +64,7 @@ class AndroidHelper {
                 def crashlyticsFile = project.file('crashlytics.properties')
                 def writer = new FileWriter(crashlyticsFile)
                 writer.write(
-"""
+                        """
 apiSecret=$fabric_secret
 apiKey=$fabric_key
 """)
@@ -85,6 +85,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.phrase:phrase:1.0.3'
+    compile 'com.android.support:support-v4:21.1.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
 
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
@@ -99,6 +101,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
 
     // test project configuration
+     testCompile 'junit:junit:4.12'
+     testCompile ("org.mockito:mockito-core:1.9.5"){
+         exclude group: 'org.hamcrest'
+      }
+
     androidTestCompile("org.mockito:mockito-core:1.9.5") {
         exclude group: 'org.hamcrest'
     }
@@ -108,8 +115,8 @@ dependencies {
 }
 
 configurations {
-    // to avoid double inclusion of support libraries
-    all*.exclude group: 'com.android.support', module: 'support-v4'
+    // I believe it was a wrong configuration at project level before.
+   // all*.exclude group: 'com.android.support', module: 'support-v4'
 }
 
 android {
@@ -123,16 +130,16 @@ android {
         }
     }
 
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
-        targetSdkVersion 21
-        versionCode 68
-        versionName "1.0.07"
+        targetSdkVersion 22
+        versionCode 71
+        versionName "1.0.09"
 
         renderscriptTargetApi 18
         renderscriptSupportModeEnabled true
@@ -201,6 +208,7 @@ android {
         exclude 'LICENSE.txt'
         exclude 'APK LICENSE.txt'
     }
+ 
 }
 
 
@@ -218,7 +226,7 @@ android.applicationVariants.all { variant ->
     generateTask.dependsOn(configureTask)
 
     tasks.all {task ->
-        if(task.name.startsWith("fabric")) {
+        if (task.name.startsWith("fabric")) {
             task.mustRunAfter(configureTask)
         }
     }

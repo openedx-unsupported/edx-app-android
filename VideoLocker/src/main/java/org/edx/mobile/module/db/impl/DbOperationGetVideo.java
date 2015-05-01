@@ -2,12 +2,11 @@ package org.edx.mobile.module.db.impl;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 
-class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
+class DbOperationGetVideo extends DbOperationSelect<VideoModel> {
     
     DbOperationGetVideo(boolean distinct, String table, String[] columns,
             String whereClause, String[] whereArgs, String orderBy) {
@@ -15,8 +14,8 @@ class DbOperationGetVideo extends DbOperationSelect<IVideoModel> {
     }
     
     @Override
-    public IVideoModel execute(SQLiteDatabase db) {
-        IVideoModel video = null;
+    public VideoModel execute(SQLiteDatabase db) {
+        VideoModel video = null;
         
         Cursor c = getCursor(db);
         if (c.moveToFirst()) {

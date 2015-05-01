@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+     <item android:id="@+id/change_mode_video_only"
+              android:icon="@drawable/change_mode"
+              android:title="Video Only"
+              android:orderInCategory="100" />
+    <item android:id="@+id/change_mode_full_mode"
+          android:icon="@drawable/change_mode"
+          android:title="Course View Mode"
+          android:orderInCategory="100"/>
+</menu>

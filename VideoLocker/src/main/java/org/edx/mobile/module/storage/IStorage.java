@@ -1,7 +1,7 @@
 package org.edx.mobile.module.storage;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -18,7 +18,7 @@ public interface IStorage {
      * @param model
      * @return row id updated in the Database (0 if not added to download)
      */
-    long addDownload(IVideoModel model);
+    long addDownload(VideoModel model);
     
     /**
      * Removes a Video from the database as well as NativeDownloadManager 
@@ -26,7 +26,7 @@ public interface IStorage {
      * @param model
      * @return no of entries that were marked as deleted or removed
      */
-    int removeDownload(IVideoModel model);
+    int removeDownload(VideoModel model);
     
 
     /**
@@ -71,7 +71,7 @@ public interface IStorage {
      * @param vrm - VideoResponseModel
      * @return
      */
-    IVideoModel getDownloadEntryfromVideoResponseModel(VideoResponseModel vrm);
+    VideoModel getDownloadEntryfromVideoResponseModel(VideoResponseModel vrm);
 
     /**
      * Returns NativeDownload Entry for the given DMID
@@ -123,7 +123,7 @@ public interface IStorage {
      * @param dmId - DownloadModule ID
      * @param callback
      */
-    void markDownloadAsComplete(long dmId, DataCallback<IVideoModel> callback);
+    void markDownloadAsComplete(long dmId, DataCallback<VideoModel> callback);
 
     /**
      * Marks given video as WatchedState.PARTIALLY_WATCHED if it is WatchedState.WATCHED.

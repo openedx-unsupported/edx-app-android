@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -41,9 +41,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
                     // mark download as completed
                     IStorage storage = new Storage(context);
-                    storage.markDownloadAsComplete(id, new DataCallback<IVideoModel>() {
+                    storage.markDownloadAsComplete(id, new DataCallback<VideoModel>() {
                         @Override
-                        public void onResult(IVideoModel result) {
+                        public void onResult(VideoModel result) {
                             if(result!=null){
                                 DownloadEntry download = (DownloadEntry) result;
                                 

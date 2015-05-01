@@ -8,6 +8,7 @@ import org.edx.mobile.util.Config;
 
 import java.util.ArrayList;
 
+
 /**
  * Created by aleffert on 2/6/15.
  */

@@ -4,11 +4,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/grey_act_background"
                 android:orientation="vertical" >
-    <View
-        android:id="@+id/offline_bar"
-        style="@style/offline_bar_style"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"/>
+
 
     <org.edx.mobile.view.custom.CourseImageHeader
         android:id="@+id/header_image_view"
@@ -67,15 +63,6 @@
             />
 
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/progress_spinner"
-        style="@style/api_progress_style"
-        android:visibility="gone" />
-
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/offline_mode_message"
-        style="@style/offline_mode_message"/>
 
 </LinearLayout>
 

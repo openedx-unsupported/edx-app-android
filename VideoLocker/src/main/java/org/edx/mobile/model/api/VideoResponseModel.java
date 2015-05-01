@@ -2,6 +2,8 @@ package org.edx.mobile.model.api;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
 
+import java.util.List;
+
 
 @SuppressWarnings("serial")
 public class VideoResponseModel implements SectionItemInterface {
@@ -11,6 +13,7 @@ public class VideoResponseModel implements SectionItemInterface {
     private String courseId;
     public String section_url;
     public String unit_url;
+    private List<String> named_path;
 
     /**
      * Returns chapter object of this model. The chapter object is found
@@ -43,6 +46,17 @@ public class VideoResponseModel implements SectionItemInterface {
 
         for (int i = 0; i < path.length; i++) {
             if (path[i].isSequential())
+                return path[i];
+        }
+        return null;
+    }
+
+    public PathModel getVertical() {
+        // not being depend on array index
+        // check if the object is really a section object
+
+        for (int i = 0; i < path.length; i++) {
+            if (path[i].isVertical())
                 return path[i];
         }
         return null;
@@ -108,5 +122,12 @@ public class VideoResponseModel implements SectionItemInterface {
     public String getSequentialName() {
         return getSection().name;
     }
-    
+
+    public List<String> getNamed_path() {
+        return named_path;
+    }
+
+    public void setNamed_path(List<String> named_path) {
+        this.named_path = named_path;
+    }
 }

@@ -3,13 +3,13 @@ package org.edx.mobile.module.db.impl;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class DbOperationGetVideos extends DbOperationSelect<List<IVideoModel>> {
+class DbOperationGetVideos extends DbOperationSelect<List<VideoModel>> {
     
     DbOperationGetVideos(boolean distinct, String table, String[] columns,
             String whereClause, String[] whereArgs, String orderBy) {
@@ -17,13 +17,13 @@ class DbOperationGetVideos extends DbOperationSelect<List<IVideoModel>> {
     }
     
     @Override
-    public List<IVideoModel> execute(SQLiteDatabase db) {
-        List<IVideoModel> list = new ArrayList<IVideoModel>();
+    public List<VideoModel> execute(SQLiteDatabase db) {
+        List<VideoModel> list = new ArrayList<VideoModel>();
         
         Cursor c = getCursor(db);
         if (c.moveToFirst()) {
             do {
-                IVideoModel video = DatabaseModelFactory.getModel(c);
+                VideoModel video = DatabaseModelFactory.getModel(c);
                 list.add(video);
             } while (c.moveToNext());
         }

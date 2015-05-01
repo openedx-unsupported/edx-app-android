@@ -1,6 +1,6 @@
 package org.edx.mobile.module.db;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
@@ -54,7 +54,7 @@ public interface IDatabase {
      * Returns all Deactivated videos for logged in user
      * @param callback
      */
-    public List<IVideoModel> getAllDeactivatedVideos(DataCallback<List<IVideoModel>> callback);
+    public List<VideoModel> getAllDeactivatedVideos(DataCallback<List<VideoModel>> callback);
     
     
     /**
@@ -170,22 +170,22 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    public Long addVideoData(IVideoModel de, DataCallback<Long> callback);
+    public Long addVideoData(VideoModel de, DataCallback<Long> callback);
     
     /**
      * Returns VideoEntry for the passed VideoId
      * @param videoId
      * @param callback
      */
-    public IVideoModel getVideoEntryByVideoId(String videoId, DataCallback<IVideoModel> callback);
+    public VideoModel getVideoEntryByVideoId(String videoId, DataCallback<VideoModel> callback);
     
     /**
-     * Returns {@link IVideoModel} which is downloaded or download is in progress for given videoUrl.
+     * Returns {@link org.edx.mobile.model.VideoModel} which is downloaded or download is in progress for given videoUrl.
      * @param videoUrl
      * @param callback
      * @return
      */
-    IVideoModel getVideoByVideoUrl(String videoUrl, DataCallback<IVideoModel> callback);
+    VideoModel getVideoByVideoUrl(String videoUrl, DataCallback<VideoModel> callback);
     
     
     /**
@@ -197,7 +197,7 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    Integer deleteVideoByVideoId(IVideoModel de, DataCallback<Integer> callback);
+    Integer deleteVideoByVideoId(VideoModel de, DataCallback<Integer> callback);
     
     
     /**
@@ -213,7 +213,7 @@ public interface IDatabase {
      * @param model
      * @param callback
      */
-    public Integer updateDownloadingVideoInfoByVideoId(IVideoModel model, 
+    public Integer updateDownloadingVideoInfoByVideoId(VideoModel model,
             DataCallback<Integer> callback);
     
     /**
@@ -221,14 +221,14 @@ public interface IDatabase {
      * @param model
      * @param callback
      */
-    public Integer updateAsDownloadingByVideoId(IVideoModel model, 
+    public Integer updateAsDownloadingByVideoId(VideoModel model,
             DataCallback<Integer> callback);
     
     /**
      * Returns list of All VideoEntries which are currently being downloaded
      * @return
      */
-    public List<IVideoModel> getListOfOngoingDownloads(DataCallback<List<IVideoModel>> callback);
+    public List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
     
     
     /**
@@ -251,8 +251,8 @@ public interface IDatabase {
      * @param courseId
      * @param callback
      */
-    public List<IVideoModel> getDownloadedVideoListForCourse(String courseId, 
-            DataCallback<List<IVideoModel>> callback);
+    public List<VideoModel> getDownloadedVideoListForCourse(String courseId,
+            DataCallback<List<VideoModel>> callback);
     
     
     /**
@@ -266,8 +266,8 @@ public interface IDatabase {
      * Returns IVideoModel object if entry exists with Video status set as 
      * downloaded with the given URL
      */
-    public IVideoModel getIVideoModelByVideoUrl(String videoUrl,
-            DataCallback<IVideoModel> callback);
+    public VideoModel getIVideoModelByVideoUrl(String videoUrl,
+            DataCallback<VideoModel> callback);
     
     
     /**
@@ -286,13 +286,13 @@ public interface IDatabase {
      * @return
      */
     public Integer updateDownloadCompleteInfoByDmId(long dmId, 
-            IVideoModel de, DataCallback<Integer> callback);
+            VideoModel de, DataCallback<Integer> callback);
 
     /**
      * Returns list of all videos from the database.
      * @return
      */
-    List<IVideoModel> getAllVideos(String username, DataCallback<List<IVideoModel>> DataCallback);
+    List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
 
     /**
      * Removes all records of given username from the datbase.
@@ -322,13 +322,13 @@ public interface IDatabase {
      * @param callback
      * @return
      */
-    IVideoModel getDownloadEntryByDmId(long dmId, DataCallback<IVideoModel> callback);
+    VideoModel getDownloadEntryByDmId(long dmId, DataCallback<VideoModel> callback);
     
     /**
      * This function is used to getting all sorted Downloads based on Download date
      */
-    public List<IVideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-            DataCallback<List<IVideoModel>> callback);
+    public List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
+            DataCallback<List<VideoModel>> callback);
     
     /**
      * This method gives the WatchedState stored in the DB for VideoID

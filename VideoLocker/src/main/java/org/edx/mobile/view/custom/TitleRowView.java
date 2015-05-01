@@ -45,7 +45,7 @@ public class TitleRowView extends LinearLayout {
         if (isInEditMode()){return;}
 
         TypedArray attrArray = context.obtainStyledAttributes(attrs, styleable.TitleRowView);
-        String title = attrArray.getString(styleable.TitleRowView_title);
+        String title = attrArray.getString(styleable.TitleRowView_titleText);
         float fontSize = attrArray.getDimension(styleable.TitleRowView_titleFontSize, 12.0f);
         DecorationStyle decorationStyle =DecorationStyle.values()[attrArray.getInt(styleable.TitleRowView_decorationStyle, DecorationStyle.CENTER.ordinal())];
         int textColor = attrArray.getColor(styleable.TitleRowView_android_textColor, Color.BLACK);

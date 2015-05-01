@@ -17,7 +17,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
         
     </style>
-    
+
     <!-- A theme for a custom dialog appearance. -->
     <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
         
@@ -72,7 +72,7 @@
     <style name="blue_bar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
-        <item name="android:background">@color/blue_bar</item>
+        <item name="android:background">@color/brand_primary_accent</item>
     </style>
 
     <style name="course_detail_style">
@@ -96,6 +96,10 @@
         <item name="android:background">@drawable/spinner_selector</item>
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarItemBackground">@color/brand_primary_accent</item>
     </style>
 
 </resources>

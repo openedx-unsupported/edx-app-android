@@ -4,25 +4,23 @@ import android.content.Context;
 
 import org.edx.mobile.model.api.LatestUpdateModel;
 
+import java.util.List;
+
 /*
  * TODO: models to be refactored in GA+1
  */
-public interface ICourse {
-    LatestUpdateModel getLatest_updates();
+public interface ICourse extends IComponent{
+    LatestUpdateModel getLatestUpdateModel();
 
     String getStart();
 
-    String getCourse_image(Context context);
+    String getCourseImage();
 
     String getEnd();
 
-    String getName();
-
     String getOrg();
 
-    String getVideo_outline();
-
-    String getId();
+    String getVideoOutline();
 
     String getNumber();
 
@@ -32,11 +30,15 @@ public interface ICourse {
 
     boolean hasUpdates();
 
-    String getCourse_about();
+    String getCourseAbout();
 
-    String getCourse_updates();
+    String getCourseUpdates();
 
-    String getCourse_handouts();
+    String getCourseHandout();
 
-    String getSubscription_id();
+    String getSubscriptionId();
+
+    public IChapter getChapterById(String cid);
+
+    public List<IChapter> getChapters();
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.edx.mobile.view.custom.ETextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_header"
+    style="@style/regular_grey_text"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/row_height_cc_option"
+    android:gravity="center_vertical|start"
+    android:background="@color/grey_3"
+    android:padding="10dp" />
