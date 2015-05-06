@@ -24,7 +24,6 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Environment;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
