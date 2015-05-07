@@ -20,12 +20,65 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="1"
             android:id="@+id/fragment_container"
             android:layout_below="@id/offline_bar">
 
         </RelativeLayout>
 
+        <LinearLayout android:orientation="horizontal"
+                      android:gravity="center"
+                      android:id="@+id/course_unit_nav_bar"
+                      android:measureWithLargestChild="true"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@drawable/rectangle_with_top_border"
+                      android:visibility="gone"
+                      android:layout_weight="0">
+            <Button android:id="@+id/goto_prev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/brand_primary_accent"
+                    android:background="@color/white"
+                    android:text="@string/assessment_previous">
+            </Button>
+            <LinearLayout android:orientation="vertical"
+                          android:gravity="center"
+                          android:id="@+id/new_unit_reminder"
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:layout_margin="5dp"
+                          android:visibility="gone">
+                <TextView
+                    android:id="@+id/next_unit_title"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/grey_4"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/next_unit_marker"
+                    android:layout_width="wrap_content"
+                    android:textColor="@color/grey_4"
+                    android:text="@string/assessment_next_unit"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:layout_weight="1"/>
+
+            <Button android:id="@+id/goto_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/white"
+                    android:textColor="@color/brand_primary_accent"
+                    android:text="@string/assessment_next">
+            </Button>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_spinner"

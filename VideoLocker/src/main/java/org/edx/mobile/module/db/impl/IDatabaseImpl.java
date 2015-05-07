@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import java.util.List;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
@@ -74,7 +74,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public List<IVideoModel> getAllDeactivatedVideos(final DataCallback<List<IVideoModel>> callback) {
+    public List<VideoModel> getAllDeactivatedVideos(final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.IS_COURSE_ACTIVE + "=? AND "+ DbStructure.Column.USERNAME + "=? " , 
                 new String[] { "0", username}, null);
@@ -244,8 +244,8 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public Long addVideoData(final IVideoModel de, final DataCallback<Long> callback) {
-        IVideoModel result = getVideoEntryByVideoId(de.getVideoId(), null);
+    public Long addVideoData(final VideoModel de, final DataCallback<Long> callback) {
+        VideoModel result = getVideoEntryByVideoId(de.getVideoId(), null);
         if (result == null) {
             ContentValues values = new ContentValues();
             values.put(DbStructure.Column.USERNAME, username);
@@ -288,7 +288,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
      * @param videoId
      * @return
      */
-    public IVideoModel getVideoEntryByVideoId(String videoId, final DataCallback<IVideoModel> callback) {
+    public VideoModel getVideoEntryByVideoId(String videoId, final DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.VIDEO_ID + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
                 new String[] { videoId, username}, null);
@@ -297,8 +297,8 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public IVideoModel getVideoByVideoUrl(String videoUrl,
-            DataCallback<IVideoModel> callback) {
+    public VideoModel getVideoByVideoUrl(String videoUrl,
+            DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.URL + "=? AND "+DbStructure.Column.DOWNLOADED + "!=? AND "
                 + DbStructure.Column.USERNAME + "=?" ,
@@ -308,7 +308,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer deleteVideoByVideoId(IVideoModel video, DataCallback<Integer> callback) {
+    public Integer deleteVideoByVideoId(VideoModel video, DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.DOWNLOADED, DownloadedState.ONLINE.ordinal());
         values.put(DbStructure.Column.DM_ID, -1);
@@ -334,7 +334,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public Integer updateDownloadingVideoInfoByVideoId(IVideoModel model, 
+    public Integer updateDownloadingVideoInfoByVideoId(VideoModel model,
             DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.DM_ID, model.getDmId());
@@ -353,7 +353,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public Integer updateAsDownloadingByVideoId(IVideoModel model, 
+    public Integer updateAsDownloadingByVideoId(VideoModel model,
             DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.DM_ID, model.getDmId());
@@ -367,7 +367,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<IVideoModel> getListOfOngoingDownloads(final DataCallback<List<IVideoModel>> callback) {
+    public List<VideoModel> getListOfOngoingDownloads(final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?", 
                 new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username}, null);
@@ -400,7 +400,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public List<IVideoModel> getDownloadedVideoListForCourse(String courseId, final DataCallback<List<IVideoModel>> callback){
+    public List<VideoModel> getDownloadedVideoListForCourse(String courseId, final DataCallback<List<VideoModel>> callback){
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND " 
                         + DbStructure.Column.USERNAME + "=?", 
@@ -427,8 +427,8 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
 
     @Override
-    public List<IVideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-            DataCallback<List<IVideoModel>> callback) {
+    public List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
+            DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND " 
                         + DbStructure.Column.USERNAME + "=?", 
@@ -440,8 +440,8 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public IVideoModel getIVideoModelByVideoUrl(String videoUrl,
-            final DataCallback<IVideoModel> callback) {
+    public VideoModel getIVideoModelByVideoUrl(String videoUrl,
+            final DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.URL + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
                 new String[] { videoUrl, username}, null);
@@ -460,7 +460,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public Integer updateDownloadCompleteInfoByDmId(long dmId, 
-            IVideoModel model, DataCallback<Integer> callback) {
+            VideoModel model, DataCallback<Integer> callback) {
         ContentValues values = new ContentValues();
         values.put(DbStructure.Column.SIZE, model.getSize());
         values.put(DbStructure.Column.DURATION, model.getDuration());
@@ -481,7 +481,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public List<IVideoModel> getAllVideos(String username, final DataCallback<List<IVideoModel>> callback) {
+    public List<VideoModel> getAllVideos(String username, final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.USERNAME + "=?", new String[] { username }, null);
         op.setCallback(callback);
@@ -541,8 +541,8 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     }
 
     @Override
-    public IVideoModel getDownloadEntryByDmId(long dmId,
-            DataCallback<IVideoModel> callback) {
+    public VideoModel getDownloadEntryByDmId(long dmId,
+            DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.DM_ID + "=? AND "+ DbStructure.Column.DOWNLOADED + "=?" , 
                 new String[] { String.valueOf(dmId), String.valueOf(DownloadedState

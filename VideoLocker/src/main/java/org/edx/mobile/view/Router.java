@@ -7,13 +7,14 @@ import android.os.Bundle;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.LogoutEvent;
+import org.edx.mobile.model.ISequential;
+import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 
 import de.greenrobot.event.EventBus;
 
@@ -26,7 +27,9 @@ public class Router {
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_ENROLLMENT = "enrollment";
-
+    public static final String EXTRA_SEQUENTIAL = "sequential";
+    public static final String EXTRA_COURSE_OUTLINE = "cousrseoutline";
+    public static final String EXTRA_COURSE_UNIT = "cousrseunit";
     static private Router sInstance;
 
     // Note that this is not thread safe. The expectation is that this only happens
@@ -148,23 +151,43 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-
-    /**
-     * FIXME - it will bring to different view in the future
-     * @param activity
-     * @param model
-     */
-    public void showCourseAssessment(Activity activity, EnrolledCoursesResponse model ) {
+    public void showCourseChapterOutline(Activity activity, EnrolledCoursesResponse model ) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, false);
 
-        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
     }
+
+    public void showCourseSequentialDetail(Activity activity, EnrolledCoursesResponse model,
+                                           ISequential sequential ) {
+
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_SEQUENTIAL, sequential);
+
+        Intent courseDetail = new Intent(activity, CourseSequentialOutlineActivity.class);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
+    public void showCourseUnitDetail(Activity activity, EnrolledCoursesResponse model,
+                                           IUnit unit ) {
+
+        Bundle courseBundle = new Bundle();
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_COURSE_UNIT, unit);
+
+        Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);
+        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(courseDetail);
+    }
+
 
     public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
                                      boolean announcements) {

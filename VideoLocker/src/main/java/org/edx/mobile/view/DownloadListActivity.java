@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.edx.mobile.R;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
@@ -16,7 +16,6 @@ import org.edx.mobile.view.adapters.DownloadEntryAdapter;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -103,11 +102,11 @@ public class DownloadListActivity extends BaseFragmentActivity {
         adapter.setStore(storage);
         downloadListView.setAdapter(adapter);
         final ArrayList<DownloadEntry> list = new ArrayList<DownloadEntry>();
-        db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
+        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 if(result!=null){
-                    for(IVideoModel de : result){
+                    for(VideoModel de : result){
                         list.add((DownloadEntry) de);
                     }
                     adapter.setItems(list);

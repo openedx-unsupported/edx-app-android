@@ -7,7 +7,7 @@ import android.media.MediaMetadataRetriever;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
@@ -56,12 +56,12 @@ public class Storage implements IStorage {
         this.dm = DownloadFactory.getInstance(context);
     }
 
-    public long addDownload(IVideoModel model) {
+    public long addDownload(VideoModel model) {
         if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
             return -1;
         }
 
-        IVideoModel videoByUrl = db.getVideoByVideoUrl(model.getVideoUrl(), null);
+        VideoModel videoByUrl = db.getVideoByVideoUrl(model.getVideoUrl(), null);
 
         db.addVideoData(model, null);
 
@@ -114,7 +114,7 @@ public class Storage implements IStorage {
         return model.getDmId();
     }
 
-    public int removeDownload(IVideoModel model) {
+    public int removeDownload(VideoModel model) {
         int count = db.getVideoCountByVideoUrl(model.getVideoUrl(), null);
         if (count <= 1) {
             // if only one video exists, then mark it as DELETED
@@ -193,10 +193,10 @@ public class Storage implements IStorage {
     @Override
     public void getAverageDownloadProgress(final DataCallback<Integer> callback) {
         IDatabase db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-        db.getListOfOngoingDownloads(new DataCallback<List<IVideoModel>>() {
+        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
 
             @Override
-            public void onResult(List<IVideoModel> result) {
+            public void onResult(List<VideoModel> result) {
                 long[] dmids = new long[result.size()];
                 for (int i=0; i< result.size(); i++) {
                     dmids[i] = result.get(i).getDmId();
@@ -237,9 +237,9 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public IVideoModel getDownloadEntryfromVideoResponseModel(
+    public VideoModel getDownloadEntryfromVideoResponseModel(
             VideoResponseModel vrm) {
-        IVideoModel video = db.getVideoEntryByVideoId(vrm.getSummary().getId(), null);
+        VideoModel video = db.getVideoEntryByVideoId(vrm.getSummary().getId(), null);
         if (video != null) {
             // we have a db entry, so return it
             return video;
@@ -292,14 +292,14 @@ public class Storage implements IStorage {
             }else{
                 for (final EnrolledCoursesResponse course : courseList) {
                     // add all videos to the list for this course
-                    List<IVideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
+                    List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
                             course.getCourse().getId(), null);
 
                     // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
                     if (videos != null && videos.size() > 0) {
                         // add course header to the list
                         recentVideolist.add(course);
-                        for (IVideoModel videoModel : videos) {
+                        for (VideoModel videoModel : videos) {
                             //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
                             recentVideolist.add((SectionItemInterface)videoModel);
                         }
@@ -353,7 +353,7 @@ public class Storage implements IStorage {
             String courseId) {
         ArrayList<SectionItemInterface> list = new ArrayList<SectionItemInterface>();
 
-        ArrayList<IVideoModel> downloadList = (ArrayList<IVideoModel>) db
+        ArrayList<VideoModel> downloadList = (ArrayList<VideoModel>) db
                 .getDownloadedVideoListForCourse(courseId, null);
         if(downloadList==null||downloadList.size()==0){
             return list;
@@ -373,7 +373,7 @@ public class Storage implements IStorage {
                     boolean lectureAddedFlag=false;
                     // iterate videos 
                     for (VideoResponseModel v : lectureEntry.getValue()) {
-                        for(IVideoModel de : downloadList){
+                        for(VideoModel de : downloadList){
                             // identify the video
                             if (de.getVideoId().equalsIgnoreCase(v.getSummary().getId())) {
                                 // add this chapter to the list
@@ -408,7 +408,7 @@ public class Storage implements IStorage {
 
     @Override
     public void markDownloadAsComplete(long dmId,
-            DataCallback<IVideoModel> callback) {
+            DataCallback<VideoModel> callback) {
         try{
             NativeDownloadModel nm = dm.getDownload(dmId);
             if (nm != null && nm.status == DownloadManager.STATUS_SUCCESSFUL) {
@@ -491,9 +491,9 @@ public class Storage implements IStorage {
                                 // this means download is completed
                                 // so the video status should be marked as DOWNLOADED, not DOWNLOADING
                                 // update the video status
-                                storage.markDownloadAsComplete(d, new DataCallback<IVideoModel>() {
+                                storage.markDownloadAsComplete(d, new DataCallback<VideoModel>() {
                                     @Override
-                                    public void onResult(IVideoModel result) {
+                                    public void onResult(VideoModel result) {
                                         logger.debug("Video download marked as completed, dmid=" + result.getDmId());
                                     }
 

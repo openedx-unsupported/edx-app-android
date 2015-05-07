@@ -11,10 +11,7 @@ import org.edx.mobile.model.download.NativeDownloadModel;
  *
  */
 
-/*
- * TODO: models to be refactored in GA+1
- */
-public interface IVideoModel {
+public interface VideoModel {
 
     String getUsername();
 
@@ -71,7 +68,7 @@ public interface IVideoModel {
      * Sets download information from the given video object.
      * @param videoByUrl
      */
-    void setDownloadInfo(IVideoModel videoByUrl);
+    void setDownloadInfo(VideoModel videoByUrl);
     
     /**
      * Sets downloading information from the given download object.

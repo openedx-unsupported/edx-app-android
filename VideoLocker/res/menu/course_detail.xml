@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:edx="http://schemas.android.com/apk/res-auto">
+     <item android:id="@+id/action_change_mode"
+              android:icon="@drawable/change_mode"
+              android:title="Change Mode"
+              android:orderInCategory="100"
+              android:showAsAction="always"/>
+</menu>

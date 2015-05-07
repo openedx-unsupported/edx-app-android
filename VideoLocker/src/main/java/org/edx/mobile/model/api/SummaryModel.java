@@ -1,10 +1,14 @@
 package org.edx.mobile.model.api;
 
+import org.edx.mobile.model.IUnit;
+import org.edx.mobile.model.IVertical;
+import org.edx.mobile.model.db.DownloadEntry;
+
 import java.io.Serializable;
 
 
 @SuppressWarnings("serial")
-public class SummaryModel implements Serializable {
+public class SummaryModel implements Serializable, IUnit{
 
     private String category;
     private String name;
@@ -16,6 +20,8 @@ public class SummaryModel implements Serializable {
     private long size;
     private TranscriptModel transcripts;
     private EncodingsModel encodings;
+
+    private IVertical vertical;
 
     public String getCategory() {
         return category;
@@ -141,5 +147,26 @@ public class SummaryModel implements Serializable {
             return String.format("%02d:%02d", mins, secs);
         }
         return String.format("%02d:%02d:%02d", hours, mins, secs);
+    }
+
+    @Override
+    public IVertical getVertical() {
+        return vertical;
+    }
+
+    public void setVertical(IVertical vertical){
+        this.vertical = vertical;
+    }
+
+
+    private DownloadEntry downloadEntry;
+    @Override
+    public DownloadEntry getDownloadEntry() {
+        return downloadEntry;
+    }
+
+    @Override
+    public void setDownloadEntry(DownloadEntry entry) {
+        this.downloadEntry = entry;
     }
 }

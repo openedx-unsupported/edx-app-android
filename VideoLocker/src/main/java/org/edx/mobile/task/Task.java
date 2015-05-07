@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.view.common.TaskProcessCallback;
 
 public abstract class Task<T> extends AsyncTask<Object, Object, T> {
 
     protected Context context;
     private ProgressBar progressBar;
+    private TaskProcessCallback taskProcessCallback;
+
     protected final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
     
@@ -21,12 +24,17 @@ public abstract class Task<T> extends AsyncTask<Object, Object, T> {
         this.progressBar = progressBar;
     }
 
+    public void setTaskProcessCallback(TaskProcessCallback callback){
+        this.taskProcessCallback = callback;
+    }
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
+        if ( taskProcessCallback != null )
+            taskProcessCallback.startProcess();
     }
     
     @Override
@@ -45,6 +53,8 @@ public abstract class Task<T> extends AsyncTask<Object, Object, T> {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
+        if( taskProcessCallback != null )
+            taskProcessCallback.finishProcess();
     }
 
     protected void handle(final Exception ex) {

@@ -7,7 +7,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.IUnit;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EncodingsModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
@@ -16,7 +17,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 
 import android.text.TextUtils;
 
-public class DownloadEntry implements SectionItemInterface, IVideoModel {
+public class DownloadEntry implements SectionItemInterface, VideoModel {
 
     public static enum WatchedState { UNWATCHED, PARTIALLY_WATCHED, WATCHED}
     public static enum DownloadedState { DOWNLOADING, DOWNLOADED, ONLINE }
@@ -281,7 +282,7 @@ public class DownloadEntry implements SectionItemInterface, IVideoModel {
     }
 
     @Override
-    public void setDownloadInfo(IVideoModel video) {
+    public void setDownloadInfo(VideoModel video) {
         dmId = video.getDmId();
         downloaded = DownloadedState.values()[video.getDownloadedStateOrdinal()];
         filepath = video.getFilePath();

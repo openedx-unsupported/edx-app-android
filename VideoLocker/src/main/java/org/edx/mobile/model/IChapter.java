@@ -5,12 +5,14 @@ import java.util.List;
 /*
  * TODO: models to be refactored in GA+1
  */
-interface IChapter {
+public interface IChapter extends IComponent {
 
     ICourse getCourse();
 
-    List<ISection> getSections();
+    List<ISequential> getSequential();
 
     String getName();
 
+
+    ISequential getSequentialById(String sid);
 }

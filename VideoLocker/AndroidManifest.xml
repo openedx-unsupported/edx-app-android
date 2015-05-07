@@ -123,7 +123,27 @@
             android:screenOrientation="portrait"
             >
         </activity>
-        
+        <activity
+            android:name="org.edx.mobile.view.CourseOutlineActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity
+            android:name=".view.CourseSequentialOutlineActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity
+            android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
         <activity
             android:name="org.edx.mobile.view.CourseLectureListActivity"
             android:label="@string/app_name"
@@ -176,6 +196,7 @@
             android:name="org.edx.mobile.view.CourseHandoutActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="org.edx.mobile.view.CreateGroupActivity"
             android:label="@string/app_name"

@@ -53,7 +53,7 @@ public class CourseDashboardFragment extends Fragment {
             videoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.getInstance().showCourseAssessment(getActivity(), courseData);
+                    Router.getInstance().showCourseChapterOutline(getActivity(), courseData);
                 }
             });
 

@@ -3,7 +3,7 @@ package org.edx.mobile.model;
 /*
  * TODO: models to be refactored in GA+1
  */
-interface IDownload {
+public interface IDownload {
 
     void setDownloaded(long downloadedSizeInBytes);
 

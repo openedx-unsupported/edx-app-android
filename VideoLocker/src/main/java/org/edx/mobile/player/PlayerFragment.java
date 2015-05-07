@@ -35,8 +35,9 @@ import android.widget.TextView;
 import com.facebook.widget.FacebookDialog;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
@@ -162,7 +163,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         super.onCreate(savedInstanceState);
         segIO = SegmentFactory.getInstance();
         // save this fragment across activity re-creations
-        setRetainInstance(true);
+        //TODO - or FIXME  after playerFragment become a nested fragement,
+        //we need to find a way to save status
+        if (!MainApplication.Q4_ASSESSMENT_FLAG)
+            setRetainInstance(true);
     }
 
     @Override
@@ -1766,7 +1770,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
      * Returns the video model that this fragment is supposed to play.
      * @return
      */
-    public IVideoModel getPlayingVideo() {
+    public VideoModel getPlayingVideo() {
         return videoEntry;
     }
 

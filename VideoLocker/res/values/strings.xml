@@ -167,6 +167,8 @@
     <!-- My Courses -->
     <!-- Title of course dashboard screen -->
     <string name="course_dashboard">Dashboard</string>
+    <!-- Title of course outline screen -->
+    <string name="course_outline">Course Outline</string>
 
     <!-- Accessible content description of image for a course -->
     <string name="course_image">Course Image</string>
@@ -216,6 +218,14 @@
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
     <!-- Label shown when there is no course information available for a course -->
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
+
+    <!-- Assessment -->
+    <!-- Label default unit on assessment navigation bar-->
+    <string name="assessment_next_unit">Next Unit</string>
+    <!-- Label showing prvious on assessment navigation bar-->
+    <string name="assessment_previous">Previous</string>
+    <!-- Label showing next on assessment navigation bar-->
+    <string name="assessment_next">Next</string>
 
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->

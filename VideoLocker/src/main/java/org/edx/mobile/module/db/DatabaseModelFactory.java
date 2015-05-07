@@ -2,11 +2,9 @@ package org.edx.mobile.module.db;
 
 import android.database.Cursor;
 
-import org.edx.mobile.model.IVideoModel;
+import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-
-import java.util.Random;
 
 /**
  * Model Factory class for the database models.
@@ -16,11 +14,11 @@ import java.util.Random;
 public class DatabaseModelFactory {
 
     /**
-     * Returns new instance of {@link org.edx.mobile.model.IVideoModel} initialized with given cursor.
+     * Returns new instance of {@link org.edx.mobile.model.VideoModel} initialized with given cursor.
      * @param c
      * @return
      */
-    public static IVideoModel getModel(Cursor c) {
+    public static VideoModel getModel(Cursor c) {
         DownloadEntry de = new DownloadEntry();
         
         de.dmId = c.getLong(c.getColumnIndex(DbStructure.Column.DM_ID));
@@ -54,7 +52,7 @@ public class DatabaseModelFactory {
      * @param vrm
      * @return
      */
-    public static IVideoModel getModel(VideoResponseModel vrm) {
+    public static VideoModel getModel(VideoResponseModel vrm) {
         DownloadEntry e = new DownloadEntry();
         e.chapter = vrm.getChapterName();
         e.section = vrm.getSequentialName();
