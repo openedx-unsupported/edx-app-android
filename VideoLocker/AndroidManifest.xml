@@ -270,7 +270,8 @@
         <!--   Parse Setup -->
         <!--  https://www.parse.com/apps/quickstart#parse_push/android/existing  -->
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+        <!-- we have to add a level of indirection to avoid crash as parse maybe disabled by setting -->
+        <receiver android:name="org.edx.mobile.module.notification.EdxParseBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
