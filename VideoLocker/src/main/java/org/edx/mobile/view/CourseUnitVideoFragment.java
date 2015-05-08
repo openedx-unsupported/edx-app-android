@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,22 +9,24 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -33,6 +34,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.task.CircularProgressTask;
@@ -41,23 +43,19 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.adapters.MyAllVideoAdapter;
-import org.edx.mobile.view.adapters.OfflineVideoAdapter;
-import org.edx.mobile.view.adapters.OnlineVideoAdapter;
-import org.edx.mobile.view.adapters.VideoBaseAdapter;
+import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  */
-public class CourseUnitVideoFragment extends Fragment {
+public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCallback, PageViewStateCallback {
 
     protected final Logger logger = new Logger(getClass().getName());
     IUnit unit;
@@ -75,6 +73,8 @@ public class CourseUnitVideoFragment extends Fragment {
     private boolean downloadAvailable = false;
     private Button deleteButton;
     private Api api;
+    private Runnable playPending;
+    private final Handler playHandler = new Handler();
 
     /**
      * Create a new instance of fragment
@@ -188,15 +188,16 @@ public class CourseUnitVideoFragment extends Fragment {
         checkVideoStatus(unit);
     }
 
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-
+        try {
+            if (playerFragment != null) {
+                playerFragment.setCallback(this);
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
-    public void onPause(){
-        super.onPause();
-        //Stop it.
-    }
-
 
     private void checkVideoStatus(IUnit unit) {
         try {
@@ -250,7 +251,7 @@ public class CourseUnitVideoFragment extends Fragment {
         addVideoDatatoDb(de);
 
 
-        play(model);
+        playVideoModel(model);
         notifyAdapter();
     }
 
@@ -272,31 +273,136 @@ public class CourseUnitVideoFragment extends Fragment {
     }
 
 
+    public synchronized void playVideoModel(final DownloadEntry video) {
+        try {
+            if (playerFragment.isPlaying()) {
+                if (video.getVideoId().equals(playerFragment.getPlayingVideo().getVideoId())) {
+                    logger.debug("this video is already being played, skipping play event");
+                    return;
+                }
+            }
+        } catch(Exception ex) {
+            logger.debug(ex.toString());
+        }
+        try{
 
-    private void play(DownloadEntry model) {
-        if (model instanceof DownloadEntry) {
-            hideOpenInBrowserPanel();
+            // reload this model
+            new Storage(getActivity()).reloadDownloadEntry(video);
 
-            DownloadEntry v = (DownloadEntry) model;
+            logger.debug("Resumed= " + playerFragment.isResumed());
+            if ( !playerFragment.isResumed()) {
+                // playback can work only if fragment is resume
+                if (playPending != null) {
+                    playHandler.removeCallbacks(playPending);
+                }
+                playPending = new Runnable() {
+                    public void run() {
+                        playVideoModel(video);
+                    }
+                };
+                playHandler.postDelayed(playPending, 200);
+                return;
+            } else {
+                if (playPending != null) {
+                    playHandler.removeCallbacks(playPending);
+                }
+            }
+
+            TranscriptModel transcript = getTranscriptModel(video);
+            String filepath = getVideoPath(video);
+
+
+            playerFragment.prepare(filepath, video.lastPlayedOffset,
+                video.getTitle(), transcript, video);
+
+
             try {
-                String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                    .username, v.eid);
-                PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = api.getVideoById(v.eid, v.videoId);
-                prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
-
+                updateLastAccess(video);
                 // capture chapter name
                 if (chapterName == null) {
                     // capture the chapter name of this video
-                    chapterName = v.chapter;
+                    chapterName = video.chapter;
                 }
 
-                videoModel = v;
+                videoModel = video;
             } catch (Exception e) {
                 logger.error(e);
             }
-
+        }catch(Exception ex){
+            logger.error(ex);
         }
+    }
+
+    private void updateLastAccess(DownloadEntry video){
+        try {
+            String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
+                .username, video.eid);
+            PrefManager prefManager = new PrefManager(getActivity(), prefName);
+            VideoResponseModel vrm = api.getVideoById(video.eid, video.videoId);
+            prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+    }
+
+    private String getVideoPath(DownloadEntry video){
+        String filepath = null;
+        // check if file available on local
+        if( video.isVideoForWebOnly ){
+            //don't download anything
+        }
+        else if (video.filepath != null && video.filepath.length()>0) {
+            if (video.isDownloaded()) {
+                File f = new File(video.filepath);
+                if (f.exists()) {
+                    // play from local
+                    filepath = video.filepath;
+                    logger.debug("playing from local file");
+                }
+            }
+        } else {
+            DownloadEntry de = (DownloadEntry)DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE )
+                .getIVideoModelByVideoUrl(
+                    video.url, null);
+            if(de!=null){
+                if(de.filepath!=null){
+                    File f = new File(de.filepath);
+                    if (f.exists()) {
+                        // play from local
+                        filepath = de.filepath;
+                        logger.debug("playing from local file for " +
+                            "another Download Entry");
+                    }
+                }
+            }
+        }
+
+        if(TextUtils.isEmpty(filepath)){
+            // not available on local, so play online
+            logger.warn("Local file path not available");
+
+            filepath = video.getBestEncodingUrl(getActivity());
+        }
+        return filepath;
+    }
+
+    private TranscriptModel getTranscriptModel(DownloadEntry video){
+        TranscriptModel transcript = null;
+        if(unit!=null && unit.getVideoResponseModel() != null &&
+            unit.getVideoResponseModel().getSummary() != null) {
+            transcript = unit.getVideoResponseModel().getSummary().getTranscripts();
+        }
+        if ( transcript == null ) {
+            Api api = new Api(getActivity());
+            try {
+                if (video.videoId != null) {
+                    transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);
+                }
+            } catch (Exception e) {
+                logger.error(e);
+            }
+        }
+        return transcript;
     }
 
     private void showPlayer() {
@@ -467,6 +573,16 @@ public class CourseUnitVideoFragment extends Fragment {
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onPlaybackStarted() {
+
     }
 
     public void onPlaybackComplete() {
@@ -654,5 +770,47 @@ public class CourseUnitVideoFragment extends Fragment {
     }
 
 
+   /// for PageViewStateCallback ///
+    @Override
+    public void onPageShow() {
 
+    }
+
+    @Override
+    public void onPageDisappear() {
+         if( playerFragment != null ){
+             playerFragment.freezePlayer();
+         }
+    }
+
+    /**
+     * mostly the orientation changes.
+     * @param newConfig
+     */
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //TODO - should we use load different layout file?
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
+            if ( playerContainer != null ) {
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                float screenHeight = displayMetrics.heightPixels;
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
+                playerContainer.requestLayout();
+            }
+        } else {
+            LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
+            if ( playerContainer != null ) {
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                float screenWidth = displayMetrics.widthPixels;
+                float ideaHeight = screenWidth * 9 / 16;
+
+                playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
+                playerContainer.requestLayout();
+            }
+        }
+    }
 }

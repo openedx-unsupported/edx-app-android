@@ -1,5 +1,6 @@
 package org.edx.mobile.model;
 
+import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 
 /**
@@ -31,5 +32,15 @@ public abstract class UnitBaseModel extends CourseComponent implements IUnit {
     @Override
     public void setDownloadEntry(DownloadEntry downloadEntry) {
         this.downloadEntry = downloadEntry;
+    }
+
+
+    private VideoResponseModel videoResponseModel;
+    public VideoResponseModel getVideoResponseModel(){
+        return videoResponseModel;
+    }
+
+    public void setVideoResponseModel(VideoResponseModel entry){
+        this.videoResponseModel =entry;
     }
 }

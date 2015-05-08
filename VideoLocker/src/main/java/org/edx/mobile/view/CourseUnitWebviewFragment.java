@@ -10,12 +10,12 @@ import android.webkit.WebViewClient;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.IUnit;
-import org.edx.mobile.view.dialog.WebViewDialogFragment;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 /**
  *
  */
-public class CourseUnitWebviewFragment extends Fragment {
+public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback {
     IUnit unit;
 
     /**
@@ -75,4 +75,14 @@ public class CourseUnitWebviewFragment extends Fragment {
     }
 
 
+    /// for PageViewStateCallback ///
+    @Override
+    public void onPageShow() {
+
+    }
+
+    @Override
+    public void onPageDisappear() {
+
+    }
 }

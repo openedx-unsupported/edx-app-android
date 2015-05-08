@@ -1089,7 +1089,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void restore(Bundle savedInstanceState) {
+    protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             playingVideoIndex = savedInstanceState.getInt("playingVideoIndex", -1);
             videoModel = (DownloadEntry) savedInstanceState.getSerializable("model");

@@ -1,44 +1,43 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.task.GetCourseOutlineTask;
+import org.edx.mobile.third_party.view.PinnedSectionListView;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
-import org.edx.mobile.third_party.view.PinnedSectionListView;
 
 import java.util.ArrayList;
 
-public class CourseOutlineFragment extends Fragment {
+public class CourseOutlineFragment extends MyVideosBaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
-    static public String TAG = CourseHandoutFragment.class.getCanonicalName();
+    static public String TAG = CourseOutlineFragment.class.getCanonicalName();
 
     private CourseOutlineAdapter adapter;
     private PinnedSectionListView listView;
     private GetCourseOutlineTask getHierarchyTask;
     private TaskProcessCallback taskProcessCallback;
     private boolean isTaskRunning;
-    private EnrolledCoursesResponse courseData;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -47,7 +46,6 @@ public class CourseOutlineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_course_outline, container,
                 false);
         listView = (PinnedSectionListView)view.findViewById(R.id.outline_list);
-//Initialize the adapter
         initializeAdapter();
 
         listView.setAdapter(adapter);
@@ -57,22 +55,17 @@ public class CourseOutlineFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
+        restore(savedInstanceState);
         try {
-            //TODO - should we get data from callback at activity level?
-            final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable(Router.EXTRA_COURSE_OUTLINE);
-
-            if ( courseData == null )
-                return;
-          //  CourseManager.fromEnrollment(courseData.)
-            loadData(getView());
-
+            if( courseData == null ) {
+                final Bundle bundle = getArguments();
+                courseData = (EnrolledCoursesResponse) bundle
+                    .getSerializable(Router.EXTRA_COURSE_DATA);
+            }
         } catch (Exception ex) {
             logger.error(ex);
         }
+        loadData(getView());
     }
 
     public void setTaskProcessCallback(TaskProcessCallback callback){
@@ -94,16 +87,16 @@ public class CourseOutlineFragment extends Fragment {
         getHierarchyTask = new GetCourseOutlineTask(getActivity()) {
 
             @Override
-            public void onFinish(ICourse course) {
+            public void onFinish(ICourse aCourse) {
                 // display these chapters
-                if (course != null) {
+                if (aCourse != null) {
                     logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
+                    course = aCourse;
                     adapter.setData(course);
                     if(adapter.getCount()==0){
                         view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
                     }
                 }
-                CourseManager.getSharedInstance().setCourseInView(course);
 
                 if (adapter.getCount() == 0) {
                     //TODO - if we have startDate , showCourseNotStartedMessage
@@ -120,7 +113,6 @@ public class CourseOutlineFragment extends Fragment {
                     //TODO - if we have startDate , showCourseNotStartedMessage
                     //otherwise , show empty view
                 }
-
                 isTaskRunning = false;
             }
         };
@@ -143,7 +135,8 @@ public class CourseOutlineFragment extends Fragment {
                 public void rowClicked(SectionRow row) {
                     // handle click
                     try {
-                        Router.getInstance().showCourseSequentialDetail(getActivity(), courseData, (ISequential) row.component);
+                        Router.getInstance().showCourseSequentialDetail(getActivity(),
+                            courseData, course, (ISequential) row.component);
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
@@ -167,5 +160,10 @@ public class CourseOutlineFragment extends Fragment {
         if(adapter!=null){
             //FIXME - we need to save data into the outState
         }
+    }
+
+    @Override
+    public void reloadList(){
+
     }
 }

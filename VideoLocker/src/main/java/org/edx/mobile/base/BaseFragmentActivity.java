@@ -416,6 +416,20 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         }
     }
 
+    public void setActionBarVisible(boolean visible){
+        try {
+            ActionBar bar = getActionBar();
+            if (bar != null ) {
+                if ( visible )
+                    bar.show();
+                else
+                    bar.hide();
+            }
+        }catch(Exception ex){
+            logger.error(ex);
+        }
+    }
+
     /**
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...

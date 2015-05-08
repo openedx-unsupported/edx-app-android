@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -12,8 +11,8 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -31,12 +30,19 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     private View offlineBar;
     private ProgressBar progressWheel;
 
-    protected Bundle bundle;
     protected EnrolledCoursesResponse courseData;
+    protected ICourse course;
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        Bundle bundle = arg0;
+        if ( bundle == null ) {
+            if ( getIntent() != null )
+                bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
+        }
+        restore(bundle);
+
         initialize(arg0);
         blockDrawerFromOpening();
     }
@@ -47,11 +53,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     protected void initialize(Bundle arg){
         setContentView(getContentViewResourceId());
-        bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        courseData = (EnrolledCoursesResponse) bundle
-            .getSerializable(Router.EXTRA_ENROLLMENT);
-
-        CourseManager.getSharedInstance().setCourseData(courseData);
 
         setApplyPrevTransitionOnRestart(true);
         offlineBar = findViewById(R.id.offline_bar);
@@ -66,6 +67,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         }
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
@@ -77,6 +79,22 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if ( courseData != null)
+            outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        if ( course != null )
+            outState.putSerializable(Router.EXTRA_COURSE, course);
+        super.onSaveInstanceState(outState);
+    }
+
+    protected void restore(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
+            course = (ICourse) savedInstanceState.getSerializable(Router.EXTRA_COURSE);
+        }
+    }
 
     @Override
     protected void onOnline() {

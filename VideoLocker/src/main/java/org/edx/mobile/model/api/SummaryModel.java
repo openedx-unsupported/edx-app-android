@@ -169,4 +169,13 @@ public class SummaryModel implements Serializable, IUnit{
     public void setDownloadEntry(DownloadEntry entry) {
         this.downloadEntry = entry;
     }
+
+    private VideoResponseModel videoResponseModel;
+    public VideoResponseModel getVideoResponseModel(){
+        return videoResponseModel;
+    }
+
+    public void setVideoResponseModel(VideoResponseModel entry){
+        this.videoResponseModel =entry;
+    }
 }

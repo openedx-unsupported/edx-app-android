@@ -1,10 +1,11 @@
 package org.edx.mobile.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,17 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IChapter;
-import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.IVertical;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +40,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     private ViewPager pager;
     private IUnit unit;
+    private ISequential sequential;
+
     private List<IUnit> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
 
@@ -58,55 +57,67 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         pager = (ViewPager)findViewById(R.id.pager);
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
-        pager.setPageTransformer(false, new ViewPager.PageTransformer() {
 
-            public void transformPage(View page, float position) {
-                int pageWidth = page.getWidth();
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+            }
 
-                if (position < -1) { // [-Infinity,-1)
-                    // This page is way off-screen to the left.
-                    page.setAlpha(1);
-
-                } else if (position <= 1) { // [-1,1]
-
-                    // dummyImageView.setTranslationX(-position * (pageWidth / 2)); //Half the normal speed
-
-                } else { // (1,+Infinity]
-                    // This page is way off-screen to the right.
-                    page.setAlpha(1);
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if ( state == ViewPager.SCROLL_STATE_DRAGGING ){
+                    int curIndex = pager.getCurrentItem();
+                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
+                    if( curView != null )
+                        curView.onPageDisappear();
                 }
-
+                if ( state == ViewPager.SCROLL_STATE_IDLE ){
+                    int curIndex = pager.getCurrentItem();
+                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
+                     if( curView != null )
+                         curView.onPageShow();
+                    tryToUpdateForEndOfSequential();
+                }
             }
         });
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-       Button button = (Button) findViewById(R.id.goto_prev);
+        Button button = (Button) findViewById(R.id.goto_prev);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(pager.getCurrentItem() + 1);
-                tryToUpdateForEndOfSequential();
+                int index = pager.getCurrentItem();
+                if ( index >  0 ) {
+                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
+                    if( curView != null )
+                        curView.onPageDisappear();
+                    pager.setCurrentItem(index - 1);
+                }
             }
         });
         button = (Button) findViewById(R.id.goto_next);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(pager.getCurrentItem() + 1);
-                tryToUpdateForEndOfSequential();
+                int index = pager.getCurrentItem();
+                if( index < pagerAdapter.getCount() - 1 ) {
+                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
+                    if( curView != null )
+                        curView.onPageDisappear();
+                    pager.setCurrentItem(index + 1);
+                }
             }
         });
 
-
         setApplyPrevTransitionOnRestart(true);
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-      //  configureDrawer();
 
         try{
-            segIO.screenViewsTracking(getString(R.string.course_outline));
+            segIO.screenViewsTracking("Assessment");
         }catch(Exception e){
             logger.error(e);
         }
@@ -118,6 +129,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         IUnit unit = pagerAdapter.getUnit(curIndex);
         IUnit nextUnit = pagerAdapter.getUnit(curIndex +1);
         View prevButton = findViewById(R.id.goto_prev);
+        View nextButton = findViewById(R.id.goto_next);
+        nextButton.setVisibility(View.VISIBLE);
         View newUnitReminder = findViewById(R.id.new_unit_reminder);
         if( unit.getVertical().getId().equalsIgnoreCase(nextUnit.getVertical().getId())){
             prevButton.setVisibility(View.VISIBLE);
@@ -128,13 +141,34 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             TextView textView = (TextView)findViewById(R.id.next_unit_title);
             textView.setText(nextUnit.getVertical().getName());
         }
+        if ( curIndex == 0 ){
+            prevButton.setVisibility(View.GONE);
+        } else if ( curIndex >= pagerAdapter.getCount() -1 ){
+            nextButton.setVisibility(View.GONE);
+        }
         findViewById(R.id.course_unit_nav_bar).requestLayout();
     }
 
     protected void initialize(Bundle arg){
         super.initialize(arg);
-        unit = (IUnit) bundle.getSerializable(Router.EXTRA_COURSE_UNIT);
-        setData(CourseManager.getSharedInstance().getSequentialInView(), unit);
+        setData(sequential, unit);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if( sequential != null )
+            outState.putSerializable(Router.EXTRA_SEQUENTIAL, sequential);
+        if( unit != null )
+            outState.putSerializable(Router.EXTRA_COURSE_UNIT, sequential);
+        super.onSaveInstanceState(outState);
+    }
+
+    protected void restore(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            sequential = (ISequential) savedInstanceState.getSerializable(Router.EXTRA_SEQUENTIAL);
+            unit = (IUnit) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT);
+        }
+        super.restore(savedInstanceState);
     }
 
 
@@ -144,6 +178,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         setTitle("");
     }
 
+
+    protected void onResume() {
+        super.onResume();
+    }
 
     public void setData(ISequential sequential, IUnit selected){
         unitList.clear();
@@ -156,21 +194,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
                 unitList.addAll(vertical.getUnits());
         }
         //populate video detail for
-        Api  api = new Api(this);
-        ArrayList<SectionItemInterface> list = api
-            .getLiveOrganizedVideosByChapter(sequential.getChapter().getId() , sequential.getChapter().getName());
-
-        for (SectionItemInterface m : list) {
-            if (m.isVideo()) {
-                VideoResponseModel vidmodel = (VideoResponseModel) m;
+        for (IUnit unit : unitList) {
+            if (unit.getCategory().equals("video")  ) {
+                VideoResponseModel vidmodel = (VideoResponseModel) unit.getVideoResponseModel();
                 DownloadEntry downloadEntry = (DownloadEntry) storage
                     .getDownloadEntryfromVideoResponseModel(vidmodel);
-                for(IUnit unit : unitList){
-                    if ( unit.getId().equalsIgnoreCase(downloadEntry.getVideoId())){
-                        unit.setDownloadEntry(downloadEntry);
-                        break;
-                    }
-                }
+                unit.setDownloadEntry(downloadEntry);
             }
         }
 
@@ -190,17 +219,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
 
 
-    /**
-     * This function sets text to the title in Action Bar
-     * @param title
-     */
-    private void setActivityTitle(String title){
-        try{
-            setTitle(title);
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
 
     @Override
     protected boolean createOptionMenu(Menu menu) {
@@ -209,7 +227,20 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         return true;
     }
 
-    private class CourseUnitPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //TODO - should we use load different layout file?
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setActionBarVisible(false);
+            findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
+        } else {
+            setActionBarVisible(true);
+            findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
 
         public CourseUnitPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -228,7 +259,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             IUnit unit = getUnit(pos);
 
             if ( "video".equalsIgnoreCase(unit.getCategory())) {
-                return CourseUnitVideoFragment.newInstance(unit);
+                return  CourseUnitVideoFragment.newInstance(unit);
             }
             return CourseUnitWebviewFragment.newInstance(unit);
         }
@@ -238,19 +269,5 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             return unitList.size();
         }
     }
-   /** public static class MyAdapter extends FragmentStatePagerAdapter {
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
-        }
 
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return null;//ArrayListFragment.newInstance(position);
-        }
-    } **/
 }

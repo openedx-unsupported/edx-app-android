@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
@@ -9,11 +8,12 @@ import org.edx.mobile.logger.Logger;
 
 
 /**
- *
+ *  Top level outline for the Course
  */
 public class CourseOutlineActivity extends CourseBaseActivity {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
+
 
     private CourseOutlineFragment fragment;
 
@@ -21,10 +21,6 @@ public class CourseOutlineActivity extends CourseBaseActivity {
         super.onCreate(savedInstanceState);
  
         setApplyPrevTransitionOnRestart(true);
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-      //  configureDrawer();
-
         try{
             segIO.screenViewsTracking(getString(R.string.course_outline));
         }catch(Exception e){
@@ -33,10 +29,11 @@ public class CourseOutlineActivity extends CourseBaseActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setTitle("");
+    public void onResume(){
+        super.onResume();
+        if ( courseData != null && courseData.getCourse() != null ){
+            setTitle( courseData.getCourse().getName() );
+        }
     }
 
     @Override
@@ -44,13 +41,12 @@ public class CourseOutlineActivity extends CourseBaseActivity {
         super.onPostCreate(savedInstanceState);
         if (savedInstanceState == null){
             try {
-
                 fragment = new CourseOutlineFragment();
                 fragment.setTaskProcessCallback(this);
 
                 if (courseData != null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_COURSE_OUTLINE, courseData);
+                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
                     fragment.setArguments(bundle);
                 }
                 //this activity will only ever hold this lone fragment, so we
@@ -58,13 +54,18 @@ public class CourseOutlineActivity extends CourseBaseActivity {
                 fragment.setRetainInstance(true);
 
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.fragment_container, fragment);
+                fragmentTransaction.add(R.id.fragment_container, fragment, CourseOutlineFragment.TAG);
                 fragmentTransaction.disallowAddToBackStack();
                 fragmentTransaction.commit();
 
             } catch (Exception e) {
                 logger.error(e);
             }
+        } else {
+             fragment = (CourseOutlineFragment)
+                 getSupportFragmentManager().findFragmentByTag(CourseOutlineFragment.TAG);
         }
     }
+
+
 }
