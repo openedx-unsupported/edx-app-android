@@ -36,7 +36,7 @@ import io.fabric.sdk.android.Fabric;
  */
 public class MainApplication extends Application{
     //FIXME - temporary solution
-    public static final boolean Q4_ASSESSMENT_FLAG = true;
+    public static final boolean Q4_ASSESSMENT_FLAG = false;
     //FIXME - temporary solution
     public static final boolean ForumEnabled = false;
 
