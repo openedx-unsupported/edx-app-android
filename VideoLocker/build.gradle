@@ -130,14 +130,14 @@ android {
         }
     }
 
-    compileSdkVersion 22
+    compileSdkVersion 21
     buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
         applicationId "org.edx.mobile"
         // minimum version is Android 4.0
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode 71
         versionName "1.0.09"
 

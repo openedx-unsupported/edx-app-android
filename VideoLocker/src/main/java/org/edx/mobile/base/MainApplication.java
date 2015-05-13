@@ -25,7 +25,6 @@ import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
 
-
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;

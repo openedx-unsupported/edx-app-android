@@ -2,8 +2,6 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -47,9 +45,11 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        setTitle("");
+    protected void onResume() {
+        super.onResume();
+        if (sequential != null && sequential.getChapter() != null) {
+            setTitle( sequential.getChapter().getName() );
+        }
     }
 
     @Override
@@ -86,10 +86,4 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
         }
     }
 
-    @Override
-    protected boolean createOptionMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.course_detail, menu);
-        return true;
-    }
 }

@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -13,6 +14,9 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -117,12 +121,28 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
 
+
+
+    @Override
+    protected boolean createOptionMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.course_detail, menu);
+        return true;
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        //Hide the actions from Action bar.
-        //This has to be called in onCreateOptions as well
-        //Hide the action bar items progress from Action bar
-        //TODO - place for custom action
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
+
+        if (userPrefManager.isUserPrefVideoModel()) {
+            menu.findItem(R.id.action_change_mode).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_film)
+                    .actionBarSize());
+        } else {
+            menu.findItem(R.id.action_change_mode).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_list)
+                    .actionBarSize());
+        }
         return true;
     }
     @Override
