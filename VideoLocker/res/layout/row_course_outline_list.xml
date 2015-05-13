@@ -11,13 +11,11 @@
     android:paddingTop="5dp"
     android:paddingBottom="5dp" >
 
-    <ImageView
+    <TextView
         android:id="@+id/vertical_type"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:visibility="invisible"
-        android:background="@drawable/ic_download"
-        android:contentDescription="@string/course_content" />
+        android:visibility="invisible" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/chapter_name"
@@ -45,12 +43,10 @@
         android:layout_marginEnd="2dp"
         android:background="@android:color/transparent" >
 
-        <ImageView
+        <TextView
             android:id="@+id/bulk_download"
             android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:background="@drawable/ic_download"
-            android:contentDescription="@string/course_content" />
+            android:layout_height="15dp" />
     </LinearLayout>
 
        <LinearLayout

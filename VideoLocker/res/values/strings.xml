@@ -166,7 +166,7 @@
 
     <!-- My Courses -->
     <!-- Title of course dashboard screen -->
-    <string name="course_dashboard">Dashboard</string>
+    <string name="course_home">Course Home</string>
     <!-- Title of course outline screen -->
     <string name="course_outline">Course Outline</string>
 
@@ -470,4 +470,5 @@
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
     <string name="notification_toggle">Notifications</string>
+
 </resources>

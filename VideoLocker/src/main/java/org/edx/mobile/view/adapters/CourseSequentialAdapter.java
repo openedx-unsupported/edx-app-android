@@ -3,7 +3,6 @@ package org.edx.mobile.view.adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -12,6 +11,7 @@ import org.edx.mobile.model.IComponent;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.IVertical;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
 
 import java.util.List;
@@ -87,19 +87,20 @@ public abstract  class CourseSequentialAdapter extends CourseBaseAdapter
             case SectionRow.ITEM:
                 IUnit unit = (IUnit)row.component;
                 //TODO - we will move it using ViewHolder pattern
-                ImageView image = (ImageView) convertView.findViewById(R.id.vertical_type);
-                image.setVisibility(View.INVISIBLE);
+                TextView image = (TextView) convertView.findViewById(R.id.vertical_type);
+                image.setVisibility(View.VISIBLE);
                 if ( "video".equals(unit.getCategory())){
-                    image.setVisibility(View.VISIBLE);
-                    image.setImageResource(R.drawable.unit_video);
+                    Iconify.setIcon(image, Iconify.IconValue.fa_film);
                 } else {
-                    image.setVisibility(View.VISIBLE);
-                    image.setImageResource(R.drawable.unit_html);
+                    Iconify.setIcon(image, Iconify.IconValue.fa_file_o);
                 }
-                image = (ImageView) convertView.findViewById(R.id.bulk_download);
-                image.setVisibility(View.INVISIBLE);
+
+                image = (TextView) convertView.findViewById(R.id.bulk_download);
                 if ( "video".equals(unit.getCategory())){
+                    Iconify.setIcon(image, Iconify.IconValue.fa_download);
                     image.setVisibility(View.VISIBLE);
+                } else {
+                    image.setVisibility(View.INVISIBLE);
                 }
 
                 TextView view = (TextView) convertView.findViewById(R.id.chapter_name);

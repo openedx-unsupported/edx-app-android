@@ -27,7 +27,7 @@ public class CourseDashboardActivity extends CourseBaseActivity {
       //  configureDrawer();
 
         try{
-            segIO.screenViewsTracking(getString(R.string.course_dashboard));
+            segIO.screenViewsTracking(getString(R.string.course_home));
         }catch(Exception e){
             logger.error(e);
         }
@@ -37,7 +37,7 @@ public class CourseDashboardActivity extends CourseBaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setTitle(getString(R.string.course_dashboard));
+        setTitle(getString(R.string.course_home));
     }
 
     @Override
