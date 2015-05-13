@@ -22,23 +22,28 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
- 
         setApplyPrevTransitionOnRestart(true);
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-       // configureDrawer();
 
         try{
             segIO.screenViewsTracking(getString(R.string.course_outline));
         }catch(Exception e){
             logger.error(e);
         }
-
     }
 
-    protected void initialize(Bundle arg){
-        super.initialize(arg);
-        sequential = (ISequential) bundle.getSerializable(Router.EXTRA_SEQUENTIAL);
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if( sequential != null )
+            outState.putSerializable(Router.EXTRA_SEQUENTIAL, sequential);
+        super.onSaveInstanceState(outState);
+    }
+
+    protected void restore(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            sequential = (ISequential) savedInstanceState.getSerializable(Router.EXTRA_SEQUENTIAL);
+        }
+        super.restore(savedInstanceState);
     }
 
     @Override
@@ -58,7 +63,8 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
 
                 if (courseData != null &&  sequential != null ) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_COURSE_OUTLINE, courseData);
+                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+                    bundle.putSerializable(Router.EXTRA_COURSE, course);
                     bundle.putSerializable(Router.EXTRA_SEQUENTIAL, sequential);
                     fragment.setArguments(bundle);
                 }
@@ -67,13 +73,16 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
                 fragment.setRetainInstance(true);
 
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.fragment_container, fragment);
+                fragmentTransaction.add(R.id.fragment_container, fragment, CourseSequentialOutlineFragment.TAG);
                 fragmentTransaction.disallowAddToBackStack();
                 fragmentTransaction.commit();
 
             } catch (Exception e) {
                 logger.error(e);
             }
+        }else {
+            fragment = (CourseSequentialOutlineFragment)
+                getSupportFragmentManager().findFragmentByTag(CourseSequentialOutlineFragment.TAG);
         }
     }
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/course_unit_video"
               android:layout_width="match_parent"
-              android:layout_height="200dp"
+              android:layout_height="match_parent"
               android:baselineAligned="false"
               android:orientation="vertical" >
 
@@ -24,13 +24,13 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="200dp"
+        android:orientation="vertical"
         android:id="@+id/player_container">
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
 

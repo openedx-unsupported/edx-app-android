@@ -452,15 +452,26 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
     }
 
+    public synchronized void prepare(String path, int seekTo, String title,
+                                  TranscriptModel trModel, DownloadEntry video) {
+        playOrPrepare(path, seekTo, title, trModel, video, true);
+    }
+
+    public synchronized void play(String path, int seekTo, String title,
+                                  TranscriptModel trModel, DownloadEntry video) {
+        playOrPrepare(path, seekTo, title, trModel, video, false);
+    }
+
     /**
      * Starts playing given path. Path can be file path or http/https URL.
      * 
      * @param path
      * @param seekTo
      * @param title
+     * @param prepareOnly  <code>true</code> player will be prepared but not start to play
      */
-    public synchronized void play(String path, int seekTo, String title, 
-            TranscriptModel trModel, DownloadEntry video) {
+    public synchronized void playOrPrepare(String path, int seekTo, String title,
+            TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
@@ -524,8 +535,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             boolean enableShare = videoEntry != null && !TextUtils.isEmpty(videoEntry.getYoutubeVideoUrl()) && new FacebookProvider().isLoggedIn();
 
             player.setShareEnabled(enableShare);
-
-            player.setUriAndPlay(path, seekTo);
+            if( prepareOnly)
+                player.setUri(path, seekTo);
+            else
+                player.setUriAndPlay(path, seekTo);
         } catch (Exception e) {
             logger.error(e);
         }
@@ -1782,7 +1795,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         return (player != null && player.isPlaying());
     }
     
-    private void freezePlayer() {
+    public void freezePlayer() {
         setScreenOnWhilePlaying(false);
 
         if (player!=null) {

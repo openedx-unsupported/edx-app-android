@@ -14,7 +14,6 @@ import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.IVertical;
 import org.edx.mobile.model.SequentialModel;
 import org.edx.mobile.model.VerticalModel;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.PathModel;
 import org.edx.mobile.model.api.SummaryModel;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -40,67 +39,10 @@ public class CourseManager {
         return instance;
     }
 
-    private ICourse courseInView;
-    private EnrolledCoursesResponse courseData;
-    private IChapter chapterInView;
-    private ISequential sequentialInView;
 
     private CourseManager(){
 
     }
-
-    public void clear(){
-        courseInView = null;
-        courseData = null;
-        chapterInView = null;
-        sequentialInView = null;
-    }
-
-    public ICourse getCourseInView() {
-        return courseInView;
-    }
-
-    public void setCourseInView(ICourse courseInView) {
-        this.courseInView = courseInView;
-        if (this.courseInView != null && courseData != null &&
-            ! this.courseData.getCourse().getId().equalsIgnoreCase(this.courseInView.getId())){
-            this.courseData = null;
-        }
-        chapterInView = null;
-        sequentialInView = null;
-    }
-
-    public IChapter getChapterInView() {
-        return chapterInView;
-    }
-
-    public void setChapterInView(IChapter chapterInView) {
-        this.chapterInView = chapterInView;
-        this.sequentialInView = null;
-    }
-
-    public EnrolledCoursesResponse getCourseData() {
-        return courseData;
-    }
-
-    public void setCourseData(EnrolledCoursesResponse courseData) {
-        this.courseData = courseData;
-        if (courseInView != null && this.courseData != null
-            && ! this.courseData.getCourse().getId().equalsIgnoreCase(courseInView.getId())){
-            this.courseInView = null;
-            chapterInView = null;
-            sequentialInView = null;
-        }
-    }
-
-    public ISequential getSequentialInView() {
-        return sequentialInView;
-    }
-
-    public void setSequentialInView(ISequential sequentialInView) {
-        this.sequentialInView = sequentialInView;
-    }
-
     /**
      * this method exists
      *
@@ -170,11 +112,12 @@ public class CourseManager {
                 continue;
             unit.setVertical(vertical);
             //FIXME - create random unit category for testing purpose.
-            unit.setCategory( unit.getId().hashCode() %2 == 0 ? "video" : "htmlm");
+            unit.setCategory( unit.getId().hashCode() %2 == 0 ? "video" : "html");
             List<String> namedPath = m.getNamed_path();
             if (namedPath != null && !namedPath.isEmpty() && TextUtils.isEmpty(unit.getName())) {
                 unit.setName(namedPath.get(namedPath.size() - 1));
             }
+            unit.setVideoResponseModel(m);
 
             vertical.getUnits().add(unit);
         }

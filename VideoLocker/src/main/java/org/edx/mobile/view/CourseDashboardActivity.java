@@ -24,7 +24,7 @@ public class CourseDashboardActivity extends CourseBaseActivity {
         setApplyPrevTransitionOnRestart(true);
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
-        configureDrawer();
+      //  configureDrawer();
 
         try{
             segIO.screenViewsTracking(getString(R.string.course_dashboard));
