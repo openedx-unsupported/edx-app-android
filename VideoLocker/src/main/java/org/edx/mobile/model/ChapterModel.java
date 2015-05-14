@@ -2,6 +2,8 @@ package org.edx.mobile.model;
 
 import android.text.TextUtils;
 
+import org.edx.mobile.model.api.VideoResponseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +53,22 @@ public class ChapterModel extends CourseComponent implements IChapter {
                 return sequential;
         }
         return null;
+    }
+
+    public int getVideoCount(){
+        int count = 0;
+        for(ISequential sequential : sequentials){
+            count += sequential.getVideoCount();
+        }
+        return count;
+    }
+
+    public  List<VideoResponseModel> getVideos(){
+        List<VideoResponseModel> videos = new ArrayList<>();
+        for(ISequential sequential : sequentials){
+            videos.addAll( sequential.getVideos() );
+        }
+        return videos;
     }
 
 }

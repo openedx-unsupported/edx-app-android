@@ -2,6 +2,8 @@ package org.edx.mobile.model;
 
 import android.text.TextUtils;
 
+import org.edx.mobile.model.api.VideoResponseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +42,7 @@ public class SequentialModel extends CourseComponent implements ISequential{
         this.sectionUrl = sectionUrl;
     }
 
+    @Override
     public  IVertical getVerticalById(String vid){
         if (TextUtils.isEmpty(vid))
             return null;
@@ -48,5 +51,23 @@ public class SequentialModel extends CourseComponent implements ISequential{
                 return vertical;
         }
         return null;
+    }
+
+    @Override
+    public int getVideoCount(){
+        int count = 0;
+        for(IVertical vertical : verticals){
+            count += vertical.getVideoCount();
+        }
+        return count;
+    }
+
+    @Override
+    public  List<VideoResponseModel> getVideos(){
+        List<VideoResponseModel> videos = new ArrayList<>();
+        for(IVertical vertical : verticals){
+            videos.addAll( vertical.getVideos() );
+        }
+        return videos;
     }
 }

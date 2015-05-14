@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
@@ -13,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -27,35 +24,27 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.notification.UserNotificationManager;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.EnqueueDownloadTask;
+import org.edx.mobile.services.DownloadManager;
+import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.GetLastAccessedTask;
-import org.edx.mobile.task.SyncLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ChapterAdapter;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
-import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class CourseChapterListFragment extends CourseDetailBaseFragment implements NetworkObserver{
+public class CourseChapterListFragment extends CourseDetailBaseFragment
+    implements NetworkObserver, LastAccessManager.LastAccessManagerCallback, DownloadManager.DownloadManagerCallback {
 
 
     private static final String TAG = CourseChapterListFragment.class.getCanonicalName();
@@ -75,6 +64,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
     private String startDate;
     private boolean isTaskRunning = false;
     private GetCourseHierarchyTask getHeirarchyTask;
+    private long lastClickTime;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,8 +140,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         if(!adapter.isEmpty()){
             adapter.notifyDataSetChanged();
         }
-
-        fetchLastAccessed(getView());
+        LastAccessManager.getSharedInstance().fetchLastAccessed(this, getView(), courseId);
     }
 
     @Override
@@ -202,25 +191,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
                 @Override
                 public void download(final SectionEntry model) {
-                    try {
-                        IDialogCallback dialogCallback = new IDialogCallback() {
-                            @Override
-                            public void onPositiveClicked() {
-                                startChapterDownload(model);
-                            }
-
-                            @Override
-                            public void onNegativeClicked() {
-                                ((CourseDetailTabActivity) getActivity())
-                                        .showInfoMessage(getString(R.string.wifi_off_message));
-                            }
-                        };
-                        MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
-
-                    } catch (Exception e) {
-                        logger.error(e);
-                    }
-
+                     DownloadManager.getSharedInstance().downloadVideos(
+                         model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
                 }
             };
         }
@@ -243,37 +215,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
-    private void startChapterDownload(SectionEntry model) {
-        long downloadSize = 0;
-        ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
-        int downloadCount = 0;
-        for (VideoResponseModel v : model.getAllVideos()) {
-            DownloadEntry de = (DownloadEntry) storage
-                    .getDownloadEntryfromVideoResponseModel(v);
-            if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
-                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
-                    || de.isVideoForWebOnly ) {
-                continue;
-            } else {
-                downloadSize = downloadSize
-                        + v.getSummary().getSize();
-                downloadList.add(de);
-                downloadCount++;
-            }
-        }
-        if (downloadSize > MemoryUtil
-                .getAvailableExternalMemory(getActivity())) {
-            ((CourseDetailTabActivity) getActivity())
-                    .showInfoMessage(getString(R.string.file_size_exceeded));
-            updateList();
-        } else {
-            if (downloadSize < MemoryUtil.GB) {
-                startDownload(downloadList, downloadCount);
-            } else {
-                showDownloadSizeExceedDialog(downloadList, downloadCount);
-            }
-        }
-    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -322,7 +264,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
                     updateOpenInBrowserPanel();
 
                     if ( !AppConstants.offline_flag) {
-                        fetchLastAccessed(getView());
+                        LastAccessManager.getSharedInstance().fetchLastAccessed(CourseChapterListFragment.this, getView(), courseId);
                     }
                 }
 
@@ -388,7 +330,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             adapter.notifyDataSetChanged();
         }
         if (chapterListView != null && openInBrowserUrl != null) {
-            fetchLastAccessed(getView());
+            LastAccessManager.getSharedInstance().fetchLastAccessed(CourseChapterListFragment.this, getView(), courseId);
             updateOpenInBrowserPanel();
         }
     }
@@ -399,73 +341,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
-    // Dialog fragment to display message to user regarding 
-    protected void showDownloadSizeExceedDialog(final ArrayList<DownloadEntry> de,
-            final int noOfDownloads) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title", getString(R.string.download_exceed_title));
-        dialogMap.put("message_1", getString(R.string.download_exceed_message));
-        downloadFragment = DownloadSizeExceedDialog.newInstance(dialogMap,
-                new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                startDownload(de, noOfDownloads);
-            }
-
-            @Override
-            public void onNegativeClicked() {
-                updateList();
-                downloadFragment.dismiss();
-            }
-        });
-        downloadFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        downloadFragment.show(getFragmentManager(), "dialog");
-        downloadFragment.setCancelable(false);
-    }
-
-    public void startDownload(ArrayList<DownloadEntry> downloadList,
-            int noOfDownloads) {
-        try{
-            segIO.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
-                    downloadList.get(0).getChapterName(), noOfDownloads);
-        }catch(Exception e){
-            logger.error(e);
-        }
-
-        EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(getActivity()) {
-            @Override
-            public void onFinish(Long result) {
-                try {
-                    hideProgressDialog();
-                    if(isActivityStarted) {
-                        adapter.notifyDataSetChanged();
-                        (getActivity()).invalidateOptionsMenu();
-
-                        String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
-
-                        UiUtil.showMessage(CourseChapterListFragment.this.getView(), content);
-
-                    }
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                hideProgressDialog();
-                UiUtil.showMessage(CourseChapterListFragment.this.getView(), getString(R.string.msg_video_not_downloaded));
-            }
-        };
-
-        // it is better to show progress before executing the task
-        // this ensures task will hide the progress after it is shown
-        if(downloadList.size()>=3) {
-            showProgressDialog();
-        }
-        
-        downloadTask.execute(downloadList);
-    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -476,7 +351,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             if(AppConstants.offline_flag){
                 hideLastAccessedView(getView());
             }else{
-                fetchLastAccessed(getView());
+                LastAccessManager.getSharedInstance().fetchLastAccessed(CourseChapterListFragment.this, getView(), courseId);
             }
         }
     }
@@ -503,7 +378,33 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
 
     private ProgressDialogFragment progressDialog;
     private boolean isFetchingLastAccessed;
-    private synchronized void showProgressDialog() {
+
+    @Override
+    public void onDownloadSuccess(Long result) {
+        try {
+            hideProgressDialog();
+            if(isActivityStarted) {
+                adapter.notifyDataSetChanged();
+                (getActivity()).invalidateOptionsMenu();
+
+                String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
+
+                UiUtil.showMessage(CourseChapterListFragment.this.getView(), content);
+
+            }
+        }catch(Exception e){
+            logger.error(e);
+        }
+    }
+
+    @Override
+    public void onDownloadFailure() {
+        hideProgressDialog();
+        UiUtil.showMessage(CourseChapterListFragment.this.getView(), getString(R.string.msg_video_not_downloaded));
+    }
+
+    @Override
+    public synchronized void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = ProgressDialogFragment.newInstance();
         }
@@ -533,6 +434,16 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
+    @Override
+    public void updateListUI() {
+       updateList();
+    }
+
+    @Override
+    public boolean showInfoMessage(String message){
+        return ((CourseDetailTabActivity) getActivity()).showInfoMessage(message);
+    }
+
     private void hideProgressDialog(){
         if(progressDialog!=null) {
             synchronized (progressDialog) {
@@ -542,72 +453,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
-    private long lastClickTime;
-    
-    protected void showLastAccessedView(View v) {
-        if (v != null && isActivityStarted()) {
-            if (!AppConstants.offline_flag) {
-                try {
-                    if(courseId!=null && lastAccessed_subSectionId!=null){
-                        final Api api = new Api(getActivity());
-                        final VideoResponseModel videoModel = api.getSubsectionById(courseId, 
-                                lastAccessed_subSectionId);
-                        if (videoModel != null) {
-                            LinearLayout lastAccessedLayout = (LinearLayout) v
-                                    .findViewById(R.id.last_viewed_layout);
-                            lastAccessedLayout.setVisibility(View.VISIBLE);
-
-                            TextView lastAccessedVideoTv = (TextView) v
-                                    .findViewById(R.id.last_viewed_tv);
-                            lastAccessedVideoTv.setText(" "
-                                    + videoModel.getSection().name);
-
-                            lastAccessedLayout.setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //This has been used so that if user clicks continuously on the screen, 
-                                    //two activities should not be opened
-                                    long currentTime = SystemClock.elapsedRealtime();
-                                    if (currentTime - lastClickTime > 1000) {
-                                        lastClickTime = currentTime;
-                                        Bundle bundle = getArguments();
-                                        EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) 
-                                                bundle.getSerializable(Router.EXTRA_ENROLLMENT);
-                                        try {
-                                            LectureModel lecture = api.getLecture(courseId,
-                                                    videoModel.getChapterName(), 
-                                                    videoModel.getSequentialName());
-                                            SectionEntry chapter = new SectionEntry();
-                                            chapter.chapter = videoModel.getChapterName();
-                                            lecture.chapter = chapter;
-                                            Intent videoIntent = new Intent(
-                                                    getActivity(),
-                                                    VideoListActivity.class);
-                                            videoIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
-                                            videoIntent.putExtra("lecture", lecture);
-                                            videoIntent.putExtra("FromMyVideos", false);
-                                            
-                                            startActivity(videoIntent);
-                                        } catch (Exception e) {
-                                            logger.error(e);
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            hideLastAccessedView(v);
-                        }   
-                    }
-                } catch (Exception e) {
-                    hideLastAccessedView(v);
-                    logger.error(e);
-                }
-            } else {
-                hideLastAccessedView(v);
-            }
-        }
-
-    }
 
     //Hide Last Accessed
     private void hideLastAccessedView(View v) {
@@ -620,92 +465,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
         }
     }
 
-    private void fetchLastAccessed(final View view){
-        try{
-            if(!isFetchingLastAccessed) {
-                if(courseId!=null && getProfile()!=null && getProfile().username!=null){
-                    String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                            .username, courseId);
-                    final PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                    final String prefModuleId = prefManager.getLastAccessedSubsectionId();
-
-                    logger.debug("Last Accessed Module ID from Preferences "
-                            +prefModuleId);
-
-                    lastAccessed_subSectionId = prefModuleId;
-                    showLastAccessedView(view);
-                    getLastAccessedTask = new GetLastAccessedTask(getActivity()) {
-                        @Override
-                        public void onFinish(SyncLastAccessedSubsectionResponse result) {
-                            String server_moduleId = null;
-                            if(result!=null && result.getLastVisitedModuleId()!=null){
-                                //Handle the last Visited Module received from Sever
-                                server_moduleId = result.getLastVisitedModuleId();
-                                logger.debug("Last Accessed Module ID from Server Get "
-                                        +server_moduleId);
-                                if(prefManager.isSyncedLastAccessedSubsection()){
-                                    //If preference last accessed flag is true, put the last access fetched 
-                                    //from server in Prefernces and display it on Last Accessed. 
-                                    prefManager.putLastAccessedSubsection(server_moduleId, true);
-                                    lastAccessed_subSectionId = server_moduleId;
-                                    showLastAccessedView(view);
-                                }else{
-                                    //Preference's last accessed is not synched with server, 
-                                    //Sync with server and display the result from server on UI.
-                                    if(prefModuleId!=null && prefModuleId.length()>0){
-                                        syncLastAccessedWithServer(prefManager, view, prefModuleId);
-                                    }
-                                }
-                            }else{
-                                //There is no Last Accessed module on the server
-                                if(prefModuleId!=null && prefModuleId.length()>0){
-                                    syncLastAccessedWithServer(prefManager,view, prefModuleId);
-                                }
-                            }
-                            isFetchingLastAccessed = false;
-                        }
-                        @Override
-                        public void onException(Exception ex) {
-                            isFetchingLastAccessed = false;
-                            logger.error(ex);
-                        }
-                    };
-
-                    isFetchingLastAccessed = true;
-                    getLastAccessedTask.execute(courseId);
-                }   
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    private void syncLastAccessedWithServer(final PrefManager prefManager,
-            final View view, String prefModuleId){
-        try{
-            SyncLastAccessedTask syncLastAccessTask = new SyncLastAccessedTask(
-                    getActivity()) {
-                @Override
-                public void onFinish(SyncLastAccessedSubsectionResponse result) {
-                    if(result!=null && result.getLastVisitedModuleId()!=null){
-                        prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
-                        logger.debug("Last Accessed Module ID from Server Sync "
-                                +result.getLastVisitedModuleId());
-                        lastAccessed_subSectionId = result.getLastVisitedModuleId();
-                        showLastAccessedView(view);
-                    }
-                }
-
-                @Override
-                public void onException(Exception ex) {
-                    logger.error(ex);
-                }
-            };
-            syncLastAccessTask.execute(courseId, prefModuleId);
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
 
     /**
      * This function attaches the course not started message as Empty view to Chapter List
@@ -720,6 +479,81 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment implemen
             }
         }catch(Exception e){
             logger.error(e);
+        }
+    }
+
+    @Override
+    public boolean isFetchingLastAccessed() {
+        return isFetchingLastAccessed;
+    }
+
+    @Override
+    public void setFetchingLastAccessed(boolean accessed) {
+       this.isFetchingLastAccessed = accessed;
+    }
+
+    @Override
+    public void showLastAccessedView(String lastAccessedSubSectionId, final String courseId, final View v) {
+        if (v != null && isActivityStarted()) {
+            if (!AppConstants.offline_flag) {
+                try {
+                    if(courseId!=null && lastAccessed_subSectionId!=null){
+                        final Api api = new Api(getActivity());
+                        final VideoResponseModel videoModel = api.getSubsectionById(courseId,
+                            lastAccessed_subSectionId);
+                        if (videoModel != null) {
+                            LinearLayout lastAccessedLayout = (LinearLayout) v
+                                .findViewById(R.id.last_viewed_layout);
+                            lastAccessedLayout.setVisibility(View.VISIBLE);
+
+                            TextView lastAccessedVideoTv = (TextView) v
+                                .findViewById(R.id.last_viewed_tv);
+                            lastAccessedVideoTv.setText(" "
+                                + videoModel.getSection().name);
+
+                            lastAccessedLayout.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //This has been used so that if user clicks continuously on the screen,
+                                    //two activities should not be opened
+                                    long currentTime = SystemClock.elapsedRealtime();
+                                    if (currentTime - lastClickTime > 1000) {
+                                        lastClickTime = currentTime;
+                                        Bundle bundle = getArguments();
+                                        EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse)
+                                            bundle.getSerializable(Router.EXTRA_ENROLLMENT);
+                                        try {
+                                            LectureModel lecture = api.getLecture(courseId,
+                                                videoModel.getChapterName(),
+                                                videoModel.getSequentialName());
+                                            SectionEntry chapter = new SectionEntry();
+                                            chapter.chapter = videoModel.getChapterName();
+                                            lecture.chapter = chapter;
+                                            Intent videoIntent = new Intent(
+                                                getActivity(),
+                                                VideoListActivity.class);
+                                            videoIntent.putExtra(Router.EXTRA_ENROLLMENT, enrollment);
+                                            videoIntent.putExtra("lecture", lecture);
+                                            videoIntent.putExtra("FromMyVideos", false);
+
+                                            startActivity(videoIntent);
+                                        } catch (Exception e) {
+                                            logger.error(e);
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            hideLastAccessedView(v);
+                        }
+                    }
+                } catch (Exception e) {
+                    hideLastAccessedView(v);
+                    logger.error(e);
+                }
+            } else {
+                hideLastAccessedView(v);
+            }
         }
     }
 }

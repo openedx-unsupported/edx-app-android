@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -66,5 +67,13 @@ public class CourseDashboardActivity extends CourseBaseActivity {
                 logger.error(e);
             }
         }
+    }
+
+    protected boolean createOptionMenu(Menu menu) {
+        return false;
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return false;
     }
 }

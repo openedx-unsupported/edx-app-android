@@ -4,16 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.ISequential;
 
 
 /**
  *
  */
-public class CourseSequentialOutlineActivity extends CourseBaseActivity {
-
-    protected Logger logger = new Logger(getClass().getSimpleName());
+public class CourseSequentialOutlineActivity extends CourseVideoListActivity{
 
     private CourseSequentialOutlineFragment fragment;
     private ISequential sequential;
@@ -45,7 +42,7 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (sequential != null && sequential.getChapter() != null) {
             setTitle( sequential.getChapter().getName() );
@@ -86,4 +83,9 @@ public class CourseSequentialOutlineActivity extends CourseBaseActivity {
         }
     }
 
+    @Override
+    public void updateListUI() {
+        if( fragment != null )
+            fragment.reloadList();
+    }
 }

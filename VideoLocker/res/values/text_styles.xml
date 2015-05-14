@@ -132,7 +132,7 @@
     </style>
     
     <style name="bold_text">
-        <item name="font">OpenSans-Bold.ttf</item>
+        <item name="font">OpenSans-Semibold.ttf</item>
     </style>
     
      <style name="text_network_error" parent="@style/semibold_white_text">

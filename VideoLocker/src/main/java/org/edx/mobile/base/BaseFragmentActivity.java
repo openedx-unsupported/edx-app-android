@@ -538,10 +538,10 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                             .findViewById(R.id.progress_wheel);
                     if (totalProgress != null) {
                         progressMenuItem.setVisible(true);
-                        storage.getAverageDownloadProgress(averageProgressCallback);
                     }else{
                         progressMenuItem.setVisible(false);
                     }
+                    storage.getAverageDownloadProgress(averageProgressCallback);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -701,7 +701,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         public void onResult(Integer result) {
             int progressPercent = result;
             if(progressPercent >= 0 && progressPercent <= 100){
-                totalProgress.setProgressPercent(progressPercent);
+                updateDownloadProgress(progressPercent);
             }
         }
         @Override
@@ -710,6 +710,11 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         }
     };
 
+
+    protected void updateDownloadProgress(int progressPercent){
+        if ( totalProgress != null)
+            totalProgress.setProgressPercent(progressPercent);
+    }
 
     /**
      * Returns user's profile.

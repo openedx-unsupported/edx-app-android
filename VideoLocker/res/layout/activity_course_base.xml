@@ -11,11 +11,142 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/downloadMessage"
+            style="@style/downloading_message"
+            android:text="@string/started_downloading"
+            android:visibility="gone" />
+
+        <LinearLayout
             android:id="@+id/offline_bar"
-            style="@style/offline_bar_style"
-            android:visibility="gone"
-            android:layout_alignParentTop="true"/>
+            android:orientation="vertical"
+            style="@style/offline_msg_bar_style"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+            <org.edx.mobile.view.custom.ETextView
+                android:text="@string/offline_text"
+                android:textColor="@color/offline_text"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="left|start|center_vertical"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/red_offline_bar"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/last_access_bar"
+            android:orientation="vertical"
+            style="@style/last_access_bar_style"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:text="@string/last_accessed"
+                        android:textColor="@color/cyan_4"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="left"/>
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/last_access_text"
+                        android:textSize="18sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="left"/>
+                </LinearLayout>
+
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/last_access_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/regular_text"
+                    android:gravity="center"
+                    android:textColor="@color/cyan_3"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:textAllCaps="true"
+                    android:text="@string/view_button_text" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/cyan_3"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/download_in_progress_bar"
+            android:orientation="vertical"
+            style="@style/download_in_progress_bar_style"
+
+            android:visibility="gone">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/video_download_indicator"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"/>
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    style="@style/regular_text"
+                    android:gravity="left|start"
+                    android:textColor="@color/cyan_3"
+                    android:textSize="16sp"
+                    android:text="@string/video_download_in_progress" />
+
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/download_in_progress_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/regular_text"
+                    android:gravity="center"
+                    android:textColor="@color/cyan_3"
+                    android:textSize="16sp"
+                    android:padding="10dp"
+                    android:textAllCaps="true"
+                    android:text="@string/view_button_text" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/cyan_3"/>
+        </LinearLayout>
 
 
         <RelativeLayout
@@ -86,9 +217,7 @@
             style="@style/api_progress_style"
             android:visibility="gone" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/offline_mode_message"
-            style="@style/offline_mode_message"/>
+
 
     </LinearLayout>
 

@@ -1,6 +1,8 @@
 package org.edx.mobile.model;
 
 
+import org.edx.mobile.model.api.VideoResponseModel;
+
 import java.util.List;
 
 public interface IVertical extends IComponent{
@@ -10,4 +12,8 @@ public interface IVertical extends IComponent{
 
     void setUnitUrl(String url);
     String getUnitUrl();
+
+    int getVideoCount();
+
+    List<VideoResponseModel> getVideos();
 }

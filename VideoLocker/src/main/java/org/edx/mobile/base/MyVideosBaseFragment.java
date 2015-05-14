@@ -3,7 +3,7 @@ package org.edx.mobile.base;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import org.edx.mobile.event.DownloadCompleteEvent;
+import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
@@ -29,14 +29,15 @@ public abstract class MyVideosBaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDB();
-        EventBus.getDefault().register(this);
+        if ( !EventBus.getDefault().isRegistered(this) )
+            EventBus.getDefault().register(this);
     }
 
     /**
      * used by EventBus callback
      * @param event
      */
-    public void onEvent(DownloadCompleteEvent event) {
+    public void onEvent(DownloadEvent event) {
         reloadList();
     }
 

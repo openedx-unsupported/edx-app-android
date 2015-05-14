@@ -2,7 +2,6 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
-import java.util.List;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -12,6 +11,8 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.UserPrefs;
+
+import java.util.List;
 
 class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
@@ -202,6 +203,20 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         return enqueue(op);
     }
 
+
+    @Override
+    public Boolean isVideoDownloadedInSection(String enrollmentId,
+                                              String chapter, String section, final DataCallback<Boolean> callback) {
+        DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS,
+            new String[] {DbStructure.Column.VIDEO_ID},
+            DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
+                + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
+            new String[] { section, chapter, enrollmentId,
+                String.valueOf(DownloadedState.DOWNLOADED.ordinal()),username}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
     @Override
     public Integer getVideosCountBySection(String enrollmentId, String chapter,
             String section, final DataCallback<Integer> callback) {
@@ -211,6 +226,18 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         + DbStructure.Column.DOWNLOADED + "!=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { section, chapter, enrollmentId, 
                 String.valueOf(DownloadedState.ONLINE.ordinal()),username}, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    @Override
+    public Integer getWebOnlyVideosCountBySection(String enrollmentId, String chapter, String section,
+                                                  final DataCallback<Integer> callback) {
+        DbOperationGetCount op = new DbOperationGetCount(false,DbStructure.Table.DOWNLOADS,
+            new String[] {DbStructure.Column.VIDEO_ID},
+            DbStructure.Column.SECTION + "=? AND "+DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
+                + DbStructure.Column.VIDEO_FOR_WEB_ONLY + "==1 AND " + DbStructure.Column.USERNAME + "=?",
+            new String[] { section, chapter, enrollmentId, username}, null);
         op.setCallback(callback);
         return enqueue(op);
     }

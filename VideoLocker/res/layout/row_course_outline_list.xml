@@ -1,35 +1,72 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
-    android:paddingLeft="12dp"
-    android:paddingRight="5dp"
-    android:paddingStart="12dp"
-    android:paddingEnd="5dp"
+    android:background="@drawable/rectangle_with_bottom_border"
+    android:gravity="center_vertical"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp" >
 
     <TextView
-        android:id="@+id/vertical_type"
+        android:id="@+id/row_type"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:visibility="invisible" />
+        android:padding="6dp"
+        android:gravity="center_vertical"
+        android:visibility="gone" />
 
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/chapter_name"
+    <LinearLayout
         style="@style/regular_grey_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginStart="50dp"
-        android:ellipsize="end"
-        android:maxWidth="@dimen/width_chapter_text"
-        android:singleLine="true"
-        tools:text="@string/chapter_name"
-        android:textSize="16sp" />
+        android:orientation="vertical"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp">
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/row_title"
+            style="@style/regular_grey_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text="@string/chapter_name"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            style="@style/regular_grey_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/row_subtitle"
+                style="@style/regular_grey_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:singleLine="true"
+                tools:text="@string/chapter_name"
+                android:visibility="gone"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/row_subtitle_icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:gravity="center_vertical"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bulk_download_layout"
@@ -45,24 +82,11 @@
 
         <TextView
             android:id="@+id/bulk_download"
+            android:gravity="center_vertical"
             android:layout_width="15dp"
             android:layout_height="15dp" />
     </LinearLayout>
 
-       <LinearLayout
-            android:id="@+id/download_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:visibility="invisible"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:background="@android:color/transparent" >
-
-            <include layout="@layout/view_progress_wheel" />
-        </LinearLayout>
     
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_of_videos"
@@ -70,6 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginRight="0dp"
@@ -77,22 +102,8 @@
         android:layout_toLeftOf="@id/bulk_download_layout"
         android:layout_toStartOf="@id/bulk_download_layout"
         tools:text="0"
+        android:visibility="gone"
         android:textColor="@color/grey_text_mycourse"
         android:textSize="15sp" />
 
-    <ImageView
-        android:id="@+id/next_arrow"
-        android:layout_width="10dp"
-        android:layout_height="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="14dp"
-        android:background="@drawable/ic_next_default"
-        android:contentDescription="@string/course_content"
-        android:scaleType="fitXY"
-        android:visibility="gone" />
-    
-    
-
-</RelativeLayout>
+</LinearLayout>

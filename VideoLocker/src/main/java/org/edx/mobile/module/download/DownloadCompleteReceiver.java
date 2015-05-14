@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import org.edx.mobile.event.DownloadCompleteEvent;
+import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -63,7 +63,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                                 count ++;
                                 p.put(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED, count);
 
-                                EventBus.getDefault().post(new DownloadCompleteEvent());
+                                EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.COMPLETED));
                             }
                         }
 

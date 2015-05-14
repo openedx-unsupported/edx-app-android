@@ -1,5 +1,7 @@
 package org.edx.mobile.model;
 
+import org.edx.mobile.model.api.VideoResponseModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,5 +49,26 @@ public class VerticalModel extends CourseComponent implements IVertical{
     @Override
     public void setUnitUrl(String unitUrl) {
         this.unitUrl = unitUrl;
+    }
+
+    @Override
+    public int getVideoCount(){
+        int count = 0;
+        for( IUnit unit :units ){
+            //TODO - we may need to create enum type for categories
+           if ("video".equals(unit.getCategory())  ){
+               count ++;
+           }
+        }
+        return count;
+    }
+
+    public  List<VideoResponseModel> getVideos(){
+        List<VideoResponseModel> videos = new ArrayList<>();
+        for(IUnit unit :units){
+            if ( "video".equals(unit.getCategory()) )
+                videos.add(unit.getVideoResponseModel());
+        }
+        return videos;
     }
 }

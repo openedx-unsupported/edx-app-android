@@ -3,6 +3,7 @@ package org.edx.mobile.model.api;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.IVertical;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.storage.IStorage;
 
 import java.io.Serializable;
 
@@ -22,6 +23,7 @@ public class SummaryModel implements Serializable, IUnit{
     private EncodingsModel encodings;
 
     private IVertical vertical;
+    private boolean graded;
 
     public String getCategory() {
         return category;
@@ -154,14 +156,30 @@ public class SummaryModel implements Serializable, IUnit{
         return vertical;
     }
 
+    @Override
     public void setVertical(IVertical vertical){
         this.vertical = vertical;
     }
 
+    @Override
+    public boolean isGraded(){
+        return graded;
+    }
+
+    @Override
+    public void setGraded(boolean graded){
+        this.graded = graded;
+    }
 
     private DownloadEntry downloadEntry;
     @Override
-    public DownloadEntry getDownloadEntry() {
+    public DownloadEntry getDownloadEntry(IStorage storage) {
+        if ( downloadEntry != null )
+            return downloadEntry;
+        if ( videoResponseModel != null && storage != null ) {
+            downloadEntry = (DownloadEntry) storage
+                .getDownloadEntryfromVideoResponseModel(videoResponseModel);
+        }
         return downloadEntry;
     }
 

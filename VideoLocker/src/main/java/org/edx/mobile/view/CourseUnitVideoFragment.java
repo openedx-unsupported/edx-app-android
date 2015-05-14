@@ -33,6 +33,7 @@ import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
@@ -73,6 +74,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     private boolean downloadAvailable = false;
     private Button deleteButton;
     private Api api;
+    private IStorage storage;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
 
@@ -100,6 +102,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         api = new Api(getActivity());
         unit = getArguments() == null ? null :
             (IUnit) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+        storage = new Storage(getActivity());
     }
 
     /**
@@ -201,8 +204,8 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     private void checkVideoStatus(IUnit unit) {
         try {
-            final DownloadEntry entry = unit.getDownloadEntry();
-            if ( unit.getDownloadEntry() == null )
+            final DownloadEntry entry = unit.getDownloadEntry(storage);
+            if ( entry == null )
                 return;
 
             if ( entry.isDownload() ){
@@ -287,7 +290,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         try{
 
             // reload this model
-            new Storage(getActivity()).reloadDownloadEntry(video);
+            storage.reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
@@ -532,7 +535,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     };
 
     public void markPlaying() {
-        new Storage(getActivity()).markVideoPlaying(videoModel, watchedStateCallback);
+        storage.markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     /**
@@ -638,7 +641,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
                         downloadEntry.lmsUrl);
                 }
 
-                if (new Storage(getActivity()).addDownload(downloadEntry) != -1) {
+                if (storage.addDownload(downloadEntry) != -1) {
                     ((VideoListActivity) getActivity())
                         .showInfoMessage(getString(R.string.msg_started_one_video_download));
                 } else {
