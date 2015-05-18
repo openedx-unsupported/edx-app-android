@@ -216,7 +216,9 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         selectedPosition = position;
         SectionItemInterface model = getItem(position);
-        if(model!=null) onItemClicked(model, position);
+        if(model!=null && testClickAcceptable( position )){
+            onItemClicked(model, position);
+        }
     }
 
     public abstract void onItemClicked(SectionItemInterface model, int position);

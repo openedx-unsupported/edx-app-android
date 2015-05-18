@@ -1,17 +1,17 @@
 package org.edx.mobile.module.prefs;
 
-import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.notification.NotificationPreference;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.Sha1Util;
-
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.Sha1Util;
 
 /**
  * This is a Utility for reading and writing to shared preferences.
@@ -25,8 +25,13 @@ public class PrefManager {
     private String prefName;
     private static final Logger logger = new Logger(PrefManager.class.getName());
 
+    //FIXME - we should use MAApplication's context to clean up
+    //the code.
     public PrefManager(Context context, String prefName) {
-        this.context = context;
+        if ( MainApplication.instance() != null )
+            this.context = MainApplication.instance().getApplicationContext();
+        else
+            this.context = context;
         this.prefName = prefName;
     }
     

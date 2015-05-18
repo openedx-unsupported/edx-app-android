@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import java.util.ArrayList;
+
 import org.edx.mobile.logger.Logger;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnItemClickListener {
 
@@ -21,6 +23,9 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     private SparseIntArray selection = new SparseIntArray(); 
     public static final long MIN_CLICK_INTERVAL = 1000; //in millis
     protected final Logger logger = new Logger(getClass().getName());
+
+    //simple way to avoid click on same row too quickly.
+    protected LastClickedEvent lastClickedEvent = new LastClickedEvent();
     
     public BaseListAdapter(Context context, int layoutResourceId) {
         super(context, layoutResourceId);
@@ -105,6 +110,7 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     public void clear() {
         super.clear();
         selection.clear();
+        lastClickedEvent = new LastClickedEvent();
     }
     
     @Override
@@ -161,11 +167,37 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     public abstract BaseViewHolder getTag(View convertView);
 
     /**
+     * help method to avoid quick click on the same row
+     * @param position  the row it clicks
+     * @return  <code>true</code> click can pass through <code>false</code> click on
+     * the same row moment ago
+     */
+    protected final boolean testClickAcceptable(int position){
+        final int acceptableElapseTime = 500;
+        if ( lastClickedEvent.position != position ){
+            lastClickedEvent.position = position;
+            lastClickedEvent.timestamp = new Date().getTime();
+            return true;
+        } else {
+            long previousClickTime = lastClickedEvent.timestamp;
+            lastClickedEvent.timestamp = new Date().getTime();
+            return  lastClickedEvent.timestamp - previousClickTime > acceptableElapseTime;
+        }
+    }
+
+    /**
      * Base class for ViewHolders in individual adapters.
      */
     public static class BaseViewHolder {
         public int position;
         public String videoId;
     }
-    
+
+    /**
+     * remember the last click for list view
+     */
+    private  class LastClickedEvent {
+        public int position;
+        public long timestamp;
+    }
 }
