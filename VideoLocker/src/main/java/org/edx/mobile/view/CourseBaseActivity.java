@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
@@ -22,6 +24,8 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import de.greenrobot.event.EventBus;
+
+import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 /**
  *  A base class to handle some common task
@@ -171,11 +175,75 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_share_on_web:
-                BrowserUtil.open(this, getUrlForWebView());
+                shareOnWeb();
+                return true;
+            case R.id.action_change_mode:
+                changeMode();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void shareOnWeb() {
+        //Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(this,
+                findViewById(R.id.action_share_on_web), Gravity.START);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.share_on_web, popup.getMenu());
+
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
+                return true;
+            }
+        });
+
+        popup.show(); //showing popup menu
+    }
+
+    public void changeMode(){
+                 //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(this,
+                        findViewById(R.id.action_change_mode), Gravity.START);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater()
+                    .inflate(R.menu.change_mode, popup.getMenu());
+                final PrefManager.UserPrefManager userPrefManager =
+                        new PrefManager.UserPrefManager(this);
+                MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+                MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
+                // Initializing the font awesome icons
+                IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
+                IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
+                videoOnlyItem.setIcon(videoOnlyIcon);
+                fullCourseItem.setIcon(fullCourseIcon);
+                // Setting checked states
+                if (userPrefManager.isUserPrefVideoModel()) {
+                    videoOnlyItem.setChecked(true);
+                    videoOnlyIcon.colorRes(R.color.cyan_4);
+                    fullCourseIcon.colorRes(R.color.black);
+                } else {
+                    fullCourseItem.setChecked(true);
+                    fullCourseIcon.colorRes(R.color.cyan_4);
+                    videoOnlyIcon.colorRes(R.color.black);
+                }
+
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        userPrefManager.setUserPrefVideoModel(
+                                item.getItemId() == R.id.change_mode_video_only);
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+
     }
 
     protected  String getUrlForWebView(){

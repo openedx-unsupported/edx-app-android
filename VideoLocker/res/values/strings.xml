@@ -193,6 +193,16 @@
     <!-- Header ror list of users' friends enrolled in a course -->
     <string name="course_friends_also_enrolled">Friends also enrolled in this course</string>
 
+    <!-- Title for the course filter menu popup -->
+    <string name="course_view_modes">Course View Modes</string>
+    <!-- Label for the course filter menu popup option for filtering by videos only -->
+    <string name="course_view_mode_videos_only">Videos Only</string>
+    <!-- Label for the course filter menu popup option for displaying the full course -->
+    <string name="course_view_mode_full_course">Full Course</string>
+
+    <!-- Label for the menu popup for viewing the course on the web -->
+    <string name="course_view_on_web">View on Web</string>
+
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
     <string name="course_content">Course Content</string>

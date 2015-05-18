@@ -2,6 +2,13 @@
 <resources>
     
     <dimen name="height_drawer_menu">44dp</dimen>
+    <dimen name="popupMenuWidth">168dp</dimen>
+    <dimen name="popupMenuHorizontalOffset">-168dp</dimen>
+    <dimen name="popupMenuVerticalOffset">6dp</dimen>
+    <dimen name="popupMenuPadding">16dp</dimen>
+    <dimen name="popupMenuItemVerticalPadding">6dp</dimen>
+    <dimen name="popupMenuIconDefaultSize">16dp</dimen>
+    <dimen name="popupMenuIconPadding">26dp</dimen>
     <dimen name="width_chapter_text">185dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
