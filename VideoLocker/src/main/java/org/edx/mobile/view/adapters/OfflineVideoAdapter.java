@@ -195,7 +195,7 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                     selectedPosition = position;
                 }
             }
-            if (!AppConstants.videoListDeleteMode) {
+            if (!AppConstants.videoListDeleteMode && testClickAcceptable(position)) {
                 onItemClicked(model, position);
             }
         }
