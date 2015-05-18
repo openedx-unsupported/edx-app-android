@@ -145,7 +145,23 @@ public interface IDatabase {
      */
     public Integer getVideosCountBySection(String enrollmentId, String chapter, 
             String section, DataCallback<Integer> callback);
-    
+
+    /**
+     * Returns true if Video is downloaded in Section for logged in user
+     */
+    public Boolean isVideoDownloadedInSection(String enrollmentId,
+                                              String chapter, String section, DataCallback<Boolean> callback);
+    /**
+     * get number of videos marked as webOnly
+     * @param enrollmentId
+     * @param chapter
+     * @param section
+     * @param callback
+     * @return
+     */
+    public Integer getWebOnlyVideosCountBySection(String enrollmentId, String chapter, String section,
+                                                  final DataCallback<Integer> callback);
+
     /**
      * Update a Video's watched state 
      * @param videoId  - Id of video for which status needs to change

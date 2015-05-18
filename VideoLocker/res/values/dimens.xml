@@ -2,7 +2,7 @@
 <resources>
     
     <dimen name="height_drawer_menu">44dp</dimen>
-    <dimen name="width_chapter_text">195dp</dimen>
+    <dimen name="width_chapter_text">185dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="avatar_view_width">32dp</dimen>

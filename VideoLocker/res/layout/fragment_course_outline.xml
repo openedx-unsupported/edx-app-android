@@ -10,6 +10,8 @@
         android:id="@+id/outline_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         />
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_chapter_tv"

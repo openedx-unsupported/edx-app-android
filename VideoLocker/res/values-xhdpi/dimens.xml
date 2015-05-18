@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="width_chapter_text">260dp</dimen>
+    <dimen name="width_chapter_text">230dp</dimen>
     <dimen name="width_video_text">250dp</dimen>
 </resources>

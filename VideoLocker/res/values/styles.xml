@@ -29,6 +29,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
@@ -49,11 +50,33 @@
            parent="@style/android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
     </style>
-    
+
     <style name="offline_bar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
         <item name="android:background">@color/red_offline_bar</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="offline_msg_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:background">@color/edx_brand_secondary_x_light</item>
+        <item name="android:textColor">@color/offline_text</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="last_access_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">75dp</item>
+        <item name="android:background">@color/cyan_1</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="download_in_progress_bar_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:background">@color/white</item>
         <item name="android:visibility">gone</item>
     </style>
     
@@ -100,6 +123,13 @@
 
     <style name="AppTheme.Dark" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@color/brand_primary_accent</item>
+    </style>
+
+    <!-- used to control the space between action bar items -->
+    <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
+        <item name="android:minWidth">0dip</item>
+        <item name="android:paddingLeft">2dip</item>
+        <item name="android:paddingRight">2dip</item>
     </style>
 
 </resources>

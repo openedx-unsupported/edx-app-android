@@ -1,5 +1,7 @@
 package org.edx.mobile.model;
 
+import org.edx.mobile.model.api.VideoResponseModel;
+
 import java.util.List;
 
 /*
@@ -15,4 +17,8 @@ public interface IChapter extends IComponent {
 
 
     ISequential getSequentialById(String sid);
+
+    int getVideoCount();
+
+    List<VideoResponseModel> getVideos();
 }

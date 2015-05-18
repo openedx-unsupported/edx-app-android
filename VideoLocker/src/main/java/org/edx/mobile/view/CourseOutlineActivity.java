@@ -4,16 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
 
 
 /**
  *  Top level outline for the Course
  */
-public class CourseOutlineActivity extends CourseBaseActivity {
-
-    protected Logger logger = new Logger(getClass().getSimpleName());
-
+public class CourseOutlineActivity extends CourseVideoListActivity {
 
     private CourseOutlineFragment fragment;
 
@@ -29,12 +25,6 @@ public class CourseOutlineActivity extends CourseBaseActivity {
 
     }
 
-    public void onResume(){
-        super.onResume();
-        if ( courseData != null && courseData.getCourse() != null ){
-            setTitle( courseData.getCourse().getName() );
-        }
-    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -67,5 +57,9 @@ public class CourseOutlineActivity extends CourseBaseActivity {
         }
     }
 
-
+    @Override
+    public void updateListUI() {
+           if( fragment != null )
+               fragment.reloadList();
+    }
 }

@@ -227,6 +227,14 @@
     <!-- Label showing next on assessment navigation bar-->
     <string name="assessment_next">Next</string>
 
+    <!-- Label showing assessment only available on website-->
+    <string name="assessment_not_available">This interactive component isn\'t yet available on mobile.</string>
+    <!-- Label showing assessment only available on website-->
+    <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
+    <!-- Button to show wiew on web for assessment-->
+    <string name="assessment_view_on_web">View on Web</string>
+
+
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->
     <string name="started_downloading">Downloading</string>
@@ -266,6 +274,10 @@
     <string name="title_lecture_complete">You\'ve reached the end of this video.</string>
     <!-- Alert dialog prompt at end of video. -->
     <string name="msg_lecture_complete">Would you like to watch the next video?</string>
+
+
+    <!-- Message shown video download in process -->
+    <string name="video_download_in_progress">Video Downloads in Progress</string>
 
     <!-- Message shown a single video download begins -->
     <string name="msg_started_one_video_download">"Downloading 1 Video"</string>

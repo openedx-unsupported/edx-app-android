@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="width_chapter_text">220dp</dimen>
+    <dimen name="width_chapter_text">200dp</dimen>
     <dimen name="width_video_text">210dp</dimen>
     <dimen name="checkbox_margin">40dp</dimen>
     <dimen name="checkbox_size">30dp</dimen>

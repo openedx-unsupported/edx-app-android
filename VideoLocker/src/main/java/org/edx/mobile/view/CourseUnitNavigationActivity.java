@@ -19,8 +19,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.IVertical;
-import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
@@ -33,8 +31,6 @@ import java.util.List;
 public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
-
-    private CourseOutlineFragment fragment;
 
     private ViewPager pager;
     private IUnit unit;
@@ -191,15 +187,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             if ( vertical.getUnits().size() > 0 )
                 unitList.addAll(vertical.getUnits());
         }
-        //populate video detail for
-        for (IUnit unit : unitList) {
-            if (unit.getCategory().equals("video")  ) {
-                VideoResponseModel vidmodel = (VideoResponseModel) unit.getVideoResponseModel();
-                DownloadEntry downloadEntry = (DownloadEntry) storage
-                    .getDownloadEntryfromVideoResponseModel(vidmodel);
-                unit.setDownloadEntry(downloadEntry);
-            }
-        }
 
         if ( selected != null ){
             int index = unitList.indexOf(selected);
@@ -250,6 +237,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
             if ( "video".equalsIgnoreCase(unit.getCategory())) {
                 return  CourseUnitVideoFragment.newInstance(unit);
+            }
+            if ( unit.isGraded() ){
+                return CourseUnitGradeFragment.newInstance(unit);
             }
             return CourseUnitWebviewFragment.newInstance(unit);
         }

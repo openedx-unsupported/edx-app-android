@@ -2,11 +2,22 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
+import android.widget.TextView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.IComponent;
+import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
+import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +28,21 @@ import java.util.List;
 public abstract  class CourseBaseAdapter extends BaseAdapter
     implements PinnedSectionListView.PinnedSectionListAdapter, SectionIndexer {
 
+    protected final Logger logger = new Logger(getClass().getName());
+
     protected IComponent rootComponent;
     protected SectionRow[] sections;
     protected LayoutInflater mInflater;
     protected List<CourseBaseAdapter.SectionRow> mData;
 
-    public CourseBaseAdapter(Context context) {
+    protected IDatabase dbStore;
+    protected IStorage storage;
+    protected Context context;
+
+    public CourseBaseAdapter(Context context, IDatabase dbStore, IStorage storage) {
+        this.context = context;
+        this.dbStore = dbStore;
+        this.storage = storage;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
         this.sections = new SectionRow[0];
         mData = new ArrayList();
@@ -79,8 +99,88 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
     }
 
 
+    @Override
+    public final View getView(int position, View convertView, ViewGroup parent) {
 
+        int type = getItemViewType(position);
+
+        if (convertView == null) {
+            switch (type) {
+                case SectionRow.ITEM:
+                    convertView = mInflater.inflate(R.layout.row_course_outline_list, null);
+                    // apply a tag to this list row
+                    ViewHolder tag = getTag(convertView);
+                    convertView.setTag(tag);
+                    break;
+                default : //SectionRow.SECTION:
+                    convertView = mInflater.inflate(R.layout.row_section_header, null);
+                    break;
+            }
+        }
+
+        switch (type) {
+            case SectionRow.ITEM:
+                return  getRowView(position, convertView, parent);
+            default : //SectionRow.SECTION:
+                return  getHeaderView(position, convertView, parent);
+        }
+    }
+
+    /**
+     *  subclass should implement this method instead,
+     *  convertView is guaranteed not null
+     */
+    public abstract View getRowView(int position, View convertView, ViewGroup parent);
+
+    /**
+     *  subclass should implement this method for section header
+     *   convertView is guaranteed not null
+     */
+    public abstract View getHeaderView(int position, View convertView, ViewGroup parent);
+
+    /**
+     *  handle the click of the row
+     */
     public abstract void rowClicked(SectionRow row) ;
+
+    /**
+     * download all the videos
+     */
+    public abstract void download(List<VideoResponseModel> models);
+
+    public abstract void download(DownloadEntry videoData);
+
+
+    public ViewHolder getTag(View convertView) {
+        ViewHolder holder = new ViewHolder();
+        holder.rowType = (TextView) convertView
+            .findViewById(R.id.row_type);
+        holder.rowTitle = (ETextView) convertView
+            .findViewById(R.id.row_title);
+        holder.rowSubtitle = (ETextView) convertView
+            .findViewById(R.id.row_subtitle);
+        holder.rowSubtitleIcon = (TextView) convertView
+            .findViewById(R.id.row_subtitle_icon);
+        holder.noOfVideos = (TextView) convertView
+            .findViewById(R.id.no_of_videos);
+        holder.bulkDownload = (TextView) convertView
+            .findViewById(R.id.bulk_download);
+        holder.bulkDownloadVideos = (LinearLayout) convertView
+            .findViewById(R.id.bulk_download_layout);
+        return holder;
+    }
+
+    public static class ViewHolder{
+
+        TextView  rowType;
+        ETextView rowTitle;
+        ETextView rowSubtitle;
+        TextView  rowSubtitleIcon;
+        TextView bulkDownload;
+        TextView noOfVideos;
+        LinearLayout bulkDownloadVideos;
+    }
+
 
 
     public static class SectionRow {

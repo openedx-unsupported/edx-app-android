@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,16 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseSequentialAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
+
+import java.util.List;
 
 public class CourseSequentialOutlineFragment extends MyVideosBaseFragment {
 
@@ -88,7 +94,7 @@ public class CourseSequentialOutlineFragment extends MyVideosBaseFragment {
     private void initializeAdapter(){
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseSequentialAdapter(getActivity()) {
+            adapter = new CourseSequentialAdapter(getActivity(), db, storage) {
                 @Override
                 public void rowClicked(SectionRow row) {
                     try {
@@ -97,6 +103,15 @@ public class CourseSequentialOutlineFragment extends MyVideosBaseFragment {
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
+                }
+                @Override
+                public void download(List<VideoResponseModel> models){
+                     //do nothing....
+                }
+                @Override
+                public void download(DownloadEntry videoData){
+                    DownloadManager.getSharedInstance().downloadVideo(
+                        videoData, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
                 }
             };
         }

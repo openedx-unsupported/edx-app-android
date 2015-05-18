@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.task.GetCourseOutlineTask;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
 import org.edx.mobile.util.AppConstants;
@@ -21,6 +25,7 @@ import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CourseOutlineFragment extends MyVideosBaseFragment {
 
@@ -129,7 +134,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     private void initializeAdapter(){
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity()) {
+            adapter = new CourseOutlineAdapter(getActivity(), db, storage) {
 
                 @Override
                 public void rowClicked(SectionRow row) {
@@ -140,6 +145,15 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
+                }
+
+                public void download(List<VideoResponseModel> models){
+                    DownloadManager.getSharedInstance().downloadVideos(
+                        models, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
+                }
+
+                public  void download(DownloadEntry videoData){
+
                 }
             };
         }
