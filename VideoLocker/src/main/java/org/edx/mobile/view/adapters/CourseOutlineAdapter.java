@@ -6,11 +6,13 @@ import android.view.ViewGroup;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.IChapter;
 import org.edx.mobile.model.IComponent;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.ISequential;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
@@ -42,19 +44,25 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter
         if ( rootComponent != null ) {
             ICourse course = (ICourse)rootComponent;
             int sectionsNumber = course.getChapters().size();
-            sections = new SectionRow[sectionsNumber];
+            SectionRow[] sectionsHolder = new SectionRow[sectionsNumber];
+            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+            boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
 
             int sectionPosition = 0, listPosition = 0;
             for (int i=0; i<sectionsNumber; i++) {
                 IChapter chapter = course.getChapters().get(i);
+                if ( currentVideoMode && chapter.getVideoCount() == 0 )
+                    continue;
                 SectionRow section = new SectionRow(SectionRow.SECTION, chapter );
                 section.sectionPosition = sectionPosition;
                 section.listPosition = listPosition++;
-                sections[sectionPosition] = section;
+                sectionsHolder[sectionPosition] = section;
                 mData.add(section);
 
                 List<ISequential> sequentials = chapter.getSequential();
                 for (int j=0;j<sequentials.size();j++) {
+                    if ( currentVideoMode && sequentials.get(j).getVideoCount() == 0 )
+                        continue;
                     SectionRow item = new SectionRow(SectionRow.ITEM, sequentials.get(j) );
                     item.sectionPosition = sectionPosition;
                     item.listPosition = listPosition++;
@@ -62,6 +70,11 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter
                 }
 
                 sectionPosition++;
+            }
+
+            if ( sectionPosition > 1 ){
+                this.sections = new SectionRow[sectionPosition -1 ];
+                System.arraycopy(sectionsHolder, 0, this.sections, 0, this.sections.length);
             }
         }
         notifyDataSetChanged();

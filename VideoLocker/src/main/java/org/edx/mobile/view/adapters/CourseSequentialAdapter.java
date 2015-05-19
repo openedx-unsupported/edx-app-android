@@ -17,6 +17,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.third_party.view.PinnedSectionListView;
@@ -37,6 +38,7 @@ public abstract  class CourseSequentialAdapter extends CourseBaseAdapter
         super(context, dbStore, storage);
     }
 
+
     /**
      * component can be null.
      * @IComponent component should be ICourse
@@ -50,19 +52,27 @@ public abstract  class CourseSequentialAdapter extends CourseBaseAdapter
         if ( rootComponent != null ) {
             ISequential course = (ISequential)rootComponent;
             int sectionsNumber = course.getVerticals().size();
-            sections = new SectionRow[sectionsNumber];
+            SectionRow[] sectionsHolder = new SectionRow[sectionsNumber];
+
+            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+            boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
 
             int sectionPosition = 0, listPosition = 0;
             for (int i=0; i<sectionsNumber; i++) {
                 IVertical vertical = course.getVerticals().get(i);
+                if( currentVideoMode && vertical.getVideoCount() == 0 )
+                    continue;
+
                 SectionRow section = new SectionRow(SectionRow.SECTION, vertical );
                 section.sectionPosition = sectionPosition;
                 section.listPosition = listPosition++;
-                sections[sectionPosition] = section;
+                sectionsHolder[sectionPosition] = section;
                 mData.add(section);
 
                 List<IUnit> units = vertical.getUnits();
                 for (int j=0;j<units.size();j++) {
+                    if( currentVideoMode && !"video".equals( units.get(j).getCategory() ))
+                        continue;
                     SectionRow item = new SectionRow(SectionRow.ITEM, units.get(j) );
                     item.sectionPosition = sectionPosition;
                     item.listPosition = listPosition++;
@@ -70,6 +80,11 @@ public abstract  class CourseSequentialAdapter extends CourseBaseAdapter
                 }
 
                 sectionPosition++;
+            }
+
+            if ( sectionPosition > 1 ){
+                this.sections = new SectionRow[sectionPosition -1 ];
+                System.arraycopy(sectionsHolder, 0, this.sections, 0, this.sections.length);
             }
         }
         notifyDataSetChanged();

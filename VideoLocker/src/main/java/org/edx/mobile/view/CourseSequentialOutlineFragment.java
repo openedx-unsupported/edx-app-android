@@ -125,7 +125,9 @@ public class CourseSequentialOutlineFragment extends MyVideosBaseFragment {
 
     @Override
     public void reloadList(){
-
+        if ( adapter != null ){
+            adapter.reloadData();
+        }
     }
 
     @Override

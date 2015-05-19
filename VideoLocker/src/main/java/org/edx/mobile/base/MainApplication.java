@@ -87,14 +87,14 @@ public class MainApplication extends Application{
         if (Config.getInstance().getNewRelicConfig().isEnabled()) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(Config.getInstance().getNewRelicConfig().getNewRelicKey())
-                    .withCrashReportingEnabled(false)
-                    .start(this);
+                .withCrashReportingEnabled(false)
+                .start(this);
         }
 
         // initialize Facebook SDK
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
         if ( !isOnZeroRatedNetwork
-                && Config.getInstance().getFacebookConfig().isEnabled()) {
+            && Config.getInstance().getFacebookConfig().isEnabled()) {
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookConfig().getFacebookAppId());
         }
 
@@ -104,8 +104,8 @@ public class MainApplication extends Application{
         // we at two level of controls just for easy change of different providers.
         if ( Config.getInstance().isNotificationEnabled() ){
             Config.ParseNotificationConfig parseNotificationConfig =
-                    Config.getInstance().getParseNotificationConfig();
-            if ( parseNotificationConfig.isEnabled() ) { 
+                Config.getInstance().getParseNotificationConfig();
+            if ( parseNotificationConfig.isEnabled() ) {
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
                 tryToUpdateParseForAppUpgrade(this);
@@ -130,9 +130,9 @@ public class MainApplication extends Application{
             EventBus.getDefault().removeStickyEvent(event);
         }
     }
-    
+
     /**
-     * Create the image cache. Uses Memory Cache by default. 
+     * Create the image cache. Uses Memory Cache by default.
      * Change to Disk for a Disk based LRU implementation.
      */
     private void createImageCache(){
@@ -143,11 +143,11 @@ public class MainApplication extends Application{
 
         RequestManager.init(this);
         ImageCacheManager.getInstance().init(this,
-                this.getPackageCodePath()
-                , DISK_IMAGECACHE_SIZE
-                , DISK_IMAGECACHE_COMPRESS_FORMAT
-                , DISK_IMAGECACHE_QUALITY
-                , ImageCacheManager.CacheType.MEMORY);
+            this.getPackageCodePath()
+            , DISK_IMAGECACHE_SIZE
+            , DISK_IMAGECACHE_COMPRESS_FORMAT
+            , DISK_IMAGECACHE_QUALITY
+            , ImageCacheManager.CacheType.MEMORY);
     }
 
 
@@ -158,7 +158,7 @@ public class MainApplication extends Application{
         logger.debug("onApplicationLaunchedFromBackground");
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         if ( pref.hasAuthTokenSocialCookie() ){
-             Router.getInstance().forceLogout(this);
+            Router.getInstance().forceLogout(this);
         }
     }
 
@@ -208,7 +208,7 @@ public class MainApplication extends Application{
     }
 
     private final class MyActivityLifecycleCallbacks
-            implements Application.ActivityLifecycleCallbacks{
+        implements Application.ActivityLifecycleCallbacks{
 
         Activity  prevPausedOne;
 
@@ -225,10 +225,10 @@ public class MainApplication extends Application{
         }
 
         public void onActivityResumed(Activity activity) {
-             if( null ==  prevPausedOne || prevPausedOne == activity ){
-                 //application launched from background,
-                 onApplicationLaunchedFromBackground();
-             }
+            if( null ==  prevPausedOne || prevPausedOne == activity ){
+                //application launched from background,
+                onApplicationLaunchedFromBackground();
+            }
         }
 
         public void onActivitySaveInstanceState(Activity activity,

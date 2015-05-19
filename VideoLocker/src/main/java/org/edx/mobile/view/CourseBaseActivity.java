@@ -6,17 +6,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
@@ -40,7 +37,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     private View downloadProgressBar;
     protected TextView downloadIndicator;
 
-    private ProgressBar progressWheel;
+    protected ProgressBar progressWheel;
 
     protected EnrolledCoursesResponse courseData;
     protected ICourse course;
@@ -163,29 +160,16 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
-
-        if (userPrefManager.isUserPrefVideoModel()) {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_film)
+        if( menu.findItem(R.id.action_share_on_web) != null)
+            menu.findItem(R.id.action_share_on_web).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
                     .actionBarSize());
-        } else {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_list)
-                    .actionBarSize());
-        }
-        menu.findItem(R.id.action_share_on_web).setIcon(
-            new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
-                .actionBarSize());
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_change_mode:
-                changeMode();
-                return true;
             case R.id.action_share_on_web:
                 BrowserUtil.open(this, getUrlForWebView());
                 return true;
@@ -198,30 +182,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         return "";
     }
 
-    public void changeMode(){
-                 //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(this, this.progressWheel);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                    .inflate(R.menu.change_mode, popup.getMenu());
-                MenuItem menuItem = popup.getMenu().findItem(R.id.change_mode_video_only);
 
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(
-                            CourseBaseActivity.this,
-                            "You Clicked : " + item.getTitle(),
-                            Toast.LENGTH_SHORT
-                        ).show();
-                        return true;
-                    }
-                });
-
-                popup.show(); //showing popup menu
-
-    }
     /**
      * This function shows the offline mode message
      */
@@ -267,7 +228,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     protected void hideLastAccessedView(View v) {
         try{
-             lastAccessBar.setVisibility(View.GONE);
+            lastAccessBar.setVisibility(View.GONE);
         }catch(Exception e){
             logger.error(e);
         }
@@ -275,7 +236,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
         try{
-           lastAccessBar.setVisibility(View.VISIBLE);
+            lastAccessBar.setVisibility(View.VISIBLE);
             //
             View lastAccessTextView = v == null ? findViewById(R.id.last_access_text) :
                 v.findViewById(R.id.last_access_text);
@@ -315,3 +276,4 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         hideLoadingProgress();
     }
 }
+
