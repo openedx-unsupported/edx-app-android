@@ -227,6 +227,11 @@
     <!-- Label showing next on assessment navigation bar-->
     <string name="assessment_next">Next</string>
 
+    <!-- Label for mode switch menu item-->
+    <string name="assessment_video_only">Video Only</string>
+    <!-- Label for mode switch menu item-->
+    <string name="assessment_full_course">Full Course</string>
+
     <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn\'t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->

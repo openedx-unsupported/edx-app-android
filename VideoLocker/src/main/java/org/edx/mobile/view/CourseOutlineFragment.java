@@ -178,6 +178,8 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
 
     @Override
     public void reloadList(){
-
+        if ( adapter != null ){
+            adapter.reloadData();
+        }
     }
 }

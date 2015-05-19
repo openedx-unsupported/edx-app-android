@@ -50,6 +50,11 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
 
     public abstract void setData(IComponent component);
 
+    public void reloadData(){
+        if (  this.rootComponent != null )
+            setData(this.rootComponent);
+    }
+
 
     @Override public SectionRow[] getSections() {
        return sections;
