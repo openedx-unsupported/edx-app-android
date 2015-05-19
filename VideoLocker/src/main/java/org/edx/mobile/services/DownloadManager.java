@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.storage.Storage;
@@ -42,7 +42,7 @@ public class DownloadManager {
         return manager;
     }
 
-    public void downloadVideos(final List<VideoResponseModel> model, final FragmentActivity activity,
+    public void downloadVideos(final List<HasDownloadEntry> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
         if ( model == null || model.isEmpty() ) {
              return;
@@ -67,21 +67,20 @@ public class DownloadManager {
 
     }
 
-    private void startDownloadVideos(List<VideoResponseModel> model, FragmentActivity activity, DownloadManagerCallback callback) {
+    private void startDownloadVideos(List<HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
         Storage storage = new Storage(activity);
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         int downloadCount = 0;
-        for (VideoResponseModel v : model) {
-            DownloadEntry de = (DownloadEntry) storage
-                .getDownloadEntryfromVideoResponseModel(v);
+        for (HasDownloadEntry v : model) {
+            DownloadEntry de = v.getDownloadEntry( storage );
             if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
                 || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
                 || de.isVideoForWebOnly ) {
                 continue;
             } else {
                 downloadSize = downloadSize
-                    + v.getSummary().getSize();
+                    + v.getSize();
                 downloadList.add(de);
                 downloadCount++;
             }

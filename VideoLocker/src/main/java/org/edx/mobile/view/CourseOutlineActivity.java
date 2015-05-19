@@ -37,6 +37,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                 if (courseData != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+                    bundle.putSerializable(Router.EXTRA_COURSE_COMPONENT, courseComponent);
                     fragment.setArguments(bundle);
                 }
                 //this activity will only ever hold this lone fragment, so we
@@ -62,4 +63,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
            if( fragment != null )
                fragment.reloadList();
     }
+
+
 }

@@ -8,21 +8,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.model.IUnit;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 /**
  *
  */
-public class CourseUnitGradeFragment extends Fragment implements PageViewStateCallback {
-    IUnit unit;
+public class CourseUnitEmptyFragment extends Fragment implements PageViewStateCallback {
+    CourseComponent unit;
 
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitGradeFragment newInstance(IUnit unit) {
-        CourseUnitGradeFragment f = new CourseUnitGradeFragment();
+    static CourseUnitEmptyFragment newInstance(CourseComponent unit) {
+        CourseUnitEmptyFragment f = new CourseUnitEmptyFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -39,7 +39,7 @@ public class CourseUnitGradeFragment extends Fragment implements PageViewStateCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         unit = getArguments() == null ? null :
-            (IUnit) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+            (CourseComponent) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
     }
 
     /**
@@ -49,15 +49,10 @@ public class CourseUnitGradeFragment extends Fragment implements PageViewStateCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_unit_grade, container, false);
+        View v = inflater.inflate(R.layout.fragment_course_unit_empty, container, false);
         TextView laptop = (TextView)v.findViewById(R.id.watch_on_web_icon);
         Iconify.setIcon(laptop, Iconify.IconValue.fa_laptop);
-        v.findViewById(R.id.view_on_web_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO - open the webview.
-            }
-        });
+
         return v;
     }
 

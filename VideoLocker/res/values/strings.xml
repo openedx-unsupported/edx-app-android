@@ -248,7 +248,15 @@
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
     <!-- Button to show wiew on web for assessment-->
     <string name="assessment_view_on_web">View on Web</string>
+    <!-- Label for homework for assessment-->
+    <string name="assessment_homework">Homework</string>
+    <!-- Label to show empty assessment -->
+    <string name="assessment_empty">This interactive component isn\'t yet available on mobile.</string>
+    <!-- Label to show empty assessment -->
+    <string name="assessment_empty_coming_soon">Coming soon.</string>
 
+    <!-- Label for warning message of graded assessment -->
+    <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the web until it is fully supported on mobile.</string>
 
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->

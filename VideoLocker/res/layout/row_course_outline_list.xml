@@ -3,7 +3,7 @@
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rectangle_with_bottom_border"
+    android:background="@color/white"
     android:gravity="center_vertical"
     android:layout_marginStart="16dp"
     android:layout_marginLeft="16dp"
@@ -45,6 +45,7 @@
 
         <LinearLayout
             style="@style/regular_grey_text"
+            android:id="@+id/row_subtitle_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -109,5 +110,6 @@
         android:textColor="@color/grey_text_mycourse"
         android:textSize="15sp"
         tools:targetApi="17" />
+
 
 </LinearLayout>

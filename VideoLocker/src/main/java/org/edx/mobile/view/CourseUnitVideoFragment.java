@@ -22,12 +22,12 @@ import android.widget.Toast;
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
@@ -59,7 +59,7 @@ import java.util.Map;
 public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCallback, PageViewStateCallback {
 
     protected final Logger logger = new Logger(getClass().getName());
-    IUnit unit;
+    VideoBlockModel unit;
     private PlayerFragment playerFragment;
     private boolean isLandscape = false;
     private boolean myVideosFlag = false;
@@ -81,7 +81,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitVideoFragment newInstance(IUnit unit) {
+    static CourseUnitVideoFragment newInstance(VideoBlockModel unit) {
         CourseUnitVideoFragment f = new CourseUnitVideoFragment();
 
         // Supply num input as an argument.
@@ -101,7 +101,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         setRetainInstance(true);
         api = new Api(getActivity());
         unit = getArguments() == null ? null :
-            (IUnit) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         storage = new Storage(getActivity());
     }
 
@@ -202,7 +202,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         }
     }
 
-    private void checkVideoStatus(IUnit unit) {
+    private void checkVideoStatus(VideoBlockModel unit) {
         try {
             final DownloadEntry entry = unit.getDownloadEntry(storage);
             if ( entry == null )
@@ -391,9 +391,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     private TranscriptModel getTranscriptModel(DownloadEntry video){
         TranscriptModel transcript = null;
-        if(unit!=null && unit.getVideoResponseModel() != null &&
-            unit.getVideoResponseModel().getSummary() != null) {
-            transcript = unit.getVideoResponseModel().getSummary().getTranscripts();
+        if(unit!=null && unit.getData() != null &&
+            unit.getData().transcripts != null) {
+            transcript = unit.getData().transcripts;
         }
         if ( transcript == null ) {
             Api api = new Api(getActivity());
