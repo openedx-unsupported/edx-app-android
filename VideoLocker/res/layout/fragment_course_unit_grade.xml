@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -28,6 +29,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        tools:targetApi="17"
         />
 
     <TextView
@@ -44,6 +46,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
+        tools:targetApi="17"
         />
 
     <Button

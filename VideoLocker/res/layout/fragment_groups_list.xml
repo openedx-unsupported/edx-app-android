@@ -109,6 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:targetApi="17"/>
 
 </RelativeLayout>

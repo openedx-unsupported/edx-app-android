@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -63,9 +64,10 @@
             android:id="@+id/slider_menu"
             android:layout_width="240dp"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
+            android:layout_gravity="left|start"
             android:background="@color/black"
-            android:clickable="true" />
+            android:clickable="true"
+            tools:targetApi="17" />
     </android.support.v4.widget.DrawerLayout>
 
 </LinearLayout>

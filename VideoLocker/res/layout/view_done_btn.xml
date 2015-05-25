@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -8,10 +9,13 @@
     android:textStyle="bold"
     android:text="@string/done_text"
     android:paddingRight="15dp"
+    android:paddingEnd="15dp"
     android:paddingLeft="5dp"
+    android:paddingStart="5dp"
     android:textAllCaps="true"
     style="@style/regular_text"
     android:background="@android:color/white"
     android:clickable="true"
     android:layout_centerVertical="true"
-    android:enabled="false"/>
+    android:enabled="false"
+    tools:targetApi="17"/>

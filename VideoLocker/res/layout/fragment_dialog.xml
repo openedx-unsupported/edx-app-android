@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_layout"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
@@ -90,10 +91,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
             android:layout_toRightOf="@+id/progressbar"
+            android:layout_toEndOf="@+id/progressbar"
             android:text="@string/progressText"
             android:textColor="@color/grey_light"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            tools:targetApi="17" />
     </RelativeLayout>
 
     <LinearLayout
@@ -111,12 +115,14 @@
             android:layout_height="35dip"
             android:layout_gravity="center|center_horizontal"
             android:layout_marginRight="0.5dp"
+            android:layout_marginEnd="0.5dp"
             android:layout_weight="0.5"
             android:background="@android:color/white"
             android:gravity="center"
             android:text="@string/label_cancel"
             android:textAllCaps="true"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.EButton
             android:id="@+id/positiveButton"

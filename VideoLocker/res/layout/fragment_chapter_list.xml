@@ -35,7 +35,9 @@
                 android:textAllCaps="true"
                 android:textColor="@color/cyan_text_navigation"
                 android:textSize="15sp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                tools:targetApi="17" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/last_viewed_tv"

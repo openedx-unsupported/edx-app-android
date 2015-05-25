@@ -12,8 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:text="@string/course_name"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txt_chapter_title"
@@ -21,8 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:text="@string/app_name"
-        android:visibility="visible" />
+        android:visibility="visible"
+        tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txt_lecture_title"
@@ -30,8 +38,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:text="@string/app_name"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:targetApi="17" />
 
     <RelativeLayout
         android:id="@+id/video_row_layout"
@@ -45,8 +57,11 @@
             android:layout_height="13dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/cyan_circle" />
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/cyan_circle"
+            tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/video_title"
@@ -56,12 +71,14 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/video_watched_status"
+            android:layout_toEndOf="@id/video_watched_status"
             android:ellipsize="end"
             android:maxWidth="@dimen/width_video_text"
             android:singleLine="true"
             tools:text="Video Title"
             android:textColor="@color/grey_text_mycourse"
-            android:textSize="16sp" 
+            android:textSize="16sp"
+            tools:targetApi="17"
             />
 
         <org.edx.mobile.view.custom.ETextView
@@ -70,13 +87,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/video_title"
+            android:layout_alignStart="@id/video_title"
             android:layout_below="@id/video_title"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
             tools:text="3:45"
             android:textColor="@color/grey_video_size_text"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/video_size"
@@ -85,13 +104,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/video_title"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_toRightOf="@id/video_playing_time"
+            android:layout_toEndOf="@id/video_playing_time"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
             tools:text="200 MB"
             android:textColor="@color/grey_video_size_text"
             android:textSize="13sp"
+            tools:targetApi="17"
  />
 
         <LinearLayout
@@ -99,9 +121,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="-4dp"
-            android:visibility="gone" >
+            android:layout_marginEnd="-4dp"
+            android:visibility="gone"
+            tools:targetApi="17" >
 
             <include layout="@layout/view_progress_wheel" />
         </LinearLayout>
@@ -111,11 +136,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="-3dp"
+            android:layout_marginEnd="-3dp"
             android:background="@android:color/transparent"
             android:padding="10dp"
-            android:visibility="gone" >
+            android:visibility="gone"
+            tools:targetApi="17" >
 
             <ImageView
                 android:id="@+id/video_start_download"
@@ -132,9 +160,12 @@
             android:layout_height="@dimen/checkbox_size"
             android:layout_centerVertical="true"
             android:layout_marginLeft="320dp"
+            android:layout_marginStart="320dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:button="@drawable/checkbox_selector"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:targetApi="17" />
     </RelativeLayout>
 
 </LinearLayout>

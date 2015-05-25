@@ -49,7 +49,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     private void setUIParams(){
         int padding = (int)UiUtil.getParamsInDP(getResources(),10);
         setPadding(padding,padding,padding,padding);
-        setGravity(Gravity.LEFT|Gravity.CENTER_VERTICAL);
+        setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
     }
 
     public void setHint(String hint) {

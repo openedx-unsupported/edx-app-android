@@ -88,7 +88,9 @@
                     android:src="@drawable/ic_cert"
                     android:layout_weight="1"
                     android:gravity="center|center_vertical"
-                    android:layout_marginRight="14dp" />
+                    android:layout_marginRight="14dp"
+                    android:layout_marginEnd="14dp"
+                    tools:targetApi="17" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -166,7 +168,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="4dp"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="4dp"
+                    tools:targetApi="17" />
 
             </LinearLayout>
 
@@ -213,7 +216,8 @@
                         app:borderRadius="@dimen/avatar_image_radius_small"
                         app:overflowBorderWidth="1dp"
                         app:overflowTextSize="12sp"
-                        android:gravity="center|right" />
+                        android:gravity="center|right|end"
+                        tools:targetApi="17" />
 
                 </LinearLayout>
 
@@ -242,10 +246,13 @@
                 android:paddingRight="@dimen/course_detail_margin_left"
                 android:paddingTop="@dimen/course_detail_margin"
                 android:paddingBottom="@dimen/course_detail_margin"
+                android:drawablePadding="@dimen/course_detail_margin_left"
                 android:visibility="visible"
                 style="@style/regular_grey_text"
                 android:textSize="16sp"
-                android:drawableRight="@drawable/ic_officialfbgroup" />
+                android:drawableRight="@drawable/ic_officialfbgroup"
+                android:drawableEnd="@drawable/ic_officialfbgroup"
+                tools:targetApi="17" />
 
         </LinearLayout>
 
@@ -255,34 +262,37 @@
             android:background="@color/grey"
             android:gravity="center" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white">
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/combined_course_handout_text"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/view_handouts"
                 style="@style/regular_grey_text"
                 android:paddingLeft="@dimen/course_detail_margin_left"
-                android:paddingRight="@dimen/course_detail_margin_left"
+                android:paddingStart="@dimen/course_detail_margin_left"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
                 android:paddingTop="@dimen/course_detail_margin"
                 android:paddingBottom="@dimen/course_detail_margin"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                tools:targetApi="17"/>
 
             <ImageView
                 android:id="@+id/next_arrow"
                 android:layout_width="10dp"
                 android:layout_height="16dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_margin="14dp"
-                android:background="@drawable/ic_next_default"
+                android:background="@drawable/ic_next_default_mirrored"
                 android:contentDescription="@string/course_content"
                 android:scaleType="fitXY"/>
-            </RelativeLayout>
+            </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -332,12 +342,14 @@
                             android:id="@+id/settingsText"
                             style="@style/regular_text"
                             android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:layout_gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/notification_toggle"
                             android:textColor="@color/grey_6"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            tools:targetApi="17" />
                     </LinearLayout>
 
                     <Switch

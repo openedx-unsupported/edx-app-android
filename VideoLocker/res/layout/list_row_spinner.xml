@@ -4,9 +4,10 @@
     style="@style/regular_grey_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical|left"
+    android:gravity="center_vertical|left|start"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    tools:text="this is sample text" />
+    tools:text="this is sample text"
+    tools:targetApi="17" />

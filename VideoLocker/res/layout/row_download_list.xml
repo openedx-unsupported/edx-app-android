@@ -12,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:layout_marginRight="45dp"
+        android:layout_marginEnd="45dp"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:fadingEdge="horizontal"
@@ -22,17 +24,20 @@
         android:singleLine="true"
         tools:text="Engaging in Interaction"
         android:textColor="@color/grey_text_mycourse"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:targetApi="17" />
 
     <LinearLayout android:id="@+id/close_btn_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
-        android:padding="5dp" >
+        android:padding="5dp"
+        tools:targetApi="17" >
 
         <ImageView
             android:id="@+id/close_btn"
@@ -49,11 +54,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/downloads_name"
         android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:lines="1"
         android:singleLine="true"
         tools:text="53:59:21"
         android:textColor="@color/grey_video_size_text"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/download_percentage"
@@ -62,12 +69,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/downloads_name"
         android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_toRightOf="@+id/download_time"
+        android:layout_toEndOf="@+id/download_time"
         android:lines="1"
         android:singleLine="true"
         tools:text="45.20/200MB"
         android:textColor="@color/grey_video_size_text"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:targetApi="17" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -77,10 +87,13 @@
         android:layout_below="@+id/download_time"
         android:layout_marginBottom="4dp"
         android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:layout_marginRight="45dp"
+        android:layout_marginEnd="45dp"
         android:layout_marginTop="4dp"
         android:max="100"
-        android:progress="40" />
+        android:progress="40"
+        tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/txtDownloadFailed"
@@ -90,8 +103,10 @@
         android:layout_below="@+id/progressBar"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:text="@string/download_failed_text"
         android:textColor="@color/red_download_failed_text"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:targetApi="17" />
 
 </RelativeLayout>

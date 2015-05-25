@@ -13,7 +13,10 @@
         android:layout_height="wrap_content"
         android:textColorHint="@color/hint_grey_text"
         android:paddingLeft="5dp"
-        android:paddingRight="10dp"/>
+        android:paddingStart="5dp"
+        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
+        tools:targetApi="17"/>
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/input_spinner_error"

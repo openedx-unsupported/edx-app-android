@@ -26,12 +26,17 @@
             android:textAllCaps="true"
             android:textStyle="bold"
             android:drawableLeft="@drawable/ic_facebookwhite"
+            android:drawableStart="@drawable/ic_facebookwhite"
             android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="0dp"
+            android:paddingEnd="0dp"
             android:drawablePadding="10dp"
             android:layout_margin="8dp"
             android:textSize="14sp"
             android:background="@drawable/com_facebook_button_blue"
-            android:text="@string/open_study_group"/>
+            android:text="@string/open_study_group"
+            tools:targetApi="17" />
 
         <TextView
             android:id="@+id/member_count"
@@ -40,12 +45,14 @@
             android:layout_marginTop="2dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="10sp"
             android:text="@string/group_summary_count"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            tools:targetApi="17"/>
 
     </LinearLayout>
 
@@ -100,6 +107,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        tools:targetApi="17"/>
 
 </RelativeLayout>

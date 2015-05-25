@@ -78,7 +78,8 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_facebookblue"
                 android:visibility="invisible"
-                android:gravity="center_vertical|start" />
+                android:gravity="center_vertical|start"
+                tools:targetApi="17" />
 
             <TextView
                 android:layout_marginTop="16dp"
@@ -147,12 +148,17 @@
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:drawableLeft="@drawable/ic_facebookwhite"
+                android:drawableStart="@drawable/ic_facebookwhite"
                 android:drawablePadding="12dp"
                 android:paddingLeft="12dp"
+                android:paddingStart="12dp"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
-                android:text="@string/btn_share_app"/>
+                android:text="@string/btn_share_app"
+                tools:targetApi="17"/>
 
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,9 +15,10 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="25dp"
-        android:gravity="left"
+        android:gravity="left|start"
         android:text="@string/find_courses_dialog_text_1"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/find_courses_dialog_tv2"
@@ -26,9 +28,10 @@
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="15dp"
-        android:gravity="left"
+        android:gravity="left|start"
         android:textSize="15sp"
-        android:layout_below="@id/find_courses_dialog_tv1"/>
+        android:layout_below="@id/find_courses_dialog_tv1"
+        tools:targetApi="17"/>
 
     <Button
         android:id="@+id/open_edx_in_browser_btn"

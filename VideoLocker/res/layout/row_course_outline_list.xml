@@ -10,7 +10,8 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="5dp"
-    android:paddingBottom="5dp" >
+    android:paddingBottom="5dp"
+    tools:targetApi="17" >
 
     <TextView
         android:id="@+id/row_type"
@@ -28,7 +29,8 @@
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp">
+        android:layout_marginStart="2dp"
+        tools:targetApi="17">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/row_title"
@@ -78,7 +80,8 @@
         android:padding="10dp"
         android:layout_marginRight="2dp"
         android:layout_marginEnd="2dp"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        tools:targetApi="17" >
 
         <TextView
             android:id="@+id/bulk_download"
@@ -104,6 +107,7 @@
         tools:text="0"
         android:visibility="gone"
         android:textColor="@color/grey_text_mycourse"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:targetApi="17" />
 
 </LinearLayout>

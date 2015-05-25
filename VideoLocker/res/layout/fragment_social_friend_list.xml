@@ -15,6 +15,7 @@
         <org.edx.mobile.view.custom.EEditText
             android:id="@+id/search_friends_edit_text"
             android:drawableLeft="@drawable/ic_search"
+            android:drawableStart="@drawable/ic_search"
             android:layout_width="wrap_content"
             android:background="@null"
             style="@style/semibold_text"
@@ -30,7 +31,8 @@
             android:textColorHint="@color/white"
             android:hint="@string/friends_search"
             android:textCursorDrawable="@null"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            tools:targetApi="17" />
 
         <ImageButton
             android:id="@+id/cancel_search_btn"
@@ -38,8 +40,10 @@
             android:layout_height="match_parent"
             android:src="@drawable/ic_cancelsearch"
             android:layout_marginRight="14dp"
+            android:layout_marginEnd="14dp"
             android:background="@null"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            tools:targetApi="17" />
 
         </LinearLayout>
 
@@ -49,8 +53,12 @@
         android:layout_height="wrap_content"
         style="@style/video_section_title"
         android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
         android:text="@string/friends_with_edx_accounts"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        tools:targetApi="17" />
 
     <RelativeLayout
         android:id="@+id/friend_list_container"

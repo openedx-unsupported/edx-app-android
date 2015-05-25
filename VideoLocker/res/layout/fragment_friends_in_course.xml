@@ -26,6 +26,7 @@
             android:background="@drawable/group_next"
             android:textColor="@color/white"
             android:drawableRight="@drawable/ic_openedx"
+            android:drawableEnd="@drawable/ic_openedx"
             style="@style/bold_text"
             android:textAllCaps="true"
             android:layout_margin="8dp"
@@ -34,7 +35,8 @@
             android:padding="12dp"
             android:text="@string/open_course_page"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/course_label"
@@ -43,13 +45,15 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             style="@style/regular_text"
             android:textAllCaps="true"
             android:textStyle="bold"
             android:textSize="10sp"
             android:text="@string/friends_in_course"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            tools:targetApi="17"/>
 
     </LinearLayout>
 

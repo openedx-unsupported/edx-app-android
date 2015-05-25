@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <style name="section_title" parent="@style/regular_white_text">
         <item name="android:paddingLeft">15dp</item>
@@ -52,7 +53,7 @@
         <item name="android:maxWidth">300dp</item>
         <item name="android:textColor">@color/grey_text</item>
         <item name="android:background">@drawable/edit_bg_selector</item>
-        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
         <item name="android:textSize">12sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:paddingLeft">10dp</item>
@@ -175,7 +176,7 @@
         <item name="android:maxHeight">80dp</item>
         <item name="android:textColor">@color/grey_text</item>
         <item name="android:background">@drawable/edit_bg_selector</item>
-        <item name="android:gravity">left|top</item>
+        <item name="android:gravity" tools:targetApi="17">left|start|top</item>
         <item name="android:textSize">12sp</item>
         <item name="android:singleLine">false</item>
         <item name="android:padding">10dp</item>
@@ -187,7 +188,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/red_error_text</item>
-        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
         <item name="android:textSize">11sp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:paddingLeft">5dp</item>
@@ -200,7 +201,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/grey_redirected_txt</item>
-        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
         <item name="android:textSize">11sp</item>
         <item name="android:padding">5dp</item>
         <item name="font">OpenSans-Regular.ttf</item>

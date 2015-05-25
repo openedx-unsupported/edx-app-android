@@ -5,9 +5,12 @@
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
     android:paddingLeft="12dp"
+    android:paddingStart="12dp"
     android:paddingRight="5dp"
+    android:paddingEnd="5dp"
     android:paddingTop="5dp"
-    android:paddingBottom="5dp" >
+    android:paddingBottom="5dp"
+    tools:targetApi="17" >
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/chapter_name"
@@ -16,21 +19,26 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:ellipsize="end"
         android:maxWidth="@dimen/width_chapter_text"
         android:singleLine="true"
         tools:text="@string/chapter_name"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        tools:targetApi="17" />
 
     <LinearLayout
         android:id="@+id/bulk_download_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:padding="10dp"
         android:layout_marginRight="2dp"
-        android:background="@android:color/transparent" >
+        android:layout_marginEnd="2dp"
+        android:background="@android:color/transparent"
+        tools:targetApi="17" >
 
         <ImageView
             android:id="@+id/bulk_download"
@@ -45,10 +53,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:visibility="invisible"
             android:layout_marginLeft="5dp"
-            android:background="@android:color/transparent" >
+            android:layout_marginStart="5dp"
+            android:background="@android:color/transparent"
+            tools:targetApi="17" >
 
             <include layout="@layout/view_progress_wheel" />
         </LinearLayout>
@@ -60,23 +71,29 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginRight="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_toLeftOf="@id/bulk_download_layout"
+        android:layout_toStartOf="@id/bulk_download_layout"
         tools:text="0"
         android:textColor="@color/grey_text_mycourse"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:targetApi="17" />
 
     <ImageView
         android:id="@+id/next_arrow"
         android:layout_width="10dp"
         android:layout_height="16dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_margin="14dp"
-        android:background="@drawable/ic_next_default"
+        android:background="@drawable/ic_next_default_mirrored"
         android:contentDescription="@string/course_content"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:targetApi="17" />
     
     
 
