@@ -23,6 +23,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 
@@ -196,7 +197,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         //we should use courseComponent instead.   Requirement maybe changed?
        // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
-        ((CourseComponent)selectedUnit.getRoot()).fetchAllLeafComponents(leaves);
+        EnumSet<BlockType> types = EnumSet.allOf(BlockType.class);
+        ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
 
         int index = unitList.indexOf(selectedUnit);

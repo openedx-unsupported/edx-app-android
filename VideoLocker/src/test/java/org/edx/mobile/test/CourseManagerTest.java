@@ -25,7 +25,7 @@ public class CourseManagerTest {
 
     @Test
     public void testNormalizeCourseStructure() throws Exception {
-        IBlock block = CourseManager.getSharedInstance().normalizeCourseStructure(model);
+        IBlock block = CourseManager.normalizeCourseStructure(model);
     }
 
 

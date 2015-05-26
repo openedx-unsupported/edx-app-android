@@ -6,7 +6,7 @@ import org.edx.mobile.module.storage.IStorage;
 /**
  * common base class for all type of units
  */
-public class VideoBlockModel extends CourseComponent implements HasDownloadEntry{
+public class VideoBlockModel extends CourseComponent implements HasDownloadEntry {
 
     private DownloadEntry downloadEntry;
     private VideoData data;
@@ -37,5 +37,6 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
     public void setData(VideoData data) {
         this.data = data;
     }
+
 
 }

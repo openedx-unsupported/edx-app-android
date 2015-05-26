@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
-import org.apache.http.HttpStatus;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
@@ -51,7 +50,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -246,6 +244,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Map<String, SectionEntry> getCourseHierarchy(String courseId)
             throws Exception {
         return getCourseHierarchy(courseId, false);
@@ -259,6 +258,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
@@ -297,7 +297,7 @@ public class Api {
             // add each video to its corresponding chapter and section
 
             // add this as a chapter
-            String cname = m.getChapter().name;
+            String cname = m.getChapter().getName();
 
             // carry this courseId with video model
             m.setCourseId(courseId);
@@ -309,16 +309,16 @@ public class Api {
                 s = new SectionEntry();
                 s.chapter = cname;
                 s.isChapter = true;
-                s.section_url = m.section_url;
+                s.section_url = m.getSectionUrl();
                 chapterMap.put(cname, s);
             }
 
             // add this video to section inside in this chapter
-            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().name);
+            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().getName());
             if (videos == null) {
-                s.sections.put(m.getSection().name,
+                s.sections.put(m.getSection().getName(),
                         new ArrayList<VideoResponseModel>());
-                videos = s.sections.get(m.getSection().name);
+                videos = s.sections.get(m.getSection().getName());
             }
 
             //This has been commented out because for some Videos thereare no english srt's and hence returning empty
@@ -350,6 +350,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public LectureModel getLecture(String courseId, String chapterName, String lectureName)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
@@ -381,6 +382,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public VideoResponseModel getVideoById(String courseId, String videoId)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
@@ -413,6 +415,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
@@ -427,7 +430,7 @@ public class Api {
                 // iterate videos 
                 for (VideoResponseModel v : entry.getValue()) {
                     // identify the subsection (module) if id matches
-                    if (subsectionId.equals(v.getSection().id)) {
+                    if (subsectionId.equals(v.getSection().getId())) {
                         return v;
                     }
                 }
@@ -444,12 +447,13 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public String getUnitUrlByVideoById(String courseId, String videoId)
             throws Exception {
         try{
             VideoResponseModel vrm = getVideoById(courseId, videoId);
             if(vrm!=null){
-                return vrm.unit_url;
+                return vrm.getUnitUrl();
             }
         }catch(Exception e){
             logger.error(e);
@@ -551,7 +555,8 @@ public class Api {
      * @return
      * @throws Exception
      */
-    public ArrayList<VideoResponseModel> getVideosByCourseId(String courseId, boolean preferCache)
+    @Deprecated
+    private ArrayList<VideoResponseModel> getVideosByCourseId(String courseId, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
         String url = getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
@@ -776,36 +781,6 @@ public class Api {
         return null;
     }
 
-    /**
-     * Returns list of videos for a particular URL.
-     * @param courseId
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public ArrayList<VideoResponseModel> getVideosByURL(String courseId, String videoUrl, boolean preferCache)
-            throws Exception {
-        if(videoUrl==null){
-            return null;
-        }
-        ArrayList<VideoResponseModel> vidList = getVideosByCourseId(courseId, preferCache);
-        ArrayList<VideoResponseModel> list = new ArrayList<VideoResponseModel>();
-        if(vidList!=null && vidList.size()>0){
-            for(VideoResponseModel vrm : vidList){
-                try{
-                    if(vrm.getSummary().getVideoUrl().equalsIgnoreCase(videoUrl)){
-                        vrm.setCourseId(courseId);
-                        list.add(vrm);
-                    }
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            }
-        }
-
-        return list;
-    }
-
     public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
         return getFriendsCourses(false, oauthToken);
     }
@@ -1026,6 +1001,7 @@ public class Api {
      * @param chapter
      * @return
      */
+    @Deprecated
     public ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
     (String courseId, String chapter) {
 
@@ -1043,12 +1019,12 @@ public class Api {
             ArrayList<VideoResponseModel> videos = getVideosByCourseId(courseId, true);
             for (VideoResponseModel v : videos) {
                 // filter videos by chapter
-                if (v.getChapter().name.equals(chapter)) {
+                if (v.getChapter().getName().equals(chapter)) {
                     // this video is under the specified chapter
 
                     // sort out the section of this video
-                    if (sections.containsKey(v.getSection().name)) {
-                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().name);
+                    if (sections.containsKey(v.getSection().getName())) {
+                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().getName());
                         if (sv == null) {
                             sv = new ArrayList<VideoResponseModel>();
                         }
@@ -1056,7 +1032,7 @@ public class Api {
                     } else {
                         ArrayList<VideoResponseModel> vlist = new ArrayList<VideoResponseModel>();
                         vlist.add(v);
-                        sections.put(v.getSection().name, vlist);
+                        sections.put(v.getSection().getName(), vlist);
                     }
                 }
             }
@@ -1271,51 +1247,19 @@ public class Api {
     }
 
 
-    /**
-     * Returns course structure object from the given URL.
-     * @param courseId
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public String getCourseStructure(String courseId, boolean preferCache) throws Exception {
-        //TODO - should we create a separate data structure to host
-        //different parameters for this API? it is not needed for now.
-        String block_count = URLEncoder.encode("[\"video\"]", "UTF-8");
-        String block_data = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"],\"allow_cache_miss\":\"True\"}}", "UTF-8");
-
-        String url = getBaseUrl() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
-                     +"children=False&block_count=" + block_count + "&block_data=" + block_data;
-
-        logger.debug("GET url for enrolling in a Course: " + url);
+    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
 
 
-        String json = null;
+        logger.debug("GET url for enrolling in a Course: " + delegate.getUrl());
 
-        if ( preferCache ){
-            json = cache.get(url);
-            if ( json != null )
-                return json;
-        }
-
-        if (NetworkUtil.isConnected(context) && !preferCache) {
+        if (NetworkUtil.isConnected(context)) {
             // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(url, null);
-            logger.debug("Url "+urlWithAppendedParams);
+            String urlWithAppendedParams = HttpManager.toGetUrl(delegate.getUrl(), null);
             HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
-            if ( result.statusCode == HttpStatus.SC_OK ) {
-                cache.put(url, result.body);
-                json = result.body;
-            }
+            return result;
         }
 
-        if ( json == null ) {
-            json = cache.get(url);
-        }
-
-        logger.debug("Response of course_about= " + json);
-
-        return json;
+        return null;
     }
 
 }

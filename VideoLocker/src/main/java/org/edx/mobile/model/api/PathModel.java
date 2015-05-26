@@ -3,11 +3,11 @@ package org.edx.mobile.model.api;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class PathModel implements Serializable {
+public class PathModel implements Serializable, IPathNode {
     
-    public String category;
-    public String name;
-    public String id;
+    private String category;
+    private String name;
+    private String id;
     
     /*
      * Returns true if this is a CHAPTER.
@@ -30,5 +30,29 @@ public class PathModel implements Serializable {
      */
     public boolean isVertical() {
         return category.equalsIgnoreCase("vertical");
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

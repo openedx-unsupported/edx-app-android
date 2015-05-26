@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
@@ -20,6 +19,7 @@ import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -77,11 +77,10 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessedSubSectionId!=null){
-                        final Api api = new Api(this);
-                        final VideoResponseModel videoModel = api.getSubsectionById(courseId,
+                        final VideoResponseModel videoModel = ServiceManager.getInstance().getSubsectionById(courseId,
                             lastAccessedSubSectionId);
                         if (videoModel != null) {
-                            super.showLastAccessedView(null, " " + videoModel.getSection().name, new View.OnClickListener() {
+                            super.showLastAccessedView(null, " " + videoModel.getSection().getName(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //This has been used so that if user clicks continuously on the screen,
@@ -90,9 +89,9 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
                                         try {
-                                            LectureModel lecture = api.getLecture(courseId,
-                                                videoModel.getChapterName(),
-                                                videoModel.getSequentialName());
+                                            LectureModel lecture = ServiceManager.getInstance().getLecture(courseId,
+                                                videoModel.getChapterName(), videoModel.getChapter().getId(),
+                                                videoModel.getSequentialName(), videoModel.getSection().getId());
                                             SectionEntry chapter = new SectionEntry();
                                             chapter.chapter = videoModel.getChapterName();
                                             lecture.chapter = chapter;

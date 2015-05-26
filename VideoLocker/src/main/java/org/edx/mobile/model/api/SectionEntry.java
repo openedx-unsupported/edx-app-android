@@ -64,13 +64,4 @@ public class SectionEntry implements Serializable {
         return list;
     }
 
-    public boolean isIs_video_downloads_available() {
-        // TODO is this method really required ?
-        return false;
-    }
-
-    public boolean isDownloaded_videos_chapter() {
-        // TODO is this method really required ?
-        return false;
-    }
 }

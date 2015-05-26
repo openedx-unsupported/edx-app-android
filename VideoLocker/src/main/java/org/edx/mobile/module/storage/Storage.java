@@ -25,6 +25,7 @@ import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 
@@ -372,8 +373,8 @@ public class Storage implements IStorage {
 
         Api api = new Api(context);
         try {
-            Map<String, SectionEntry> courseHeirarchyMap = (LinkedHashMap<String, SectionEntry>) api
-                    .getCourseHierarchy(courseId, true);
+            Map<String, SectionEntry> courseHeirarchyMap = (LinkedHashMap<String, SectionEntry>)
+                  ServiceManager.getInstance().getCourseHierarchy(courseId);
 
             // iterate chapters
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {
