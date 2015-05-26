@@ -4,6 +4,9 @@ import android.database.Cursor;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.model.db.DownloadEntry;
 
 /**
@@ -59,8 +62,8 @@ public class DatabaseModelFactory {
         e.eid = vrm.getCourseId();
         e.duration = vrm.getSummary().getDuration();
         e.size = vrm.getSummary().getSize();
-        e.title = vrm.getSummary().getName();
-        e.url = vrm.getSummary().getVideo_url();
+        e.title = vrm.getSummary().getDisplayName();
+        e.url = vrm.getSummary().getVideoUrl();
         e.url_high_quality = vrm.getSummary().getHighEncoding();
         e.url_low_quality = vrm.getSummary().getLowEncoding();
         e.url_youtube = vrm.getSummary().getYoutubeLink();
@@ -68,10 +71,36 @@ public class DatabaseModelFactory {
         e.transcript = vrm.getSummary().getTranscripts();
         e.lmsUrl = vrm.unit_url;
 
-        e.videoId = vrm.getSummary().getId();
-        e.transcript = vrm.getSummary().getTranscripts();
-        e.lmsUrl = vrm.unit_url;
-        e.isVideoForWebOnly = vrm.getSummary().isOnly_on_web(); // new Random().nextBoolean();//
+        e.isVideoForWebOnly = vrm.getSummary().isOnlyOnWeb();
+        return e;
+    }
+
+    /**
+     *  Returns an object of IVideoModel which has all the fields copied from given VideoData.
+     * @param vrm
+     * @return
+     */
+    public static VideoModel getModel(VideoData vrm, VideoBlockModel block) {
+        DownloadEntry e = new DownloadEntry();
+        //FIXME - current database schema is not suitable for arbitary level of course structure tree
+        //solution - store the navigation path info in into one column field in the database,
+        //rather than individual column fields.
+        e.chapter = block.getAncestor(2).getDisplayName();
+        e.section = block.getAncestor(1).getDisplayName();
+        IBlock root = block.getRoot();
+        e.eid = root.getId();
+        e.duration = vrm.duration;
+        e.size =  vrm.encodedVideos.getPreferredVideoInfo().fileSize;
+        e.title = block.getDisplayName();
+        e.url = vrm.encodedVideos.getPreferredVideoInfo().url;
+        e.url_high_quality = vrm.encodedVideos.mobileHigh == null ? "" : vrm.encodedVideos.mobileHigh.url;
+        e.url_low_quality = vrm.encodedVideos.mobileLow == null ? "": vrm.encodedVideos.mobileLow.url;
+        //e.url_youtube = ?? ;
+        e.videoId = block.getId();
+        e.transcript = vrm.transcripts;
+        e.lmsUrl = block.getBlockUrl();
+
+        e.isVideoForWebOnly = vrm.onlyOnWeb;
         return e;
     }
 }

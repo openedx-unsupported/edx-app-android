@@ -16,10 +16,14 @@ import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
 
 public class CourseDashboardFragment extends Fragment {
-
+    public static interface ShowCourseOutlineCallback{
+        void showCourseOutline();
+    }
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";
+
+    private ShowCourseOutlineCallback callback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,8 @@ public class CourseDashboardFragment extends Fragment {
             videoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.getInstance().showCourseChapterOutline(getActivity(), courseData);
+                    if( callback != null)
+                        callback.showCourseOutline();
                 }
             });
 
@@ -89,6 +94,10 @@ public class CourseDashboardFragment extends Fragment {
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    public void setCallback(ShowCourseOutlineCallback callback){
+        this.callback = callback;
     }
 
 }

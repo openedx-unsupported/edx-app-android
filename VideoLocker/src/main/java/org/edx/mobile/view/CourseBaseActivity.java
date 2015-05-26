@@ -13,8 +13,8 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
-import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -22,10 +22,9 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import de.greenrobot.event.EventBus;
-
-import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 /**
  *  A base class to handle some common task
@@ -44,7 +43,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected ProgressBar progressWheel;
 
     protected EnrolledCoursesResponse courseData;
-    protected ICourse course;
+    protected CourseComponent courseComponent;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -114,16 +113,15 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void onSaveInstanceState(Bundle outState) {
         if ( courseData != null)
             outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-        if ( course != null )
-            outState.putSerializable(Router.EXTRA_COURSE, course);
+        if ( courseComponent != null )
+            outState.putSerializable(Router.EXTRA_COURSE_COMPONENT, courseComponent);
         super.onSaveInstanceState(outState);
     }
 
     protected void restore(Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
-            course = (ICourse) savedInstanceState.getSerializable(Router.EXTRA_COURSE);
+            courseComponent =   (CourseComponent)savedInstanceState.getSerializable(Router.EXTRA_COURSE_COMPONENT);
         }
     }
 
@@ -168,6 +166,17 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             menu.findItem(R.id.action_share_on_web).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
                     .actionBarSize());
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
+
+        if (userPrefManager.isUserPrefVideoModel()) {
+            menu.findItem(R.id.action_change_mode).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_film)
+                    .actionBarSize());
+        } else {
+            menu.findItem(R.id.action_change_mode).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_list)
+                    .actionBarSize());
+        }
         return true;
     }
     @Override
@@ -247,8 +256,9 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
     protected  String getUrlForWebView(){
-        return "";
+        return courseComponent == null ? "" : courseComponent.getWebUrl();
     }
+
 
 
     /**

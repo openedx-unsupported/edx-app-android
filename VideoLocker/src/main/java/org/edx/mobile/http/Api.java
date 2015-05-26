@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
+import org.apache.http.HttpStatus;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
@@ -50,6 +51,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -175,7 +177,7 @@ public class Api {
         p.putString("username", username);
 
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username;
-        String json = http.get(url, getAuthHeaders());
+        String json = http.get(url, getAuthHeaders()).body;
 
         Gson gson = new GsonBuilder().create();
         ProfileModel res = gson.fromJson(json, ProfileModel.class);
@@ -201,7 +203,7 @@ public class Api {
         
         logger.debug("Url for getProfile: " + urlWithAppendedParams);
 
-        String json = http.get(urlWithAppendedParams, getAuthHeaders());
+        String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
 
         if (json == null) {
             return null;
@@ -267,7 +269,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -414,7 +416,9 @@ public class Api {
     public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
-
+       //FIXME - we should not invoke this method for new course structure api
+       if ( map == null )
+           return null;
         // iterate chapters
         for (Entry<String, SectionEntry> chapterentry : map.entrySet()) {
             // iterate lectures
@@ -502,7 +506,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !fetchFromCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         }
@@ -556,7 +560,7 @@ public class Api {
             // get data from server
             //Change from post to get. as post is not supported
             //FIXME -  it does not check the return code before it cache the result.
-            json = http.get(url, getAuthHeaders());
+            json = http.get(url, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -589,7 +593,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -622,7 +626,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -655,7 +659,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("url : "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -716,7 +720,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             //cache.put(url, json);
         } else {
@@ -762,7 +766,7 @@ public class Api {
         if (url != null){
             try {
                 if (NetworkUtil.isConnected(this.context)) {
-                    String str = http.get(url, getAuthHeaders());
+                    String str = http.get(url, getAuthHeaders()).body;
                     return str;
                 }
             } catch (Exception ex){
@@ -789,7 +793,7 @@ public class Api {
         if(vidList!=null && vidList.size()>0){
             for(VideoResponseModel vrm : vidList){
                 try{
-                    if(vrm.getSummary().getVideo_url().equalsIgnoreCase(videoUrl)){
+                    if(vrm.getSummary().getVideoUrl().equalsIgnoreCase(videoUrl)){
                         vrm.setCourseId(courseId);
                         list.add(vrm);
                     }
@@ -817,7 +821,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
            logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -865,7 +869,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
             logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -957,7 +961,7 @@ public class Api {
 
         String url = getBaseUrl() + "/api/mobile/v0.5/settings/preferences/";
         String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-        String json = http.get(urlWithAppendedParams, getAuthHeaders());
+        String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
 
         if (json == null) {
             return false;
@@ -980,7 +984,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
             logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -1180,7 +1184,7 @@ public class Api {
 
         String date = DateUtil.getModificationDate();
 
-        String json = http.get(url, getAuthHeaders());
+        String json = http.get(url, getAuthHeaders()).body;
 
         if (json == null) {
             return null;
@@ -1264,6 +1268,54 @@ public class Api {
         }
 
         return false;
+    }
+
+
+    /**
+     * Returns course structure object from the given URL.
+     * @param courseId
+     * @param preferCache
+     * @return
+     * @throws Exception
+     */
+    public String getCourseStructure(String courseId, boolean preferCache) throws Exception {
+        //TODO - should we create a separate data structure to host
+        //different parameters for this API? it is not needed for now.
+        String block_count = URLEncoder.encode("[\"video\"]", "UTF-8");
+        String block_data = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"],\"allow_cache_miss\":\"True\"}}", "UTF-8");
+
+        String url = getBaseUrl() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
+                     +"children=False&block_count=" + block_count + "&block_data=" + block_data;
+
+        logger.debug("GET url for enrolling in a Course: " + url);
+
+
+        String json = null;
+
+        if ( preferCache ){
+            json = cache.get(url);
+            if ( json != null )
+                return json;
+        }
+
+        if (NetworkUtil.isConnected(context) && !preferCache) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(url, null);
+            logger.debug("Url "+urlWithAppendedParams);
+            HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
+            if ( result.statusCode == HttpStatus.SC_OK ) {
+                cache.put(url, result.body);
+                json = result.body;
+            }
+        }
+
+        if ( json == null ) {
+            json = cache.get(url);
+        }
+
+        logger.debug("Response of course_about= " + json);
+
+        return json;
     }
 
 }

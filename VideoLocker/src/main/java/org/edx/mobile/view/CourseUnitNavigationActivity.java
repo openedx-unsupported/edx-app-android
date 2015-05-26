@@ -16,9 +16,10 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.ISequential;
-import org.edx.mobile.model.IUnit;
-import org.edx.mobile.model.IVertical;
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.ArrayList;
@@ -33,10 +34,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private ViewPager pager;
-    private IUnit unit;
-    private ISequential sequential;
+    private CourseComponent selectedUnit;
 
-    private List<IUnit> unitList = new ArrayList<>();
+    private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +108,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             }
         });
 
+
+        updateDataModel();
+        
         setApplyPrevTransitionOnRestart(true);
 
         try{
@@ -118,22 +121,30 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     }
 
+
+    protected  String getUrlForWebView(){
+        if ( selectedUnit == null ){
+            return courseComponent == null ? "" : courseComponent.getWebUrl();
+        } else {
+            return selectedUnit.getWebUrl();
+        }
+    }
+
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
-        IUnit unit = pagerAdapter.getUnit(curIndex);
-        IUnit nextUnit = pagerAdapter.getUnit(curIndex +1);
+        selectedUnit = pagerAdapter.getUnit(curIndex);
+        CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
         View prevButton = findViewById(R.id.goto_prev);
         View nextButton = findViewById(R.id.goto_next);
         nextButton.setVisibility(View.VISIBLE);
+        prevButton.setVisibility(View.VISIBLE);
         View newUnitReminder = findViewById(R.id.new_unit_reminder);
-        if( unit.getVertical().getId().equalsIgnoreCase(nextUnit.getVertical().getId())){
-            prevButton.setVisibility(View.VISIBLE);
-            newUnitReminder.setVisibility(View.GONE);
-        } else {
-            prevButton.setVisibility(View.GONE);
+        if( selectedUnit.isLastChild() ){
             newUnitReminder.setVisibility(View.VISIBLE);
             TextView textView = (TextView)findViewById(R.id.next_unit_title);
-            textView.setText(nextUnit.getVertical().getName());
+            textView.setText(nextUnit.getParent().getDisplayName());
+        } else {
+            newUnitReminder.setVisibility(View.GONE);
         }
         if ( curIndex == 0 ){
             prevButton.setVisibility(View.GONE);
@@ -141,26 +152,24 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             nextButton.setVisibility(View.GONE);
         }
         findViewById(R.id.course_unit_nav_bar).requestLayout();
+
+        setTitle(selectedUnit.getDisplayName());
     }
 
     protected void initialize(Bundle arg){
         super.initialize(arg);
-        setData(sequential, unit);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if( sequential != null )
-            outState.putSerializable(Router.EXTRA_SEQUENTIAL, sequential);
-        if( unit != null )
-            outState.putSerializable(Router.EXTRA_COURSE_UNIT, sequential);
+        if( selectedUnit != null )
+            outState.putSerializable(Router.EXTRA_COURSE_UNIT, selectedUnit);
         super.onSaveInstanceState(outState);
     }
 
     protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            sequential = (ISequential) savedInstanceState.getSerializable(Router.EXTRA_SEQUENTIAL);
-            unit = (IUnit) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT);
+            selectedUnit = (CourseComponent) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT);
         }
         super.restore(savedInstanceState);
     }
@@ -169,7 +178,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setTitle("");
     }
 
 
@@ -177,28 +185,28 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         super.onResume();
     }
 
-    public void setData(ISequential sequential, IUnit selected){
+    private void updateDataModel(){
         unitList.clear();
-        if ( sequential == null ) {
-            return;
+        if( selectedUnit == null || selectedUnit.getRoot() == null ) {
+            logger.warn("selectedUnit is null?");
+            return;   //should not happen
         }
+        //TODO - courseComponent is not necessary the course object.
+        //if we want to navigate through all unit of within the parent node,
+        //we should use courseComponent instead.   Requirement maybe changed?
+       // unitList.addAll( courseComponent.getChildLeafs() );
+        List<CourseComponent> leaves = new ArrayList<>();
+        ((CourseComponent)selectedUnit.getRoot()).fetchAllLeafComponents(leaves);
+        unitList.addAll( leaves );
 
-        for(IVertical vertical : sequential.getVerticals() ){
-            if ( vertical.getUnits().size() > 0 )
-                unitList.addAll(vertical.getUnits());
-        }
-
-        if ( selected != null ){
-            int index = unitList.indexOf(selected);
-            if ( index >= 0 ){
-                pager.setCurrentItem( index );
-                tryToUpdateForEndOfSequential();
-            }
+        int index = unitList.indexOf(selectedUnit);
+        if ( index >= 0 ){
+            pager.setCurrentItem( index );
+            tryToUpdateForEndOfSequential();
         }
 
         if ( pagerAdapter  != null )
             pagerAdapter.notifyDataSetChanged();
-
 
     }
 
@@ -224,7 +232,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         }
 
 
-        public IUnit getUnit(int pos){
+        public CourseComponent getUnit(int pos){
             if ( pos >= unitList.size() )
                 pos = unitList.size() -1;
             if ( pos < 0 )
@@ -233,15 +241,30 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         }
         @Override
         public Fragment getItem(int pos) {
-            IUnit unit = getUnit(pos);
+            CourseComponent unit = getUnit(pos);
 
-            if ( "video".equalsIgnoreCase(unit.getCategory())) {
-                return  CourseUnitVideoFragment.newInstance(unit);
+            if ( !unit.isMobileSupported() ){
+                return CourseUnitMobileNotSupportedFragment.newInstance(unit);
             }
-            if ( unit.isGraded() ){
-                return CourseUnitGradeFragment.newInstance(unit);
+
+            if ( unit.getType() != BlockType.VIDEO &&
+                unit.getType() != BlockType.HTML &&
+                unit.getType() != BlockType.OTHERS &&
+                unit.getType() != BlockType.DISCUSSION ) {
+                return CourseUnitEmptyFragment.newInstance(unit);
             }
-            return CourseUnitWebviewFragment.newInstance(unit);
+
+            if ( unit instanceof VideoBlockModel) {
+                return  CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
+            }
+
+            if ( unit instanceof HtmlBlockModel ){
+                return CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
+            }
+
+            //fallback
+            return CourseUnitMobileNotSupportedFragment.newInstance(unit);
+
         }
 
         @Override

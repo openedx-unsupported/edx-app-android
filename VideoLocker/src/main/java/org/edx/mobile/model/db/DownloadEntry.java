@@ -2,20 +2,19 @@ package org.edx.mobile.model.db;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EncodingsModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.prefs.PrefManager;
-
-import android.text.TextUtils;
+import org.edx.mobile.util.JavaUtil;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
 
@@ -97,21 +96,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
      * @return
      */
     public String getDurationReadable() {
-        if (duration == 0) {
-            return "00:00";
-        }
-        
-        // convert duration to seconds
-        //long d = duration / 1000;
-        long d = duration;
-        int hours = (int) (d / 3600f); 
-        d = d % 3600;
-        int mins = (int) (d / 60f);
-        int secs = (int) (d % 60); 
-        if (hours <= 0) {
-            return String.format("%02d:%02d", mins, secs);
-        }
-        return String.format("%02d:%02d:%02d", hours, mins, secs);
+        return JavaUtil.getDurationString(duration);
     }
 
     @Override

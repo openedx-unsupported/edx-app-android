@@ -40,6 +40,7 @@ import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -192,7 +193,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                 @Override
                 public void download(final SectionEntry model) {
                      DownloadManager.getSharedInstance().downloadVideos(
-                         model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
+                         (List)model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
                 }
             };
         }

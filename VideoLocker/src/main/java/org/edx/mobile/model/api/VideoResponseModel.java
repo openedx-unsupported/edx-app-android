@@ -1,12 +1,15 @@
 package org.edx.mobile.model.api;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.course.HasDownloadEntry;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.storage.IStorage;
 
 import java.util.List;
 
 
 @SuppressWarnings("serial")
-public class VideoResponseModel implements SectionItemInterface {
+public class VideoResponseModel implements SectionItemInterface, HasDownloadEntry {
 
     private PathModel[] path;
     private SummaryModel summary;
@@ -14,6 +17,8 @@ public class VideoResponseModel implements SectionItemInterface {
     public String section_url;
     public String unit_url;
     private List<String> named_path;
+
+    private DownloadEntry downloadEntry;
 
     /**
      * Returns chapter object of this model. The chapter object is found
@@ -97,7 +102,7 @@ public class VideoResponseModel implements SectionItemInterface {
     
     @Override
         public String toString() {
-            return summary.getName();
+            return summary.getDisplayName();
         }
 
     @Override
@@ -129,5 +134,20 @@ public class VideoResponseModel implements SectionItemInterface {
 
     public void setNamed_path(List<String> named_path) {
         this.named_path = named_path;
+    }
+
+    @Override
+    public DownloadEntry getDownloadEntry(IStorage storage) {
+        if ( downloadEntry != null )
+            return downloadEntry;
+        if ( storage != null ) {
+            downloadEntry = (DownloadEntry) storage
+                .getDownloadEntryfromVideoResponseModel(this);
+        }
+        return downloadEntry;
+    }
+
+    public long getSize(){
+        return summary == null ? 0 : summary.getSize();
     }
 }

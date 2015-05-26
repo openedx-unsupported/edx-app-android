@@ -18,8 +18,6 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -127,17 +125,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
 
-        if (userPrefManager.isUserPrefVideoModel()) {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_film)
-                    .actionBarSize());
-        } else {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_list)
-                    .actionBarSize());
-        }
         return super.onPrepareOptionsMenu(menu);
     }
 

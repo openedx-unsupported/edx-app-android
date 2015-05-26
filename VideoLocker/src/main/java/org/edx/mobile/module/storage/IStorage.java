@@ -4,6 +4,7 @@ import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
@@ -72,6 +73,13 @@ public interface IStorage {
      * @return
      */
     VideoModel getDownloadEntryfromVideoResponseModel(VideoResponseModel vrm);
+
+    /**
+     * Returns DownloadEntry Model after converting it from VidoeBlockModel
+     * @param block - VidoeBlockModel
+     * @return
+     */
+    VideoModel getDownloadEntryfromVideoModel(VideoBlockModel block);
 
     /**
      * Returns NativeDownload Entry for the given DMID

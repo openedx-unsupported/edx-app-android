@@ -47,7 +47,7 @@ public class HttpManager {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public String get(String urlWithAppendedParams, Bundle headers)
+    public HttpResult get(String urlWithAppendedParams, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
         DefaultHttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -79,8 +79,10 @@ public class HttpManager {
         // String response =
         // EntityUtils.toString(client.execute(get).getEntity(), "UTF-8");
         client.getConnectionManager().shutdown();
-
-        return strRes;
+        HttpResult result = new HttpResult();
+        result.body = strRes;
+        result.statusCode = response.getStatusLine().getStatusCode();
+        return result;
     }
 
     /**
@@ -308,5 +310,10 @@ public class HttpManager {
         client.getConnectionManager().shutdown();
 
         return header;
+    }
+
+    public static class HttpResult {
+        public String body;
+        public int statusCode;
     }
 }

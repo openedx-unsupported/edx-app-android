@@ -6,17 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IComponent;
-import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.third_party.view.PinnedSectionListView;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -25,13 +23,11 @@ import java.util.List;
 /**
  * Used for pinned behavior.
  */
-public abstract  class CourseBaseAdapter extends BaseAdapter
-    implements PinnedSectionListView.PinnedSectionListAdapter, SectionIndexer {
+public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     protected final Logger logger = new Logger(getClass().getName());
 
-    protected IComponent rootComponent;
-    protected SectionRow[] sections;
+    protected CourseComponent rootComponent;
     protected LayoutInflater mInflater;
     protected List<CourseBaseAdapter.SectionRow> mData;
 
@@ -43,12 +39,11 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
         this.context = context;
         this.dbStore = dbStore;
         this.storage = storage;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);;
-        this.sections = new SectionRow[0];
+        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mData = new ArrayList();
     }
 
-    public abstract void setData(IComponent component);
+    public abstract void setData(CourseComponent component);
 
     public void reloadData(){
         if (  this.rootComponent != null )
@@ -56,30 +51,13 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
     }
 
 
-    @Override public SectionRow[] getSections() {
-       return sections;
-    }
-
-    @Override public int getPositionForSection(int section) {
-        if ( sections.length <= section )
-            section = sections.length -1;
-        return sections[section].listPosition;
-    }
-
-    @Override public int getSectionForPosition(int position) {
-        if (position >= getCount()) {
-            position = getCount() - 1;
-        }
-        return getItem(position).sectionPosition;
-    }
-
     @Override public int getItemViewType(int position) {
         return getItem(position).type;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;  //TODO - we will change it
+        return 2;
     }
 
     @Override
@@ -95,12 +73,6 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-
-    @Override
-    public boolean isItemViewTypePinned(int viewType) {
-        return viewType == SectionRow.SECTION;
     }
 
 
@@ -151,7 +123,7 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
     /**
      * download all the videos
      */
-    public abstract void download(List<VideoResponseModel> models);
+    public abstract void download(List<HasDownloadEntry> model);
 
     public abstract void download(DownloadEntry videoData);
 
@@ -172,6 +144,10 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
             .findViewById(R.id.bulk_download);
         holder.bulkDownloadVideos = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
+        holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);
+        //holder.fullSeparator = convertView.findViewById(R.id.row_full_separator);
+       // holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
+
         return holder;
     }
 
@@ -184,6 +160,9 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
         TextView bulkDownload;
         TextView noOfVideos;
         LinearLayout bulkDownloadVideos;
+        View rowSubtitlePanel;
+        View fullSeparator;
+        View halfSeparator;
     }
 
 
@@ -193,14 +172,18 @@ public abstract  class CourseBaseAdapter extends BaseAdapter
         public static final int ITEM = 0;
         public static final int SECTION = 1;
 
+
         public final int type;
-        public final IComponent component;
+        public final boolean topComponent;
+        public final CourseComponent component;
 
-        public int sectionPosition;
-        public int listPosition;
+        public SectionRow(int type, CourseComponent component) {
+            this(type, false, component);
+        }
 
-        public SectionRow(int type, IComponent component) {
+        public SectionRow(int type, boolean topComponent, CourseComponent component) {
             this.type = type;
+            this.topComponent = topComponent;
             this.component = component;
         }
 

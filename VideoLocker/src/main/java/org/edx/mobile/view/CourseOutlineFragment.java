@@ -5,21 +5,18 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.ICourse;
-import org.edx.mobile.model.ISequential;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.services.DownloadManager;
-import org.edx.mobile.task.GetCourseOutlineTask;
-import org.edx.mobile.third_party.view.PinnedSectionListView;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -33,11 +30,8 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
 
     private CourseOutlineAdapter adapter;
-    private PinnedSectionListView listView;
-    private GetCourseOutlineTask getHierarchyTask;
+    private ListView listView;
     private TaskProcessCallback taskProcessCallback;
-    private boolean isTaskRunning;
-
 
 
     @Override
@@ -50,7 +44,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_outline, container,
                 false);
-        listView = (PinnedSectionListView)view.findViewById(R.id.outline_list);
+        listView = (ListView)view.findViewById(R.id.outline_list);
         initializeAdapter();
 
         listView.setAdapter(adapter);
@@ -64,8 +58,8 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         try {
             if( courseData == null ) {
                 final Bundle bundle = getArguments();
-                courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable(Router.EXTRA_COURSE_DATA);
+                courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
+                courseComponent = (CourseComponent) bundle.getSerializable(Router.EXTRA_COURSE_COMPONENT);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -82,54 +76,11 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         if ( courseData == null )
             return;
 
-        if (isTaskRunning) {
-            logger.debug("skipping a call to loadData, task is already running");
-
-            getHierarchyTask.setTaskProcessCallback(taskProcessCallback);
-            return;
+        adapter.setData(courseComponent);
+        if(adapter.getCount()==0){
+            view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
         }
-
-        getHierarchyTask = new GetCourseOutlineTask(getActivity()) {
-
-            @Override
-            public void onFinish(ICourse aCourse) {
-                // display these chapters
-                if (aCourse != null) {
-                    logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
-                    course = aCourse;
-                    adapter.setData(course);
-                    if(adapter.getCount()==0){
-                        view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (adapter.getCount() == 0) {
-                    //TODO - if we have startDate , showCourseNotStartedMessage
-                    //otherwise , show empty view
-                }
-
-                logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());
-                isTaskRunning = false;
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                if(adapter.getCount()==0) {
-                    //TODO - if we have startDate , showCourseNotStartedMessage
-                    //otherwise , show empty view
-                }
-                isTaskRunning = false;
-            }
-        };
-
-
-        getHierarchyTask.setTaskProcessCallback(taskProcessCallback);
-        //Initializing task call
-        logger.debug("Initializing Chapter Task" + DateUtil.getCurrentTimeStamp());
-        isTaskRunning = true;
-        getHierarchyTask.execute(courseData.getCourse().getId());
     }
-
 
     private void initializeAdapter(){
         if (adapter == null) {
@@ -140,20 +91,26 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 public void rowClicked(SectionRow row) {
                     // handle click
                     try {
-                        Router.getInstance().showCourseSequentialDetail(getActivity(),
-                            courseData, course, (ISequential) row.component);
+                        CourseComponent comp = row.component;
+                        if ( comp.isContainer() ){
+                            Router.getInstance().showCourseContainerOutline(getActivity(), courseData, comp);
+                        } else {
+                            Router.getInstance().showCourseUnitDetail(getActivity(), courseData, courseComponent, comp);
+                        }
+
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
                 }
 
-                public void download(List<VideoResponseModel> models){
+                public void download(List<HasDownloadEntry> models){
                     DownloadManager.getSharedInstance().downloadVideos(
-                        models, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
+                        (List)models, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
                 }
 
                 public  void download(DownloadEntry videoData){
-
+                    DownloadManager.getSharedInstance().downloadVideo(
+                        videoData, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
                 }
             };
         }
@@ -164,6 +121,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             AppConstants.offline_flag = false;
         }
     }
+
 
 
     @Override

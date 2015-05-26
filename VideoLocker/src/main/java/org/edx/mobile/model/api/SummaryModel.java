@@ -1,70 +1,73 @@
 package org.edx.mobile.model.api;
 
-import org.edx.mobile.model.IUnit;
-import org.edx.mobile.model.IVertical;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.storage.IStorage;
+import com.google.gson.annotations.SerializedName;
+
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.util.JavaUtil;
 
 import java.io.Serializable;
 
 
 @SuppressWarnings("serial")
-public class SummaryModel implements Serializable, IUnit{
+public class SummaryModel implements Serializable {
 
-    private String category;
+    private BlockType category;
     private String name;
-    private String video_url;
-    private String video_thumbnail_url;
+
+    @SerializedName("video_url")
+    private String videoUrl;
+    @SerializedName("video_thumbnail_url")
+    private String videoThumbnailUrl;
     private double duration;
-    public boolean only_on_web;
+    @SerializedName("only_on_web")
+    public boolean onlyOnWeb;
     private String id;
     private long size;
     private TranscriptModel transcripts;
     private EncodingsModel encodings;
 
-    private IVertical vertical;
     private boolean graded;
 
-    public String getCategory() {
+    public BlockType getType() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setType(BlockType category) {
         this.category = category;
     }
 
-    public String getName() {
+    public String getDisplayName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setDisplayName(String name) {
         this.name = name;
     }
 
-    public String getVideo_url() {
-        if (video_url == null)
+    public String getVideoUrl() {
+        if (videoUrl == null)
             return null;
-        return video_url.trim();
+        return videoUrl.trim();
     }
 
-    public void setVideo_url(String video_url) {
-        this.video_url = video_url;
+    public void setVideoUrl(String video_url) {
+        this.videoUrl = video_url;
     }
 
-    public String getVideo_thumbnail_url() {
-        return video_thumbnail_url;
+    public String getVideoThumbnailUrl() {
+        return videoThumbnailUrl;
     }
 
-    public void setVideo_thumbnail_url(String video_thumbnail_url) {
-        this.video_thumbnail_url = video_thumbnail_url;
+    public void setVideoThumbnailUrl(String video_thumbnail_url) {
+        this.videoThumbnailUrl = video_thumbnail_url;
     }
 
-    public boolean isOnly_on_web() {
-        return only_on_web;
+    public boolean isOnlyOnWeb() {
+        return onlyOnWeb;
     }
 
-    public void setOnly_on_web(boolean only_on_web) {
-        this.only_on_web = only_on_web;
+    public void setOnlyOnWeb(boolean only_on_web) {
+        this.onlyOnWeb = only_on_web;
     }
 
     public void setDuration(int duration) {
@@ -84,7 +87,7 @@ public class SummaryModel implements Serializable, IUnit{
     }
 
     public String getSizeString() { 
-        return getMemorySize(size);
+        return JavaUtil.getMemorySize(size);
     }
     
     public void setSize(long size) {
@@ -111,21 +114,7 @@ public class SummaryModel implements Serializable, IUnit{
         return this.encodings == null ? null : encodings.youtubeLink;
     }
 
-    private String getMemorySize(long bytes) {
-        if (bytes == 0) {
-            return "0KB";
-        }
-        
-        long s = bytes;
-        int gb = (int) (s / (1024f * 1024f * 1024f) );
-        s = s % (1024 * 1024 * 1024) ;
-        int mb = (int) (s / (1024f * 1024f) );
-        s = s % (1024 * 1024) ;
-        int kb = (int) (s / 1024f);
-        int b = (int) (s % 1024);
-        
-        return String.format("%d MB", mb);
-    }
+
     
     public int getDuration() {
         return (int)duration;
@@ -136,64 +125,6 @@ public class SummaryModel implements Serializable, IUnit{
      * @return
      */
     public String getDurationString() {
-        if (duration == 0) {
-            return "00:00";
-        }
-        
-        long d = (long)duration;
-        int hours = (int) (d / 3600f); 
-        d = d % 3600;
-        int mins = (int) (d / 60f);
-        int secs = (int) (d % 60); 
-        if (hours <= 0) {
-            return String.format("%02d:%02d", mins, secs);
-        }
-        return String.format("%02d:%02d:%02d", hours, mins, secs);
-    }
-
-    @Override
-    public IVertical getVertical() {
-        return vertical;
-    }
-
-    @Override
-    public void setVertical(IVertical vertical){
-        this.vertical = vertical;
-    }
-
-    @Override
-    public boolean isGraded(){
-        return graded;
-    }
-
-    @Override
-    public void setGraded(boolean graded){
-        this.graded = graded;
-    }
-
-    private DownloadEntry downloadEntry;
-    @Override
-    public DownloadEntry getDownloadEntry(IStorage storage) {
-        if ( downloadEntry != null )
-            return downloadEntry;
-        if ( videoResponseModel != null && storage != null ) {
-            downloadEntry = (DownloadEntry) storage
-                .getDownloadEntryfromVideoResponseModel(videoResponseModel);
-        }
-        return downloadEntry;
-    }
-
-    @Override
-    public void setDownloadEntry(DownloadEntry entry) {
-        this.downloadEntry = entry;
-    }
-
-    private VideoResponseModel videoResponseModel;
-    public VideoResponseModel getVideoResponseModel(){
-        return videoResponseModel;
-    }
-
-    public void setVideoResponseModel(VideoResponseModel entry){
-        this.videoResponseModel =entry;
+        return JavaUtil.getDurationString((long)duration);
     }
 }

@@ -14,6 +14,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
@@ -246,6 +247,16 @@ public class Storage implements IStorage {
         }
 
         return DatabaseModelFactory.getModel(vrm);
+    }
+
+    @Override
+    public VideoModel getDownloadEntryfromVideoModel(VideoBlockModel block){
+        VideoModel video = db.getVideoEntryByVideoId(block.getId(), null);
+        if (video != null) {
+            return video;
+        }
+
+        return DatabaseModelFactory.getModel(block.getData(), block);
     }
 
     @Override
