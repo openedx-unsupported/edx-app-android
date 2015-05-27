@@ -450,9 +450,9 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
                         view = convertView;
                     } else {
                         view = new View(mContext);
-                        view.setLayoutParams(new ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                mPopupPadding - mPopupItemVerticalPadding));
+                     //   view.setLayoutParams(new ViewGroup.LayoutParams(
+                       //         ViewGroup.LayoutParams.MATCH_PARENT,
+                         //       mPopupPadding - mPopupItemVerticalPadding));
                     }
                     return view;
                 } default: {
