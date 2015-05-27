@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
@@ -18,6 +18,8 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -143,20 +145,38 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     public void changeMode(){
         //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(this, this.progressWheel);
+        org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
+            findViewById(R.id.action_change_mode), Gravity.START);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
             .inflate(R.menu.change_mode, popup.getMenu());
-        MenuItem menuItem = popup.getMenu().findItem(R.id.change_mode_video_only);
-
+        final PrefManager.UserPrefManager userPrefManager =
+            new PrefManager.UserPrefManager(this);
+        final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+        MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
+        // Initializing the font awesome icons
+        IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
+        IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
+        videoOnlyItem.setIcon(videoOnlyIcon);
+        fullCourseItem.setIcon(fullCourseIcon);
+        // Setting checked states
+        if (userPrefManager.isUserPrefVideoModel()) {
+            videoOnlyItem.setChecked(true);
+            videoOnlyIcon.colorRes(R.color.cyan_4);
+            fullCourseIcon.colorRes(R.color.black);
+        } else {
+            fullCourseItem.setChecked(true);
+            fullCourseIcon.colorRes(R.color.cyan_4);
+            videoOnlyIcon.colorRes(R.color.black);
+        }
 
         //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        popup.setOnMenuItemClickListener(new org.edx.mobile.view.custom.popup.menu.PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 PrefManager.UserPrefManager userPrefManager =
                     new PrefManager.UserPrefManager(CourseVideoListActivity.this);
                 boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-                boolean selectedVideoMode = modeVideoOnly.equals( item.getTitleCondensed() );
+                boolean selectedVideoMode = videoOnlyItem == item;
                 if ( currentVideoMode == selectedVideoMode )
                     return true;
 
@@ -170,8 +190,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
         popup.show(); //showing popup menu
 
     }
-
-
 
     @Override
     protected void updateDownloadProgress(int progressPercent){

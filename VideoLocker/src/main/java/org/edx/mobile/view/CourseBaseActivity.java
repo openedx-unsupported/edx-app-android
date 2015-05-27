@@ -186,9 +186,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             case R.id.action_share_on_web:
                 shareOnWeb();
                 return true;
-            case R.id.action_change_mode:
-                changeMode();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -214,46 +211,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         popup.show(); //showing popup menu
     }
 
-    public void changeMode(){
-                 //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(this,
-                        findViewById(R.id.action_change_mode), Gravity.START);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater()
-                    .inflate(R.menu.change_mode, popup.getMenu());
-                final PrefManager.UserPrefManager userPrefManager =
-                        new PrefManager.UserPrefManager(this);
-                MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
-                MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
-                // Initializing the font awesome icons
-                IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
-                IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
-                videoOnlyItem.setIcon(videoOnlyIcon);
-                fullCourseItem.setIcon(fullCourseIcon);
-                // Setting checked states
-                if (userPrefManager.isUserPrefVideoModel()) {
-                    videoOnlyItem.setChecked(true);
-                    videoOnlyIcon.colorRes(R.color.cyan_4);
-                    fullCourseIcon.colorRes(R.color.black);
-                } else {
-                    fullCourseItem.setChecked(true);
-                    fullCourseIcon.colorRes(R.color.cyan_4);
-                    videoOnlyIcon.colorRes(R.color.black);
-                }
 
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        userPrefManager.setUserPrefVideoModel(
-                                item.getItemId() == R.id.change_mode_video_only);
-                        return true;
-                    }
-                });
-
-                popup.show(); //showing popup menu
-
-    }
 
     protected  String getUrlForWebView(){
         return courseComponent == null ? "" : courseComponent.getWebUrl();
