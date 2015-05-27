@@ -167,6 +167,28 @@
     <!-- My Courses -->
     <!-- Title of course dashboard screen -->
     <string name="course_home">Course Home</string>
+    <!-- Row of course on dashboard screen -->
+    <string name="course_title">Course</string>
+    <!-- Row of course on dashboard screen -->
+    <!-- NOTE: TODO - not final one -->
+    <string name="course_subtitle">Lectures,videos &amp; homework, oh my!</string>
+    <!-- Row of Discussion on dashboard screen -->
+    <string name="discussion_title">Discussion</string>
+    <!-- Row of Discussion on dashboard screen -->
+    <!-- NOTE: TODO - not final one -->
+    <string name="discussion_subtitle">Let\'s talk about single-molecule diodes</string>
+    <!-- Row of Handouts on dashboard screen -->
+    <string name="handouts_title">Handouts</string>
+    <!-- Row of Handouts on dashboard screen -->
+    <!-- NOTE: TODO - not final one -->
+    <string name="handouts_subtitle">Virtual, so not really a handout</string>
+    <!-- Row of announcement on dashboard screen -->
+    <string name="announcement_title">Announcements</string>
+    <!-- Row of announcement on dashboard screen -->
+    <!-- NOTE: TODO - not final one -->
+    <string name="announcement_subtitle">It\'s 3 o\'clock and all is well</string>
+
+
     <!-- Title of course outline screen -->
     <string name="course_outline">Course Outline</string>
 

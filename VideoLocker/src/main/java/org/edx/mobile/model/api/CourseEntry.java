@@ -2,14 +2,15 @@ package org.edx.mobile.model.api;
 
 import android.content.Context;
 
+import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import android.content.Context;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -218,6 +219,31 @@ public class CourseEntry implements Serializable {
 
         return false;
 
+    }
+
+    public String getDescription(Context context){
+        StringBuilder detailBuilder = new StringBuilder();
+        if ( getOrg() != null){
+            detailBuilder.append( getOrg());
+        }
+        if ( getNumber() != null) {
+            if (detailBuilder.length() > 0){
+                detailBuilder.append(" | ");
+            }
+            detailBuilder.append( getNumber());
+
+        }
+        if ( isStarted() && ! isEnded() &&  getEnd() != null){
+            if (detailBuilder.length() > 0){
+                detailBuilder.append(" | ");
+            }
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
+            Date endDate = DateUtil.convertToDate( getEnd());
+            detailBuilder.append(context.getString(R.string.label_ending_on));
+            detailBuilder.append(" - ");
+            detailBuilder.append(dateFormat.format(endDate));
+        }
+        return detailBuilder.toString();
     }
 
 }

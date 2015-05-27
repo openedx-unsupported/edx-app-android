@@ -107,6 +107,10 @@
     <style name="regular_grey_text" parent="@style/regular_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
     </style>
+
+    <style name="light_grey_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/grey_video_size_text</item>
+    </style>
     
     <style name="regular_white_text" parent="@style/regular_text">
         <item name="android:textColor">@android:color/white</item>

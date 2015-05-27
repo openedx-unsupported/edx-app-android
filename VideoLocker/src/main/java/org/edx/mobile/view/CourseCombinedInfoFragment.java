@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,7 +36,6 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
@@ -48,9 +46,7 @@ import org.edx.mobile.view.custom.SocialShareView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CourseCombinedInfoFragment extends CourseDetailBaseFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
@@ -171,29 +167,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
                 courseTextName.setText(courseData.getCourse().getName());
                 CourseEntry course = courseData.getCourse();
-
-                StringBuilder detailBuilder = new StringBuilder();
-                if (course.getOrg() != null){
-                    detailBuilder.append(courseData.getCourse().getOrg());
-                }
-                if (course.getNumber() != null) {
-                    if (detailBuilder.length() > 0){
-                        detailBuilder.append(" | ");
-                    }
-                    detailBuilder.append(course.getNumber());
-
-                }
-                if (course.isStarted() && !course.isEnded() && course.getEnd() != null){
-                    if (detailBuilder.length() > 0){
-                        detailBuilder.append(" | ");
-                    }
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
-                    Date endDate = DateUtil.convertToDate(course.getEnd());
-                    detailBuilder.append(getString(R.string.label_ending_on));
-                    detailBuilder.append(" - ");
-                    detailBuilder.append(dateFormat.format(endDate));
-                }
-                courseTextDetails.setText(detailBuilder.toString());
+                courseTextDetails.setText( course.getDescription(this.getActivity()));
 
                 String url = courseData.getCourse().getCourse_url();
 
