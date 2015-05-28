@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/course_unit_video"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:baselineAligned="false"
+              android:background="@color/edx_white"
               android:orientation="vertical" >
 
     <LinearLayout
@@ -30,6 +32,40 @@
         android:orientation="vertical"
         android:id="@+id/player_container">
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/edx_white"
+        android:gravity="center"
+        android:id="@+id/message_container">
+        <TextView
+            android:id="@+id/empty_document_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="70dp"
+            android:textColor="@color/grey_3"
+            android:layout_margin="20dp"/>
+
+        <TextView
+            android:text="@string/assessment_empty_transcript"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:singleLine="false"
+            android:textColor="@color/grey_3"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            tools:targetApi="17"
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -120,7 +120,8 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         try {
             if(recentVideosFragment!=null){
                 recentVideosFragment.onSaveInstanceState(outState);
-                getSupportFragmentManager().putFragment(outState, "recentFragment", recentVideosFragment);
+                if (recentVideosFragment.isAdded())
+                     getSupportFragmentManager().putFragment(outState, "recentFragment", recentVideosFragment);
             }
         } catch(Exception ex) {
             logger.error(ex);

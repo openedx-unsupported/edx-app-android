@@ -406,7 +406,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
                 TextView titleTextView = (TextView) findViewById(titleId);
                 if(titleTextView!=null){
-                    titleTextView.setTextColor(getResources().getColor(R.color.grey_text_mycourse));
+                    titleTextView.setTextColor(getResources().getColor(R.color.edx_white));
                     titleTextView.setTypeface(type);
                     bar.setTitle(title);
                 }
@@ -534,6 +534,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             try {
                 View view = progressMenuItem.getActionView();
                 if (view != null) {
+                    view.setBackgroundResource(R.color.edx_brand_primary_accent);
                     totalProgress = (ProgressWheel) view
                             .findViewById(R.id.progress_wheel);
                     if (totalProgress != null) {
@@ -696,7 +697,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
         segIO = SegmentFactory.getInstance();
     }
 
-    private DataCallback<Integer> averageProgressCallback = new DataCallback<Integer>() {
+    protected DataCallback<Integer> averageProgressCallback = new DataCallback<Integer>() {
         @Override
         public void onResult(Integer result) {
             int progressPercent = result;

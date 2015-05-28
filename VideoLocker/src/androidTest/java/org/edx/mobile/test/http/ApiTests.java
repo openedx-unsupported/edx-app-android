@@ -46,7 +46,7 @@ public class ApiTests extends HttpBaseTestCase {
         Entry<String, ArrayList<VideoResponseModel>> subsection = entry.getValue().sections.entrySet().iterator().next();
 
         String courseId = e.getCourse().getId();
-        String lastVisitedModuleId = subsection.getValue().get(0).getSection().id;
+        String lastVisitedModuleId = subsection.getValue().get(0).getSection().getId();
 
         assertNotNull(courseId);
         assertNotNull(lastVisitedModuleId);

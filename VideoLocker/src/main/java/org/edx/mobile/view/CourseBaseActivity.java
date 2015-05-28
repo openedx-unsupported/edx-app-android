@@ -165,17 +165,19 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         if( menu.findItem(R.id.action_share_on_web) != null)
             menu.findItem(R.id.action_share_on_web).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
-                    .actionBarSize());
+                    .actionBarSize().colorRes(R.color.edx_white));
         PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
 
-        if (userPrefManager.isUserPrefVideoModel()) {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_film)
-                    .actionBarSize());
-        } else {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_list)
-                    .actionBarSize());
+        if (  menu.findItem(R.id.action_change_mode) != null ) {
+            if (userPrefManager.isUserPrefVideoModel()) {
+                menu.findItem(R.id.action_change_mode).setIcon(
+                    new IconDrawable(this, Iconify.IconValue.fa_film)
+                        .actionBarSize().colorRes(R.color.edx_white));
+            } else {
+                menu.findItem(R.id.action_change_mode).setIcon(
+                    new IconDrawable(this, Iconify.IconValue.fa_list)
+                        .actionBarSize().colorRes(R.color.edx_white));
+            }
         }
         return true;
     }

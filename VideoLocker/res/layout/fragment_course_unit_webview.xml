@@ -18,8 +18,8 @@
             android:lines="3"
             android:textSize="16sp"
             android:singleLine="false"
-            android:textColor="@color/grey_medium"
-            android:background="@color/white"
+            android:textColor="@color/grey_4"
+            android:background="@drawable/rectangle_with_bottom_border"
             android:text="@string/assessment_graded_warning"
             />
         <WebView

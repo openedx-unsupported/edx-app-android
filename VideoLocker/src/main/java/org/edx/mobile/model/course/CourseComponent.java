@@ -253,14 +253,14 @@ public class CourseComponent implements IBlock, IPathNode {
     /**
      * get ancestor with give blockType, starting from itself
      */
-    public CourseComponent getAncestor(BlockType blockType){
-        if( type == blockType )
+    public CourseComponent getAncestor(EnumSet<BlockType> types){
+        if( types.contains(type) )
             return this;
         IBlock ancestor = parent;
         if ( ancestor == null )
             return null;
         do{
-           if ( ancestor.getType() == blockType )
+           if ( types.contains( ancestor.getType() ) )
                return (CourseComponent) ancestor;
         }while ((ancestor = ancestor.getParent()) != null );
         return null;

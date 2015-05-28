@@ -128,4 +128,15 @@
     <color name="course_banner_blue">@color/cyan_3</color>
     <color name="hint_grey_text">#8c8e90</color>
     <color name="grey_hide_optional_text">#AFAFB5</color>
+
+
+    <!--  We need to adapt edX color code -->
+    <!--  see  http://ux.edx.org/elements/colors/ -->
+    <color name="edx_brand_primary_x_dark">#003654</color>
+    <color name="edx_brand_primary_dark">#005483</color>
+    <color name="edx_brand_primary_base">#0079BC</color>
+    <color name="edx_brand_primary_light">#4CA1D0</color>
+    <color name="edx_brand_primary_x_light">#B2D6EA</color>
+    <color name="edx_brand_primary_accent">#0EA6EC</color>
+    <color name="edx_brand_primary_x_accent">#00B2FF</color>
 </resources>

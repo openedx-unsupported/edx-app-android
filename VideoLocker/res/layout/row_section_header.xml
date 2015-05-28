@@ -6,5 +6,5 @@
     android:layout_height="@dimen/row_height_cc_option"
     android:gravity="center_vertical|start"
     android:textColor="@color/grey_4"
-    android:background="@color/white"
+    android:background="@drawable/rectangle_with_top_border"
     android:padding="10dp" />
