@@ -5,7 +5,7 @@ package org.edx.mobile.view.custom.popup.menu;
  * the AOSP. It uses the appcompat implementation because it exposes it's
  * internal classes, so we only need to duplicate minimal code. We use
  * a custom attribute set to define a fixed width and other things, and
- * a custom adapter with it's own layout that automatically expends the
+ * a custom adapter with it's own layout that automatically expands the
  * first level of submenus in order to support headers.
  *
  * Copyright (C) 2010 The Android Open Source Project
@@ -450,9 +450,7 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
                         view = convertView;
                     } else {
                         view = new View(mContext);
-                     //   view.setLayoutParams(new ViewGroup.LayoutParams(
-                       //         ViewGroup.LayoutParams.MATCH_PARENT,
-                         //       mPopupPadding - mPopupItemVerticalPadding));
+                        view.setMinimumHeight(mPopupPadding - mPopupItemVerticalPadding);
                     }
                     return view;
                 } default: {
