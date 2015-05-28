@@ -69,7 +69,7 @@ public class DatabaseModelFactory {
         e.url_youtube = vrm.getSummary().getYoutubeLink();
         e.videoId = vrm.getSummary().getId();
         e.transcript = vrm.getSummary().getTranscripts();
-        e.lmsUrl = vrm.unit_url;
+        e.lmsUrl = vrm.getUnitUrl();
 
         e.isVideoForWebOnly = vrm.getSummary().isOnlyOnWeb();
         return e;

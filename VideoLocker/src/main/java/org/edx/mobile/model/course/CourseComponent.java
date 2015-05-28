@@ -1,12 +1,16 @@
 package org.edx.mobile.model.course;
 
+import org.edx.mobile.model.api.IPathNode;
+
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * Created by hanning on 4/29/15.
+ * Default implementation of IBlock
  */
-public class CourseComponent implements IBlock {
+public class CourseComponent implements IBlock, IPathNode {
     private String id;
     private BlockType type;
     private String name;
@@ -157,6 +161,11 @@ public class CourseComponent implements IBlock {
         return children != null && children.size() > 0;
     }
 
+    /**
+     * get direct children who have child.  it is not based on the block type, but on
+     * the real tree structure.
+     * @return
+     */
     public List<CourseComponent> getChildContainers(){
         List<CourseComponent> childContainers = new ArrayList<>();
         if ( children != null ){
@@ -168,6 +177,11 @@ public class CourseComponent implements IBlock {
         return childContainers;
     }
 
+    /**
+     * get direct children who is leaf.  it is not based on the block type, but on
+     * the real tree structure.
+     * @return
+     */
     public List<CourseComponent> getChildLeafs(){
         List<CourseComponent> childLeafs = new ArrayList<>();
         if ( children != null ){
@@ -179,12 +193,13 @@ public class CourseComponent implements IBlock {
         return childLeafs;
     }
 
+    /**
+     * return all videos blocks under this node
+     */
     public List<HasDownloadEntry> getVideos(){
-        List<HasDownloadEntry> videos = new ArrayList<>();
-        for(CourseComponent c : children){
-            videos.addAll( c.getVideos() );
-        }
-        return videos;
+        List<CourseComponent> videos = new ArrayList<>();
+        fetchAllLeafComponents(videos, EnumSet.of(BlockType.VIDEO));
+        return (List)videos;
     }
 
     /**
@@ -207,12 +222,12 @@ public class CourseComponent implements IBlock {
      * just add it to list
      * @param leaves
      */
-    public void fetchAllLeafComponents(List<CourseComponent> leaves){
-         if ( !isContainer() ){
+    public void fetchAllLeafComponents(List<CourseComponent> leaves, EnumSet<BlockType> types){
+         if ( !isContainer() && types.contains(type)){
              leaves.add(this);
          } else {
              for( CourseComponent comp : children ){
-                 comp.fetchAllLeafComponents(leaves);
+                 comp.fetchAllLeafComponents(leaves, types);
              }
          }
     }
@@ -235,6 +250,22 @@ public class CourseComponent implements IBlock {
         return (CourseComponent)root;
     }
 
+    /**
+     * get ancestor with give blockType, starting from itself
+     */
+    public CourseComponent getAncestor(BlockType blockType){
+        if( type == blockType )
+            return this;
+        IBlock ancestor = parent;
+        if ( ancestor == null )
+            return null;
+        do{
+           if ( ancestor.getType() == blockType )
+               return (CourseComponent) ancestor;
+        }while ((ancestor = ancestor.getParent()) != null );
+        return null;
+    }
+
     @Override
     public boolean equals(Object obj){
         if ( obj == null || !(obj instanceof CourseComponent) )
@@ -246,5 +277,32 @@ public class CourseComponent implements IBlock {
     @Override
     public int hashCode(){
         return this.id.hashCode();
+    }
+
+
+    //// implement IPathNode interface, for backward compatibility only
+    @Override
+    public boolean isChapter() {
+        return  getType() == BlockType.CHAPTER;
+    }
+
+    @Override
+    public boolean isSequential() {
+        return  getType() == BlockType.SEQUENTIAL;
+    }
+
+    @Override
+    public boolean isVertical() {
+        return  getType() == BlockType.VERTICAL;
+    }
+
+    @Override
+    public String getCategory() {
+        return  getType().name().toLowerCase(Locale.ENGLISH);
+    }
+
+    @Override
+    public String getName() {
+        return  getDisplayName();
     }
 }

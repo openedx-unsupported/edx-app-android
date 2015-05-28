@@ -26,8 +26,6 @@ public class SummaryModel implements Serializable {
     private TranscriptModel transcripts;
     private EncodingsModel encodings;
 
-    private boolean graded;
-
     public BlockType getType() {
         return category;
     }

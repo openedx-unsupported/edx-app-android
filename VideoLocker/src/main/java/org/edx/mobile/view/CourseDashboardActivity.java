@@ -7,8 +7,6 @@ import android.view.Menu;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.CourseStructureV1Model;
-import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.task.GetCourseStructureTask;
 import org.edx.mobile.util.DateUtil;
 
@@ -94,11 +92,11 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
         getHierarchyTask = new GetCourseStructureTask(this) {
 
             @Override
-            public void onFinish(CourseStructureV1Model aCourse) {
+            public void onFinish(CourseComponent aCourse) {
                 isTaskRunning = false;
                 if (aCourse != null) {
                     logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
-                    courseComponent = (CourseComponent)CourseManager.normalizeCourseStructure(aCourse);
+                    courseComponent = aCourse;
                     Router.getInstance().showCourseContainerOutline(CourseDashboardActivity.this, courseData, courseComponent);
                 }
                 logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());

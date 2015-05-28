@@ -38,6 +38,7 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -341,8 +342,8 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                 .username, video.eid);
             PrefManager prefManager = new PrefManager(getActivity(), prefName);
-            VideoResponseModel vrm = api.getVideoById(video.eid, video.videoId);
-            prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
+            VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(video.eid, video.videoId);
+            prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
         } catch (Exception e) {
             logger.error(e);
         }

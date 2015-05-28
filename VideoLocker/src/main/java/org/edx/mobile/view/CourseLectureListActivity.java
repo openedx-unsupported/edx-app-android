@@ -95,7 +95,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                         String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                                 .username, enrollment.getCourse().getId());
                         PrefManager prefManager = new PrefManager(CourseLectureListActivity.this, prefName);
-                        prefManager.putLastAccessedSubsection(model.videos.get(0).getSection().id, false);
+                        prefManager.putLastAccessedSubsection(model.videos.get(0).getSection().getId(), false);
                     }
 
                     Intent videoIntent = new Intent(CourseLectureListActivity.this,
@@ -179,7 +179,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                 m.name = entry.getKey();
                 m.videos = entry.getValue();
                 if(openInBrowserUrl==null||openInBrowserUrl.equalsIgnoreCase("")){
-                    openInBrowserUrl = m.videos.get(0).section_url;
+                    openInBrowserUrl = m.videos.get(0).getSectionUrl();
                 }
                 adapter.add(m);
             }

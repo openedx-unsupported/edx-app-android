@@ -1,11 +1,11 @@
 package org.edx.mobile.model.api;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.HasDownloadEntry;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
-
-import java.util.List;
 
 
 @SuppressWarnings("serial")
@@ -14,9 +14,9 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
     private PathModel[] path;
     private SummaryModel summary;
     private String courseId;
-    public String section_url;
-    public String unit_url;
-    private List<String> named_path;
+    private String section_url;
+    private String unit_url;
+    public VideoBlockModel videoBlockModel;
 
     private DownloadEntry downloadEntry;
 
@@ -27,9 +27,11 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
      *
      * @return      Chapter object of PathModel
      */
-    public PathModel getChapter() {
+    public IPathNode getChapter() {
         // not being depend on array index
         // check if the object is really a chapter object
+        if ( videoBlockModel != null)
+            return videoBlockModel.getAncestor(BlockType.CHAPTER);
 
         for (int i = 0; i < path.length; i++) {
             if (path[i].isChapter())
@@ -45,23 +47,14 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
      *
      * @return      Section object of this PathModel
      */
-    public PathModel getSection() {
+    public IPathNode getSection() {
         // not being depend on array index
         // check if the object is really a section object
+        if ( videoBlockModel != null)
+            return videoBlockModel.getAncestor(BlockType.SECTION);
 
         for (int i = 0; i < path.length; i++) {
             if (path[i].isSequential())
-                return path[i];
-        }
-        return null;
-    }
-
-    public PathModel getVertical() {
-        // not being depend on array index
-        // check if the object is really a section object
-
-        for (int i = 0; i < path.length; i++) {
-            if (path[i].isVertical())
                 return path[i];
         }
         return null;
@@ -121,19 +114,27 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
     }
 
     public String getChapterName() {
-        return getChapter().name;
+        return getChapter().getName();
     }
 
     public String getSequentialName() {
-        return getSection().name;
+        return getSection().getName();
     }
 
-    public List<String> getNamed_path() {
-        return named_path;
+    public String getUnitUrl() {
+        return unit_url;
     }
 
-    public void setNamed_path(List<String> named_path) {
-        this.named_path = named_path;
+    public void setUnitUrl(String unit_url) {
+        this.unit_url = unit_url;
+    }
+
+    public String getSectionUrl() {
+        return section_url;
+    }
+
+    public void setSectionUrl(String section_url) {
+        this.section_url = section_url;
     }
 
     @Override
