@@ -261,7 +261,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             }
 
             if ( unit instanceof HtmlBlockModel ){
-                return CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
+                CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
+                fragment.callback = CourseUnitNavigationActivity.this;
+                return fragment;
             }
 
             //fallback

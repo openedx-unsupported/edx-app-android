@@ -983,7 +983,7 @@ public class Api {
     public Header getLoginResponseHeaders()
             throws Exception {
         String url = getBaseUrl() + "/login";
-        Header header = http.getRequestHeader(url);
+        Header header = http.getResponseHeader(url);
         return header;
     }
 
@@ -991,7 +991,7 @@ public class Api {
      * Returns API base URL for the current project configuration (mobile3 or production).
      * @return
      */
-    public String getBaseUrl() {
+    public static String getBaseUrl() {
         return Config.getInstance().getApiHostURL();
     }
 
@@ -1122,6 +1122,8 @@ public class Api {
 
     }
 
+
+
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
             String lastVisitedModuleId) throws Exception {
 
@@ -1246,6 +1248,9 @@ public class Api {
         return false;
     }
 
+    public static String getSessionTokenExchangeUrl(){
+        return getBaseUrl() + "/oauth2/exchange_session_cookie/";
+    }
 
     public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
 
