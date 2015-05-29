@@ -7,6 +7,8 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
 
+import java.util.EnumSet;
+
 
 @SuppressWarnings("serial")
 public class VideoResponseModel implements SectionItemInterface, HasDownloadEntry {
@@ -31,7 +33,7 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
         // not being depend on array index
         // check if the object is really a chapter object
         if ( videoBlockModel != null)
-            return videoBlockModel.getAncestor(BlockType.CHAPTER);
+            return videoBlockModel.getAncestor(EnumSet.of(BlockType.CHAPTER));
 
         for (int i = 0; i < path.length; i++) {
             if (path[i].isChapter())
@@ -51,7 +53,7 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
         // not being depend on array index
         // check if the object is really a section object
         if ( videoBlockModel != null)
-            return videoBlockModel.getAncestor(BlockType.SECTION);
+            return videoBlockModel.getAncestor(EnumSet.of(BlockType.SECTION, BlockType.SEQUENTIAL));
 
         for (int i = 0; i < path.length; i++) {
             if (path[i].isSequential())
@@ -139,8 +141,6 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
 
     @Override
     public DownloadEntry getDownloadEntry(IStorage storage) {
-        if ( downloadEntry != null )
-            return downloadEntry;
         if ( storage != null ) {
             downloadEntry = (DownloadEntry) storage
                 .getDownloadEntryfromVideoResponseModel(this);

@@ -17,8 +17,6 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
     }
 
     public DownloadEntry getDownloadEntry(IStorage storage) {
-        if ( downloadEntry != null )
-            return downloadEntry;
         if ( storage != null ) {
             downloadEntry = (DownloadEntry) storage
                 .getDownloadEntryfromVideoModel(this);

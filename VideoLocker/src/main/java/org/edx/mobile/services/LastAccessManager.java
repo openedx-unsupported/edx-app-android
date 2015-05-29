@@ -45,7 +45,7 @@ public class LastAccessManager {
                     logger.debug("Last Accessed Module ID from Preferences "
                         +prefModuleId);
 
-                    callback.showLastAccessedView(prefModuleId, courseId, null);
+                    callback.showLastAccessedView(prefModuleId, courseId, view);
                     GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance()) {
                         @Override
                         public void onFinish(SyncLastAccessedSubsectionResponse result) {
@@ -84,7 +84,7 @@ public class LastAccessManager {
                 //If preference last accessed flag is true, put the last access fetched
                 //from server in Prefernces and display it on Last Accessed.
                 prefManager.putLastAccessedSubsection(server_moduleId, true);
-                callback.showLastAccessedView(server_moduleId, courseId, null);
+                callback.showLastAccessedView(server_moduleId, courseId, view);
             }else{
                 //Preference's last accessed is not synched with server,
                 //Sync with server and display the result from server on UI.

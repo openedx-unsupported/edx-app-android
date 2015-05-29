@@ -277,6 +277,10 @@
     <!-- Label to show empty assessment -->
     <string name="assessment_empty_coming_soon">Coming soon.</string>
 
+    <!-- Label to show empty transcript -->
+    <string name="assessment_empty_transcript">This video\'s transcript is not available yet.</string>
+
+
     <!-- Label for warning message of graded assessment -->
     <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the web until it is fully supported on mobile.</string>
 

@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.CircularProgressTask;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -78,6 +81,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     private IStorage storage;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
+    private View messageContainer;
 
     /**
      * Create a new instance of fragment
@@ -114,7 +118,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
-        //TODO - populate view here
+        messageContainer = v.findViewById(R.id.message_container);
+        TextView icon = (TextView)v.findViewById(R.id.empty_document_icon);
+        Iconify.setIcon(icon, Iconify.IconValue.fa_file_text_o);
         return v;
     }
 
@@ -180,6 +186,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         if (playerFragment == null) {
 
             playerFragment = new PlayerFragment();
+
             try{
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -714,31 +721,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         }
     }
 
-    public View.OnClickListener getNextListener(){
-
-        return null;
-    }
-
-    public View.OnClickListener getPreviousListener(){
-
-        return null;
-    }
-
-    private class NextClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
-    private class PreviousClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
-
 
     private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
         @Override
@@ -795,6 +777,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         super.onConfigurationChanged(newConfig);
         //TODO - should we use load different layout file?
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            messageContainer.setVisibility(View.GONE);
+            if (Build.VERSION.SDK_INT < 16) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            } else {
+                View decorView = getActivity().getWindow().getDecorView();
+                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                decorView.setSystemUiVisibility(uiOptions);
+            }
 
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
@@ -805,6 +796,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
                 playerContainer.requestLayout();
             }
         } else {
+            messageContainer.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT < 16) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            } else {
+                View decorView = getActivity().getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.VISIBLE);
+            }
+
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

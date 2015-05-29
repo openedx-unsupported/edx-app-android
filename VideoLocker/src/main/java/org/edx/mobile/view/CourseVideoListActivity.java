@@ -8,6 +8,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -17,9 +19,9 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -192,17 +194,18 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     @Override
     protected void updateDownloadProgress(int progressPercent){
-        if ( progressPercent == 0 ) {
-            setVisibilityForDownloadProgressView(false);
-        } else if ( progressPercent < 100 ){
+        if ( progressPercent < 100 ){
             setVisibilityForDownloadProgressView(true);
             mHideHandler.removeCallbacks(mHideRunnable);
-            downloadIndicator.setVisibility(View.VISIBLE);
-            downloadIndicator.setRotation( progressPercent * 360 /100 );
+            if (downloadIndicator.getVisibility() == View.INVISIBLE ){
+                downloadIndicator.setVisibility(View.VISIBLE);
+                Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+                downloadIndicator.startAnimation(animation);
+            }
         } else { //progressPercent == 100
+            downloadIndicator.clearAnimation();
             downloadIndicator.setVisibility(View.INVISIBLE);
-            mHideHandler.postDelayed(mHideRunnable,
-                getResources().getInteger(R.integer.message_delay));
+            mHideHandler.postDelayed(mHideRunnable,  getResources().getInteger(R.integer.message_delay));
         }
     }
 
@@ -223,7 +226,8 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showProgressDialog(int numDownloads) {
+        setVisibilityForDownloadProgressView(true);
     }
 
     @Override
@@ -236,6 +240,30 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             setVisibilityForDownloadProgressView(false);
         }
     };
+
+    //TODO - legacy code use one minute tick loop to sync some UI status, like
+    //total download progress. this is a simple approach, but may not be the
+    //best one.
+    protected void onTick() {
+        // this is a per second callback
+        try {
+                if(AppConstants.offline_flag){
+                    setVisibilityForDownloadProgressView(false);
+                }else{
+                    if(db!=null){
+                        boolean downloading = db.isAnyVideoDownloading(null);
+                        if(!downloading){
+                            setVisibilityForDownloadProgressView(false);
+                        }else{
+                            storage.getAverageDownloadProgress(averageProgressCallback);
+                        }
+                    }   //store not null check
+                }
+            }  catch(Exception ex) {
+            logger.error(ex);
+        }
+    }
+
 }
 
 

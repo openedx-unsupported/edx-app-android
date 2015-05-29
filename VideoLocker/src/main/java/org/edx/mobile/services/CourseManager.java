@@ -2,6 +2,7 @@ package org.edx.mobile.services;
 
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.Filter;
+import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SummaryModel;
@@ -219,7 +220,8 @@ public class CourseManager {
                 // iterate videos
                 for (VideoResponseModel v : entry.getValue()) {
                     // identify the subsection (module) if id matches
-                    if (subsectionId.equals(v.getSection().getId())) {
+                    IPathNode node = v.getSection();
+                    if (node != null  && subsectionId.equals(node.getId())) {
                         return v;
                     }
                 }

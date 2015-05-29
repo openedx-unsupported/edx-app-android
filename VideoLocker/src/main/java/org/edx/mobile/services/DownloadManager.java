@@ -28,7 +28,7 @@ public class DownloadManager {
     public static interface DownloadManagerCallback{
         void onDownloadSuccess(Long result);
         void onDownloadFailure();
-        void showProgressDialog();
+        void showProgressDialog(int numDownloads);
         void updateListUI();
         boolean showInfoMessage(String message);
     }
@@ -94,14 +94,14 @@ public class DownloadManager {
             if (downloadSize < MemoryUtil.GB) {
                 startDownload(downloadList, downloadCount,activity, callback);
             } else {
-                showDownloadSizeExceedDialog(downloadList, downloadCount, activity);
+                showDownloadSizeExceedDialog(downloadList, downloadCount, activity, callback);
             }
         }
     }
 
     // Dialog fragment to display message to user regarding
     private void showDownloadSizeExceedDialog(final ArrayList<DownloadEntry> de,
-                                                final int noOfDownloads, FragmentActivity activity) {
+                                                final int noOfDownloads, final FragmentActivity activity, final DownloadManagerCallback callback) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", activity.getString(R.string.download_exceed_title));
         dialogMap.put("message_1", activity.getString(R.string.download_exceed_message));
@@ -109,7 +109,7 @@ public class DownloadManager {
             new IDialogCallback() {
                 @Override
                 public void onPositiveClicked() {
-                   // startDownload(de, noOfDownloads);
+                    startDownload(de, noOfDownloads, activity, callback);
                 }
 
                 @Override
@@ -154,11 +154,8 @@ public class DownloadManager {
             }
         };
 
-        // it is better to show progress before executing the task
-        // this ensures task will hide the progress after it is shown
-        if(downloadList.size()>=3) {
-            callback.showProgressDialog();
-        }
+
+        callback.showProgressDialog(downloadList.size());
 
         downloadTask.execute(downloadList);
     }

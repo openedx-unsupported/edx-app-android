@@ -300,6 +300,12 @@ public class PrefManager {
         public void setUserPrefVideoModel(boolean enabled){
             super.put(Key.UserPrefVideoModel, enabled);
         }
+        public long getLastCourseStructureFetch(String courseId){
+            return getLong(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId);
+        }
+        public void setLastCourseStructureFetch(String courseId, long timestamp){
+            super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
+        }
     }
     /**
      * Contains preference name constants.
@@ -349,6 +355,7 @@ public class PrefManager {
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
         public static final String UserPrefVideoModel = "UserPrefVideoModel";
+        public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
 
 
 

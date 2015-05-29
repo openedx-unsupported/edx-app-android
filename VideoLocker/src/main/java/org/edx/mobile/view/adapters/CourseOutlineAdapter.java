@@ -19,7 +19,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.MemoryUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -107,7 +106,6 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setText(unit.getType().name());
             Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
-            //    viewHolder.rowSubtitle.setText(R.string.assessment_homework);
         } else if (row.component instanceof VideoBlockModel){
             updateUIForVideo(position, convertView, viewHolder, row);
         } else {
@@ -138,8 +136,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
         viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
-        viewHolder.rowSubtitle.setText(MemoryUtil.format(MainApplication.instance(), videoData.size) + " " +
-            videoData.getDurationReadable());
+        viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
 
         if (videoData.downloaded == DownloadEntry.DownloadedState.DOWNLOADING) {
 
@@ -198,6 +195,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                             public void onResult(Integer result) {
                                 if(result>=0 && result < 100){
                                     EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
+                                } else if ( result == 100 ){
+                                    EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.COMPLETED));
                                 }
                             }
                             @Override
@@ -226,8 +225,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         final CourseComponent component = row.component;
 
         String courseId = component.getRoot().getId();
-        String chapterId = component.getAncestor(2).getId();
-        String sequentialId = component.getAncestor(1).getId();
+        String chapterId = component.getAncestor(2).getName();
+        String sequentialId = component.getAncestor(1).getName();
 
         ViewHolder holder = (ViewHolder)convertView.getTag();
 

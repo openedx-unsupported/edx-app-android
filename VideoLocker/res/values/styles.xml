@@ -29,9 +29,16 @@
     <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <!-- we need to change the color of the drawer arrow toggle -->
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+         <item name="color">@color/edx_white</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
@@ -43,14 +50,17 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/edx_brand_primary_x_accent</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:subtitleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="itemPadding">2dip</item>
     </style>
 
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText"
            parent="@style/android:TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="offline_bar_style">

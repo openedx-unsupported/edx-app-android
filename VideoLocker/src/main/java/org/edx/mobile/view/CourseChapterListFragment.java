@@ -406,7 +406,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
     }
 
     @Override
-    public synchronized void showProgressDialog() {
+    public synchronized void showProgressDialog(int numDownloads) {
+        // it is better to show progress before executing the task
+        // this ensures task will hide the progress after it is shown
+        if ( numDownloads < 3 )
+            return;
+
         if (progressDialog == null) {
             progressDialog = ProgressDialogFragment.newInstance();
         }
@@ -414,7 +419,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
             try {
                 if ( !progressDialog.isVisible() && isActivityStarted) {
                     final String tag = "progress_dialog_chapter";
-                    
+
                     progressDialog.dismiss();
                     Fragment f = getFragmentManager().findFragmentByTag(tag);
                     if (f != null) {
