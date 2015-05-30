@@ -1,5 +1,7 @@
 package org.edx.mobile.http;
 
+import android.os.Looper;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -17,17 +19,18 @@ import java.lang.reflect.Type;
  * Created by hanning on 5/26/15.
  */
 public abstract class HttpRequestDelegate<T> {
+    public static enum REQUEST_CACHE_TYPE { IGNORE_CACHE, PREFER_CACHE, ONLY_CACHE}
     protected final Logger logger = new Logger(getClass().getName());
     protected  Api api;
     protected CacheManager cacheManager;
+    protected HttpRequestEndPoint endPoint;
 
-    public HttpRequestDelegate(Api api, CacheManager cacheManager){
+    public HttpRequestDelegate(Api api, CacheManager cacheManager, HttpRequestEndPoint endPoint){
         this.api = api;
         this.cacheManager = cacheManager;
+        this.endPoint = endPoint;
     }
 
-    public abstract String getUrl();
-    public abstract String getCacheKey();
     public abstract HttpManager.HttpResult invokeHttpCall() throws Exception;
 
     /**
@@ -46,21 +49,30 @@ public abstract class HttpRequestDelegate<T> {
         }
     }
 
-    public T fetchData(boolean preferCache) throws Exception{
+    public T fetchData(REQUEST_CACHE_TYPE requestCacheType) throws Exception{
         String json = null;
-        String cacheKey = getCacheKey();
-        if ( preferCache  || !NetworkUtil.isConnected(MainApplication.instance()) ){
+        String cacheKey = endPoint.getCacheKey();
+        if ( requestCacheType != REQUEST_CACHE_TYPE.IGNORE_CACHE
+            || !NetworkUtil.isConnected(MainApplication.instance()) ){
             try {
                 json = cacheManager.get(cacheKey);
             } catch (Exception e) {
                 logger.error(e);
             }
-            if ( json != null )
+            if ( json != null ) {
                 try {
                     return fromJson(json);
                 } catch (Exception e) {
                     logger.error(e);
                 }
+            }
+        }
+        if ( requestCacheType == REQUEST_CACHE_TYPE.ONLY_CACHE )
+            return null;
+
+        //if it is on the UI thread, we just can not make http call
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()){
+            throw new RuntimeException("we should not execute code inside UI thread");
         }
 
         // get data from server

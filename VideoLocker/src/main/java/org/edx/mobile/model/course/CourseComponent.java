@@ -1,5 +1,6 @@
 package org.edx.mobile.model.course;
 
+import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
 
 import java.util.ArrayList;
@@ -193,6 +194,22 @@ public class CourseComponent implements IBlock, IPathNode {
         return childLeafs;
     }
 
+    /**
+     * recursively find the first node by matcher. return null if get nothing.
+     */
+    public CourseComponent find(Filter<CourseComponent> matcher){
+        if ( matcher.apply(this ) )
+            return this;
+        if ( !isContainer() )
+            return null;
+        CourseComponent found = null;
+        for(CourseComponent c : children){
+            found = c.find(matcher);
+            if ( found != null )
+                return found;
+        }
+        return null;
+    }
     /**
      * return all videos blocks under this node
      */

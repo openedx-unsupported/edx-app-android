@@ -1,6 +1,9 @@
 package org.edx.mobile.services;
 
+import android.util.LruCache;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
 import org.edx.mobile.model.api.LectureModel;
@@ -26,8 +29,11 @@ import java.util.Map;
  *  A central place for course data model transformation
  */
 public class CourseManager {
+    protected final Logger logger = new Logger(getClass().getName());
 
     private static CourseManager instance;
+
+    private LruCache<String, CourseComponent> cachedComponent;
 
     public static synchronized CourseManager getSharedInstance(){
         if ( instance == null )
@@ -37,7 +43,32 @@ public class CourseManager {
 
 
     private CourseManager(){
+        cachedComponent = new LruCache<>(1);
+    }
 
+    public CourseComponent getCourseByCourseId(String courseId){
+        CourseComponent component = cachedComponent.get(courseId);
+        if ( component != null )
+            return component;
+        try {
+            component = ServiceManager.getInstance().getCourseStructureFromCache(courseId);
+            cachedComponent.put(courseId,component);
+        } catch (Exception e) {
+           logger.error(e);
+        }
+        return component;
+    }
+
+    public CourseComponent getComponentById(String courseId, final String componentId){
+        CourseComponent courseComponent = getCourseByCourseId(courseId);
+        if ( courseComponent == null )
+            return null;
+        return courseComponent.find(new Filter<CourseComponent>() {
+            @Override
+            public boolean apply(CourseComponent courseComponent) {
+                return componentId.equals(courseComponent.getId());
+            }
+        });
     }
 
     /**

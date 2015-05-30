@@ -125,7 +125,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     protected  String getUrlForWebView(){
         if ( selectedUnit == null ){
-            return courseComponent == null ? "" : courseComponent.getWebUrl();
+            return ""; //wont happen
         } else {
             return selectedUnit.getWebUrl();
         }

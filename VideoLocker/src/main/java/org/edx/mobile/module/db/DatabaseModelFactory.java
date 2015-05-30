@@ -95,7 +95,7 @@ public class DatabaseModelFactory {
         e.url = vrm.encodedVideos.getPreferredVideoInfo().url;
         e.url_high_quality = vrm.encodedVideos.mobileHigh == null ? "" : vrm.encodedVideos.mobileHigh.url;
         e.url_low_quality = vrm.encodedVideos.mobileLow == null ? "": vrm.encodedVideos.mobileLow.url;
-        //e.url_youtube = ?? ;
+        e.url_youtube = vrm.encodedVideos.youtube == null ? "" : vrm.encodedVideos.youtube.url;
         e.videoId = block.getId();
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();

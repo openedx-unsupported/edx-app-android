@@ -30,6 +30,7 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
     protected CourseComponent rootComponent;
     protected LayoutInflater mInflater;
     protected List<CourseBaseAdapter.SectionRow> mData;
+    protected SectionRow selectedRow;
 
     protected IDatabase dbStore;
     protected IStorage storage;
@@ -116,9 +117,12 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
     public abstract View getHeaderView(int position, View convertView, ViewGroup parent);
 
     /**
-     *  handle the click of the row
+     *  handle the click of the row.
+     *  NOTE - subclass method should call super.rowClicked(row).
      */
-    public abstract void rowClicked(SectionRow row) ;
+    public void rowClicked(SectionRow row){
+        selectedRow = row;
+    }
 
     /**
      * download all the videos
@@ -145,8 +149,7 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         holder.bulkDownloadVideos = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);
-        //holder.fullSeparator = convertView.findViewById(R.id.row_full_separator);
-       // holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
+        holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
 
         return holder;
     }
@@ -161,7 +164,6 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         TextView noOfVideos;
         LinearLayout bulkDownloadVideos;
         View rowSubtitlePanel;
-        View fullSeparator;
         View halfSeparator;
     }
 

@@ -15,6 +15,7 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
@@ -59,7 +60,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             if( courseData == null ) {
                 final Bundle bundle = getArguments();
                 courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
-                courseComponent = (CourseComponent) bundle.getSerializable(Router.EXTRA_COURSE_COMPONENT);
+                courseComponentId = (String) bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -71,11 +72,15 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         this.taskProcessCallback = callback;
     }
 
+    protected CourseComponent getCourseComponent(){
+        return CourseManager.getSharedInstance().getComponentById(courseData.getCourse().getId(), courseComponentId);
+    }
+
     //Loading data to the Adapter
     private void loadData(final View view) {
         if ( courseData == null )
             return;
-
+        CourseComponent courseComponent = getCourseComponent();
         adapter.setData(courseComponent);
         if(adapter.getCount()==0){
             view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
@@ -91,11 +96,12 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 public void rowClicked(SectionRow row) {
                     // handle click
                     try {
+                        super.rowClicked(row);
                         CourseComponent comp = row.component;
                         if ( comp.isContainer() ){
-                            Router.getInstance().showCourseContainerOutline(getActivity(), courseData, comp);
+                            Router.getInstance().showCourseContainerOutline(getActivity(), courseData, comp.getId());
                         } else {
-                            Router.getInstance().showCourseUnitDetail(getActivity(), courseData, courseComponent, comp);
+                            Router.getInstance().showCourseUnitDetail(getActivity(), courseData, courseComponentId, comp);
                         }
 
                     } catch (Exception ex) {
