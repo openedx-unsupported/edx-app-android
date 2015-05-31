@@ -50,8 +50,21 @@ class DbHelper extends SQLiteOpenHelper {
                 + DbStructure.Column.VIDEO_FOR_WEB_ONLY     + " BOOLEAN "
                 + ")";
         db.execSQL(sql);
+
+        createAssessmentTable(db);
         
         logger.debug("Database created");
+    }
+
+    private void createAssessmentTable(SQLiteDatabase db){
+        String sql = "CREATE TABLE "                        + DbStructure.Table.ASSESSMENT
+            + " ("
+            + DbStructure.Column.ASSESSMENT_TB_ID       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + DbStructure.Column.ASSESSMENT_TB_USERNAME + " TEXT, "
+            + DbStructure.Column.ASSESSMENT_TB_UNIT_ID  + " TEXT, "
+            + DbStructure.Column.ASSESSMENT_TB_UNIT_WATCHED + " BOOLEAN "
+            + ")";
+        db.execSQL(sql);
     }
 
     @Override
@@ -90,6 +103,10 @@ class DbHelper extends SQLiteOpenHelper {
             if ( oldVersion < 4 ) {
                 // upgrade to version 4
                 db.execSQL(upgradeToV4);
+            }
+
+            if ( oldVersion < 5 ){
+                createAssessmentTable(db);
             }
 
             logger.debug("Database upgraded from " + oldVersion + " to " + newVersion);
