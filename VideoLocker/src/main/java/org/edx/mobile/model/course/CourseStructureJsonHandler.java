@@ -81,7 +81,7 @@ public class CourseStructureJsonHandler {
                 //as it is just a mapping from english string to constants.
                 return BlockType.valueOf(value.toUpperCase(Locale.US));
             }catch (Exception ex){
-                logger.error(ex);
+                logger.debug(ex.getMessage());
                 return BlockType.OTHERS;
             }
         }

@@ -3,6 +3,7 @@ package org.edx.mobile.task;
 import android.content.Context;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.http.HttpRequestDelegate;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ServiceManager;
@@ -29,7 +30,8 @@ Task<CourseComponent> {
                     useCache = false;
                     prefManager.setLastCourseStructureFetch(courseId, curTime);
                 }
-                final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId, useCache);
+                final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId,
+                    HttpRequestDelegate.REQUEST_CACHE_TYPE.IGNORE_CACHE);
                 if (model != null) {
                     handler.post(new Runnable() {
                         public void run() {

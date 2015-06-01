@@ -4,6 +4,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
+import org.edx.mobile.http.HttpRequestEndPoint;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -45,9 +46,9 @@ public class ServiceManager {
         cacheManager = new CacheManager(MainApplication.instance());
     }
 
-    public CourseComponent getCourseStructure(final String courseId, boolean preferCache) throws Exception {
-        HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(api, cacheManager){
-            @Override
+
+    public HttpRequestEndPoint getEndPointCourseStructure(final String courseId){
+        return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
                     String block_count = URLEncoder.encode("[\"video\"]", "UTF-8");
@@ -59,23 +60,32 @@ public class ServiceManager {
                     logger.debug("GET url for enrolling in a Course: " + url);
                     return url;
                 } catch (Exception e) {
-                   logger.error(e);
+                    logger.error(e);
                 }
                 return "";
             }
-
-            @Override
             public String getCacheKey() {
-                //NOTE - we use the key from original api.
-                String url = api.getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
-                return url;
+                return api.getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
             }
+            public Map<String, String> getParameters() {
+                return null;
+            }
+        };
+    }
 
+    public CourseComponent getCourseStructureFromCache(final String courseId) throws Exception {
+         return getCourseStructure(courseId, HttpRequestDelegate.REQUEST_CACHE_TYPE.ONLY_CACHE);
+    }
+
+    public CourseComponent getCourseStructure(final String courseId,
+                                              HttpRequestDelegate.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
+        HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(
+                api, cacheManager, getEndPointCourseStructure(courseId)){
+            @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);
                 return (CourseComponent)CourseManager.normalizeCourseStructure(model);
             }
-
             @Override
             public HttpManager.HttpResult invokeHttpCall() throws Exception{
                 return api.getCourseStructure(this);
@@ -83,14 +93,14 @@ public class ServiceManager {
 
         };
 
-        return delegate.fetchData(preferCache);
+        return delegate.fetchData(requestCacheType);
     }
 
 
     public List<SectionItemInterface> getLiveOrganizedVideosByChapter
         (String courseId, final String chapter) throws Exception{
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-             CourseComponent course = this.getCourseStructure(courseId, true);
+             CourseComponent course = this.getCourseStructureFromCache(courseId);
              if ( course == null ) {  //it means we cache the old data model in the file system
                  return api.getLiveOrganizedVideosByChapter(courseId, chapter);
              } else {
@@ -108,7 +118,7 @@ public class ServiceManager {
 
     public Map<String, SectionEntry> getCourseHierarchy(String courseId)  throws Exception{
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-            CourseComponent course = this.getCourseStructure(courseId, true);
+            CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getCourseHierarchy(courseId, true);
             } else {
@@ -122,7 +132,7 @@ public class ServiceManager {
     public LectureModel getLecture(String courseId, String chapterName, String chapterId, String lectureName, String lectureId)
         throws Exception {
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-            CourseComponent course = this.getCourseStructure(courseId, true);
+            CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getLecture(courseId, chapterName, lectureName);
             } else {
@@ -136,7 +146,7 @@ public class ServiceManager {
     public VideoResponseModel getVideoById(String courseId, String videoId)
         throws Exception {
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-            CourseComponent course = this.getCourseStructure(courseId, true);
+            CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getVideoById(courseId, videoId);
             } else {
@@ -150,7 +160,7 @@ public class ServiceManager {
     public String getUnitUrlByVideoById(String courseId, String videoId)
         throws Exception {
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-            CourseComponent course = this.getCourseStructure(courseId, true);
+            CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getUnitUrlByVideoById(courseId, videoId);
             } else {
@@ -169,7 +179,7 @@ public class ServiceManager {
     public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
         throws Exception {
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
-            CourseComponent course = this.getCourseStructure(courseId, true);
+            CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getSubsectionById(courseId, subsectionId);
             } else {

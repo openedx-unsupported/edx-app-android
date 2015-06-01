@@ -23,8 +23,6 @@ import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
 
 /**
  * Created by hanning on 5/15/15.
@@ -193,29 +191,32 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     @Override
-    protected void updateDownloadProgress(int progressPercent){
-        if ( progressPercent < 100 ){
-            setVisibilityForDownloadProgressView(true);
-            mHideHandler.removeCallbacks(mHideRunnable);
-            if (downloadIndicator.getVisibility() == View.INVISIBLE ){
-                downloadIndicator.setVisibility(View.VISIBLE);
-                Animation animation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-                downloadIndicator.startAnimation(animation);
+    protected void updateDownloadProgress(final int progressPercent){
+
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if ( progressPercent < 100 ){
+                    setVisibilityForDownloadProgressView(true);
+                    mHideHandler.removeCallbacks(mHideRunnable);
+                    if (downloadIndicator.getVisibility() == View.INVISIBLE ){
+                        downloadIndicator.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(CourseVideoListActivity.this, R.anim.rotate);
+                        downloadIndicator.startAnimation(animation);
+                    }
+                } else { //progressPercent == 100
+                    downloadIndicator.clearAnimation();
+                    downloadIndicator.setVisibility(View.INVISIBLE);
+                    mHideHandler.postDelayed(mHideRunnable,  getResources().getInteger(R.integer.message_delay));
+                }
             }
-        } else { //progressPercent == 100
-            downloadIndicator.clearAnimation();
-            downloadIndicator.setVisibility(View.INVISIBLE);
-            mHideHandler.postDelayed(mHideRunnable,  getResources().getInteger(R.integer.message_delay));
-        }
+        });
+
     }
 
     @Override
     public void onDownloadSuccess(Long result) {
         try {
             updateListUI();
-            //TODO - ideally it should merge to message view into one.
-            String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
-            UiUtil.showMessage(findViewById(R.id.drawer_layout), content);
         }catch(Exception e){
             logger.error(e);
         }

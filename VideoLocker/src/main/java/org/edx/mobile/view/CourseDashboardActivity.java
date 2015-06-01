@@ -85,6 +85,14 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
     }
 
     @Override
+    protected String getUrlForWebView() {
+        if ( courseData != null && courseData.getCourse() != null ){
+            return courseData.getCourse().getCourse_url();
+        }
+        return "";
+    }
+
+    @Override
     public void showCourseOutline() {
         if ( isTaskRunning )
             return;
@@ -96,8 +104,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
                 isTaskRunning = false;
                 if (aCourse != null) {
                     logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
-                    courseComponent = aCourse;
-                    Router.getInstance().showCourseContainerOutline(CourseDashboardActivity.this, courseData, courseComponent);
+                    Router.getInstance().showCourseContainerOutline(CourseDashboardActivity.this, courseData, aCourse.getId());
                 }
                 logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());
             }
@@ -105,6 +112,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
             @Override
             public void onException(Exception ex) {
                 isTaskRunning = false;
+                showInfoMessage(getString(R.string.no_connectivity));
             }
         };
         getHierarchyTask.setTaskProcessCallback(this);

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.IDatabase;
@@ -23,7 +22,7 @@ public abstract class MyVideosBaseFragment extends Fragment {
     protected IStorage storage;
     protected ISegment segIO;
     protected EnrolledCoursesResponse courseData;
-    protected CourseComponent courseComponent;
+    protected String courseComponentId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,15 +72,15 @@ public abstract class MyVideosBaseFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         if ( courseData != null)
             outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-        if ( courseComponent != null )
-            outState.putSerializable(Router.EXTRA_COURSE_COMPONENT, courseComponent);
+        if ( courseComponentId != null )
+            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         super.onSaveInstanceState(outState);
     }
 
     protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
-            courseComponent = (CourseComponent) savedInstanceState.getSerializable(Router.EXTRA_COURSE_COMPONENT);
+            courseComponentId = (String) savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
     }
 }

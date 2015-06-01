@@ -14,7 +14,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -43,7 +42,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected ProgressBar progressWheel;
 
     protected EnrolledCoursesResponse courseData;
-    protected CourseComponent courseComponent;
+    protected String courseComponentId;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -99,7 +98,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if ( EventBus.getDefault().isRegistered(this) )
+            EventBus.getDefault().unregister(this);
     }
 
 
@@ -113,15 +113,16 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void onSaveInstanceState(Bundle outState) {
         if ( courseData != null)
             outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-        if ( courseComponent != null )
-            outState.putSerializable(Router.EXTRA_COURSE_COMPONENT, courseComponent);
+        if ( courseComponentId != null )
+            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         super.onSaveInstanceState(outState);
     }
 
     protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
-            courseComponent =   (CourseComponent)savedInstanceState.getSerializable(Router.EXTRA_COURSE_COMPONENT);
+            courseComponentId =   (String)savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+
         }
     }
 
@@ -215,9 +216,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
 
 
-    protected  String getUrlForWebView(){
-        return courseComponent == null ? "" : courseComponent.getWebUrl();
-    }
+    protected  abstract  String getUrlForWebView();
 
 
 

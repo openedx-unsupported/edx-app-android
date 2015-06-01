@@ -37,7 +37,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
      * @IComponent component should be ICourse
      */
     public void setData(CourseComponent component){
-        if ( !component.isContainer())
+        if (component != null &&  !component.isContainer())
             return;//
         this.rootComponent = component;
         mData.clear();
@@ -73,14 +73,17 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
     public View getRowView(int position, View convertView, ViewGroup parent) {
         final SectionRow row = this.getItem(position);
         final CourseComponent component = row.component;
+        if ( row == selectedRow ){
+            convertView.setBackgroundResource(R.color.grey_1);
+        } else {
+            convertView.setBackgroundResource(R.color.white);
+        }
         final ViewHolder viewHolder = (ViewHolder)convertView.getTag();
-//        if( row.component.isLastChild() ){
-//            viewHolder.fullSeparator.setVisibility(View.VISIBLE);
-//            viewHolder.halfSeparator.setVisibility(View.GONE);
-//        } else {
-//            viewHolder.fullSeparator.setVisibility(View.GONE);
-//            viewHolder.halfSeparator.setVisibility(View.VISIBLE);
-//        }
+        if( row.component.isLastChild() ){
+            viewHolder.halfSeparator.setVisibility(View.GONE);
+        } else {
+            viewHolder.halfSeparator.setVisibility(View.VISIBLE);
+        }
         if (component.isContainer()) {
             return getRowViewForContainer(position, convertView, parent, row);
         } else {

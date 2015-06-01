@@ -200,6 +200,7 @@ public class Storage implements IStorage {
                 long[] dmids = new long[result.size()];
                 for (int i=0; i< result.size(); i++) {
                     dmids[i] = result.get(i).getDmId();
+                    logger.debug("xxxxxxxx =" +dmids[i]);
                 }
 
                 IDownloadManager dm = DownloadFactory.getInstance(context);

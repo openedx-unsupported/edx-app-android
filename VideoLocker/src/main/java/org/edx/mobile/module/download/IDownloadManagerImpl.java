@@ -1,9 +1,5 @@
 package org.edx.mobile.module.download;
 
-import java.io.File;
-import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.download.NativeDownloadModel;
-import org.edx.mobile.util.Sha1Util;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.app.DownloadManager.Request;
@@ -11,6 +7,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.download.NativeDownloadModel;
+import org.edx.mobile.util.Sha1Util;
+
+import java.io.File;
 
 class IDownloadManagerImpl implements IDownloadManager {
     
@@ -24,7 +26,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public NativeDownloadModel getDownload(long dmid) {
+    public synchronized  NativeDownloadModel getDownload(long dmid) {
         //Need to check first if the download manager service is enabled
         if(!isDownloadManagerEnabled())
             return null;
@@ -64,7 +66,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public long addDownload(File destFolder, String url, boolean wifiOnly) {
+    public synchronized long addDownload(File destFolder, String url, boolean wifiOnly) {
         long dmid = -1;
 
         //Need to check first if the download manager service is enabled
@@ -106,7 +108,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public boolean removeDownload(long dmid) {
+    public synchronized boolean removeDownload(long dmid) {
         //Need to check first if the download manager service is enabled
         if(isDownloadManagerEnabled()){
             int count = dm.remove(dmid);
@@ -116,45 +118,48 @@ class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public int getProgressForDownload(long dmid) {
+    public synchronized int getProgressForDownload(long dmid) {
         return getAverageProgressForDownloads(new long[] {dmid});
     }
 
     @Override
-    public int getAverageProgressForDownloads(long[] dmids) {
+    public synchronized int getAverageProgressForDownloads(long[] dmids) {
         //Need to check first if the download manager service is enabled
         if(!isDownloadManagerEnabled())
             return 0;
 
         Query query = new Query();
         query.setFilterById(dmids);
-        
-        Cursor c = dm.query(query);
-        if (c.moveToFirst()) {
-            int count = c.getCount();
-            float aggrPercent = 0;
-            do {
-                long downloaded = c
-                    .getLong(c
+        try {
+            Cursor c = dm.query(query);
+            if (c.moveToFirst()) {
+                int count = c.getCount();
+                float aggrPercent = 0;
+                do {
+                    long downloaded = c
+                        .getLong(c
                             .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                long size = c.getLong(c
-                    .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                
-                aggrPercent += (100f * downloaded / size);
-            } while(c.moveToNext());
-            
+                    long size = c.getLong(c
+                        .getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                    aggrPercent += (100f * downloaded / size);
+                } while (c.moveToNext());
+
+                c.close();
+
+                int average = (int) (aggrPercent / count);
+                return average;
+            }
             c.close();
-            
-            int average = (int) (aggrPercent / count);
-            return average;
+        }catch (Exception ex){
+            logger.debug(ex.getMessage());
         }
-        c.close();
         
         return 0;
     }
 
     @Override
-    public boolean isDownloadComplete(long dmid) {
+    public synchronized boolean isDownloadComplete(long dmid) {
         //Need to check first if the download manager service is enabled
         if(!isDownloadManagerEnabled())
             return false;
@@ -176,7 +181,7 @@ class IDownloadManagerImpl implements IDownloadManager {
     }
 
     @Override
-    public boolean isDownloadManagerEnabled(){
+    public synchronized boolean isDownloadManagerEnabled(){
         if(context==null){
             return false;
         }

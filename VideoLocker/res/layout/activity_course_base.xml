@@ -76,7 +76,7 @@
                             tools:targetApi="17"/>
                         <org.edx.mobile.view.custom.ETextView
                             android:id="@+id/last_access_text"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
                             android:layout_gravity="left|start"
@@ -122,10 +122,11 @@
                     android:layout_gravity="center_vertical"
                     tools:targetApi="17">
 
-                    <TextView
+                      <TextView
                         android:id="@+id/video_download_indicator"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"/>
+                        android:text=""
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
                     <org.edx.mobile.view.custom.ETextView
                         android:layout_width="0dp"

@@ -1255,11 +1255,11 @@ public class Api {
     public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
 
 
-        logger.debug("GET url for enrolling in a Course: " + delegate.getUrl());
+        logger.debug("GET url for enrolling in a Course: " + delegate.endPoint.getUrl());
 
         if (NetworkUtil.isConnected(context)) {
             // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(delegate.getUrl(), null);
+            String urlWithAppendedParams = HttpManager.toGetUrl(delegate.endPoint.getUrl(), null);
             HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
             return result;
         }

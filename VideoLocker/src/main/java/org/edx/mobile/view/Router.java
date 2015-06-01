@@ -28,7 +28,7 @@ public class Router {
     public static final String EXTRA_ENROLLMENT = "enrollment";
     public static final String EXTRA_SEQUENTIAL = "sequential";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
-    public static final String EXTRA_COURSE_COMPONENT = "course_component";
+    public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
     public static final String EXTRA_COURSE_DATA = "course_data";
     static private Router sInstance;
 
@@ -151,11 +151,11 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, CourseComponent courseComponent) {
+    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, String courseComponentId) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT, courseComponent);
+        courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
@@ -167,11 +167,11 @@ public class Router {
 
 
     public void showCourseUnitDetail(Activity activity, EnrolledCoursesResponse model,
-                                     CourseComponent course,  CourseComponent unit ) {
+                                     String courseId,  CourseComponent unit ) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT, course);
+        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseId);
         courseBundle.putSerializable(EXTRA_COURSE_UNIT, unit);
 
         Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);
