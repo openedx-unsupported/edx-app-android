@@ -23,11 +23,9 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.PropertyUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -467,14 +465,9 @@ public class Storage implements IStorage {
     /**
      * Checks progress of all the videos that are being downloaded.
      * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
+     * NOTE - precondition - used only for app upgrade
      */
     public void repairDownloadCompletionData() {
-        PrefManager.AppInfoPrefManager pref = new PrefManager.AppInfoPrefManager(context);
-        String lastSavedVersionName = pref.getAppVersionName();
-        String curVersionName = PropertyUtil.getManifestVersionName(context);
-        if (lastSavedVersionName == null || !lastSavedVersionName.equals(curVersionName)) {
-            // current version not matching with the last saved version
-            pref.setAppVersionName(curVersionName);
 
             // attempt to repair the data
             Thread maintenanceThread = new Thread(new Runnable() {
@@ -522,7 +515,6 @@ public class Storage implements IStorage {
                 }
             });
             maintenanceThread.start();
-        }
     }
 
     @Override
