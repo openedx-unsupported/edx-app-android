@@ -652,4 +652,30 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public void setUserName(String userName){
         this.username = userName;
     }
+
+
+    /**
+     * update assessment unit access record
+     */
+    public Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited){
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.ASSESSMENT_TB_UNIT_WATCHED, visited);
+
+        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.ASSESSMENT, values,
+            DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
+            new String[] {unitId, username});
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    /**
+     * get assessment unit access status
+     */
+    public boolean isUnitAccessed(final DataCallback<Boolean> callback, String unitId){
+        DbOperationExists op = new DbOperationExists(false,DbStructure.Table.ASSESSMENT, null,
+            DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? ",
+            new String[] { unitId }, null);
+        op.setCallback(callback);
+        return enqueue(op);
+    }
 }

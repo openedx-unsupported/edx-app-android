@@ -106,11 +106,14 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setText(unit.getType().name());
             Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
+            checkAccessStatus(viewHolder, unit);
+
         } else if (row.component instanceof VideoBlockModel){
             updateUIForVideo(position, convertView, viewHolder, row);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_file_o);
+            checkAccessStatus(viewHolder, unit);
         }
 
         viewHolder.rowTitle.setText(unit.getDisplayName());
@@ -120,9 +123,24 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                 rowClicked(row);
             }
         });
-
-
         return convertView;
+    }
+
+    private void checkAccessStatus(final ViewHolder viewHolder, final CourseComponent unit){
+        dbStore.isUnitAccessed(new DataCallback<Boolean>(){
+            @Override
+            public void onResult(Boolean accessed) {
+                if( accessed ) {
+                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.grey_3));
+                } else {
+                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_2));
+                }
+            }
+            @Override
+            public void onFail(Exception ex) {
+
+            }
+        }, unit.getId());
     }
 
     private void updateUIForVideo(int position, View convertView, final ViewHolder viewHolder, final SectionRow row ){
@@ -242,27 +260,31 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
         //support video download for video type
         final int totalCount = component.getBlockCount().videoCount;
-        if (totalCount == 0){
+        if (totalCount == 0 ){
             holder.noOfVideos.setVisibility(View.INVISIBLE);
             holder.bulkDownloadVideos.setVisibility(View.GONE);
         } else {
             holder.noOfVideos.setVisibility(View.VISIBLE);
             holder.noOfVideos.setText("" + totalCount);
 
-            int inProcessCount = dbStore.getVideosCountBySection(courseId, chapterId, sequentialId, null);
-            int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
-            int videoCount = totalCount - inProcessCount - webOnlyCount;
-            if (videoCount > 0) {
-                holder.bulkDownloadVideos.setVisibility(View.VISIBLE);
-                holder.bulkDownloadVideos
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View downloadView) {
-                            download(component.getVideos());
-                        }
-                    });
-            } else {
+            if (  row.numOfVideoNotDownloaded == 0 ){
                 holder.bulkDownloadVideos.setVisibility(View.GONE);
+            } else {
+                int inProcessCount = dbStore.getVideosCountBySection(courseId, chapterId, sequentialId, null);
+                int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
+                row.numOfVideoNotDownloaded = totalCount - inProcessCount - webOnlyCount;
+                if (row.numOfVideoNotDownloaded > 0) {
+                    holder.bulkDownloadVideos.setVisibility(View.VISIBLE);
+                    holder.bulkDownloadVideos
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View downloadView) {
+                                download(component.getVideos());
+                            }
+                        });
+                } else {
+                    holder.bulkDownloadVideos.setVisibility(View.GONE);
+                }
             }
         }
 

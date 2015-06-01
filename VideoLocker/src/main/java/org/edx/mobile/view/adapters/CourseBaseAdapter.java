@@ -177,6 +177,9 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         public final boolean topComponent;
         public final CourseComponent component;
 
+        //field to cache the temp value
+        public int numOfVideoNotDownloaded = -1;
+
         public SectionRow(int type, CourseComponent component) {
             this(type, false, component);
         }

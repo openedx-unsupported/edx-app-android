@@ -134,6 +134,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
         selectedUnit = pagerAdapter.getUnit(curIndex);
+        db.updateAccess(null, selectedUnit.getId(), true);
         CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
         View prevButton = findViewById(R.id.goto_prev);
         View nextButton = findViewById(R.id.goto_next);

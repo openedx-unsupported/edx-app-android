@@ -9,10 +9,12 @@ public final class DbStructure {
     
     public static final String NAME = "downloads.db";
     //Updated to Version 4 to add flag to indicate that video is only available for web
-    public static final int VERSION = 4;
+    //Updated to Version 5 to create a new table to record learning history for assessment
+    public static final int VERSION = 5;
 
     public static final class Table {
         public static final String DOWNLOADS = "downloads";
+        public static final String ASSESSMENT = "assessment";
     }
     
     public static final class Column {
@@ -39,5 +41,12 @@ public final class DbStructure {
         public static final String IS_COURSE_ACTIVE = "is_course_active";
         public static final String UNIT_URL = "unit_url";
         public static final String VIDEO_FOR_WEB_ONLY = "video_for_web_only";
+
+
+        //table for assessment learning history
+        public static final String ASSESSMENT_TB_ID = "_id";
+        public static final String ASSESSMENT_TB_USERNAME = "username";
+        public static final String ASSESSMENT_TB_UNIT_ID = "unit_id";
+        public static final String ASSESSMENT_TB_UNIT_WATCHED = "unit_watched";
     }
 }
