@@ -87,6 +87,7 @@ dependencies {
     compile 'com.squareup.phrase:phrase:1.0.3'
     compile 'com.android.support:support-v4:21.1.0'
     compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.android.support:multidex:1.0.0'
 
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
@@ -149,6 +150,9 @@ android {
         testInstrumentationRunner 'org.edx.mobile.test.edXInstrumentRunner'
         testHandleProfiling true
         testFunctionalTest true
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     sourceSets {
         main {
@@ -208,7 +212,7 @@ android {
         exclude 'LICENSE.txt'
         exclude 'APK LICENSE.txt'
     }
- 
+
 }
 
 

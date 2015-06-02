@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
@@ -34,7 +35,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * This class initializes the modules of the app based on the configuration.
  */
-public class MainApplication extends Application{
+public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
     public static final boolean Q4_ASSESSMENT_FLAG = false;
     //FIXME - temporary solution

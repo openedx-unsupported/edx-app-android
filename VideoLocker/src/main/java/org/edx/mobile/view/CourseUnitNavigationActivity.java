@@ -21,6 +21,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.view.common.PageViewStateCallback;
+import org.edx.mobile.view.custom.DisableableViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -34,7 +35,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
 
-    private ViewPager pager;
+    private DisableableViewPager pager;
     private CourseComponent selectedUnit;
 
     private List<CourseComponent> unitList = new ArrayList<>();
@@ -49,7 +50,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         insertPoint.addView(v, 0,
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        pager = (ViewPager)findViewById(R.id.pager);
+        pager = (DisableableViewPager)findViewById(R.id.pager);
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
@@ -109,6 +110,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             }
         });
 
+        updateUIForOrientation();
 
         updateDataModel();
         
@@ -218,13 +220,18 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //TODO - should we use load different layout file?
+        updateUIForOrientation();
+    }
+
+    private void updateUIForOrientation(){
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
+            pager.setPagingEnabled(false);
         } else {
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
+            pager.setPagingEnabled(true);
         }
     }
 
@@ -277,5 +284,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
             return unitList.size();
         }
     }
+
+    /// we won't show download and last access view here
+    protected void setVisibilityForDownloadProgressView(boolean show){  }
+
+    protected void hideLastAccessedView(View v) { }
+
+    protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {}
 
 }

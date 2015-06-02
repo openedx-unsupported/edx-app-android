@@ -322,4 +322,18 @@ public class CourseComponent implements IBlock, IPathNode {
     public String getName() {
         return  getDisplayName();
     }
+
+    /**
+     * calculate and construct a Path object
+     */
+    public BlockPath getPath(){
+        BlockPath path = new BlockPath();
+        path.addPathNode(this);
+        CourseComponent nodeAbove = parent;
+        while ( nodeAbove != null ){
+            path.addPathNode(nodeAbove);
+            nodeAbove = nodeAbove.getParent();
+        }
+        return path;
+    }
 }

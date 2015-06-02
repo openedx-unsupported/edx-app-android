@@ -8,6 +8,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.DownloadEvent;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -130,18 +131,18 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
     }
 
     private void checkAccessStatus(final ViewHolder viewHolder, final CourseComponent unit){
-        dbStore.isUnitAccessed(new DataCallback<Boolean>(){
+        dbStore.isUnitAccessed(new DataCallback<Boolean>(true){
             @Override
             public void onResult(Boolean accessed) {
                 if( accessed ) {
                     viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.grey_3));
                 } else {
-                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_2));
+                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_3));
                 }
             }
             @Override
             public void onFail(Exception ex) {
-
+                logger.error(ex);
             }
         }, unit.getId());
     }
@@ -244,10 +245,12 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
     private  View getRowViewForContainer(int position, View convertView, ViewGroup parent, final SectionRow row) {
         final CourseComponent component = row.component;
-
         String courseId = component.getRoot().getId();
-        String chapterId = component.getAncestor(2).getName();
-        String sequentialId = component.getAncestor(1).getName();
+        BlockPath path = component.getPath();
+        //FIXME - we should add a new column in database - pathinfo.
+        //then do the string match to get the record
+        String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
+        String sequentialId =  path.get(2) == null ? "" : path.get(2).getDisplayName();
 
         ViewHolder holder = (ViewHolder)convertView.getTag();
 
