@@ -6,23 +6,24 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import org.apache.http.HttpStatus;
+import org.apache.http.cookie.Cookie;
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.GetSessesionExchangeCookieTask;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,7 +81,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 if ( callback != null )
                     callback.finishProcess();
                 if ( errorCode == HttpStatus.SC_FORBIDDEN || errorCode == HttpStatus.SC_UNAUTHORIZED || errorCode == HttpStatus.SC_NOT_FOUND){
-                    tryToLoadWebview(view);
+                    tryToLoadWebView(view);
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
@@ -88,23 +89,6 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 if ( callback != null )
                     callback.finishProcess();
 
-                String sessionIdRefreshUrl = Api.getSessionTokenExchangeUrl();
-                if ( url.equals(sessionIdRefreshUrl) ){
-                    String cookies = CookieManager.getInstance().getCookie(url);
-                    String[] cookieValues=cookies.split(";");
-                    for (int i = 0; i < cookieValues.length; i++) {
-                        String[] split = cookieValues[i].split("=");
-                        if ( split[0].trim().equals(PrefManager.Key.SESSION_ID) ){
-                            PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, split[1]);
-                            //we can not get the expiration date from cookie, so just set it to expire for one day
-                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, new Date().getTime() + 3600 * 24 * 1000 );
-                            break;
-                        }
-                    }
-                    tryToLoadWebview(view);
-                    return;
-                }
                 view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 super.onPageFinished(view, url);
             }
@@ -116,10 +100,10 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         });
         webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        tryToLoadWebview(webView);
+        tryToLoadWebView(webView);
     }
 
-    private void tryToLoadWebview(WebView webView){
+    private void tryToLoadWebView(WebView webView){
         if ( callback != null )
             callback.startProcess();
         if ( unit != null) {
@@ -149,20 +133,49 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
 
             //if refresh sesssionid happens within last min, we dont try to refresh to avoid infinite loop
             //and just go ahead to load the pag
-            if ( lastRefresh + 60000 > curTime) {
+            if ( lastRefresh +1000 > curTime) {
                 map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
                 webView.loadUrl(unit.getBlockUrl(), map);
             } else {
                 //if session id is expired or session id is not available, we try to refresh session id
                 if ( sessionIdExpirationDate < curTime || TextUtils.isEmpty(sessionId) ){
                     pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID_REFRESH_TIME, curTime);
-                    webView.loadUrl(Api.getSessionTokenExchangeUrl(), map);
+                    tryToRefreshSessionCookie(webView);
                 } else {
                     map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
                     webView.loadUrl(unit.getBlockUrl(), map);
                 }
             }
         }
+    }
+
+    private void tryToRefreshSessionCookie(final  WebView webView){
+        GetSessesionExchangeCookieTask task = new GetSessesionExchangeCookieTask(getActivity()){
+            @Override
+            public void onFinish(List<Cookie> result) {
+                if ( result == null || result.isEmpty() ){
+                    logger.debug("result is empty");
+                    return;
+                }
+                for(Cookie cookie : result){
+                    if ( cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
+                        PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
+                        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
+                        //we can not get the expiration date from cookie, so just set it to expire for one day
+                        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
+                        tryToLoadWebView(webView);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+            }
+        };
+        task.setTaskProcessCallback( (TaskProcessCallback)getActivity());
+        task.execute();
     }
 
     @JavascriptInterface

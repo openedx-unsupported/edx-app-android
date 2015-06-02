@@ -11,7 +11,7 @@ import java.util.List;
 public class BlockPath implements Serializable{
     private List<CourseComponent> path = new ArrayList<>();
 
-    public void addPathNode(CourseComponent component){
+    public void addPathNodeToPathFront(CourseComponent component){
         path.add(0, component);
     }
     public List<CourseComponent> getPath(){
