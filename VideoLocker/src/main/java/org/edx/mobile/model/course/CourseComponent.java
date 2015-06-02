@@ -17,7 +17,8 @@ public class CourseComponent implements IBlock, IPathNode {
     private String name;
     private boolean graded;
     private boolean gradedSubDAG;
-    private boolean mobileSupported;
+    //FIXME -wait for server side change
+    private boolean mobileSupported = true;
     private String blockUrl;
     private String webUrl;
     private BlockCount blockCount;
@@ -40,9 +41,8 @@ public class CourseComponent implements IBlock, IPathNode {
         this.gradedSubDAG = blockModel.gradedSubDAG;
         this.blockUrl = blockModel.blockUrl;
         this.webUrl = blockModel.webUrl;
-        // this.mobileSupported = mobileSupported;
-        //FIXME -for testing only
-        this.mobileSupported =  blockUrl.hashCode() % 2 == 0;
+        //TESTING ONLY  FIXME -
+        this.mobileSupported =  true;
         this.blockCount = blockModel.blockCount == null ? new BlockCount() : blockModel.blockCount;
         this.parent = parent;
         if ( parent == null){
@@ -321,5 +321,19 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public String getName() {
         return  getDisplayName();
+    }
+
+    /**
+     * calculate and construct a Path object
+     */
+    public BlockPath getPath(){
+        BlockPath path = new BlockPath();
+        path.addPathNodeToPathFront(this);
+        CourseComponent nodeAbove = parent;
+        while ( nodeAbove != null ){
+            path.addPathNodeToPathFront(nodeAbove);
+            nodeAbove = nodeAbove.getParent();
+        }
+        return path;
     }
 }

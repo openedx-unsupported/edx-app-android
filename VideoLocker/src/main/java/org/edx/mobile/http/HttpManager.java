@@ -16,6 +16,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.cookie.Cookie;
@@ -329,7 +330,7 @@ public class HttpManager {
         return getResponseHeader(url, null);
     }
 
-    public List<Cookie> getCookies(String url, Bundle headers)
+    public List<Cookie> getCookies(String url, Bundle headers, boolean isGet)
         throws ParseException, ClientProtocolException, IOException {
         HttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -340,7 +341,7 @@ public class HttpManager {
         // Bind custom cookie store to the local context
         localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-        HttpGet get = new HttpGet(url);
+        HttpRequestBase get = isGet ? new HttpGet(url) : new HttpPost(url);
 
         // set request headers
         if (headers != null) {

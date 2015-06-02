@@ -22,7 +22,7 @@
             android:background="@drawable/rectangle_with_bottom_border"
             android:text="@string/assessment_graded_warning"
             />
-        <WebView
+        <org.edx.mobile.view.custom.EdxWebView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/course_unit_webView"
             android:layout_width="match_parent"

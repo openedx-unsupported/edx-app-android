@@ -2,7 +2,6 @@ package org.edx.mobile.module.db.impl;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,9 @@ class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
                 } else if (columnType == Integer.class) {
                     Integer column = c.getInt(0);
                     list.add((T) column);
+                }else if (columnType == Boolean.class) {
+                     Boolean column = c.getInt(0) != 0;  //0 will be false
+                     list.add((T) column);
                 } else {
                     logger.warn("Class types does NOT match for: " + columnType);
                 }

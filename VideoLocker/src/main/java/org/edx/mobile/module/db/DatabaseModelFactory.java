@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
@@ -85,8 +86,9 @@ public class DatabaseModelFactory {
         //FIXME - current database schema is not suitable for arbitary level of course structure tree
         //solution - store the navigation path info in into one column field in the database,
         //rather than individual column fields.
-        e.chapter = block.getAncestor(2).getDisplayName();
-        e.section = block.getAncestor(1).getDisplayName();
+        BlockPath path = block.getPath();
+        e.chapter = path.get(1) == null ? "" : path.get(1).getDisplayName();
+        e.section =  path.get(2) == null ? "" : path.get(2).getDisplayName();
         IBlock root = block.getRoot();
         e.eid = root.getId();
         e.duration = vrm.duration;

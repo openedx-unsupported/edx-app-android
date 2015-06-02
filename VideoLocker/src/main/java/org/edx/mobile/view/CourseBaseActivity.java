@@ -36,7 +36,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     private View offlineBar;
     private View lastAccessBar;
-    private View downloadProgressBar;
+    protected View downloadProgressBar;
     protected TextView downloadIndicator;
 
     protected ProgressBar progressWheel;
@@ -260,7 +260,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
 
     protected void setVisibilityForDownloadProgressView(boolean show){
-        downloadProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        if ( downloadProgressBar != null )
+            downloadProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     protected void hideLastAccessedView(View v) {

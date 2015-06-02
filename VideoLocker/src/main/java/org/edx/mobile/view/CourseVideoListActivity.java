@@ -196,7 +196,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
         runOnUiThread(new Runnable() {
             public void run() {
                 if ( progressPercent < 100 ){
-                    setVisibilityForDownloadProgressView(true);
+                    downloadProgressBar.setVisibility(  View.VISIBLE );
                     mHideHandler.removeCallbacks(mHideRunnable);
                     if (downloadIndicator.getVisibility() == View.INVISIBLE ){
                         downloadIndicator.setVisibility(View.VISIBLE);
@@ -211,6 +211,20 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             }
         });
 
+    }
+
+    @Override
+    protected void setVisibilityForDownloadProgressView(boolean show){
+         boolean visible = downloadProgressBar.getVisibility() == View.VISIBLE;
+        if (visible == show )
+            return; //do nothing
+
+        if ( show ){
+            //TODO - we pass a value less than 100 to indicate it is downloading.
+            updateDownloadProgress(0);
+        } else {
+            updateDownloadProgress(100);
+        }
     }
 
     @Override
@@ -238,7 +252,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     private Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
-            setVisibilityForDownloadProgressView(false);
+            downloadProgressBar.setVisibility(  View.GONE );
         }
     };
 

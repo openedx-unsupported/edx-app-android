@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
+import org.apache.http.cookie.Cookie;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
@@ -1249,7 +1250,14 @@ public class Api {
     }
 
     public static String getSessionTokenExchangeUrl(){
-        return getBaseUrl() + "/oauth2/exchange_session_cookie/";
+        return getBaseUrl() + "/oauth2/login/";
+    }
+
+    /**
+     *  used for assessment webview, refresh session id
+     */
+    public List<Cookie> getSessionExchangeCookie() throws Exception{
+        return http.getCookies(getSessionTokenExchangeUrl(), getAuthHeaders(), false);
     }
 
     public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {

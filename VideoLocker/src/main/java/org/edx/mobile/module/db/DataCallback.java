@@ -6,7 +6,7 @@ import android.os.Looper;
 public abstract class DataCallback<T> implements IDbCallback<T> {
     
     private Handler handler;
-    private boolean resultOnUIThread = false;
+    private final boolean resultOnUIThread;
     
     public DataCallback() {
         this(false);
