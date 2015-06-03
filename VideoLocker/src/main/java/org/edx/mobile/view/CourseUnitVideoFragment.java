@@ -186,7 +186,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         if (playerFragment == null) {
 
             playerFragment = new PlayerFragment();
-
+            playerFragment.setInViewPager(true);
             try{
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -201,12 +201,41 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     public void onResume() {
         super.onResume();
-        try {
-            if (playerFragment != null) {
-                playerFragment.setCallback(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+    }
+
+    //we use user visible hint, not onResume() for video
+    //as the original playerfragment code use onResume to
+    //control the lifecycle of the player.
+    //the problem with viewpager is that it loads this fragment
+    //and calls onResume even it is not visible.
+    //which breaks the normal behavior of activity/fragment
+    //lifecycle.
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            try {
+                if (playerFragment != null) {
+                    playerFragment.setCallback(this);
+                    playerFragment.handleOnResume();
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
             }
-        } catch (Exception ex) {
-            logger.error(ex);
+        }else{
+            // fragment is no longer visible
+            try {
+                if (playerFragment != null) {
+                    playerFragment.setCallback(null);
+                    playerFragment.handleOnPause();
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
         }
     }
 
@@ -506,7 +535,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         super.onStop();
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
+
         if(myVideosFlag){
+        }
+        try {
+            if (playerFragment != null) {
+                playerFragment.onStop();
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 
@@ -764,9 +801,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     @Override
     public void onPageDisappear() {
-         if( playerFragment != null ){
-             playerFragment.freezePlayer();
-         }
+
     }
 
     /**

@@ -54,6 +54,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
+
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -133,9 +134,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         }
     }
 
+    private void setCurrentUnit(CourseComponent component){
+        this.selectedUnit = component;
+    }
+
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
-        selectedUnit = pagerAdapter.getUnit(curIndex);
+        setCurrentUnit( pagerAdapter.getUnit(curIndex) );
         db.updateAccess(null, selectedUnit.getId(), true);
         CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
         View prevButton = findViewById(R.id.goto_prev);
@@ -173,7 +178,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            selectedUnit = (CourseComponent) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT);
+            setCurrentUnit((CourseComponent) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT) );
         }
         super.restore(savedInstanceState);
     }
@@ -187,7 +192,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     protected void onResume() {
         super.onResume();
+
     }
+
 
     private void updateDataModel(){
         unitList.clear();
@@ -253,19 +260,21 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         public Fragment getItem(int pos) {
             CourseComponent unit = getUnit(pos);
 
-            if ( !unit.isMobileSupported() ){
+            //FIXME - for the video, let's ignore responsive_UI for now
+            if ( unit instanceof VideoBlockModel) {
+                return  CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
+            }
+
+            if ( !unit.isResponsiveUI() ){
                 return CourseUnitMobileNotSupportedFragment.newInstance(unit);
             }
 
             if ( unit.getType() != BlockType.VIDEO &&
                 unit.getType() != BlockType.HTML &&
                 unit.getType() != BlockType.OTHERS &&
-                unit.getType() != BlockType.DISCUSSION ) {
+                unit.getType() != BlockType.DISCUSSION &&
+                unit.getType() != BlockType.PROBLEM ) {
                 return CourseUnitEmptyFragment.newInstance(unit);
-            }
-
-            if ( unit instanceof VideoBlockModel) {
-                return  CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
             }
 
             if ( unit instanceof HtmlBlockModel ){

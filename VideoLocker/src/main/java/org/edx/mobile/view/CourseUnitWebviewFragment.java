@@ -12,24 +12,26 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import org.apache.http.HttpStatus;
-import org.apache.http.cookie.Cookie;
 import org.edx.mobile.R;
+import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.task.GetSessesionExchangeCookieTask;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  *
  */
 public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback {
+    private final int MAX_RETRY_TIMES = 3;
     HtmlBlockModel unit;
     TaskProcessCallback callback;
     /**
@@ -54,6 +56,21 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         super.onCreate(savedInstanceState);
         unit = getArguments() == null ? null :
             (HtmlBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+
+        EventBus.getDefault().register(this);
+    }
+
+    public void onDestroy(){
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    public void onEvent(SessionIdRefreshEvent event){
+        if ( event.success ){
+            tryToLoadWebView();
+        } else {
+            //TODO - show error?
+        }
     }
 
     /**
@@ -73,6 +90,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         super.onActivityCreated(savedInstanceState);
         //should we recover here?
         WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
+        webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -81,15 +99,17 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 if ( callback != null )
                     callback.finishProcess();
                 if ( errorCode == HttpStatus.SC_FORBIDDEN || errorCode == HttpStatus.SC_UNAUTHORIZED || errorCode == HttpStatus.SC_NOT_FOUND){
-                    tryToLoadWebView(view);
+                    EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
             public void onPageFinished(WebView view, String url) {
                 if ( callback != null )
                     callback.finishProcess();
-
-                view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
+                //TODO -disable it for now. as it causes some issues for assessment
+                //webview to fit in the screen. But we still need it to show additional
+                //compenent below the webview in the future?
+               // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 super.onPageFinished(view, url);
             }
 
@@ -100,12 +120,13 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         });
         webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        tryToLoadWebView(webView);
+        tryToLoadWebView();
     }
 
-    private void tryToLoadWebView(WebView webView){
+    private void tryToLoadWebView( ){
         if ( callback != null )
             callback.startProcess();
+        WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
         if ( unit != null) {
             if ( unit.isGraded() || unit.isGradedSubDAG() ){
                 getView().findViewById(R.id.webview_header_text).setVisibility(View.VISIBLE);
@@ -126,57 +147,21 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 map.put("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
             }
 
-            Long lastRefresh = pref.getLong(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID_REFRESH_TIME);
             Long sessionIdExpirationDate = pref.getLong(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION);
             String sessionId = pref.getString(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID);
             Long curTime = new Date().getTime();
 
-            //if refresh sesssionid happens within last min, we dont try to refresh to avoid infinite loop
-            //and just go ahead to load the pag
-            if ( lastRefresh +1000 > curTime) {
-                map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
-                webView.loadUrl(unit.getBlockUrl(), map);
-            } else {
-                //if session id is expired or session id is not available, we try to refresh session id
+               //if session id is expired or session id is not available, we try to refresh session id
                 if ( sessionIdExpirationDate < curTime || TextUtils.isEmpty(sessionId) ){
-                    pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID_REFRESH_TIME, curTime);
-                    tryToRefreshSessionCookie(webView);
+                    EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                 } else {
                     map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
                     webView.loadUrl(unit.getBlockUrl(), map);
                 }
-            }
         }
     }
 
-    private void tryToRefreshSessionCookie(final  WebView webView){
-        GetSessesionExchangeCookieTask task = new GetSessesionExchangeCookieTask(getActivity()){
-            @Override
-            public void onFinish(List<Cookie> result) {
-                if ( result == null || result.isEmpty() ){
-                    logger.debug("result is empty");
-                    return;
-                }
-                for(Cookie cookie : result){
-                    if ( cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
-                        PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
-                        //we can not get the expiration date from cookie, so just set it to expire for one day
-                        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
-                        tryToLoadWebView(webView);
-                        break;
-                    }
-                }
-            }
 
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-            }
-        };
-        task.setTaskProcessCallback( (TaskProcessCallback)getActivity());
-        task.execute();
-    }
 
     @JavascriptInterface
     public void resize(final float height) {
