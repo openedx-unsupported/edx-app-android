@@ -84,7 +84,7 @@ public class ServiceManager {
             @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);
-                return (CourseComponent)CourseManager.normalizeCourseStructure(model);
+                return (CourseComponent)CourseManager.normalizeCourseStructure(model, courseId);
             }
             @Override
             public HttpManager.HttpResult invokeHttpCall() throws Exception{

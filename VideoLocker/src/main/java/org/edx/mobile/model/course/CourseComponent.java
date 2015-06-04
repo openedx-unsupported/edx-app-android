@@ -1,5 +1,8 @@
 package org.edx.mobile.model.course;
 
+import android.text.TextUtils;
+
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
 
@@ -12,6 +15,7 @@ import java.util.Locale;
  * Default implementation of IBlock
  */
 public class CourseComponent implements IBlock, IPathNode {
+    protected final static Logger logger = new Logger(CourseComponent.class.getName());
     private String id;
     private BlockType type;
     private String name;
@@ -24,6 +28,7 @@ public class CourseComponent implements IBlock, IPathNode {
     protected CourseComponent parent;
     protected CourseComponent root;
     protected List<CourseComponent> children = new ArrayList<>();
+    private String courseId;
 
     public CourseComponent(){}
 
@@ -319,6 +324,24 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public String getName() {
         return  getDisplayName();
+    }
+
+    @Override
+    public String getCourseId(){
+        if( TextUtils.isEmpty(courseId) ){
+            //root should always has a course id, add the check to avoid loop
+            if ( root == this ){
+                logger.debug( "root does not has a course id set!!! for " + id);
+                return "";
+            }
+            return root.getCourseId();
+        } else {
+            return courseId;
+        }
+    }
+    @Override
+    public void setCourseId(String courseId){
+        this.courseId = courseId;
     }
 
     /**

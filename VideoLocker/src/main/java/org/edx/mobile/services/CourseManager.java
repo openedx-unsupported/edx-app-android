@@ -76,10 +76,10 @@ public class CourseManager {
      * @param courseStructureV1Model
      * @return
      */
-    public static IBlock normalizeCourseStructure(CourseStructureV1Model courseStructureV1Model){
+    public static IBlock normalizeCourseStructure(CourseStructureV1Model courseStructureV1Model, String courseId){
         BlockModel topBlock = courseStructureV1Model.getBlockById(courseStructureV1Model.root);
         CourseComponent course = new CourseComponent(topBlock, null);
-
+        course.setCourseId(courseId);
         for (BlockModel m : courseStructureV1Model.getDescendants(topBlock)) {
             normalizeCourseStructure(courseStructureV1Model,m,course);
         }
@@ -134,7 +134,7 @@ public class CourseManager {
      */
     public static VideoResponseModel mappingVideoResponseModelFrom(VideoBlockModel videoBlockModel){
         VideoResponseModel model = new VideoResponseModel();
-        model.setCourseId(videoBlockModel.getRoot().getId());
+        model.setCourseId(videoBlockModel.getCourseId());
         SummaryModel summaryModel = mappingSummaryModelFrom(videoBlockModel);
         model.setSummary(summaryModel);
         model.videoBlockModel = videoBlockModel;
