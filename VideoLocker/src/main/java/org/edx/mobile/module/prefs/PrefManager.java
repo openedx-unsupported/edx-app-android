@@ -10,6 +10,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Sha1Util;
 
@@ -182,7 +183,7 @@ public class PrefManager {
         put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
         //assessment webview related session_id
-        put(Key.AUTH_ASSESSMENT_SESSION_ID, null);
+        EdxCookieManager.getSharedInstance().clearWebWiewCookie();
     }
 
     /**
@@ -329,7 +330,6 @@ public class PrefManager {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
         public static final String SESSION_ID = "sessionid";
-        public static final String AUTH_ASSESSMENT_SESSION_ID_REFRESH_TIME = "session_id_refresh_time";
         public static final String AUTH_ASSESSMENT_SESSION_ID = "assessment_session_id";
         public static final String AUTH_ASSESSMENT_SESSION_EXPIRATION = "assessment_session_expiration";
         //TODO- need to rename these constants. causing confusion

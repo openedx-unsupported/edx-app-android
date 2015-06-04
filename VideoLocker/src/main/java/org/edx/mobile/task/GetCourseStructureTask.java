@@ -24,14 +24,13 @@ Task<CourseComponent> {
                 PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
                 long lastFetchTime = prefManager.getLastCourseStructureFetch(courseId);
                 long curTime = new Date().getTime();
-                boolean useCache = true;
+                HttpRequestDelegate.REQUEST_CACHE_TYPE useCacheType = HttpRequestDelegate.REQUEST_CACHE_TYPE.PREFER_CACHE;
                 //if last fetch happened over one hour ago, re-fetch data
                 if ( lastFetchTime + 3600 * 1000 < curTime ){
-                    useCache = false;
+                    useCacheType =  HttpRequestDelegate.REQUEST_CACHE_TYPE.IGNORE_CACHE;;
                     prefManager.setLastCourseStructureFetch(courseId, curTime);
                 }
-                final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId,
-                    HttpRequestDelegate.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+                final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId, useCacheType);
                 if (model != null) {
                     handler.post(new Runnable() {
                         public void run() {

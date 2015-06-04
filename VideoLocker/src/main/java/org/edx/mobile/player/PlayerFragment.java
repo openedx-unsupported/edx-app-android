@@ -111,6 +111,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
 
+    //we handle the lifecycle of player differently in viewPager;
+    private boolean isInViewPager;
+
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
         @Override
@@ -347,7 +350,12 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void onResume() {
         super.onResume();
+        if (!isInViewPager) {
+            handleOnResume();
+        }
+    }
 
+    public void handleOnResume(){
         uiHelper.onResume();
 
         setupController();
@@ -365,7 +373,12 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void onPause() {
         super.onPause();
+        if ( !isInViewPager ) {
+            handleOnPause();
+        }
+    }
 
+    public void handleOnPause(){
         uiHelper.onPause();
 
         try{
@@ -375,7 +388,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         }catch(Exception e){
             logger.error(e);
         }
-    } 
+    }
 
     @Override
     public void onStop() {
@@ -861,7 +874,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         if (isPrepared) {
             // stop orientation updates before locking the screen
             orientation.stop();
-            freezePlayer();
+
+            if(!isInViewPager) {
+                freezePlayer();
+            }
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -1856,4 +1872,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
     }
 
+    public void setInViewPager(boolean inViewPager){
+        this.isInViewPager = inViewPager;
+    }
 }

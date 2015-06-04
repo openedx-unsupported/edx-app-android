@@ -17,8 +17,7 @@ public class CourseComponent implements IBlock, IPathNode {
     private String name;
     private boolean graded;
     private boolean gradedSubDAG;
-    //FIXME -wait for server side change
-    private boolean mobileSupported = true;
+    private boolean responsiveUI;
     private String blockUrl;
     private String webUrl;
     private BlockCount blockCount;
@@ -41,8 +40,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.gradedSubDAG = blockModel.gradedSubDAG;
         this.blockUrl = blockModel.blockUrl;
         this.webUrl = blockModel.webUrl;
-        //TESTING ONLY  FIXME -
-        this.mobileSupported =  true;
+        this.responsiveUI =  blockModel.responsiveUI;
         this.blockCount = blockModel.blockCount == null ? new BlockCount() : blockModel.blockCount;
         this.parent = parent;
         if ( parent == null){
@@ -150,12 +148,12 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
 
-    public boolean isMobileSupported() {
-        return mobileSupported;
+    public boolean isResponsiveUI() {
+        return responsiveUI;
     }
 
-    public void setMobileSupported(boolean mobileSupported) {
-        this.mobileSupported = mobileSupported;
+    public void setResponsiveUI(boolean responsiveUI) {
+        this.responsiveUI = responsiveUI;
     }
 
     public boolean isContainer(){

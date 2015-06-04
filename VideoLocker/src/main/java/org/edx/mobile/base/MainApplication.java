@@ -18,6 +18,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
@@ -26,7 +27,6 @@ import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
 
-import java.io.File;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
@@ -122,7 +122,7 @@ public class MainApplication extends MultiDexApplication {
             //try to clear browser cache.
             //there is an potential issue related to the 301 redirection.
             //https://openedx.atlassian.net/browse/MA-794
-            clearWebViewCache();
+            EdxCookieManager.getSharedInstance().clearWebViewCache(this);
         }
 
 
@@ -256,28 +256,6 @@ public class MainApplication extends MultiDexApplication {
         }
 
         public void onActivityStopped(Activity activity) {
-        }
-    }
-
-    public void clearWebViewCache(){
-        try {
-            boolean success = deleteDatabase("webview.db");
-            logger.debug("delete webview.db result = " + success);
-            success =  deleteDatabase("webviewCache.db");
-            logger.debug("delete webviewCache.db result = " + success);
-        } catch (Exception e) {
-           logger.error(e);
-        }
-
-
-        File webviewCacheDir = new File(getCacheDir().getAbsolutePath()+"/webviewCache");
-        if(webviewCacheDir.exists()){
-            deleteFile(webviewCacheDir.getAbsolutePath());
-        }
-
-        File appCacheDir = new File(getFilesDir().getAbsolutePath()+ "/webcache");
-        if(appCacheDir.exists()){
-            deleteFile(appCacheDir.getAbsolutePath());
         }
     }
 }

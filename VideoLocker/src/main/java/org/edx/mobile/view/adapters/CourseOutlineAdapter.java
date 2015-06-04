@@ -1,6 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -119,8 +120,13 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_file_o);
             checkAccessStatus(viewHolder, unit);
         }
-
-        viewHolder.rowTitle.setText(unit.getDisplayName());
+        String title = unit.getDisplayName();
+        if (TextUtils.isEmpty(title)) {
+            //TODO - wait for production decision
+            viewHolder.rowTitle.setText("Untitled Unit");
+        } else {
+            viewHolder.rowTitle.setText(unit.getDisplayName());
+        }
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

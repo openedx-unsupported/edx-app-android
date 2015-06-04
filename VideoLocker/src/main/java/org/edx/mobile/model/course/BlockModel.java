@@ -26,8 +26,8 @@ public class BlockModel implements Serializable{
     @SerializedName("graded")
     public boolean graded;
 
-    @SerializedName("mobile_supported")
-    public boolean mobileSupported;
+    @SerializedName("responsive_UI")
+    public boolean responsiveUI;
 
     @SerializedName("graded_subDAG")
     public boolean gradedSubDAG;
