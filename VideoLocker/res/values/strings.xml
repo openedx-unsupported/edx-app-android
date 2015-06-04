@@ -273,7 +273,7 @@
     <!-- Label for homework for assessment-->
     <string name="assessment_homework">Homework</string>
     <!-- Label to show empty assessment -->
-    <string name="assessment_empty">This interactive component isn\'t yet available on mobile.</string>
+    <string name="assessment_empty">There are no learning material in this section.</string>
     <!-- Label to show empty assessment -->
     <string name="assessment_empty_coming_soon">Coming soon.</string>
 

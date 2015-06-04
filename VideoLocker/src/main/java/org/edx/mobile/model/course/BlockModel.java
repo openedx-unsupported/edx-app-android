@@ -41,6 +41,9 @@ public class BlockModel implements Serializable{
     @SerializedName("web_url")
     public String webUrl;
 
+    @SerializedName("format")
+    public String format;
+
     // descendants: (list) A list of IDs of the children of the block if the block's depth in the
    // course hierarchy is less than the navigation_depth.  Otherwise, a list of IDs of the aggregate descendants
    // of the block.

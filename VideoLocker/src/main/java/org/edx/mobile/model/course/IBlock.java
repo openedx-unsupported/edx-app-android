@@ -36,4 +36,7 @@ public interface IBlock extends Serializable{
 
     String getCourseId();
     void setCourseId(String courseId);
+
+    String getFormat();
+    void setFormat(String format);
 }
