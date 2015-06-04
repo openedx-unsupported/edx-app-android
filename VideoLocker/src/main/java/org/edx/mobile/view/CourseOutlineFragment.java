@@ -68,6 +68,19 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         loadData(getView());
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        //check if mode is changed
+        if ( adapter != null ){
+            boolean listRebuilt = adapter.checkModeChange();
+            //we will refresh list only if there are some selection
+            if ( !listRebuilt && adapter.getSelectedRow() != null ){
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     public void setTaskProcessCallback(TaskProcessCallback callback){
         this.taskProcessCallback = callback;
     }

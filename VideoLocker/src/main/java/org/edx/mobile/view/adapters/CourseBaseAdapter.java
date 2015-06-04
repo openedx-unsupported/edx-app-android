@@ -124,6 +124,9 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         selectedRow = row;
     }
 
+    public SectionRow getSelectedRow(){
+        return selectedRow;
+    }
     /**
      * download all the videos
      */

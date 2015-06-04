@@ -16,7 +16,7 @@
             android:visibility="gone"
             android:maxLines="4"
             android:lines="3"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:singleLine="false"
             android:textColor="@color/grey_4"
             android:background="@drawable/rectangle_with_bottom_border"

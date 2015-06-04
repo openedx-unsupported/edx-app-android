@@ -222,6 +222,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
     }
 
+    protected void modeChanged(){
+        onBackPressed();
+    }
+
+
 
 
     @Override

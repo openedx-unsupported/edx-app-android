@@ -189,10 +189,64 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             case R.id.action_share_on_web:
                 shareOnWeb();
                 return true;
+            case R.id.action_change_mode:
+                changeMode();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void changeMode(){
+        //Creating the instance of PopupMenu
+        org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
+            findViewById(R.id.action_change_mode), Gravity.START);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+            .inflate(R.menu.change_mode, popup.getMenu());
+        final PrefManager.UserPrefManager userPrefManager =
+            new PrefManager.UserPrefManager(this);
+        final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+        MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
+        // Initializing the font awesome icons
+        IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
+        IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
+        videoOnlyItem.setIcon(videoOnlyIcon);
+        fullCourseItem.setIcon(fullCourseIcon);
+        // Setting checked states
+        if (userPrefManager.isUserPrefVideoModel()) {
+            videoOnlyItem.setChecked(true);
+            videoOnlyIcon.colorRes(R.color.cyan_4);
+            fullCourseIcon.colorRes(R.color.black);
+        } else {
+            fullCourseItem.setChecked(true);
+            fullCourseIcon.colorRes(R.color.cyan_4);
+            videoOnlyIcon.colorRes(R.color.black);
+        }
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new org.edx.mobile.view.custom.popup.menu.PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                PrefManager.UserPrefManager userPrefManager =
+                    new PrefManager.UserPrefManager(CourseBaseActivity.this);
+                boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
+                boolean selectedVideoMode = videoOnlyItem == item;
+                if ( currentVideoMode == selectedVideoMode )
+                    return true;
+
+                userPrefManager.setUserPrefVideoModel(selectedVideoMode);
+                modeChanged();
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
+
+        popup.show(); //showing popup menu
+
+    }
+
+    protected void modeChanged(){};
+
 
     public void shareOnWeb() {
         //Creating the instance of PopupMenu

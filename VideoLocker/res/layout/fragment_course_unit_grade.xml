@@ -55,7 +55,7 @@
         android:layout_height="45dp"
         android:textSize="18sp"
         android:textColor="@color/grey_text"
-        android:background="@drawable/rectangle_border_background"
+        android:background="@drawable/rectangle_border_light_gray_background"
         android:text="@string/assessment_view_on_web"/>
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.course.BlockPath;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -29,6 +30,7 @@ import de.greenrobot.event.EventBus;
  */
 public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
+    private boolean currentVideoMode;
 
     public CourseOutlineAdapter(Context context, IDatabase dbStore, IStorage storage) {
         super(context, dbStore, storage);
@@ -45,7 +47,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         mData.clear();
         if ( rootComponent != null ) {
             PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-            boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
+            currentVideoMode = userPrefManager.isUserPrefVideoModel();
 
             for(IBlock block : rootComponent.getChildren()){
                 CourseComponent comp = (CourseComponent)block;
@@ -75,7 +77,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
     public View getRowView(int position, View convertView, ViewGroup parent) {
         final SectionRow row = this.getItem(position);
         final CourseComponent component = row.component;
-        if ( row == selectedRow ){
+        if (selectedRow != null && selectedRow.component.equals( row.component )){
             convertView.setBackgroundResource(R.color.grey_1);
         } else {
             convertView.setBackgroundResource(R.color.white);
@@ -103,14 +105,18 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
 
-        if ( unit.isGraded() || unit.isGradedSubDAG() ){
+        if ( !unit.isResponsiveUI() && unit.getType() != BlockType.VIDEO){
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_laptop);
-            viewHolder.rowSubtitleIcon.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setText(unit.getType().name());
-            Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
+            if (unit.isGraded() || unit.isGradedSubDAG() ) {
+                viewHolder.rowSubtitleIcon.setVisibility(View.VISIBLE);
+                Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
+            } else {
+                viewHolder.rowSubtitleIcon.setVisibility(View.INVISIBLE);
+            }
             checkAccessStatus(viewHolder, unit);
 
         } else if (row.component instanceof VideoBlockModel){
@@ -270,6 +276,16 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             }
         });
 
+        if ( component.isGraded() || component.isGradedSubDAG() ){
+            holder.bulkDownload.setVisibility(View.INVISIBLE);
+            holder.rowSubtitlePanel.setVisibility(View.VISIBLE);
+            holder.rowSubtitleIcon.setVisibility(View.VISIBLE);
+            holder.rowSubtitle.setVisibility(View.VISIBLE);
+            holder.rowSubtitle.setText(component.getFormat());
+            Iconify.setIcon(holder.rowSubtitleIcon, Iconify.IconValue.fa_check);
+        }
+
+
         //support video download for video type
         final int totalCount = component.getBlockCount().videoCount;
         if (totalCount == 0 ){
@@ -325,4 +341,18 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         return convertView;
     }
 
+    /**
+     *
+     * @return <code>true</code> if we rebuild the list due to the change of mode preference
+     */
+    public boolean checkModeChange(){
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        boolean modeInConfiguration = userPrefManager.isUserPrefVideoModel();
+        if ( modeInConfiguration != currentVideoMode ){
+            setData(rootComponent);
+            return true;
+        }  else {
+            return false;
+        }
+    }
 }

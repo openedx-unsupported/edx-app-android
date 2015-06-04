@@ -29,6 +29,7 @@ public class CourseComponent implements IBlock, IPathNode {
     protected CourseComponent root;
     protected List<CourseComponent> children = new ArrayList<>();
     private String courseId;
+    private String format;
 
     public CourseComponent(){}
 
@@ -46,6 +47,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.blockUrl = blockModel.blockUrl;
         this.webUrl = blockModel.webUrl;
         this.responsiveUI =  blockModel.responsiveUI;
+        this.format = blockModel.format;
         this.blockCount = blockModel.blockCount == null ? new BlockCount() : blockModel.blockCount;
         this.parent = parent;
         if ( parent == null){
@@ -324,6 +326,16 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public String getName() {
         return  getDisplayName();
+    }
+
+    @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override

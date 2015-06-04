@@ -630,7 +630,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     @Override
     public void onPlaybackStarted() {
-
+         markPlaying();
     }
 
     public void onPlaybackComplete() {
@@ -651,21 +651,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             logger.error(ex);
         }
     }
-
-
-
-    private void finishActivity() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(isActivityStarted){
-                    getActivity().finish();
-                }
-            }
-        }, 300);
-    }
-
-
 
     public void startDownload(final DownloadEntry downloadEntry, final ProgressWheel progressWheel) {
         try{

@@ -50,8 +50,8 @@ public class CourseUnitEmptyFragment extends Fragment implements PageViewStateCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_empty, container, false);
-        TextView laptop = (TextView)v.findViewById(R.id.watch_on_web_icon);
-        Iconify.setIcon(laptop, Iconify.IconValue.fa_laptop);
+        TextView laptop = (TextView)v.findViewById(R.id.content_icon);
+        Iconify.setIcon(laptop, Iconify.IconValue.fa_list);
 
         return v;
     }
