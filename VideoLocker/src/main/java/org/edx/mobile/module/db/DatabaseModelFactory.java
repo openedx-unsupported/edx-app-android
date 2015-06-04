@@ -90,7 +90,7 @@ public class DatabaseModelFactory {
         e.chapter = path.get(1) == null ? "" : path.get(1).getDisplayName();
         e.section =  path.get(2) == null ? "" : path.get(2).getDisplayName();
         IBlock root = block.getRoot();
-        e.eid = root.getId();
+        e.eid = root.getCourseId();
         e.duration = vrm.duration;
         e.size =  vrm.encodedVideos.getPreferredVideoInfo().fileSize;
         e.title = block.getDisplayName();

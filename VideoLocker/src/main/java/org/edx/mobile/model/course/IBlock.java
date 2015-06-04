@@ -33,4 +33,7 @@ public interface IBlock extends Serializable{
     List<IBlock> getChildren();
 
     IBlock getRoot();
+
+    String getCourseId();
+    void setCourseId(String courseId);
 }
