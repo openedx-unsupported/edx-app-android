@@ -20,7 +20,6 @@ public class CourseComponent implements IBlock, IPathNode {
     private BlockType type;
     private String name;
     private boolean graded;
-    private boolean gradedSubDAG;
     private boolean responsiveUI;
     private String blockUrl;
     private String webUrl;
@@ -43,7 +42,6 @@ public class CourseComponent implements IBlock, IPathNode {
         this.type = blockModel.type;
         this.name = blockModel.displayName;
         this.graded = blockModel.graded;
-        this.gradedSubDAG = blockModel.gradedSubDAG;
         this.blockUrl = blockModel.blockUrl;
         this.webUrl = blockModel.webUrl;
         this.responsiveUI =  blockModel.responsiveUI;
@@ -97,16 +95,6 @@ public class CourseComponent implements IBlock, IPathNode {
     @Override
     public void setGraded(boolean graded) {
         this.graded = graded;
-    }
-
-    @Override
-    public boolean isGradedSubDAG() {
-        return gradedSubDAG;
-    }
-
-    @Override
-    public void setGradedSubDAG(boolean gradedSubDAG) {
-        this.gradedSubDAG = gradedSubDAG;
     }
 
     @Override

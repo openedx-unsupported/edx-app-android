@@ -129,7 +129,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         pageIsLoaded = false;
         WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
         if ( unit != null) {
-            if ( unit.isGraded() || unit.isGradedSubDAG() ){
+            if ( unit.isGraded() ){
                 getView().findViewById(R.id.webview_header_text).setVisibility(View.VISIBLE);
             } else {
                 getView().findViewById(R.id.webview_header_text).setVisibility(View.GONE);
