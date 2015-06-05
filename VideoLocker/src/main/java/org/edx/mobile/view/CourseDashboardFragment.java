@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.images.ImageCacheManager;
-import org.edx.mobile.view.custom.CourseImageHeader;
 
 public class CourseDashboardFragment extends Fragment {
     private TextView courseTextName;
@@ -121,7 +122,7 @@ public class CourseDashboardFragment extends Fragment {
                 return;
 
             String headerImageUrl = courseData.getCourse().getCourse_image(getActivity());
-            CourseImageHeader headerImageView = (CourseImageHeader)getView().findViewById(R.id.header_image_view);
+            NetworkImageView headerImageView = (NetworkImageView)getView().findViewById(R.id.header_image_view);
             headerImageView.setImageUrl(headerImageUrl, ImageCacheManager.getInstance().getImageLoader() );
 
             courseTextName.setText(courseData.getCourse().getName());

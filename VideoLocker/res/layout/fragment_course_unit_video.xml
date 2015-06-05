@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:baselineAligned="false"
-              android:background="@color/edx_white"
+              android:background="@color/white"
               android:orientation="vertical" >
 
     <LinearLayout
@@ -40,6 +40,7 @@
         android:orientation="vertical"
         android:background="@color/edx_white"
         android:gravity="center"
+        android:layout_marginTop="45dp"
         android:id="@+id/message_container">
         <TextView
             android:id="@+id/empty_document_icon"

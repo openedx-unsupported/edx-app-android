@@ -88,6 +88,14 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         } else {
             viewHolder.halfSeparator.setVisibility(View.VISIBLE);
         }
+
+        viewHolder.rowType.setVisibility(View.GONE);
+        viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
+        viewHolder.rowSubtitle.setVisibility(View.GONE);
+        viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
+        viewHolder.noOfVideos.setVisibility(View.INVISIBLE);
+        viewHolder.bulkDownloadVideos.setVisibility(View.GONE);
+
         if (component.isContainer()) {
             return getRowViewForContainer(position, convertView, parent, row);
         } else {
@@ -104,6 +112,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
+        viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
 
         if ( !unit.isResponsiveUI() && unit.getType() != BlockType.VIDEO){
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
@@ -257,7 +266,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
     private  View getRowViewForContainer(int position, View convertView, ViewGroup parent, final SectionRow row) {
         final CourseComponent component = row.component;
-        String courseId = component.getRoot().getId();
+        String courseId = component.getCourseId();
         BlockPath path = component.getPath();
         //FIXME - we should add a new column in database - pathinfo.
         //then do the string match to get the record

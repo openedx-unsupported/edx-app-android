@@ -30,7 +30,6 @@ import org.edx.mobile.util.NetworkUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -370,9 +369,8 @@ public class Storage implements IStorage {
             return list;
         }
 
-        Api api = new Api(context);
         try {
-            Map<String, SectionEntry> courseHeirarchyMap = (LinkedHashMap<String, SectionEntry>)
+            Map<String, SectionEntry> courseHeirarchyMap =
                   ServiceManager.getInstance().getCourseHierarchy(courseId);
 
             // iterate chapters

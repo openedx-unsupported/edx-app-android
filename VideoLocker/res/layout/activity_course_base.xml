@@ -132,6 +132,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         style="@style/regular_text"
                         android:gravity="left|start"
                         android:textColor="@color/cyan_3"
