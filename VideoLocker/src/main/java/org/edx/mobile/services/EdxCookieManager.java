@@ -93,7 +93,7 @@ public class EdxCookieManager {
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
                           //  pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
                             //FIXME - for demo only
-                            long expireDate = new Date().getTime() + 60 * 1000;
+                            long expireDate = new Date().getTime() + 10 * 1000;
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, expireDate);
 
                             EventBus.getDefault().post(new SessionIdRefreshEvent(true));

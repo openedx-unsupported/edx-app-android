@@ -29,6 +29,7 @@ import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentFactory;
@@ -62,6 +63,10 @@ import java.util.Map;
  */
 public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCallback, PageViewStateCallback {
 
+    public static interface HasComponent {
+        CourseComponent getComponent();
+    }
+
     protected final Logger logger = new Logger(getClass().getName());
     VideoBlockModel unit;
     private PlayerFragment playerFragment;
@@ -82,6 +87,8 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
+    private HasComponent hasComponentCallback;
+
 
     /**
      * Create a new instance of fragment
@@ -201,6 +208,19 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     public void onResume() {
         super.onResume();
+        if ( hasComponentCallback != null ){
+            CourseComponent component = hasComponentCallback.getComponent();
+            if (component != null && component.equals(unit)){
+                try {
+                    if (playerFragment != null) {
+                        playerFragment.setCallback(this);
+                        playerFragment.handleOnResume();
+                    }
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        }
     }
 
     public void onPause() {
@@ -836,5 +856,10 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
                 playerContainer.requestLayout();
             }
         }
+    }
+
+    //we need to know the current component of the container
+    public void setHasComponentCallback(HasComponent callback){
+        hasComponentCallback = callback;
     }
 }

@@ -31,7 +31,7 @@ import java.util.List;
 /**
  *
  */
-public class CourseUnitNavigationActivity extends CourseBaseActivity {
+public class CourseUnitNavigationActivity extends CourseBaseActivity implements CourseUnitVideoFragment.HasComponent {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
 
@@ -267,7 +267,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
             //FIXME - for the video, let's ignore responsive_UI for now
             if ( unit instanceof VideoBlockModel) {
-                return  CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
+                CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
+                fragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
+                return fragment;
             }
 
             if ( !unit.isResponsiveUI() ){
@@ -284,7 +286,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
 
             if ( unit instanceof HtmlBlockModel ){
                 CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
-                fragment.callback = CourseUnitNavigationActivity.this;
                 return fragment;
             }
 
@@ -299,6 +300,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity {
         }
     }
 
+    public CourseComponent getComponent() {
+        return selectedUnit;
+    }
     /// we won't show download and last access view here
     protected void setVisibilityForDownloadProgressView(boolean show){  }
 

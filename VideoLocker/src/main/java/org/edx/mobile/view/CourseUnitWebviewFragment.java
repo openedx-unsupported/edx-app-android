@@ -10,6 +10,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import org.apache.http.HttpStatus;
 import org.edx.mobile.R;
@@ -19,7 +20,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
-import org.edx.mobile.view.common.TaskProcessCallback;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +33,8 @@ import de.greenrobot.event.EventBus;
 public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback {
     private final int MAX_RETRY_TIMES = 3;
     HtmlBlockModel unit;
-    TaskProcessCallback callback;
+    ProgressBar progressWheel;
+    boolean pageIsLoaded;
     /**
      * Create a new instance of fragment
      */
@@ -66,10 +67,10 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     }
 
     public void onEvent(SessionIdRefreshEvent event){
-        if ( event.success ){
+        if ( event.success && !pageIsLoaded){
             tryToLoadWebView();
         } else {
-            //TODO - show error?
+            hideLoadingProgress();
         }
     }
 
@@ -81,7 +82,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_webview, container, false);
-        //TODO - populate view here
+        progressWheel = (ProgressBar)v.findViewById(R.id.progress_spinner);
         return v;
     }
 
@@ -96,16 +97,16 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
             @Override
             public void onReceivedError(WebView view, int errorCode,
                                         String description, String failingUrl) {
-                if ( callback != null )
-                    callback.finishProcess();
+                hideLoadingProgress();
+                pageIsLoaded = false;
                 if ( errorCode == HttpStatus.SC_FORBIDDEN || errorCode == HttpStatus.SC_UNAUTHORIZED || errorCode == HttpStatus.SC_NOT_FOUND){
                     EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
             public void onPageFinished(WebView view, String url) {
-                if ( callback != null )
-                    callback.finishProcess();
+                hideLoadingProgress();
+                pageIsLoaded = true;
                 //TODO -disable it for now. as it causes some issues for assessment
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
@@ -118,14 +119,14 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                return false;
             }
         });
-        webView.addJavascriptInterface(this, "EdxAssessmentView");
+        //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
         tryToLoadWebView();
     }
 
     private void tryToLoadWebView( ){
-        if ( callback != null )
-            callback.startProcess();
+        showLoadingProgress();
+        pageIsLoaded = false;
         WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
         if ( unit != null) {
             if ( unit.isGraded() || unit.isGradedSubDAG() ){
@@ -182,5 +183,13 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     @Override
     public void onPageDisappear() {
 
+    }
+
+    private void showLoadingProgress(){
+        progressWheel.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingProgress(){
+        progressWheel.setVisibility(View.GONE);
     }
 }

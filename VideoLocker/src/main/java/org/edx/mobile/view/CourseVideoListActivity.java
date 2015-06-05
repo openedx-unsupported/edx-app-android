@@ -14,7 +14,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.ServiceManager;
@@ -30,14 +29,11 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     private final String modeVideoOnly = "mode_video_only";
 
     private boolean isFetchingLastAccessed;
-    private Handler mHideHandler = new Handler();
-
-    protected boolean videoOnlyMode = false;
+    private Handler mHandler = new Handler();
 
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        this.videoOnlyMode = new PrefManager.UserPrefManager(this).isUserPrefVideoModel();
     }
 
 
@@ -47,12 +43,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
         if ( courseData != null && courseData.getCourse() != null ){
             setTitle( courseData.getCourse().getName() );
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
-        }
-
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(CourseVideoListActivity.this);
-        boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-        if ( currentVideoMode != videoOnlyMode ){
-            updateListUI();
         }
     }
 
@@ -133,12 +123,13 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     @Override
     protected void updateDownloadProgress(final int progressPercent){
 
-        runOnUiThread(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
             public void run() {
-                if ( progressPercent < 100 ){
-                    downloadProgressBar.setVisibility(  View.VISIBLE );
-                    mHideHandler.removeCallbacks(mHideRunnable);
-                    if (downloadIndicator.getVisibility() == View.INVISIBLE ){
+                if (progressPercent < 100) {
+                    downloadProgressBar.setVisibility(View.VISIBLE);
+                    mHandler.removeCallbacks(mHideRunnable);
+                    if (downloadIndicator.getVisibility() == View.INVISIBLE) {
                         downloadIndicator.setVisibility(View.VISIBLE);
                         Animation animation = AnimationUtils.loadAnimation(CourseVideoListActivity.this, R.anim.rotate);
                         downloadIndicator.startAnimation(animation);
@@ -146,11 +137,10 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                 } else { //progressPercent == 100
                     downloadIndicator.clearAnimation();
                     downloadIndicator.setVisibility(View.INVISIBLE);
-                    mHideHandler.postDelayed(mHideRunnable,  getResources().getInteger(R.integer.message_delay));
+                    mHandler.postDelayed(mHideRunnable, getResources().getInteger(R.integer.message_delay));
                 }
             }
-        });
-
+        }, 500);
     }
 
     @Override

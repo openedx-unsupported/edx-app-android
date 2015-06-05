@@ -7,15 +7,15 @@
                 android:orientation="vertical" >
 
 
-    <org.edx.mobile.view.custom.CourseImageHeader
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/header_image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="144dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"
-        android:background="@color/grey_4" />
+        android:scaleType="fitXY"
+        android:background="@drawable/edx_map_login" />
 
     <LinearLayout
         android:layout_width="match_parent"

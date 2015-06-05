@@ -21,7 +21,7 @@ public class EdxWebView extends WebView {
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
         settings.setBuiltInZoomControls(false);
-        settings.setSupportZoom(true);
+       // settings.setSupportZoom(true);
         settings.setLoadsImagesAutomatically(true);
     }
 }
