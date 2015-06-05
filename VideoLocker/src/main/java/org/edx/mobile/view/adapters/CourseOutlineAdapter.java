@@ -120,7 +120,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_laptop);
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setText(unit.getType().name());
-            if (unit.isGraded() || unit.isGradedSubDAG() ) {
+            if (unit.isGraded()) {
                 viewHolder.rowSubtitleIcon.setVisibility(View.VISIBLE);
                 Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
             } else {
@@ -285,7 +285,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             }
         });
 
-        if ( component.isGraded() || component.isGradedSubDAG() ){
+        if ( component.isGraded() ){
             holder.bulkDownload.setVisibility(View.INVISIBLE);
             holder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             holder.rowSubtitleIcon.setVisibility(View.VISIBLE);

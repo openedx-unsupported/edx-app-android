@@ -17,9 +17,6 @@ public interface IBlock extends Serializable{
     boolean isGraded();
     void setGraded(boolean graded);
 
-    boolean isGradedSubDAG();
-    void setGradedSubDAG(boolean gradedSubDAG);
-
     String getBlockUrl();
     void setBlockUrl(String url);
 
