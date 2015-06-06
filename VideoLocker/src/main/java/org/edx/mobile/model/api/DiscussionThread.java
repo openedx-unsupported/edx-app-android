@@ -1,5 +1,15 @@
 package org.edx.mobile.model.api;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import org.edx.mobile.util.DateUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -10,7 +20,7 @@ public class DiscussionThread {
     String type;
     String courseId;
     String topicId;
-    String groupId;
+    int groupId;
     String groupName;
     String title;
     String rawBody;
@@ -28,4 +38,10 @@ public class DiscussionThread {
     Date createdAt;
     Date updatedAt;
     String editableFields;
+
+    public static DiscussionThread fromJsonObject(JsonObject jsonObj) throws JSONException {
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+        DiscussionThread thread = gson.fromJson(jsonObj, DiscussionThread.class);
+        return thread;
+    }
 }

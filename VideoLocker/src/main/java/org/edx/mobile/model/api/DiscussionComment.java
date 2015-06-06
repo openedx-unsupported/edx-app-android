@@ -1,5 +1,17 @@
 package org.edx.mobile.model.api;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+
+import org.edx.mobile.util.DateUtil;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,14 +19,13 @@ import java.util.List;
  * Created by jakelim on 6/2/15.
  */
 public class DiscussionComment {
-    String identifier;
+    @SerializedName("id") String identifier;
     String parentId;
     String threadId;
     String rawBody;
     String renderedBody;
     String author;
     String authorLabel;
-    boolean flagged = false;
     boolean voted = false;
     int voteCount = 0;
     Date createdAt;
@@ -26,4 +37,10 @@ public class DiscussionComment {
     boolean abuseFlagged = false;
     String editableFields;
     List<DiscussionComment> children;
+
+    public static DiscussionComment fromJsonObject(JsonObject jsonObj) throws JSONException {
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+        DiscussionComment comment = gson.fromJson(jsonObj, DiscussionComment.class);
+        return comment;
+    }
 }
