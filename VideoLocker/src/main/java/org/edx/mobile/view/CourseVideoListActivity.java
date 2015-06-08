@@ -129,7 +129,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                 if (progressPercent < 100) {
                     downloadProgressBar.setVisibility(View.VISIBLE);
                     mHandler.removeCallbacks(mHideRunnable);
-                    if (downloadIndicator.getVisibility() == View.INVISIBLE) {
+                    if (downloadIndicator.getAnimation() == null) {
                         downloadIndicator.setVisibility(View.VISIBLE);
                         Animation animation = AnimationUtils.loadAnimation(CourseVideoListActivity.this, R.anim.rotate);
                         downloadIndicator.startAnimation(animation);

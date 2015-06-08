@@ -19,6 +19,7 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.services.ViewPagerWebViewDownloadManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
 
 import java.util.Date;
@@ -30,8 +31,9 @@ import de.greenrobot.event.EventBus;
 /**
  *
  */
-public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback {
-    private final int MAX_RETRY_TIMES = 3;
+public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback,
+    ViewPagerWebViewDownloadManager.HtmlTaskCallback {
+
     HtmlBlockModel unit;
     ProgressBar progressWheel;
     boolean pageIsLoaded;
@@ -63,6 +65,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
 
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
+        ViewPagerWebViewDownloadManager.getSharedInstance().removeTask(this);
         super.onDestroy();
     }
 
@@ -105,13 +108,14 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
             public void onPageFinished(WebView view, String url) {
-                hideLoadingProgress();
+
                 pageIsLoaded = true;
                 //TODO -disable it for now. as it causes some issues for assessment
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 super.onPageFinished(view, url);
+                hideLoadingProgress();
             }
 
             @Override
@@ -162,6 +166,10 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         }
     }
 
+    @Override
+    public void startLoadingPage(){
+
+    }
 
 
     @JavascriptInterface

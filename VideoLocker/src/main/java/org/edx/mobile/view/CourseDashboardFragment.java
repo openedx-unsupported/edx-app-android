@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,7 +55,6 @@ public class CourseDashboardFragment extends Fragment {
         ViewHolder holder = createViewHolder(inflater, parent);
 
         Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_list_alt );
-        Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
         holder.titleView.setText(R.string.course_title);
         holder.subtitleView.setText(R.string.course_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +68,6 @@ public class CourseDashboardFragment extends Fragment {
         holder = createViewHolder(inflater, parent);
 
         Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_comments_o );
-        Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
         holder.titleView.setText(R.string.discussion_title);
         holder.subtitleView.setText(R.string.discussion_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +80,6 @@ public class CourseDashboardFragment extends Fragment {
         holder = createViewHolder(inflater, parent);
 
         Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_file_text_o );
-        Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
         holder.titleView.setText(R.string.handouts_title);
         holder.subtitleView.setText(R.string.handouts_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +93,6 @@ public class CourseDashboardFragment extends Fragment {
         holder = createViewHolder(inflater, parent);
 
         Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_bullhorn );
-        Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
         holder.titleView.setText(R.string.announcement_title);
         holder.subtitleView.setText(R.string.announcement_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +144,16 @@ public class CourseDashboardFragment extends Fragment {
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);
         parent.addView(holder.rowView);
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            Configuration config = getResources().getConfiguration();
+            if(config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_left );
+            } else {
+                Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
+            }
+        } else {
+            Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
+        }
         return holder;
     }
 

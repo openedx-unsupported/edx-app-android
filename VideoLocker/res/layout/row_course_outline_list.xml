@@ -45,6 +45,7 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textDirection="locale"
             tools:text="@string/chapter_name"
             android:textSize="16sp" />
 
@@ -63,6 +64,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 tools:text="@string/chapter_name"
+                android:textDirection="locale"
                 android:visibility="gone"
                 android:textSize="14sp" />
 

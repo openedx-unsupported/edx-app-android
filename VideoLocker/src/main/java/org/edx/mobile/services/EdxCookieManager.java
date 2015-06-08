@@ -12,7 +12,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetSessesionExchangeCookieTask;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -91,12 +90,8 @@ public class EdxCookieManager {
                             clearWebWiewCookie();
                             PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
-                          //  pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
-                            //FIXME - for demo only
-                            long expireDate = new Date().getTime() + 10 * 1000;
-                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, expireDate);
-
-                            EventBus.getDefault().post(new SessionIdRefreshEvent(true));
+                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
+                             EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                             break;
                         }
                     }
