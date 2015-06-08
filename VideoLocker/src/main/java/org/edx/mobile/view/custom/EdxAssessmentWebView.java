@@ -8,20 +8,24 @@ import android.webkit.WebView;
 /**
  * Created by rohan on 3/12/15.
  */
-public class EdxWebView extends WebView {
+public class EdxAssessmentWebView extends WebView {
 
-    public EdxWebView(Context context, AttributeSet attrs) {
+    public EdxAssessmentWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        init();
+        init(context);
     }
 
-    private void init() {
+    private void init(Context context) {
         WebSettings settings = getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLoadWithOverviewMode(true);
         settings.setBuiltInZoomControls(false);
-        settings.setSupportZoom(true);
+        settings.setDisplayZoomControls(false);
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(false);
         settings.setLoadsImagesAutomatically(true);
+
     }
+
 }
