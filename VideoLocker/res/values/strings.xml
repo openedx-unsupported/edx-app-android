@@ -168,25 +168,25 @@
     <!-- Title of course dashboard screen -->
     <string name="course_home">Course Home</string>
     <!-- Row of course on dashboard screen -->
-    <string name="course_title">Course</string>
+    <string name="courseware_title">Courseware</string>
     <!-- Row of course on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="course_subtitle">Lectures,videos &amp; homework, oh my!</string>
+    <string name="courseware_subtitle">Access videos and assignments</string>
     <!-- Row of Discussion on dashboard screen -->
     <string name="discussion_title">Discussion</string>
     <!-- Row of Discussion on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="discussion_subtitle">Let\'s talk about single-molecule diodes</string>
+    <string name="discussion_subtitle">Join the conversation</string>
     <!-- Row of Handouts on dashboard screen -->
     <string name="handouts_title">Handouts</string>
     <!-- Row of Handouts on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="handouts_subtitle">Virtual, so not really a handout</string>
+    <string name="handouts_subtitle">Find important course information</string>
     <!-- Row of announcement on dashboard screen -->
     <string name="announcement_title">Announcements</string>
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
-    <string name="announcement_subtitle">It\'s 3 o\'clock and all is well</string>
+    <string name="announcement_subtitle">Keep up with the latest news</string>
 
 
     <!-- Title of course outline screen -->

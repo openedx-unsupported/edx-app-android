@@ -16,17 +16,10 @@ public class ViewPagerWebViewDownloadManager{
 
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static ViewPagerWebViewDownloadManager instance;
-
-    public static synchronized ViewPagerWebViewDownloadManager getSharedInstance(){
-        if ( instance == null )
-            instance = new ViewPagerWebViewDownloadManager();
-        return instance;
-    }
 
     private WeakList<HtmlTaskCallback> weakList;
 
-    private ViewPagerWebViewDownloadManager(){
+    public ViewPagerWebViewDownloadManager(){
         weakList = new WeakList<>();
     }
 

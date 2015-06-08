@@ -55,8 +55,8 @@ public class CourseDashboardFragment extends Fragment {
         ViewHolder holder = createViewHolder(inflater, parent);
 
         Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_list_alt );
-        holder.titleView.setText(R.string.course_title);
-        holder.subtitleView.setText(R.string.course_subtitle);
+        holder.titleView.setText(R.string.courseware_title);
+        holder.subtitleView.setText(R.string.courseware_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
