@@ -6,6 +6,10 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Environment;
+import org.junit.Ignore;
+import org.robolectric.RuntimeEnvironment;
+
+import static org.junit.Assert.*;
 
 /**
  * This class contains unit tests for API calls to server.
@@ -16,18 +20,19 @@ import org.edx.mobile.util.Environment;
  * real webservice right now
  *
  */
+@Ignore
 public class SocialLoginTests extends HttpBaseTestCase  {
 
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
     }
     
     public void testGetProfile() throws Exception {
         if ( shouldSkipTest ) return;
 
-        Api api = new Api(getInstrumentation().getTargetContext());
+        Api api = new Api(RuntimeEnvironment.application);
         ProfileModel profile = api.getProfile();
         assertNotNull(profile);
         assertNotNull("profile.email cannot be null", profile.email);

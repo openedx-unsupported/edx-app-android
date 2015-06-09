@@ -10,7 +10,11 @@ import org.edx.mobile.module.analytics.ISegmentTracker;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
+import org.junit.Test;
 import org.mockito.Mockito;
+import org.robolectric.RuntimeEnvironment;
+
+import static org.junit.Assert.*;
 
 public class SegmentTests extends BaseTestCase {
 
@@ -18,7 +22,7 @@ public class SegmentTests extends BaseTestCase {
     private static ISegment segment;
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         initTracker();
     }
@@ -34,13 +38,14 @@ public class SegmentTests extends BaseTestCase {
 
             // I dont want to change the implementation for now, just create ISegment
             // object directly
-            segment = new ISegmentImpl(getInstrumentation().getTargetContext());
+            segment = new ISegmentImpl(RuntimeEnvironment.application);
             // use mocked tracker
             segment.setTracker(tracker);
         }
     }
 
 
+    @Test
     public void testIdentifyUser() throws Exception {
         String userID = "123";
         String email = "testEmail";
@@ -60,6 +65,7 @@ public class SegmentTests extends BaseTestCase {
         print(traits.toString());
     }
 
+    @Test
     public void testVideoPlaying() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -80,6 +86,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testVideoPause() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -101,6 +108,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testVideoStop() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -121,6 +129,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testVideoLoading() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -140,6 +149,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testShowTranscript() throws Exception {
 
         String videoId = "videoId";
@@ -161,6 +171,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testHideTranscript() throws Exception {
         String videoId = "testVideoId";
         double currentTime = 1000;
@@ -182,6 +193,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testVideoSeek() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -229,6 +241,7 @@ public class SegmentTests extends BaseTestCase {
 
 
 
+    @Test
     public void testDownloadComplete() throws Exception {
         String videoId = "testVideoId";
         String courseId = "testCourseId";
@@ -248,6 +261,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testOpenInBrowser() throws Exception {
         String url = "https://edx.org/";
         Properties props = segment.trackOpenInBrowser(url);
@@ -268,6 +282,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testSectionBulkVideoDownload() throws Exception {
         String enrollmentId = "testEnrollmentId";
         String section = "testSection";
@@ -288,6 +303,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
 
     }
+    @Test
     public void testSubSectionBulkVideoDownload() throws Exception {
         String enrollmentId = "testEnrollmentId";
         String section = "testSection";
@@ -310,7 +326,8 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
 
     }
-    
+
+    @Test
     public void testUserLogout() throws Exception {
         Properties props= segment.trackUserLogout();
         // verify that the track method was called
@@ -323,7 +340,8 @@ public class SegmentTests extends BaseTestCase {
         Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
         assertTrue(cxt.containsKey(ISegment.Keys.APP));
     }
-    
+
+    @Test
     public void testTranscriptLanguage() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -343,7 +361,8 @@ public class SegmentTests extends BaseTestCase {
 
         print(props.toString());
     }
-    
+
+    @Test
     public void testSingleVideoDownload() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -363,7 +382,8 @@ public class SegmentTests extends BaseTestCase {
 
         print(props.toString());
     }
-    
+
+    @Test
     public void testVideoOrientation() throws Exception {
         String videoId = "videoId";
         String courseId = "courseId";
@@ -385,6 +405,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testEventLogin() throws Exception {
         String method = "Password";
         Properties props = segment.trackUserLogin(method);
@@ -397,8 +418,9 @@ public class SegmentTests extends BaseTestCase {
         Properties cxt = (Properties) props.get(ISegment.Keys.CONTEXT);
         assertTrue(cxt.containsKey(ISegment.Keys.APP));
     }
-    
-    
+
+
+    @Test
     public void testScreenView() throws Exception {
         String screenName = "testscreen";
         Properties props = segment.screenViewsTracking(screenName);
@@ -412,6 +434,7 @@ public class SegmentTests extends BaseTestCase {
 
         print(props.toString());
     }
+    @Test
     public void testtrackUserDoesNotHaveAccount() throws Exception {
 
         Properties props = segment.trackUserSignUpForAccount();
@@ -426,6 +449,7 @@ public class SegmentTests extends BaseTestCase {
 
         print(props.toString());
     }
+    @Test
     public void testtrackUserFindsCourses() throws Exception {
 
         Properties props = segment.trackUserFindsCourses();
@@ -444,6 +468,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testTrackCreateAccountClicked() throws Exception {
 
         String appVersion = "Android v1.0.04";
@@ -464,6 +489,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testtrackEnrollClicked() throws Exception {
         String courseId = "courseId";
         boolean email_opt_in = true;
@@ -483,6 +509,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testPushNotificationReceived() throws Exception {
         String courseId = "a_courseId";
         Properties props = segment.trackNotificationReceived(courseId);
@@ -500,6 +527,7 @@ public class SegmentTests extends BaseTestCase {
         print(props.toString());
     }
 
+    @Test
     public void testPushNotificationTapped() throws Exception {
         String courseId = "a_courseId";
         Properties props = segment.trackNotificationTapped(courseId);
@@ -518,7 +546,7 @@ public class SegmentTests extends BaseTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         super.tearDown();
         print("Finished : " + getClass().getName());
     }

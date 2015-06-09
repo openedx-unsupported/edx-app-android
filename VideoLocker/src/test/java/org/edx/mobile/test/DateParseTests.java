@@ -2,14 +2,18 @@ package org.edx.mobile.test;
 
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.EmailUtil;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static org.junit.Assert.*;
+
 public class DateParseTests extends BaseTestCase {
 
+    @Test
     public void testGetModificationDate() throws Exception {
         // example output is :   "2014-11-20 22:10:54.569200+00:00"
         
@@ -18,7 +22,8 @@ public class DateParseTests extends BaseTestCase {
         print("modification date = " + date);
         assertTrue(date.length() == 32);
     }
-    
+
+    @Test
     public void testDateParsing() throws Exception {
         String start = "1970-01-01T05:00:00Z";
         Date date = toDate(start);
@@ -38,6 +43,7 @@ public class DateParseTests extends BaseTestCase {
         return null;
     }
 
+    @Test
     public void testDateCompare() throws Exception {
         String start = "1970-01-01T05:00:00Z";
         Date startDate = DateUtil.convertToDate(start);
@@ -54,6 +60,7 @@ public class DateParseTests extends BaseTestCase {
      * This tests the formatted start date of a course
      * @throws Exception
      */
+    @Test
     public void testFormatCourseNotStartedDate() throws Exception {
         String inputDate = "2014-11-20T05:00:00Z";
 

@@ -7,6 +7,8 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import org.edx.mobile.util.OrientationDetector;
+import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 public class SensorTests extends BaseTestCase {
     
@@ -17,7 +19,7 @@ public class SensorTests extends BaseTestCase {
     }
 
     private boolean isDeviceLandscape() throws Exception {
-        WindowManager wm = (WindowManager) getInstrumentation().getTargetContext().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) RuntimeEnvironment.application.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point outSize = new Point();
         display.getSize(outSize);
@@ -44,8 +46,9 @@ public class SensorTests extends BaseTestCase {
         return false;
     }
 
+    @Test
     public void testOrientation() throws Exception {
-        OrientationDetector d = new OrientationDetector(getInstrumentation().getContext()) {
+        OrientationDetector d = new OrientationDetector(RuntimeEnvironment.application) {
             @Override
             protected void onLandscapeLeft() {
                 super.onLandscapeLeft();

@@ -26,6 +26,8 @@ import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Ignore;
+import org.robolectric.RuntimeEnvironment;
 import org.w3c.dom.Text;
 
 import java.io.InputStream;
@@ -40,6 +42,7 @@ import java.util.regex.Pattern;
 /**
  * Created by hanning on 4/8/15.
  */
+@Ignore
 public class HttpBaseTestCase extends BaseTestCase {
     private static final int DELAY_MS = 2000; // Network calls will take 2 seconds.
     private static final int VARIANCE_PCT = 40; // Network delay varies by ±40%.
@@ -63,14 +66,14 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
 
         server = new MockWebServer();
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
 
-        Context context = getInstrumentation().getTargetContext();
+        Context context = RuntimeEnvironment.application;
 
         // Set up a new config instance that serves the mock host url
         JsonObject properties;
@@ -95,7 +98,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         super.tearDown();
         server.shutdown();
     }

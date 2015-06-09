@@ -119,12 +119,10 @@ dependencies {
      */
      testCompile fileTree(dir: 'libs/test', include: '*.jar')
 
-    androidTestCompile("org.mockito:mockito-core:1.9.5") {
+    testCompile("org.mockito:mockito-core:1.9.5") {
         exclude group: 'org.hamcrest'
     }
-    androidTestCompile 'com.squareup.okhttp:mockwebserver:2.3.0'
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    testCompile 'com.squareup.okhttp:mockwebserver:2.3.0'
 }
 
 configurations {

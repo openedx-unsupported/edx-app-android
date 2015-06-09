@@ -12,11 +12,14 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
+import org.junit.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import static org.junit.Assert.*;
 
 /**
  * This class contains unit tests for API calls to server.
@@ -27,11 +30,12 @@ import java.util.Map.Entry;
  * real webservice right now
  * 
  */
+@Ignore
 public class ApiTests extends HttpBaseTestCase {
 
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
     }
     

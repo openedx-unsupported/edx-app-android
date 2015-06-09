@@ -3,6 +3,7 @@ package org.edx.mobile.test;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.notification.UserNotificationManager;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class NotificationTest extends BaseTestCase {
 
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
         initDelegation();
     }
@@ -34,6 +35,7 @@ public class NotificationTest extends BaseTestCase {
      * nothing interesting here.
      * @throws Exception
      */
+    @Test
     public void testNotificationManager() throws Exception {
         final String  courseId1 = "course_id_1";
         final String  channelId1 = "channel_id_1";
@@ -48,7 +50,7 @@ public class NotificationTest extends BaseTestCase {
 
 
     @Override
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         super.tearDown();
         print("Finished : " + getClass().getName());
     }

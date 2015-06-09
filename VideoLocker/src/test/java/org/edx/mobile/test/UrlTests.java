@@ -2,14 +2,19 @@ package org.edx.mobile.test;
 
 import android.net.Uri;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by shahid on 10/2/15.
  */
 public class UrlTests extends BaseTestCase {
 
+    @Test
     public void testReadUrlPaths() throws Exception {
         String url = "edxapp://enroll?course_id=course-v1:BerkeleyX+GG101x-2+1T2015&email_opt_in=true";
 
@@ -28,6 +33,7 @@ public class UrlTests extends BaseTestCase {
         assertTrue(emailOptIn);
     }
 
+    @Test
     public void testCourseInfoPaths() throws Exception {
         String url = "edxapp://course_info?path_id=course/cosmology-anux-anu-astro4x";
 

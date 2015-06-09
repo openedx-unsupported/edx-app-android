@@ -5,8 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import org.edx.mobile.util.Config;
+import org.junit.Test;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 
 /**
@@ -44,6 +47,7 @@ public class ConfigTests extends BaseTestCase {
     private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
 
 
+    @Test
     public void testSocialSharingNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -51,6 +55,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(config.getSocialSharingConfig().getDisabledCarriers().size(), 0);
     }
 
+    @Test
     public void testSocialSharingEmptyConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject socialConfig = new JsonObject();
@@ -61,6 +66,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(config.getSocialSharingConfig().getDisabledCarriers().size(), 0);
     }
 
+    @Test
     public void testSocialSharingConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject socialConfig = new JsonObject();
@@ -81,6 +87,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(carrierList, config.getSocialSharingConfig().getDisabledCarriers());
     }
 
+    @Test
     public void testZeroRatingNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -88,6 +95,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(config.getZeroRatingConfig().getCarriers().size(), 0);
     }
 
+    @Test
     public void testZeroRatingEmptyConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject socialConfig = new JsonObject();
@@ -98,6 +106,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(config.getZeroRatingConfig().getCarriers().size(), 0);
     }
 
+    @Test
     public void testZeroRatingConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject zeroRatingConfig = new JsonObject();
@@ -128,6 +137,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(domainList, config.getZeroRatingConfig().getWhiteListedDomains());
     }
 
+    @Test
     public void testEnrollmentNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -137,6 +147,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getEnrollmentConfig().getCourseInfoUrlTemplate());
     }
 
+    @Test
     public void testEnrollmentEmptyConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject enrollmentConfig = new JsonObject();
@@ -149,6 +160,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getEnrollmentConfig().getCourseInfoUrlTemplate());
     }
 
+    @Test
     public void testEnrollmentConfig() {
         JsonObject configBase = new JsonObject();
         JsonObject enrollmentConfig = new JsonObject();
@@ -165,6 +177,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(config.getEnrollmentConfig().getCourseInfoUrlTemplate(), "fake-url-template");
     }
 
+    @Test
     public void testFacebookNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -172,6 +185,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getFacebookConfig().getFacebookAppId());
     }
 
+    @Test
     public void testFacebookEmptyConfig() {
         JsonObject fbConfig = new JsonObject();
 
@@ -183,6 +197,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getFacebookConfig().getFacebookAppId());
     }
 
+    @Test
     public void testFacebookConfig() {
         String appId = "fake-app-id";
 
@@ -198,12 +213,14 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(appId, config.getFacebookConfig().getFacebookAppId());
     }
 
+    @Test
     public void testGoogleNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
         assertFalse(config.getGoogleConfig().isEnabled());
     }
 
+    @Test
     public void testGoogleEmptyConfig() {
         JsonObject googleConfig = new JsonObject();
 
@@ -214,6 +231,7 @@ public class ConfigTests extends BaseTestCase {
         assertFalse(config.getGoogleConfig().isEnabled());
     }
 
+    @Test
     public void testGoogleConfig() {
         JsonObject googleConfig = new JsonObject();
         googleConfig.add(ENABLED, new JsonPrimitive(true));
@@ -226,6 +244,7 @@ public class ConfigTests extends BaseTestCase {
     }
 
 
+    @Test
     public void testParseNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -234,6 +253,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getParseNotificationConfig().getParseClientKey());
     }
 
+    @Test
     public void testParseConfig() {
         String key = "fake-key";
         String secret = "fake-secret";
@@ -252,6 +272,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(secret, config.getParseNotificationConfig().getParseClientKey());
     }
 
+    @Test
     public void testFabricNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -260,6 +281,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getFabricConfig().getFabricBuildSecret());
     }
 
+    @Test
     public void testFabricEmptyConfig() {
         JsonObject fabricConfig = new JsonObject();
 
@@ -272,6 +294,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getFabricConfig().getFabricBuildSecret());
     }
 
+    @Test
     public void testFabricConfig() {
         String key = "fake-key";
         String secret = "fake-secret";
@@ -290,6 +313,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(secret, config.getFabricConfig().getFabricBuildSecret());
     }
 
+    @Test
     public void testNewRelicNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -297,6 +321,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getNewRelicConfig().getNewRelicKey());
     }
 
+    @Test
     public void testNewRelicEmptyConfig() {
         JsonObject fabricConfig = new JsonObject();
 
@@ -308,6 +333,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getNewRelicConfig().getNewRelicKey());
     }
 
+    @Test
     public void testNewRelicConfig() {
         String key = "fake-key";
 
@@ -323,6 +349,7 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(key, config.getNewRelicConfig().getNewRelicKey());
     }
 
+    @Test
     public void testSegmentNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);
@@ -330,6 +357,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getSegmentConfig().getSegmentWriteKey());
     }
 
+    @Test
     public void testSegmentEmptyConfig() {
         JsonObject segmentConfig = new JsonObject();
 
@@ -341,6 +369,7 @@ public class ConfigTests extends BaseTestCase {
         assertNull(config.getSegmentConfig().getSegmentWriteKey());
     }
 
+    @Test
     public void testSegmentConfig() {
         String key = "fake-key";
 

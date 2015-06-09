@@ -5,23 +5,28 @@ import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.BaseTestCase;
+import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
+
+import static org.junit.Assert.*;
 
 public class DownloadTests extends BaseTestCase {
 
     private IDownloadManager dm;
     
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
-        dm = DownloadFactory.getInstance(getInstrumentation().getTargetContext());
+        dm = DownloadFactory.getInstance(RuntimeEnvironment.application);
     }
-    
+
+    @Test
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-           dir = new UserPrefs(getInstrumentation().getTargetContext()).getDownloadFolder();
+           dir = new UserPrefs(RuntimeEnvironment.application).getDownloadFolder();
         }catch (Exception ex){
             // it happens in CI environment and we should skip the test.
             print( "dir is null, it happens in CI environment and we should skip the test.");

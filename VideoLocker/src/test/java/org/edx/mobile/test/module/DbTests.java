@@ -8,8 +8,12 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.test.BaseTestCase;
+import org.junit.Test;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class DbTests extends BaseTestCase {
 
@@ -18,19 +22,20 @@ public class DbTests extends BaseTestCase {
     private final String username = "unittest";
 
     @Override
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
-        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, getInstrumentation()
-                        .getTargetContext().getApplicationContext() );
+        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, RuntimeEnvironment
+                .application );
         db.setUserName(username);
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         super.tearDown();
         db.release();
     }
 
+    @Test
     public void testDeleteVideo() throws Exception {
         String videoId = "testVideoId";
 
@@ -50,6 +55,7 @@ public class DbTests extends BaseTestCase {
         assertTrue("Should have deleted ONE video only", count == 1);
     }
 
+    @Test
     public void testInsert() throws Exception {
         DownloadEntry de = getDummyVideoModel();
         de.isCourseActive = 1;
@@ -72,6 +78,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testPrintTable() throws Exception {
         db.getAllVideos("shahid", new DataCallback<List<VideoModel>>() {
 
@@ -95,6 +102,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetVideoEntryByVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoid="videoid";
@@ -136,6 +144,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testisAnyVideoDownloading() throws Exception {
         db.clearDataByUser(username);
         db.isAnyVideoDownloading(new DataCallback<Boolean>() {
@@ -177,6 +186,7 @@ public class DbTests extends BaseTestCase {
 
         lock();
     }
+    @Test
     public void testgetAllDownloadingVideosDmidList() throws Exception {
         db.clearDataByUser(username);
         db.getAllDownloadingVideosDmidList(new DataCallback<List<Long>>() {
@@ -216,6 +226,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testupdateAllVideosAsDeactivated() throws Exception {
         db.clearDataByUser(username);
         db.updateAllVideosAsDeactivated(new DataCallback<Integer>() {
@@ -262,6 +273,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testupdateVideosActivatedForCourse() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -312,6 +324,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testgetAllDeactivatedVideos() throws Exception {
         db.clearDataByUser(username);
         db.getAllDeactivatedVideos(new DataCallback<List<VideoModel>>() {
@@ -354,6 +367,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testupdateVideoAsOnlineByVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoId="videoId";
@@ -399,6 +413,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetVideoCountBydmId() throws Exception {
         db.clearDataByUser(username);
         long dmId = 1;
@@ -444,6 +459,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testisVideoDownloadedInChapter() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -493,6 +509,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetVideosCountByChapter() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -542,6 +559,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testisVideoDownloadingInChapter() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -591,6 +609,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testgetDownloadingVideoDmIdsForChapter() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -649,6 +668,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testisVideoDownloadingInSection() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -700,6 +720,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetDownloadingVideoDmIdsForSection() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -751,6 +772,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetVideosCountBySection() throws Exception {
         db.clearDataByUser(username);
         String enrollmentId = "enrollmentId";
@@ -803,6 +825,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testupdateVideoWatchedState() throws Exception {
         db.clearDataByUser(username);
         String videoId = "videoId";
@@ -848,6 +871,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testupdateVideoLastPlayedOffset() throws Exception {
         db.clearDataByUser(username);
         String videoId = "videoId";
@@ -895,6 +919,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testaddVideoData() throws Exception {
         db.clearDataByUser(username);
         DownloadEntry de1 = getDummyVideoModel();
@@ -920,6 +945,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testGetVideoEntryByVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoId = "videoId";
@@ -963,6 +989,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testisVideoFilePresentByUrl() throws Exception {
         db.clearDataByUser(username);
         final String url = "fakeURL";
@@ -1007,6 +1034,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testupdateDownloadingVideoInfoByVideoId() throws Exception {
         db.clearDataByUser(username);
         DownloadEntry model = getDummyVideoModel();
@@ -1052,6 +1080,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testupdateAsDownloadingByVideoId() throws Exception {
         db.clearDataByUser(username);
         DownloadEntry model = getDummyVideoModel();
@@ -1100,6 +1129,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testgetListOfOngoingDownloads() throws Exception {
         db.clearDataByUser(username);
         db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
@@ -1153,6 +1183,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testgetVideosDownloadedCount() throws Exception {
         db.clearDataByUser(username);
         db.getVideosDownloadedCount(new DataCallback<Integer>() {
@@ -1199,6 +1230,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testgetDownloadedVideoCountByCourse() throws Exception {
         db.clearDataByUser(username);
         String courseId = "courseId";
@@ -1248,6 +1280,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetDownloadedVideosSizeByCourse() throws Exception {
         db.clearDataByUser(username);
         String courseId = "courseId";
@@ -1306,6 +1339,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
     }
+    @Test
     public void testgetIVideoModelByVideoUrl() throws Exception {
         db.clearDataByUser(username);
         final String videoUrl ="url";
@@ -1346,6 +1380,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testisDmIdExists() throws Exception {
         db.clearDataByUser(username);
         final long dmId = 1;
@@ -1387,6 +1422,7 @@ public class DbTests extends BaseTestCase {
 
     }
 
+    @Test
     public void testupdateDownloadCompleteInfoByDmId() throws Exception {
         db.clearDataByUser(username);
         long dmId = 1;
@@ -1433,6 +1469,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetAllVideos() throws Exception {
         db.clearDataByUser(username);
         db.getAllVideos(username, new DataCallback<List<VideoModel>>() {
@@ -1473,6 +1510,7 @@ public class DbTests extends BaseTestCase {
         lock();
     }
 
+    @Test
     public void testgetDownloadEntryByDmId() throws Exception {
         db.clearDataByUser(username);
         long dmId=1;
@@ -1512,6 +1550,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
     }
+    @Test
     public void testgetVideoCountByVideoUrl() throws Exception {
         db.clearDataByUser(username);
         String videoUrl="url";
@@ -1554,6 +1593,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
     }
+    @Test
     public void testgetWatchedStateForVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoId="videoId";
@@ -1596,6 +1636,7 @@ public class DbTests extends BaseTestCase {
         });
         lock();
     }
+    @Test
     public void testgetVideoByVideoUrl() throws Exception {
         db.clearDataByUser(username);
         String videoUrl="url";
@@ -1636,6 +1677,7 @@ public class DbTests extends BaseTestCase {
 
         lock();
     }
+    @Test
     public void testgetDownloadedVideoListForCourse() throws Exception {
         db.clearDataByUser(username);
         String courseId="courseId";
@@ -1682,6 +1724,7 @@ public class DbTests extends BaseTestCase {
         lock();
 
     }
+    @Test
     public void testgetDownloadedStateForVideoId() throws Exception {
         db.clearDataByUser(username);
         String videoId="videoId";
