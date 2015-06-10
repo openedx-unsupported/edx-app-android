@@ -65,7 +65,6 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
 
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
-        ViewPagerWebViewDownloadManager.getSharedInstance().removeTask(this);
         super.onDestroy();
     }
 

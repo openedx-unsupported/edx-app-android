@@ -132,7 +132,13 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             updateUIForVideo(position, convertView, viewHolder, row);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_file_o);
+            if( unit.getType() == BlockType.PROBLEM ) {
+                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_list);
+            } else if( unit.getType() == BlockType.DISCUSSION ) {
+                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_comments_o);
+            } else {
+                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_file_o);
+            }
             checkAccessStatus(viewHolder, unit);
         }
         String title = unit.getDisplayName();
