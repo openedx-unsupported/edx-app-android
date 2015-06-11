@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.test.TestApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -16,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApplication.class)
 public class CourseOutlineActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseOutlineActivity} that

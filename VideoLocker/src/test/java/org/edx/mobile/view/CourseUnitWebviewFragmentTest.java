@@ -5,6 +5,7 @@ import android.webkit.WebView;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.test.TestApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
 // https://github.com/robolectric/robolectric/issues/793
 // We should add mock web server and test the handling later
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApplication.class)
 public class CourseUnitWebviewFragmentTest {
     /**
      * Testing initialization

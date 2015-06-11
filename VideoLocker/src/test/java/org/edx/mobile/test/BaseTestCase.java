@@ -16,7 +16,7 @@ import org.robolectric.annotation.Config;
  */
 @Ignore
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApplication.class)
 public class BaseTestCase {
 
     protected final Logger logger = new Logger(getClass().getName());

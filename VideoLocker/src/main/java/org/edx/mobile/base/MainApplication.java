@@ -43,7 +43,7 @@ public class MainApplication extends MultiDexApplication {
 
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static MainApplication application;
+    protected static MainApplication application;
 
     public static final MainApplication instance(){
         return application;
@@ -145,7 +145,7 @@ public class MainApplication extends MultiDexApplication {
      * Create the image cache. Uses Memory Cache by default.
      * Change to Disk for a Disk based LRU implementation.
      */
-    private void createImageCache(){
+    protected void createImageCache(){
         int DISK_IMAGECACHE_SIZE = 1024*1024*10;
         CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
         //PNG is lossless so quality is ignored but must be provided

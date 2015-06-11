@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.event.DownloadEvent;
+import org.edx.mobile.test.TestApplication;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Ignore;
@@ -32,7 +33,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApplication.class)
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
      * Method for defining the subclass of {@link CourseBaseActivity} that

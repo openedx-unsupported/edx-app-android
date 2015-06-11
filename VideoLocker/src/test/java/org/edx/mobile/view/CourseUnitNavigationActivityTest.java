@@ -6,6 +6,7 @@ import android.view.View;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.test.TestApplication;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 // the demo sandbox to see this Activity, so I'm not writing tests for the
 // adapter interactions yet
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, application = TestApplication.class)
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}
