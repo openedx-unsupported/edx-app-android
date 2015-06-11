@@ -63,10 +63,6 @@ import java.util.Map;
 public class CourseUnitVideoFragment extends CourseUnitFragment
     implements IPlayerEventCallback{
 
-    public static interface HasComponent {
-        CourseComponent getComponent();
-    }
-
     protected final Logger logger = new Logger(getClass().getName());
     VideoBlockModel unit;
     private PlayerFragment playerFragment;
@@ -87,7 +83,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
-    private HasComponent hasComponentCallback;
 
 
     /**
@@ -204,9 +199,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }
         checkVideoStatus(unit);
-
         if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
             ViewPagerDownloadManager.instance.addTask(this);
+
     }
 
     public void onResume() {
@@ -864,8 +859,5 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
-    //we need to know the current component of the container
-    public void setHasComponentCallback(HasComponent callback){
-        hasComponentCallback = callback;
-    }
+
 }

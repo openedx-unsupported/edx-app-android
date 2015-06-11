@@ -20,6 +20,12 @@ import java.util.List;
  */
 public class ViewPagerDownloadManager implements TaskCallback {
 
+    //TODO - current we just disable the pre-loading behavior
+    //for potential memory usage issue for certain type devices
+    //we will enable it when we can reduce javascript file size
+    //in assesssment webview
+    public static final boolean USING_UI_PRELOADING = false;
+
     protected final Logger logger = new Logger(getClass().getName());
 
     public static ViewPagerDownloadManager instance = new ViewPagerDownloadManager();
@@ -51,6 +57,8 @@ public class ViewPagerDownloadManager implements TaskCallback {
      *
      */
     public void setMainComponent(CourseComponent component,List<CourseComponent> unitList){
+        if ( !USING_UI_PRELOADING )
+            return;
         clear();
         this.mainComponent = component;
         int index = unitList.indexOf(component);

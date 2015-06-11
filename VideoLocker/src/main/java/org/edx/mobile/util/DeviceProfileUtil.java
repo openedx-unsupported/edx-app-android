@@ -20,4 +20,18 @@ public class DeviceProfileUtil {
     public static String getOSType(){
         return Build.VERSION.RELEASE;
     }
+
+    public static String getDeviceProfileInfo(){
+        String manufacturerName = getManufacturerName();
+        String modelName = getModelName();
+        String osType = getOSType();
+        return manufacturerName +  ":" + modelName + ":" + osType;
+    }
+
+    public static boolean isSamsungGalaxyS3(){
+        String manufacturerName = getManufacturerName();
+        String modelName = getModelName();
+        return "SAMSUNG".equals(manufacturerName) && "SAMSUNG-SGH-I747".equals(modelName);
+    }
+
 }
