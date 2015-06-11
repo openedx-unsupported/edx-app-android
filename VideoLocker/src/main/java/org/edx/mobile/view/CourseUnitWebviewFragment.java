@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +18,7 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
-import org.edx.mobile.services.ViewPagerWebViewDownloadManager;
-import org.edx.mobile.view.common.PageViewStateCallback;
+import org.edx.mobile.services.ViewPagerDownloadManager;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -31,12 +29,11 @@ import de.greenrobot.event.EventBus;
 /**
  *
  */
-public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback,
-    ViewPagerWebViewDownloadManager.HtmlTaskCallback {
+public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
-    HtmlBlockModel unit;
     ProgressBar progressWheel;
     boolean pageIsLoaded;
+    WebView webView;
     /**
      * Create a new instance of fragment
      */
@@ -57,9 +54,6 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        unit = getArguments() == null ? null :
-            (HtmlBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-
         EventBus.getDefault().register(this);
     }
 
@@ -85,6 +79,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_webview, container, false);
         progressWheel = (ProgressBar)v.findViewById(R.id.progress_spinner);
+        webView = (WebView)v.findViewById(R.id.course_unit_webView);
         return v;
     }
 
@@ -92,7 +87,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //should we recover here?
-        WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
+
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -101,6 +96,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                                         String description, String failingUrl) {
                 hideLoadingProgress();
                 pageIsLoaded = false;
+                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
                 if ( errorCode == HttpStatus.SC_FORBIDDEN || errorCode == HttpStatus.SC_UNAUTHORIZED || errorCode == HttpStatus.SC_NOT_FOUND){
                     EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                 }
@@ -114,6 +110,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                 //compenent below the webview in the future?
                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 super.onPageFinished(view, url);
+                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
                 hideLoadingProgress();
             }
 
@@ -124,13 +121,18 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         });
         //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        tryToLoadWebView();
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+            ViewPagerDownloadManager.instance.addTask(this);
+        else
+            tryToLoadWebView();
+
     }
 
     private void tryToLoadWebView( ){
+        System.gc(); //there is an well known Webview Memory Issues With Galaxy S3 With 4.3 Update
+
         showLoadingProgress();
-        pageIsLoaded = false;
-        WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
+
         if ( unit != null) {
             if ( unit.isGraded() ){
                 getView().findViewById(R.id.webview_header_text).setVisibility(View.VISIBLE);
@@ -166,8 +168,12 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     }
 
     @Override
-    public void startLoadingPage(){
-
+    public void run(){
+        if ( this.isRemoving() || this.isDetached()){
+            ViewPagerDownloadManager.instance.done(this, false);
+        } else {
+            tryToLoadWebView();
+        }
     }
 
 
@@ -176,21 +182,11 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
                 webView.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels, (int) (height * getResources().getDisplayMetrics().density)));
             }
         });
     }
-    /// for PageViewStateCallback ///
-    @Override
-    public void onPageShow() {
 
-    }
-
-    @Override
-    public void onPageDisappear() {
-
-    }
 
     private void showLoadingProgress(){
         progressWheel.setVisibility(View.VISIBLE);

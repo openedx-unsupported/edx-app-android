@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,13 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.view.common.PageViewStateCallback;
 
 /**
  *
  */
-public class CourseUnitEmptyFragment extends Fragment implements PageViewStateCallback {
-    CourseComponent unit;
+public class CourseUnitEmptyFragment extends CourseUnitFragment{
 
     /**
      * Create a new instance of fragment
@@ -38,8 +36,6 @@ public class CourseUnitEmptyFragment extends Fragment implements PageViewStateCa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        unit = getArguments() == null ? null :
-            (CourseComponent) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
     }
 
     /**
@@ -59,15 +55,14 @@ public class CourseUnitEmptyFragment extends Fragment implements PageViewStateCa
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+            ViewPagerDownloadManager.instance.addTask(this);
     }
+
 
     @Override
-    public void onPageShow() {
-
+    public void run() {
+        ViewPagerDownloadManager.instance.done(this, true);
     }
 
-    @Override
-    public void onPageDisappear() {
-
-    }
 }
