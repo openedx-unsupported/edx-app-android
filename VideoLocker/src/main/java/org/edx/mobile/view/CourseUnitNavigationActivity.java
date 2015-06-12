@@ -203,7 +203,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             logger.warn("selectedUnit is null?");
             return;   //should not happen
         }
-        //TODO - courseComponent is not necessary the course object.
+
         //if we want to navigate through all unit of within the parent node,
         //we should use courseComponent instead.   Requirement maybe changed?
        // unitList.addAll( courseComponent.getChildLeafs() );
@@ -211,6 +211,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         EnumSet<BlockType> types = EnumSet.allOf(BlockType.class);
         ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
+
         ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
         int index = unitList.indexOf(selectedUnit);
@@ -270,7 +271,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             //FIXME - for the video, let's ignore responsive_UI for now
             if ( unit instanceof VideoBlockModel) {
                 CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
-                fragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
+
                 unitFragment = fragment;
             }
 
@@ -295,6 +296,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
             }
 
+            unitFragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
 
             return unitFragment;
         }

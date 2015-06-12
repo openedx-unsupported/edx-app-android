@@ -11,7 +11,13 @@ import org.edx.mobile.view.common.RunnableCourseComponent;
  * Created by hanning on 6/9/15.
  */
 public class CourseUnitFragment  extends Fragment implements PageViewStateCallback, RunnableCourseComponent {
+
+    public static interface HasComponent {
+        CourseComponent getComponent();
+    }
+
     protected CourseComponent unit;
+    protected HasComponent hasComponentCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,5 +44,9 @@ public class CourseUnitFragment  extends Fragment implements PageViewStateCallba
     @Override
     public void run() {
 
+    }
+
+    public void setHasComponentCallback(HasComponent callback){
+        hasComponentCallback = callback;
     }
 }

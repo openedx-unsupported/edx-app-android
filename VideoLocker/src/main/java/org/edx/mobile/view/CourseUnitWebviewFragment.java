@@ -14,7 +14,9 @@ import android.widget.ProgressBar;
 import org.apache.http.HttpStatus;
 import org.edx.mobile.R;
 import org.edx.mobile.event.SessionIdRefreshEvent;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
@@ -30,6 +32,10 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class CourseUnitWebviewFragment extends CourseUnitFragment{
+
+    protected final Logger logger = new Logger(getClass().getName());
+
+    private final static String EMPTY_HTML = "<html><body></body></html>";
 
     ProgressBar progressWheel;
     boolean pageIsLoaded;
@@ -63,8 +69,8 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     }
 
     public void onEvent(SessionIdRefreshEvent event){
-        if ( event.success && !pageIsLoaded){
-            tryToLoadWebView();
+        if ( event.success ){
+            tryToLoadWebView(false);
         } else {
             hideLoadingProgress();
         }
@@ -103,8 +109,12 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
             public void onPageFinished(WebView view, String url) {
+                if ( url != null && url.equals("data:text/html," + EMPTY_HTML ) ){
+                    //we load a local empty html page to release the memory
+                } else {
+                    pageIsLoaded = true;
+                }
 
-                pageIsLoaded = true;
                 //TODO -disable it for now. as it causes some issues for assessment
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
@@ -121,15 +131,22 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         });
         //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
-            ViewPagerDownloadManager.instance.addTask(this);
-        else
-            tryToLoadWebView();
-
+        if(  ViewPagerDownloadManager.USING_UI_PRELOADING ) {
+            if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+                ViewPagerDownloadManager.instance.addTask(this);
+            else
+                tryToLoadWebView(true);
+        }
     }
 
-    private void tryToLoadWebView( ){
+
+
+
+    private void tryToLoadWebView(boolean forceLoad){
         System.gc(); //there is an well known Webview Memory Issues With Galaxy S3 With 4.3 Update
+
+        if ( (!forceLoad && pageIsLoaded) ||  progressWheel == null )
+            return;
 
         showLoadingProgress();
 
@@ -172,10 +189,49 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         if ( this.isRemoving() || this.isDetached()){
             ViewPagerDownloadManager.instance.done(this, false);
         } else {
-            tryToLoadWebView();
+            tryToLoadWebView(true);
         }
     }
 
+
+    private void tryToClearWebView(){
+        pageIsLoaded = false;
+        if ( webView != null)
+            webView.loadData(EMPTY_HTML, "text/html", "UTF-8");
+    }
+
+
+
+    public void onResume() {
+        super.onResume();
+        if ( hasComponentCallback != null ){
+            CourseComponent component = hasComponentCallback.getComponent();
+            if (component != null && component.equals(unit)){
+                try {
+                    tryToLoadWebView(false);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        }
+    }
+    //the problem with viewpager is that it loads this fragment
+    //and calls onResume even it is not visible.
+    //which breaks the normal behavior of activity/fragment
+    //lifecycle.
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if ( ViewPagerDownloadManager.USING_UI_PRELOADING )
+            return;
+        if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+            return;
+        if (isVisibleToUser) {
+            tryToLoadWebView(false);
+        }else{
+            tryToClearWebView();
+        }
+    }
 
     @JavascriptInterface
     public void resize(final float height) {
