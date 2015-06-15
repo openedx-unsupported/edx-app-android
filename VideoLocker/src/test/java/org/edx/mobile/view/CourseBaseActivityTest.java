@@ -10,10 +10,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.event.DownloadEvent;
-import org.edx.mobile.test.TestApplication;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Ignore;
@@ -22,7 +20,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.Shadows;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
@@ -33,7 +30,6 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, application = TestApplication.class)
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
      * Method for defining the subclass of {@link CourseBaseActivity} that
