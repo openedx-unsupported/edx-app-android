@@ -253,6 +253,10 @@ public class HttpBaseTestCase extends BaseTestCase {
                     // TODO: Find out if this is a wrong API call or server issue
                     response.setResponseCode(404);
                     response.setBody("{\"detail\": \"Not found\"}");
+                } else if (urlMatches(path, "/api/course_structure/v0/courses/[^/]+/[^/]+/[^/]+/blocks\\+navigation")) {
+                    // TODO: Return different responses based on the parameters?
+                    response.setBody(getMockResponse("get_course_structure"));
+                    response.setResponseCode(200);
                 }
             }
         } catch (IOException e) {
