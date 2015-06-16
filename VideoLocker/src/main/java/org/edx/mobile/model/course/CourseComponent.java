@@ -8,6 +8,7 @@ import org.edx.mobile.model.api.IPathNode;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -209,6 +210,13 @@ public class CourseComponent implements IBlock, IPathNode {
     public List<HasDownloadEntry> getVideos(){
         List<CourseComponent> videos = new ArrayList<>();
         fetchAllLeafComponents(videos, EnumSet.of(BlockType.VIDEO));
+        for (Iterator<CourseComponent> videosIterator = videos.iterator();
+                videosIterator.hasNext();) {
+            CourseComponent videoComponent = videosIterator.next();
+            if (!(videoComponent instanceof VideoBlockModel)) {
+                videosIterator.remove();
+            }
+        }
         return (List)videos;
     }
 
