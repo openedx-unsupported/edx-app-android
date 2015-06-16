@@ -51,11 +51,12 @@ public class ServiceManager {
         return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
-                    String block_count = URLEncoder.encode("[\"video\"]", "UTF-8");
-                    String block_data = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"],\"allow_cache_miss\":\"True\"}}", "UTF-8");
+                    String block_count = URLEncoder.encode("video", "UTF-8");
+                    String block_fields = URLEncoder.encode("graded,format,responsive_ui", "UTF-8");
+                    String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
 
                     String url = api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
-                        +"children=False&block_count=" + block_count + "&block_data=" + block_data;
+                        +"block_count=" + block_count + "&fields=" + block_fields + "&block_json=" + block_json;
 
                     logger.debug("GET url for enrolling in a Course: " + url);
                     return url;
@@ -65,7 +66,7 @@ public class ServiceManager {
                 return "";
             }
             public String getCacheKey() {
-                return api.getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
+                return api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId;
             }
             public Map<String, String> getParameters() {
                 return null;

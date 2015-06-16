@@ -26,7 +26,7 @@ public class BlockModel implements Serializable{
     @SerializedName("graded")
     public boolean graded;
 
-    @SerializedName("responsive_UI")
+    @SerializedName("responsive_ui")
     public boolean responsiveUI;
 
     @SerializedName("block_url")
@@ -47,7 +47,7 @@ public class BlockModel implements Serializable{
     @SerializedName("descendants")
     public List<String> descendants;
 
-    @SerializedName("data")
+    @SerializedName("block_json")
     public BlockData data;
 
     public boolean isContainer(){
