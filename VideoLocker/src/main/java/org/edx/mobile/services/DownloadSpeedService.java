@@ -13,7 +13,8 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.OkHttpManager;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.ISegment;
@@ -106,7 +107,7 @@ public class DownloadSpeedService extends Service {
                 .url(file.getUrl())
                 .build();
 
-            OkHttpManager.getInstance().getClient().newCall(request).enqueue(new Callback() {
+            RestApiManager.getInstance(MainApplication.instance()).createSpeedTestClient().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException throwable) {
                     logger.error(throwable);

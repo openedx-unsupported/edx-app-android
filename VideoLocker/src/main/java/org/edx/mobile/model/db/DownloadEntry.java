@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -14,6 +13,7 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.JavaUtil;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
@@ -82,8 +82,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         try{
             lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
             if(lmsUrl==null || lmsUrl.trim().length()==0){
-                Api api = new Api(context);
-                lmsUrl = api.getUnitUrlByVideoById(eid, videoId);
+                lmsUrl = ServiceManager.getInstance().getUnitUrlByVideoById(eid, videoId);
             }
         }catch(Exception e){
             new Logger(getClass().getName()).error(e);

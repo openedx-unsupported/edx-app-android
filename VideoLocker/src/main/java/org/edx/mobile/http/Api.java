@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
-import org.apache.http.cookie.Cookie;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
@@ -31,7 +30,6 @@ import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
-import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
@@ -51,6 +49,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -59,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Api {
+public class Api implements IApi {
 
     private HttpManager http;
     private CacheManager cache;
@@ -78,6 +77,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public ResetPasswordResponse resetPassword(String emailId)
             throws Exception {
         Bundle headerBundle = new Bundle();
@@ -140,6 +140,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public AuthResponse auth(String username, String password)
             throws Exception {
         Bundle p = new Bundle();
@@ -171,6 +172,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public ProfileModel getProfile(String username) throws Exception {
         Bundle p = new Bundle();
         p.putString("username", username);
@@ -193,6 +195,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public ProfileModel getProfile() throws Exception {
         Bundle p = new Bundle();
         p.putString("format", "json");
@@ -468,7 +471,8 @@ public class Api {
      * @return
      * @throws Exception
      */
-    public ArrayList<EnrolledCoursesResponse> getEnrolledCourses()
+    @Override
+    public List<EnrolledCoursesResponse> getEnrolledCourses()
             throws Exception {
         return getEnrolledCourses(false);
     }
@@ -478,6 +482,7 @@ public class Api {
      * @param courseId
      * @return
      */
+    @Override
     public EnrolledCoursesResponse getCourseById(String courseId) {
         try {
             for (EnrolledCoursesResponse r : getEnrolledCourses(true)) {
@@ -499,7 +504,8 @@ public class Api {
      * @return
      * @throws Exception
      */
-    public ArrayList<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
+    @Override
+    public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
 
         Bundle p = new Bundle();
@@ -586,16 +592,16 @@ public class Api {
     /**
      * Returns handout for the given course id.
      * @param url
-     * @param preferCache
      * @return
      * @throws Exception
      */
-    public HandoutModel getHandout(String url, boolean preferCache) throws Exception {
+    @Override
+    public HandoutModel getHandout(String url, boolean prefCache) throws Exception {
         Bundle p = new Bundle();
         p.putString("format", "json");
 
         String json = null;
-        if (NetworkUtil.isConnected(context) && !preferCache) {
+        if (NetworkUtil.isConnected(context) || !prefCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
@@ -623,6 +629,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception {
         Bundle p = new Bundle();
         p.putString("format", "json");
@@ -656,6 +663,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public List<AnnouncementsModel> getAnnouncement(String url, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
@@ -689,7 +697,7 @@ public class Api {
      * Returns "Authorization" header with current active access token.
      * @return
      */
-    public Bundle getAuthHeaders() {
+    private Bundle getAuthHeaders() {
         Bundle headers = new Bundle();
         
         // generate auth headers
@@ -717,7 +725,7 @@ public class Api {
      * @return
      * @throws Exception
      */
-    public CourseInfoModel srtStream(String url, boolean preferCache) throws Exception {
+    private CourseInfoModel srtStream(String url, boolean preferCache) throws Exception {
         Bundle p = new Bundle();
         p.putString("format", "json");
 
@@ -743,30 +751,9 @@ public class Api {
         return res;
     }
 
-    /**
-     * Returns Transcript of a given Video.
-     * 
-     * @param 
-     * @return TranscriptModel
-     * @throws Exception
-     */
-    public TranscriptModel getTranscriptsOfVideo(String enrollmentId,
-            String videoId) throws Exception {
-        try{
-            TranscriptModel transcript;
-            VideoResponseModel vidModel =  getVideoById(enrollmentId, videoId);
-            if(vidModel!=null){
-                if(vidModel.getSummary()!=null){
-                    transcript = vidModel.getSummary().getTranscripts();
-                    return transcript;
-                }
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-        return null;
-    }
 
+
+    @Override
     public String downloadTranscript(String url)
             throws Exception {
         if (url != null){
@@ -782,10 +769,12 @@ public class Api {
         return null;
     }
 
+    @Override
     public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
         return getFriendsCourses(false, oauthToken);
     }
 
+    @Override
     public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -830,10 +819,12 @@ public class Api {
 
     }
 
+    @Override
     public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
         return getFriendsInCourse(false, courseId, oauthToken);
     }
 
+    @Override
     public List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -861,6 +852,7 @@ public class Api {
         return response.getFriends();
     }
 
+    @Override
     public boolean inviteFriendsToGroup(long[] toInvite, long groupId, String oauthToken) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -890,6 +882,7 @@ public class Api {
     /**
      *  return of -1 indicates an error
      */
+    @Override
     public long createGroup(String name, String description, boolean privacy, long adminId, String socialToken) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -912,6 +905,7 @@ public class Api {
         return Long.valueOf(response.getId());
     }
 
+    @Override
     public boolean setUserCourseShareConsent(boolean consent) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -931,6 +925,7 @@ public class Api {
         return response.isSuccess();
     }
 
+    @Override
     public boolean getUserCourseShareConsent() throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -950,6 +945,7 @@ public class Api {
         return response.isSuccess();
     }
 
+    @Override
     public List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception {
         Bundle params = new Bundle();
         params.putString("format", "json");
@@ -1059,6 +1055,7 @@ public class Api {
         return list;
     }
 
+    @Override
     public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
             throws Exception{
         if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
@@ -1068,6 +1065,7 @@ public class Api {
         return null;
     }
 
+    @Override
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
 
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
@@ -1076,6 +1074,7 @@ public class Api {
         return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
     }
 
+    @Override
     public AuthResponse loginByGoogle(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
@@ -1125,8 +1124,9 @@ public class Api {
 
 
 
+    @Override
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
-            String lastVisitedModuleId) throws Exception {
+                                                                         String lastVisitedModuleId) throws Exception {
 
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         String username = pref.getCurrentUserProfile().username;
@@ -1154,6 +1154,7 @@ public class Api {
         return res;
     }
 
+    @Override
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         String username = pref.getCurrentUserProfile().username;
@@ -1182,6 +1183,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Override
     public RegisterResponse register(Bundle parameters)
             throws Exception {
         String url = getBaseUrl() + "/user_api/v1/account/registration/";
@@ -1215,6 +1217,7 @@ public class Api {
      * @return
      * @throws IOException
      */
+    @Override
     public RegistrationDescription getRegistrationDescription() throws Exception {
         Gson gson = new Gson();
         InputStream in = context.getAssets().open("config/registration_form.json");
@@ -1223,6 +1226,7 @@ public class Api {
         return form;
     }
 
+    @Override
     public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";
         logger.debug("POST url for enrolling in a Course: " + enrollUrl);
@@ -1256,7 +1260,8 @@ public class Api {
     /**
      *  used for assessment webview, refresh session id
      */
-    public List<Cookie> getSessionExchangeCookie() throws Exception{
+    @Override
+    public List<HttpCookie> getSessionExchangeCookie() throws Exception{
         return http.getCookies(getSessionTokenExchangeUrl(), getAuthHeaders(), false);
     }
 

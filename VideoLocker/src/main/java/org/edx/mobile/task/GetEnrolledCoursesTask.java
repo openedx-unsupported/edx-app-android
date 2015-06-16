@@ -26,7 +26,7 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
             
             // return instant cached data
             try {
-                final ArrayList<EnrolledCoursesResponse> list = api
+                final ArrayList<EnrolledCoursesResponse> list = (ArrayList)api
                         .getEnrolledCourses(true);
                 if (list != null) {
                     handler.post(new Runnable() {
@@ -40,7 +40,7 @@ public abstract class GetEnrolledCoursesTask extends Task<ArrayList<EnrolledCour
                 logger.error(ex);
             }
             
-            return api.getEnrolledCourses();
+            return (ArrayList)api.getEnrolledCourses();
         } catch(AuthException ex) {
             handle(ex);
             logger.error(ex);

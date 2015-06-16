@@ -125,7 +125,6 @@ public class MainApplication extends MultiDexApplication {
             EdxCookieManager.getSharedInstance().clearWebViewCache(this);
         }
 
-
         //TODO - ideally this should belong to SegmentFactory, but code refactoring is need because of the way it constructs new instances
         EventBus.getDefault().registerSticky(this);
     }

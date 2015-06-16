@@ -466,10 +466,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             transcript = unit.getData().transcripts;
         }
         if ( transcript == null ) {
-            Api api = new Api(getActivity());
             try {
                 if (video.videoId != null) {
-                    transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript =  ServiceManager.getInstance().getTranscriptsOfVideo(video.eid, video.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);

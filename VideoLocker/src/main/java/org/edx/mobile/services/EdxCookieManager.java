@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.webkit.ValueCallback;
 
-import org.apache.http.cookie.Cookie;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
@@ -12,6 +11,8 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetSessesionExchangeCookieTask;
 
 import java.io.File;
+import java.net.HttpCookie;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -42,7 +43,11 @@ public class EdxCookieManager {
                 }
             });
         } else {
-            android.webkit.CookieManager.getInstance().removeAllCookie();
+            try {
+                android.webkit.CookieManager.getInstance().removeAllCookie();
+            }catch (Exception ex){
+                logger.debug(ex.getMessage());
+            }
         }
         PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, "");
@@ -79,19 +84,25 @@ public class EdxCookieManager {
         if ( task == null || task.isCancelled()  ) {
             task =new GetSessesionExchangeCookieTask(MainApplication.instance()) {
                 @Override
-                public void onFinish(List<Cookie> result) {
+                public void onFinish(List<HttpCookie> result) {
                     if (result == null || result.isEmpty()) {
                         logger.debug("result is empty");
                         EventBus.getDefault().post(new SessionIdRefreshEvent(false));
                         return;
                     }
-                    for (Cookie cookie : result) {
+                    long currentTime = new Date().getTime();
+                    for (HttpCookie cookie : result) {
                         if (cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
                             clearWebWiewCookie();
                             PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
-                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, cookie.getExpiryDate() == null ? 0 : cookie.getExpiryDate().getTime());
-                             EventBus.getDefault().post(new SessionIdRefreshEvent(true));
+                            long maxAgeInSecond = cookie.getMaxAge();
+                            if ( maxAgeInSecond == 0 ){
+                                pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, 0);
+                            } else {
+                                pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, currentTime + maxAgeInSecond * 1000);
+                            }
+                            EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                             break;
                         }
                     }
