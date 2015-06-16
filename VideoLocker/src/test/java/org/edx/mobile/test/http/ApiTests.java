@@ -12,7 +12,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
-import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
  * real webservice right now
  * 
  */
-@Ignore
 public class ApiTests extends HttpBaseTestCase {
 
 
@@ -39,6 +38,7 @@ public class ApiTests extends HttpBaseTestCase {
         super.setUp();
     }
     
+    @Test
     public void testSyncLastSubsection() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -65,6 +65,7 @@ public class ApiTests extends HttpBaseTestCase {
         print("sync returned: " + model.last_visited_module_id);
     }
 
+    @Test
     public void testGetLastAccessedModule() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -82,6 +83,7 @@ public class ApiTests extends HttpBaseTestCase {
     //  print(model.json);
     }
 
+    @Test
     public void testResetPassword() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -92,6 +94,7 @@ public class ApiTests extends HttpBaseTestCase {
         print("test: finished: reset password");
     }
 
+    @Test
     public void testHandouts() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -108,6 +111,7 @@ public class ApiTests extends HttpBaseTestCase {
         print(model.handouts_html);
     }
 
+    @Test
     public void testChannelId() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -122,6 +126,7 @@ public class ApiTests extends HttpBaseTestCase {
         assertTrue(subscription_id != null);
     }
 
+    @Test
     public void testCourseStructure() throws Exception {
         if( shouldSkipTest ) return;
         login();
@@ -144,6 +149,7 @@ public class ApiTests extends HttpBaseTestCase {
         }
     }
 
+    @Test
     public void login() throws Exception {
         if( shouldSkipTest ) return;
         Config.TestAccountConfig config  = Config.getInstance().getTestAccountConfig();
@@ -158,6 +164,7 @@ public class ApiTests extends HttpBaseTestCase {
         assertNotNull(profile);
     }
 
+    @Test
     public void testGetAnnouncement() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -176,6 +183,7 @@ public class ApiTests extends HttpBaseTestCase {
         }
     }
 
+    @Test
     public void testReadRegistrationDescription() throws Exception {
         if( shouldSkipTest ) return;
 
@@ -191,6 +199,7 @@ public class ApiTests extends HttpBaseTestCase {
         assertNotNull(form.getFields().get(0).getFieldType());
     }
 
+    @Test
     public void testEnrollInACourse() throws Exception {
         if( shouldSkipTest ) return;
 

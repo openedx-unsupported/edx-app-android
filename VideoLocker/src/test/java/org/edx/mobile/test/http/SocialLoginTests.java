@@ -6,7 +6,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Environment;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.*;
@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
  * real webservice right now
  *
  */
-@Ignore
 public class SocialLoginTests extends HttpBaseTestCase  {
 
 
@@ -29,6 +28,7 @@ public class SocialLoginTests extends HttpBaseTestCase  {
         super.setUp();
     }
     
+    @Test
     public void testGetProfile() throws Exception {
         if ( shouldSkipTest ) return;
 
