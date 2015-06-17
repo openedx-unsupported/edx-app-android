@@ -107,7 +107,7 @@ public class WeakList<T>{
     public void removeReleased() {
         synchronized (items) {
             System.gc(); //just a hint
-            int size = size();
+            int size = items.size();
             for (int i = size -1; i >= 0; i--) {
                 WeakReference<T> ref = (WeakReference)items.get(i);
                 if (ref.get() == null) {
