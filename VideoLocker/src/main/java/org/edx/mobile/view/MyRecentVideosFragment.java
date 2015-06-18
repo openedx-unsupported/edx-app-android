@@ -471,7 +471,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             AppConstants.myVideosDeleteMode = false;
             ((MyVideosTabActivity) getActivity()).hideCheckBox();
             if(deletedVideoCount>0){
-                String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video, "{video_count}", deletedVideoCount).toString();
+                String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video, "video_count", deletedVideoCount).toString();
                 UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
                         String.format(format, deletedVideoCount));
             }
