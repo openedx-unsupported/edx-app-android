@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PopupMenu">
+        <attr name="android:dropDownWidth" />
+        <attr name="android:padding" />
+        <attr name="itemVerticalPadding" format="dimension" />
+        <attr name="iconDefaultSize" format="dimension" />
+    </declare-styleable>
+</resources>

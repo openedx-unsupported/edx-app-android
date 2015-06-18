@@ -652,4 +652,49 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public void setUserName(String userName){
         this.username = userName;
     }
+
+
+    /**
+     * update assessment unit access record
+     */
+    public synchronized Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited){
+        ContentValues values = new ContentValues();
+        values.put(DbStructure.Column.ASSESSMENT_TB_UNIT_WATCHED, visited);
+
+        DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.ASSESSMENT, values,
+            DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? AND " + DbStructure.Column.ASSESSMENT_TB_USERNAME + "=?",
+            new String[] {unitId, username});
+        op.setCallback(callback);
+        return enqueue(op);
+    }
+
+    /**
+     * get assessment unit access status
+     */
+    public synchronized boolean isUnitAccessed(final DataCallback<Boolean> callback, String unitId){
+        DbOperationGetColumn<Boolean> op = new DbOperationGetColumn<Boolean>(false,DbStructure.Table.ASSESSMENT,
+            new String[] { DbStructure.Column.ASSESSMENT_TB_UNIT_WATCHED },
+            DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? AND "+ DbStructure.Column.ASSESSMENT_TB_USERNAME + "=?" ,
+            new String[] { unitId, username}, null, Boolean.class);
+        if( callback != null ) {
+            op.setCallback(new DataCallback<List<Boolean>>() {
+                @Override
+                public void onResult(List<Boolean> ordinals) {
+                    if (ordinals != null && !ordinals.isEmpty()) {
+                        callback.sendResult( ordinals.get(0));
+                    } else {
+                        //if no record, it also means not accessed before.
+                        callback.sendResult(false);
+                    }
+                }
+
+                @Override
+                public void onFail(Exception ex) {
+                    callback.sendException(ex);
+                }
+            });
+        }
+        List<Boolean> result = enqueue(op);
+        return result != null && result.size() > 0 ? result.get(0) : false;
+    }
 }

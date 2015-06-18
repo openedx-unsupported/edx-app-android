@@ -14,6 +14,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
@@ -22,15 +23,13 @@ import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.PropertyUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -200,6 +199,7 @@ public class Storage implements IStorage {
                 long[] dmids = new long[result.size()];
                 for (int i=0; i< result.size(); i++) {
                     dmids[i] = result.get(i).getDmId();
+                    logger.debug("xxxxxxxx =" +dmids[i]);
                 }
 
                 IDownloadManager dm = DownloadFactory.getInstance(context);
@@ -246,6 +246,16 @@ public class Storage implements IStorage {
         }
 
         return DatabaseModelFactory.getModel(vrm);
+    }
+
+    @Override
+    public VideoModel getDownloadEntryfromVideoModel(VideoBlockModel block){
+        VideoModel video = db.getVideoEntryByVideoId(block.getId(), null);
+        if (video != null) {
+            return video;
+        }
+
+        return DatabaseModelFactory.getModel(block.getData(), block);
     }
 
     @Override
@@ -359,10 +369,9 @@ public class Storage implements IStorage {
             return list;
         }
 
-        Api api = new Api(context);
         try {
-            Map<String, SectionEntry> courseHeirarchyMap = (LinkedHashMap<String, SectionEntry>) api
-                    .getCourseHierarchy(courseId, true);
+            Map<String, SectionEntry> courseHeirarchyMap =
+                  ServiceManager.getInstance().getCourseHierarchy(courseId);
 
             // iterate chapters
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {
@@ -455,14 +464,9 @@ public class Storage implements IStorage {
     /**
      * Checks progress of all the videos that are being downloaded.
      * If progress of any of the downloads is 100%, then marks the video as DOWNLOADED.
+     * NOTE - precondition - used only for app upgrade
      */
     public void repairDownloadCompletionData() {
-        PrefManager.AppInfoPrefManager pref = new PrefManager.AppInfoPrefManager(context);
-        String lastSavedVersionName = pref.getAppVersionName();
-        String curVersionName = PropertyUtil.getManifestVersionName(context);
-        if (lastSavedVersionName == null || !lastSavedVersionName.equals(curVersionName)) {
-            // current version not matching with the last saved version
-            pref.setAppVersionName(curVersionName);
 
             // attempt to repair the data
             Thread maintenanceThread = new Thread(new Runnable() {
@@ -510,7 +514,6 @@ public class Storage implements IStorage {
                 }
             });
             maintenanceThread.start();
-        }
     }
 
     @Override

@@ -26,6 +26,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -45,6 +46,7 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VideoListFragment extends MyVideosBaseFragment {
@@ -245,7 +247,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 for (VideoResponseModel m : lecture.videos) {
                     if (openInBrowserUrl == null
                             || openInBrowserUrl.equalsIgnoreCase("")) {
-                        openInBrowserUrl = m.section_url;
+                        openInBrowserUrl = m.getSectionUrl();
                     }
                     final DownloadEntry downloadEntry = (DownloadEntry) storage
                             .getDownloadEntryfromVideoResponseModel(m);
@@ -255,9 +257,9 @@ public class VideoListFragment extends MyVideosBaseFragment {
             } else {
                 setActivityTitle(chapterName);
 
-                ArrayList<SectionItemInterface> list = api
+                List<SectionItemInterface> list = ServiceManager.getInstance()
                         .getLiveOrganizedVideosByChapter(enrollment.getCourse()
-                                .getId(), chapterName);
+                            .getId(), chapterName);
                 for (SectionItemInterface m : list) {
                     if (m.isVideo()) {
                         VideoResponseModel vidmodel = (VideoResponseModel) m;
@@ -361,9 +363,9 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
             setActivityTitle(chapterName);
 
-            ArrayList<SectionItemInterface> list = api
+            List<SectionItemInterface> list = ServiceManager.getInstance()
                     .getLiveOrganizedVideosByChapter(enrollment.getCourse()
-                            .getId(), chapterName);
+                        .getId(), chapterName);
             downloadAvailable = false;
             for (SectionItemInterface m : list) {
                 if (m.isVideo()) {
@@ -484,8 +486,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                         .username, v.eid);
                 PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = api.getVideoById(v.eid, v.videoId);
-                prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
+                VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(v.eid, v.videoId);
+                prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
 
                 // capture chapter name
                 if (chapterName == null) {
@@ -925,7 +927,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
         if(deletedVideoCount>0){
             String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
-                     "video_num", deletedVideoCount).toString();
+                "video_num", deletedVideoCount).toString();
 
             ((VideoListActivity) getActivity())
                     .showInfoMessage(String.format(format, deletedVideoCount));

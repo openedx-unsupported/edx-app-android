@@ -25,10 +25,13 @@ abstract class DbOperationSelect<T> extends DbOperationBase<T> {
         if (table == null) {
             throw new IllegalArgumentException("table must be provided");
         }
-        
-        Cursor c = db.query(distinct,table, columns, whereClause, whereArgs, null, null, orderBy, null);
-        
-        return c;
+        try {
+            Cursor c = db.query(distinct, table, columns, whereClause, whereArgs, null, null, orderBy, null);
+            return c;
+        }catch (Exception ex){
+            logger.error(ex);
+            throw new IllegalArgumentException(ex.getMessage());
+        }
     }
     
 }

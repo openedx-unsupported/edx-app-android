@@ -1,4 +1,5 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -28,8 +29,16 @@
     <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+        <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
+    <!-- we need to change the color of the drawer arrow toggle -->
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+         <item name="color">@color/edx_white</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
@@ -41,14 +50,17 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@color/edx_brand_primary_x_accent</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:subtitleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="itemPadding">2dip</item>
     </style>
 
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText"
-           parent="@style/android:TextAppearance.Holo.Widget.ActionBar.Title">
+           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="offline_bar_style">
@@ -78,6 +90,18 @@
         <item name="android:layout_height">45dp</item>
         <item name="android:background">@color/white</item>
         <item name="android:visibility">gone</item>
+    </style>
+    
+    <!-- Custom menu popup -->
+    <style name="CustomPopupMenu" android:parent="Widget.Holo.Light.PopupMenu">
+        <item name="android:popupBackground">@drawable/white_rounded_bordered_bg</item>
+        <item name="android:overlapAnchor" tools:ignore="NewApi">true</item>
+        <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
+        <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
+        <item name="android:dropDownWidth">@dimen/popupMenuWidth</item>
+        <item name="android:padding">@dimen/popupMenuPadding</item>
+        <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
+        <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
     </style>
     
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">

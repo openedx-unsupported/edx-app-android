@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,14 +13,15 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
-import org.edx.mobile.model.ICourse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import de.greenrobot.event.EventBus;
 
@@ -34,13 +36,13 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     private View offlineBar;
     private View lastAccessBar;
-    private View downloadProgressBar;
+    protected View downloadProgressBar;
     protected TextView downloadIndicator;
 
     protected ProgressBar progressWheel;
 
     protected EnrolledCoursesResponse courseData;
-    protected ICourse course;
+    protected String courseComponentId;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -96,7 +98,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onPause() {
         super.onPause();
-        EventBus.getDefault().unregister(this);
+        if ( EventBus.getDefault().isRegistered(this) )
+            EventBus.getDefault().unregister(this);
     }
 
 
@@ -110,16 +113,16 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void onSaveInstanceState(Bundle outState) {
         if ( courseData != null)
             outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
-        if ( course != null )
-            outState.putSerializable(Router.EXTRA_COURSE, course);
+        if ( courseComponentId != null )
+            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         super.onSaveInstanceState(outState);
     }
 
     protected void restore(Bundle savedInstanceState) {
-
         if (savedInstanceState != null) {
             courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
-            course = (ICourse) savedInstanceState.getSerializable(Router.EXTRA_COURSE);
+            courseComponentId =   (String)savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+
         }
     }
 
@@ -163,7 +166,20 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         if( menu.findItem(R.id.action_share_on_web) != null)
             menu.findItem(R.id.action_share_on_web).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
-                    .actionBarSize());
+                    .actionBarSize().colorRes(R.color.edx_white));
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
+
+        if (  menu.findItem(R.id.action_change_mode) != null ) {
+            if (userPrefManager.isUserPrefVideoModel()) {
+                menu.findItem(R.id.action_change_mode).setIcon(
+                    new IconDrawable(this, Iconify.IconValue.fa_film)
+                        .actionBarSize().colorRes(R.color.edx_white));
+            } else {
+                menu.findItem(R.id.action_change_mode).setIcon(
+                    new IconDrawable(this, Iconify.IconValue.fa_list)
+                        .actionBarSize().colorRes(R.color.edx_white));
+            }
+        }
         return true;
     }
     @Override
@@ -171,16 +187,91 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_share_on_web:
-                BrowserUtil.open(this, getUrlForWebView());
+                shareOnWeb();
+                return true;
+            case R.id.action_change_mode:
+                changeMode();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    protected  String getUrlForWebView(){
-        return "";
+    public void changeMode(){
+        //Creating the instance of PopupMenu
+        org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
+            findViewById(R.id.action_change_mode), Gravity.START);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+            .inflate(R.menu.change_mode, popup.getMenu());
+        final PrefManager.UserPrefManager userPrefManager =
+            new PrefManager.UserPrefManager(this);
+        final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+        MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
+        // Initializing the font awesome icons
+        IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
+        IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
+        videoOnlyItem.setIcon(videoOnlyIcon);
+        fullCourseItem.setIcon(fullCourseIcon);
+        // Setting checked states
+        if (userPrefManager.isUserPrefVideoModel()) {
+            videoOnlyItem.setChecked(true);
+            videoOnlyIcon.colorRes(R.color.cyan_4);
+            fullCourseIcon.colorRes(R.color.black);
+        } else {
+            fullCourseItem.setChecked(true);
+            fullCourseIcon.colorRes(R.color.cyan_4);
+            videoOnlyIcon.colorRes(R.color.black);
+        }
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new org.edx.mobile.view.custom.popup.menu.PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                PrefManager.UserPrefManager userPrefManager =
+                    new PrefManager.UserPrefManager(CourseBaseActivity.this);
+                boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
+                boolean selectedVideoMode = videoOnlyItem == item;
+                if ( currentVideoMode == selectedVideoMode )
+                    return true;
+
+                userPrefManager.setUserPrefVideoModel(selectedVideoMode);
+                modeChanged();
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
+
+        popup.show(); //showing popup menu
+
     }
+
+    protected void modeChanged(){};
+
+
+    public void shareOnWeb() {
+        //Creating the instance of PopupMenu
+        PopupMenu popup = new PopupMenu(this,
+                findViewById(R.id.action_share_on_web), Gravity.START);
+        //Inflating the Popup using xml file
+        popup.getMenuInflater()
+                .inflate(R.menu.share_on_web, popup.getMenu());
+
+
+        //registering popup with OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
+                return true;
+            }
+        });
+
+        popup.show(); //showing popup menu
+    }
+
+
+
+    protected  abstract  String getUrlForWebView();
+
 
 
     /**
@@ -223,7 +314,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
 
     protected void setVisibilityForDownloadProgressView(boolean show){
-        downloadProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        if ( downloadProgressBar != null )
+            downloadProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     protected void hideLastAccessedView(View v) {

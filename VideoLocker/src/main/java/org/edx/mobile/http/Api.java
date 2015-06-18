@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
+import org.apache.http.cookie.Cookie;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
@@ -175,7 +176,7 @@ public class Api {
         p.putString("username", username);
 
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username;
-        String json = http.get(url, getAuthHeaders());
+        String json = http.get(url, getAuthHeaders()).body;
 
         Gson gson = new GsonBuilder().create();
         ProfileModel res = gson.fromJson(json, ProfileModel.class);
@@ -201,7 +202,7 @@ public class Api {
         
         logger.debug("Url for getProfile: " + urlWithAppendedParams);
 
-        String json = http.get(urlWithAppendedParams, getAuthHeaders());
+        String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
 
         if (json == null) {
             return null;
@@ -244,6 +245,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Map<String, SectionEntry> getCourseHierarchy(String courseId)
             throws Exception {
         return getCourseHierarchy(courseId, false);
@@ -257,6 +259,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
@@ -267,7 +270,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -295,7 +298,7 @@ public class Api {
             // add each video to its corresponding chapter and section
 
             // add this as a chapter
-            String cname = m.getChapter().name;
+            String cname = m.getChapter().getName();
 
             // carry this courseId with video model
             m.setCourseId(courseId);
@@ -307,16 +310,16 @@ public class Api {
                 s = new SectionEntry();
                 s.chapter = cname;
                 s.isChapter = true;
-                s.section_url = m.section_url;
+                s.section_url = m.getSectionUrl();
                 chapterMap.put(cname, s);
             }
 
             // add this video to section inside in this chapter
-            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().name);
+            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().getName());
             if (videos == null) {
-                s.sections.put(m.getSection().name,
+                s.sections.put(m.getSection().getName(),
                         new ArrayList<VideoResponseModel>());
-                videos = s.sections.get(m.getSection().name);
+                videos = s.sections.get(m.getSection().getName());
             }
 
             //This has been commented out because for some Videos thereare no english srt's and hence returning empty
@@ -348,6 +351,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public LectureModel getLecture(String courseId, String chapterName, String lectureName)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
@@ -379,6 +383,7 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public VideoResponseModel getVideoById(String courseId, String videoId)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
@@ -411,10 +416,13 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
             throws Exception {
         Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
-
+       //FIXME - we should not invoke this method for new course structure api
+       if ( map == null )
+           return null;
         // iterate chapters
         for (Entry<String, SectionEntry> chapterentry : map.entrySet()) {
             // iterate lectures
@@ -423,7 +431,7 @@ public class Api {
                 // iterate videos 
                 for (VideoResponseModel v : entry.getValue()) {
                     // identify the subsection (module) if id matches
-                    if (subsectionId.equals(v.getSection().id)) {
+                    if (subsectionId.equals(v.getSection().getId())) {
                         return v;
                     }
                 }
@@ -440,12 +448,13 @@ public class Api {
      * @return
      * @throws Exception
      */
+    @Deprecated
     public String getUnitUrlByVideoById(String courseId, String videoId)
             throws Exception {
         try{
             VideoResponseModel vrm = getVideoById(courseId, videoId);
             if(vrm!=null){
-                return vrm.unit_url;
+                return vrm.getUnitUrl();
             }
         }catch(Exception e){
             logger.error(e);
@@ -502,7 +511,7 @@ public class Api {
         if (NetworkUtil.isConnected(context) && !fetchFromCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         }
@@ -547,7 +556,8 @@ public class Api {
      * @return
      * @throws Exception
      */
-    public ArrayList<VideoResponseModel> getVideosByCourseId(String courseId, boolean preferCache)
+    @Deprecated
+    private ArrayList<VideoResponseModel> getVideosByCourseId(String courseId, boolean preferCache)
             throws Exception {
         Bundle p = new Bundle();
         String url = getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
@@ -556,7 +566,7 @@ public class Api {
             // get data from server
             //Change from post to get. as post is not supported
             //FIXME -  it does not check the return code before it cache the result.
-            json = http.get(url, getAuthHeaders());
+            json = http.get(url, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -589,7 +599,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -622,7 +632,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -655,7 +665,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("url : "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -716,7 +726,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             //cache.put(url, json);
         } else {
@@ -762,7 +772,7 @@ public class Api {
         if (url != null){
             try {
                 if (NetworkUtil.isConnected(this.context)) {
-                    String str = http.get(url, getAuthHeaders());
+                    String str = http.get(url, getAuthHeaders()).body;
                     return str;
                 }
             } catch (Exception ex){
@@ -770,36 +780,6 @@ public class Api {
             }
         }
         return null;
-    }
-
-    /**
-     * Returns list of videos for a particular URL.
-     * @param courseId
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    public ArrayList<VideoResponseModel> getVideosByURL(String courseId, String videoUrl, boolean preferCache)
-            throws Exception {
-        if(videoUrl==null){
-            return null;
-        }
-        ArrayList<VideoResponseModel> vidList = getVideosByCourseId(courseId, preferCache);
-        ArrayList<VideoResponseModel> list = new ArrayList<VideoResponseModel>();
-        if(vidList!=null && vidList.size()>0){
-            for(VideoResponseModel vrm : vidList){
-                try{
-                    if(vrm.getSummary().getVideo_url().equalsIgnoreCase(videoUrl)){
-                        vrm.setCourseId(courseId);
-                        list.add(vrm);
-                    }
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            }
-        }
-
-        return list;
     }
 
     public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
@@ -817,7 +797,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
            logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -865,7 +845,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
             logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -957,7 +937,7 @@ public class Api {
 
         String url = getBaseUrl() + "/api/mobile/v0.5/settings/preferences/";
         String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-        String json = http.get(urlWithAppendedParams, getAuthHeaders());
+        String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
 
         if (json == null) {
             return false;
@@ -980,7 +960,7 @@ public class Api {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
             logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders());
+            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
         } else {
@@ -1004,7 +984,7 @@ public class Api {
     public Header getLoginResponseHeaders()
             throws Exception {
         String url = getBaseUrl() + "/login";
-        Header header = http.getRequestHeader(url);
+        Header header = http.getResponseHeader(url);
         return header;
     }
 
@@ -1012,7 +992,7 @@ public class Api {
      * Returns API base URL for the current project configuration (mobile3 or production).
      * @return
      */
-    public String getBaseUrl() {
+    public static String getBaseUrl() {
         return Config.getInstance().getApiHostURL();
     }
 
@@ -1022,6 +1002,7 @@ public class Api {
      * @param chapter
      * @return
      */
+    @Deprecated
     public ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
     (String courseId, String chapter) {
 
@@ -1039,12 +1020,12 @@ public class Api {
             ArrayList<VideoResponseModel> videos = getVideosByCourseId(courseId, true);
             for (VideoResponseModel v : videos) {
                 // filter videos by chapter
-                if (v.getChapter().name.equals(chapter)) {
+                if (v.getChapter().getName().equals(chapter)) {
                     // this video is under the specified chapter
 
                     // sort out the section of this video
-                    if (sections.containsKey(v.getSection().name)) {
-                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().name);
+                    if (sections.containsKey(v.getSection().getName())) {
+                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().getName());
                         if (sv == null) {
                             sv = new ArrayList<VideoResponseModel>();
                         }
@@ -1052,7 +1033,7 @@ public class Api {
                     } else {
                         ArrayList<VideoResponseModel> vlist = new ArrayList<VideoResponseModel>();
                         vlist.add(v);
-                        sections.put(v.getSection().name, vlist);
+                        sections.put(v.getSection().getName(), vlist);
                     }
                 }
             }
@@ -1142,6 +1123,8 @@ public class Api {
 
     }
 
+
+
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
             String lastVisitedModuleId) throws Exception {
 
@@ -1180,7 +1163,7 @@ public class Api {
 
         String date = DateUtil.getModificationDate();
 
-        String json = http.get(url, getAuthHeaders());
+        String json = http.get(url, getAuthHeaders()).body;
 
         if (json == null) {
             return null;
@@ -1264,6 +1247,32 @@ public class Api {
         }
 
         return false;
+    }
+
+    public static String getSessionTokenExchangeUrl(){
+        return getBaseUrl() + "/oauth2/login/";
+    }
+
+    /**
+     *  used for assessment webview, refresh session id
+     */
+    public List<Cookie> getSessionExchangeCookie() throws Exception{
+        return http.getCookies(getSessionTokenExchangeUrl(), getAuthHeaders(), false);
+    }
+
+    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
+
+
+        logger.debug("GET url for enrolling in a Course: " + delegate.endPoint.getUrl());
+
+        if (NetworkUtil.isConnected(context)) {
+            // get data from server
+            String urlWithAppendedParams = HttpManager.toGetUrl(delegate.endPoint.getUrl(), null);
+            HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
+            return result;
+        }
+
+        return null;
     }
 
 }

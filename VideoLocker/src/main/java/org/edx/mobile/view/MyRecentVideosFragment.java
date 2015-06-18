@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -25,17 +24,11 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -226,8 +219,8 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                         .username, v.eid);
                 PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = api.getVideoById(v.eid, v.videoId);
-                prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
+                VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(v.eid, v.videoId);
+                prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
 
                 if (callback != null) {
                     videoModel = v;

@@ -63,7 +63,8 @@
                     app:borderRadius="@dimen/avatar_image_radius"
                     app:avatarCount="6"
                     app:avatarMaxSize="50dp"
-                    android:gravity="center|left" />
+                    android:gravity="center|left|start"
+                    tools:targetApi="17" />
 
             </LinearLayout>
 
@@ -78,8 +79,10 @@
             android:translationX="51dp"
             android:background="@color/course_banner_blue"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            tools:targetApi="17" >
             <org.edx.mobile.view.custom.ETextView
                 style="@style/bold_white_text"
                 android:textSize="10sp"
@@ -114,11 +117,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/ic_starting"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_starting_mirrored"
             android:paddingLeft="5dp"
+            android:paddingStart="5dp"
             android:paddingRight="10dp"
-            android:layout_below="@id/course_name">
+            android:paddingEnd="10dp"
+            android:layout_below="@id/course_name"
+            tools:targetApi="17" >
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/starting_from"
@@ -136,8 +144,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@id/course_name"
-            android:layout_marginRight="10dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            tools:targetApi="17">
 
             <View
                 android:id="@+id/ellipsis_icon"
@@ -154,9 +165,13 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/new_course_content"
                 android:paddingLeft="3dp"
+                android:paddingStart="3dp"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
                 android:text="@string/new_course_content"
                 android:textAllCaps="true"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                tools:targetApi="17" />
         </LinearLayout>
 
         <LinearLayout
@@ -164,12 +179,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:layout_toLeftOf="@id/starting_from_layout"
+            android:layout_toStartOf="@id/starting_from_layout"
             android:layout_alignTop="@id/starting_from_layout"
-            android:layout_below="@id/course_name">
+            android:layout_below="@id/course_name"
+            tools:targetApi="17">
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/org_code_tv"

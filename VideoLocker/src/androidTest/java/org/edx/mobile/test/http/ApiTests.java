@@ -1,10 +1,5 @@
 package org.edx.mobile.test.http;
 
-import android.text.TextUtils;
-
-import com.google.gson.Gson;
-
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -17,8 +12,6 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Environment;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +46,7 @@ public class ApiTests extends HttpBaseTestCase {
         Entry<String, ArrayList<VideoResponseModel>> subsection = entry.getValue().sections.entrySet().iterator().next();
 
         String courseId = e.getCourse().getId();
-        String lastVisitedModuleId = subsection.getValue().get(0).getSection().id;
+        String lastVisitedModuleId = subsection.getValue().get(0).getSection().getId();
 
         assertNotNull(courseId);
         assertNotNull(lastVisitedModuleId);
@@ -141,7 +134,7 @@ public class ApiTests extends HttpBaseTestCase {
             for (Entry<String, ArrayList<VideoResponseModel>> se : entry.getValue().sections.entrySet()) {
                 print("------------" + se.getKey() + "------------");
                 for (VideoResponseModel v : se.getValue()) {
-                    print(v.getSummary().getName());
+                    print(v.getSummary().getDisplayName());
                 }
             }
         }

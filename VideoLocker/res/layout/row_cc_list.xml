@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.edx.mobile.view.custom.ETextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row_cc_lang"
     style="@style/regular_grey_text"
     android:layout_width="match_parent"
     android:layout_height="@dimen/row_height_cc_option"
-    android:gravity="center_vertical|left"
-    android:padding="10dp" />
+    android:gravity="center_vertical|left|start"
+    android:padding="10dp"
+    tools:targetApi="17" />

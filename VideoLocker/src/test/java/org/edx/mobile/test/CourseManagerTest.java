@@ -1,26 +1,31 @@
 package org.edx.mobile.test;
 
-import org.edx.mobile.model.ICourse;
-import org.edx.mobile.model.ISequential;
-import org.edx.mobile.model.mocked.MockedCourseOutlineProvider;
+import org.edx.mobile.model.course.CourseStructureJsonHandler;
+import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.services.CourseManager;
+import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertTrue;
+import java.io.File;
 
 /**
- * Created by hanning on 4/29/15.
- */
+ * TODO - we will create a separate PR for course manager unit test.
+  */
 public class CourseManagerTest {
+    CourseStructureV1Model model;
+    @Before
+    public  void setUp() throws Exception {
+        //FIXME - there is a bug in android studio [up to version 1.2], test resource is not copied
+        //we need to find a workaround to load resource.
+        java.net.URL url = CourseManagerTest.class.getResource("course_outline.txt");
+        String jsonString = new java.util.Scanner(new File(url.toURI()),"UTF8").useDelimiter("\\Z").next();
+         model = new CourseStructureJsonHandler().processInput(jsonString);
+    }
 
     @Test
-    public void testGetDisplayVersionName() throws Exception {
-        MockedCourseOutlineProvider provider = new MockedCourseOutlineProvider();
-        String courseOutline = provider.getCourseOutline();
-        ICourse course = CourseManager.fromEnrollment(courseOutline, "a-course-id");
-        assertTrue("get chapters", course.getChapters().size() != 0 );
-        ISequential sequential = (ISequential) course.getChapters().get(0);
-        assertTrue("get getVerticals", sequential.getVerticals().size() != 0 );
+    public void testNormalizeCourseStructure() throws Exception {
+        IBlock block = CourseManager.normalizeCourseStructure(model, "");
     }
 
 

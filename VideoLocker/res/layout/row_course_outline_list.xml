@@ -1,16 +1,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+  <LinearLayout
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/rectangle_with_bottom_border"
+    android:background="@android:color/transparent"
     android:gravity="center_vertical"
     android:layout_marginStart="16dp"
     android:layout_marginLeft="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp" >
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    tools:targetApi="17" >
 
     <TextView
         android:id="@+id/row_type"
@@ -28,7 +34,8 @@
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp">
+        android:layout_marginStart="2dp"
+        tools:targetApi="17">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/row_title"
@@ -38,11 +45,13 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
+            android:textDirection="locale"
             tools:text="@string/chapter_name"
             android:textSize="16sp" />
 
         <LinearLayout
             style="@style/regular_grey_text"
+            android:id="@+id/row_subtitle_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -55,6 +64,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 tools:text="@string/chapter_name"
+                android:textDirection="locale"
                 android:visibility="gone"
                 android:textSize="14sp" />
 
@@ -78,7 +88,8 @@
         android:padding="10dp"
         android:layout_marginRight="2dp"
         android:layout_marginEnd="2dp"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        tools:targetApi="17" >
 
         <TextView
             android:id="@+id/bulk_download"
@@ -104,6 +115,16 @@
         tools:text="0"
         android:visibility="gone"
         android:textColor="@color/grey_text_mycourse"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        tools:targetApi="17" />
 
+    </LinearLayout>
+
+    <View
+        android:id="@+id/row_half_separator"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
+        android:background="@color/grey_3"
+        android:layout_height="1dp"/>
 </LinearLayout>

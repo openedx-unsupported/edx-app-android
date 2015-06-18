@@ -19,24 +19,26 @@
             style="@style/regular_white_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
+            android:gravity="left|start|center_vertical"
             android:inputType="textCapWords"
             android:maxWidth="200dp"
             android:paddingTop="10dp"
             android:textSize="20sp"
-            tools:text="Username" />
+            tools:text="Username"
+            tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/email_tv"
             style="@style/regular_white_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
+            android:gravity="left|start"
             android:maxWidth="200dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:textSize="13sp"
-            tools:text="user@domain.com" />
+            tools:text="user@domain.com"
+            tools:targetApi="17" />
     </LinearLayout>
 
     <LinearLayout

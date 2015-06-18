@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/setting_popup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,9 +12,10 @@
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="left|center_vertical"
+        android:gravity="left|start|center_vertical"
         android:padding="10dp"
         android:text="@string/lbl_closed_caption"
-        android:background="@drawable/white_rounded_selector" />
+        android:background="@drawable/white_rounded_selector"
+        tools:targetApi="17" />
 
 </LinearLayout>

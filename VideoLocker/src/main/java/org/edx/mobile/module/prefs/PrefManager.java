@@ -10,6 +10,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Sha1Util;
 
@@ -181,6 +182,8 @@ public class PrefManager {
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
         put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
+        //assessment webview related session_id
+        EdxCookieManager.getSharedInstance().clearWebWiewCookie();
     }
 
     /**
@@ -293,10 +296,17 @@ public class PrefManager {
         }
 
         public boolean isUserPrefVideoModel(){
-            return getBoolean(Key.UserPrefVideoModel, false);
+            //default is video only mode
+            return getBoolean(Key.UserPrefVideoModel, true);
         }
         public void setUserPrefVideoModel(boolean enabled){
             super.put(Key.UserPrefVideoModel, enabled);
+        }
+        public long getLastCourseStructureFetch(String courseId){
+            return getLong(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId);
+        }
+        public void setLastCourseStructureFetch(String courseId, long timestamp){
+            super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
         }
     }
     /**
@@ -320,6 +330,9 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
+        public static final String SESSION_ID = "sessionid";
+        public static final String AUTH_ASSESSMENT_SESSION_ID = "assessment_session_id";
+        public static final String AUTH_ASSESSMENT_SESSION_EXPIRATION = "assessment_session_expiration";
         //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
@@ -343,6 +356,7 @@ public class PrefManager {
         public static final String AppUpgradeNeedSyncWithParse = "AppUpgradeNeedSyncWithParse";
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
         public static final String UserPrefVideoModel = "UserPrefVideoModel";
+        public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
 
 
 

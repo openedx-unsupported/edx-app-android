@@ -7,6 +7,7 @@ import org.edx.mobile.model.api.SectionEntry;
 
 import java.util.Map;
 
+@Deprecated
 public abstract class GetCourseHierarchyTask extends
 Task<Map<String, SectionEntry>> {
 

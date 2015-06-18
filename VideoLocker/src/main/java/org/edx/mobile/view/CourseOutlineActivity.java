@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.services.CourseManager;
 
 
 /**
@@ -25,6 +27,14 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     }
 
+    @Override
+    protected String getUrlForWebView() {
+        if ( courseData == null )
+            return "";
+        CourseComponent courseComponent = CourseManager.getSharedInstance().getComponentById(courseData.getCourse().getId(), courseComponentId);
+        return courseComponent == null ? "" : courseComponent.getWebUrl();
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -37,6 +47,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                 if (courseData != null) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+                    bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
                     fragment.setArguments(bundle);
                 }
                 //this activity will only ever hold this lone fragment, so we
@@ -62,4 +73,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
            if( fragment != null )
                fragment.reloadList();
     }
+
+
 }

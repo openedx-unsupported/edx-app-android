@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.newrelic.agent.android.NewRelic;
@@ -17,6 +18,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
@@ -33,7 +35,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * This class initializes the modules of the app based on the configuration.
  */
-public class MainApplication extends Application{
+public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
     public static final boolean Q4_ASSESSMENT_FLAG = false;
     //FIXME - temporary solution
@@ -98,6 +100,7 @@ public class MainApplication extends Application{
             com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookConfig().getFacebookAppId());
         }
 
+        boolean needVersionUpgrade = needVersionUpgrade(this);
         // initialize Parse notification
         // it maybe good to support multiple notification providers running
         // at the same time, as it is less like to be the case in the future,
@@ -108,13 +111,20 @@ public class MainApplication extends Application{
             if ( parseNotificationConfig.isEnabled() ) {
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
-                tryToUpdateParseForAppUpgrade(this);
+                tryToUpdateParseForAppUpgrade(this, needVersionUpgrade);
             }
         }
 
+        if( needVersionUpgrade ) {
+            // try repair of download data if app version is updated
+            new Storage(this).repairDownloadCompletionData();
 
-        // try repair of download data if app version is updated
-        new Storage(this).repairDownloadCompletionData();
+            //try to clear browser cache.
+            //there is an potential issue related to the 301 redirection.
+            //https://openedx.atlassian.net/browse/MA-794
+            EdxCookieManager.getSharedInstance().clearWebViewCache(this);
+        }
+
 
         //TODO - ideally this should belong to SegmentFactory, but code refactoring is need because of the way it constructs new instances
         EventBus.getDefault().registerSticky(this);
@@ -162,18 +172,27 @@ public class MainApplication extends Application{
         }
     }
 
+    private boolean needVersionUpgrade(Context context){
+        boolean needVersionUpgrade = false;
+        PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
+        Long previousVersion = pmanager.getAppVersionCode();
+        int  curVersion = PropertyUtil.getManifestVersionCode(context);
+        if (  previousVersion < curVersion ){
+            needVersionUpgrade = true;
+            pmanager.setAppVersionCode(curVersion);
+        }
+        return needVersionUpgrade;
+    }
 
     /**
      * if app is launched from upgrading, we need to resync with parse server.
      * @param context
      */
-    private void tryToUpdateParseForAppUpgrade(Context context){
+    private void tryToUpdateParseForAppUpgrade(Context context, boolean needVersionUpgrade){
 
         PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
-        Long previousVersion = pmanager.getAppVersionCode();
         boolean hadNotification = pmanager.isNotificationEnabled();
-        int  curVersion = PropertyUtil.getManifestVersionCode(context);
-        if (  previousVersion < curVersion ){
+        if ( needVersionUpgrade ){
             if ( hadNotification ) {
                 pmanager.setAppUpgradeNeedSyncWithParse(true);
             }
@@ -202,8 +221,6 @@ public class MainApplication extends Application{
                 logger.error(ex);
             }
         }
-
-        pmanager.setAppVersionCode(curVersion);
         pmanager.setNotificationEnabled(true);
     }
 

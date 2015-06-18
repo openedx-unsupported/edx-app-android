@@ -85,8 +85,9 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.phrase:phrase:1.0.3'
-    compile 'com.android.support:support-v4:21.0.0'
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:support-v4:21.1.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
+    compile 'com.android.support:multidex:1.0.0'
 
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
@@ -105,6 +106,18 @@ dependencies {
      testCompile ("org.mockito:mockito-core:1.9.5"){
          exclude group: 'org.hamcrest'
       }
+     testCompile "org.robolectric:robolectric:3.0-rc3"
+     testCompile "org.robolectric:shadows-support-v4:3.0-rc3"
+     testCompile "org.robolectric:shadows-multidex:3.0-rc3"
+    /**
+     * Adding the jars statically because the assertj-android
+     * module is only available in Maven Central as an AAR,
+     * and there is a bug in Android Studio where it doesn't
+     * allow compiling AARs for unit testing.
+     * http://b.android.com/66841
+     * https://github.com/square/assertj-android/issues/110
+     */
+     testCompile fileTree(dir: 'libs/test', include: '*.jar')
 
     androidTestCompile("org.mockito:mockito-core:1.9.5") {
         exclude group: 'org.hamcrest'
@@ -149,6 +162,9 @@ android {
         testInstrumentationRunner 'org.edx.mobile.test.edXInstrumentRunner'
         testHandleProfiling true
         testFunctionalTest true
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     sourceSets {
         main {
@@ -208,7 +224,7 @@ android {
         exclude 'LICENSE.txt'
         exclude 'APK LICENSE.txt'
     }
- 
+
 }
 
 

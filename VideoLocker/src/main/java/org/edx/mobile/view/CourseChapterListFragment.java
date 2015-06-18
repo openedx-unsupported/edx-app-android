@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
@@ -27,6 +26,7 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
@@ -40,9 +40,11 @@ import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
 import org.edx.mobile.view.dialog.ProgressDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Deprecated
 public class CourseChapterListFragment extends CourseDetailBaseFragment
     implements NetworkObserver, LastAccessManager.LastAccessManagerCallback, DownloadManager.DownloadManagerCallback {
 
@@ -192,7 +194,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                 @Override
                 public void download(final SectionEntry model) {
                      DownloadManager.getSharedInstance().downloadVideos(
-                         model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
+                         (List)model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
                 }
             };
         }
@@ -404,7 +406,12 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
     }
 
     @Override
-    public synchronized void showProgressDialog() {
+    public synchronized void showProgressDialog(int numDownloads) {
+        // it is better to show progress before executing the task
+        // this ensures task will hide the progress after it is shown
+        if ( numDownloads < 3 )
+            return;
+
         if (progressDialog == null) {
             progressDialog = ProgressDialogFragment.newInstance();
         }
@@ -412,7 +419,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
             try {
                 if ( !progressDialog.isVisible() && isActivityStarted) {
                     final String tag = "progress_dialog_chapter";
-                    
+
                     progressDialog.dismiss();
                     Fragment f = getFragmentManager().findFragmentByTag(tag);
                     if (f != null) {
@@ -494,12 +501,13 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
 
     @Override
     public void showLastAccessedView(String lastAccessedSubSectionId, final String courseId, final View v) {
+        this.lastAccessed_subSectionId = lastAccessedSubSectionId;
         if (v != null && isActivityStarted()) {
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessed_subSectionId!=null){
-                        final Api api = new Api(getActivity());
-                        final VideoResponseModel videoModel = api.getSubsectionById(courseId,
+
+                        final VideoResponseModel videoModel = ServiceManager.getInstance().getSubsectionById(courseId,
                             lastAccessed_subSectionId);
                         if (videoModel != null) {
                             LinearLayout lastAccessedLayout = (LinearLayout) v
@@ -509,7 +517,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                             TextView lastAccessedVideoTv = (TextView) v
                                 .findViewById(R.id.last_viewed_tv);
                             lastAccessedVideoTv.setText(" "
-                                + videoModel.getSection().name);
+                                + videoModel.getSection().getName());
 
                             lastAccessedLayout.setOnClickListener(new OnClickListener() {
                                 @Override
@@ -523,9 +531,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                                         EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse)
                                             bundle.getSerializable(Router.EXTRA_ENROLLMENT);
                                         try {
-                                            LectureModel lecture = api.getLecture(courseId,
-                                                videoModel.getChapterName(),
-                                                videoModel.getSequentialName());
+                                            LectureModel lecture = ServiceManager.getInstance().getLecture(courseId,
+                                                videoModel.getChapterName(), videoModel.getChapter().getId(),
+                                                videoModel.getSequentialName(), videoModel.getSection().getId());
                                             SectionEntry chapter = new SectionEntry();
                                             chapter.chapter = videoModel.getChapterName();
                                             lecture.chapter = chapter;

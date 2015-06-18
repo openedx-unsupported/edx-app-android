@@ -7,10 +7,8 @@ import android.os.Bundle;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.LogoutEvent;
-import org.edx.mobile.model.ICourse;
-import org.edx.mobile.model.ISequential;
-import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.notification.UserNotificationManager;
@@ -30,7 +28,7 @@ public class Router {
     public static final String EXTRA_ENROLLMENT = "enrollment";
     public static final String EXTRA_SEQUENTIAL = "sequential";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
-    public static final String EXTRA_COURSE = "course";
+    public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
     public static final String EXTRA_COURSE_DATA = "course_data";
     static private Router sInstance;
 
@@ -153,39 +151,27 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
-    public void showCourseChapterOutline(Activity activity, EnrolledCoursesResponse model ) {
+    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, String courseComponentId) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        //TODO - what's the most suitable FLAG?
+       // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
     }
 
-    public void showCourseSequentialDetail(Activity activity, EnrolledCoursesResponse model,
-                                           ICourse course,
-                                           ISequential sequential ) {
 
-        Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putSerializable(EXTRA_COURSE, course);
-        courseBundle.putSerializable(EXTRA_SEQUENTIAL, sequential);
-
-        Intent courseDetail = new Intent(activity, CourseSequentialOutlineActivity.class);
-        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
-    }
 
     public void showCourseUnitDetail(Activity activity, EnrolledCoursesResponse model,
-                                     ICourse course, ISequential sequential, IUnit unit ) {
+                                     String courseId,  CourseComponent unit ) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
-        courseBundle.putSerializable(EXTRA_COURSE, course);
-        courseBundle.putSerializable(EXTRA_SEQUENTIAL, sequential);
+        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseId);
         courseBundle.putSerializable(EXTRA_COURSE_UNIT, unit);
 
         Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);

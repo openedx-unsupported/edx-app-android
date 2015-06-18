@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chapter_row_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_with_bottom_border"
+    android:gravity="center_vertical"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:orientation="horizontal"
+    tools:targetApi="17" >
+
+    <TextView
+        android:id="@+id/row_type"
+        android:textSize="24dp"
+        style="@style/light_grey_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"  />
+
+    <LinearLayout
+        style="@style/regular_grey_text"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        tools:targetApi="17">
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/row_title"
+            style="@style/regular_grey_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text=""
+            android:textDirection="locale"
+            android:textSize="16sp" />
+
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/row_subtitle"
+            style="@style/light_grey_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            tools:text=""
+            android:textDirection="locale"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/right_arrow"
+        android:textSize="24dp"
+        style="@style/light_grey_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"  />
+
+</LinearLayout>

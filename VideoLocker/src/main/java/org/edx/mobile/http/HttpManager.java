@@ -11,12 +11,17 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -24,7 +29,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.edx.mobile.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +54,7 @@ public class HttpManager {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public String get(String urlWithAppendedParams, Bundle headers)
+    public HttpResult get(String urlWithAppendedParams, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
         DefaultHttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -79,8 +86,10 @@ public class HttpManager {
         // String response =
         // EntityUtils.toString(client.execute(get).getEntity(), "UTF-8");
         client.getConnectionManager().shutdown();
-
-        return strRes;
+        HttpResult result = new HttpResult();
+        result.body = strRes;
+        result.statusCode = response.getStatusLine().getStatusCode();
+        return result;
     }
 
     /**
@@ -291,7 +300,7 @@ public class HttpManager {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public org.apache.http.Header getRequestHeader(String url)
+    public org.apache.http.Header getResponseHeader(String url, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
         HttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -299,14 +308,60 @@ public class HttpManager {
 
         HttpGet get = new HttpGet(url);
 
+        // set request headers
+        if (headers != null) {
+            for (String key : headers.keySet()) {
+                get.addHeader(key, headers.getString(key));
+            }
+        }
+
         HttpResponse response = client.execute(get);
         org.apache.http.Header header=null;
         if(response.containsHeader("Set-Cookie")){
             header = response.getFirstHeader("Set-Cookie");
         }
-        
         client.getConnectionManager().shutdown();
 
         return header;
+    }
+
+    public org.apache.http.Header getResponseHeader(String url)
+        throws ParseException, ClientProtocolException, IOException {
+        return getResponseHeader(url, null);
+    }
+
+    public List<Cookie> getCookies(String url, Bundle headers, boolean isGet)
+        throws ParseException, ClientProtocolException, IOException {
+        HttpClient client = new DefaultHttpClient();
+        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+            HttpVersion.HTTP_1_1);
+
+        CookieStore cookieStore = new BasicCookieStore();
+        HttpContext localContext = new BasicHttpContext();
+        // Bind custom cookie store to the local context
+        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+        HttpRequestBase get = isGet ? new HttpGet(url) : new HttpPost(url);
+
+        // set request headers
+        if (headers != null) {
+            for (String key : headers.keySet()) {
+                get.addHeader(key, headers.getString(key));
+            }
+        }
+        // Pass local context as a parameter
+        try {
+            client.execute(get, localContext);
+        }catch (Exception ex){
+            logger.error(ex);
+        }
+        client.getConnectionManager().shutdown();
+
+        return cookieStore.getCookies();
+    }
+
+    public static class HttpResult {
+        public String body;
+        public int statusCode;
     }
 }

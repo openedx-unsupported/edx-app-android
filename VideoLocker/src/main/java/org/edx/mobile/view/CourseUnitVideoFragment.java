@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,12 +24,13 @@ import android.widget.Toast;
 import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.IUnit;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
@@ -38,7 +41,9 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.CircularProgressTask;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -58,8 +63,12 @@ import java.util.Map;
  */
 public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCallback, PageViewStateCallback {
 
+    public static interface HasComponent {
+        CourseComponent getComponent();
+    }
+
     protected final Logger logger = new Logger(getClass().getName());
-    IUnit unit;
+    VideoBlockModel unit;
     private PlayerFragment playerFragment;
     private boolean isLandscape = false;
     private boolean myVideosFlag = false;
@@ -77,11 +86,14 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     private IStorage storage;
     private Runnable playPending;
     private final Handler playHandler = new Handler();
+    private View messageContainer;
+    private HasComponent hasComponentCallback;
+
 
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitVideoFragment newInstance(IUnit unit) {
+    static CourseUnitVideoFragment newInstance(VideoBlockModel unit) {
         CourseUnitVideoFragment f = new CourseUnitVideoFragment();
 
         // Supply num input as an argument.
@@ -101,7 +113,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         setRetainInstance(true);
         api = new Api(getActivity());
         unit = getArguments() == null ? null :
-            (IUnit) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+            (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
         storage = new Storage(getActivity());
     }
 
@@ -113,7 +125,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
-        //TODO - populate view here
+        messageContainer = v.findViewById(R.id.message_container);
+        TextView icon = (TextView)v.findViewById(R.id.empty_document_icon);
+        Iconify.setIcon(icon, Iconify.IconValue.fa_file_text_o);
         return v;
     }
 
@@ -179,6 +193,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         if (playerFragment == null) {
 
             playerFragment = new PlayerFragment();
+            playerFragment.setInViewPager(true);
             try{
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -193,16 +208,58 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     public void onResume() {
         super.onResume();
-        try {
-            if (playerFragment != null) {
-                playerFragment.setCallback(this);
+        if ( hasComponentCallback != null ){
+            CourseComponent component = hasComponentCallback.getComponent();
+            if (component != null && component.equals(unit)){
+                try {
+                    if (playerFragment != null) {
+                        playerFragment.setCallback(this);
+                        playerFragment.handleOnResume();
+                    }
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
             }
-        } catch (Exception ex) {
-            logger.error(ex);
         }
     }
 
-    private void checkVideoStatus(IUnit unit) {
+    public void onPause() {
+        super.onPause();
+    }
+
+    //we use user visible hint, not onResume() for video
+    //as the original playerfragment code use onResume to
+    //control the lifecycle of the player.
+    //the problem with viewpager is that it loads this fragment
+    //and calls onResume even it is not visible.
+    //which breaks the normal behavior of activity/fragment
+    //lifecycle.
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            try {
+                if (playerFragment != null) {
+                    playerFragment.setCallback(this);
+                    playerFragment.handleOnResume();
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
+        }else{
+            // fragment is no longer visible
+            try {
+                if (playerFragment != null) {
+                    playerFragment.setCallback(null);
+                    playerFragment.handleOnPause();
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
+        }
+    }
+
+    private void checkVideoStatus(VideoBlockModel unit) {
         try {
             final DownloadEntry entry = unit.getDownloadEntry(storage);
             if ( entry == null )
@@ -341,8 +398,8 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                 .username, video.eid);
             PrefManager prefManager = new PrefManager(getActivity(), prefName);
-            VideoResponseModel vrm = api.getVideoById(video.eid, video.videoId);
-            prefManager.putLastAccessedSubsection(vrm.getSection().id, false);
+            VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(video.eid, video.videoId);
+            prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
         } catch (Exception e) {
             logger.error(e);
         }
@@ -391,9 +448,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     private TranscriptModel getTranscriptModel(DownloadEntry video){
         TranscriptModel transcript = null;
-        if(unit!=null && unit.getVideoResponseModel() != null &&
-            unit.getVideoResponseModel().getSummary() != null) {
-            transcript = unit.getVideoResponseModel().getSummary().getTranscripts();
+        if(unit!=null && unit.getData() != null &&
+            unit.getData().transcripts != null) {
+            transcript = unit.getData().transcripts;
         }
         if ( transcript == null ) {
             Api api = new Api(getActivity());
@@ -498,7 +555,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         super.onStop();
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
+
         if(myVideosFlag){
+        }
+        try {
+            if (playerFragment != null) {
+                playerFragment.onStop();
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
     }
 
@@ -585,7 +650,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     @Override
     public void onPlaybackStarted() {
-
+         markPlaying();
     }
 
     public void onPlaybackComplete() {
@@ -606,21 +671,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             logger.error(ex);
         }
     }
-
-
-
-    private void finishActivity() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(isActivityStarted){
-                    getActivity().finish();
-                }
-            }
-        }, 300);
-    }
-
-
 
     public void startDownload(final DownloadEntry downloadEntry, final ProgressWheel progressWheel) {
         try{
@@ -713,31 +763,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         }
     }
 
-    public View.OnClickListener getNextListener(){
-
-        return null;
-    }
-
-    public View.OnClickListener getPreviousListener(){
-
-        return null;
-    }
-
-    private class NextClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
-    private class PreviousClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
-
-
 
     private DataCallback<Integer> watchedStateCallback = new DataCallback<Integer>() {
         @Override
@@ -781,9 +806,7 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
 
     @Override
     public void onPageDisappear() {
-         if( playerFragment != null ){
-             playerFragment.freezePlayer();
-         }
+
     }
 
     /**
@@ -794,6 +817,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         super.onConfigurationChanged(newConfig);
         //TODO - should we use load different layout file?
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            messageContainer.setVisibility(View.GONE);
+            if (Build.VERSION.SDK_INT < 16) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            } else {
+                View decorView = getActivity().getWindow().getDecorView();
+                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+                decorView.setSystemUiVisibility(uiOptions);
+            }
 
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
@@ -804,6 +836,15 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
                 playerContainer.requestLayout();
             }
         } else {
+            messageContainer.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT < 16) {
+                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            } else {
+                View decorView = getActivity().getWindow().getDecorView();
+                decorView.setSystemUiVisibility(View.VISIBLE);
+            }
+
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -815,5 +856,10 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
                 playerContainer.requestLayout();
             }
         }
+    }
+
+    //we need to know the current component of the container
+    public void setHasComponentCallback(HasComponent callback){
+        hasComponentCallback = callback;
     }
 }

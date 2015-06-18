@@ -5,24 +5,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.PopupMenu;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.DownloadManager;
 import org.edx.mobile.services.LastAccessManager;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.UiUtil;
 
 /**
  * Created by hanning on 5/15/15.
@@ -34,14 +29,11 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     private final String modeVideoOnly = "mode_video_only";
 
     private boolean isFetchingLastAccessed;
-    private Handler mHideHandler = new Handler();
-
-    protected boolean videoOnlyMode = false;
+    private Handler mHandler = new Handler();
 
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        this.videoOnlyMode = new PrefManager.UserPrefManager(this).isUserPrefVideoModel();
     }
 
 
@@ -51,12 +43,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
         if ( courseData != null && courseData.getCourse() != null ){
             setTitle( courseData.getCourse().getName() );
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
-        }
-
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(CourseVideoListActivity.this);
-        boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-        if ( currentVideoMode != videoOnlyMode ){
-            updateListUI();
         }
     }
 
@@ -77,11 +63,10 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessedSubSectionId!=null){
-                        final Api api = new Api(this);
-                        final VideoResponseModel videoModel = api.getSubsectionById(courseId,
+                        final VideoResponseModel videoModel = ServiceManager.getInstance().getSubsectionById(courseId,
                             lastAccessedSubSectionId);
                         if (videoModel != null) {
-                            super.showLastAccessedView(null, " " + videoModel.getSection().name, new View.OnClickListener() {
+                            super.showLastAccessedView(null, " " + videoModel.getSection().getName(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //This has been used so that if user clicks continuously on the screen,
@@ -90,9 +75,9 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
                                         try {
-                                            LectureModel lecture = api.getLecture(courseId,
-                                                videoModel.getChapterName(),
-                                                videoModel.getSequentialName());
+                                            LectureModel lecture = ServiceManager.getInstance().getLecture(courseId,
+                                                videoModel.getChapterName(), videoModel.getChapter().getId(),
+                                                videoModel.getSequentialName(), videoModel.getSection().getId());
                                             SectionEntry chapter = new SectionEntry();
                                             chapter.chapter = videoModel.getChapterName();
                                             lecture.chapter = chapter;
@@ -127,77 +112,48 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
 
-        if (userPrefManager.isUserPrefVideoModel()) {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_film)
-                    .actionBarSize());
-        } else {
-            menu.findItem(R.id.action_change_mode).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_list)
-                    .actionBarSize());
-        }
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.action_change_mode:
-                changeMode();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    protected void modeChanged(){
+        updateListUI();
     }
 
-    public void changeMode(){
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(this, this.progressWheel);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-            .inflate(R.menu.change_mode, popup.getMenu());
-        MenuItem menuItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+    @Override
+    protected void updateDownloadProgress(final int progressPercent){
 
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                PrefManager.UserPrefManager userPrefManager =
-                    new PrefManager.UserPrefManager(CourseVideoListActivity.this);
-                boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-                boolean selectedVideoMode = modeVideoOnly.equals( item.getTitleCondensed() );
-                if ( currentVideoMode == selectedVideoMode )
-                    return true;
-
-                userPrefManager.setUserPrefVideoModel(selectedVideoMode);
-                updateListUI();
-                invalidateOptionsMenu();
-                return true;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (progressPercent < 100) {
+                    downloadProgressBar.setVisibility(View.VISIBLE);
+                    mHandler.removeCallbacks(mHideRunnable);
+                    if (downloadIndicator.getAnimation() == null) {
+                        downloadIndicator.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(CourseVideoListActivity.this, R.anim.rotate);
+                        downloadIndicator.startAnimation(animation);
+                    }
+                } else { //progressPercent == 100
+                    downloadIndicator.clearAnimation();
+                    downloadIndicator.setVisibility(View.INVISIBLE);
+                    mHandler.postDelayed(mHideRunnable, getResources().getInteger(R.integer.message_delay));
+                }
             }
-        });
-
-        popup.show(); //showing popup menu
-
+        }, 500);
     }
 
-
-
     @Override
-    protected void updateDownloadProgress(int progressPercent){
-        if ( progressPercent == 0 ) {
-            setVisibilityForDownloadProgressView(false);
-        } else if ( progressPercent < 100 ){
-            setVisibilityForDownloadProgressView(true);
-            mHideHandler.removeCallbacks(mHideRunnable);
-            downloadIndicator.setVisibility(View.VISIBLE);
-            downloadIndicator.setRotation( progressPercent * 360 /100 );
-        } else { //progressPercent == 100
-            downloadIndicator.setVisibility(View.INVISIBLE);
-            mHideHandler.postDelayed(mHideRunnable,
-                getResources().getInteger(R.integer.message_delay));
+    protected void setVisibilityForDownloadProgressView(boolean show){
+         boolean visible = downloadProgressBar.getVisibility() == View.VISIBLE;
+        if (visible == show )
+            return; //do nothing
+
+        if ( show ){
+            //TODO - we pass a value less than 100 to indicate it is downloading.
+            updateDownloadProgress(0);
+        } else {
+            updateDownloadProgress(100);
         }
     }
 
@@ -205,9 +161,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     public void onDownloadSuccess(Long result) {
         try {
             updateListUI();
-            //TODO - ideally it should merge to message view into one.
-            String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
-            UiUtil.showMessage(findViewById(R.id.drawer_layout), content);
         }catch(Exception e){
             logger.error(e);
         }
@@ -218,7 +171,8 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showProgressDialog(int numDownloads) {
+        setVisibilityForDownloadProgressView(true);
     }
 
     @Override
@@ -228,9 +182,33 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     private Runnable mHideRunnable = new Runnable() {
         @Override
         public void run() {
-            setVisibilityForDownloadProgressView(false);
+            downloadProgressBar.setVisibility(  View.GONE );
         }
     };
+
+    //TODO - legacy code use one minute tick loop to sync some UI status, like
+    //total download progress. this is a simple approach, but may not be the
+    //best one.
+    protected void onTick() {
+        // this is a per second callback
+        try {
+                if(AppConstants.offline_flag){
+                    setVisibilityForDownloadProgressView(false);
+                }else{
+                    if(db!=null){
+                        boolean downloading = db.isAnyVideoDownloading(null);
+                        if(!downloading){
+                            setVisibilityForDownloadProgressView(false);
+                        }else{
+                            storage.getAverageDownloadProgress(averageProgressCallback);
+                        }
+                    }   //store not null check
+                }
+            }  catch(Exception ex) {
+            logger.error(ex);
+        }
+    }
+
 }
 
 

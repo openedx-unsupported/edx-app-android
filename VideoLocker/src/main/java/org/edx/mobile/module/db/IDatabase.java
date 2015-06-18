@@ -381,4 +381,16 @@ public interface IDatabase {
      * @param userName
      */
     public void setUserName(String userName);
+
+    /**
+     * update assessment unit access record
+     */
+    public Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited);
+
+    /**
+     * get assessment unit access status
+     */
+    public boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
+
+
 }

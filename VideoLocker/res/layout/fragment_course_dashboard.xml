@@ -1,68 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/grey_act_background"
                 android:orientation="vertical" >
 
 
-    <org.edx.mobile.view.custom.CourseImageHeader
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/header_image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="144dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:scaleType="centerCrop"
-        android:background="@color/grey_4" />
+        android:scaleType="fitXY"
+        android:background="@drawable/edx_map_login" />
 
-    <RelativeLayout
-        android:id="@+id/course_dashboard_container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@color/white">
 
-       <Button
-           android:id="@+id/course_videos_btn"
-           android:layout_width="match_parent"
-           android:layout_height="120dp"
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bold_text"
+            android:textSize="20sp"
+            android:paddingBottom="6dp"
+            tools:text="test course" />
 
-           android:text="Watch Videos"
-           />
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_extras"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/regular_text"
+            android:textSize="13sp"
+            android:textAllCaps="true"
+            tools:text="XX | xx | xxxxx" />
 
-        <Button
-            android:id="@+id/course_forum_btn"
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:id="@+id/dashboard_detail"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="Discussions"
-            android:layout_marginTop="16dp"
-            android:layout_below="@+id/course_videos_btn"
-            />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/course_handout_btn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="Handouts"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp"
-            android:layout_below="@+id/course_forum_btn"
-            />
+        </LinearLayout>
 
-
-
-        <Button
-            android:id="@+id/course_announcement_btn"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="Announcements"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="16dp"
-            android:layout_below="@+id/course_forum_btn"
-            />
-
-    </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>
 

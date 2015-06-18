@@ -16,6 +16,7 @@
 
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -32,20 +33,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
-            android:text="@string/app_name" />
+            android:layout_marginEnd="40dp"
+            android:text="@string/app_name"
+            tools:targetApi="17" />
 
         <ImageButton
             android:id="@+id/lms_btn"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="14dp"
+            android:layout_marginEnd="14dp"
             android:background="@drawable/ic_lms_selector"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            tools:targetApi="17" />
 
         <ImageButton
             android:id="@+id/share_btn"
@@ -53,9 +60,12 @@
             android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/lms_btn"
+            android:layout_toStartOf="@id/lms_btn"
             android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/ic_facebookdiscuss"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            tools:targetApi="17" />
 
     </RelativeLayout>
 
@@ -94,16 +104,21 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/ic_rewind_button_selector"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ic_media_rewind_30_selector"
+                android:src="@drawable/ic_media_rewind_selector"
+                android:scaleType="fitXY"
                 android:contentDescription="@string/app_name"
-                android:padding="3dp" />
+                tools:targetApi="17" />
 
             <SeekBar
                 android:id="@+id/mediacontroller_progress"
                 android:layout_width="0dip"
                 android:layout_height="25dp"
                 android:layout_marginRight="6dp"
+                android:layout_marginEnd="6dp"
                 android:layout_weight="1"
                 android:background="@drawable/ic_seek_background"
                 android:max="100"
@@ -115,7 +130,8 @@
                 android:progressDrawable="@drawable/player_seekbar_progress"
                 android:secondaryProgress="70"
                 android:thumb="@drawable/player_seekbar_thumb"
-                android:thumbOffset="0dp" />
+                android:thumbOffset="0dp"
+                tools:targetApi="17" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/time_current"
@@ -124,8 +140,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingLeft="4dip"
+                android:paddingStart="4dip"
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
                 android:paddingTop="4dip"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:targetApi="17"/>
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/time_slash"
@@ -144,9 +164,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingRight="4dip"
+                android:paddingEnd="4dip"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
                 android:paddingTop="4dip"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:targetApi="17" />
 
             <ImageButton
                 android:id="@+id/settings"
@@ -193,9 +217,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_previous_button_selector"
             android:contentDescription="@string/app_name"
+            tools:targetApi="17"
              />
 
         <ImageButton
@@ -203,9 +229,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_next_button_selector"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"
+            tools:targetApi="17" />
 
     </RelativeLayout>
 

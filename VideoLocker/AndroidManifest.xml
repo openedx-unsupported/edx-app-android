@@ -71,6 +71,7 @@
 
     <application
         android:allowBackup="true"
+        android:supportsRtl="false"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme"
@@ -125,13 +126,6 @@
         </activity>
         <activity
             android:name="org.edx.mobile.view.CourseOutlineActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
-
-        <activity
-            android:name=".view.CourseSequentialOutlineActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             >

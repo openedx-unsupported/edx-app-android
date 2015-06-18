@@ -42,7 +42,7 @@ class IDatabaseBaseImpl implements Runnable {
         
         // mark queue not being processed
         isQueueProcessing = false;
-        logger.debug("All database operations completed, queue is empty");
+       // logger.debug("All database operations completed, queue is empty");
     }
     
     /**

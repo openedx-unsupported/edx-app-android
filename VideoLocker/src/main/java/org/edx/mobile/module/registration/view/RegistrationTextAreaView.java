@@ -21,6 +21,6 @@ class RegistrationTextAreaView extends RegistrationEditTextView {
         mInputView.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         // text should start from the left-top
-        mInputView.setGravity(Gravity.LEFT | Gravity.TOP);
+        mInputView.setGravity(Gravity.START | Gravity.TOP);
     }
 }
