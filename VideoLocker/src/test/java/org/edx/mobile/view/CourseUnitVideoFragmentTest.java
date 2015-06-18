@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Test;
@@ -36,7 +35,7 @@ import static org.junit.Assume.assumeNotNull;
 // The SDK version needs to be lesser than Lollipop because of this
 // issue: https://github.com/robolectric/robolectric/issues/1810
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 19)
+@Config(sdk = 19)
 public class CourseUnitVideoFragmentTest {
     /**
      * Testing initialization

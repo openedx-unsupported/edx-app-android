@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.view.View;
 
-import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -22,7 +20,6 @@ import static org.junit.Assert.*;
 // the demo sandbox to see this Activity, so I'm not writing tests for the
 // adapter interactions yet
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}

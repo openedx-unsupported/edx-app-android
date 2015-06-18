@@ -2,33 +2,27 @@ package org.edx.mobile.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.net.http.AndroidHttpClient;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
-import org.edx.mobile.model.ProgressReport;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,6 +53,7 @@ public class DownloadSpeedService extends Service {
 
     Timer timer = null;
     TimerTask timerTask = null;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -103,98 +98,62 @@ public class DownloadSpeedService extends Service {
 
     private synchronized void performDownload(DownloadDescriptor file) {
 
-        final String url = file.getUrl();
-        final byte[] buffer = new byte[BLOCK_SIZE];
         final long startTime;
 
-        int timeoutMillis = getResources().getInteger(R.integer.speed_test_timeout_in_milliseconds);
-
-        ArrayList<ProgressReport> progress = new ArrayList<ProgressReport>();
-
         try {
-            HttpClient client = new DefaultHttpClient();
-            client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-
-            HttpGet get = new HttpGet(url);
-            AndroidHttpClient.modifyRequestToAcceptGzipResponse(get);
-
-            HttpConnectionParams.setConnectionTimeout(client.getParams(), timeoutMillis);
-
             startTime = System.nanoTime();
-            HttpResponse response = client.execute(get);
 
-            InputStream inputStream = AndroidHttpClient
-                    .getUngzippedContent(response.getEntity());
+            Request request = new Request.Builder()
+                .url(file.getUrl())
+                .build();
 
-            long received = 0;
-            int read;
+            RestApiManager.getInstance(MainApplication.instance()).createSpeedTestClient().newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException throwable) {
+                    logger.error(throwable);
+                    //If it times out, set a low value for download speed
+                    setCurrentDownloadSpeed(0.01f);
+                }
 
-            //use the same buffer each time, we don't care what's in it
-            while( (read = inputStream.read(buffer, 0, BLOCK_SIZE)) != -1 ) {
-
-                //record and report progress
-                received += read;
-                progress.add(new ProgressReport(received, System.nanoTime() - startTime));
-
-            }
-        }catch (ConnectTimeoutException e){
-            logger.error(e);
-
-            //If it times out, set a low value for download speed
-            setCurrentDownloadSpeed(0.01f);
-            sendErrorBroadcast();
-            return;
-
-        } catch (IOException e) {
-            logger.error(e);
-            sendErrorBroadcast();
-            return;
-
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        logger.debug("Download Speed Test Failed");
+                    } else {
+                        long length = response.body().string().length();
+                        double seconds = (System.nanoTime() - startTime) / NS_PER_SEC;
+                        if( seconds != 0 ) {
+                            final float downloadSpeedKps = (float) ((length / seconds) / 1024);
+                            setCurrentDownloadSpeed(downloadSpeedKps);
+                            reportDownloadSpeed(downloadSpeedKps);
+                        }
+                    }
+                }
+            });
+        }catch (Exception ex){
+            logger.error(ex);
         }
 
-        ProgressReport last = progress.get(progress.size() - 1);
-        final double seconds = (double)last.getTime() / NS_PER_SEC;
+    }
 
-        final float downloadSpeedKps = (float)((last.getDownloaded() / seconds) / 1024);
-
-        setCurrentDownloadSpeed(downloadSpeedKps);
-
-        logger.debug(String.format("+++Speed: %.1fKbps   Time: %.2fsec", downloadSpeedKps, seconds));
-
-        Intent intent = new Intent();
-        intent.setAction(ACTION_DOWNLOAD_DONE);
-        intent.putExtra(EXTRA_SECONDS, seconds);
-        intent.putExtra(EXTRA_KBPS, downloadSpeedKps);
-        intent.putParcelableArrayListExtra(EXTRA_REPORT_PROGRESS, progress);
-
+    private void reportDownloadSpeed(float downloadSpeedKps){
         try{
 
             if (NetworkUtil.isConnectedWifi(DownloadSpeedService.this)) {
-                segIO.trackUserConnectionSpeed(ISegment.Values.WIFI, downloadSpeedKps);
+                segIO.trackUserConnectionSpeed(ISegment.Values.WIFI,   downloadSpeedKps);
             } else if (NetworkUtil.isConnectedMobile(DownloadSpeedService.this)) {
-                segIO.trackUserConnectionSpeed(ISegment.Values.CELL_DATA, downloadSpeedKps);
+                segIO.trackUserConnectionSpeed(ISegment.Values.CELL_DATA,   downloadSpeedKps);
             }
 
         }catch(Exception e){
             logger.error(e);
         }
-
-        sendBroadcast(intent);
     }
 
     private void setCurrentDownloadSpeed(float downloadSpeedKps){
         PrefManager manager = new PrefManager(this, PrefManager.Pref.WIFI);
         manager.put(PrefManager.Key.SPEED_TEST_KBPS, downloadSpeedKps);
     }
-
-    private void sendErrorBroadcast(){
-
-        Intent intent = new Intent();
-        intent.setAction(ACTION_DOWNLOAD_DONE);
-        intent.putExtra(EXTRA_ERROR, true);
-        sendBroadcast(intent);
-    }
-
 
     public class SpeedTestHandler extends Handler {
         public SpeedTestHandler(Looper looper) {

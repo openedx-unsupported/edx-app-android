@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -42,6 +41,7 @@ import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
@@ -49,7 +49,6 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -61,11 +60,8 @@ import java.util.Map;
 /**
  *
  */
-public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCallback, PageViewStateCallback {
-
-    public static interface HasComponent {
-        CourseComponent getComponent();
-    }
+public class CourseUnitVideoFragment extends CourseUnitFragment
+    implements IPlayerEventCallback{
 
     protected final Logger logger = new Logger(getClass().getName());
     VideoBlockModel unit;
@@ -87,7 +83,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
-    private HasComponent hasComponentCallback;
 
 
     /**
@@ -204,6 +199,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             }
         }
         checkVideoStatus(unit);
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+            ViewPagerDownloadManager.instance.addTask(this);
+
     }
 
     public void onResume() {
@@ -223,10 +221,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         }
     }
 
-    public void onPause() {
-        super.onPause();
-    }
-
     //we use user visible hint, not onResume() for video
     //as the original playerfragment code use onResume to
     //control the lifecycle of the player.
@@ -237,6 +231,8 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+            return;
         if (isVisibleToUser) {
             try {
                 if (playerFragment != null) {
@@ -258,6 +254,23 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             }
         }
     }
+    @Override
+    public void run() {
+        if ( this.isRemoving() || this.isDetached()){
+            ViewPagerDownloadManager.instance.done(this, false);
+        } else {
+            try {
+                if (playerFragment != null) {
+                    playerFragment.setCallback(this);
+                    playerFragment.handleOnResume();
+                }
+                ViewPagerDownloadManager.instance.done(this, true);
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
+        }
+    }
+
 
     private void checkVideoStatus(VideoBlockModel unit) {
         try {
@@ -453,10 +466,9 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
             transcript = unit.getData().transcripts;
         }
         if ( transcript == null ) {
-            Api api = new Api(getActivity());
             try {
                 if (video.videoId != null) {
-                    transcript = api.getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript =  ServiceManager.getInstance().getTranscriptsOfVideo(video.eid, video.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -797,18 +809,6 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         return prefManager.getCurrentUserProfile();
     }
 
-
-   /// for PageViewStateCallback ///
-    @Override
-    public void onPageShow() {
-
-    }
-
-    @Override
-    public void onPageDisappear() {
-
-    }
-
     /**
      * mostly the orientation changes.
      * @param newConfig
@@ -858,8 +858,5 @@ public class CourseUnitVideoFragment extends Fragment implements IPlayerEventCal
         }
     }
 
-    //we need to know the current component of the container
-    public void setHasComponentCallback(HasComponent callback){
-        hasComponentCallback = callback;
-    }
+
 }

@@ -20,6 +20,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
 
@@ -202,7 +203,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             logger.warn("selectedUnit is null?");
             return;   //should not happen
         }
-        //TODO - courseComponent is not necessary the course object.
+
         //if we want to navigate through all unit of within the parent node,
         //we should use courseComponent instead.   Requirement maybe changed?
        // unitList.addAll( courseComponent.getChildLeafs() );
@@ -210,6 +211,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         EnumSet<BlockType> types = EnumSet.allOf(BlockType.class);
         ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
+
+        ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
         int index = unitList.indexOf(selectedUnit);
         if ( index >= 0 ){
@@ -264,34 +267,38 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         @Override
         public Fragment getItem(int pos) {
             CourseComponent unit = getUnit(pos);
-
+            CourseUnitFragment unitFragment = null;
             //FIXME - for the video, let's ignore responsive_UI for now
             if ( unit instanceof VideoBlockModel) {
                 CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
-                fragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
-                return fragment;
+
+                unitFragment = fragment;
             }
 
-            if ( !unit.isResponsiveUI() ){
-                return CourseUnitMobileNotSupportedFragment.newInstance(unit);
+            else if ( !unit.isResponsiveUI() ){
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
             }
 
-            if ( unit.getType() != BlockType.VIDEO &&
+            else if ( unit.getType() != BlockType.VIDEO &&
                 unit.getType() != BlockType.HTML &&
                 unit.getType() != BlockType.OTHERS &&
                 unit.getType() != BlockType.DISCUSSION &&
                 unit.getType() != BlockType.PROBLEM ) {
-                return CourseUnitEmptyFragment.newInstance(unit);
+                unitFragment = CourseUnitEmptyFragment.newInstance(unit);
             }
 
-            if ( unit instanceof HtmlBlockModel ){
-                CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
-                return fragment;
+            else if ( unit instanceof HtmlBlockModel ){
+                unitFragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
             }
 
             //fallback
-            return CourseUnitMobileNotSupportedFragment.newInstance(unit);
+            else {
+                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
+            }
 
+            unitFragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
+
+            return unitFragment;
         }
 
         @Override

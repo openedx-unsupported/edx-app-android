@@ -5,12 +5,14 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
 import org.edx.mobile.http.HttpRequestEndPoint;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
@@ -51,11 +53,12 @@ public class ServiceManager {
         return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
-                    String block_count = URLEncoder.encode("[\"video\"]", "UTF-8");
-                    String block_data = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"],\"allow_cache_miss\":\"True\"}}", "UTF-8");
+                    String block_count = URLEncoder.encode("video", "UTF-8");
+                    String block_fields = URLEncoder.encode("graded,format,responsive_ui", "UTF-8");
+                    String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
 
                     String url = api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
-                        +"children=False&block_count=" + block_count + "&block_data=" + block_data;
+                        +"block_count=" + block_count + "&fields=" + block_fields + "&block_json=" + block_json;
 
                     logger.debug("GET url for enrolling in a Course: " + url);
                     return url;
@@ -65,7 +68,7 @@ public class ServiceManager {
                 return "";
             }
             public String getCacheKey() {
-                return api.getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
+                return api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId;
             }
             public Map<String, String> getParameters() {
                 return null;
@@ -74,11 +77,11 @@ public class ServiceManager {
     }
 
     public CourseComponent getCourseStructureFromCache(final String courseId) throws Exception {
-         return getCourseStructure(courseId, HttpRequestDelegate.REQUEST_CACHE_TYPE.ONLY_CACHE);
+         return getCourseStructure(courseId, OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE);
     }
 
     public CourseComponent getCourseStructure(final String courseId,
-                                              HttpRequestDelegate.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
+                                              OkHttpUtil.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
         HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(
                 api, cacheManager, getEndPointCourseStructure(courseId)){
             @Override
@@ -188,6 +191,24 @@ public class ServiceManager {
         } else {
             return api.getSubsectionById(courseId,subsectionId);
         }
+    }
+
+
+    public TranscriptModel getTranscriptsOfVideo(String enrollmentId,
+                                                 String videoId) throws Exception {
+        try{
+            TranscriptModel transcript;
+            VideoResponseModel vidModel =  getVideoById(enrollmentId, videoId);
+            if(vidModel!=null){
+                if(vidModel.getSummary()!=null){
+                    transcript = vidModel.getSummary().getTranscripts();
+                    return transcript;
+                }
+            }
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
     }
 
 }

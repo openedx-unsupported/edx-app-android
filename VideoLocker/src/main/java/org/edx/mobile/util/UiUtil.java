@@ -1,12 +1,14 @@
 package org.edx.mobile.util;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.util.Log;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 
 /**
@@ -92,5 +94,15 @@ public class UiUtil {
             logger.error(e);
         }
         return 0;
+    }
+
+
+    public static boolean isLeftToRightOrientation(){
+        Configuration config = MainApplication.instance().getResources().getConfiguration();
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return config.getLayoutDirection() == View.LAYOUT_DIRECTION_LTR;
+        } else {
+            return true;
+        }
     }
 }

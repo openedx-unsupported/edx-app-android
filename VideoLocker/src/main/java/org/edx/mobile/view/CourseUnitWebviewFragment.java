@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +14,13 @@ import android.widget.ProgressBar;
 import org.apache.http.HttpStatus;
 import org.edx.mobile.R;
 import org.edx.mobile.event.SessionIdRefreshEvent;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
-import org.edx.mobile.services.ViewPagerWebViewDownloadManager;
-import org.edx.mobile.view.common.PageViewStateCallback;
+import org.edx.mobile.services.ViewPagerDownloadManager;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -31,12 +31,15 @@ import de.greenrobot.event.EventBus;
 /**
  *
  */
-public class CourseUnitWebviewFragment extends Fragment implements PageViewStateCallback,
-    ViewPagerWebViewDownloadManager.HtmlTaskCallback {
+public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
-    HtmlBlockModel unit;
+    protected final Logger logger = new Logger(getClass().getName());
+
+    private final static String EMPTY_HTML = "<html><body></body></html>";
+
     ProgressBar progressWheel;
     boolean pageIsLoaded;
+    WebView webView;
     /**
      * Create a new instance of fragment
      */
@@ -57,21 +60,17 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        unit = getArguments() == null ? null :
-            (HtmlBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-
         EventBus.getDefault().register(this);
     }
 
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
-        ViewPagerWebViewDownloadManager.getSharedInstance().removeTask(this);
         super.onDestroy();
     }
 
     public void onEvent(SessionIdRefreshEvent event){
-        if ( event.success && !pageIsLoaded){
-            tryToLoadWebView();
+        if ( event.success ){
+            tryToLoadWebView(false);
         } else {
             hideLoadingProgress();
         }
@@ -86,6 +85,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_webview, container, false);
         progressWheel = (ProgressBar)v.findViewById(R.id.progress_spinner);
+        webView = (WebView)v.findViewById(R.id.course_unit_webView);
         return v;
     }
 
@@ -93,7 +93,7 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //should we recover here?
-        WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
+
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -102,19 +102,25 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
                                         String description, String failingUrl) {
                 hideLoadingProgress();
                 pageIsLoaded = false;
+                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
                 if ( errorCode == HttpStatus.SC_FORBIDDEN || errorCode == HttpStatus.SC_UNAUTHORIZED || errorCode == HttpStatus.SC_NOT_FOUND){
                     EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl);
             }
             public void onPageFinished(WebView view, String url) {
+                if ( url != null && url.equals("data:text/html," + EMPTY_HTML ) ){
+                    //we load a local empty html page to release the memory
+                } else {
+                    pageIsLoaded = true;
+                }
 
-                pageIsLoaded = true;
                 //TODO -disable it for now. as it causes some issues for assessment
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 super.onPageFinished(view, url);
+                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
                 hideLoadingProgress();
             }
 
@@ -125,13 +131,25 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
         });
         //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        tryToLoadWebView();
+        if(  ViewPagerDownloadManager.USING_UI_PRELOADING ) {
+            if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+                ViewPagerDownloadManager.instance.addTask(this);
+            else
+                tryToLoadWebView(true);
+        }
     }
 
-    private void tryToLoadWebView( ){
+
+
+
+    private void tryToLoadWebView(boolean forceLoad){
+        System.gc(); //there is an well known Webview Memory Issues With Galaxy S3 With 4.3 Update
+
+        if ( (!forceLoad && pageIsLoaded) ||  progressWheel == null )
+            return;
+
         showLoadingProgress();
-        pageIsLoaded = false;
-        WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
+
         if ( unit != null) {
             if ( unit.isGraded() ){
                 getView().findViewById(R.id.webview_header_text).setVisibility(View.VISIBLE);
@@ -167,31 +185,64 @@ public class CourseUnitWebviewFragment extends Fragment implements PageViewState
     }
 
     @Override
-    public void startLoadingPage(){
-
+    public void run(){
+        if ( this.isRemoving() || this.isDetached()){
+            ViewPagerDownloadManager.instance.done(this, false);
+        } else {
+            tryToLoadWebView(true);
+        }
     }
 
+
+    private void tryToClearWebView(){
+        pageIsLoaded = false;
+        if ( webView != null)
+            webView.loadData(EMPTY_HTML, "text/html", "UTF-8");
+    }
+
+
+
+    public void onResume() {
+        super.onResume();
+        if ( hasComponentCallback != null ){
+            CourseComponent component = hasComponentCallback.getComponent();
+            if (component != null && component.equals(unit)){
+                try {
+                    tryToLoadWebView(false);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        }
+    }
+    //the problem with viewpager is that it loads this fragment
+    //and calls onResume even it is not visible.
+    //which breaks the normal behavior of activity/fragment
+    //lifecycle.
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if ( ViewPagerDownloadManager.USING_UI_PRELOADING )
+            return;
+        if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+            return;
+        if (isVisibleToUser) {
+            tryToLoadWebView(false);
+        }else{
+            tryToClearWebView();
+        }
+    }
 
     @JavascriptInterface
     public void resize(final float height) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                WebView webView = (WebView)getView().findViewById(R.id.course_unit_webView);
                 webView.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels, (int) (height * getResources().getDisplayMetrics().density)));
             }
         });
     }
-    /// for PageViewStateCallback ///
-    @Override
-    public void onPageShow() {
 
-    }
-
-    @Override
-    public void onPageDisappear() {
-
-    }
 
     private void showLoadingProgress(){
         progressWheel.setVisibility(View.VISIBLE);
