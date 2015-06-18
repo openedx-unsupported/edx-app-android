@@ -2,6 +2,7 @@ package org.edx.mobile.services;
 
 import android.content.Context;
 import android.os.Build;
+import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
 
 import org.edx.mobile.base.MainApplication;
@@ -34,7 +35,7 @@ public class EdxCookieManager {
         return instance;
     }
 
-    public void clearWebWiewCookie(){
+    public void clearWebWiewCookie(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             android.webkit.CookieManager.getInstance().removeAllCookies(new ValueCallback() {
                 @Override
@@ -44,6 +45,7 @@ public class EdxCookieManager {
             });
         } else {
             try {
+                CookieSyncManager.createInstance(context);
                 android.webkit.CookieManager.getInstance().removeAllCookie();
             }catch (Exception ex){
                 logger.debug(ex.getMessage());
@@ -58,7 +60,7 @@ public class EdxCookieManager {
 
     public void clearWebViewCache(Context context){
         try {
-            clearWebWiewCookie();
+            clearWebWiewCookie(context);
 
             boolean success = context.deleteDatabase("webview.db");
             logger.debug("delete webview.db result = " + success);
@@ -93,7 +95,7 @@ public class EdxCookieManager {
                     long currentTime = new Date().getTime();
                     for (HttpCookie cookie : result) {
                         if (cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
-                            clearWebWiewCookie();
+                            clearWebWiewCookie(context);
                             PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
                             long maxAgeInSecond = cookie.getMaxAge();
