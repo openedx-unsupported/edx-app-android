@@ -12,23 +12,12 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
-import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by hanning on 4/8/15.
+ *  use MockWebService for Api test
  */
 @Ignore
 public class HttpBaseTestCase extends BaseTestCase {
@@ -57,7 +46,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     private static final String MOCK_API_RESPONSES_PROPERTIES = "mock_api_responses.properties";
 
     // Use a mock server to serve fixed responses
-    private MockWebServer server;
+    protected MockWebServer server;
     protected Api api;
     //there are third party extension to handle conditionally skip some test programmatically.
     //but i think it is not a good idea to introduce more libs only for this purpose.

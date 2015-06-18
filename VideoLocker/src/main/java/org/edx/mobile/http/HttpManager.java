@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -330,7 +331,7 @@ public class HttpManager {
         return getResponseHeader(url, null);
     }
 
-    public List<Cookie> getCookies(String url, Bundle headers, boolean isGet)
+    public List<HttpCookie> getCookies(String url, Bundle headers, boolean isGet)
         throws ParseException, ClientProtocolException, IOException {
         HttpClient client = new DefaultHttpClient();
         client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
@@ -356,8 +357,14 @@ public class HttpManager {
             logger.error(ex);
         }
         client.getConnectionManager().shutdown();
-
-        return cookieStore.getCookies();
+        List<HttpCookie> cookieList = new ArrayList<>();
+        for(Cookie cookie : cookieStore.getCookies()){
+            HttpCookie copy = OkHttpUtil.servletCookieFromApacheCookie(cookie);
+            if( copy != null ){
+                cookieList.add(copy);
+            }
+        }
+        return cookieList;
     }
 
     public static class HttpResult {

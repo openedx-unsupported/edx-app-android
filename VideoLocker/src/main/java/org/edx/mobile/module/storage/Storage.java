@@ -268,7 +268,7 @@ public class Storage implements IStorage {
         Api api = new Api(context);
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<EnrolledCoursesResponse>();
         try {
-            ArrayList<EnrolledCoursesResponse> enrolledCourses = api.getEnrolledCourses(true);
+            List<EnrolledCoursesResponse> enrolledCourses = api.getEnrolledCourses(true);
             if(enrolledCourses!=null && enrolledCourses.size()>0){
                 for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
                     int videoCount = db.getDownloadedVideoCountByCourse(
@@ -295,7 +295,7 @@ public class Storage implements IStorage {
             Api api = new Api(context);
             ArrayList<EnrolledCoursesResponse> courseList = null;
 
-            courseList = api.getEnrolledCourses(true);
+            courseList = (ArrayList)api.getEnrolledCourses(true);
 
             if(courseList==null || courseList.size() ==0){
                 return recentVideolist;

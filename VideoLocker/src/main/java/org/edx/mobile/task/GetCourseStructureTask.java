@@ -3,7 +3,7 @@ package org.edx.mobile.task;
 import android.content.Context;
 
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.http.HttpRequestDelegate;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ServiceManager;
@@ -24,10 +24,10 @@ Task<CourseComponent> {
                 PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
                 long lastFetchTime = prefManager.getLastCourseStructureFetch(courseId);
                 long curTime = new Date().getTime();
-                HttpRequestDelegate.REQUEST_CACHE_TYPE useCacheType = HttpRequestDelegate.REQUEST_CACHE_TYPE.PREFER_CACHE;
+                OkHttpUtil.REQUEST_CACHE_TYPE useCacheType = OkHttpUtil.REQUEST_CACHE_TYPE.PREFER_CACHE;
                 //if last fetch happened over one hour ago, re-fetch data
                 if ( lastFetchTime + 3600 * 1000 < curTime ){
-                    useCacheType =  HttpRequestDelegate.REQUEST_CACHE_TYPE.IGNORE_CACHE;;
+                    useCacheType =  OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE;;
                     prefManager.setLastCourseStructureFetch(courseId, curTime);
                 }
                 final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId, useCacheType);

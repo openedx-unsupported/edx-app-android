@@ -19,7 +19,6 @@ import java.lang.reflect.Type;
  * Created by hanning on 5/26/15.
  */
 public abstract class HttpRequestDelegate<T> {
-    public static enum REQUEST_CACHE_TYPE { IGNORE_CACHE, PREFER_CACHE, ONLY_CACHE}
     protected final Logger logger = new Logger(getClass().getName());
     protected  Api api;
     protected CacheManager cacheManager;
@@ -49,10 +48,10 @@ public abstract class HttpRequestDelegate<T> {
         }
     }
 
-    public T fetchData(REQUEST_CACHE_TYPE requestCacheType) throws Exception{
+    public T fetchData(OkHttpUtil.REQUEST_CACHE_TYPE requestCacheType) throws Exception{
         String json = null;
         String cacheKey = endPoint.getCacheKey();
-        if ( requestCacheType != REQUEST_CACHE_TYPE.IGNORE_CACHE
+        if ( requestCacheType != OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE
             || !NetworkUtil.isConnected(MainApplication.instance()) ){
             try {
                 json = cacheManager.get(cacheKey);
@@ -67,7 +66,7 @@ public abstract class HttpRequestDelegate<T> {
                 }
             }
         }
-        if ( requestCacheType == REQUEST_CACHE_TYPE.ONLY_CACHE )
+        if ( requestCacheType == OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE )
             return null;
 
         //if it is on the UI thread, we just can not make http call

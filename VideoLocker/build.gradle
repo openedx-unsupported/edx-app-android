@@ -91,6 +91,7 @@ dependencies {
     compile 'com.squareup.phrase:phrase:1.0.3'
     compile 'com.squareup.okhttp:okhttp:2.5.0-SNAPSHOT'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.android.support:support-v4:21.1.0'
     compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:multidex:1.0.0'

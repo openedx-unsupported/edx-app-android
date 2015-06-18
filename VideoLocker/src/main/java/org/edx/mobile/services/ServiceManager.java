@@ -5,12 +5,14 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
 import org.edx.mobile.http.HttpRequestEndPoint;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
@@ -75,11 +77,11 @@ public class ServiceManager {
     }
 
     public CourseComponent getCourseStructureFromCache(final String courseId) throws Exception {
-         return getCourseStructure(courseId, HttpRequestDelegate.REQUEST_CACHE_TYPE.ONLY_CACHE);
+         return getCourseStructure(courseId, OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE);
     }
 
     public CourseComponent getCourseStructure(final String courseId,
-                                              HttpRequestDelegate.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
+                                              OkHttpUtil.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
         HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(
                 api, cacheManager, getEndPointCourseStructure(courseId)){
             @Override
@@ -189,6 +191,24 @@ public class ServiceManager {
         } else {
             return api.getSubsectionById(courseId,subsectionId);
         }
+    }
+
+
+    public TranscriptModel getTranscriptsOfVideo(String enrollmentId,
+                                                 String videoId) throws Exception {
+        try{
+            TranscriptModel transcript;
+            VideoResponseModel vidModel =  getVideoById(enrollmentId, videoId);
+            if(vidModel!=null){
+                if(vidModel.getSummary()!=null){
+                    transcript = vidModel.getSummary().getTranscripts();
+                    return transcript;
+                }
+            }
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return null;
     }
 
 }
