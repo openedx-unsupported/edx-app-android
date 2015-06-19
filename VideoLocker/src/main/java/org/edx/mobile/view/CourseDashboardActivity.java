@@ -43,7 +43,9 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
     @Override
     protected void onStart() {
         super.onStart();
-        setTitle(getString(R.string.course_home));
+        if ( courseData != null && courseData.getCourse() != null ){
+            setTitle(courseData.getCourse().getName());
+        }
     }
 
     @Override

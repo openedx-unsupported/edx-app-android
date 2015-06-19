@@ -59,7 +59,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         try {
             if( courseData == null ) {
                 final Bundle bundle = getArguments();
-                courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
+                courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
                 courseComponentId = (String) bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
             }
         } catch (Exception ex) {

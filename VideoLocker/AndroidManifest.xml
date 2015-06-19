@@ -193,6 +193,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="org.edx.mobile.view.CourseDetailInfoActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name="org.edx.mobile.view.CreateGroupActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />

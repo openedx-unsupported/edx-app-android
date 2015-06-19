@@ -22,6 +22,7 @@ import com.facebook.widget.LikeView;
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -52,7 +53,7 @@ import java.util.List;
 public class CourseCombinedInfoFragment extends CourseDetailBaseFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
 
     static final String TAG = CourseCombinedInfoFragment.class.getCanonicalName();
-    static final String ANNOUNCEMENTS = TAG + ".announcements";
+
     private final int LOADER_ID = 0x416BED;
 
     private CourseImageHeader headerImageView;
@@ -106,7 +107,13 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         shareButton.setOnClickListener(this);
 
         TextView handoutText = (TextView) view.findViewById(R.id.combined_course_handout_text);
-        handoutText.setOnClickListener(this);
+        View handoutArrow =  view.findViewById(R.id.next_arrow);
+        if (MainApplication.Q4_ASSESSMENT_FLAG ) {
+            handoutText.setVisibility(View.GONE);
+            handoutArrow.setVisibility(View.GONE);
+        } else {
+            handoutText.setOnClickListener(this);
+        }
 
         TextView certificateButton = (TextView) view.findViewById(R.id.view_cert_button);
         certificateButton.setOnClickListener(this);
@@ -143,7 +150,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         if (savedInstanceState != null) {
 
             try {
-                savedAnnouncements = savedInstanceState.getParcelableArrayList(ANNOUNCEMENTS);
+                savedAnnouncements = savedInstanceState.getParcelableArrayList(Router.EXTRA_ANNOUNCEMENTS);
             } catch (Exception ex) {
                 logger.error(ex);
             }
@@ -247,7 +254,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         super.onSaveInstanceState(outState);
 
         if (savedAnnouncements != null) {
-            outState.putParcelableArrayList(ANNOUNCEMENTS, new ArrayList<Parcelable>(savedAnnouncements));
+            outState.putParcelableArrayList(Router.EXTRA_ANNOUNCEMENTS, new ArrayList<Parcelable>(savedAnnouncements));
         }
         uiHelper.onSaveInstanceState(outState);
 

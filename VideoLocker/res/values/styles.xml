@@ -30,6 +30,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:homeAsUpIndicator">@drawable/left_arrow</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
@@ -38,7 +39,7 @@
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-         <item name="color">@color/edx_white</item>
+         <item name="color">@color/white</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
