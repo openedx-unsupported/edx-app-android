@@ -21,6 +21,7 @@ package org.edx.mobile.third_party.iconify;
  *     http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=OFL_plaintext&filename=OFL.txt
  */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,7 +30,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
+import android.view.View;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+import static android.os.Build.VERSION_CODES.KITKAT;
 import static java.lang.String.valueOf;
 import static org.edx.mobile.third_party.iconify.Utils.convertDpToPx;
 import static org.edx.mobile.third_party.iconify.Utils.isEnabled;
@@ -60,6 +65,8 @@ public class IconDrawable extends Drawable {
 
     private int alpha = 255;
 
+    private boolean autoMirrored;
+
     /**
      * Create an IconDrawable.
      * @param context Your activity or application context.
@@ -75,6 +82,8 @@ public class IconDrawable extends Drawable {
         paint.setUnderlineText(false);
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
+        // Default to enable auto-mirroring
+        setAutoMirrored(true);
     }
 
     /**
@@ -168,7 +177,17 @@ public class IconDrawable extends Drawable {
         paint.getTextBounds(textValue, 0, 1, textBounds);
         int textHeight = textBounds.height();
         float textBottom = bounds.top + (height - textHeight) / 2f + textHeight - textBounds.bottom;
+        final boolean needMirroring = needMirroring();
+        if (needMirroring) {
+            canvas.save();
+            // Mirror the icon
+            canvas.translate(bounds.width(), 0);
+            canvas.scale(-1.0f, 1.0f);
+        }
         canvas.drawText(textValue, bounds.exactCenterX(), textBottom, paint);
+        if (needMirroring) {
+            canvas.restore();
+        }
     }
 
     @Override
@@ -211,6 +230,39 @@ public class IconDrawable extends Drawable {
      */
     public void setStyle(Paint.Style style) {
         paint.setStyle(style);
+    }
+
+    @Override
+    public void setAutoMirrored(boolean mirrored) {
+        if (SDK_INT >= JELLY_BEAN_MR1 && icon.supportsRtl && autoMirrored != mirrored) {
+            autoMirrored = mirrored;
+            invalidateSelf();
+        }
+    }
+
+    @Override
+    public final boolean isAutoMirrored() {
+        return autoMirrored;
+    }
+
+    @TargetApi(KITKAT)
+    private boolean needMirroring() {
+        if (isAutoMirrored()) {
+            // Since getLayoutDirection() is hidden, we will try to
+            // get the layout direction from the View, which we will,
+            // attempt to get from the Callback. As the
+            // setLayoutDirection() method is also hidden, we can
+            // safely rely on the behaviour of the platform Views
+            // to provide a correct replacement for the hidden method.
+            Callback callback = getCallback();
+            if (callback instanceof View) {
+                View view = (View) callback;
+                if (SDK_INT < KITKAT || view.isLayoutDirectionResolved()) {
+                    return view.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+                }
+            }
+        }
+        return false;
     }
 
 }
