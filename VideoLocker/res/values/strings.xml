@@ -523,7 +523,7 @@
         <!-- Message indicating one video deleted. {video_count} is 1-->
         <item quantity="one">{video_count} video deleted </item>
         <!-- Message indicating more than one video deleted. {video_count} is number of videos deleted-->
-        <item quantity="other">{{video_count}} videos deleted</item>
+        <item quantity="other">{video_count} videos deleted</item>
     </plurals>
 
     <!-- Notification related -->

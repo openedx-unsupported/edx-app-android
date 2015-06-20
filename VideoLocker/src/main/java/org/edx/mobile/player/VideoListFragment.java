@@ -926,11 +926,15 @@ public class VideoListFragment extends MyVideosBaseFragment {
         }
 
         if(deletedVideoCount>0){
-            String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
-                "video_num", deletedVideoCount).toString();
+            try {
+                String format = ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
+                        "video_count", deletedVideoCount).toString();
 
-            ((VideoListActivity) getActivity())
-                    .showInfoMessage(String.format(format, deletedVideoCount));
+                ((VideoListActivity) getActivity())
+                        .showInfoMessage(String.format(format, deletedVideoCount));
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
         }
         getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
         getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);

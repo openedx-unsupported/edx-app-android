@@ -453,34 +453,34 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
     //Deleting Downloaded videos on getting confirmation
     private void onConfirmDelete() {
-        try{
-            int deletedVideoCount = 0;
-            ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
-            if (list != null) {
-                for (SectionItemInterface section : list) {
-                    if (section.isDownload()) {
-                        DownloadEntry de = (DownloadEntry) section;
-                        storage.removeDownload(de);
-                        deletedVideoCount++;
-                    }
+        int deletedVideoCount = 0;
+        ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
+        if (list != null) {
+            for (SectionItemInterface section : list) {
+                if (section.isDownload()) {
+                    DownloadEntry de = (DownloadEntry) section;
+                    storage.removeDownload(de);
+                    deletedVideoCount++;
                 }
             }
-            addToRecentAdapter(getView());
-            notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
-            AppConstants.myVideosDeleteMode = false;
-            ((MyVideosTabActivity) getActivity()).hideCheckBox();
-            if(deletedVideoCount>0){
+        }
+        addToRecentAdapter(getView());
+        notifyAdapter();
+        videoListView.setOnItemClickListener(adapter);
+        AppConstants.myVideosDeleteMode = false;
+        ((MyVideosTabActivity) getActivity()).hideCheckBox();
+        if(deletedVideoCount>0){
+            try{
                 String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video, "video_count", deletedVideoCount).toString();
                 UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
                         String.format(format, deletedVideoCount));
+            }catch(Exception ex){
+                logger.error(ex);
             }
-            getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
-            getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
-        }catch(Exception ex){
-            logger.error(ex);
         }
+        getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
+        getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
     }
 
     //Handle check box selection in Delete mode
