@@ -14,7 +14,7 @@ public class DiscussionAPI {
 
     DiscussionService createService() {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("TODO")
+                .setEndpoint("TODO") // TODO specify the API host
                 .build();
         DiscussionService discussionService = restAdapter.create(DiscussionService.class);
         return discussionService;
@@ -35,9 +35,9 @@ public class DiscussionAPI {
         });
     }
 
-    void getThreadList(String topicId, final APICallback<List<DiscussionThread>> callback) {
+    void getThreadList(String courseId, String topicId, final APICallback<List<DiscussionThread>> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getThreadList(new Callback<List<DiscussionThread>>() {
+        discussionService.getThreadList(courseId, topicId, new Callback<List<DiscussionThread>>() {
             @Override
             public void success(List<DiscussionThread> discussionThreads, Response response) {
                 callback.success(discussionThreads);
@@ -52,7 +52,7 @@ public class DiscussionAPI {
 
     void getCommentList(String threadId, final APICallback<List<DiscussionComment>> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getCommentList(new Callback<List<DiscussionComment>>() {
+        discussionService.getCommentList(threadId, new Callback<List<DiscussionComment>>() {
             @Override
             public void success(List<DiscussionComment> discussionComments, Response response) {
                 callback.success(discussionComments);
