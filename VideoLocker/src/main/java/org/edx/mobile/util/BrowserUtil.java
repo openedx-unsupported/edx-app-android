@@ -96,7 +96,7 @@ public class BrowserUtil {
             }
             
             // apply transition animation
-            context.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+            context.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
             logger.debug("Next transition animation applied");
         } catch(Exception ex) {
             logger.error(ex);

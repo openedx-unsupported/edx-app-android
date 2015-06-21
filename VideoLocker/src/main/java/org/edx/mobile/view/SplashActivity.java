@@ -23,7 +23,7 @@ public class SplashActivity extends BaseFragmentActivity {
             return;
         }
         setContentView(R.layout.activity_splash);
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
 
         new Handler().postDelayed(new Runnable() {
 

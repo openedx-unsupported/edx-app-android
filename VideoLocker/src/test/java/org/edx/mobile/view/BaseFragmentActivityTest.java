@@ -209,7 +209,7 @@ public class BaseFragmentActivityTest {
      */
     private void assertAppliedTransitionNext(ShadowActivity shadowActivity) {
         assertOverridePendingTransition(shadowActivity,
-                R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+                R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
 
     /**
@@ -219,7 +219,7 @@ public class BaseFragmentActivityTest {
      */
     private void assertAppliedTransitionPrev(ShadowActivity shadowActivity) {
         assertOverridePendingTransition(shadowActivity,
-                R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+                R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 
     /**

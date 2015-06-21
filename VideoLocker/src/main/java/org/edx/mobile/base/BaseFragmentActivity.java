@@ -659,13 +659,13 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
     private void applyTransitionNext() {
         // apply slide transition animation
-        overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         logger.debug( "next transition animation applied");
     }
 
     private void applyTransitionPrev() {
         // apply slide transition animation
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
         logger.debug( "prev transition animation applied");
     }
 
