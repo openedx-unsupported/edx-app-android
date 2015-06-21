@@ -3,7 +3,10 @@ package org.edx.mobile.third_party.iconify;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spanned;
+import android.util.SparseArray;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
 
 import static android.text.Html.fromHtml;
 import static android.text.Html.toHtml;
@@ -703,6 +706,25 @@ public final class Iconify {
 
         public boolean supportsRtl() {
             return supportsRtl;
+        }
+
+        // A map from the hash codes of the item names to the items
+        private static final SparseArray<IconValue> hashMap;
+
+        static {
+            IconValue[] values = IconValue.values();
+            hashMap = new SparseArray<>(values.length);
+            for (IconValue value : values) {
+                hashMap.put(value.name().hashCode(), value);
+            }
+        }
+
+        /**
+         * Get an IconValue by providing the hash code of it's name.
+         * Used to map the {@link R.styleable#IconView_iconName} attr values.
+         */
+        public static IconValue getFromHashCode(int hashCode) {
+            return hashMap.get(hashCode);
         }
     }
 }
