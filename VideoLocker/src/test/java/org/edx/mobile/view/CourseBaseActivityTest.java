@@ -8,12 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,12 +61,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         controller.create();
         assertNotNull(activity.findViewById(R.id.offline_bar));
         assertNotNull(activity.findViewById(R.id.last_access_bar));
-        TextView downloadIndicatorView = (TextView)
-                activity.findViewById(R.id.video_download_indicator);
-        assertNotNull(downloadIndicatorView);
-        assertThat(downloadIndicatorView)
-                .hasTypeface(Iconify.getTypeface(activity))
-                .hasText(String.valueOf(Iconify.IconValue.fa_spinner.character()));
+        assertNotNull(activity.findViewById(R.id.video_download_indicator));
         View downloadInProgressButton =
                 activity.findViewById(R.id.download_in_progress_button);
         assertNotNull(downloadInProgressButton);

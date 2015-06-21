@@ -43,7 +43,6 @@ import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.task.CircularProgressTask;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -121,8 +120,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_video, container, false);
         messageContainer = v.findViewById(R.id.message_container);
-        TextView icon = (TextView)v.findViewById(R.id.empty_document_icon);
-        Iconify.setIcon(icon, Iconify.IconValue.fa_file_text_o);
         return v;
     }
 

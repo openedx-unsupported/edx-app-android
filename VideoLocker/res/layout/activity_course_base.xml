@@ -1,5 +1,6 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -122,11 +123,12 @@
                     android:layout_gravity="center_vertical"
                     tools:targetApi="17">
 
-                      <TextView
+                      <org.edx.mobile.third_party.iconify.IconImageView
                         android:id="@+id/video_download_indicator"
-                        android:text=""
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        app:iconName="fa_spinner"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:baselineAlignBottom="true"/>
 
                     <org.edx.mobile.view.custom.ETextView
                         android:layout_width="0dp"
