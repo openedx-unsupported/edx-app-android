@@ -29,7 +29,7 @@ public class Router {
     public static final String EXTRA_SEQUENTIAL = "sequential";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
-    public static final String EXTRA_COURSE_DATA = "course_data";
+
     static private Router sInstance;
 
     // Note that this is not thread safe. The expectation is that this only happens
@@ -145,7 +145,12 @@ public class Router {
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
 
-        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+
+        Intent courseDetail;
+        if (MainApplication.Q4_ASSESSMENT_FLAG)
+            courseDetail = new Intent(activity, CourseDetailInfoActivity.class);
+        else
+            courseDetail = new Intent(activity, CourseDetailTabActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
@@ -154,7 +159,7 @@ public class Router {
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, String courseComponentId) {
 
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
@@ -170,7 +175,7 @@ public class Router {
                                      String courseId,  CourseComponent unit ) {
 
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseId);
         courseBundle.putSerializable(EXTRA_COURSE_UNIT, unit);
 
@@ -184,7 +189,7 @@ public class Router {
     public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
                                      boolean announcements) {
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
+        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
 
         Intent courseDetail = new Intent(activity, CourseDashboardActivity.class);

@@ -2,14 +2,12 @@ package org.edx.mobile.model.api;
 
 import android.content.Context;
 
-import org.edx.mobile.R;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -233,16 +231,9 @@ public class CourseEntry implements Serializable {
             detailBuilder.append( getNumber());
 
         }
-        if ( isStarted() && ! isEnded() &&  getEnd() != null){
-            if (detailBuilder.length() > 0){
-                detailBuilder.append(" | ");
-            }
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd");
-            Date endDate = DateUtil.convertToDate( getEnd());
-            detailBuilder.append(context.getString(R.string.label_ending_on));
-            detailBuilder.append(" - ");
-            detailBuilder.append(dateFormat.format(endDate));
-        }
+        //https://openedx.atlassian.net/browse/MA-858
+        //we remove the ending data for now
+
         return detailBuilder.toString();
     }
 

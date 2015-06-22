@@ -49,7 +49,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         EnrolledCoursesResponse courseData = new EnrolledCoursesResponse();
         String courseComponentId = "id";
         Bundle data  = new Bundle();
-        data.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        data.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
         data.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         controller.create(data).postCreate(null);
@@ -60,8 +60,8 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertTrue(fragment.getRetainInstance());
         Bundle args = fragment.getArguments();
         assertNotNull(args);
-        assertEquals(data.getSerializable(Router.EXTRA_COURSE_DATA),
-                args.getSerializable(Router.EXTRA_COURSE_DATA));
+        assertEquals(data.getSerializable(Router.EXTRA_ENROLLMENT),
+                args.getSerializable(Router.EXTRA_ENROLLMENT));
         assertEquals(data.getSerializable(Router.EXTRA_COURSE_COMPONENT_ID),
                 args.getSerializable(Router.EXTRA_COURSE_COMPONENT_ID));
     }

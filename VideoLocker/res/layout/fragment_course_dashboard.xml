@@ -40,7 +40,6 @@
             android:layout_height="wrap_content"
             style="@style/regular_text"
             android:textSize="13sp"
-            android:textAllCaps="true"
             tools:text="XX | xx | xxxxx" />
 
     </LinearLayout>

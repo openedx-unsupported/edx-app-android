@@ -46,7 +46,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
                 if (courseData != null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+                    bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
                     bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
                     fragment.setArguments(bundle);
                 }

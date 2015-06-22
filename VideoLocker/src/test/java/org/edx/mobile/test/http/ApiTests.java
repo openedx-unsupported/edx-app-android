@@ -23,18 +23,21 @@ import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.ServiceManager;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.junit.Test;
 
-import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 /**
