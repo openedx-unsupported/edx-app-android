@@ -257,7 +257,7 @@ public class IconDrawable extends Drawable {
     private boolean needMirroring() {
         if (isAutoMirrored()) {
             // Since getLayoutDirection() is hidden, we will try to
-            // get the layout direction from the View, which we will,
+            // get the layout direction from the View, which we will
             // attempt to get from the Callback. As the
             // setLayoutDirection() method is also hidden, we can
             // safely rely on the behaviour of the platform Views
