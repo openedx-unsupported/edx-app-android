@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.ViewPagerDownloadManager;
-import org.edx.mobile.third_party.iconify.Iconify;
 
 /**
  *
@@ -45,11 +43,7 @@ public class CourseUnitEmptyFragment extends CourseUnitFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_unit_empty, container, false);
-        TextView laptop = (TextView)v.findViewById(R.id.content_icon);
-        Iconify.setIcon(laptop, Iconify.IconValue.fa_list);
-
-        return v;
+        return inflater.inflate(R.layout.fragment_course_unit_empty, container, false);
     }
 
     @Override

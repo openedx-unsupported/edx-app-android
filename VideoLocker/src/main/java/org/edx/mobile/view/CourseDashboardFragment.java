@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.third_party.iconify.IconImageView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.images.ImageCacheManager;
 
@@ -54,7 +53,7 @@ public class CourseDashboardFragment extends Fragment {
 
         ViewHolder holder = createViewHolder(inflater, parent);
 
-        Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_list_alt );
+        holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);
         holder.titleView.setText(R.string.courseware_title);
         holder.subtitleView.setText(R.string.courseware_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +66,7 @@ public class CourseDashboardFragment extends Fragment {
 
         holder = createViewHolder(inflater, parent);
 
-        Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_comments_o );
+        holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
         holder.titleView.setText(R.string.discussion_title);
         holder.subtitleView.setText(R.string.discussion_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +78,7 @@ public class CourseDashboardFragment extends Fragment {
 
         holder = createViewHolder(inflater, parent);
 
-        Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_file_text_o );
+        holder.typeView.setIcon(Iconify.IconValue.fa_file_text_o);
         holder.titleView.setText(R.string.handouts_title);
         holder.subtitleView.setText(R.string.handouts_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +91,7 @@ public class CourseDashboardFragment extends Fragment {
 
         holder = createViewHolder(inflater, parent);
 
-        Iconify.setIcon(holder.typeView, Iconify.IconValue.fa_bullhorn );
+        holder.typeView.setIcon(Iconify.IconValue.fa_bullhorn);
         holder.titleView.setText(R.string.announcement_title);
         holder.subtitleView.setText(R.string.announcement_subtitle);
         holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -139,28 +138,16 @@ public class CourseDashboardFragment extends Fragment {
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.row_course_dashboard_list, null);
-        holder.typeView = (TextView) holder.rowView.findViewById(R.id.row_type);
-        holder.arrowView = (TextView) holder.rowView.findViewById(R.id.right_arrow);
+        holder.typeView = (IconImageView) holder.rowView.findViewById(R.id.row_type);
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);
         parent.addView(holder.rowView);
-        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-            Configuration config = getResources().getConfiguration();
-            if(config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-                Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_left );
-            } else {
-                Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
-            }
-        } else {
-            Iconify.setIcon(holder.arrowView, Iconify.IconValue.fa_angle_right );
-        }
         return holder;
     }
 
     private class ViewHolder {
         View rowView;
-        TextView typeView;
-        TextView arrowView;
+        IconImageView typeView;
         TextView titleView;
         TextView subtitleView;
     }

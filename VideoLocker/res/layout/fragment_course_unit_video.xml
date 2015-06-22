@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/course_unit_video"
               android:layout_width="match_parent"
@@ -42,12 +43,11 @@
         android:gravity="center"
         android:layout_marginTop="45dp"
         android:id="@+id/message_container">
-        <TextView
-            android:id="@+id/empty_document_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="70dp"
-            android:textColor="@color/grey_3"
+        <org.edx.mobile.third_party.iconify.IconImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:iconColor="@color/grey_3"
+            app:iconName="fa_file_text_o"
             android:layout_margin="20dp"/>
 
         <TextView

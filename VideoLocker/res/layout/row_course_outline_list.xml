@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,11 +19,16 @@
     android:paddingBottom="8dp"
     tools:targetApi="17" >
 
-    <TextView
+    <org.edx.mobile.third_party.iconify.IconImageView
         android:id="@+id/row_type"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:padding="6dp"
+        android:paddingTop="21dp"
+        android:paddingLeft="0dp"
+        android:paddingStart="0dp"
+        android:paddingRight="21dp"
+        android:paddingEnd="21dp"
+        android:baselineAlignBottom="true"
         android:gravity="center_vertical"
         android:visibility="gone" />
 
@@ -68,11 +74,17 @@
                 android:visibility="gone"
                 android:textSize="14sp" />
 
-            <TextView
+            <org.edx.mobile.third_party.iconify.IconImageView
                 android:id="@+id/row_subtitle_icon"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:textDirection="locale"
+                android:paddingTop="21dp"
+                android:paddingLeft="0dp"
+                android:paddingStart="0dp"
+                android:paddingRight="21dp"
+                android:paddingEnd="21dp"
+                app:iconName="fa_check"
+                android:baselineAlignBottom="true"
                 android:gravity="center_vertical"
                 android:visibility="gone" />
         </LinearLayout>
@@ -92,11 +104,18 @@
         android:background="@android:color/transparent"
         tools:targetApi="17" >
 
-        <TextView
+        <org.edx.mobile.third_party.iconify.IconImageView
             android:id="@+id/bulk_download"
             android:gravity="center_vertical"
             android:layout_width="15dp"
-            android:layout_height="15dp" />
+            android:layout_height="15dp"
+            android:paddingTop="1dp"
+            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
+            android:paddingRight="1dp"
+            android:paddingEnd="1dp"
+            android:baselineAlignBottom="true"
+            app:iconName="fa_arrow_down" />
     </LinearLayout>
 
     

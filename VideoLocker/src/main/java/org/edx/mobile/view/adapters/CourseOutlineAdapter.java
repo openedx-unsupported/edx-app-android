@@ -117,12 +117,11 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         if ( !unit.isResponsiveUI() && unit.getType() != BlockType.VIDEO){
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
-            Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_laptop);
+            viewHolder.rowType.setIcon(Iconify.IconValue.fa_laptop);
             viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
             viewHolder.rowSubtitle.setText(unit.getType().name());
             if (unit.isGraded()) {
                 viewHolder.rowSubtitleIcon.setVisibility(View.VISIBLE);
-                Iconify.setIcon(viewHolder.rowSubtitleIcon, Iconify.IconValue.fa_check);
             } else {
                 viewHolder.rowSubtitleIcon.setVisibility(View.INVISIBLE);
             }
@@ -133,11 +132,11 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             if( unit.getType() == BlockType.PROBLEM ) {
-                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_list);
+                viewHolder.rowType.setIcon(Iconify.IconValue.fa_list);
             } else if( unit.getType() == BlockType.DISCUSSION ) {
-                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_comments_o);
+                viewHolder.rowType.setIcon(Iconify.IconValue.fa_comments_o);
             } else {
-                Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_file_o);
+                viewHolder.rowType.setIcon(Iconify.IconValue.fa_file_o);
             }
             checkAccessStatus(viewHolder, unit);
         }
@@ -162,9 +161,9 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             @Override
             public void onResult(Boolean accessed) {
                 if( accessed ) {
-                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.grey_3));
+                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.grey_3));
                 } else {
-                    viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_3));
+                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_3));
                 }
             }
             @Override
@@ -177,9 +176,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
     private void updateUIForVideo(int position, View convertView, final ViewHolder viewHolder, final SectionRow row ){
         VideoBlockModel unit = (VideoBlockModel) row.component;
 
-        Iconify.setIcon(viewHolder.rowType, Iconify.IconValue.fa_film);
+        viewHolder.rowType.setIcon(Iconify.IconValue.fa_film);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
-        Iconify.setIcon(viewHolder.bulkDownload, Iconify.IconValue.fa_arrow_down);
 
         final DownloadEntry videoData =  unit.getDownloadEntry(storage);
 
@@ -205,11 +203,11 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                 public void onResult(DownloadEntry.WatchedState result) {
                     DownloadEntry.WatchedState ws = result;
                     if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                        viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_3));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_3));
                     } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                        viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.cyan_2));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_2));
                     } else {
-                        viewHolder.rowType.setTextColor(context.getResources().getColor(R.color.grey_3));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.grey_3));
                     }
                 }
                 @Override
@@ -281,8 +279,6 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
         ViewHolder holder = (ViewHolder)convertView.getTag();
 
-        Iconify.setIcon(holder.bulkDownload, Iconify.IconValue.fa_arrow_down);
-
         holder.rowTitle.setText(component.getDisplayName());
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,7 +293,6 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             holder.rowSubtitleIcon.setVisibility(View.VISIBLE);
             holder.rowSubtitle.setVisibility(View.VISIBLE);
             holder.rowSubtitle.setText(component.getFormat());
-            Iconify.setIcon(holder.rowSubtitleIcon, Iconify.IconValue.fa_check);
         }
 
 

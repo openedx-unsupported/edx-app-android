@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
@@ -14,12 +15,12 @@
     android:orientation="horizontal"
     tools:targetApi="17" >
 
-    <TextView
+    <org.edx.mobile.third_party.iconify.IconImageView
         android:id="@+id/row_type"
-        android:textSize="24dp"
-        style="@style/light_grey_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:iconColor="@color/grey_video_size_text"
+        android:baselineAlignBottom="true"
         android:gravity="center_vertical"  />
 
     <LinearLayout
@@ -59,12 +60,12 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/right_arrow"
-        android:textSize="24dp"
-        style="@style/light_grey_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <org.edx.mobile.third_party.iconify.IconImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:iconColor="@color/grey_video_size_text"
+        app:iconName="fa_angle_right"
+        android:baselineAlignBottom="true"
         android:gravity="center_vertical"  />
 
 </LinearLayout>
