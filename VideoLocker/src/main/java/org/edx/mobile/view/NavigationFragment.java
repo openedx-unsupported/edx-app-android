@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,27 +16,31 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
+import roboguice.fragment.RoboFragment;
 
-public class NavigationFragment extends Fragment {
+
+public class NavigationFragment extends RoboFragment {
 
     private static final String TAG = "NavigationFragment";
+
+    @Inject
+    IEdxEnvironment environment;
 
     private PrefManager pref;
     private final Logger logger = new Logger(getClass().getName());
@@ -82,7 +85,7 @@ public class NavigationFragment extends Fragment {
                 ((BaseFragmentActivity) act).closeDrawer();
 
                 if (!(act instanceof MyCoursesListActivity)) {
-                    Router.getInstance().showMyCourses(act);
+                    environment.getRouter().showMyCourses(act);
                     act.finish();
                 }
             }
@@ -96,7 +99,7 @@ public class NavigationFragment extends Fragment {
                 ((BaseFragmentActivity) act).closeDrawer();
 
                 if (!(act instanceof MyVideosTabActivity)) {
-                    Router.getInstance().showMyVideos(act);
+                    environment.getRouter().showMyVideos(act);
                     //Finish need not be called if the current activity is MyCourseListing
                     // as on returning back from FindCourses,
                     // the student should be returned to the MyCourses screen
@@ -113,16 +116,16 @@ public class NavigationFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-                        ISegment segIO = SegmentFactory.getInstance();
+                        ISegment segIO = environment.getSegment();
                         segIO.trackUserFindsCourses();
                     } catch (Exception e) {
                         logger.error(e);
                     }
                     Activity act = getActivity();
                     ((BaseFragmentActivity) act).closeDrawer();
-                    if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
+                    if (environment.getConfig().getEnrollmentConfig().isEnabled()) {
                         if (!(act instanceof FindCoursesActivity)) {
-                            Router.getInstance().showFindCourses(act);
+                            environment.getRouter().showFindCourses(act);
 
                             //Finish need not be called if the current activity is MyCourseListing
                             // as on returning back from FindCourses,
@@ -153,7 +156,7 @@ public class NavigationFragment extends Fragment {
                 ((BaseFragmentActivity) act).closeDrawer();
 
                 if (!(act instanceof MyGroupsListActivity)) {
-                    Router.getInstance().showMyGroups(act);
+                    environment.getRouter().showMyGroups(act);
 
                     if (!(act instanceof MyCoursesListActivity)) {
                         act.finish();
@@ -171,7 +174,7 @@ public class NavigationFragment extends Fragment {
                 ((BaseFragmentActivity) act).closeDrawer();
 
                 if ( !(act instanceof SettingsActivity)) {
-                    Router.getInstance().showSettings(act);
+                    environment.getRouter().showSettings(act);
 
                     if (!(act instanceof MyCoursesListActivity)) {
                         act.finish();
@@ -184,10 +187,10 @@ public class NavigationFragment extends Fragment {
         tvSubmitFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String to = Config.getInstance().getFeedbackEmailAddress();
+                String to = environment.getConfig().getFeedbackEmailAddress();
                 String subject = getString(R.string.email_subject);
                 String email = "";
-                EmailUtil.sendEmail(getActivity(), to, subject, email);
+                EmailUtil.sendEmail(getActivity(), to, subject, email, environment.getConfig());
             }
         });
 
@@ -207,7 +210,7 @@ public class NavigationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Router.getInstance().forceLogout(getActivity());
+            environment.getRouter().forceLogout(getActivity(), environment.getSegment(), environment.getNotificationDelegate());
             }
         });
 
@@ -219,7 +222,7 @@ public class NavigationFragment extends Fragment {
             String versionName = PropertyUtil.getManifestVersionName(getActivity());
 
             if(versionName != null) {
-                String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
+                String envDisplayName = environment.getConfig().getEnvironmentDisplayName();
                 String text = String.format("%s %s %s",
                         getString(R.string.label_version), versionName, envDisplayName);
                 version_tv.setText(text);

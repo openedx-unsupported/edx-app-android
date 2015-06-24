@@ -22,7 +22,6 @@ import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -166,7 +165,7 @@ VideoListCallback, IPlayerEventCallback {
             container.setVisibility(View.VISIBLE);
 
             // reload this model
-            storage.reloadDownloadEntry(video);
+            environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
@@ -193,7 +192,7 @@ VideoListCallback, IPlayerEventCallback {
             TranscriptModel transcript = null;
             try {
                 if(video.videoId!=null){
-                    transcript =  ServiceManager.getInstance().getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript =  environment.getServiceManager().getTranscriptsOfVideo(video.eid, video.videoId);
                 }
 
             } catch (Exception e) {
@@ -215,7 +214,7 @@ VideoListCallback, IPlayerEventCallback {
                     } 
                 }
             } else {
-                DownloadEntry de = (DownloadEntry)db.getIVideoModelByVideoUrl(
+                DownloadEntry de = (DownloadEntry)environment.getDatabase().getIVideoModelByVideoUrl(
                         video.url, null); 
                 if(de!=null){
                     if(de.filepath!=null){

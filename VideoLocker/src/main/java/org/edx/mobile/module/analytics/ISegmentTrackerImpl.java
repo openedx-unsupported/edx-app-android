@@ -3,6 +3,8 @@ package org.edx.mobile.module.analytics;
 
 import android.content.Context;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.segment.analytics.Analytics;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
@@ -12,16 +14,20 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
-class ISegmentTrackerImpl implements ISegmentTracker {
+@Singleton
+public class ISegmentTrackerImpl implements ISegmentTracker {
 
     /* Singleton instance of Analytics */
     private Analytics analytics;
     private final Logger logger = new Logger(getClass().getName());
 
-    public ISegmentTrackerImpl(Context context) {
-        try {
-            Config config = Config.getInstance();
 
+    Config config;
+
+    @Inject
+    public ISegmentTrackerImpl(Context context, Config config) {
+        try {
+            this.config = config;
             String writeKey = config.getSegmentConfig().getSegmentWriteKey();
             boolean debugging = context.getResources().getBoolean(R.bool.analytics_debug);
             int queueSize = context.getResources().getInteger(R.integer.analytics_queue_size);

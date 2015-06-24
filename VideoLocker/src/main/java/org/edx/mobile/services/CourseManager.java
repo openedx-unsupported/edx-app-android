@@ -2,6 +2,9 @@ package org.edx.mobile.services;
 
 import android.util.LruCache;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
@@ -28,21 +31,18 @@ import java.util.Map;
 /**
  *  A central place for course data model transformation
  */
+
+@Singleton
 public class CourseManager {
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static CourseManager instance;
-
     private LruCache<String, CourseComponent> cachedComponent;
 
-    public static synchronized CourseManager getSharedInstance(){
-        if ( instance == null )
-            instance = new CourseManager();
-        return instance;
-    }
 
+    @Inject
+    ServiceManager serviceManager;
 
-    private CourseManager(){
+    public CourseManager(){
         cachedComponent = new LruCache<>(1);
     }
 
@@ -51,7 +51,7 @@ public class CourseManager {
         if ( component != null )
             return component;
         try {
-            component = ServiceManager.getInstance().getCourseStructureFromCache(courseId);
+            component = serviceManager.getCourseStructureFromCache(courseId);
             cachedComponent.put(courseId,component);
         } catch (Exception e) {
            logger.error(e);

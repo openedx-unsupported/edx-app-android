@@ -7,6 +7,8 @@ import android.graphics.Bitmap.CompressFormat;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 
 /**
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
  * @author Trey Robinson
  *
  */
+@Singleton
 public class ImageCacheManager{
 
     /**
@@ -29,8 +32,7 @@ public class ImageCacheManager{
         , MEMORY
     }
     
-    private static ImageCacheManager mInstance;
-    
+
     /**
      * Volley image loader 
      */
@@ -40,17 +42,23 @@ public class ImageCacheManager{
      * Image cache implementation
      */
     private ImageCache mImageCache;
-    
-    /**
-     * @return
-     *      instance of the cache manager
-     */
-    public static ImageCacheManager getInstance(){
-        if(mInstance == null)
-            mInstance = new ImageCacheManager();
-        
-        return mInstance;
+
+    @Inject
+    public ImageCacheManager(Context context) {
+        int DISK_IMAGECACHE_SIZE = 1024*1024*10;
+        Bitmap.CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
+        //PNG is lossless so quality is ignored but must be provided
+        int DISK_IMAGECACHE_QUALITY = 100;
+
+        RequestManager.init(context);
+        init(context,
+            context.getPackageCodePath()
+            , DISK_IMAGECACHE_SIZE
+            , DISK_IMAGECACHE_COMPRESS_FORMAT
+            , DISK_IMAGECACHE_QUALITY
+            , ImageCacheManager.CacheType.MEMORY);
     }
+
     
     /**
      * Initializer for the manager. Must be called prior to use. 
@@ -65,21 +73,25 @@ public class ImageCacheManager{
      *          file type compression format.
      * @param quality
      */
-    public void init(Context context, String uniqueName, int cacheSize, CompressFormat compressFormat, int quality, CacheType type){
+    public ImageCacheManager(Context context, String uniqueName, int cacheSize, CompressFormat compressFormat, int quality, CacheType type){
+        init(context, uniqueName, cacheSize, compressFormat, quality, type);
+    }
+
+    private void init(Context context, String uniqueName, int cacheSize, CompressFormat compressFormat, int quality, CacheType type){
         switch (type) {
-        case DISK:
-            mImageCache= new DiskLruImageCache(context, uniqueName, cacheSize, compressFormat, quality);
-            break;
-        case MEMORY:
-            mImageCache = new BitmapLruImageCache(cacheSize);
-        default:
-            mImageCache = new BitmapLruImageCache(cacheSize);
-            break;
+            case DISK:
+                mImageCache= new DiskLruImageCache(context, uniqueName, cacheSize, compressFormat, quality);
+                break;
+            case MEMORY:
+                mImageCache = new BitmapLruImageCache(cacheSize);
+            default:
+                mImageCache = new BitmapLruImageCache(cacheSize);
+                break;
         }
-        
+
         mImageLoader = new ImageLoader(RequestManager.getRequestQueue(), mImageCache);
     }
-    
+
     public Bitmap getBitmap(String url) {
         try {
             return mImageCache.getBitmap(createKey(url));

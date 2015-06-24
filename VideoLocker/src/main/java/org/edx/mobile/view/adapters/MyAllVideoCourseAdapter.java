@@ -9,16 +9,16 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.MemoryUtil;
-import org.edx.mobile.util.images.ImageCacheManager;
 
 public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
     private long lastClickTime;
 
-    public MyAllVideoCourseAdapter(Context context) {
-        super(context, R.layout.row_myvideo_course_list);
+    public MyAllVideoCourseAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_myvideo_course_list, environment);
         lastClickTime = 0;
     }
 
@@ -36,8 +36,8 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         holder.size_of_videos.setText(MemoryUtil.format(getContext(), enrollment.size));
 
         holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
-                ImageCacheManager.getInstance().getImageLoader());
+        holder.courseImage.setImageUrl(courseData.getCourse_image(environment.getConfig()),
+            environment.getImageCacheManager().getImageLoader());
         holder.courseImage.setTag(courseData);
     }
 

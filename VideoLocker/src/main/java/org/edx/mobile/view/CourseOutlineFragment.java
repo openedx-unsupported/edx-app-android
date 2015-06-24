@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
@@ -16,7 +18,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.services.CourseManager;
-import org.edx.mobile.services.DownloadManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
@@ -34,6 +36,11 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     private ListView listView;
     private TaskProcessCallback taskProcessCallback;
 
+    @Inject
+    CourseManager courseManager;
+
+    @Inject
+    VideoDownloadHelper downloadManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +93,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     }
 
     protected CourseComponent getCourseComponent(){
-        return CourseManager.getSharedInstance().getComponentById(courseData.getCourse().getId(), courseComponentId);
+        return courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
     }
 
     //Loading data to the Adapter
@@ -103,7 +110,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     private void initializeAdapter(){
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), db, storage) {
+            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(), environment.getStorage()) {
 
                 @Override
                 public void rowClicked(SectionRow row) {
@@ -112,9 +119,9 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                         super.rowClicked(row);
                         CourseComponent comp = row.component;
                         if ( comp.isContainer() ){
-                            Router.getInstance().showCourseContainerOutline(getActivity(), courseData, comp.getId());
+                            environment.getRouter().showCourseContainerOutline(getActivity(), courseData, comp.getId());
                         } else {
-                            Router.getInstance().showCourseUnitDetail(getActivity(), courseData, courseComponentId, comp);
+                            environment.getRouter().showCourseUnitDetail(getActivity(), courseData, courseComponentId, comp);
                         }
 
                     } catch (Exception ex) {
@@ -123,13 +130,13 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 }
 
                 public void download(List<HasDownloadEntry> models){
-                    DownloadManager.getSharedInstance().downloadVideos(
-                        (List)models, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
+                    downloadManager.downloadVideos(
+                        (List) models, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
                 }
 
                 public  void download(DownloadEntry videoData){
-                    DownloadManager.getSharedInstance().downloadVideo(
-                        videoData, (FragmentActivity)getActivity(), (DownloadManager.DownloadManagerCallback)getActivity());
+                    downloadManager.downloadVideo(
+                        videoData, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
                 }
             };
         }

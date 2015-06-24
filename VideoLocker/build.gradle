@@ -89,7 +89,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.phrase:phrase:1.0.3'
-    compile 'com.squareup.okhttp:okhttp:2.5.0-SNAPSHOT'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.android.support:support-v4:21.1.0'
@@ -107,6 +107,14 @@ dependencies {
     //Included for Parse/notification service
     compile 'com.parse.bolts:bolts-android:1.+'
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+
+    //Include DI framework
+    compile 'org.roboguice:roboguice:3.+'
+    provided 'org.roboguice:roboblender:3.+'
+    provided 'org.roboguice:roboblender:3.0.1'
+
+    // For the optional Nullable annotation
+    compile 'com.android.support:support-annotations:22.2.0'
 
     // test project configuration
      testCompile 'junit:junit:4.12'
@@ -129,7 +137,7 @@ dependencies {
     testCompile("org.mockito:mockito-core:1.9.5") {
         exclude group: 'org.hamcrest'
     }
-    testCompile 'com.squareup.okhttp:mockwebserver:2.5.0-SNAPSHOT'
+    testCompile 'com.squareup.okhttp:mockwebserver:2.4.0'
 }
 
 configurations {
@@ -228,6 +236,9 @@ android {
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'APK LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
 }

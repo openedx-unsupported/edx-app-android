@@ -43,4 +43,9 @@ public interface NotificationDelegate {
      * @return
      */
     public boolean isSubscribedByCourseId(String channel);
+
+    /**
+     * app upgrade or new installation, it may need to resync with notification server
+     */
+    public void checkAppUpgrade();
 }

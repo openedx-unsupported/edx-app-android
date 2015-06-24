@@ -6,20 +6,22 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.ServiceManager;
 
 import java.util.Date;
 
 public abstract class GetCourseStructureTask extends
 Task<CourseComponent> {
 
-    public GetCourseStructureTask(Context context) {
+    String courseId;
+
+    public GetCourseStructureTask(Context context, String courseId) {
         super(context);
+        this.courseId = courseId;
     }
 
-    protected CourseComponent doInBackground(Object... params) {
+    public CourseComponent call( ) throws Exception{
         try {
-            String courseId = (String) (params[0]);
+
             if(courseId!=null){
                 PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
                 long lastFetchTime = prefManager.getLastCourseStructureFetch(courseId);
@@ -30,11 +32,16 @@ Task<CourseComponent> {
                     useCacheType =  OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE;;
                     prefManager.setLastCourseStructureFetch(courseId, curTime);
                 }
-                final CourseComponent model = ServiceManager.getInstance().getCourseStructure(courseId, useCacheType);
+                final CourseComponent model = environment.getServiceManager().getCourseStructure(courseId, useCacheType);
                 if (model != null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            onFinish(model);
+                            try {
+                                onSuccess(model);
+                            } catch (Exception e) {
+                                handle(e);
+                                logger.error(e);
+                            }
                             stopProgress();
                         }
                     });

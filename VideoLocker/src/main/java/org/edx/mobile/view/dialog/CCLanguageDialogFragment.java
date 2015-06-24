@@ -1,7 +1,6 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,18 +8,26 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class CCLanguageDialogFragment extends DialogFragment {
+import roboguice.fragment.RoboDialogFragment;
+
+public class CCLanguageDialogFragment extends RoboDialogFragment {
 
     private final Logger logger = new Logger(getClass().getName());
     private IListDialogCallback callback;
     private LinkedHashMap<String, String> langList;
+
+    @Inject
+    IEdxEnvironment environment;
 
     public CCLanguageDialogFragment(){
     }
@@ -48,7 +55,7 @@ public class CCLanguageDialogFragment extends DialogFragment {
         try{
             ListView lv_ccLang = (ListView) v.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
-                    ClosedCaptionAdapter(getActivity().getBaseContext()) {
+                    ClosedCaptionAdapter(getActivity().getBaseContext(), environment) {
                 @Override
                 public void onItemClicked(HashMap<String, String> language) {
                     if (callback != null) {

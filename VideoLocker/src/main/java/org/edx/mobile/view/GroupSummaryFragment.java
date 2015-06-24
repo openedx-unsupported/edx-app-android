@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
@@ -34,10 +33,12 @@ import org.edx.mobile.view.adapters.SimpleAdapter;
 
 import java.util.List;
 
+import roboguice.fragment.RoboFragment;
+
 /**
  * Created by marcashman on 2014-12-15.
  */
-public class GroupSummaryFragment extends Fragment implements View.OnClickListener {
+public class GroupSummaryFragment extends RoboFragment implements View.OnClickListener {
 
     private static final String TAG = GroupSummaryFragment.class.getCanonicalName();
     private static final int REQUEST_ADD_FRIENDS = 0x0000dead;
@@ -57,6 +58,7 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
     private SocialGroup group;
     private int unread;
 
+    @Inject
     private ISegment segIO;
 
     @Override
@@ -73,8 +75,6 @@ public class GroupSummaryFragment extends Fragment implements View.OnClickListen
         if (adapter == null) {
             adapter = new GroupSummaryAdapter(getActivity());
         }
-
-        segIO = SegmentFactory.getInstance();
 
         try{
             segIO.screenViewsTracking("Group Summary - " + Long.toString(group.getId()));

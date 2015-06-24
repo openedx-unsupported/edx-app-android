@@ -11,11 +11,9 @@ import android.view.View.OnClickListener;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.view.custom.EButton;
 import org.edx.mobile.view.custom.ETextView;
 
@@ -51,7 +49,7 @@ public class LaunchActivity extends BaseFragmentActivity {
         sign_in_tv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Router.getInstance().showLogin(LaunchActivity.this);
+                environment.getRouter().showLogin(LaunchActivity.this);
             }
         });
 
@@ -60,16 +58,16 @@ public class LaunchActivity extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    segIO.trackUserSignUpForAccount();
+                    environment.getSegment().trackUserSignUpForAccount();
                 }catch(Exception e){
                     logger.error(e);
                 }
-                Router.getInstance().showRegistration(LaunchActivity.this);
+                environment.getRouter().showRegistration(LaunchActivity.this);
             }
         });
 
         try {
-            segIO.screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
+            environment.getSegment().screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
         } catch(Exception e) {
             logger.error(e);
         }

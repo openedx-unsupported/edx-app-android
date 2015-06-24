@@ -3,28 +3,28 @@ package org.edx.mobile.task;
 import android.content.Context;
 
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.TranscriptManager;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class EnqueueDownloadTask extends Task<Long> {
 
-    public EnqueueDownloadTask(Context context) {
+
+    List<DownloadEntry> downloadList;
+    public EnqueueDownloadTask(Context context, List<DownloadEntry> downloadList) {
         super(context);
+        this.downloadList = downloadList;
     }
 
     @Override
-    protected Long doInBackground(Object... params) {
+    public Long call( ) throws Exception{
         try {
-            IStorage storage = new Storage(context);
-            ArrayList<DownloadEntry> downloadList = (ArrayList<DownloadEntry>) params[0];
+
             if(downloadList!=null){
                 int count = 0;
                 for (DownloadEntry de : downloadList) {
                     try{
-                        if(storage.addDownload(de)!=-1){
+                        if(environment.getStorage().addDownload(de)!=-1){
                             count++;
                         }
                         TranscriptManager transManager = new TranscriptManager(context);

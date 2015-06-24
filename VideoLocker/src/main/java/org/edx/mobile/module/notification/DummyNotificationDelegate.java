@@ -35,4 +35,7 @@ public class DummyNotificationDelegate implements NotificationDelegate{
     public boolean isSubscribedByCourseId(String channel){
         return false;
     }
+
+    @Override
+    public void checkAppUpgrade(){}
 }

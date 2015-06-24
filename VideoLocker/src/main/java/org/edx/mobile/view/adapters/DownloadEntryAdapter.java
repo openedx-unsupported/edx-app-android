@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.storage.IStorage;
@@ -19,8 +20,8 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
 
     private IStorage storage;
 
-    public DownloadEntryAdapter(Context context) {
-        super(context, R.layout.row_download_list);
+    public DownloadEntryAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_download_list, environment);
     }
 
     public void setStore(IStorage storage) {

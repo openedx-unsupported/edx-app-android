@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.TypedValue;
@@ -25,7 +24,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
@@ -33,22 +35,14 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.LayoutAnimationControllerUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
-import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
@@ -56,8 +50,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import roboguice.activity.RoboFragmentActivity;
 
-public class BaseFragmentActivity extends FragmentActivity implements NetworkSubject, ICommonUI {
+public class BaseFragmentActivity extends RoboFragmentActivity implements NetworkSubject, ICommonUI {
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
@@ -71,9 +66,9 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
     private boolean isConnectedToWifi = false;
     private boolean applyPrevTransitionOnRestart = false;
     private boolean isActivityStarted = false;
-    protected IDatabase db;
-    protected IStorage storage;
-    protected ISegment segIO;
+    @Inject
+    protected IEdxEnvironment environment;
+
 
     private List<NetworkObserver> networkObservers = new ArrayList<NetworkObserver>();
 
@@ -115,7 +110,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
         }
 
-        initDB();
         try{
             applyTransitionNext();
         }catch(Exception ex){
@@ -147,7 +141,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
         PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
 
-        boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this);
+        boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this, environment.getConfig());
 
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
@@ -350,7 +344,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Router.getInstance().showDownloads(BaseFragmentActivity.this);
+                    environment.getRouter().showDownloads(BaseFragmentActivity.this);
                 }
             });
         }
@@ -513,8 +507,8 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                 if(AppConstants.offline_flag){
                     progressMenuItem.setVisible(false);
                 }else{
-                    if(db!=null){
-                        boolean downloading = db.isAnyVideoDownloading(null);
+                    if(environment.getDatabase()!=null){
+                        boolean downloading = environment.getDatabase().isAnyVideoDownloading(null);
                         if(!downloading){
                             progressMenuItem.setVisible(false);
                         }else{
@@ -530,7 +524,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
 
     //Update the Progress if Videos are downloading 
     private void updateDownloadingProgress() {
-        if(storage!=null){
+        if(environment.getStorage()!=null){
             try {
                 View view = progressMenuItem.getActionView();
                 if (view != null) {
@@ -542,7 +536,7 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
                     }else{
                         progressMenuItem.setVisible(false);
                     }
-                    storage.getAverageDownloadProgress(averageProgressCallback);
+                    environment.getStorage().getAverageDownloadProgress(averageProgressCallback);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -682,20 +676,6 @@ public class BaseFragmentActivity extends FragmentActivity implements NetworkSub
             }
         }
     };
-
-    private void initDB() {
-        storage = new Storage(this);
-
-        UserPrefs userprefs = new UserPrefs(this);
-        String username = null;
-        ProfileModel profile = userprefs.getProfile();
-        if(profile!=null){
-            username =profile.username;
-        }
-        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-
-        segIO = SegmentFactory.getInstance();
-    }
 
     protected DataCallback<Integer> averageProgressCallback = new DataCallback<Integer>() {
         @Override

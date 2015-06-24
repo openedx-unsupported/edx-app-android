@@ -1,7 +1,6 @@
 package org.edx.mobile.base;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,30 +8,28 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
 
-public class CourseDetailBaseFragment extends Fragment {
+import roboguice.fragment.RoboFragment;
 
-    protected IDatabase db;
-    protected IStorage storage;
-    protected ISegment segIO;
+public class CourseDetailBaseFragment extends RoboFragment {
+
+   @Inject
+    protected IEdxEnvironment environment;
+
     protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDB();
+
     }
 
     @Override
@@ -62,7 +59,7 @@ public class CourseDetailBaseFragment extends Fragment {
                 openInBrowserTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BrowserUtil.open(getActivity(), 
+                        new BrowserUtil().open(getActivity(),
                                 urlStringBuffer.toString());
                     }
                 });
@@ -87,21 +84,6 @@ public class CourseDetailBaseFragment extends Fragment {
         }
     }
     
-    private void initDB() {
-        storage = new Storage(getActivity());
-
-        UserPrefs userprefs = new UserPrefs(getActivity());
-        String username = null;
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if(profile!=null){
-                username =profile.username;
-            }
-        }
-        db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-
-        segIO = SegmentFactory.getInstance();
-    }
 
     /**
      * Returns user's profile.

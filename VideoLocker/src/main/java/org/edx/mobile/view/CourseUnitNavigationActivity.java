@@ -119,7 +119,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         setApplyPrevTransitionOnRestart(true);
 
         try{
-            segIO.screenViewsTracking("Assessment");
+            environment.getSegment().screenViewsTracking("Assessment");
         }catch(Exception e){
             logger.error(e);
         }
@@ -142,7 +142,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
         setCurrentUnit( pagerAdapter.getUnit(curIndex) );
-        db.updateAccess(null, selectedUnit.getId(), true);
+        environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
         CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
         View prevButton = findViewById(R.id.goto_prev);
         View nextButton = findViewById(R.id.goto_next);

@@ -2,21 +2,27 @@ package org.edx.mobile.http;
 
 import android.os.Bundle;
 
+import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO - we won't need this api when we fully migrate the code to okhttp
@@ -90,4 +96,26 @@ public interface IApi {
 
     List<HttpCookie> getSessionExchangeCookie() throws Exception;
 
+    @Deprecated
+    String getUnitUrlByVideoById(String courseId, String videoId);
+    @Deprecated
+    VideoResponseModel getSubsectionById(String courseId, String subsectionId)
+        throws Exception;
+    @Deprecated
+    VideoResponseModel getVideoById(String courseId, String videoId)
+        throws Exception;
+    @Deprecated
+    LectureModel getLecture(String courseId, String chapterName, String lectureName)
+        throws Exception;
+    @Deprecated
+    Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
+        throws Exception;
+    @Deprecated
+    Map<String, SectionEntry> getCourseHierarchy(String courseId)
+        throws Exception;
+    @Deprecated
+    ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
+        (String courseId, String chapter);
+
+    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception;
 }

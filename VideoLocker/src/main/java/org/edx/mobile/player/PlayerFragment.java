@@ -13,7 +13,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -33,15 +32,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.FacebookDialog;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
@@ -66,18 +65,23 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import roboguice.fragment.RoboFragment;
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
-public class PlayerFragment extends Fragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
+public class PlayerFragment extends RoboFragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
 
     private enum VideoNotPlayMessageType {IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB, IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE}
 
     private static final int MSG_TYPE_TICK = 2014;
     private static final int DELAY_TIME = 1000;
+
+    @Inject
+    IEdxEnvironment environment;
+
     protected IPlayer player;
     private boolean isPrepared = false;
     private boolean stateSaved = false;
@@ -100,7 +104,9 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     private LayoutInflater layoutInflater;
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
-    private ISegment segIO;
+
+
+
     private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
 
     private boolean isManualFullscreen = false;
@@ -164,7 +170,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        segIO = SegmentFactory.getInstance();
+
         // save this fragment across activity re-creations
         //TODO - or FIXME  after playerFragment become a nested fragement,
         //we need to find a way to save status
@@ -277,7 +283,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         } else {
                             urlStringBuffer.append( videoEntry.url);
                         }
-                        BrowserUtil.open(getActivity(),
+                        new BrowserUtil().open(getActivity(),
                                 urlStringBuffer.toString());
                     }
 
@@ -635,7 +641,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                segIO.trackVideoPause(videoEntry.videoId, current_time,
+                environment.getSegment().trackVideoPause(videoEntry.videoId, current_time,
                         videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -766,7 +772,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         clearAllErrors();
 
         try{
-            segIO.trackVideoLoading(videoEntry.videoId, videoEntry.eid, 
+            environment.getSegment().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
                     videoEntry.lmsUrl);
         }catch(Exception e){
             logger.error(e);
@@ -804,7 +810,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                segIO.trackVideoPlaying(videoEntry.videoId, current_time
+                environment.getSegment().trackVideoPlaying(videoEntry.videoId, current_time
                         , videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -832,7 +838,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
         try{
             if(player!=null){
                 double current_time = player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND ;
-                segIO.trackVideoStop(videoEntry.videoId,
+                environment.getSegment().trackVideoStop(videoEntry.videoId,
                         current_time, videoEntry.eid, videoEntry.lmsUrl);
             }
         }catch(Exception e){
@@ -862,7 +868,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public void callLMSServer(String url) {
         try{
             if(url!=null){
-                BrowserUtil.open(getActivity(), url);
+                new BrowserUtil().open(getActivity(), url);
             }
         }catch(Exception e){
             logger.error(e);
@@ -911,7 +917,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
             if (isPrepared) {
-                if (segIO == null) {
+                if (environment.getSegment() == null) {
                     logger.warn("segment is NOT initialized, cannot capture event enterFullScreen");
                     return;
                 }
@@ -924,7 +930,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                     return;
                 }
 
-                segIO.trackVideoOrientation(videoEntry.videoId,
+                environment.getSegment().trackVideoOrientation(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
                         true, videoEntry.eid, videoEntry.lmsUrl);
             }
@@ -939,7 +945,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
             if (isPrepared) {
-                if (segIO == null) {
+                if (environment.getSegment() == null) {
                     logger.warn("segment is NOT initialized, cannot capture event exitFullScreen");
                     return;
                 }
@@ -952,7 +958,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                     return;
                 }
 
-                segIO.trackVideoOrientation(videoEntry.videoId,
+                environment.getSegment().trackVideoOrientation(videoEntry.videoId,
                         player.getCurrentPosition() / AppConstants.MILLISECONDS_PER_SECOND,
                         false, videoEntry.eid, videoEntry.lmsUrl);
             }
@@ -1016,7 +1022,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
     public void onConnectedToMobile(){
         UserPrefs pref = new UserPrefs(getActivity());
         boolean wifiPreference = pref.isDownloadOverWifiOnly();
-        if(!NetworkUtil.isOnZeroRatedNetwork(getActivity()) && wifiPreference){
+        if(!NetworkUtil.isOnZeroRatedNetwork(getActivity(), environment.getConfig()) && wifiPreference){
             //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
             //then prompt user to set change his wifi settings
             showWifiSettingsMessage();
@@ -1479,7 +1485,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
 
             ListView lv_ccLang = (ListView) layout.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
-                    ClosedCaptionAdapter(getActivity()) {
+                    ClosedCaptionAdapter(getActivity(), environment) {
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
                     try{
@@ -1493,7 +1499,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         //subtitleSelected = pos;
                         try{
                             if(player!=null){
-                                segIO.trackTranscriptLanguage(videoEntry.videoId,
+                                environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1570,7 +1576,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         }
                         try{
                             if(player!=null){
-                                segIO.trackHideTranscript(videoEntry.videoId,
+                                environment.getSegment().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1620,10 +1626,10 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                             PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
                             pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, languageSubtitle);
                             if(player!=null){
-                                segIO.trackShowTranscript(videoEntry.videoId,
+                                environment.getSegment().trackShowTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
-                                segIO.trackTranscriptLanguage(videoEntry.videoId,
+                                environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1648,7 +1654,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                             PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
                             pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, getString(R.string.lbl_cc_cancel));
                             if(player!=null){
-                                segIO.trackHideTranscript(videoEntry.videoId,
+                                environment.getSegment().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                         videoEntry.eid, videoEntry.lmsUrl);
                             }
@@ -1722,7 +1728,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
                         if (srt != null) {
                             try{
                                 if(player!=null){
-                                    segIO.trackShowTranscript(videoEntry.videoId,
+                                    environment.getSegment().trackShowTranscript(videoEntry.videoId,
                                             player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
                                             videoEntry.eid, videoEntry.lmsUrl);
                                 }
@@ -1754,7 +1760,7 @@ public class PlayerFragment extends Fragment implements IPlayerListener, Seriali
             if(isRewindClicked){
                 resetClosedCaptioning();
             }
-            segIO.trackVideoSeek(videoEntry.videoId,
+            environment.getSegment().trackVideoSeek(videoEntry.videoId,
                     lastPostion/AppConstants.MILLISECONDS_PER_SECOND,
                     newPosition/AppConstants.MILLISECONDS_PER_SECOND,
                     videoEntry.eid, videoEntry.lmsUrl,

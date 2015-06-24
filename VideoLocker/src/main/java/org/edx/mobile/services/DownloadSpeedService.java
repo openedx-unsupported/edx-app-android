@@ -1,6 +1,5 @@
 package org.edx.mobile.services;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -8,17 +7,16 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 
+import com.google.inject.Inject;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.DownloadDescriptor;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -26,10 +24,12 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import roboguice.service.RoboService;
+
 /**
  * Created by marcashman on 2014-12-01.
  */
-public class DownloadSpeedService extends Service {
+public class DownloadSpeedService extends RoboService {
 
     private static final String TAG = DownloadSpeedService.class.getCanonicalName();
     private static final long NS_PER_SEC = 1000000000;
@@ -48,7 +48,12 @@ public class DownloadSpeedService extends Service {
 
     private static final Logger logger = new Logger(DownloadSpeedService.class);
 
+    @Inject
     private ISegment segIO;
+
+    @Inject
+    RestApiManager apiManager;
+
     SpeedTestHandler messageHandler;
 
     Timer timer = null;
@@ -82,8 +87,6 @@ public class DownloadSpeedService extends Service {
     public void onCreate() {
         startThread();
 
-        segIO = SegmentFactory.getInstance();
-
         DELAY_IN_MILLISECONDS = getResources().getInteger(R.integer.delay_speed_test_in_milliseconds);
 
         super.onCreate();
@@ -107,7 +110,7 @@ public class DownloadSpeedService extends Service {
                 .url(file.getUrl())
                 .build();
 
-            RestApiManager.getInstance(MainApplication.instance()).createSpeedTestClient().newCall(request).enqueue(new Callback() {
+            apiManager.createSpeedTestClient().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException throwable) {
                     logger.error(throwable);

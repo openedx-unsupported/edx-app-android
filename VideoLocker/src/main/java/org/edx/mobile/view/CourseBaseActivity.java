@@ -16,7 +16,6 @@ import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -25,6 +24,8 @@ import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
 /**
  *  A base class to handle some common task
@@ -33,14 +34,23 @@ import de.greenrobot.event.EventBus;
  *  2. progress_spinner
  *  3. offline_mode_message
  */
+@ContentView(R.layout.activity_course_base)
 public abstract  class CourseBaseActivity  extends BaseFragmentActivity implements TaskProcessCallback{
 
-    private View offlineBar;
-    private View lastAccessBar;
-    protected View downloadProgressBar;
-    protected IconView downloadIndicator;
+    @InjectView(R.id.offline_bar)
+    View offlineBar;
 
-    protected ProgressBar progressWheel;
+    @InjectView(R.id.last_access_bar)
+    View lastAccessBar;
+
+    @InjectView(R.id.download_in_progress_bar)
+    View downloadProgressBar;
+
+    @InjectView(R.id.video_download_indicator)
+    TextView downloadIndicator;
+
+    @InjectView(R.id.progress_spinner)
+    ProgressBar progressWheel;
 
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
@@ -59,26 +69,19 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         blockDrawerFromOpening();
     }
 
-    protected int getContentViewResourceId(){
-        return R.layout.activity_course_base;
-    }
-
     protected void initialize(Bundle arg){
-        setContentView(getContentViewResourceId());
 
         setApplyPrevTransitionOnRestart(true);
-        offlineBar = findViewById(R.id.offline_bar);
-        lastAccessBar = findViewById(R.id.last_access_bar);
-        downloadProgressBar = findViewById(R.id.download_in_progress_bar);
-        downloadIndicator = (IconView)findViewById(R.id.video_download_indicator);
+        Iconify.setIcon(downloadIndicator, Iconify.IconValue.fa_spinner);
+
         findViewById(R.id.download_in_progress_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Router.getInstance().showDownloads(CourseBaseActivity.this);
+                environment.getRouter().showDownloads(CourseBaseActivity.this);
             }
         });
 
-        progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
+
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
             invalidateOptionsMenu();
@@ -260,7 +263,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
+                new BrowserUtil().open(CourseBaseActivity.this, getUrlForWebView());
                 return true;
             }
         });

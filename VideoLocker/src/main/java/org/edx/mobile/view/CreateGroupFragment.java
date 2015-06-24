@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -18,13 +17,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
@@ -35,7 +33,9 @@ import org.edx.mobile.view.dialog.InstallFacebookDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateGroupFragment extends Fragment implements View.OnClickListener {
+import roboguice.fragment.RoboFragment;
+
+public class CreateGroupFragment extends RoboFragment implements View.OnClickListener {
 
     public static String TAG = CreateGroupFragment.class.getCanonicalName();
     public static String ALL_FRIENDS = TAG + ".all_friends";
@@ -59,6 +59,9 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
     private List<SocialMember> friendsConnectedToEdx;
 
     private IUiLifecycleHelper uiHelper;
+
+    @Inject
+    ISegment segment;
 
     private SocialProvider.Callback<List<SocialMember>> getFriendsCallback = new SocialProvider.Callback<List<SocialMember>>() {
         @Override
@@ -140,10 +143,8 @@ public class CreateGroupFragment extends Fragment implements View.OnClickListene
             new FacebookProvider().getMyFriends(getActivity(), getFriendsCallback);
         }
 
-        ISegment segIO = SegmentFactory.getInstance();
-
         try{
-            segIO.screenViewsTracking("Create Games Group");
+            segment.screenViewsTracking("Create Games Group");
         }catch(Exception e){
             logger.error(e);
         }

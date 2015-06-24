@@ -56,7 +56,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         }
 
         try{
-            segIO.screenViewsTracking(getString(R.string.label_my_videos));
+            environment.getSegment().screenViewsTracking(getString(R.string.label_my_videos));
         }catch(Exception e){
             logger.error(e);
         }

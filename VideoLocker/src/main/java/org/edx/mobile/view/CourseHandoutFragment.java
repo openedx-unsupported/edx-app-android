@@ -1,41 +1,41 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.logger.Logger;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetHandoutTask;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-public class CourseHandoutFragment extends Fragment {
+import roboguice.fragment.RoboFragment;
+
+public class CourseHandoutFragment extends RoboFragment {
 
     public WebView webview;
 
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String ENROLLMENT = TAG + ".enrollment";
-    protected ISegment segIO;
     protected final Logger logger = new Logger(getClass().getName());
+
+    @Inject
+    ISegment segIO;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,6 @@ public class CourseHandoutFragment extends Fragment {
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
                 .getSerializable(ENROLLMENT);
 
-        segIO = SegmentFactory.getInstance();
 
         try{
             segIO.screenViewsTracking(courseData.getCourse().getName() +
@@ -68,7 +67,7 @@ public class CourseHandoutFragment extends Fragment {
 
             @Override
             public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
+                new BrowserUtil().open(getActivity(), url);
             }
         };
 
@@ -94,19 +93,19 @@ public class CourseHandoutFragment extends Fragment {
     }
 
     private void loadData(EnrolledCoursesResponse enrollment) {
-        GetHandoutTask task = new GetHandoutTask(getActivity()) {
+        GetHandoutTask task = new GetHandoutTask(getActivity(), enrollment) {
 
             @Override
-            public void onFinish(HandoutModel result) {
+            public void onSuccess(HandoutModel result) {
                 try {
                     if(result!=null&&(!TextUtils.isEmpty(result.handouts_html))){
                         hideEmptyHandoutMessage();
-                        webview.loadDataWithBaseURL(new Api(context).getBaseUrl(), result.handouts_html,
+                        webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), result.handouts_html,
                                 "text/html",Encoding.UTF_8.toString(),null);
                         webview.setWebViewClient(new WebViewClient(){
                             @Override
                             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                                BrowserUtil.open(getActivity(), url);
+                                new BrowserUtil().open(getActivity(), url);
                                 return true;
                             }
                         });
@@ -127,7 +126,7 @@ public class CourseHandoutFragment extends Fragment {
         };
         ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.api_spinner);
         task.setProgressDialog(progressBar);
-        task.execute(enrollment);
+        task.execute();
 
     }
 

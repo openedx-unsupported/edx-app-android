@@ -4,14 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-
-import com.parse.ParsePushBroadcastReceiver;
-
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+
+import com.parse.ParsePushBroadcastReceiver;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.CourseAnnouncementEvent;
@@ -41,7 +40,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
     protected void onPushReceive(android.content.Context context, android.content.Intent intent) {
         try{
             CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
-            if ( payload != null && UserNotificationManager.hasNotificationHash(context, payload.getIdentifier()) )
+            if ( payload != null && ParseHandleHelper.hasNotificationHash(context, payload.getIdentifier()) )
                 return;
             if( enableFlyinWindow ) {
                 Intent intent2 = new Intent(context, NotificationFlyinService.class);

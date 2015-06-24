@@ -15,14 +15,11 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.FlyingMessageEvent;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
@@ -84,7 +81,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                 @Override
                 public void onOpenExternalURL(String url) {
                     // open URL in external browser
-                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
+                    new BrowserUtil().open(FindCoursesBaseActivity.this, url);
                 }
             };
 
@@ -190,7 +187,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         //If Path id is not null or empty then call CourseInfoActivity
         if(!TextUtils.isEmpty(pathId)){
             logger.debug("PathId" +pathId);
-            Router.getInstance().showCourseInfo(this, pathId);
+            environment.getRouter().showCourseInfo(this, pathId);
         }
     }
 
@@ -203,7 +200,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         }
 
         try {
-            segIO.trackEnrollClicked(courseId, emailOptIn);
+            environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
         }catch(Exception e){
             logger.error(e);
         }
@@ -212,9 +209,10 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
 
         logger.debug("CourseId - "+courseId);
         logger.debug("Email option - "+emailOptIn);
-        EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this) {
+        EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this,
+            courseId, emailOptIn) {
             @Override
-            public void onFinish(Boolean result) {
+            public void onSuccess(Boolean result) {
                 isTaskInProgress = false;
                 if(result!=null && result) {
                     logger.debug("Enrollment successful");
@@ -226,8 +224,8 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                     sendBroadcast(intent);
 
                     // show flying message about the success of Enroll
-                    Api api = new Api(context);
-                    EnrolledCoursesResponse course = api.getCourseById(courseId);
+
+                    EnrolledCoursesResponse course = environment.getServiceManager().getCourseById(courseId);
                     String msg;
                     if (course == null || course.getCourse() == null ) {
                         // this means, you were not already enrolled to this course
@@ -251,7 +249,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
             }
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
-        enrollForCourseTask.execute(courseId,emailOptIn);
+        enrollForCourseTask.execute();
     }
 
     @Override
