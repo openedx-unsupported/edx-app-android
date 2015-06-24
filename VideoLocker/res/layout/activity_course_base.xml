@@ -123,7 +123,7 @@
                     android:layout_gravity="center_vertical"
                     tools:targetApi="17">
 
-                      <org.edx.mobile.third_party.iconify.IconImageView
+                      <org.edx.mobile.third_party.iconify.IconView
                         android:id="@+id/video_download_indicator"
                         app:iconName="fa_spinner"
                         android:layout_width="14dp"

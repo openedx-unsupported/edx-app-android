@@ -43,7 +43,7 @@
         android:gravity="center"
         android:layout_marginTop="45dp"
         android:id="@+id/message_container">
-        <org.edx.mobile.third_party.iconify.IconImageView
+        <org.edx.mobile.third_party.iconify.IconView
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:iconColor="@color/grey_3"

@@ -14,7 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.third_party.iconify.IconImageView;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.images.ImageCacheManager;
 
@@ -138,7 +138,7 @@ public class CourseDashboardFragment extends Fragment {
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.row_course_dashboard_list, null);
-        holder.typeView = (IconImageView) holder.rowView.findViewById(R.id.row_type);
+        holder.typeView = (IconView) holder.rowView.findViewById(R.id.row_type);
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);
         parent.addView(holder.rowView);
@@ -147,7 +147,7 @@ public class CourseDashboardFragment extends Fragment {
 
     private class ViewHolder {
         View rowView;
-        IconImageView typeView;
+        IconView typeView;
         TextView titleView;
         TextView subtitleView;
     }

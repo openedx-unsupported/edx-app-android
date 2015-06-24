@@ -15,7 +15,7 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.third_party.iconify.IconImageView;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -138,17 +138,17 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     public ViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.rowType = (IconImageView) convertView
+        holder.rowType = (IconView) convertView
             .findViewById(R.id.row_type);
         holder.rowTitle = (ETextView) convertView
             .findViewById(R.id.row_title);
         holder.rowSubtitle = (ETextView) convertView
             .findViewById(R.id.row_subtitle);
-        holder.rowSubtitleIcon = (IconImageView) convertView
+        holder.rowSubtitleIcon = (IconView) convertView
             .findViewById(R.id.row_subtitle_icon);
         holder.noOfVideos = (TextView) convertView
             .findViewById(R.id.no_of_videos);
-        holder.bulkDownload = (IconImageView) convertView
+        holder.bulkDownload = (IconView) convertView
             .findViewById(R.id.bulk_download);
         holder.bulkDownloadVideos = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
@@ -160,11 +160,11 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     public static class ViewHolder{
 
-        IconImageView rowType;
+        IconView rowType;
         ETextView rowTitle;
         ETextView rowSubtitle;
-        IconImageView rowSubtitleIcon;
-        IconImageView bulkDownload;
+        IconView rowSubtitleIcon;
+        IconView bulkDownload;
         TextView noOfVideos;
         LinearLayout bulkDownloadVideos;
         View rowSubtitlePanel;
