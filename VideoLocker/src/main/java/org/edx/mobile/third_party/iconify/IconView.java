@@ -9,19 +9,19 @@ import android.widget.ImageView;
 
 import org.edx.mobile.R;
 
-public class IconImageView extends ImageView {
+public class IconView extends ImageView {
 
     private int color;
 
-    public IconImageView(Context context) {
+    public IconView(Context context) {
         super(context);
     }
 
-    public IconImageView(Context context, AttributeSet attrs) {
+    public IconView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public IconImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public IconView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.IconView, defStyleAttr, 0);

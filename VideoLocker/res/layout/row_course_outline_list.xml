@@ -19,7 +19,7 @@
     android:paddingBottom="8dp"
     tools:targetApi="17" >
 
-    <org.edx.mobile.third_party.iconify.IconImageView
+    <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/row_type"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -74,7 +74,7 @@
                 android:visibility="gone"
                 android:textSize="14sp" />
 
-            <org.edx.mobile.third_party.iconify.IconImageView
+            <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/row_subtitle_icon"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -104,7 +104,7 @@
         android:background="@android:color/transparent"
         tools:targetApi="17" >
 
-        <org.edx.mobile.third_party.iconify.IconImageView
+        <org.edx.mobile.third_party.iconify.IconView
             android:id="@+id/bulk_download"
             android:gravity="center_vertical"
             android:layout_width="15dp"
