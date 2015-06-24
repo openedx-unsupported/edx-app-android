@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +8,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.util.images.ImageCacheManager;
 
-public class CourseDashboardFragment extends Fragment {
+import roboguice.fragment.RoboFragment;
+
+public class CourseDashboardFragment extends RoboFragment {
+
     private TextView courseTextName;
     private TextView courseTextDetails;
 
@@ -32,6 +35,9 @@ public class CourseDashboardFragment extends Fragment {
     private ShowCourseOutlineCallback callback;
     private EnrolledCoursesResponse courseData;
 
+    @Inject
+    IEdxEnvironment environment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,7 @@ public class CourseDashboardFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_dashboard, container,
                 false);
+
         courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
         courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
 
@@ -50,6 +57,7 @@ public class CourseDashboardFragment extends Fragment {
         //but as number of rows are fixed and each row is different. the only common
         //thing is UI layout. so we reuse the same UI layout programmatically here.
         LinearLayout parent = (LinearLayout)  view.findViewById(R.id.dashboard_detail);
+
 
         ViewHolder holder = createViewHolder(inflater, parent);
 
@@ -85,7 +93,7 @@ public class CourseDashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if ( courseData != null )
-                    Router.getInstance().showHandouts(getActivity(), courseData);
+                    environment.getRouter().showHandouts(getActivity(), courseData);
             }
         });
 
@@ -98,7 +106,7 @@ public class CourseDashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if ( courseData != null )
-                    Router.getInstance().showCourseAnnouncement(getActivity(), courseData);
+                    environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
             }
         });
 
@@ -118,9 +126,9 @@ public class CourseDashboardFragment extends Fragment {
             if ( courseData == null )
                 return;
 
-            String headerImageUrl = courseData.getCourse().getCourse_image(getActivity());
+            String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
             NetworkImageView headerImageView = (NetworkImageView)getView().findViewById(R.id.header_image_view);
-            headerImageView.setImageUrl(headerImageUrl, ImageCacheManager.getInstance().getImageLoader() );
+            headerImageView.setImageUrl(headerImageUrl, environment.getImageCacheManager().getImageLoader() );
 
             courseTextName.setText(courseData.getCourse().getName());
             CourseEntry course = courseData.getCourse();

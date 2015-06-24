@@ -8,6 +8,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
 
@@ -19,18 +21,8 @@ import java.util.List;
 /**
  * Created by aleffert on 1/8/15.
  */
+@Singleton
 public class Config {
-    private static Config sInstance;
-
-    // Note that this is not thread safe. The expectation is that this only happens
-    // immediately when the app launches or synchronously at the start of a test.
-    public static void setInstance(Config config) {
-        sInstance = config;
-    }
-
-    public static Config getInstance() {
-        return sInstance;
-    }
 
     protected final Logger logger = new Logger(getClass().getName());
     private JsonObject mProperties;
@@ -254,7 +246,8 @@ public class Config {
         }
     }
 
-    Config(Context context) {
+    @Inject
+    public Config(Context context) {
         try {
             InputStream in = context.getAssets().open("config/config.json");
             JsonParser parser = new JsonParser();

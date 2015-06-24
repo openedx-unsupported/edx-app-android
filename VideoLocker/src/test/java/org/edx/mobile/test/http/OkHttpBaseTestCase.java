@@ -1,6 +1,5 @@
 package org.edx.mobile.test.http;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.JsonElement;
@@ -16,7 +15,6 @@ import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
-import org.robolectric.RuntimeEnvironment;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +38,7 @@ public class OkHttpBaseTestCase extends BaseTestCase {
 
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
-    protected Context context;
+
 
     /**
      * Returns the base url used by the mock server
@@ -56,9 +54,10 @@ public class OkHttpBaseTestCase extends BaseTestCase {
         server = new MockWebServer();
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
+    }
 
-        context = RuntimeEnvironment.application;
-
+    @Override
+    protected Config createConfig(){
         // Set up a new config instance that serves the mock host url
         JsonObject properties;
         try {
@@ -71,8 +70,7 @@ public class OkHttpBaseTestCase extends BaseTestCase {
             logger.error(e);
         }
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
-        Config.setInstance(new Config(properties));
-
+        return new Config(properties);
     }
 
     @Override

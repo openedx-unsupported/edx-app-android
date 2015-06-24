@@ -46,9 +46,9 @@ public class LastAccessManager {
                         +prefModuleId);
 
                     callback.showLastAccessedView(prefModuleId, courseId, view);
-                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance()) {
+                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance(),courseId) {
                         @Override
-                        public void onFinish(SyncLastAccessedSubsectionResponse result) {
+                        public void onSuccess(SyncLastAccessedSubsectionResponse result) {
                             syncWithServerOnSuccess(result, prefModuleId, prefManager, courseId, callback, view);
                         }
                         @Override
@@ -59,7 +59,7 @@ public class LastAccessManager {
                     };
 
                     callback.setFetchingLastAccessed( true );
-                    getLastAccessedTask.execute(courseId);
+                    getLastAccessedTask.execute( );
                 }
             }
         }catch(Exception e){
@@ -106,9 +106,9 @@ public class LastAccessManager {
                                            String prefModuleId, final String courseId, final LastAccessManagerCallback callback){
         try{
             SyncLastAccessedTask syncLastAccessTask = new SyncLastAccessedTask(
-                MainApplication.instance()) {
+                MainApplication.instance(),courseId, prefModuleId) {
                 @Override
-                public void onFinish(SyncLastAccessedSubsectionResponse result) {
+                public void onSuccess(SyncLastAccessedSubsectionResponse result) {
                     if(result!=null && result.getLastVisitedModuleId()!=null){
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
                         logger.debug("Last Accessed Module ID from Server Sync "
@@ -122,7 +122,7 @@ public class LastAccessManager {
                     logger.error(ex);
                 }
             };
-            syncLastAccessTask.execute(courseId, prefModuleId);
+            syncLastAccessTask.execute( );
         }catch(Exception e){
             logger.error(e);
         }

@@ -2,9 +2,8 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.ServiceManager;
 
 /**
  * This task represents Task for login by edX username and password.
@@ -12,16 +11,18 @@ import org.edx.mobile.module.prefs.PrefManager;
  *
  */
 public abstract class LoginTask extends Task<AuthResponse> {
+    String username;
+    String password;
 
-    public LoginTask(Context context) {
+    public LoginTask(Context context, String username, String password) {
         super(context);
+        this.username = username;
+        this.password = password;
     }
 
     @Override
-    protected AuthResponse doInBackground(Object... params) {
-        try { 
-            String username = params[0].toString();
-            String password = params[1].toString();
+    public AuthResponse call() throws Exception{
+        try {
             if(username!=null) {
                 return getAuthResponse(context, username, password);
             }
@@ -32,8 +33,8 @@ public abstract class LoginTask extends Task<AuthResponse> {
         return null;
     }
 
-    public static AuthResponse getAuthResponse(Context context, String username, String password) throws Exception {
-        Api api = new Api(context);
+    public  AuthResponse getAuthResponse(Context context, String username, String password) throws Exception {
+        ServiceManager api = environment.getServiceManager();
         AuthResponse res = api.auth(username, password);
 
         // get profile of this user

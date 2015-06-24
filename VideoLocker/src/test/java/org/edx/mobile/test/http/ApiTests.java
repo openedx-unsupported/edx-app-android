@@ -171,9 +171,9 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     public void login() throws Exception {
         if( shouldSkipTest ) return;
-        Config.TestAccountConfig config  = Config.getInstance().getTestAccountConfig();
+        Config.TestAccountConfig config2  = config.getTestAccountConfig();
 
-        AuthResponse res = api.auth(config.getName(), config.getPassword());
+        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
@@ -242,7 +242,7 @@ public class ApiTests extends HttpBaseTestCase {
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         final String courseId = e.getCourse().getId();
         HttpRequestDelegate<CourseComponent> requestDelegate = new HttpRequestDelegate<CourseComponent>(
-                api, null, ServiceManager.getInstance().getEndPointCourseStructure(courseId)) {
+                api, null, new ServiceManager().getEndPointCourseStructure(courseId)) {
             @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);

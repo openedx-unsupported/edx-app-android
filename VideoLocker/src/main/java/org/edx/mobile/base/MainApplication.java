@@ -4,33 +4,34 @@ package org.edx.mobile.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
+import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.Environment;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
-import org.edx.mobile.util.images.ImageCacheManager;
-import org.edx.mobile.util.images.RequestManager;
 import org.edx.mobile.view.Router;
 
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
+import roboguice.RoboGuice;
 
 /**
  * This class initializes the modules of the app based on the configuration.
@@ -41,6 +42,9 @@ public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
     public static final boolean ForumEnabled = false;
 
+    //FIXME - temporary solution
+    public static final boolean RETROFIT_ENABLED = false;
+
     protected final Logger logger = new Logger(getClass().getName());
 
     protected static MainApplication application;
@@ -49,7 +53,7 @@ public class MainApplication extends MultiDexApplication {
         return application;
     }
 
-
+    Injector injector;
 
     @Override
     public void onCreate() {
@@ -68,36 +72,29 @@ public class MainApplication extends MultiDexApplication {
         application = this;
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 
-        // setup environment
-        Environment env = new Environment();
-        env.setupEnvironment(this.getApplicationContext());
+        injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
+            (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
-        // setup image cache
-        createImageCache();
 
-        // initialize SegmentIO
-        if (Config.getInstance().getSegmentConfig().isEnabled()) {
-            SegmentFactory.makeInstance(this);
-        }
-
+        Config config = injector.getInstance(Config.class);
         // initialize Fabric
-        if (Config.getInstance().getFabricConfig().isEnabled()) {
+        if (config.getFabricConfig().isEnabled()) {
             Fabric.with(this, new Crashlytics());
         }
 
         // initialize NewRelic with crash reporting disabled
-        if (Config.getInstance().getNewRelicConfig().isEnabled()) {
+        if (config.getNewRelicConfig().isEnabled()) {
             //Crash reporting for new relic has been disabled
-            NewRelic.withApplicationToken(Config.getInstance().getNewRelicConfig().getNewRelicKey())
+            NewRelic.withApplicationToken(config.getNewRelicConfig().getNewRelicKey())
                 .withCrashReportingEnabled(false)
                 .start(this);
         }
 
         // initialize Facebook SDK
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
         if ( !isOnZeroRatedNetwork
-            && Config.getInstance().getFacebookConfig().isEnabled()) {
-            com.facebook.Settings.setApplicationId(Config.getInstance().getFacebookConfig().getFacebookAppId());
+            && config.getFacebookConfig().isEnabled()) {
+            com.facebook.Settings.setApplicationId(config.getFacebookConfig().getFacebookAppId());
         }
 
         boolean needVersionUpgrade = needVersionUpgrade(this);
@@ -105,9 +102,9 @@ public class MainApplication extends MultiDexApplication {
         // it maybe good to support multiple notification providers running
         // at the same time, as it is less like to be the case in the future,
         // we at two level of controls just for easy change of different providers.
-        if ( Config.getInstance().isNotificationEnabled() ){
+        if ( config.isNotificationEnabled() ){
             Config.ParseNotificationConfig parseNotificationConfig =
-                Config.getInstance().getParseNotificationConfig();
+                config.getParseNotificationConfig();
             if ( parseNotificationConfig.isEnabled() ) {
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
@@ -117,7 +114,7 @@ public class MainApplication extends MultiDexApplication {
 
         if( needVersionUpgrade ) {
             // try repair of download data if app version is updated
-            new Storage(this).repairDownloadCompletionData();
+            injector.getInstance(IStorage.class).repairDownloadCompletionData();
 
             //try to clear browser cache.
             //there is an potential issue related to the 301 redirection.
@@ -130,34 +127,17 @@ public class MainApplication extends MultiDexApplication {
     }
 
     public void onEvent(CourseAnnouncementEvent event) {
+        ISegment segment = injector.getInstance(ISegment.class);
         if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED ) {
-            SegmentFactory.getInstance().trackNotificationReceived(event.courseId);
+            segment.trackNotificationReceived(event.courseId);
             EventBus.getDefault().removeStickyEvent(event);
         }
         if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_TAPPED ) {
-            SegmentFactory.getInstance().trackNotificationTapped(event.courseId);
+            segment.trackNotificationTapped(event.courseId);
             EventBus.getDefault().removeStickyEvent(event);
         }
     }
 
-    /**
-     * Create the image cache. Uses Memory Cache by default.
-     * Change to Disk for a Disk based LRU implementation.
-     */
-    protected void createImageCache(){
-        int DISK_IMAGECACHE_SIZE = 1024*1024*10;
-        CompressFormat DISK_IMAGECACHE_COMPRESS_FORMAT = CompressFormat.PNG;
-        //PNG is lossless so quality is ignored but must be provided
-        int DISK_IMAGECACHE_QUALITY = 100;
-
-        RequestManager.init(this);
-        ImageCacheManager.getInstance().init(this,
-            this.getPackageCodePath()
-            , DISK_IMAGECACHE_SIZE
-            , DISK_IMAGECACHE_COMPRESS_FORMAT
-            , DISK_IMAGECACHE_QUALITY
-            , ImageCacheManager.CacheType.MEMORY);
-    }
 
 
     /**
@@ -167,7 +147,7 @@ public class MainApplication extends MultiDexApplication {
         logger.debug("onApplicationLaunchedFromBackground");
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         if ( pref.hasAuthTokenSocialCookie() ){
-            Router.getInstance().forceLogout(this);
+            injector.getInstance(Router.class).forceLogout(this, injector.getInstance(ISegment.class),injector.getInstance(NotificationDelegate.class));
         }
     }
 

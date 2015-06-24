@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.parse.ParseInstallation;
 
-import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.task.Task;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public abstract class ParseSyncTask extends Task<Void> {
     }
 
     @Override
-    protected Void doInBackground(Object... params) {
+    public Void call( ) throws Exception{
         try {
             subscribedChannels = ParseInstallation.getCurrentInstallation().getList("channels");
         } catch (Exception ex) {

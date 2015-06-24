@@ -4,7 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -13,7 +16,6 @@ import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.JavaUtil;
 
 public class DownloadEntry implements SectionItemInterface, VideoModel {
@@ -47,6 +49,9 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
     public boolean isVideoForWebOnly; //default is FALSE
     public String lmsUrl;
     public TranscriptModel transcript;
+
+    @Inject
+    IEdxEnvironment environment;
     
     /**
      * Fields that are not part of database nor API
@@ -82,7 +87,7 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
         try{
             lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
             if(lmsUrl==null || lmsUrl.trim().length()==0){
-                lmsUrl = ServiceManager.getInstance().getUnitUrlByVideoById(eid, videoId);
+                lmsUrl = environment.getServiceManager().getUnitUrlByVideoById(eid, videoId);
             }
         }catch(Exception e){
             new Logger(getClass().getName()).error(e);

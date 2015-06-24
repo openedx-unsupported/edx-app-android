@@ -3,12 +3,17 @@ package org.edx.mobile.social;
 import android.app.Activity;
 import android.content.Context;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.social.facebook.FacebookAuth;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 public class SocialFactory {
+    @Inject
+    static Config config;
+
     //TODO - we should create a central place for application wide constants.
     public static enum SOCIAL_SOURCE_TYPE {
         TYPE_UNKNOWN(-1, "unknown"), TYPE_GOOGLE(100, "google-oauth2"), TYPE_FACEBOOK(101,"facebook");
@@ -31,16 +36,16 @@ public class SocialFactory {
     }
 
     
-    public static ISocial getInstance(Activity activity, SOCIAL_SOURCE_TYPE type) {
+    public static ISocial getInstance(Activity activity, SOCIAL_SOURCE_TYPE type, Config config) {
         if (type == SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
-            if ( isSocialFeatureEnabled(activity.getApplicationContext(), type) ) {
+            if ( isSocialFeatureEnabled(activity.getApplicationContext(), type, config) ) {
                 return new GoogleOauth2(activity);
             }
             else {
                 return new ISocialEmptyImpl();
             }
         } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
-            if ( isSocialFeatureEnabled(activity.getApplicationContext(),type)) {
+            if ( isSocialFeatureEnabled(activity.getApplicationContext(),type, config)) {
                 return new FacebookAuth(activity);
             }
             else {
@@ -50,14 +55,14 @@ public class SocialFactory {
         return null;
     }
 
-    public static boolean isSocialFeatureEnabled(Context context, SOCIAL_SOURCE_TYPE type) {
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(context);
+    public static boolean isSocialFeatureEnabled(Context context, SOCIAL_SOURCE_TYPE type, Config config) {
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(context, config);
         if ( isOnZeroRatedNetwork )
             return false;
         if (type == SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
-            return Config.getInstance().getGoogleConfig().isEnabled();
+            return config.getGoogleConfig().isEnabled();
         } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
-            return Config.getInstance().getFacebookConfig().isEnabled();
+            return config.getFacebookConfig().isEnabled();
         }
         return true;
     }

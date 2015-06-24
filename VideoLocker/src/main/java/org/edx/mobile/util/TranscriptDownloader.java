@@ -2,10 +2,12 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 
+import com.google.inject.Inject;
+
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.services.ServiceManager;
 
 import java.io.IOException;
 
@@ -13,6 +15,8 @@ public abstract class TranscriptDownloader implements Runnable {
 
     private String srtUrl;
     private Context context;
+    @Inject
+    ServiceManager localApi;
     private final Logger logger = new Logger(TranscriptDownloader.class.getName());
 
     public TranscriptDownloader(Context context, String url) {
@@ -22,7 +26,7 @@ public abstract class TranscriptDownloader implements Runnable {
 
     @Override
     public void run() {
-        Api localApi = new Api(context);
+
         try {
             String response = localApi.downloadTranscript(srtUrl);
             onDownloadComplete(response);

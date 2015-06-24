@@ -3,13 +3,17 @@ package org.edx.mobile.services;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.CourseDetailTabActivity;
@@ -24,7 +28,8 @@ import java.util.Map;
 /**
  *
  */
-public class DownloadManager {
+@Singleton
+public class VideoDownloadHelper {
     public static interface DownloadManagerCallback{
         void onDownloadSuccess(Long result);
         void onDownloadFailure();
@@ -33,14 +38,19 @@ public class DownloadManager {
         boolean showInfoMessage(String message);
     }
     protected final Logger logger = new Logger(getClass().getName());
-    private static DownloadManager manager;
+
     private DownloadSizeExceedDialog downloadFragment;
 
-    public static synchronized final DownloadManager getSharedInstance(){
-        if ( manager == null )
-            manager = new DownloadManager();
-        return manager;
-    }
+    @Inject
+    IStorage storage;
+
+    @Inject
+    Config config;
+
+    @Inject
+    ISegment segment;
+
+
 
     public void downloadVideos(final List<HasDownloadEntry> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
@@ -59,7 +69,7 @@ public class DownloadManager {
                     callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
                 }
             };
-            MediaConsentUtils.consentToMediaPlayback(activity, dialogCallback);
+            MediaConsentUtils.consentToMediaPlayback(activity, dialogCallback, config);
 
         } catch (Exception e) {
             logger.error(e);
@@ -68,7 +78,7 @@ public class DownloadManager {
     }
 
     private void startDownloadVideos(List<HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
-        Storage storage = new Storage(activity);
+
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         int downloadCount = 0;
@@ -135,16 +145,16 @@ public class DownloadManager {
             return;
         try{
             if ( downloadList.size() > 1 ) {
-                SegmentFactory.getInstance().trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
+                segment.trackSectionBulkVideoDownload(downloadList.get(0).getEnrollmentId(),
                     downloadList.get(0).getChapterName(), noOfDownloads);
             }
         }catch(Exception e){
             logger.error(e);
         }
 
-        EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(activity) {
+        EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(activity, downloadList) {
             @Override
-            public void onFinish(Long result) {
+            public void onSuccess(Long result) {
                  callback.onDownloadSuccess(result);
             }
 
@@ -156,8 +166,7 @@ public class DownloadManager {
 
 
         callback.showProgressDialog(downloadList.size());
-
-        downloadTask.execute(downloadList);
+        downloadTask.execute();
     }
 
 }

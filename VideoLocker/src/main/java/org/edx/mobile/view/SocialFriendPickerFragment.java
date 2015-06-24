@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,10 +21,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SocialFriendPickerFragment extends Fragment implements SocialProvider.Callback<List<SocialMember>> {
+import roboguice.fragment.RoboFragment;
+
+public class SocialFriendPickerFragment extends RoboFragment implements SocialProvider.Callback<List<SocialMember>> {
 
     private enum State {
         LOADING,
@@ -64,6 +66,9 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
     private MenuItem doneMenuItem;
     private ImageButton cancelBtn;
 
+    @Inject
+    ISegment segIO;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -82,7 +87,6 @@ public class SocialFriendPickerFragment extends Fragment implements SocialProvid
 
         });
 
-        ISegment segIO = SegmentFactory.getInstance();
 
         try{
             segIO.screenViewsTracking("Social Friend Picker");

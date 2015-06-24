@@ -5,13 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.module.notification.UserNotificationManager;
+import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 
@@ -20,6 +22,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by aleffert on 1/30/15.
  */
+@Singleton
 public class Router {
 
     public static final String EXTRA_ANNOUNCEMENTS = "announcements";
@@ -29,18 +32,8 @@ public class Router {
     public static final String EXTRA_SEQUENTIAL = "sequential";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
+    public static final String EXTRA_COURSE_DATA = "course_data";
 
-    static private Router sInstance;
-
-    // Note that this is not thread safe. The expectation is that this only happens
-    // immediately when the app launches or synchronously at the start of a test.
-    public static void setInstance(Router router) {
-        sInstance = router;
-    }
-
-    public static Router getInstance() {
-        return sInstance;
-    }
 
     public void showDownloads(Activity sourceActivity) {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
@@ -203,21 +196,21 @@ public class Router {
      *  this method can be called either through UI [ user clicks LOGOUT button],
      *  or programmatically
      */
-    public void forceLogout(Context context){
+    @Inject
+    public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate){
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.clearAuth();
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
 
         EventBus.getDefault().post(new LogoutEvent());
 
-        ISegment segIO = SegmentFactory.getInstance();
-        segIO.trackUserLogout();
-        segIO.resetIdentifyUser();
+        segment.trackUserLogout();
+        segment.resetIdentifyUser();
 
-        UserNotificationManager.getInstance().unsubscribeAll();
+        delegate.unsubscribeAll();
 
-        Router.getInstance().showLaunchScreen(context,true);
-        Router.getInstance().showLogin(context);
+        showLaunchScreen(context, true);
+        showLogin(context);
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {

@@ -1,6 +1,5 @@
 package org.edx.mobile.test.http;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.JsonElement;
@@ -17,15 +16,11 @@ import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
-import org.robolectric.RuntimeEnvironment;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -67,8 +62,17 @@ public class HttpBaseTestCase extends BaseTestCase {
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
 
-        Context context = RuntimeEnvironment.application;
 
+        api = new Api(context);
+        String oAuthClientId = config.getOAuthClientId();
+        String testAccount = config.getTestAccountConfig().getName();
+        shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);
+
+
+    }
+
+    @Override
+    protected Config createConfig(){
         // Set up a new config instance that serves the mock host url
         JsonObject properties;
         try {
@@ -81,14 +85,7 @@ public class HttpBaseTestCase extends BaseTestCase {
             logger.error(e);
         }
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
-        Config.setInstance(new Config(properties));
-
-        api = new Api(context);
-        String oAuthClientId = Config.getInstance().getOAuthClientId();
-        String testAccount = Config.getInstance().getTestAccountConfig().getName();
-        shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);
-
-
+        return new Config(properties);
     }
 
     @Override

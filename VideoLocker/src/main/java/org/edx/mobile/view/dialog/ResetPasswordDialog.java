@@ -103,9 +103,9 @@ public class ResetPasswordDialog extends DialogFragment {
      */
     private void resetPassword(String email) {
         email_et.setEnabled(false);
-        resetPasswordTask = new ResetPasswordTask(getActivity()) {
+        resetPasswordTask = new ResetPasswordTask(getActivity(),email) {
             @Override
-            public void onFinish(ResetPasswordResponse result) {
+            public void onSuccess(ResetPasswordResponse result) {
                 if (result != null && result.isSuccess()) {
                     isResetSuccessful = true;
                     //Only if the app is in foreground then
@@ -134,7 +134,7 @@ public class ResetPasswordDialog extends DialogFragment {
         };
         resetPasswordTask.setProgressDialog(progressbar);
         isResetSuccessful = false;
-        resetPasswordTask.execute(email);
+        resetPasswordTask.execute( );
     }
 
     @Override

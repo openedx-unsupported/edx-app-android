@@ -14,16 +14,15 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.services.DownloadManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.LastAccessManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 
 /**
  * Created by hanning on 5/15/15.
  */
 public abstract class CourseVideoListActivity  extends CourseBaseActivity implements
-    LastAccessManager.LastAccessManagerCallback ,DownloadManager.DownloadManagerCallback {
+    LastAccessManager.LastAccessManagerCallback ,VideoDownloadHelper.DownloadManagerCallback {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
     private final String modeVideoOnly = "mode_video_only";
@@ -63,7 +62,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessedSubSectionId!=null){
-                        final VideoResponseModel videoModel = ServiceManager.getInstance().getSubsectionById(courseId,
+                        final VideoResponseModel videoModel = environment.getServiceManager().getSubsectionById(courseId,
                             lastAccessedSubSectionId);
                         if (videoModel != null) {
                             super.showLastAccessedView(null, " " + videoModel.getSection().getName(), new View.OnClickListener() {
@@ -75,7 +74,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
                                         try {
-                                            LectureModel lecture = ServiceManager.getInstance().getLecture(courseId,
+                                            LectureModel lecture = environment.getServiceManager().getLecture(courseId,
                                                 videoModel.getChapterName(), videoModel.getChapter().getId(),
                                                 videoModel.getSequentialName(), videoModel.getSection().getId());
                                             SectionEntry chapter = new SectionEntry();
@@ -195,12 +194,12 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                 if(AppConstants.offline_flag){
                     setVisibilityForDownloadProgressView(false);
                 }else{
-                    if(db!=null){
-                        boolean downloading = db.isAnyVideoDownloading(null);
+                    if(environment.getDatabase()!=null){
+                        boolean downloading = environment.getDatabase().isAnyVideoDownloading(null);
                         if(!downloading){
                             setVisibilityForDownloadProgressView(false);
                         }else{
-                            storage.getAverageDownloadProgress(averageProgressCallback);
+                            environment.getStorage().getAverageDownloadProgress(averageProgressCallback);
                         }
                     }   //store not null check
                 }

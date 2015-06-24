@@ -2,21 +2,23 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.services.ServiceManager;
 
 public abstract class ResetPasswordTask extends Task<ResetPasswordResponse> {
 
-    public ResetPasswordTask(Context context) {
+    String emailId;
+    public ResetPasswordTask(Context context,String emailId) {
         super(context);
+        this.emailId = emailId;
     }
 
     @Override
-    protected ResetPasswordResponse doInBackground(Object... params) {
+    public ResetPasswordResponse call() throws Exception{
         try {
-            String emailId = params[0].toString();
+
             if(emailId!=null){
-                Api api = new Api(context);
+                ServiceManager api = environment.getServiceManager();
                 ResetPasswordResponse res = api.resetPassword(emailId);
                 return res;
             }

@@ -1,21 +1,26 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.view.custom.ETextView;
 
-public class FindCoursesDialogFragment extends DialogFragment {
+import roboguice.fragment.RoboDialogFragment;
+
+public class FindCoursesDialogFragment extends RoboDialogFragment {
+
+    @Inject
+    IEdxEnvironment environment;
 
     public FindCoursesDialogFragment() {
     }   
@@ -48,8 +53,8 @@ public class FindCoursesDialogFragment extends DialogFragment {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
                 if(!isRemoving() && isVisible()){
-                    String url = Config.getInstance().getEnrollmentConfig().getExternalCourseSearchUrl();
-                    BrowserUtil.open(getActivity(), url);
+                    String url = environment.getConfig().getEnrollmentConfig().getExternalCourseSearchUrl();
+                    new BrowserUtil().open(getActivity(), url);
                 }
             }
         });

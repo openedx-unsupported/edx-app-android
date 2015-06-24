@@ -11,8 +11,11 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.inject.Inject;
+
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -43,6 +46,9 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     private IActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
+
+    @Inject
+    Config config;
     /*
     To help a few views (like Announcements) to treat every link as external link and open outside the view.
      */
@@ -167,8 +173,8 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
             // suppress external links on ZeroRated network
             if (isExternalLink(url)
-                    && !ConfigUtil.isWhiteListedURL(url)
-                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && !ConfigUtil.isWhiteListedURL(url, config)
+                    && NetworkUtil.isOnZeroRatedNetwork(context, config)
                     && NetworkUtil.isConnectedMobile(context)) {
                 return new WebResourceResponse("text/html", HTTP.UTF_8, null);
             }
@@ -187,8 +193,8 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
             // suppress external links on ZeroRated network
             String url = request.getUrl().toString();
             if (isExternalLink(url)
-                    && !ConfigUtil.isWhiteListedURL(url)
-                    && NetworkUtil.isOnZeroRatedNetwork(context)
+                    && !ConfigUtil.isWhiteListedURL(url, config)
+                    && NetworkUtil.isOnZeroRatedNetwork(context, config)
                     && NetworkUtil.isConnectedMobile(context)) {
                 return new WebResourceResponse("text/html", HTTP.UTF_8, null);
             }

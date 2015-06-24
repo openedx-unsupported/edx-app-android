@@ -4,20 +4,21 @@ import android.content.Context;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.edx.mobile.http.Api;
+import org.edx.mobile.services.ServiceManager;
 
 import java.io.IOException;
 
 public abstract class TranscriptsProcessingTask extends Task<String> {
-
-    public TranscriptsProcessingTask(Context context) {
+    String url;
+    public TranscriptsProcessingTask(Context context, String url) {
         super(context);
+        this.url = url;
     }
 
     @Override
-    protected String doInBackground(Object... params) {
-        String url = (String)params[0];
-        Api localApi = new Api(context);
+    public String call( ) throws Exception{
+
+        ServiceManager localApi = environment.getServiceManager();
         try
         {
             String response = localApi.downloadTranscript(url);

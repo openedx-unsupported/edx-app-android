@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,25 +20,23 @@ import android.widget.ProgressBar;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
@@ -48,7 +45,9 @@ import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
 import java.util.List;
 
-public abstract class CourseListTabFragment extends Fragment implements NetworkObserver, MyCourseAdapter.CourseFriendsListener, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
+import roboguice.fragment.RoboFragment;
+
+public abstract class CourseListTabFragment extends RoboFragment implements NetworkObserver, MyCourseAdapter.CourseFriendsListener, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
 
     protected MyCourseAdapter adapter;
 
@@ -59,7 +58,9 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
     protected PrefManager pmFeatures;
 
-    protected ISegment segIO;
+    @Inject
+    protected IEdxEnvironment environment;
+
 
     protected IUiLifecycleHelper uiHelper;
     protected ListView myCourseList;
@@ -90,19 +91,12 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
-            segIO = SegmentFactory.getInstance();
-            segIO.screenViewsTracking(getString(R.string.label_my_courses));
-        }catch(Exception e){
-            logger.error(e);
-        }
-
         fetchFriendsObserver = new FetchFriendsReceiver();
 
         SocialProvider fbProvider = new FacebookProvider();
         pmFeatures = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
         boolean showSocialFeatures = fbProvider.isLoggedIn() && pmFeatures.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-        adapter = new MyCourseAdapter(getActivity(), showSocialFeatures, this) {
+        adapter = new MyCourseAdapter(getActivity(), showSocialFeatures, this, environment) {
 
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
@@ -111,9 +105,10 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
 
             @Override
             public void onAnnouncementClicked(EnrolledCoursesResponse model) {
-                Router.getInstance().showCourseDetailTabs(getActivity(), model, true);
+                environment.getRouter().showCourseDetailTabs(getActivity(), model, true);
             }
         };
+        adapter.setImageCacheManager(environment.getImageCacheManager());
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
             @Override
@@ -271,15 +266,15 @@ public abstract class CourseListTabFragment extends Fragment implements NetworkO
                 @Override
                 public void onClick(View v) {
                     try {
-                        segIO.trackUserFindsCourses();
+                        environment.getSegment().trackUserFindsCourses();
                     } catch (Exception e) {
                         logger.error(e);
                     }
 
                     try {
-                        if (Config.getInstance().getEnrollmentConfig().isEnabled()) {
+                        if (environment.getConfig().getEnrollmentConfig().isEnabled()) {
                             //Call the Find courses activity
-                            Router.getInstance().showFindCourses(getActivity());
+                            environment.getRouter().showFindCourses(getActivity());
                         } else {
                             //Show the dialog only if the activity is started. This is to avoid Illegal state
                             //exceptions if the dialog fragment tries to show even if the application is not in foreground

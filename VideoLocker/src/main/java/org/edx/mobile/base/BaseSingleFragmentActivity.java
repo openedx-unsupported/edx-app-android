@@ -11,10 +11,14 @@ import android.view.View;
 import org.edx.mobile.R;
 import org.edx.mobile.util.NetworkUtil;
 
+import roboguice.inject.InjectView;
+
 public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
 
     public static final String FIRST_FRAG_TAG = "first_frag";
-    private View offlineBar;
+
+    @InjectView(R.id.offline_bar)
+    View offlineBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_groups_list);
 
-        offlineBar = findViewById(R.id.offline_bar);
+
         if(NetworkUtil.isConnected(this)){
             hideOfflineBar();
         }else{

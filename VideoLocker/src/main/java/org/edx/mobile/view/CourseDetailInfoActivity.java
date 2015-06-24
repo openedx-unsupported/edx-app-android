@@ -52,7 +52,7 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
                 activityTitle = courseData.getCourse().getName();
 
                 try{
-                    segIO.screenViewsTracking(courseData.getCourse().getName());
+                    environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
                 }catch(Exception e){
                     logger.error(e);
                 }
@@ -63,13 +63,13 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
                 if (!handleFromNotification) {
                     //it is a good idea to go to the my course page. as loading of my courses
                     //take a while to load. that the only way to get anouncement link
-                    Router.getInstance().showMyCourses(this);
+                    environment.getRouter().showMyCourses(this);
                     finish();
                 }
             }
 
         }catch(Exception ex){
-            Router.getInstance().showMyCourses(this);
+            environment.getRouter().showMyCourses(this);
             finish();
             logger.error(ex);
         }

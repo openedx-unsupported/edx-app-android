@@ -1,12 +1,13 @@
 package org.edx.mobile.services;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import org.edx.mobile.http.Api;
+import com.google.inject.Inject;
+
+import org.edx.mobile.http.IApi;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.social.SocialMember;
 
@@ -14,10 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import roboguice.service.RoboIntentService;
+
 /**
  * Created by yervant on 1/22/15.
  */
-public class FetchCourseFriendsService extends IntentService {
+public class FetchCourseFriendsService extends RoboIntentService {
 
     public static final String TAG = FetchCourseFriendsService.class.getSimpleName();
 
@@ -29,6 +32,9 @@ public class FetchCourseFriendsService extends IntentService {
     public static final String TAG_FORCE_REFRESH = TAG + ".force_refresh";
 
     private static final Map<String, AsyncTaskResult<List<SocialMember>>> results = new HashMap<>();
+
+    @Inject
+    IApi api;
 
     public FetchCourseFriendsService() {
         super(TAG);
@@ -61,7 +67,6 @@ public class FetchCourseFriendsService extends IntentService {
 
     private void fetchFriends(String courseID, String oauthToken){
 
-        Api api = new Api(this);
         if (TextUtils.isEmpty(courseID) || TextUtils.isEmpty(oauthToken)){
             return;
         }

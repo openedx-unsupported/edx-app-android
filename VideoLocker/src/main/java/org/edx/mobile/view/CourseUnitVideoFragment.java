@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
@@ -31,16 +30,12 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.TranscriptManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
@@ -77,8 +72,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
-    private Api api;
-    private IStorage storage;
+
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
@@ -105,10 +99,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        api = new Api(getActivity());
         unit = getArguments() == null ? null :
             (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-        storage = new Storage(getActivity());
+
     }
 
     /**
@@ -271,7 +264,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private void checkVideoStatus(VideoBlockModel unit) {
         try {
-            final DownloadEntry entry = unit.getDownloadEntry(storage);
+            final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
             if ( entry == null )
                 return;
 
@@ -292,7 +285,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                             notifyAdapter();
                         }
                     };
-                    MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+                    MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                 }else{
                     if (  AppConstants.offline_flag ){
                         //TODO - should use interface to decouple
@@ -357,7 +350,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         try{
 
             // reload this model
-            storage.reloadDownloadEntry(video);
+            environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
@@ -408,7 +401,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                 .username, video.eid);
             PrefManager prefManager = new PrefManager(getActivity(), prefName);
-            VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(video.eid, video.videoId);
+            VideoResponseModel vrm = environment.getServiceManager().getVideoById(video.eid, video.videoId);
             prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
         } catch (Exception e) {
             logger.error(e);
@@ -465,7 +458,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if ( transcript == null ) {
             try {
                 if (video.videoId != null) {
-                    transcript =  ServiceManager.getInstance().getTranscriptsOfVideo(video.eid, video.videoId);
+                    transcript =  environment.getServiceManager().getTranscriptsOfVideo(video.eid, video.videoId);
                 }
             } catch (Exception e) {
                 logger.error(e);
@@ -519,7 +512,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     openInBrowserTv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            BrowserUtil.open(getActivity(),
+                            new BrowserUtil().open(getActivity(),
                                 urlStringBuffer.toString());
                         }
                     });
@@ -609,7 +602,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     };
 
     public void markPlaying() {
-        storage.markVideoPlaying(videoModel, watchedStateCallback);
+        environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     /**
@@ -695,12 +688,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     reloadListFlag = false;
                 }
 
-                if (SegmentFactory.getInstance() != null) {
-                    SegmentFactory.getInstance().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
+                if (environment.getSegment() != null) {
+                    environment.getSegment().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                         downloadEntry.lmsUrl);
                 }
 
-                if (storage.addDownload(downloadEntry) != -1) {
+                if (environment.getStorage().addDownload(downloadEntry) != -1) {
                     ((VideoListActivity) getActivity())
                         .showInfoMessage(getString(R.string.msg_started_one_video_download));
                 } else {

@@ -11,6 +11,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserBasedPrefManager;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -23,16 +24,13 @@ import java.util.List;
 public class ParseNotificationDelegate implements NotificationDelegate{
     private static final Logger logger = new Logger(ParseNotificationDelegate.class.getName());
 
-    ParseNotificationDelegate() {
-    }
-
     /**
      * if a user logs out, they should not receive the push notification
      */
     public void unsubscribeAll() {
         new ParseSyncTask(MainApplication.instance().getApplicationContext()) {
             @Override
-            public void onFinish(Void result) {
+            public void onSuccess(Void result) {
                 if (subscribedChannels != null) {
                     for (String channel : subscribedChannels) {
                         changeSubscriptionToNotificationServer(channel, false, false);
@@ -205,5 +203,19 @@ public class ParseNotificationDelegate implements NotificationDelegate{
     }
 
 
+    public void checkAppUpgrade(){
+        if (!NetworkUtil.isConnected(MainApplication.instance()))
+            return;
+        PrefManager.AppInfoPrefManager pmanager =
+            new PrefManager.AppInfoPrefManager(MainApplication.instance());
+        if ( pmanager.isAppUpgradeNeedSyncWithParse() ){
+            pmanager.setAppUpgradeNeedSyncWithParse(false);
+            resubscribeAll();
+        }
+        if ( pmanager.isAppSettingNeedSyncWithParse() ){
+            pmanager.setAppSettingNeedSyncWithParse(false);
+            ParseHandleHelper.tryToSaveLanguageSetting();
+        }
+    }
 }
 

@@ -13,8 +13,10 @@ class IDatabaseBaseImpl implements Runnable {
     private Queue<IDbOperation<?>> opQueue = new LinkedList<IDbOperation<?>>();
     private boolean isQueueProcessing = false;
     protected static final Logger logger = new Logger(IDatabaseBaseImpl.class.getName());
-    
+    protected Context context;
+
     public IDatabaseBaseImpl(Context context) {
+        this.context = context;
         helper = new DbHelper(context);
     }
     

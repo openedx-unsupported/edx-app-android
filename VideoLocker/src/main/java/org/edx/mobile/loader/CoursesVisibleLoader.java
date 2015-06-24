@@ -1,10 +1,10 @@
 package org.edx.mobile.loader;
 
-import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.content.AsyncTaskLoader;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 
 /**
@@ -19,10 +19,11 @@ public class CoursesVisibleLoader extends AsyncTaskLoader<AsyncTaskResult<Boolea
     public static final String KEY_SET_TO_VALUE = "key_set_to_value";
     public static final String KEY_GET_VALUE = "key_get_value";
     private static final Logger logger = new Logger(CoursesVisibleLoader.class);
+    IEdxEnvironment environment;
 
-    public CoursesVisibleLoader(Context context, Bundle bundle){
+    public CoursesVisibleLoader(Context context, Bundle bundle, IEdxEnvironment environment){
         super(context);
-
+        this.environment = environment;
         if(bundle != null){
             if(bundle.containsKey(KEY_SET_TO_VALUE))
                 setToValue = bundle.getBoolean(KEY_SET_TO_VALUE);
@@ -34,15 +35,14 @@ public class CoursesVisibleLoader extends AsyncTaskLoader<AsyncTaskResult<Boolea
     @Override
     public AsyncTaskResult<Boolean> loadInBackground() {
         AsyncTaskResult<Boolean> result = new AsyncTaskResult<>();
-        Api api = new Api(getContext());
 
         try {
             if(fetchValue && setToValue == null){
-                Boolean isSet = api.getUserCourseShareConsent();
+                Boolean isSet = environment.getServiceManager().getUserCourseShareConsent();
                 result.setResult(isSet);
             }
             else if(setToValue != null){
-                Boolean wasSet = api.setUserCourseShareConsent(setToValue);
+                Boolean wasSet = environment.getServiceManager().setUserCourseShareConsent(setToValue);
                 result.setResult(wasSet);
             }
             else{

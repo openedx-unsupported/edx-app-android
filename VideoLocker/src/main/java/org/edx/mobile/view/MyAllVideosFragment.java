@@ -24,7 +24,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            segIO.screenViewsTracking("My Videos - All Videos");
+            environment.getSegment().screenViewsTracking("My Videos - All Videos");
         }catch(Exception e){
             logger.error(e);
         }
@@ -43,7 +43,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
         ListView myCourseList = (ListView) view.findViewById(R.id.my_video_course_list);
         myCourseList.setEmptyView(view.findViewById(R.id.empty_list_view));
 
-        myCoursesAdaptor = new MyAllVideoCourseAdapter(getActivity()) {
+        myCoursesAdaptor = new MyAllVideoCourseAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
                 AppConstants.myVideosDeleteMode = false;
@@ -79,7 +79,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
         try{
             if(myCoursesAdaptor!=null){
                 myCoursesAdaptor.clear();
-                ArrayList<EnrolledCoursesResponse> coursesList = storage
+                ArrayList<EnrolledCoursesResponse> coursesList = environment.getStorage()
                         .getDownloadedCoursesWithVideoCountAndSize();
                 for (EnrolledCoursesResponse m : coursesList) {
                     if(m.isIs_active()){

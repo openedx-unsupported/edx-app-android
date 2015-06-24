@@ -2,7 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.services.ServiceManager;
 
 import java.net.HttpCookie;
 import java.util.List;
@@ -14,9 +14,9 @@ public abstract class GetSessesionExchangeCookieTask extends Task<List<HttpCooki
     }
 
     @Override
-    protected List<HttpCookie> doInBackground(Object... params) {
+    public List<HttpCookie> call( ) throws Exception{
         try {
-                Api api = new Api(context);
+                ServiceManager api = environment.getServiceManager();
                 return api.getSessionExchangeCookie();
         } catch (Exception ex) {
             handle(ex);

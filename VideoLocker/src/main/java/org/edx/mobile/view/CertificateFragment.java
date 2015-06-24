@@ -3,32 +3,30 @@ package org.edx.mobile.view;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.FacebookDialog;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
-public class CertificateFragment extends Fragment {
+import roboguice.fragment.RoboFragment;
+
+public class CertificateFragment extends RoboFragment {
 
     private final Logger logger = new Logger(CertificateFragment.class);
 
@@ -44,6 +42,7 @@ public class CertificateFragment extends Fragment {
 
     private UiLifecycleHelper uiHelper;
 
+    @Inject
     private ISegment segIO;
 
     private enum CertificateState {
@@ -59,7 +58,6 @@ public class CertificateFragment extends Fragment {
         uiHelper = new UiLifecycleHelper(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
 
-        segIO = SegmentFactory.getInstance();
 
         try{
             segIO.screenViewsTracking("Certificate");
@@ -84,7 +82,7 @@ public class CertificateFragment extends Fragment {
 
             @Override
             public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
+                new BrowserUtil().open(getActivity(), url);
             }
         };
 

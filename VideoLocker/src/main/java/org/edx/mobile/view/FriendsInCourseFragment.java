@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,16 +12,17 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FriendsInCourseAdapter;
@@ -31,7 +31,9 @@ import org.edx.mobile.view.custom.EButton;
 
 import java.util.List;
 
-public class FriendsInCourseFragment extends Fragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
+import roboguice.fragment.RoboFragment;
+
+public class FriendsInCourseFragment extends RoboFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
 
     private static final String TAG = FriendsInCourseFragment.class.getCanonicalName();
     public static final String ARG_COURSE = TAG + ".argCourse";
@@ -50,6 +52,10 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
     private final int LOADER_ID = 0x416EEE;
 
+    @Inject
+    IEdxEnvironment environment;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +70,9 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
         if (adapter == null) {
             adapter = new FriendsInCourseAdapter(getActivity());
         }
-
-        ISegment segIO = SegmentFactory.getInstance();
-
+ 
         try{
-            segIO.screenViewsTracking("Friends In This Course");
+            environment.getSegment().screenViewsTracking("Friends In This Course");
         }catch(Exception e){
             logger.error(e);
         }
@@ -108,7 +112,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
                 @Override
                 public void onClick(View v) {
 
-                    BrowserUtil.open(getActivity(), courseData.getCourse_url());
+                    new BrowserUtil().open(getActivity(), courseData.getCourse_url());
 
                 }
             });
@@ -169,7 +173,7 @@ public class FriendsInCourseFragment extends Fragment implements LoaderManager.L
 
     @Override
     public Loader<AsyncTaskResult<List<SocialMember>>> onCreateLoader(int i, Bundle bundle) {
-        return new FriendsInCourseLoader(getActivity(), bundle);
+        return new FriendsInCourseLoader(getActivity(), bundle, environment);
     }
 
     @Override

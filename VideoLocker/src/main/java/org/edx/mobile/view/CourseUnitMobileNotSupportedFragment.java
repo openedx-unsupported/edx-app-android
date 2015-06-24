@@ -48,7 +48,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment{
         v.findViewById(R.id.view_on_web_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BrowserUtil.open(getActivity(), unit.getWebUrl());
+                new BrowserUtil().open(getActivity(), unit.getWebUrl());
             }
         });
         return v;

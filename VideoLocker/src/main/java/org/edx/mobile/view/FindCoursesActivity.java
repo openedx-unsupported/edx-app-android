@@ -5,13 +5,14 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
-import org.edx.mobile.util.Config;
 
+import roboguice.inject.ContentView;
+
+@ContentView(R.layout.activity_find_courses)
 public class FindCoursesActivity extends FindCoursesBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_find_courses);
         super.onCreate(savedInstanceState);
 
         // configure slider layout. This should be called only once and
@@ -19,7 +20,7 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         configureDrawer();
 
         try{
-            segIO.screenViewsTracking(getString(R.string.find_courses_title));
+            environment.getSegment().screenViewsTracking(getString(R.string.find_courses_title));
         }catch(Exception e){
             logger.error(e);
         }
@@ -34,7 +35,7 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
     }
 
     private void loadCourseSearchUrl() {
-        String url = Config.getInstance().getEnrollmentConfig().getCourseSearchUrl();
+        String url = environment.getConfig().getEnrollmentConfig().getCourseSearchUrl();
         WebView webview = (WebView) findViewById(R.id.webview);
         webview.loadUrl(url);
     }

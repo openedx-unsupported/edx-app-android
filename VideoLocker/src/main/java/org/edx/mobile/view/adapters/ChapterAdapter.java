@@ -1,13 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import org.edx.mobile.R;
-import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.custom.ProgressWheel;
-
 import android.content.Context;
 import android.os.SystemClock;
 import android.view.View;
@@ -18,23 +10,26 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.view.custom.ProgressWheel;
+
 public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
 
     private String courseId;
     private long lastClickTime;
-    private IDatabase dbStore;
-    private IStorage storage;
 
-    public ChapterAdapter(Context context, String courseId) {
-        super(context, R.layout.row_chapter_list);
+
+    public ChapterAdapter(Context context, String courseId, IEdxEnvironment environment) {
+        super(context, R.layout.row_chapter_list, environment);
         this.courseId = courseId;
         lastClickTime = 0;
     }
 
-    public void setStore(IDatabase dbStore, IStorage storage) {
-        this.storage = storage;
-        this.dbStore = dbStore;
-    }
+
 
     @Override
     public void render(BaseViewHolder tag, final SectionEntry model) {
@@ -44,8 +39,8 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
         final int totalCount = model.getVideoCount();
         holder.no_of_videos.setVisibility(View.VISIBLE);
         holder.no_of_videos.setText("" + totalCount);
-        int inProcessCount = dbStore.getVideosCountByChapter(courseId, model.chapter, null);
-        int webOnlyCount = dbStore.getWebOnlyVideosCountByChapter(courseId,model.chapter,null);
+        int inProcessCount = environment.getDatabase().getVideosCountByChapter(courseId, model.chapter, null);
+        int webOnlyCount = environment.getDatabase().getWebOnlyVideosCountByChapter(courseId,model.chapter,null);
         int videoCount = totalCount - inProcessCount - webOnlyCount;
         if (videoCount > 0) {
             holder.progresslayout.setVisibility(View.INVISIBLE);
@@ -59,9 +54,9 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             });
         } else {
             holder.bulk_download_videos.setVisibility(View.INVISIBLE);
-            if(dbStore.isVideoDownloadingInChapter(courseId, model.chapter, null)){
+            if(environment.getDatabase().isVideoDownloadingInChapter(courseId, model.chapter, null)){
                 holder.download_pw.setVisibility(View.VISIBLE);
-                storage.getAverageDownloadProgressInChapter(
+                environment.getStorage().getAverageDownloadProgressInChapter(
                         courseId, model.chapter, new DataCallback<Integer>(true) {
                             @Override
                             public void onResult(Integer result) {
@@ -89,7 +84,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             holder.bulk_download_videos.setVisibility(View.GONE);
             holder.download_pw.setVisibility(View.INVISIBLE);
             holder.next_arrow.setVisibility(View.VISIBLE);
-            boolean isVideoDownloaded = dbStore.isVideoDownloadedInChapter
+            boolean isVideoDownloaded = environment.getDatabase().isVideoDownloadedInChapter
                     (courseId, model.chapter, null);
             if(isVideoDownloaded)
             {

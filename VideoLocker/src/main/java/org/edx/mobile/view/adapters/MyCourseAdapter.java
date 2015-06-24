@@ -14,16 +14,16 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.images.ImageCacheManager;
+import org.edx.mobile.view.custom.SocialFacePileView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.view.custom.SocialFacePileView;
-
 import java.util.List;
 
 
@@ -35,6 +35,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
     private boolean showSocial;
 
     private CourseFriendsListener courseFriendsListener;
+    private ImageCacheManager imageCacheManager;
 
     public interface CourseFriendsListener {
         public void fetchCourseFriends(EnrolledCoursesResponse course);
@@ -49,8 +50,8 @@ BaseListAdapter<EnrolledCoursesResponse> {
         return -1;
     }
 
-    public MyCourseAdapter(Context context, boolean showSocial, CourseFriendsListener courseFriendsListener ) {
-        super(context, R.layout.row_course_list);
+    public MyCourseAdapter(Context context, boolean showSocial, CourseFriendsListener courseFriendsListener,IEdxEnvironment environment ) {
+        super(context, R.layout.row_course_list, environment);
         this.courseFriendsListener = courseFriendsListener;
         this.showSocial = showSocial;
         lastClickTime = 0;
@@ -147,8 +148,8 @@ BaseListAdapter<EnrolledCoursesResponse> {
         }
 
         holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(getContext()),
-                ImageCacheManager.getInstance().getImageLoader());
+        holder.courseImage.setImageUrl(courseData.getCourse_image(environment.getConfig()),
+            imageCacheManager.getImageLoader());
         holder.courseImage.setTag(courseData);
 
         if (showSocial) {
@@ -240,4 +241,7 @@ BaseListAdapter<EnrolledCoursesResponse> {
 
     }
 
+    public void setImageCacheManager(ImageCacheManager imageCacheManager) {
+        this.imageCacheManager = imageCacheManager;
+    }
 }

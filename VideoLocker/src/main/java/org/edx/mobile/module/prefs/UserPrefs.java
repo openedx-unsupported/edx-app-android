@@ -4,17 +4,22 @@ package org.edx.mobile.module.prefs;
 import android.content.Context;
 import android.os.Environment;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 
 import java.io.File;
 import java.io.IOException;
 
+@Singleton
 public class UserPrefs {
 
     private Context context;
     private final Logger logger = new Logger(getClass().getName());
 
+    @Inject
     public UserPrefs(Context context) {
         this.context = context;
     }

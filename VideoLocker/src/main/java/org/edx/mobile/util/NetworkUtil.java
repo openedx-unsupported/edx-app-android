@@ -123,14 +123,14 @@ public class NetworkUtil {
      * @param context
      * @return
      */
-    public static boolean isOnZeroRatedNetwork(Context context){
-        if (Config.getInstance().getZeroRatingConfig().isEnabled()) {
+    public static boolean isOnZeroRatedNetwork(Context context, Config config){
+        if (config.getZeroRatingConfig().isEnabled()) {
             TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String carrierId = manager.getNetworkOperator();
 
             logger.debug(String.format("Carrier id: %s", carrierId));
 
-            List<String> zeroRatedCarriers = Config.getInstance().getZeroRatingConfig().getCarriers();
+            List<String> zeroRatedCarriers = config.getZeroRatingConfig().getCarriers();
 
             for (String carrier : zeroRatedCarriers) {
                 if (carrier.equalsIgnoreCase(carrierId)) {
@@ -143,12 +143,12 @@ public class NetworkUtil {
         return false;
     }
 
-    public static boolean isOnSocialDisabledNetwork(Context context){
+    public static boolean isOnSocialDisabledNetwork(Context context, Config config){
 
         TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         String carrierId = manager.getNetworkOperator();
 
-        List<String> socialDisabledCarriers = Config.getInstance().getSocialSharingConfig().getDisabledCarriers();
+        List<String> socialDisabledCarriers = config.getSocialSharingConfig().getDisabledCarriers();
 
         for(String carrier : socialDisabledCarriers) {
             if (carrier.equalsIgnoreCase(carrierId)) {
@@ -161,11 +161,11 @@ public class NetworkUtil {
 
     }
 
-    public static boolean isSocialFeatureFlagEnabled(Context context){
+    public static boolean isSocialFeatureFlagEnabled(Context context, Config config){
 
-        boolean isSocialEnabled = Config.getInstance().getSocialSharingConfig().isEnabled();
+        boolean isSocialEnabled = config.getSocialSharingConfig().isEnabled();
 
-        return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context));
+        return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context, config));
 
     }
 }

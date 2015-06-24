@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.Config;
+import org.edx.mobile.services.ServiceManager;
 
 import java.util.List;
 import java.util.Observable;
@@ -22,9 +22,14 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     private Observer mObserver;
 
-    public CoursesAsyncLoader(Context context, Bundle args){
+    IEdxEnvironment environment;
+    ServiceManager api;
+
+    public CoursesAsyncLoader(Context context, Bundle args, IEdxEnvironment environment,  ServiceManager api){
 
         super(context);
+        this.environment = environment;
+        this.api = api;
         if (args.containsKey(TAG_COURSE_OAUTH)){
             this.oauthToken = args.getString(TAG_COURSE_OAUTH);
         }
@@ -34,9 +39,9 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
 
-        Api api = new Api(getContext());
+
         // FIXME: (PR#120) Should this Loader class really be called when social feature is disabled?
-        if (Config.getInstance().getSocialSharingConfig().isEnabled() && this.oauthToken == null) {
+        if (environment.getConfig().getSocialSharingConfig().isEnabled() && this.oauthToken == null) {
             return null;
         }
 
@@ -55,8 +60,9 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     }
 
-    protected List<EnrolledCoursesResponse> getCourses(Api api) throws Exception {
-        return api.getFriendsCourses(false, this.oauthToken);
+    protected List<EnrolledCoursesResponse> getCourses(ServiceManager api) throws Exception {
+       // return api.getFriendsCourses(false, this.oauthToken); ?
+        return api.getEnrolledCourses(false);
     }
 
     @Override

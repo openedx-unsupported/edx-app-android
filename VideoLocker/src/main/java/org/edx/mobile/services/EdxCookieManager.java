@@ -86,7 +86,7 @@ public class EdxCookieManager {
         if ( task == null || task.isCancelled()  ) {
             task =new GetSessesionExchangeCookieTask(MainApplication.instance()) {
                 @Override
-                public void onFinish(List<HttpCookie> result) {
+                public void onSuccess(List<HttpCookie> result) {
                     if (result == null || result.isEmpty()) {
                         logger.debug("result is empty");
                         EventBus.getDefault().post(new SessionIdRefreshEvent(false));

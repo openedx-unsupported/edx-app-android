@@ -6,9 +6,6 @@ import android.webkit.WebView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
-import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 public class CourseInfoActivity extends FindCoursesBaseActivity {
 
@@ -20,7 +17,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
         super.onCreate(savedInstanceState);
 
         try{
-            segIO.screenViewsTracking(ISegment.Values.COURSE_INFO_SCREEN);
+            environment.getSegment().screenViewsTracking(ISegment.Values.COURSE_INFO_SCREEN);
         }catch(Exception e){
             logger.error(e);
         }
@@ -31,7 +28,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
         super.onStart();
 
         String pathId = getIntent().getStringExtra(EXTRA_PATH_ID);
-        String url = Config.getInstance().getEnrollmentConfig()
+        String url = environment.getConfig().getEnrollmentConfig()
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
         WebView webview = (WebView) findViewById(R.id.webview);

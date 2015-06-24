@@ -4,7 +4,9 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 
-import org.edx.mobile.http.Api;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -21,10 +23,10 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DatabaseModelFactory;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.io.File;
@@ -34,26 +36,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Singleton
 public class Storage implements IStorage {
 
+    @Inject
     private Context context;
+    @Inject
     private IDatabase db;
+    @Inject
     private IDownloadManager dm;
+    @Inject
     private UserPrefs pref;
+
+    @Inject
+    private Config config;
+
+
+    @Inject
+    ServiceManager serviceManager;
+
     private final Logger logger = new Logger(getClass().getName());
 
-    public Storage(Context context) {
-        this.context = context;
-
-        // init pref file
-        this.pref = new UserPrefs(context);
-
-        // init database manager
-        this.db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE );
-
-        // init download manager
-        this.dm = DownloadFactory.getInstance(context);
-    }
 
     public long addDownload(VideoModel model) {
         if(model.getVideoUrl()==null||model.getVideoUrl().length()<=0){
@@ -71,7 +74,7 @@ public class Storage implements IStorage {
 
         if (videoByUrl == null || videoByUrl.getDmId() < 0) {
             boolean downloadPreference = pref.isDownloadOverWifiOnly();
-            if(NetworkUtil.isOnZeroRatedNetwork(context)){
+            if(NetworkUtil.isOnZeroRatedNetwork(context, config)){
                 //If the device has zero rated network, then allow downloading
                 //on mobile network even if user has "Only on wifi" settings as ON
                 downloadPreference = false;
@@ -202,7 +205,6 @@ public class Storage implements IStorage {
                     logger.debug("xxxxxxxx =" +dmids[i]);
                 }
 
-                IDownloadManager dm = DownloadFactory.getInstance(context);
                 int averageProgress = dm.getAverageProgressForDownloads(dmids);
                 callback.onResult(averageProgress);
             }
@@ -265,10 +267,10 @@ public class Storage implements IStorage {
 
     @Override
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() {
-        Api api = new Api(context);
+
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<EnrolledCoursesResponse>();
         try {
-            List<EnrolledCoursesResponse> enrolledCourses = api.getEnrolledCourses(true);
+            List<EnrolledCoursesResponse> enrolledCourses = serviceManager.getEnrolledCourses(true);
             if(enrolledCourses!=null && enrolledCourses.size()>0){
                 for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
                     int videoCount = db.getDownloadedVideoCountByCourse(
@@ -292,10 +294,10 @@ public class Storage implements IStorage {
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() {
         try {
             ArrayList<SectionItemInterface> recentVideolist = new ArrayList<SectionItemInterface>();
-            Api api = new Api(context);
+
             ArrayList<EnrolledCoursesResponse> courseList = null;
 
-            courseList = (ArrayList)api.getEnrolledCourses(true);
+            courseList = (ArrayList)serviceManager.getEnrolledCourses(true);
 
             if(courseList==null || courseList.size() ==0){
                 return recentVideolist;
@@ -371,7 +373,7 @@ public class Storage implements IStorage {
 
         try {
             Map<String, SectionEntry> courseHeirarchyMap =
-                  ServiceManager.getInstance().getCourseHierarchy(courseId);
+                serviceManager.getCourseHierarchy(courseId, true);
 
             // iterate chapters
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {
@@ -480,13 +482,6 @@ public class Storage implements IStorage {
                             return;
                         }
 
-                        String username = profile.username;
-
-                        IDownloadManager dm = DownloadFactory.getInstance(context);
-                        IStorage storage = new Storage(context);
-                        IDatabase db = DatabaseFactory.getInstance(
-                                DatabaseFactory.TYPE_DATABASE_NATIVE );
-
                         List<Long> dmidList = db.getAllDownloadingVideosDmidList(null);
                         for (Long d : dmidList) {
                             // for each downloading video, check the percentage progress
@@ -495,7 +490,7 @@ public class Storage implements IStorage {
                                 // this means download is completed
                                 // so the video status should be marked as DOWNLOADED, not DOWNLOADING
                                 // update the video status
-                                storage.markDownloadAsComplete(d, new DataCallback<VideoModel>() {
+                                markDownloadAsComplete(d, new DataCallback<VideoModel>() {
                                     @Override
                                     public void onResult(VideoModel result) {
                                         logger.debug("Video download marked as completed, dmid=" + result.getDmId());

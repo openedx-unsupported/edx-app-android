@@ -1,12 +1,12 @@
 package org.edx.mobile.view;
 
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.module.prefs.PrefManager;
 
 public class SplashActivity extends BaseFragmentActivity {
 
@@ -39,7 +39,7 @@ public class SplashActivity extends BaseFragmentActivity {
                         intent = new Intent(SplashActivity.this, MyCoursesListActivity.class);
                         startActivity(intent);
                     } else {
-                        Router.getInstance().showLaunchScreen(SplashActivity.this, false);
+                        environment.getRouter().showLaunchScreen(SplashActivity.this, false);
                     }
                     finish();
                 }

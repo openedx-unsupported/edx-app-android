@@ -1,16 +1,20 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
+import com.google.inject.Inject;
+
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.common.RunnableCourseComponent;
 
+import roboguice.fragment.RoboFragment;
+
 /**
  * Created by hanning on 6/9/15.
  */
-public class CourseUnitFragment  extends Fragment implements PageViewStateCallback, RunnableCourseComponent {
+public class CourseUnitFragment  extends RoboFragment implements PageViewStateCallback, RunnableCourseComponent {
 
     public static interface HasComponent {
         CourseComponent getComponent();
@@ -18,6 +22,9 @@ public class CourseUnitFragment  extends Fragment implements PageViewStateCallba
 
     protected CourseComponent unit;
     protected HasComponent hasComponentCallback;
+
+    @Inject
+    IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

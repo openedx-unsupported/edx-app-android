@@ -30,15 +30,12 @@ import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
-import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SocialUtils;
-import org.edx.mobile.util.images.ImageCacheManager;
 import org.edx.mobile.view.custom.CourseImageHeader;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.SocialAffirmView;
@@ -131,7 +128,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
             @Override
             public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
+                new BrowserUtil().open(getActivity(), url);
             }
         };
         // treat every link as external link in this view, so that all links will open in external browser
@@ -189,25 +186,25 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
                 shareButton.setSocialShareType(socialType);
 
-                String headerImageUrl = courseData.getCourse().getCourse_image(getActivity());
-                headerImageView.setImageUrl(headerImageUrl, ImageCacheManager.getInstance().getImageLoader() );
+                String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
+                headerImageView.setImageUrl(headerImageUrl, environment.getImageCacheManager().getImageLoader() );
 
                 updateInteractiveVisibility();
 
             }
             showSocialEnabled(fbProvider.isLoggedIn());
 
-            if ( Config.getInstance().isNotificationEnabled()
+            if ( environment.getConfig().isNotificationEnabled()
                     && courseData != null && courseData.getCourse() != null){
                 notificationSettingRow.setVisibility(View.VISIBLE);
                 final String courseId = courseData.getCourse().getId();
                 final String subscriptionId = courseData.getCourse().getSubscription_id();
-                boolean isSubscribed = UserNotificationManager.getInstance().isSubscribedByCourseId(courseId);
+                boolean isSubscribed = environment.getNotificationDelegate().isSubscribedByCourseId(courseId);
                 notificationSwitch.setChecked(isSubscribed);
                 notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-                        UserNotificationManager.getInstance().changeNotificationSetting(
+                        environment.getNotificationDelegate().changeNotificationSetting(
                                 courseId, subscriptionId, isChecked);
                     }
                 });
@@ -261,7 +258,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     }
 
     private void loadAnnouncementData(EnrolledCoursesResponse enrollment) {
-        GetAnnouncementTask task = new GetAnnouncementTask(getActivity()) {
+        GetAnnouncementTask task = new GetAnnouncementTask(getActivity(), enrollment) {
 
             @Override
             public void onException(Exception ex) {
@@ -269,8 +266,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             }
 
             @Override
-            public void onFinish(List<AnnouncementsModel> announcementsList) {
-
+            public void onSuccess(List<AnnouncementsModel> announcementsList) {
                 try {
 
                     savedAnnouncements = announcementsList;
@@ -284,7 +280,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         };
         ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.api_spinner);
         task.setProgressDialog(progressBar);
-        task.execute(enrollment);
+        task.execute();
 
     }
 
@@ -358,7 +354,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 buff.append(entry);
             }
 
-            announcementWebView.loadDataWithBaseURL(Config.getInstance().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
+            announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
         } else {
             showEmptyAnnouncementMessage();
         }
@@ -405,7 +401,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_handout_text:
 
                 if (courseData != null) {
-                    Router.getInstance().showHandouts(getActivity(), courseData);
+                    environment.getRouter().showHandouts(getActivity(), courseData);
                 }
 
                 break;
@@ -424,7 +420,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
                     try{
 
-                        segIO.courseShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
+                        environment.getSegment().courseShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
 
                     }catch(Exception e){
                         logger.error(e);
@@ -446,7 +442,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             case R.id.combined_course_social_group:
 
                 try{
-                    segIO.courseGroupAccessed(courseData.getCourse().getId());
+                    environment.getSegment().courseGroupAccessed(courseData.getCourse().getId());
                 }catch(Exception e){
                     logger.error(e);
                 }
@@ -461,7 +457,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     @Override
     public Loader<AsyncTaskResult<List<SocialMember>>> onCreateLoader(int i, Bundle bundle) {
-        return new FriendsInCourseLoader(getActivity(), bundle);
+        return new FriendsInCourseLoader(getActivity(), bundle, environment);
     }
 
     @Override

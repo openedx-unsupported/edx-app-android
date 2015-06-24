@@ -7,14 +7,10 @@ import com.segment.analytics.Traits;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.ISegmentImpl;
 import org.edx.mobile.module.analytics.ISegmentTracker;
-import org.edx.mobile.module.analytics.SegmentFactory;
-import org.edx.mobile.test.BaseTestCase;
-import org.edx.mobile.util.Config;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.robolectric.RuntimeEnvironment;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class SegmentTests extends BaseTestCase {
 
@@ -38,7 +34,7 @@ public class SegmentTests extends BaseTestCase {
 
             // I dont want to change the implementation for now, just create ISegment
             // object directly
-            segment = new ISegmentImpl(RuntimeEnvironment.application);
+            segment = new ISegmentImpl( );
             // use mocked tracker
             segment.setTracker(tracker);
         }

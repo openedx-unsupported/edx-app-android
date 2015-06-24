@@ -6,12 +6,9 @@ import android.support.v4.app.FragmentActivity;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.URLSpan;
-import android.util.Patterns;
 import android.view.View;
 
 import org.edx.mobile.util.BrowserUtil;
-
-import java.util.regex.Pattern;
 
 /**
  * Created by yervant on 1/28/15.
@@ -31,7 +28,7 @@ public class OutboundUrlSpan extends URLSpan {
         Context context = widget.getContext();
 
         if(context instanceof FragmentActivity)
-            BrowserUtil.open((FragmentActivity)context, getURL());
+            new BrowserUtil().open((FragmentActivity)context, getURL());
     }
 
     public static Spanned interceptAllLinks(Spanned content){

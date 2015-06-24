@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 
 import java.util.ArrayList;
@@ -26,10 +27,13 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
 
     //simple way to avoid click on same row too quickly.
     protected LastClickedEvent lastClickedEvent = new LastClickedEvent();
+
+    protected IEdxEnvironment environment;
     
-    public BaseListAdapter(Context context, int layoutResourceId) {
+    public BaseListAdapter(Context context, int layoutResourceId, IEdxEnvironment environment) {
         super(context, layoutResourceId);
         layoutResource = layoutResourceId;
+        this.environment = environment;
     }
     
     /**

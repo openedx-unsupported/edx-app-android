@@ -20,7 +20,6 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.module.notification.UserNotificationManager;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -65,7 +64,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         runOnTick = false;
 
         // setup for social login
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this);
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
         ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
         ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
@@ -116,7 +115,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         });
 
         try{
-            segIO.screenViewsTracking("Login");
+            environment.getSegment().screenViewsTracking("Login");
         }catch(Exception e){
             logger.error(e);
         }
@@ -136,20 +135,21 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         // enable login buttons at launch
         tryToSetUIInteraction(true);
 
+        Config config = environment.getConfig();
         // check if third party traffic is enabled
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext());
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
 
         if (isOnZeroRatedNetwork) {
             findViewById(R.id.panel_login_social).setVisibility(View.GONE);
         } else {
-            if (!Config.getInstance().getFacebookConfig().isEnabled()
-                    && !Config.getInstance().getGoogleConfig().isEnabled()) {
+            if (!config.getFacebookConfig().isEnabled()
+                    && !config.getGoogleConfig().isEnabled()) {
                 findViewById(R.id.panel_login_social).setVisibility(View.GONE);
             }
-            else if (!Config.getInstance().getFacebookConfig().isEnabled()) {
+            else if (!config.getFacebookConfig().isEnabled()) {
                 findViewById(R.id.facebook_layout).setVisibility(View.GONE);
             }
-            else if (!Config.getInstance().getGoogleConfig().isEnabled()) {
+            else if (!config.getGoogleConfig().isEnabled()) {
                 findViewById(R.id.google_layout).setVisibility(View.GONE);
             }
         }
@@ -161,7 +161,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         TextView version_tv = (TextView)  findViewById(R.id.tv_version_no);
         try{
-            String envDisplayName = Config.getInstance().getEnvironmentDisplayName();
+            String envDisplayName = config.getEnvironmentDisplayName();
 
             if(envDisplayName != null && envDisplayName.length() > 0 ) {
                 version_tv.setVisibility(View.VISIBLE);
@@ -266,9 +266,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                 clearDialogs();
 
-                LoginTask logintask = new LoginTask(this) {
+                LoginTask logintask = new LoginTask(this,email_et.getText().toString().trim(),
+                    password_et.getText().toString()) {
                     @Override
-                    public void onFinish(AuthResponse result) {
+                    public void onSuccess(AuthResponse result) {
                         try {
                             if (result != null && result.hasValidProfile()) {
                                 onUserLoginSuccess(result.profile);
@@ -294,8 +295,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                 tryToSetUIInteraction(false);
                 logintask.setProgressDialog(progressbar);
-                logintask.execute(email_et.getText().toString().trim(),
-                        password_et.getText().toString());
+                logintask.execute();
             }
         } else {
             showErrorMessage(getString(R.string.no_connectivity),
@@ -405,7 +405,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     private void myCourseScreen() {
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
-            Router.getInstance().showMyCourses(this);
+            environment.getRouter().showMyCourses(this);
             // but finish this screen anyways as login is succeeded
             finish();
         }
@@ -443,16 +443,16 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
 
-        segIO.identifyUser(profile.id.toString(), profile.email , 
+        environment.getSegment().identifyUser(profile.id.toString(), profile.email ,
                 email_et.getText().toString().trim());
         
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
         if(backendKey!=null){
-            segIO.trackUserLogin(backendKey);
+            environment.getSegment().trackUserLogin(backendKey);
         }
 
         //segIO.trackDeviceDetails();
-        UserNotificationManager.getInstance().resubscribeAll();
+        environment.getNotificationDelegate().resubscribeAll();
 
         myCourseScreen();
     }

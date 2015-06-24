@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.SectionItemModel;
@@ -24,9 +25,9 @@ import org.edx.mobile.util.MemoryUtil;
 public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
 
     IDatabase dbStore;
-    public MyAllVideoAdapter(Context context, IDatabase dbStore) {
-        super(context, R.layout.row_video_list);
-        this.dbStore = dbStore;
+    public MyAllVideoAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_video_list, environment);
+        this.dbStore = environment.getDatabase();
     }
 
     @Override

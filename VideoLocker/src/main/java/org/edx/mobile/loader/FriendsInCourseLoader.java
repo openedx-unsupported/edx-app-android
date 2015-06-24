@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.social.SocialMember;
 
 import java.util.List;
@@ -23,10 +23,12 @@ public class FriendsInCourseLoader extends AsyncTaskLoader<AsyncTaskResult<List<
     private AsyncTaskResult<List<SocialMember>> mData;
 
     private Observer mObserver;
+    IEdxEnvironment environment;
 
-    public FriendsInCourseLoader(Context context, Bundle args){
+    public FriendsInCourseLoader(Context context, Bundle args, IEdxEnvironment environment){
 
         super(context);
+        this.environment = environment;
         if(args.containsKey(TAG_COURSE_ID)){
            this.courseID = args.getString(TAG_COURSE_ID);
         }
@@ -39,7 +41,7 @@ public class FriendsInCourseLoader extends AsyncTaskLoader<AsyncTaskResult<List<
     @Override
     public AsyncTaskResult<List<SocialMember>> loadInBackground() {
 
-        Api api = new Api(getContext());
+
         if (TextUtils.isEmpty(courseID) || TextUtils.isEmpty(this.oauthToken)){
             return null;
         }
@@ -47,7 +49,7 @@ public class FriendsInCourseLoader extends AsyncTaskLoader<AsyncTaskResult<List<
         AsyncTaskResult<List<SocialMember>> result = new AsyncTaskResult<List<SocialMember>>();
         try {
 
-            List<SocialMember> list = api.getFriendsInCourse(false, this.courseID, this.oauthToken);
+            List<SocialMember> list = environment.getServiceManager().getFriendsInCourse(false, this.courseID, this.oauthToken);
 
             result.setResult(list);
 

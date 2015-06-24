@@ -11,9 +11,9 @@ public class ConfigUtil {
      * @param url
      * @return
      */
-    public static boolean isWhiteListedURL(String url) {
+    public static boolean isWhiteListedURL(String url, Config config) {
         // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-        for (String domain : Config.getInstance().getZeroRatingConfig().getWhiteListedDomains()) {
+        for (String domain : config.getZeroRatingConfig().getWhiteListedDomains()) {
             if (BrowserUtil.isUrlOfHost(url, domain)) {
                 // this is white-listed URL
                 return true;

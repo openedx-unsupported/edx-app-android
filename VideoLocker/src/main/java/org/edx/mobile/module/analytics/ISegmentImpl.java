@@ -1,31 +1,25 @@
 package org.edx.mobile.module.analytics;
 
-import android.content.Context;
 import android.text.TextUtils;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.PrefManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Singleton
 public class ISegmentImpl implements ISegment {
 
+    @Inject
     private ISegmentTracker tracker;
     private final Logger logger = new Logger(getClass().getName());
 
-    /**
-     * This Constructor also initializes {@link ISegmentTrackerImpl}
-     * that is used to submit analytics data.
-     * @param context
-     */
-    public ISegmentImpl(Context context) {
-        this.tracker = new ISegmentTrackerImpl(context);
-    }
 
     @Override
     public void setTracker(ISegmentTracker tracker) {

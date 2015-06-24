@@ -1,23 +1,42 @@
 package org.edx.mobile.services;
 
+import android.os.Bundle;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
 import org.edx.mobile.http.HttpRequestEndPoint;
+import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
+import org.edx.mobile.model.api.AnnouncementsModel;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.CourseInfoModel;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.LectureModel;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.social.SocialFactory;
+import org.edx.mobile.social.SocialMember;
+import org.edx.mobile.util.Config;
 
+import java.net.HttpCookie;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -27,24 +46,24 @@ import java.util.Map;
  * controller -> service -> dao -> data source
  *
  * also, api is designed in a way to make future migration to RetroFit easy
+ *
+ * UI layer should call ServiceManager, not IApi directly.
  */
+@Singleton
 public class ServiceManager {
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static ServiceManager instance;
+
     private final CacheManager cacheManager;
     //TODO - we will move this logic into DI framework
 
-    private Api api;
+    @Inject
+    Config config;
 
-    public static synchronized  ServiceManager getInstance(){
-        if ( instance == null ){
-            instance = new ServiceManager();
-        }
-        return instance;
-    }
+    @Inject
+    IApi api;
+
     public ServiceManager(){
-        api = new Api(MainApplication.instance());
         cacheManager = new CacheManager(MainApplication.instance());
     }
 
@@ -57,7 +76,7 @@ public class ServiceManager {
                     String block_fields = URLEncoder.encode("graded,format,responsive_ui", "UTF-8");
                     String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
 
-                    String url = api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
+                    String url = config.getApiHostURL() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
                         +"block_count=" + block_count + "&fields=" + block_fields + "&block_json=" + block_json;
 
                     logger.debug("GET url for enrolling in a Course: " + url);
@@ -68,7 +87,7 @@ public class ServiceManager {
                 return "";
             }
             public String getCacheKey() {
-                return api.getBaseUrl() + "/api/course_structure/v0/courses/" + courseId;
+                return config.getApiHostURL() + "/api/course_structure/v0/courses/" + courseId;
             }
             public Map<String, String> getParameters() {
                 return null;
@@ -83,7 +102,7 @@ public class ServiceManager {
     public CourseComponent getCourseStructure(final String courseId,
                                               OkHttpUtil.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
         HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(
-                api, cacheManager, getEndPointCourseStructure(courseId)){
+            api, cacheManager, getEndPointCourseStructure(courseId)){
             @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);
@@ -119,16 +138,24 @@ public class ServiceManager {
         }
     }
 
+    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
+        return null;
+    }
+
     public Map<String, SectionEntry> getCourseHierarchy(String courseId)  throws Exception{
+        return getCourseHierarchy(courseId, true);
+    }
+
+    public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean prefCache)  throws Exception{
         if ( MainApplication.Q4_ASSESSMENT_FLAG ){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getCourseHierarchy(courseId, true);
+                return api.getCourseHierarchy(courseId, prefCache);
             } else {
                return CourseManager.mappingCourseHierarchyFrom(course);
             }
         } else {
-            return api.getCourseHierarchy(courseId, true);
+            return api.getCourseHierarchy(courseId, prefCache);
         }
     }
 
@@ -142,7 +169,7 @@ public class ServiceManager {
                 return CourseManager.getLecture(course, chapterName, chapterId, lectureName, lectureId);
             }
         } else {
-            return api.getLecture(courseId,chapterName,lectureName);
+            return api.getLecture(courseId, chapterName, lectureName);
         }
     }
 
@@ -156,9 +183,10 @@ public class ServiceManager {
                 return CourseManager.getVideoById(course, videoId);
             }
         } else {
-            return api.getVideoById(courseId,videoId);
+            return api.getVideoById(courseId, videoId);
         }
     }
+
 
     public String getUnitUrlByVideoById(String courseId, String videoId)
         throws Exception {
@@ -175,7 +203,7 @@ public class ServiceManager {
                 }
             }
         } else {
-            return api.getUnitUrlByVideoById(courseId,videoId);
+            return api.getUnitUrlByVideoById(courseId, videoId);
         }
     }
 
@@ -189,7 +217,7 @@ public class ServiceManager {
                 return CourseManager.getSubsectionById(course,subsectionId);
             }
         } else {
-            return api.getSubsectionById(courseId,subsectionId);
+            return api.getSubsectionById(courseId, subsectionId);
         }
     }
 
@@ -211,4 +239,134 @@ public class ServiceManager {
         return null;
     }
 
+
+    public ResetPasswordResponse resetPassword(String emailId) throws Exception {
+        return api.resetPassword(emailId);
+    }
+
+    public AuthResponse auth(String username, String password) throws Exception {
+        return api.auth(username, password);
+    }
+
+    public ProfileModel getProfile(String username) throws Exception {
+        return api.getProfile(username);
+    }
+
+    public ProfileModel getProfile() throws Exception {
+        return api.getProfile();
+    }
+
+    public List<EnrolledCoursesResponse> getEnrolledCourses() throws Exception {
+        return api.getEnrolledCourses();
+    }
+
+    public EnrolledCoursesResponse getCourseById(String courseId) {
+        return api.getCourseById(courseId);
+    }
+
+    public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
+        return api.getEnrolledCourses(fetchFromCache);
+    }
+
+    public HandoutModel getHandout(String url, boolean fetchFromCache) throws Exception {
+        return api.getHandout(url, fetchFromCache);
+    }
+
+
+    public CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception {
+        return api.getCourseInfo(url, preferCache);
+    }
+
+
+    public List<AnnouncementsModel> getAnnouncement(String url, boolean preferCache) throws Exception {
+        return api.getAnnouncement(url, preferCache);
+    }
+
+    public String downloadTranscript(String url) throws Exception {
+        return api.downloadTranscript(url);
+    }
+
+    public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
+        return api.getFriendsCourses(oauthToken);
+    }
+
+
+    public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
+        return api.getFriendsCourses(preferCache, oauthToken);
+    }
+
+
+    public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
+        return api.getFriendsInCourse(courseId, oauthToken);
+    }
+
+    public List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception {
+        return api.getFriendsInCourse(preferCache, courseId, oauthToken);
+    }
+
+    public boolean inviteFriendsToGroup(long[] toInvite, long groupId, String oauthToken) throws Exception {
+        return api.inviteFriendsToGroup(toInvite, groupId, oauthToken);
+    }
+
+
+    public long createGroup(String name, String description, boolean privacy, long adminId, String socialToken) throws Exception {
+        return api.createGroup(name, description, privacy, adminId, socialToken);
+    }
+
+
+    public boolean setUserCourseShareConsent(boolean consent) throws Exception {
+        return api.setUserCourseShareConsent(consent);
+    }
+
+
+    public boolean getUserCourseShareConsent() throws Exception {
+        return api.getUserCourseShareConsent();
+    }
+
+
+    public List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception {
+        return api.getGroupMembers(preferCache, groupId);
+    }
+
+    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType) throws Exception {
+        return api.socialLogin(accessToken, socialType);
+    }
+
+
+    public AuthResponse loginByFacebook(String accessToken) throws Exception {
+        return api.loginByFacebook(accessToken) ;
+    }
+
+
+    public AuthResponse loginByGoogle(String accessToken) throws Exception {
+        return api.loginByGoogle(accessToken);
+    }
+
+
+    public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
+        return api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
+    }
+
+
+    public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
+        return api.getLastAccessedSubsection(courseId);
+    }
+
+    public RegisterResponse register(Bundle parameters) throws Exception {
+        return api.register(parameters);
+    }
+
+
+    public RegistrationDescription getRegistrationDescription() throws Exception {
+        return api.getRegistrationDescription();
+    }
+
+
+    public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
+        return api.enrollInACourse(courseId, email_opt_in);
+    }
+
+    public List<HttpCookie> getSessionExchangeCookie() throws Exception {
+        return api.getSessionExchangeCookie();
+    }
 }
