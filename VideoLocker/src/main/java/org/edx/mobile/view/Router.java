@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -16,6 +15,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.Config;
 
 import de.greenrobot.event.EventBus;
 
@@ -109,10 +109,10 @@ public class Router {
         sourceActivity.sendBroadcast(loginIntent);
     }
 
-    public void showCourseDetailTabs(Activity activity, EnrolledCoursesResponse model,
+    public void showCourseDetailTabs(Activity activity, Config config, EnrolledCoursesResponse model,
                                      boolean announcements) {
 
-        if (MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled() ){
             showCourseDashboard(activity, model, announcements);
             return;
         }
@@ -132,7 +132,7 @@ public class Router {
      * @param activity
      * @param model
      */
-    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model ) {
+    public void showCourseAnnouncement(Activity activity, Config config,  EnrolledCoursesResponse model ) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
@@ -140,7 +140,7 @@ public class Router {
 
 
         Intent courseDetail;
-        if (MainApplication.Q4_ASSESSMENT_FLAG)
+        if ( config.isNewCourseNavigationEnabled() )
             courseDetail = new Intent(activity, CourseDetailInfoActivity.class);
         else
             courseDetail = new Intent(activity, CourseDetailTabActivity.class);

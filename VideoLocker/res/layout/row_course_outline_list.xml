@@ -63,7 +63,7 @@
             android:orientation="horizontal">
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/row_subtitle"
-                style="@style/regular_grey_text"
+                android:textColor="@color/edx_grayscale_neutral_base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -76,9 +76,8 @@
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/row_subtitle_icon"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:paddingTop="21dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:paddingLeft="0dp"
                 android:paddingStart="0dp"
                 android:paddingRight="21dp"
@@ -90,6 +89,25 @@
         </LinearLayout>
 
     </LinearLayout>
+
+      <org.edx.mobile.view.custom.ETextView
+          android:id="@+id/no_of_videos"
+          style="@style/semibold_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:gravity="center_vertical"
+          android:layout_marginLeft="10dp"
+          android:layout_marginStart="10dp"
+          android:layout_marginRight="0dp"
+          android:layout_marginEnd="0dp"
+          android:layout_toLeftOf="@id/bulk_download_layout"
+          android:layout_toStartOf="@id/bulk_download_layout"
+          tools:text="0"
+          android:visibility="gone"
+          android:textColor="@color/edx_grayscale_neutral_base"
+          android:textSize="15sp"
+          tools:targetApi="17" />
 
     <LinearLayout
         android:id="@+id/bulk_download_layout"
@@ -117,26 +135,6 @@
             android:baselineAlignBottom="true"
             app:iconName="fa_arrow_down" />
     </LinearLayout>
-
-    
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/no_of_videos"
-        style="@style/semibold_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_toLeftOf="@id/bulk_download_layout"
-        android:layout_toStartOf="@id/bulk_download_layout"
-        tools:text="0"
-        android:visibility="gone"
-        android:textColor="@color/grey_text_mycourse"
-        android:textSize="15sp"
-        tools:targetApi="17" />
 
     </LinearLayout>
 

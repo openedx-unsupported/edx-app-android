@@ -37,10 +37,6 @@ import roboguice.RoboGuice;
  * This class initializes the modules of the app based on the configuration.
  */
 public class MainApplication extends MultiDexApplication {
-    //FIXME - temporary solution
-    public static final boolean Q4_ASSESSMENT_FLAG = false;
-    //FIXME - temporary solution
-    public static final boolean ForumEnabled = false;
 
     //FIXME - temporary solution
     public static final boolean RETROFIT_ENABLED = false;

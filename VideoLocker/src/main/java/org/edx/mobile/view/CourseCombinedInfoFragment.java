@@ -22,7 +22,6 @@ import com.facebook.widget.LikeView;
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -105,7 +104,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         TextView handoutText = (TextView) view.findViewById(R.id.combined_course_handout_text);
         View handoutArrow =  view.findViewById(R.id.next_arrow);
-        if (MainApplication.Q4_ASSESSMENT_FLAG ) {
+        if (environment.getConfig().isNewCourseNavigationEnabled() ) {
             handoutText.setVisibility(View.GONE);
             handoutArrow.setVisibility(View.GONE);
         } else {

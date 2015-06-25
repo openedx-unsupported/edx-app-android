@@ -78,7 +78,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         final SectionRow row = this.getItem(position);
         final CourseComponent component = row.component;
         if (selectedRow != null && selectedRow.component.equals( row.component )){
-            convertView.setBackgroundResource(R.color.grey_1);
+            convertView.setBackgroundResource(R.color.edx_brand_primary_x_light);
         } else {
             convertView.setBackgroundResource(R.color.white);
         }
