@@ -55,6 +55,9 @@ public class Config {
     public static final String TEST_ACCOUNT_NAME = "NAME";
     public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
 
+    public static final String NEW_COURSE_NAVIGATION_ENABLED = "NEW_COURSE_NAVIGATION_ENABLED";
+    public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
+
     /**
      * Social Sharing configuration.
      */
@@ -339,6 +342,14 @@ public class Config {
         return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
+
+    public boolean isNewCourseNavigationEnabled() {
+        return getBoolean(NEW_COURSE_NAVIGATION_ENABLED, false);
+    }
+
+    public boolean isDiscussionsEnabled() {
+        return getBoolean(DISCUSSIONS_ENABLED, false);
+    }
     /**
      * Returns Course Enrollment configuration.
      * @return

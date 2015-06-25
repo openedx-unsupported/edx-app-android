@@ -105,7 +105,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
 
             @Override
             public void onAnnouncementClicked(EnrolledCoursesResponse model) {
-                environment.getRouter().showCourseDetailTabs(getActivity(), model, true);
+                environment.getRouter().showCourseDetailTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
         adapter.setImageCacheManager(environment.getImageCacheManager());
