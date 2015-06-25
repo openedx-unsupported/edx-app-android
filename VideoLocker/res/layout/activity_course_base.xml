@@ -46,6 +46,64 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/download_in_progress_bar"
+                android:orientation="vertical"
+                style="@style/download_in_progress_bar_style"
+
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center_vertical"
+                    tools:targetApi="17">
+
+                    <org.edx.mobile.third_party.iconify.IconView
+                        android:id="@+id/video_download_indicator"
+                        app:iconName="fa_spinner"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:baselineAlignBottom="true"/>
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
+                        style="@style/regular_text"
+                        android:gravity="left|start"
+                        android:textColor="@color/cyan_3"
+                        android:textSize="16sp"
+                        android:text="@string/video_download_in_progress"
+                        tools:targetApi="17" />
+
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/download_in_progress_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/regular_text"
+                        android:gravity="center"
+                        android:textColor="@color/cyan_3"
+                        android:textSize="16sp"
+                        android:padding="10dp"
+                        android:textAllCaps="true"
+                        android:text="@string/view_button_text" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cyan_3"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/last_access_bar"
                 android:orientation="vertical"
                 style="@style/last_access_bar_style"
@@ -106,63 +164,7 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:id="@+id/download_in_progress_bar"
-                android:orientation="vertical"
-                style="@style/download_in_progress_bar_style"
 
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_gravity="center_vertical"
-                    tools:targetApi="17">
-
-                      <org.edx.mobile.third_party.iconify.IconView
-                        android:id="@+id/video_download_indicator"
-                        app:iconName="fa_spinner"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:baselineAlignBottom="true"/>
-
-                    <org.edx.mobile.view.custom.ETextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginStart="5dp"
-                        style="@style/regular_text"
-                        android:gravity="left|start"
-                        android:textColor="@color/cyan_3"
-                        android:textSize="16sp"
-                        android:text="@string/video_download_in_progress"
-                        tools:targetApi="17" />
-
-
-                    <org.edx.mobile.view.custom.ETextView
-                        android:id="@+id/download_in_progress_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/regular_text"
-                        android:gravity="center"
-                        android:textColor="@color/cyan_3"
-                        android:textSize="16sp"
-                        android:padding="10dp"
-                        android:textAllCaps="true"
-                        android:text="@string/view_button_text" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/cyan_3"/>
-            </LinearLayout>
 
 
             <RelativeLayout
