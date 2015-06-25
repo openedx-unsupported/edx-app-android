@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.services.LastAccessManager;
 
 
 /**
@@ -30,6 +31,19 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             logger.error(e);
         }
 
+    }
+
+    public void onResume(){
+        super.onResume();
+
+        if ( courseData != null && courseData.getCourse() != null ){
+            CourseComponent courseComponent = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
+            if ( courseComponent == null)
+                setTitle( courseData.getCourse().getName() );
+            else
+                setTitle( courseComponent.getName() );
+            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+        }
     }
 
     @Override

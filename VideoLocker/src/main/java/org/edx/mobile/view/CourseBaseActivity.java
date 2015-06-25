@@ -73,7 +73,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected void initialize(Bundle arg){
 
         setApplyPrevTransitionOnRestart(true);
-
+        ((IconView)findViewById(R.id.video_download_indicator)).setIconColor(getResources().getColor(R.color.edx_brand_primary_light));
         findViewById(R.id.download_in_progress_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

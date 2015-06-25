@@ -36,14 +36,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
 
-    public void onResume(){
-        super.onResume();
 
-        if ( courseData != null && courseData.getCourse() != null ){
-            setTitle( courseData.getCourse().getName() );
-            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
-        }
-    }
 
     @Override
     public boolean isFetchingLastAccessed() {

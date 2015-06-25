@@ -146,10 +146,13 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
             .findViewById(R.id.row_subtitle);
         holder.rowSubtitleIcon = (IconView) convertView
             .findViewById(R.id.row_subtitle_icon);
+        holder.rowSubtitleIcon.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_light));
         holder.noOfVideos = (TextView) convertView
             .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (IconView) convertView
             .findViewById(R.id.bulk_download);
+        holder.bulkDownload.setIconColor(context.getResources().getColor(
+            R.color.edx_grayscale_neutral_base));
         holder.bulkDownloadVideos = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);

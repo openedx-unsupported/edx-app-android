@@ -139,4 +139,10 @@
     <color name="edx_brand_primary_x_light">#B2D6EA</color>
     <color name="edx_brand_primary_accent">#0EA6EC</color>
     <color name="edx_brand_primary_x_accent">#00B2FF</color>
+
+
+    <color name="edx_grayscale_neutral_black">#101010</color>
+    <color name="edx_grayscale_neutral_dark">#646262</color>
+    <color name="edx_grayscale_neutral_base">#A7A4A4</color>
+    <color name="edx_grayscale_neutral_light">#D3D1D1</color>
 </resources>
