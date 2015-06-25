@@ -76,12 +76,10 @@
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/row_subtitle_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:paddingLeft="0dp"
-                android:paddingStart="0dp"
-                android:paddingRight="21dp"
-                android:paddingEnd="21dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:paddingLeft="2dp"
+                android:paddingStart="2dp"
                 app:iconName="fa_check"
                 android:baselineAlignBottom="true"
                 android:gravity="center_vertical"
