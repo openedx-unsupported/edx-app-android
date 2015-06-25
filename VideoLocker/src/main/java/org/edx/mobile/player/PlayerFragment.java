@@ -35,7 +35,6 @@ import com.facebook.widget.FacebookDialog;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -174,7 +173,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         // save this fragment across activity re-creations
         //TODO - or FIXME  after playerFragment become a nested fragement,
         //we need to find a way to save status
-        if (!MainApplication.Q4_ASSESSMENT_FLAG)
+        if (!environment.getConfig().isNewCourseNavigationEnabled())
             setRetainInstance(true);
     }
 

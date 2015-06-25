@@ -62,7 +62,8 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     private ProgressWheel totalProgress;
     private MenuItem progressMenuItem;
     private ActionBarDrawerToggle mDrawerToggle;
-    private boolean isOnline = false;
+    //FIXME - we should not set a separate flag to indicate the status of UI component
+    private boolean isUiOnline = true;
     private boolean isConnectedToWifi = false;
     private boolean applyPrevTransitionOnRestart = false;
     private boolean isActivityStarted = false;
@@ -544,13 +545,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         }
     }
 
-
-
-    public void onEvent(LogoutEvent event){
-        finish();
-    }
-
-
     /**
      * Returns true if current orientation is LANDSCAPE, false otherwise.
      */
@@ -565,7 +559,13 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         this.applyPrevTransitionOnRestart = applyPrevTransitionOnRestart;
     }
 
-
+    /**
+     * callback from EventBus
+     * @param event
+     */
+    public void onEvent(LogoutEvent event){
+        finish();
+    }
     /**
      * callback from EventBus
      * @param event
@@ -574,9 +574,9 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
         logger.debug("network state changed");
         if (NetworkUtil.isConnected(this)) {
-            if ( !isOnline) {
+            if ( !isUiOnline) {
                 // only notify if previous state was NOT same
-                isOnline = true;
+                isUiOnline = true;
                 handler.post(new Runnable() {
                     public void run() {
                         AppConstants.offline_flag = false;
@@ -608,8 +608,8 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 }
             }
         } else {
-            if (isOnline) {
-                isOnline = false;
+            if (isUiOnline) {
+                isUiOnline = false;
                 handler.post(new Runnable() {
                     public void run() {
                         AppConstants.offline_flag = true;

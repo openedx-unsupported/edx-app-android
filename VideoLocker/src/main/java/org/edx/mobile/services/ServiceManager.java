@@ -121,7 +121,7 @@ public class ServiceManager {
 
     public List<SectionItemInterface> getLiveOrganizedVideosByChapter
         (String courseId, final String chapter) throws Exception{
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if (config.isNewCourseNavigationEnabled()){
              CourseComponent course = this.getCourseStructureFromCache(courseId);
              if ( course == null ) {  //it means we cache the old data model in the file system
                  return api.getLiveOrganizedVideosByChapter(courseId, chapter);
@@ -147,7 +147,7 @@ public class ServiceManager {
     }
 
     public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean prefCache)  throws Exception{
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled() ){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getCourseHierarchy(courseId, prefCache);
@@ -161,7 +161,7 @@ public class ServiceManager {
 
     public LectureModel getLecture(String courseId, String chapterName, String chapterId, String lectureName, String lectureId)
         throws Exception {
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled() ){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getLecture(courseId, chapterName, lectureName);
@@ -175,7 +175,7 @@ public class ServiceManager {
 
     public VideoResponseModel getVideoById(String courseId, String videoId)
         throws Exception {
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled() ){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getVideoById(courseId, videoId);
@@ -190,7 +190,7 @@ public class ServiceManager {
 
     public String getUnitUrlByVideoById(String courseId, String videoId)
         throws Exception {
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled() ){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getUnitUrlByVideoById(courseId, videoId);
@@ -209,7 +209,7 @@ public class ServiceManager {
 
     public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
         throws Exception {
-        if ( MainApplication.Q4_ASSESSMENT_FLAG ){
+        if ( config.isNewCourseNavigationEnabled()){
             CourseComponent course = this.getCourseStructureFromCache(courseId);
             if ( course == null ) {  //it means we cache the old data model in the file system
                 return api.getSubsectionById(courseId, subsectionId);

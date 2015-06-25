@@ -239,7 +239,7 @@
     <!-- Tab title for course info section -->
     <string name="tab_label_course_info">Course Info</string>
     <!-- Button for last accessed course section. Will be followed by course name -->
-    <string name="last_accessed">Last Accessed - </string>
+    <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No courseware is currently available.</string>
     <!-- Label shown when user is enrolled in no courses -->
