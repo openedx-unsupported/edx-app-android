@@ -38,7 +38,7 @@ import roboguice.RoboGuice;
  */
 public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
-    public static final boolean Q4_ASSESSMENT_FLAG = false;
+    public static final boolean Q4_ASSESSMENT_FLAG = true;
     //FIXME - temporary solution
     public static final boolean ForumEnabled = false;
 
