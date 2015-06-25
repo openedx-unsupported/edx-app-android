@@ -16,6 +16,7 @@ import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -47,7 +48,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     View downloadProgressBar;
 
     @InjectView(R.id.video_download_indicator)
-    TextView downloadIndicator;
+    IconView downloadIndicator;
 
     @InjectView(R.id.progress_spinner)
     ProgressBar progressWheel;
@@ -72,7 +73,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected void initialize(Bundle arg){
 
         setApplyPrevTransitionOnRestart(true);
-        Iconify.setIcon(downloadIndicator, Iconify.IconValue.fa_spinner);
 
         findViewById(R.id.download_in_progress_button).setOnClickListener(new View.OnClickListener() {
             @Override
