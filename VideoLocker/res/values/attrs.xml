@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="edgePopupMenuStyle" format="reference" />
+
     <declare-styleable name="PopupMenu">
         <attr name="android:dropDownWidth" />
         <attr name="android:padding" />

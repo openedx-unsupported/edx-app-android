@@ -203,7 +203,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void changeMode(){
         //Creating the instance of PopupMenu
         org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
-            findViewById(R.id.action_change_mode), Gravity.START);
+            findViewById(R.id.action_change_mode), Gravity.END);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
             .inflate(R.menu.change_mode, popup.getMenu());
@@ -253,8 +253,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     public void shareOnWeb() {
         //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(this,
-                findViewById(R.id.action_share_on_web), Gravity.START);
+        PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_share_on_web),
+                Gravity.END, R.attr.edgePopupMenuStyle, R.style.CustomEdgePopupMenu);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
                 .inflate(R.menu.share_on_web, popup.getMenu());
