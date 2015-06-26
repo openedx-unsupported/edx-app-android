@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -143,19 +142,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         int curIndex = pager.getCurrentItem();
         setCurrentUnit( pagerAdapter.getUnit(curIndex) );
         environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
-        CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
+
         View prevButton = findViewById(R.id.goto_prev);
-        View nextButton = findViewById(R.id.goto_next);
+        Button nextButton = (Button) findViewById(R.id.goto_next);
         nextButton.setVisibility(View.VISIBLE);
         prevButton.setVisibility(View.VISIBLE);
-        View newUnitReminder = findViewById(R.id.new_unit_reminder);
-        if( selectedUnit.isLastChild() ){
-            newUnitReminder.setVisibility(View.VISIBLE);
-            TextView textView = (TextView)findViewById(R.id.next_unit_title);
-            textView.setText(nextUnit.getParent().getDisplayName());
-        } else {
-            newUnitReminder.setVisibility(View.GONE);
-        }
+ 
         if ( curIndex == 0 ){
             prevButton.setVisibility(View.GONE);
         } else if ( curIndex >= pagerAdapter.getCount() -1 ){

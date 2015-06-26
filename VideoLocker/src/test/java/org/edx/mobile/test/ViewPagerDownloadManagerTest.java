@@ -70,6 +70,7 @@ public class ViewPagerDownloadManagerTest {
                 ViewPagerDownloadManager.instance.done(this, true);
             }
         };
+        ViewPagerDownloadManager.USING_UI_PRELOADING = true;
     }
 
     @Test
@@ -81,13 +82,13 @@ public class ViewPagerDownloadManagerTest {
         unitlist.add(nextComponent);
         ViewPagerDownloadManager.instance.setMainComponent(mainComponent, unitlist);
 
-        assertTrue("InInitialPhase() op failed",  ViewPagerDownloadManager.instance.inInitialPhase(prevComponent) );
-        assertTrue("InInitialPhase() op failed",  ViewPagerDownloadManager.instance.inInitialPhase(mainComponent) );
-        assertTrue("InInitialPhase() op failed",  ViewPagerDownloadManager.instance.inInitialPhase(nextComponent) );
-        assertTrue("InInitialPhase() op failed",  ViewPagerDownloadManager.instance.inInitialPhase(otherComponent) );
+        assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(prevComponent) );
+        assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(mainComponent) );
+        assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(nextComponent) );
+        assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(otherComponent) );
 
         ViewPagerDownloadManager.instance.addTask(prevComponentUI);
-        assertTrue("InInitialPhase() op failed",  ViewPagerDownloadManager.instance.inInitialPhase(otherComponent) );
+        assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(otherComponent) );
 
         ViewPagerDownloadManager.instance.addTask(mainComponentUI);
         assertTrue("InInitialPhase() op failed",  !ViewPagerDownloadManager.instance.inInitialPhase(otherComponent) );
@@ -106,7 +107,7 @@ public class ViewPagerDownloadManagerTest {
 
         ViewPagerDownloadManager.instance.addTask(prevComponentUI);
         assertTrue("addTask() op failed",  !ViewPagerDownloadManager.instance.isTaskIsRunning() );
-        assertTrue("addTask() op failed",  ViewPagerDownloadManager.instance.numTaskInStack() == 1 );
+        assertTrue("addTask() op failed",  ViewPagerDownloadManager.instance.numTaskInStack() == 0 );
 
         ViewPagerDownloadManager.instance.addTask(mainComponentUI);
         assertTrue("addTask() op failed for add main component",   ViewPagerDownloadManager.instance.numTaskInStack() == 0 );
