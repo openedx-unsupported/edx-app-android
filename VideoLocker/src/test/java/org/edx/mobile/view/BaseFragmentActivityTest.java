@@ -44,6 +44,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.Shadows;
@@ -239,7 +240,7 @@ public class BaseFragmentActivityTest {
         controller.start();
         // Social features state persistence
         PrefManager pmFeatures = new PrefManager(activity, PrefManager.Pref.FEATURES);
-        assertEquals(NetworkUtil.isSocialFeatureFlagEnabled(activity),
+        assertEquals(NetworkUtil.isSocialFeatureFlagEnabled(activity, Mockito.mock(org.edx.mobile.util.Config.class)),
                 pmFeatures.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, false));
         // Action bar state initialization
         ActionBar bar = activity.getActionBar();

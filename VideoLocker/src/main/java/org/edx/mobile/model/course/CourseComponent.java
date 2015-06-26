@@ -1,7 +1,5 @@
 package org.edx.mobile.model.course;
 
-import android.text.TextUtils;
-
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
@@ -341,7 +339,7 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public String getCourseId(){
-        if( TextUtils.isEmpty(courseId) ){
+        if( courseId == null || courseId.length() == 0 ){
             //root should always has a course id, add the check to avoid loop
             if ( root == this ){
                 logger.debug( "root does not has a course id set!!! for " + id);
@@ -370,4 +368,23 @@ public class CourseComponent implements IBlock, IPathNode {
         }
         return path;
     }
+
+    public static CourseComponent getCommonAncestor(CourseComponent node1, CourseComponent node2){
+        List<CourseComponent> path1 = node1.getPath().getPath();
+        List<CourseComponent> path2 = node2.getPath().getPath();
+        if ( path1.isEmpty() || path2.isEmpty() )
+            return null;
+        for(int i = path1.size() -1; i >=0; i --){
+            CourseComponent comp1 = path1.get(i);
+            for(int j = path2.size() -1; j >=0; j --){
+                CourseComponent comp2 = path2.get(j);
+                if (comp1.equals(comp2))
+                    return comp1;
+            }
+        }
+        return null;
+    }
+
+
+
 }

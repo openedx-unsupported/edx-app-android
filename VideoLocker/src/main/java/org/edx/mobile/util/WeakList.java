@@ -44,13 +44,10 @@ public class WeakList<T>{
 
     public T getFirstValid(){
         synchronized (items) {
-            for (Iterator it = items.iterator(); it.hasNext(); ) {
-                WeakReference<T> ref = (WeakReference) it.next();
-                if (ref.get() == null) {
-                    items.remove(ref);
-                    ref.clear();
-                } else
-                    return ref.get();
+            int size = size();
+            if(  size > 0 ){
+                WeakReference<T> ref = (WeakReference)items.get(0);
+                return ref.get();
             }
             return null;
         }
