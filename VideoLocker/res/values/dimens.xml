@@ -3,7 +3,7 @@
     
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="popupMenuWidth">168dp</dimen>
-    <dimen name="popupMenuHorizontalOffset">-168dp</dimen>
+    <dimen name="popupMenuHorizontalOffset">-6dp</dimen>
     <dimen name="popupMenuVerticalOffset">6dp</dimen>
     <dimen name="popupMenuPadding">16dp</dimen>
     <dimen name="popupMenuItemVerticalPadding">6dp</dimen>
