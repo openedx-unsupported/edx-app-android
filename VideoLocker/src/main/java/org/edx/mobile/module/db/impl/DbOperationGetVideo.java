@@ -30,4 +30,14 @@ class DbOperationGetVideo extends DbOperationSelect<VideoModel> {
         return video;
     }
     
+    @Override
+    public VideoModel getDefaultValue() {
+        // Returning null should be fine here, as video should only be queried if
+        // it exists, or at least there should be a null check on the client code
+        // otherwise. If we want to return an empty object here, then we will
+        // need an appropriate constructor or initializer in the default
+        // VideoModel implementation as well.
+        return null;
+    }
+    
 }

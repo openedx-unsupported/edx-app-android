@@ -41,4 +41,19 @@ class DbOperationSingleValueByRawQuery<T> extends DbOperationBase<T> {
         return result;
     }
     
+    @Override
+    public T getDefaultValue() {
+        if (columnType == Long.class) {
+            return (T) (Long) (-1L);
+        } else if (columnType == String.class) {
+            return (T) "";
+        } else if (columnType == Integer.class) {
+            return (T) (Integer) (-1);
+        } else {
+            logger.warn("Class types does NOT match for: " + columnType);
+        }
+
+        return null;
+    }
+
 }
