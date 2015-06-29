@@ -36,7 +36,7 @@
             android:id="@+id/course_unit_webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/grey_act_background"
+            android:background="@color/white"
           />
         <TextView
             android:id="@+id/webview_footer_text"
