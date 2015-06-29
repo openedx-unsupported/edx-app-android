@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_act_background"
+    android:background="@color/white"
     android:splitMotionEvents="false" >
 
     <FrameLayout
@@ -183,6 +183,10 @@
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:padding="1dp"
+                          android:layout_marginLeft="5dp"
+                          android:layout_marginStart="5dp"
+                          android:layout_marginRight="5dp"
+                          android:layout_marginEnd="5dp"
                           android:background="@drawable/rectangle_with_top_border"
                           android:visibility="gone"
                           android:layout_weight="0">
