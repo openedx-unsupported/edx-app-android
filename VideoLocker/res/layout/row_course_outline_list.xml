@@ -21,9 +21,8 @@
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/row_type"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:paddingTop="21dp"
+        android:layout_width="40dp"
+        android:layout_height="18dp"
         android:paddingLeft="0dp"
         android:paddingStart="0dp"
         android:paddingRight="21dp"
