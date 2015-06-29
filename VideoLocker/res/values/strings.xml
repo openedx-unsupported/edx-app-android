@@ -280,7 +280,7 @@
 
 
     <!-- Label for warning message of graded assessment -->
-    <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the web until it is fully supported on mobile.</string>
+    <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the <i>web</i> until it is fully supported on mobile.</string>
 
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->
