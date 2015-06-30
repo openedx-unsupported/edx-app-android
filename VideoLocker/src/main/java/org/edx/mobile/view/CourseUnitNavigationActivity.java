@@ -14,11 +14,13 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
@@ -200,7 +202,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         //we should use courseComponent instead.   Requirement maybe changed?
        // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
-        EnumSet<BlockType> types = EnumSet.allOf(BlockType.class);
+
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        EnumSet<BlockType> types =  userPrefManager.isUserPrefVideoModel() ?
+                             EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
         ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
 
