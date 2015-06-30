@@ -69,6 +69,8 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     @Override
     public CourseBaseAdapter.SectionRow getItem(int position) {
+        if ( position < 0 || position >= mData.size() )
+            return null;
         return mData.get(position);
     }
 
@@ -153,10 +155,11 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
             .findViewById(R.id.bulk_download);
         holder.bulkDownload.setIconColor(context.getResources().getColor(
             R.color.edx_grayscale_neutral_base));
-        holder.bulkDownloadVideos = (LinearLayout) convertView
+        holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);
         holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
+        holder.wholeSeparator = convertView.findViewById(R.id.row_whole_separator);
 
         return holder;
     }
@@ -169,9 +172,10 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         IconView rowSubtitleIcon;
         IconView bulkDownload;
         TextView noOfVideos;
-        LinearLayout bulkDownloadVideos;
+        LinearLayout numOfVideoAndDownloadArea;
         View rowSubtitlePanel;
         View halfSeparator;
+        View wholeSeparator;
     }
 
 
