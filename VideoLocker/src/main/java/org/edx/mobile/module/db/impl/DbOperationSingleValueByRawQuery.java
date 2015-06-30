@@ -20,16 +20,17 @@ class DbOperationSingleValueByRawQuery<T> extends DbOperationBase<T> {
     public T execute(SQLiteDatabase db) {
         Cursor c = db.rawQuery(sqlQuery, selectionArgs);
         
+        T result = null;
         if (c.moveToFirst()) {
             if (columnType == Long.class) { 
                 Long column = c.getLong(0);
-                return (T) column;
+                result = (T) column;
             } else if (columnType == String.class) {
                 String column = c.getString(0);
-                return (T) column;
+                result = (T) column;
             } else if (columnType == Integer.class) {
                 Integer column = c.getInt(0);
-                return (T) column;
+                result = (T) column;
             } else {
                 logger.warn("Class types does NOT match for: " + columnType);
             }
@@ -37,7 +38,22 @@ class DbOperationSingleValueByRawQuery<T> extends DbOperationBase<T> {
         
         c.close();
         
-        return null;
+        return result;
     }
     
+    @Override
+    public T getDefaultValue() {
+        if (columnType == Long.class) {
+            return (T) (Long) (-1L);
+        } else if (columnType == String.class) {
+            return (T) "";
+        } else if (columnType == Integer.class) {
+            return (T) (Integer) (-1);
+        } else {
+            logger.warn("Class types does NOT match for: " + columnType);
+        }
+
+        return null;
+    }
+
 }

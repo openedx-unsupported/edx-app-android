@@ -38,7 +38,7 @@ abstract class DbOperationBase<T> implements IDbOperation<T> {
             }
         }
         
-        return null;
+        return getDefaultValue();
     }
     
     /**
@@ -48,4 +48,10 @@ abstract class DbOperationBase<T> implements IDbOperation<T> {
      * @return
      */
     public abstract T execute(SQLiteDatabase db);
+
+    /**
+     * Returns the default value of the data type.
+     * @return The data type
+     */
+    public abstract T getDefaultValue();
 }

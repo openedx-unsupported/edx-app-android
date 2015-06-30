@@ -25,4 +25,9 @@ class DbOperationDelete extends DbOperationBase<Integer> {
         return count;
     }
 
+    @Override
+    public Integer getDefaultValue() {
+        return -1;
+    }
+
 }
