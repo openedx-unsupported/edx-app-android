@@ -124,7 +124,7 @@
     <style name="blue_bar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
-        <item name="android:background">@color/brand_primary_accent</item>
+        <item name="android:background">@color/edx_brand_primary_accent</item>
     </style>
 
     <style name="course_detail_style">
@@ -151,7 +151,7 @@
     </style>
 
     <style name="AppTheme.Dark" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarItemBackground">@color/brand_primary_accent</item>
+        <item name="android:actionBarItemBackground">@color/edx_brand_primary_light</item>
     </style>
 
     <!-- used to control the space between action bar items -->
