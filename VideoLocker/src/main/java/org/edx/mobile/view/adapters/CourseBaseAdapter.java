@@ -88,13 +88,13 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         if (convertView == null) {
             switch (type) {
                 case SectionRow.ITEM:
-                    convertView = mInflater.inflate(R.layout.row_course_outline_list, null);
+                    convertView = mInflater.inflate(R.layout.row_course_outline_list, parent,false);
                     // apply a tag to this list row
                     ViewHolder tag = getTag(convertView);
                     convertView.setTag(tag);
                     break;
                 default : //SectionRow.SECTION:
-                    convertView = mInflater.inflate(R.layout.row_section_header, null);
+                    convertView = mInflater.inflate(R.layout.row_section_header, parent,false);
                     break;
             }
         }
