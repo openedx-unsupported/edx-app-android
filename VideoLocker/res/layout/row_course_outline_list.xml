@@ -87,24 +87,7 @@
 
     </LinearLayout>
 
-      <org.edx.mobile.view.custom.ETextView
-          android:id="@+id/no_of_videos"
-          style="@style/semibold_text"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:gravity="center_vertical"
-          android:layout_marginLeft="10dp"
-          android:layout_marginStart="10dp"
-          android:layout_marginRight="0dp"
-          android:layout_marginEnd="0dp"
-          android:layout_toLeftOf="@id/bulk_download_layout"
-          android:layout_toStartOf="@id/bulk_download_layout"
-          tools:text="0"
-          android:visibility="gone"
-          android:textColor="@color/edx_grayscale_neutral_base"
-          android:textSize="15sp"
-          tools:targetApi="17" />
+
 
     <LinearLayout
         android:id="@+id/bulk_download_layout"
@@ -113,18 +96,36 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:padding="10dp"
+        android:paddingRight="5dp"
+        android:paddingEnd="5dp"
         android:layout_marginRight="2dp"
         android:layout_marginEnd="2dp"
         android:background="@android:color/transparent"
         tools:targetApi="17" >
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/no_of_videos"
+            style="@style/semibold_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            tools:text="0"
+            android:visibility="gone"
+            android:textColor="@color/edx_grayscale_neutral_base"
+            android:textSize="15sp"
+            tools:targetApi="17" />
 
         <org.edx.mobile.third_party.iconify.IconView
             android:id="@+id/bulk_download"
             android:gravity="center_vertical"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:paddingTop="1dp"
+            android:paddingTop="3dp"
             android:paddingLeft="0dp"
             android:paddingStart="0dp"
             android:paddingRight="1dp"
@@ -141,5 +142,11 @@
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp"
         android:background="@color/grey_3"
+        android:layout_height="1dp"/>
+    <View
+        android:id="@+id/row_whole_separator"
+        android:layout_width="match_parent"
+        android:background="@color/grey_3"
+        android:visibility="gone"
         android:layout_height="1dp"/>
 </LinearLayout>

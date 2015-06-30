@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,6 @@ public class CourseDashboardFragment extends RoboFragment {
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";
 
-    private ShowCourseOutlineCallback callback;
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -67,8 +67,10 @@ public class CourseDashboardFragment extends RoboFragment {
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( callback != null)
-                    callback.showCourseOutline();
+                Activity activity = getActivity();
+                if ( activity != null && activity instanceof ShowCourseOutlineCallback){
+                    ((ShowCourseOutlineCallback)activity).showCourseOutline();
+                }
             }
         });
 
@@ -137,10 +139,6 @@ public class CourseDashboardFragment extends RoboFragment {
         } catch (Exception ex) {
             logger.error(ex);
         }
-    }
-
-    public void setCallback(ShowCourseOutlineCallback callback){
-        this.callback = callback;
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){

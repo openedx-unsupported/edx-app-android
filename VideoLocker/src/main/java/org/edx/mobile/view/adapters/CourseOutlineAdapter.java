@@ -76,6 +76,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
     @Override
     public View getRowView(int position, View convertView, ViewGroup parent) {
         final SectionRow row = this.getItem(position);
+        final SectionRow nextRow = this.getItem(position+1);
         final CourseComponent component = row.component;
         if (selectedRow != null && selectedRow.component.equals( row.component )){
             convertView.setBackgroundResource(R.color.edx_brand_primary_x_light);
@@ -83,18 +84,27 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             convertView.setBackgroundResource(R.color.white);
         }
         final ViewHolder viewHolder = (ViewHolder)convertView.getTag();
-        if( row.component.isLastChild() ){
+
+        if ( nextRow == null ){
             viewHolder.halfSeparator.setVisibility(View.GONE);
+            viewHolder.wholeSeparator.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.halfSeparator.setVisibility(View.VISIBLE);
+            viewHolder.wholeSeparator.setVisibility(View.GONE);
+            boolean isLastChildInBlock = !row.component.getParent().getId().equals( nextRow.component.getParent().getId());
+            if( isLastChildInBlock ){
+                viewHolder.halfSeparator.setVisibility(View.GONE);
+            } else {
+                viewHolder.halfSeparator.setVisibility(View.VISIBLE);
+            }
         }
+
+
 
         viewHolder.rowType.setVisibility(View.GONE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
-        viewHolder.noOfVideos.setVisibility(View.INVISIBLE);
-        viewHolder.bulkDownloadVideos.setVisibility(View.GONE);
+        viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
 
         if (component.isContainer()) {
             return getRowViewForContainer(position, convertView, parent, row);
@@ -177,6 +187,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         VideoBlockModel unit = (VideoBlockModel) row.component;
 
         viewHolder.rowType.setIcon(Iconify.IconValue.fa_film);
+        viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
         viewHolder.bulkDownload.setVisibility(View.VISIBLE);
 
         final DownloadEntry videoData =  unit.getDownloadEntry(storage);
@@ -223,8 +234,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                     DownloadEntry.DownloadedState ds = result;
                     if(ds == null || ds == DownloadEntry.DownloadedState.ONLINE) {
                         // not yet downloaded
-                        viewHolder.bulkDownloadVideos.setVisibility(View.VISIBLE);
-                        viewHolder.bulkDownloadVideos.setOnClickListener(new View.OnClickListener() {
+                        viewHolder.bulkDownload.setVisibility(View.VISIBLE);
+                        viewHolder.numOfVideoAndDownloadArea.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
@@ -236,7 +247,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                     } else if(ds == DownloadEntry.DownloadedState.DOWNLOADING) {
                         // may be download in progress
                         EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-                        viewHolder.bulkDownloadVideos.setVisibility(View.GONE);
+                        viewHolder.bulkDownload.setVisibility(View.GONE);
                         storage.getDownloadProgressByDmid(videoData.dmId, new DataCallback<Integer>(true) {
                             @Override
                             public void onResult(Integer result) {
@@ -249,19 +260,19 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                             @Override
                             public void onFail(Exception ex) {
                                 logger.error(ex);
-                                viewHolder.bulkDownloadVideos.setVisibility(View.VISIBLE);
+                                viewHolder.bulkDownload.setVisibility(View.VISIBLE);
                             }
                         });
                     } else if (ds == DownloadEntry.DownloadedState.DOWNLOADED) {
                         // downloaded
-                        viewHolder.bulkDownloadVideos.setVisibility(View.GONE);
+                        viewHolder.bulkDownload.setVisibility(View.GONE);
                     }
 
                 }
                 @Override
                 public void onFail(Exception ex) {
                     logger.error(ex);
-                    viewHolder.bulkDownloadVideos.setVisibility(View.VISIBLE);
+                    viewHolder.bulkDownload.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -287,6 +298,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             }
         });
 
+        holder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
+
         if ( component.isGraded() ){
             holder.bulkDownload.setVisibility(View.INVISIBLE);
             holder.rowSubtitlePanel.setVisibility(View.VISIBLE);
@@ -299,21 +312,20 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         //support video download for video type
         final int totalCount = component.getBlockCount().videoCount;
         if (totalCount == 0 ){
-            holder.noOfVideos.setVisibility(View.INVISIBLE);
-            holder.bulkDownloadVideos.setVisibility(View.GONE);
+            holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
             holder.noOfVideos.setVisibility(View.VISIBLE);
             holder.noOfVideos.setText("" + totalCount);
 
             if (  row.numOfVideoNotDownloaded == 0 ){
-                holder.bulkDownloadVideos.setVisibility(View.GONE);
+                holder.bulkDownload.setVisibility(View.GONE);
             } else {
                 int inProcessCount = dbStore.getVideosCountBySection(courseId, chapterId, sequentialId, null);
                 int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
                 row.numOfVideoNotDownloaded = totalCount - inProcessCount - webOnlyCount;
                 if (row.numOfVideoNotDownloaded > 0) {
-                    holder.bulkDownloadVideos.setVisibility(View.VISIBLE);
-                    holder.bulkDownloadVideos
+                    holder.bulkDownload.setVisibility(View.VISIBLE);
+                    holder.numOfVideoAndDownloadArea
                         .setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
@@ -321,14 +333,13 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                             }
                         });
                 } else {
-                    holder.bulkDownloadVideos.setVisibility(View.GONE);
+                    holder.bulkDownload.setVisibility(View.GONE);
                 }
             }
         }
 
         if (AppConstants.offline_flag) {
-            holder.noOfVideos.setVisibility(View.GONE);
-            holder.bulkDownloadVideos.setVisibility(View.GONE);
+            holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
             boolean isVideoDownloaded = dbStore.isVideoDownloadedInSection
                 (courseId, chapterId, sequentialId, null);
             if(isVideoDownloaded)

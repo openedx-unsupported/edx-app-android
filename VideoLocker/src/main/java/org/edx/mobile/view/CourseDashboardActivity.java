@@ -62,7 +62,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
                     fragment.setArguments(bundle);
 
                 }
-                fragment.setCallback(this);
+
                 //this activity will only ever hold this lone fragment, so we
                 // can afford to retain the instance during activity recreation
                 fragment.setRetainInstance(true);
