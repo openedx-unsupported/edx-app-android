@@ -358,7 +358,14 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
     public  View getHeaderView(int position, View convertView, ViewGroup parent){
         final SectionRow row = this.getItem(position);
-        ((TextView)convertView).setText(row.component.getDisplayName());
+        TextView titleView = (TextView)convertView.findViewById(R.id.row_header);
+        View separator = convertView.findViewById(R.id.row_separator);
+        titleView.setText(row.component.getDisplayName());
+        if ( position == 0 ){
+            separator.setVisibility(View.GONE);
+        } else {
+            separator.setVisibility(View.VISIBLE);
+        }
         return convertView;
     }
 

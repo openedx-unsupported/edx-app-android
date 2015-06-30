@@ -105,7 +105,6 @@
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
     <!-- TODO : we should change color name to be more meaningful, and to match  http://ux.edx.org/elements/colors/  -->
-    <color name="brand_primary_accent">#1f9ed9</color>
     <color name="grey_text_course_not_started">#00454951</color>
 
     <!-- social sharing -->
