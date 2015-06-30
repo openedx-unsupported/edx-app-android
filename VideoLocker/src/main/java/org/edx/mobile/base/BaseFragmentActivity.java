@@ -403,7 +403,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 if(titleTextView!=null){
                     titleTextView.setTextColor(getResources().getColor(R.color.edx_white));
                     titleTextView.setTypeface(type);
-                    bar.setTitle(title);
+                    bar.setTitle("  " + title);
                 }
             }
         }catch(Exception ex){

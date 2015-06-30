@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,14 @@ public class CourseDashboardFragment extends RoboFragment {
 
             String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
             NetworkImageView headerImageView = (NetworkImageView)getView().findViewById(R.id.header_image_view);
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            float screenWidth = displayMetrics.widthPixels;
+            float ideaHeight = screenWidth * 9 / 16;
+
+            headerImageView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
+            headerImageView.requestLayout();
+
             headerImageView.setImageUrl(headerImageUrl, environment.getImageCacheManager().getImageLoader() );
 
             courseTextName.setText(courseData.getCourse().getName());
