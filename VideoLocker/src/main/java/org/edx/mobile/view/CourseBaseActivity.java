@@ -10,11 +10,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -52,6 +55,9 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     @InjectView(R.id.progress_spinner)
     ProgressBar progressWheel;
+
+    @Inject
+    CourseManager courseManager;
 
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;

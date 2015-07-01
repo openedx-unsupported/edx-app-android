@@ -76,7 +76,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:background">@color/edx_brand_secondary_x_light</item>
-        <item name="android:textColor">@color/offline_text</item>
+        <item name="android:textColor">@color/edx_brand_secondary_accent</item>
         <item name="android:visibility">gone</item>
     </style>
 
