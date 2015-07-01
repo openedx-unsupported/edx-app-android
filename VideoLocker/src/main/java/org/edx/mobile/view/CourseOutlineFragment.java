@@ -23,6 +23,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +103,23 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             return;
         CourseComponent courseComponent = getCourseComponent();
         adapter.setData(courseComponent);
+        updateMessageView(view);
+    }
+    public void updateMessageView(View view){
+        if (view == null )
+            view = getView();
+        if ( view == null )
+            return;
+        ETextView messageView = (ETextView) view.findViewById(R.id.no_chapter_tv);
         if(adapter.getCount()==0){
-            view.findViewById(R.id.no_chapter_tv).setVisibility(View.VISIBLE);
+            messageView.setVisibility(View.VISIBLE);
+            if ( adapter.hasFilteredUnits() ){
+                messageView.setText(R.string.assessment_empty_video_info);
+            } else {
+                messageView.setText(R.string.no_chapter_text);
+            }
+        }else{
+            messageView.setVisibility(View.GONE);
         }
     }
 

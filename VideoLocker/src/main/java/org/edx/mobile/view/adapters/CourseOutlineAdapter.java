@@ -23,6 +23,8 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -31,6 +33,7 @@ import de.greenrobot.event.EventBus;
 public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
     private boolean currentVideoMode;
+    private int numOfTotalUnits;
 
     public CourseOutlineAdapter(Context context, IDatabase dbStore, IStorage storage) {
         super(context, dbStore, storage);
@@ -44,12 +47,14 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         if (component != null &&  !component.isContainer())
             return;//
         this.rootComponent = component;
+        this.numOfTotalUnits = 0;
         mData.clear();
         if ( rootComponent != null ) {
             PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
             currentVideoMode = userPrefManager.isUserPrefVideoModel();
-
-            for(IBlock block : rootComponent.getChildren()){
+            List<IBlock> children = rootComponent.getChildren();
+            this.numOfTotalUnits = children.size();
+            for(IBlock block : children){
                 CourseComponent comp = (CourseComponent)block;
                 if ( currentVideoMode && comp.getBlockCount().videoCount == 0 )
                     continue;
@@ -382,5 +387,12 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         }  else {
             return false;
         }
+    }
+
+    /**
+     * if the app is in the video-only mode, some unit will not show up
+     */
+    public boolean hasFilteredUnits(){
+        return this.numOfTotalUnits > mData.size();
     }
 }

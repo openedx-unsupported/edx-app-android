@@ -262,7 +262,9 @@
     <!-- Label for mode switch menu item-->
     <string name="assessment_full_course">Full Course</string>
 
-    <!-- Label showing assessment only available on website-->
+    <!-- Label for empty video in video only mode-->
+    <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select the Video icon above and switch to full course mode.</string>
+   <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn\'t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
