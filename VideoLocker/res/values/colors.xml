@@ -35,7 +35,7 @@
     <color name="pink_3">#b72667</color>
     <color name="pink_2">#e86caa</color>
     <color name="pink_1">#ed9bc7</color>
-    <color name="edx_brand_secondary_x_light">#EFCDDC</color>
+
     <color name="edx_white">#fafafa</color>
     <color name="edx_black">#191919</color>
 
@@ -138,6 +138,10 @@
     <color name="edx_brand_primary_x_light">#B2D6EA</color>
     <color name="edx_brand_primary_accent">#0EA6EC</color>
     <color name="edx_brand_primary_x_accent">#00B2FF</color>
+
+    <color name="edx_brand_secondary_x_light">#EFCDDC</color>
+    <color name="edx_brand_secondary_accent">#F26CAA</color>
+    <color name="edx_brand_secondary_base">#CB598D</color>
 
 
     <color name="edx_grayscale_neutral_black">#101010</color>

@@ -138,12 +138,21 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void setCurrentUnit(CourseComponent component){
         this.selectedUnit = component;
+        if ( this.selectedUnit == null  )
+            return;
+
+        environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
+
+        CourseComponent parent = component.getParent();
+        String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
+            .username, selectedUnit.getCourseId());
+        final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
+        prefManager.putLastAccessedSubsection(parent.getId(), false);
     }
 
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
         setCurrentUnit( pagerAdapter.getUnit(curIndex) );
-        environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
 
         View prevButton = findViewById(R.id.goto_prev);
         Button nextButton = (Button) findViewById(R.id.goto_next);

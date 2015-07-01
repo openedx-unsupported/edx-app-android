@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/edx_white"
+        android:background="@color/white"
         android:gravity="center"
         android:layout_marginTop="45dp"
         android:id="@+id/message_container">
@@ -48,7 +48,7 @@
             android:layout_height="70dp"
             app:iconColor="@color/grey_3"
             app:iconName="fa_file_text_o"
-            android:background="@color/edx_white"
+            android:background="@color/white"
             android:layout_margin="20dp"/>
 
         <TextView
@@ -59,7 +59,7 @@
             android:singleLine="false"
             android:textColor="@color/grey_3"
             android:textAlignment="center"
-            android:background="@color/edx_white"
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"

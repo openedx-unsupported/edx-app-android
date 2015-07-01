@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -10,12 +9,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.services.VideoDownloadHelper;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.AppConstants;
 
 /**
@@ -25,7 +24,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     LastAccessManager.LastAccessManagerCallback ,VideoDownloadHelper.DownloadManagerCallback {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
-    private final String modeVideoOnly = "mode_video_only";
 
     private boolean isFetchingLastAccessed;
     private Handler mHandler = new Handler();
@@ -50,15 +48,22 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     private long lastClickTime;
     @Override
-    public void showLastAccessedView(String lastAccessedSubSectionId, final String courseId, final View view) {
+    public void showLastAccessedView(final String lastAccessedSubSectionId, final String courseId, final View view) {
         if (  isActivityStarted() ) {
             if (!AppConstants.offline_flag) {
                 try {
                     if(courseId!=null && lastAccessedSubSectionId!=null){
-                        final VideoResponseModel videoModel = environment.getServiceManager().getSubsectionById(courseId,
-                            lastAccessedSubSectionId);
-                        if (videoModel != null) {
-                            super.showLastAccessedView(null, " " + videoModel.getSection().getName(), new View.OnClickListener() {
+                        final CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+                        if (lastAccessComponent != null) {
+                            //if last access section has no video and app is on video-only model,
+                            //we should hide last-access-view for now.  TODO - i believe it is a temporary solution. we should
+                            //get rid of video-only mode in the future?
+                            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+                            if ( userPrefManager.isUserPrefVideoModel() &&
+                                lastAccessComponent.getVideos().isEmpty() )
+                                return;
+
+                            super.showLastAccessedView(null, " " + lastAccessComponent.getName(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //This has been used so that if user clicks continuously on the screen,
@@ -67,20 +72,8 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
                                         try {
-                                            LectureModel lecture = environment.getServiceManager().getLecture(courseId,
-                                                videoModel.getChapterName(), videoModel.getChapter().getId(),
-                                                videoModel.getSequentialName(), videoModel.getSection().getId());
-                                            SectionEntry chapter = new SectionEntry();
-                                            chapter.chapter = videoModel.getChapterName();
-                                            lecture.chapter = chapter;
-                                            Intent videoIntent = new Intent(
-                                                CourseVideoListActivity.this,
-                                                VideoListActivity.class);
-                                            videoIntent.putExtra(Router.EXTRA_ENROLLMENT, courseData);
-                                            videoIntent.putExtra("lecture", lecture);
-                                            videoIntent.putExtra("FromMyVideos", false);
-
-                                            startActivity(videoIntent);
+                                            environment.getRouter().showCourseContainerOutline(
+                                                CourseVideoListActivity.this, courseData, lastAccessedSubSectionId);
                                         } catch (Exception e) {
                                             logger.error(e);
                                         }
@@ -109,6 +102,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     protected void modeChanged(){
+        LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
         updateListUI();
     }
 
