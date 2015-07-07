@@ -158,7 +158,7 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
         String title = unit.getDisplayName();
         if (TextUtils.isEmpty(title)) {
             //TODO - wait for production decision
-            viewHolder.rowTitle.setText("Untitled Unit");
+            viewHolder.rowTitle.setText(R.string.untitled_block);
         } else {
             viewHolder.rowTitle.setText(unit.getDisplayName());
         }
