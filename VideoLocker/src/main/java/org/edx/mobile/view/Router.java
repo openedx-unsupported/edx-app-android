@@ -151,6 +151,12 @@ public class Router {
 
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, String courseComponentId) {
 
+        showCourseContainerOutline(activity, -1, model, courseComponentId);
+    }
+
+    public void showCourseContainerOutline(Activity activity, int requestCode,
+                                           EnrolledCoursesResponse model, String courseComponentId) {
+
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
@@ -159,12 +165,18 @@ public class Router {
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         //TODO - what's the most suitable FLAG?
        // courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
+        activity.startActivityForResult(courseDetail, requestCode);
     }
 
 
 
     public void showCourseUnitDetail(Activity activity, EnrolledCoursesResponse model,
+                                     String courseId,  CourseComponent unit ) {
+
+        showCourseUnitDetail(activity, -1, model, courseId, unit);
+    }
+
+    public void showCourseUnitDetail(Activity activity, int requestCode, EnrolledCoursesResponse model,
                                      String courseId,  CourseComponent unit ) {
 
         Bundle courseBundle = new Bundle();
@@ -175,7 +187,7 @@ public class Router {
         Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
+        activity.startActivityForResult(courseDetail, requestCode);
     }
 
 
