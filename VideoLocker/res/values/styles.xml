@@ -52,7 +52,7 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/edx_brand_primary_x_accent</item>
+        <item name="android:background">@color/edx_brand_primary_base</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:subtitleTextStyle">@style/MyActionBarTitleText</item>
         <item name="itemPadding">2dip</item>
