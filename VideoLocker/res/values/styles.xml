@@ -30,7 +30,7 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:homeAsUpIndicator">@drawable/left_arrow</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
