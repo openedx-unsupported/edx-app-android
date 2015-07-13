@@ -156,7 +156,6 @@ public class Api implements IApi {
         Bundle p = new Bundle();
         p.putString("grant_type", "password");
         p.putString("client_id", config.getOAuthClientId());
-        p.putString("client_secret", config.getOAuthClientSecret());
         p.putString("username", username);
         p.putString("password", password);
 
