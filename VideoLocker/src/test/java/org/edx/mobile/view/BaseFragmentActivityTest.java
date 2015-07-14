@@ -39,6 +39,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.test.http.HttpBaseTestCase;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
@@ -63,7 +64,7 @@ import static org.junit.Assume.*;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
 @RunWith(RobolectricGradleTestRunner.class)
-public class BaseFragmentActivityTest {
+public class BaseFragmentActivityTest extends HttpBaseTestCase {
     /**
      * Method for defining the subclass of {@link BaseFragmentActivity} that
      * is being tested. Should be overridden by subclasses.
