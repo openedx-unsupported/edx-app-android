@@ -171,8 +171,7 @@ public class RestApiManager implements IApi{
     @Override
     public AuthResponse auth(String username, String password) throws Exception {
 
-        AuthResponse response = restApi.doLogin("password", environment.getConfig().getOAuthClientId(),
-            environment.getConfig().getOAuthClientSecret(), username, password);
+        AuthResponse response = restApi.doLogin("password", environment.getConfig().getOAuthClientId(), username, password);
 
         // store auth token response
         Gson gson = new GsonBuilder().create();
