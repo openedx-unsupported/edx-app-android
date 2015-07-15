@@ -5,17 +5,21 @@ import android.text.TextUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.inject.Injector;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.http.Api;
+import org.edx.mobile.http.IApi;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
+import org.robolectric.RuntimeEnvironment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +47,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     protected Api api;
+    protected ServiceManager serviceManager;
     //there are third party extension to handle conditionally skip some test programmatically.
     //but i think it is not a good idea to introduce more libs only for this purpose.
     protected boolean shouldSkipTest = false;
@@ -56,14 +61,15 @@ public class HttpBaseTestCase extends BaseTestCase {
 
     @Override
     public void setUp() throws Exception {
-        super.setUp();
-
         server = new MockWebServer();
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
 
+        api = new Api(RuntimeEnvironment.application);
 
-        api = new Api(context);
+        super.setUp();
+
+
         String oAuthClientId = config.getOAuthClientId();
         String testAccount = config.getTestAccountConfig().getName();
         shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);
@@ -86,6 +92,19 @@ public class HttpBaseTestCase extends BaseTestCase {
         }
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
         return new Config(properties);
+    }
+
+    @Override
+    public void addBindings() {
+        super.addBindings();
+        module.addBinding(IApi.class, api);
+    }
+
+    @Override
+    protected void inject(Injector injector) {
+        super.inject(injector);
+        injector.injectMembers(api);
+        serviceManager = injector.getInstance(ServiceManager.class);
     }
 
     @Override

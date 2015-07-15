@@ -242,7 +242,7 @@ public class ApiTests extends HttpBaseTestCase {
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         final String courseId = e.getCourse().getId();
         HttpRequestDelegate<CourseComponent> requestDelegate = new HttpRequestDelegate<CourseComponent>(
-                api, null, new ServiceManager().getEndPointCourseStructure(courseId)) {
+                api, null, serviceManager.getEndPointCourseStructure(courseId)) {
             @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);

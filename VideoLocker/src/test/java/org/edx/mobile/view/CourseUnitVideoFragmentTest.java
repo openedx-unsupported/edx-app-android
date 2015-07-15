@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
+import org.edx.mobile.test.http.HttpBaseTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -34,7 +35,7 @@ import static org.junit.Assume.assumeNotNull;
 // issue: https://github.com/robolectric/robolectric/issues/1810
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(sdk = 19)
-public class CourseUnitVideoFragmentTest {
+public class CourseUnitVideoFragmentTest extends HttpBaseTestCase {
     /**
      * Testing initialization
      */
