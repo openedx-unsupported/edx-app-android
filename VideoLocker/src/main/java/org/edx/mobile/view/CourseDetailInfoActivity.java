@@ -31,6 +31,8 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTitle(R.string.announcement_title);
+
         setApplyPrevTransitionOnRestart(true);
 
         bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);

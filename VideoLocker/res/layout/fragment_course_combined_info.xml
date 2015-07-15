@@ -33,6 +33,7 @@
                 android:orientation="vertical"
                 android:gravity="bottom"
                 android:padding="12dp"
+                android:visibility="gone"
                 android:background="@drawable/course_image_header_text_backing">
 
                 <org.edx.mobile.view.custom.ETextView
@@ -298,7 +299,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey"
-            android:gravity="center" />
+            android:gravity="center"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/announcement_layout"
@@ -321,6 +323,7 @@
                     android:paddingLeft="@dimen/course_detail_margin_left"
                     android:paddingRight="@dimen/course_detail_margin_left"
                     android:paddingTop="@dimen/course_detail_margin"
+                    android:visibility="gone"
                     android:paddingBottom="@dimen/course_detail_margin"
                     android:background="@color/grey_2"
                     android:textSize="14dp" />
