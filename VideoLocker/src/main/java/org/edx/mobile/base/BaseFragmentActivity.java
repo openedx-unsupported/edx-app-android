@@ -111,12 +111,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
             setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
         }
 
-        try{
-            applyTransitionNext();
-        }catch(Exception ex){
-            logger.error(ex);
-        }
-
 
         updateActionBarShadow();
 
@@ -124,9 +118,9 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
     @Override
-    public void startActivity(Intent intent) {
+    public void startActivityForResult(Intent intent, int requestCode) {
         try{
-            super.startActivity(intent);
+            super.startActivityForResult(intent, requestCode);
             applyTransitionNext();
         }catch(Exception e){
             logger.error(e);

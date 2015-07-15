@@ -28,6 +28,8 @@ import org.edx.mobile.view.custom.ETextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.edx.mobile.view.CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL;
+
 public class CourseOutlineFragment extends MyVideosBaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -135,9 +137,11 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                         super.rowClicked(row);
                         CourseComponent comp = row.component;
                         if ( comp.isContainer() ){
-                            environment.getRouter().showCourseContainerOutline(getActivity(), courseData, comp.getId());
+                            environment.getRouter().showCourseContainerOutline(getActivity(),
+                                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
                         } else {
-                            environment.getRouter().showCourseUnitDetail(getActivity(), courseData, courseComponentId, comp);
+                            environment.getRouter().showCourseUnitDetail(getActivity(),
+                                    REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseComponentId, comp);
                         }
 
                     } catch (Exception ex) {

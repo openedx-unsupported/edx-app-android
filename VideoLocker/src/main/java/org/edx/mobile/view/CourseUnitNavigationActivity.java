@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -148,6 +149,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             .username, selectedUnit.getCourseId());
         final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
         prefManager.putLastAccessedSubsection(parent.getId(), false);
+        Intent resultData = new Intent();
+        resultData.putExtra(Router.EXTRA_COURSE_UNIT, selectedUnit);
+        setResult(RESULT_OK, resultData);
     }
 
     private void tryToUpdateForEndOfSequential(){
