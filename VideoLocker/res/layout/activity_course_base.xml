@@ -49,7 +49,7 @@
                 android:id="@+id/download_in_progress_bar"
                 android:orientation="vertical"
                 style="@style/download_in_progress_bar_style"
-
+                android:background="@color/cyan_1"
                 android:visibility="gone">
 
                 <LinearLayout
