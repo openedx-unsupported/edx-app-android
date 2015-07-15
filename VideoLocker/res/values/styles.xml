@@ -36,6 +36,7 @@
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
         <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="buttonTextColor">@color/button_text</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
