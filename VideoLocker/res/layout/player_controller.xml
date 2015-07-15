@@ -72,6 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layoutDirection="ltr"
         android:background="#CC000000"
         android:orientation="vertical"
         android:padding="7dp" >
@@ -206,6 +207,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/panel_bottom"
         android:layout_below="@id/video_top_bar"
+        android:layoutDirection="ltr"
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >
 
