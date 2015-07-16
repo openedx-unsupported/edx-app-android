@@ -210,11 +210,14 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
 
             TabWidget widget = mTabHost.getTabWidget();
             for (int i = 0; i < widget.getChildCount(); i++) {
-                final TextView tv = (TextView) widget.getChildAt(i).findViewById(
+                View child = widget.getChildAt(i);
+                final TextView tv = (TextView) child.findViewById(
                         android.R.id.title);
                 tv.setTextColor(this.getResources().getColorStateList(
                         R.color.tab_selector));
                 tv.setAllCaps(true);
+
+                child.setBackgroundResource(R.drawable.tab_indicator);
             }
             mTabHost.setCurrentTab(0);
         }catch(Exception e){
