@@ -25,39 +25,6 @@
                 android:scaleType="centerCrop"
                 android:background="@color/grey_4" />
 
-             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="110dp"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical"
-                android:gravity="bottom"
-                android:padding="12dp"
-                android:visibility="gone"
-                android:background="@drawable/course_image_header_text_backing">
-
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/course_detail_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/bold_text"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:paddingBottom="6dp"
-                    tools:text="test course" />
-
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/course_detail_extras"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/regular_text"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textAllCaps="true"
-                    tools:text="XX | xx | xxxxx" />
-
-            </LinearLayout>
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -295,13 +262,6 @@
                 android:scaleType="fitXY"/>
             </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey"
-            android:gravity="center"
-            android:visibility="gone"/>
-
         <RelativeLayout
             android:id="@+id/announcement_layout"
             android:layout_width="match_parent"
@@ -312,21 +272,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/course_details_announcements_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_label_announcement"
-                    style="@style/bold_text"
-                    android:textColor="@color/grey_5"
-                    android:paddingLeft="@dimen/course_detail_margin_left"
-                    android:paddingRight="@dimen/course_detail_margin_left"
-                    android:paddingTop="@dimen/course_detail_margin"
-                    android:visibility="gone"
-                    android:paddingBottom="@dimen/course_detail_margin"
-                    android:background="@color/grey_2"
-                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:id="@+id/notificaton_setting_row"
