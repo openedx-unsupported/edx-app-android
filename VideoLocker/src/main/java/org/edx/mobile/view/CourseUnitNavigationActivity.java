@@ -160,14 +160,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         View prevButton = findViewById(R.id.goto_prev);
         Button nextButton = (Button) findViewById(R.id.goto_next);
-        nextButton.setVisibility(View.VISIBLE);
-        prevButton.setVisibility(View.VISIBLE);
+        prevButton.setEnabled(curIndex > 0);
+        nextButton.setEnabled(curIndex < pagerAdapter.getCount() - 1);
  
-        if ( curIndex == 0 ){
-            prevButton.setVisibility(View.GONE);
-        } else if ( curIndex >= pagerAdapter.getCount() -1 ){
-            nextButton.setVisibility(View.GONE);
-        }
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
