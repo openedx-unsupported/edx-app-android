@@ -530,7 +530,7 @@
     <!-- Template for notification title -->
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
-    <string name="notification_toggle">Notifications</string>
+    <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
 
