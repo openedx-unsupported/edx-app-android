@@ -53,8 +53,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private final int LOADER_ID = 0x416BED;
 
     private CourseImageHeader headerImageView;
-    private TextView courseTextName;
-    private TextView courseTextDetails;
     private EdxWebView announcementWebView;
     private LinearLayout facePileContainer;
     private SocialFacePileView facePileView;
@@ -91,8 +89,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         View view = inflater.inflate(R.layout.fragment_course_combined_info, container, false);
 
-        courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
         certificateContainer = view.findViewById(R.id.combined_course_certificate_container);
         likeButton = (SocialAffirmView) view.findViewById(R.id.course_affirm_btn);
 
@@ -167,10 +163,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 } else {
                     populateAnnouncements(savedAnnouncements);
                 }
-
-                courseTextName.setText(courseData.getCourse().getName());
-                CourseEntry course = courseData.getCourse();
-                courseTextDetails.setText( course.getDescription(this.getActivity()));
 
                 String url = courseData.getCourse().getCourse_url();
 
