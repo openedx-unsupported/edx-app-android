@@ -94,6 +94,9 @@
     <style name="separator_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="course_header_separator_style" parent="separator_style">
         <item name="android:background">@color/edx_brand_primary_base</item>
     </style>
     

@@ -96,7 +96,7 @@
 
                 </LinearLayout>
 
-                <View style="@style/separator_style"/>
+                <View style="@style/course_header_separator_style"/>
             </LinearLayout>
 
             <LinearLayout
@@ -153,7 +153,7 @@
 
                 </LinearLayout>
 
-                <View style="@style/separator_style"/>
+                <View style="@style/course_header_separator_style"/>
             </LinearLayout>
 
 
