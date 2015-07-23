@@ -96,10 +96,7 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/cyan_3"/>
+                <View style="@style/separator_style"/>
             </LinearLayout>
 
             <LinearLayout
@@ -156,10 +153,7 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/cyan_3"/>
+                <View style="@style/separator_style"/>
             </LinearLayout>
 
 

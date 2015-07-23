@@ -87,11 +87,14 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="download_in_progress_bar_style">
-        <item name="android:layout_width">match_parent</item>
+    <style name="download_in_progress_bar_style" parent="last_access_bar_style">
         <item name="android:layout_height">45dp</item>
-        <item name="android:background">@color/edx_brand_primary_x_light</item>
-        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="separator_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/edx_brand_primary_base</item>
     </style>
     
     <!-- Custom menu popup -->
