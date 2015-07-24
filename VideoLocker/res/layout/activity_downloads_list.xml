@@ -16,19 +16,6 @@
             android:id="@+id/offline_bar"
             style="@style/offline_bar_style"
             android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/download_header_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                android:id="@+id/download_header"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                layout="@layout/panel_download_msg"
-                android:visibility="gone" />
-        </LinearLayout>
     </LinearLayout>
 
     <ListView
