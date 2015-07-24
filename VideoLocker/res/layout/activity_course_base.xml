@@ -31,7 +31,7 @@
                 android:visibility="gone">
                 <org.edx.mobile.view.custom.ETextView
                     android:text="@string/offline_text"
-                    android:textColor="@color/offline_text"
+                    android:textColor="@color/edx_brand_secondary_base"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="20dp"
@@ -42,7 +42,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/edx_brand_secondary_accent"/>
+                    android:background="@color/edx_brand_secondary_base"/>
             </LinearLayout>
 
             <LinearLayout

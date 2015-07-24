@@ -140,7 +140,9 @@
     <color name="edx_brand_primary_accent">#0EA6EC</color>
     <color name="edx_brand_primary_x_accent">#00B2FF</color>
 
-    <color name="edx_brand_secondary_x_light">#EFCDDC</color>
+    <color name="edx_brand_secondary_x_dark">#5B283F</color>
+    <color name="edx_brand_secondary_dark">#8E3E63</color>
+    <color name="edx_brand_secondary_x_light">#EFCDDD</color>
     <color name="edx_brand_secondary_accent">#F26CAA</color>
     <color name="edx_brand_secondary_base">#CB598D</color>
 
