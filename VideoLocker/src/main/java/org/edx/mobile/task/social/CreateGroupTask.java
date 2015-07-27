@@ -2,28 +2,31 @@ package org.edx.mobile.task.social;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
-import org.edx.mobile.task.Task;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.task.Task;
 
 public abstract class CreateGroupTask extends Task<Long> {
 
-    public CreateGroupTask(Context context) {
+    String name;
+    String description;
+    long adminID;
+    Boolean privacy;
 
+    public CreateGroupTask(Context context, String name, String description, String adminID, Boolean privacy) {
         super(context);
-
+        this.name = name;
+        this.description = description;
+        this.adminID = Long.parseLong(adminID);
+        this.privacy = privacy;
     }
 
     @Override
-    protected Long doInBackground(Object... params) {
+    public Long call( ) {
 
-        String name = (String) params[0];
-        String description = (String) params[1];
-        long adminID = Long.parseLong((String)params[2]);
-        Boolean privacy = (Boolean) params[3];
         String oauthToken = FacebookSessionUtil.getAccessToken();
         //
-        Api api = new Api(context);
+        ServiceManager api = environment.getServiceManager();
         try {
 
             final long groupID = api.createGroup(name, description, privacy, adminID, oauthToken);

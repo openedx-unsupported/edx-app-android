@@ -2,24 +2,23 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.services.ServiceManager;
 
 import java.util.List;
 
 public abstract class GetAnnouncementTask extends
         Task<List<AnnouncementsModel>> {
-
-    public GetAnnouncementTask(Context context) {
+    EnrolledCoursesResponse enrollment;
+    public GetAnnouncementTask(Context context, EnrolledCoursesResponse enrollment) {
         super(context);
-
+        this.enrollment = enrollment;
     }
 
-    protected List<AnnouncementsModel> doInBackground(Object... params) {
+    public List<AnnouncementsModel> call() throws Exception{
         try {
-            EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) params[0];
-            Api api = new Api(context);
+            ServiceManager api = environment.getServiceManager();
             
             try {
                 // return instant data from cache
@@ -28,7 +27,11 @@ public abstract class GetAnnouncementTask extends
                 if (list != null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            onFinish(list);
+                            try {
+                                onSuccess(list);
+                            }catch (Exception ex){
+                                logger.error(ex);
+                            }
                             stopProgress();
                         }
                     });

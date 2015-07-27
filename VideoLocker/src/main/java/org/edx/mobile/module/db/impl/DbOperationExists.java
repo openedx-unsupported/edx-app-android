@@ -18,4 +18,9 @@ class DbOperationExists extends DbOperationSelect<Boolean> {
         return (exists != null && exists);
     }
     
+    @Override
+    public Boolean getDefaultValue() {
+        return false;
+    }
+    
 }

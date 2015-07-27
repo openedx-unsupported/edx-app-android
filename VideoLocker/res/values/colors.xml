@@ -35,7 +35,7 @@
     <color name="pink_3">#b72667</color>
     <color name="pink_2">#e86caa</color>
     <color name="pink_1">#ed9bc7</color>
-    <color name="edx_brand_secondary_x_light">#EFCDDC</color>
+
     <color name="edx_white">#fafafa</color>
     <color name="edx_black">#191919</color>
 
@@ -105,7 +105,6 @@
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
     <!-- TODO : we should change color name to be more meaningful, and to match  http://ux.edx.org/elements/colors/  -->
-    <color name="brand_primary_accent">#1f9ed9</color>
     <color name="grey_text_course_not_started">#00454951</color>
 
     <!-- social sharing -->
@@ -139,4 +138,14 @@
     <color name="edx_brand_primary_x_light">#B2D6EA</color>
     <color name="edx_brand_primary_accent">#0EA6EC</color>
     <color name="edx_brand_primary_x_accent">#00B2FF</color>
+
+    <color name="edx_brand_secondary_x_light">#EFCDDC</color>
+    <color name="edx_brand_secondary_accent">#F26CAA</color>
+    <color name="edx_brand_secondary_base">#CB598D</color>
+
+
+    <color name="edx_grayscale_neutral_black">#101010</color>
+    <color name="edx_grayscale_neutral_dark">#646262</color>
+    <color name="edx_grayscale_neutral_base">#A7A4A4</color>
+    <color name="edx_grayscale_neutral_light">#D3D1D1</color>
 </resources>

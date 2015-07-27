@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
@@ -15,16 +14,14 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
-import com.squareup.phrase.Phrase;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesVisibleLoader;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
@@ -38,7 +35,9 @@ import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
 import java.util.Arrays;
 
-public class SettingsFragment extends Fragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<Boolean>>{
+import roboguice.fragment.RoboFragment;
+
+public class SettingsFragment extends RoboFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<Boolean>>{
 
     public static final String TAG = SettingsFragment.class.getCanonicalName();
     private static final int SHARE_LOADER_ID = 0x0000f0f0;
@@ -49,7 +48,8 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
     private IUiLifecycleHelper uiHelper;
     private Switch wifiSwitch;
     private Switch visibilitySwitch;
-    protected ISegment segIO;
+    @Inject
+    protected IEdxEnvironment environment;
     boolean showSocialFeatures;
 
     private ETextView socialConnectedText;
@@ -58,10 +58,9 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        segIO = SegmentFactory.getInstance();
 
         try{
-            segIO.screenViewsTracking("Settings");
+            environment.getSegment().screenViewsTracking("Settings");
         }catch(Exception e){
             logger.error(e);
         }
@@ -172,7 +171,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
         setCourseVisibilitySwitchEnabled(isLoggedIn);
 
         try{
-            segIO.socialConnectionEvent(isLoggedIn, SocialUtils.Values.FACEBOOK);
+            environment.getSegment().socialConnectionEvent(isLoggedIn, SocialUtils.Values.FACEBOOK);
         }catch(Exception e){
             logger.error(e);
         }
@@ -272,7 +271,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public Loader<AsyncTaskResult<Boolean>> onCreateLoader(int id, Bundle args) {
-        return new CoursesVisibleLoader(getActivity(), args);
+        return new CoursesVisibleLoader(getActivity(), args, environment);
     }
 
     @Override
@@ -292,7 +291,7 @@ public class SettingsFragment extends Fragment implements LoaderManager.LoaderCa
                 public void onCheckedChanged(CompoundButton button, boolean isChecked) {
 
                     try {
-                        segIO.coursesVisibleToFriendsChange(isChecked);
+                        environment.getSegment().coursesVisibleToFriendsChange(isChecked);
                     } catch (Exception e) {
                         logger.error(e);
                     }

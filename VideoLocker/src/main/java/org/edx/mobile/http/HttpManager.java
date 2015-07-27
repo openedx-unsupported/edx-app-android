@@ -3,6 +3,8 @@ package org.edx.mobile.http;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 
+import com.google.inject.Singleton;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -42,6 +44,7 @@ import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class HttpManager {
     protected final Logger logger = new Logger(getClass().getName());
 

@@ -45,4 +45,9 @@ class DbOperationGetColumn<T> extends DbOperationSelect<List<T>> {
         return list;
     }
     
+    @Override
+    public List<T> getDefaultValue() {
+        return new ArrayList<T>();
+    }
+    
 }

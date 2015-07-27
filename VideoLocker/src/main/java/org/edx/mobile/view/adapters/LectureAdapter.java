@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
@@ -21,8 +22,8 @@ public abstract class LectureAdapter extends BaseListAdapter<LectureModel> {
     private IStorage storage;
     private String enrollmentId;
 
-    public LectureAdapter(Context context) {
-        super(context, R.layout.row_chapter_list);
+    public LectureAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_chapter_list, environment);
         lastClickTime = 0;
     }
 

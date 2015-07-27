@@ -11,7 +11,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.services.ServiceManager;
 
 import java.io.File;
 
@@ -130,7 +129,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             playerFragment.setPrevNxtListners(next, prev);
 
             // reload this model
-            storage.reloadDownloadEntry(video);
+            environment.getStorage().reloadDownloadEntry(video);
 
             logger.debug("Resumed= " + playerFragment.isResumed());
             if ( !playerFragment.isResumed()) {
@@ -154,7 +153,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
             TranscriptModel transcript = null;
 
             try {
-                transcript = ServiceManager.getInstance().getTranscriptsOfVideo(video.eid, video.videoId);
+                transcript = environment.getServiceManager().getTranscriptsOfVideo(video.eid, video.videoId);
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -171,7 +170,7 @@ public abstract class PlayerActivity extends BaseFragmentActivity implements IPl
                     } 
                 }
             } else {
-                DownloadEntry de = (DownloadEntry) db.getIVideoModelByVideoUrl(
+                DownloadEntry de = (DownloadEntry) environment.getDatabase().getIVideoModelByVideoUrl(
                         video.url, null);
                 if(de!=null){
                     if(de.filepath!=null){

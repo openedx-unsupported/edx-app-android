@@ -2,13 +2,10 @@ package org.edx.mobile.util;
 
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.player.VideoListFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
@@ -30,14 +27,14 @@ public class MediaConsentUtils {
      * 2. Is connected to mobile and on zero rated network
      * 3. Is connected to mobile network and wifi preference is off
      */
-    public static void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback) {
+    public static void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback, Config config) {
         // init pref file
         UserPrefs pref = new UserPrefs(activity);
         boolean wifiPreference = pref.isDownloadOverWifiOnly();
 
         boolean connectedToWifi = NetworkUtil.isConnectedWifi(activity);
         boolean connectedMobile = NetworkUtil.isConnectedMobile(activity);
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(activity);
+        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(activity, config);
 
         if (connectedToWifi || (connectedMobile && isOnZeroRatedNetwork)
                 || (connectedMobile && !wifiPreference)) {

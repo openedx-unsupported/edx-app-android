@@ -1,5 +1,8 @@
 package org.edx.mobile.module.notification;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.parse.ParseException;
@@ -17,6 +20,8 @@ import java.util.Locale;
  * Common helper for Parse Notification
  */
 public class ParseHandleHelper {
+    public static final String COURSE_ANNOUNCEMENT_ACTION = "course.announcement";
+
     private static final Logger logger = new Logger(ParseHandleHelper.class.getName());
 
     public static CourseUpdateNotificationPayload extractPayload(android.content.Intent intent) {
@@ -40,7 +45,7 @@ public class ParseHandleHelper {
             return MyCoursesListActivity.class;
         }
         String action = payload.getAction();
-        if ( UserNotificationManager.COURSE_ANNOUNCEMENT_ACTION.equals(action) ) {
+        if ( COURSE_ANNOUNCEMENT_ACTION.equals(action) ) {
             return CourseDetailTabActivity.class;
         }
         return MyCoursesListActivity.class;
@@ -87,4 +92,16 @@ public class ParseHandleHelper {
             }
         }
     }
+
+    public static boolean hasNotificationHash(Context context, String notificationId){
+        PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
+        String prevHashCode = pmanager.getPrevNotificationHashKey();
+        pmanager.setPrevNotificationHashKey(notificationId);
+        if ( TextUtils.isEmpty(notificationId) && TextUtils.isEmpty(prevHashCode) )
+            return true;
+        if ( notificationId != null && notificationId.equals(prevHashCode) )
+            return true;
+        return false;
+    }
+
 }

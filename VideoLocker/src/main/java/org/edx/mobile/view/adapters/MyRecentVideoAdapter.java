@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -24,9 +25,9 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
     private IDatabase dbStore;
 
-    public MyRecentVideoAdapter(Context context, IDatabase dbStore) {
-        super(context, R.layout.row_video_list);
-        this.dbStore = dbStore;
+    public MyRecentVideoAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_video_list, environment);
+        this.dbStore = environment.getDatabase();
     }
 
     @Override

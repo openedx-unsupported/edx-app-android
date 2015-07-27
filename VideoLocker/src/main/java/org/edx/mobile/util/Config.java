@@ -8,6 +8,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
 
@@ -19,18 +21,8 @@ import java.util.List;
 /**
  * Created by aleffert on 1/8/15.
  */
+@Singleton
 public class Config {
-    private static Config sInstance;
-
-    // Note that this is not thread safe. The expectation is that this only happens
-    // immediately when the app launches or synchronously at the start of a test.
-    public static void setInstance(Config config) {
-        sInstance = config;
-    }
-
-    public static Config getInstance() {
-        return sInstance;
-    }
 
     protected final Logger logger = new Logger(getClass().getName());
     private JsonObject mProperties;
@@ -40,7 +32,6 @@ public class Config {
     private static final String ENVIRONMENT_DISPLAY_NAME = "ENVIRONMENT_DISPLAY_NAME";
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
-    private static final String OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
 
     /* Composite configuration keys */
@@ -62,6 +53,9 @@ public class Config {
     private static final String TEST_ACCOUNT = "TEST_ACCOUNT";
     public static final String TEST_ACCOUNT_NAME = "NAME";
     public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
+
+    public static final String NEW_COURSE_NAVIGATION_ENABLED = "NEW_COURSE_NAVIGATION_ENABLED";
+    public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
 
     /**
      * Social Sharing configuration.
@@ -254,7 +248,8 @@ public class Config {
         }
     }
 
-    Config(Context context) {
+    @Inject
+    public Config(Context context) {
         try {
             InputStream in = context.getAssets().open("config/config.json");
             JsonParser parser = new JsonParser();
@@ -329,10 +324,6 @@ public class Config {
         return getString(OAUTH_CLIENT_ID);
     }
 
-    public String getOAuthClientSecret() {
-        return getString(OAUTH_CLIENT_SECRET);
-    }
-
     public boolean isNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
@@ -346,6 +337,14 @@ public class Config {
         return getBoolean(SPEED_TEST_ENABLED, false);
     }
 
+
+    public boolean isNewCourseNavigationEnabled() {
+        return getBoolean(NEW_COURSE_NAVIGATION_ENABLED, false);
+    }
+
+    public boolean isDiscussionsEnabled() {
+        return getBoolean(DISCUSSIONS_ENABLED, false);
+    }
     /**
      * Returns Course Enrollment configuration.
      * @return

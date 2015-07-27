@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -24,9 +26,8 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.services.DownloadManager;
+import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.services.LastAccessManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.GetCourseHierarchyTask;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.util.AppConstants;
@@ -46,7 +47,7 @@ import java.util.Map.Entry;
 
 @Deprecated
 public class CourseChapterListFragment extends CourseDetailBaseFragment
-    implements NetworkObserver, LastAccessManager.LastAccessManagerCallback, DownloadManager.DownloadManagerCallback {
+    implements NetworkObserver, LastAccessManager.LastAccessManagerCallback, VideoDownloadHelper.DownloadManagerCallback {
 
 
     private static final String TAG = CourseChapterListFragment.class.getCanonicalName();
@@ -68,6 +69,9 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
     private GetCourseHierarchyTask getHeirarchyTask;
     private long lastClickTime;
 
+    @Inject
+    VideoDownloadHelper downloadManager;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -80,8 +84,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
             if(enrollment!=null) {
                 courseId = enrollment.getCourse().getId();
                 try {
-                    segIO.screenViewsTracking(enrollment.getCourse().getName()
-                            + " - Courseware");
+                    environment.getSegment().screenViewsTracking(enrollment.getCourse().getName()
+                        + " - Courseware");
                 } catch (Exception e) {
                     logger.error(e);
                 }
@@ -137,7 +141,6 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
     public void onStart() {
         super.onStart();
         isActivityStarted = true;
-        adapter.setStore(db, storage);
         handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
         if(!adapter.isEmpty()){
             adapter.notifyDataSetChanged();
@@ -160,15 +163,15 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
         if (adapter == null) {
             // creating adapter just once
 
-            adapter = new ChapterAdapter(getActivity(), courseId) {
+            adapter = new ChapterAdapter(getActivity(), courseId, environment) {
 
                 @Override
                 public void onItemClicked(final SectionEntry model) {
                     // handle click
                     try {
                         if (AppConstants.offline_flag) {
-                            boolean isVideoDownloaded = db.isVideoDownloadedInChapter(courseId,
-                                    model.chapter, null);
+                            boolean isVideoDownloaded = environment.getDatabase().isVideoDownloadedInChapter(courseId,
+                                model.chapter, null);
                             if (isVideoDownloaded) {
                                 Intent videoIntent = new Intent(getActivity(),
                                         VideoListActivity.class);
@@ -193,8 +196,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
 
                 @Override
                 public void download(final SectionEntry model) {
-                     DownloadManager.getSharedInstance().downloadVideos(
-                         (List)model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
+                    downloadManager.downloadVideos(
+                        (List) model.getAllVideos(), getActivity(), CourseChapterListFragment.this);
                 }
             };
         }
@@ -242,10 +245,10 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
             return;
         }
 
-        getHeirarchyTask = new GetCourseHierarchyTask(getActivity()) {
+        getHeirarchyTask = new GetCourseHierarchyTask(getActivity(), courseId) {
 
             @Override
-            public void onFinish(Map<String, SectionEntry> chapterMap) {
+            public void onSuccess(Map<String, SectionEntry> chapterMap) {
                 // display these chapters
                 if (chapterMap != null) {
                     logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
@@ -304,7 +307,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
         //Initializing task call
         logger.debug("Initializing Chapter Task"+ DateUtil.getCurrentTimeStamp());
         isTaskRunning = true;
-        getHeirarchyTask.execute(courseId);
+        getHeirarchyTask.execute();
+
     }
 
     private void updateOpenInBrowserPanel() {
@@ -368,7 +372,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                 if (isActivityStarted()){
                     if(!AppConstants.offline_flag) {
                         if (adapter != null && enrollment != null) {
-                            if (db.isAnyVideoDownloadingInCourse(null, enrollment.getCourse().getId()))
+                            if (environment.getDatabase().isAnyVideoDownloadingInCourse(null, enrollment.getCourse().getId()))
                                 adapter.notifyDataSetChanged();
                         }
                     }
@@ -507,7 +511,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                 try {
                     if(courseId!=null && lastAccessed_subSectionId!=null){
 
-                        final VideoResponseModel videoModel = ServiceManager.getInstance().getSubsectionById(courseId,
+                        final VideoResponseModel videoModel = environment.getServiceManager().getSubsectionById(courseId,
                             lastAccessed_subSectionId);
                         if (videoModel != null) {
                             LinearLayout lastAccessedLayout = (LinearLayout) v
@@ -531,7 +535,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                                         EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse)
                                             bundle.getSerializable(Router.EXTRA_ENROLLMENT);
                                         try {
-                                            LectureModel lecture = ServiceManager.getInstance().getLecture(courseId,
+                                            LectureModel lecture = environment.getServiceManager().getLecture(courseId,
                                                 videoModel.getChapterName(), videoModel.getChapter().getId(),
                                                 videoModel.getSequentialName(), videoModel.getSection().getId());
                                             SectionEntry chapter = new SectionEntry();

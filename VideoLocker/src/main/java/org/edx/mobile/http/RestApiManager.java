@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Interceptor;
@@ -15,9 +17,11 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.model.CourseIdObject;
 import org.edx.mobile.http.model.EnrollmentRequestBody;
 import org.edx.mobile.http.serialization.ShareCourseResult;
+import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
@@ -25,10 +29,13 @@ import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
@@ -41,7 +48,6 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
@@ -52,7 +58,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.RestAdapter;
@@ -66,17 +74,13 @@ import retrofit.client.OkClient;
  2. the cache behavior in okhttp is controlled by http header, but in our case, it is totally controlled by our client logic.
  3. in okhttp document, cache is not thread safe, so it recommend singleton pattern, on the other hand, intercept is not individual request based.
  */
+@Singleton
 public class RestApiManager implements IApi{
     protected final Logger logger = new Logger(getClass().getName());
 
-    private static RestApiManager instance;
+    @Inject
+    IEdxEnvironment environment;
 
-
-    public static final synchronized RestApiManager getInstance(Context context){
-        if ( instance == null )
-            instance = new RestApiManager(context);
-        return instance;
-    }
     private final int cacheSize = 10 * 1024 * 1024; // 10 MiB
     private final OkHttpClient oauthBasedClient;
     private final  com.squareup.okhttp.Cache cache;
@@ -86,7 +90,8 @@ public class RestApiManager implements IApi{
     private final Gson gson = new Gson();
     private Context context;
 
-    private RestApiManager(Context context){
+    @Inject
+    public RestApiManager(Context context){
         this.context = context;
         oauthBasedClient = new OkHttpClient();
         File cacheDirectory = new File(context.getFilesDir(), "http-cache");
@@ -130,8 +135,8 @@ public class RestApiManager implements IApi{
         return client;
     }
 
-    public static String getBaseUrl() {
-        return Config.getInstance().getApiHostURL();
+    public  String getBaseUrl() {
+        return environment.getConfig().getApiHostURL();
     }
 
 
@@ -166,8 +171,7 @@ public class RestApiManager implements IApi{
     @Override
     public AuthResponse auth(String username, String password) throws Exception {
 
-        AuthResponse response = restApi.doLogin("password", Config.getInstance().getOAuthClientId(),
-            Config.getInstance().getOAuthClientSecret(), username, password);
+        AuthResponse response = restApi.doLogin("password", environment.getConfig().getOAuthClientId(), username, password);
 
         // store auth token response
         Gson gson = new GsonBuilder().create();
@@ -432,7 +436,7 @@ public class RestApiManager implements IApi{
         throws Exception {
 
         AuthResponse response =
-            restApi.doExchangeAccessToken(accessToken, Config.getInstance().getOAuthClientId(), backend);
+            restApi.doExchangeAccessToken(accessToken, environment.getConfig().getOAuthClientId(), backend);
 
         // store auth token response
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
@@ -563,4 +567,44 @@ public class RestApiManager implements IApi{
         return (CourseComponent) CourseManager.normalizeCourseStructure(model, courseId);
     }
 
+
+    @Override
+    public String getUnitUrlByVideoById(String courseId, String videoId) {
+        return null;
+    }
+
+    @Override
+    public VideoResponseModel getSubsectionById(String courseId, String subsectionId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public VideoResponseModel getVideoById(String courseId, String videoId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public LectureModel getLecture(String courseId, String chapterName, String lectureName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter(String courseId, String chapter) {
+        return null;
+    }
+
+    @Override
+    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
+        return null;
+    }
 }

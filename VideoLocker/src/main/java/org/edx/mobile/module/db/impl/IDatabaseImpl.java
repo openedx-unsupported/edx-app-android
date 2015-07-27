@@ -3,6 +3,9 @@ package org.edx.mobile.module.db.impl;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
@@ -14,28 +17,35 @@ import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.util.List;
 
-class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
+@Singleton
+public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     private String username;
 
+    @Inject
     public IDatabaseImpl( Context context ) {
         super(context);
-        UserPrefs userprefs = new UserPrefs(context);
-        String username = "";
-        if (userprefs != null) {
-            ProfileModel profile = userprefs.getProfile();
-            if (profile != null) {
-                username = profile.username;
+
+    }
+
+    private String username(){
+        if ( username == null ) {
+            UserPrefs userprefs = new UserPrefs(context);
+            if (userprefs != null) {
+                ProfileModel profile = userprefs.getProfile();
+                if (profile != null) {
+                    return profile.username;
+                }
             }
         }
-        this.username =  username;
+        return username;
     }
 
     @Override
     public Boolean isAnyVideoDownloading(final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.USERNAME + "=? AND "+ DbStructure.Column.DOWNLOADED + "=?", 
-                new String[] { username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+                new String[] { username(), String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -44,7 +54,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public List<Long> getAllDownloadingVideosDmidList(final DataCallback<List<Long>> callback){
         DbOperationGetColumn<Long> op = new DbOperationGetColumn<Long>(true,DbStructure.Table.DOWNLOADS, new String[]{DbStructure.Column.DM_ID},
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username}, null, Long.class);
+                new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username()}, null, Long.class);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -55,7 +65,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         values.put(DbStructure.Column.IS_COURSE_ACTIVE, false);
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
-                DbStructure.Column.USERNAME + "=?", new String[] {username});
+                DbStructure.Column.USERNAME + "=?", new String[] {username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -68,7 +78,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {enrollmentId, username});
+                new String[] {enrollmentId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -78,7 +88,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public List<VideoModel> getAllDeactivatedVideos(final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.IS_COURSE_ACTIVE + "=? AND "+ DbStructure.Column.USERNAME + "=? " , 
-                new String[] { "0", username}, null);
+                new String[] { "0", username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -92,7 +102,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {videoId, username});
+                new String[] {videoId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -103,7 +113,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetCount op = new DbOperationGetCount(false,DbStructure.Table.DOWNLOADS, 
                 new String[] {DbStructure.Column.VIDEO_ID}, 
                 DbStructure.Column.DM_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] { String.valueOf(dmId), username }, null);
+                new String[] { String.valueOf(dmId), username() }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -116,7 +126,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND " 
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { chapter, enrollmentId, 
-                String.valueOf(DownloadedState.DOWNLOADED.ordinal()),username}, null);
+                String.valueOf(DownloadedState.DOWNLOADED.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -130,7 +140,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND " 
                         + DbStructure.Column.DOWNLOADED + "!=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { chapter, enrollmentId, 
-                String.valueOf(DownloadedState.ONLINE.ordinal()),username}, null);
+                String.valueOf(DownloadedState.ONLINE.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -142,7 +152,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 new String[] {DbStructure.Column.VIDEO_ID},
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                         + DbStructure.Column.VIDEO_FOR_WEB_ONLY + "==1 AND " + DbStructure.Column.USERNAME + "=?",
-                new String[] { chapter, enrollmentId, username}, null);
+                new String[] { chapter, enrollmentId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -155,7 +165,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND " 
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { chapter, enrollmentId, 
-                String.valueOf(DownloadedState.DOWNLOADING.ordinal()),username}, null);
+                String.valueOf(DownloadedState.DOWNLOADING.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -168,7 +178,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.DOWNLOADED + "=? AND "+ DbStructure.Column.EID + "=? AND " 
                         + DbStructure.Column.CHAPTER + "=? AND "+ DbStructure.Column.USERNAME + "=?",
                         new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), 
-                enrollmentId, chapter,username}, null, Long.class);
+                enrollmentId, chapter,username()}, null, Long.class);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -182,7 +192,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         + DbStructure.Column.EID + "=? AND "+ DbStructure.Column.DOWNLOADED + "=? AND "
                         + DbStructure.Column.USERNAME + "=?",
                         new String[] {section, chapter, enrollmentId, 
-                String.valueOf(DownloadedState.DOWNLOADING.ordinal()),username}, null);
+                String.valueOf(DownloadedState.DOWNLOADING.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
 
@@ -198,7 +208,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                         + DbStructure.Column.SECTION + "=? AND "
                         + DbStructure.Column.USERNAME + "=?",
                         new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), 
-                enrollmentId, chapter, section, username}, null, Long.class);
+                enrollmentId, chapter, section, username()}, null, Long.class);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -212,7 +222,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             DbStructure.Column.SECTION + "=? AND " + DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                 + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
             new String[] { section, chapter, enrollmentId,
-                String.valueOf(DownloadedState.DOWNLOADED.ordinal()),username}, null);
+                String.valueOf(DownloadedState.DOWNLOADED.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -225,7 +235,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.SECTION + "=? AND "+DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND " 
                         + DbStructure.Column.DOWNLOADED + "!=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { section, chapter, enrollmentId, 
-                String.valueOf(DownloadedState.ONLINE.ordinal()),username}, null);
+                String.valueOf(DownloadedState.ONLINE.ordinal()),username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -237,7 +247,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             new String[] {DbStructure.Column.VIDEO_ID},
             DbStructure.Column.SECTION + "=? AND "+DbStructure.Column.CHAPTER + "=? AND " + DbStructure.Column.EID + "=? AND "
                 + DbStructure.Column.VIDEO_FOR_WEB_ONLY + "==1 AND " + DbStructure.Column.USERNAME + "=?",
-            new String[] { section, chapter, enrollmentId, username}, null);
+            new String[] { section, chapter, enrollmentId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -250,7 +260,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {videoId, username});
+                new String[] {videoId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -264,7 +274,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {videoId, username});
+                new String[] {videoId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -275,7 +285,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         VideoModel result = getVideoEntryByVideoId(de.getVideoId(), null);
         if (result == null) {
             ContentValues values = new ContentValues();
-            values.put(DbStructure.Column.USERNAME, username);
+            values.put(DbStructure.Column.USERNAME, username());
             values.put(DbStructure.Column.TITLE, de.getTitle());
             values.put(DbStructure.Column.VIDEO_ID, de.getVideoId());
             values.put(DbStructure.Column.SIZE, de.getSize());
@@ -318,7 +328,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public VideoModel getVideoEntryByVideoId(String videoId, final DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.VIDEO_ID + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
-                new String[] { videoId, username}, null);
+                new String[] { videoId, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -329,7 +339,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.URL + "=? AND "+DbStructure.Column.DOWNLOADED + "!=? AND "
                 + DbStructure.Column.USERNAME + "=?" ,
-                new String[] { videoUrl, String.valueOf(DownloadedState.ONLINE.ordinal()), username}, null);
+                new String[] { videoUrl, String.valueOf(DownloadedState.ONLINE.ordinal()), username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -343,7 +353,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] { video.getVideoId(), username});
+                new String[] { video.getVideoId(), username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -355,7 +365,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.URL + "=? AND "+ DbStructure.Column.DOWNLOADED + "=? AND " 
                         + DbStructure.Column.USERNAME + "=?", 
                         new String[] { videoUrl,String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
-                username}, null);
+                username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -373,7 +383,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] { model.getVideoId(),username});
+                new String[] { model.getVideoId(),username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -388,7 +398,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.DOWNLOADS, values,
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] { model.getVideoId(),username});
+                new String[] { model.getVideoId(),username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -397,7 +407,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public List<VideoModel> getListOfOngoingDownloads(final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username}, null);
+                new String[] {String.valueOf(DownloadedState.DOWNLOADING.ordinal()), username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -408,7 +418,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetCount op = new DbOperationGetCount(false,DbStructure.Table.DOWNLOADS, 
                 null, 
                 DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] {String.valueOf(DownloadedState.DOWNLOADED.ordinal()), username}, null);
+                new String[] {String.valueOf(DownloadedState.DOWNLOADED.ordinal()), username()}, null);
         op.setCallback(callback);
         return enqueue(op);
 
@@ -419,7 +429,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetCount op = new DbOperationGetCount(true,DbStructure.Table.DOWNLOADS, 
                 new String[] {DbStructure.Column.VIDEO_ID}, 
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
-                new String[] { courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()), username },
+                new String[] { courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()), username() },
                 null);
         op.setCallback(callback);
         return enqueue(op);
@@ -432,7 +442,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND " 
                         + DbStructure.Column.USERNAME + "=?", 
                         new String[] {courseId, String.valueOf(DownloadedState.DOWNLOADED.ordinal()),
-                username}, null);
+                username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -446,7 +456,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 + DbStructure.Column.DOWNLOADED + "=?";
         DbOperationSingleValueByRawQuery<Long> op = new DbOperationSingleValueByRawQuery<Long>(
                 sqlQuery,
-                new String[] { courseId, username, String.valueOf(DownloadedState.DOWNLOADED.ordinal()) }, 
+                new String[] { courseId, username(), String.valueOf(DownloadedState.DOWNLOADED.ordinal()) }, 
                 Long.class);
         op.setCallback(callback);
         return enqueue(op);
@@ -460,7 +470,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND " 
                         + DbStructure.Column.USERNAME + "=?", 
                         new String[] { courseId, String.valueOf(
-                                DownloadedState.DOWNLOADED.ordinal()), username }, 
+                                DownloadedState.DOWNLOADED.ordinal()), username() }, 
                                 DbStructure.Column.DOWNLOADED_ON + " DESC");
         op.setCallback(callback);
         return enqueue(op);
@@ -471,7 +481,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
             final DataCallback<VideoModel> callback) {
         DbOperationGetVideo op = new DbOperationGetVideo(false,DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.URL + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
-                new String[] { videoUrl, username}, null);
+                new String[] { videoUrl, username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -480,7 +490,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public Boolean isDmIdExists(long dmId, final DataCallback<Boolean> callback) {
         DbOperationExists op = new DbOperationExists(false, DbStructure.Table.DOWNLOADS, null, 
                 DbStructure.Column.USERNAME + "=? AND "+ DbStructure.Column.DM_ID + "=?", 
-                new String[] { username, String.valueOf(dmId) }, null);
+                new String[] { username(), String.valueOf(dmId) }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -510,7 +520,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     @Override
     public List<VideoModel> getAllVideos(String username, final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false,DbStructure.Table.DOWNLOADS, null, 
-                DbStructure.Column.USERNAME + "=?", new String[] { username }, null);
+                DbStructure.Column.USERNAME + "=?", new String[] { username() }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -519,7 +529,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     public void clearDataByUser(String username) {
         DbOperationDelete op = new DbOperationDelete(DbStructure.Table.DOWNLOADS, 
                 DbStructure.Column.USERNAME + "=?", 
-                new String[] { username } );
+                new String[] { username() } );
         enqueue(op);
     }
 
@@ -528,9 +538,6 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         super.release();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public WatchedState getWatchedStateForVideoId(String videoId,
@@ -538,7 +545,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetColumn<Integer> op = new DbOperationGetColumn<Integer>(false,DbStructure.Table.DOWNLOADS, 
                 new String[] { DbStructure.Column.WATCHED }, 
                 DbStructure.Column.VIDEO_ID + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
-                new String[] { videoId, username}, null, Integer.class);
+                new String[] { videoId, username()}, null, Integer.class);
         op.setCallback(new DataCallback<List<Integer>>() {
             @Override
             public void onResult(List<Integer> ordinals) {
@@ -562,7 +569,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetCount op = new DbOperationGetCount(false,DbStructure.Table.DOWNLOADS, 
                 new String[] {DbStructure.Column.VIDEO_ID}, 
                 DbStructure.Column.URL + "=? AND " + DbStructure.Column.USERNAME + "=?", 
-                new String[] { videoUrl, username }, null);
+                new String[] { videoUrl, username() }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -586,7 +593,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.VIDEO_ID + "=? "
                         + DbStructure.Column.DOWNLOADED + "=? AND " + DbStructure.Column.USERNAME + "=?",
                         new String[] { videoId, String.valueOf(DownloadedState.DOWNLOADING.ordinal())
-                ,username}, null);
+                ,username()}, null);
         op.setCallback(callback);
         return enqueue(op);
     }*/
@@ -597,7 +604,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetColumn<Integer> op = new DbOperationGetColumn<Integer>(false,DbStructure.Table.DOWNLOADS, 
                 new String[] { DbStructure.Column.DOWNLOADED }, 
                 DbStructure.Column.VIDEO_ID + "=? AND "+ DbStructure.Column.USERNAME + "=?" , 
-                new String[] { videoId, username}, null, Integer.class);
+                new String[] { videoId, username()}, null, Integer.class);
         op.setCallback(new DataCallback<List<Integer>>() {
             @Override
             public void onResult(List<Integer> ordinals) {
@@ -621,7 +628,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.EID + "=? AND "+ DbStructure.Column.USERNAME + "=? AND "
                         + DbStructure.Column.DOWNLOADED + "=?",
-                new String[] {courseId, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+                new String[] {courseId, username(), String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -631,7 +638,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationExists op = new DbOperationExists(false,DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.EID + "=? AND "+ DbStructure.Column.CHAPTER + "=? AND "+
                 DbStructure.Column.USERNAME + "=? AND "+ DbStructure.Column.DOWNLOADED + "=?",
-                new String[] {courseId, section, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+                new String[] {courseId, section, username(), String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -643,7 +650,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
                 DbStructure.Column.EID + "=? AND "+ DbStructure.Column.CHAPTER + "=? AND "+
                         DbStructure.Column.SECTION + "=? AND "+ DbStructure.Column.USERNAME + "=? AND "+
                         DbStructure.Column.DOWNLOADED + "=?",
-                new String[] {courseId, section, subSection, username, String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
+                new String[] {courseId, section, subSection, username(), String.valueOf(DownloadedState.DOWNLOADING.ordinal()) }, null);
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -663,7 +670,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
         DbOperationUpdate op = new DbOperationUpdate(DbStructure.Table.ASSESSMENT, values,
             DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? AND " + DbStructure.Column.ASSESSMENT_TB_USERNAME + "=?",
-            new String[] {unitId, username});
+            new String[] {unitId, username()});
         op.setCallback(callback);
         return enqueue(op);
     }
@@ -675,7 +682,7 @@ class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         DbOperationGetColumn<Boolean> op = new DbOperationGetColumn<Boolean>(false,DbStructure.Table.ASSESSMENT,
             new String[] { DbStructure.Column.ASSESSMENT_TB_UNIT_WATCHED },
             DbStructure.Column.ASSESSMENT_TB_UNIT_ID + "=? AND "+ DbStructure.Column.ASSESSMENT_TB_USERNAME + "=?" ,
-            new String[] { unitId, username}, null, Boolean.class);
+            new String[] { unitId, username()}, null, Boolean.class);
         if( callback != null ) {
             op.setCallback(new DataCallback<List<Boolean>>() {
                 @Override

@@ -33,7 +33,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
       //  configureDrawer();
 
         try{
-            segIO.screenViewsTracking(getString(R.string.course_home));
+            environment.getSegment().screenViewsTracking(getString(R.string.course_home));
         }catch(Exception e){
             logger.error(e);
         }
@@ -43,7 +43,9 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
     @Override
     protected void onStart() {
         super.onStart();
-        setTitle(getString(R.string.course_home));
+        if ( courseData != null && courseData.getCourse() != null ){
+            setTitle(courseData.getCourse().getName());
+        }
     }
 
     @Override
@@ -60,7 +62,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
                     fragment.setArguments(bundle);
 
                 }
-                fragment.setCallback(this);
+
                 //this activity will only ever hold this lone fragment, so we
                 // can afford to retain the instance during activity recreation
                 fragment.setRetainInstance(true);
@@ -97,14 +99,14 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
         if ( isTaskRunning )
             return;
 
-        getHierarchyTask = new GetCourseStructureTask(this) {
+        getHierarchyTask = new GetCourseStructureTask(this, courseData.getCourse().getId()) {
 
             @Override
-            public void onFinish(CourseComponent aCourse) {
+            public void onSuccess(CourseComponent aCourse) {
                 isTaskRunning = false;
                 if (aCourse != null) {
                     logger.debug("Start displaying on UI "+ DateUtil.getCurrentTimeStamp());
-                    Router.getInstance().showCourseContainerOutline(CourseDashboardActivity.this, courseData, aCourse.getId());
+                    environment.getRouter().showCourseContainerOutline(CourseDashboardActivity.this, courseData, aCourse.getId());
                 }
                 logger.debug("Completed displaying data on UI "+ DateUtil.getCurrentTimeStamp());
             }
@@ -120,6 +122,7 @@ public class CourseDashboardActivity extends CourseBaseActivity implements Cours
         //Initializing task call
         logger.debug("Initializing Chapter Task" + DateUtil.getCurrentTimeStamp());
         isTaskRunning = true;
-        getHierarchyTask.execute(courseData.getCourse().getId());
+        getHierarchyTask.execute();
+
     }
 }

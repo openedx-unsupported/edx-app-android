@@ -10,14 +10,13 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.notification.UserNotificationManager;
+import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.services.ServiceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            segIO.screenViewsTracking(getString(R.string.label_my_courses));
+            environment.getSegment().screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
             logger.error(e);
         }
@@ -41,7 +40,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public void handleCourseClick(EnrolledCoursesResponse model) {
-        Router.getInstance().showCourseDetailTabs(getActivity(), model, false);
+       environment.getRouter().showCourseDetailTabs(getActivity(), environment.getConfig(), model, false);
     }
 
     @Override
@@ -78,12 +77,12 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
 
-        return new CoursesAsyncLoader(getActivity(), bundle){
+        return new CoursesAsyncLoader(getActivity(), bundle, environment, environment.getServiceManager()){
             @Override
-            protected List<EnrolledCoursesResponse> getCourses(Api api) throws Exception {
+            protected List<EnrolledCoursesResponse> getCourses(ServiceManager api) throws Exception {
                 List<EnrolledCoursesResponse> response =  api.getEnrolledCourses();
-                UserNotificationManager.getInstance().syncWithServerForFailure();
-                UserNotificationManager.getInstance().checkCourseEnrollment(response);
+                environment.getNotificationDelegate().syncWithServerForFailure();
+                environment.getNotificationDelegate().checkCourseEnrollment(response);
                 return response;
             }
         };

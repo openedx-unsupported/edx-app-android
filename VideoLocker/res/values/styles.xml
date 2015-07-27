@@ -30,15 +30,17 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@color/white</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-         <item name="color">@color/edx_white</item>
+         <item name="color">@color/white</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
@@ -50,7 +52,7 @@
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
     <!-- ActionBar styles -->
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/edx_brand_primary_x_accent</item>
+        <item name="android:background">@color/edx_brand_primary_base</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:subtitleTextStyle">@style/MyActionBarTitleText</item>
         <item name="itemPadding">2dip</item>
@@ -74,7 +76,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:background">@color/edx_brand_secondary_x_light</item>
-        <item name="android:textColor">@color/offline_text</item>
+        <item name="android:textColor">@color/edx_brand_secondary_accent</item>
         <item name="android:visibility">gone</item>
     </style>
 
@@ -97,11 +99,14 @@
         <item name="android:popupBackground">@drawable/white_rounded_bordered_bg</item>
         <item name="android:overlapAnchor" tools:ignore="NewApi">true</item>
         <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
-        <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
         <item name="android:dropDownWidth">@dimen/popupMenuWidth</item>
         <item name="android:padding">@dimen/popupMenuPadding</item>
         <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
         <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
+    </style>
+    
+    <style name="CustomEdgePopupMenu" parent="@style/CustomPopupMenu">
+        <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
     </style>
     
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
@@ -119,7 +124,7 @@
     <style name="blue_bar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
-        <item name="android:background">@color/brand_primary_accent</item>
+        <item name="android:background">@color/edx_brand_primary_accent</item>
     </style>
 
     <style name="course_detail_style">
@@ -146,14 +151,14 @@
     </style>
 
     <style name="AppTheme.Dark" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarItemBackground">@color/brand_primary_accent</item>
+        <item name="android:actionBarItemBackground">@color/edx_brand_primary_light</item>
     </style>
 
     <!-- used to control the space between action bar items -->
     <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
-        <item name="android:minWidth">0dip</item>
-        <item name="android:paddingLeft">2dip</item>
-        <item name="android:paddingRight">2dip</item>
+        <item name="android:minWidth">5dip</item>
+        <item name="android:paddingLeft">4dip</item>
+        <item name="android:paddingRight">4dip</item>
     </style>
 
 </resources>

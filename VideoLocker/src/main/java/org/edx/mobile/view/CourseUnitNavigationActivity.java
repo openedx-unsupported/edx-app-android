@@ -12,14 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
@@ -119,7 +120,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         setApplyPrevTransitionOnRestart(true);
 
         try{
-            segIO.screenViewsTracking("Assessment");
+            environment.getSegment().screenViewsTracking("Assessment");
         }catch(Exception e){
             logger.error(e);
         }
@@ -137,25 +138,27 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void setCurrentUnit(CourseComponent component){
         this.selectedUnit = component;
+        if ( this.selectedUnit == null  )
+            return;
+
+        environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
+
+        CourseComponent parent = component.getParent();
+        String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
+            .username, selectedUnit.getCourseId());
+        final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
+        prefManager.putLastAccessedSubsection(parent.getId(), false);
     }
 
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
         setCurrentUnit( pagerAdapter.getUnit(curIndex) );
-        db.updateAccess(null, selectedUnit.getId(), true);
-        CourseComponent nextUnit = pagerAdapter.getUnit(curIndex +1);
+
         View prevButton = findViewById(R.id.goto_prev);
-        View nextButton = findViewById(R.id.goto_next);
+        Button nextButton = (Button) findViewById(R.id.goto_next);
         nextButton.setVisibility(View.VISIBLE);
         prevButton.setVisibility(View.VISIBLE);
-        View newUnitReminder = findViewById(R.id.new_unit_reminder);
-        if( selectedUnit.isLastChild() ){
-            newUnitReminder.setVisibility(View.VISIBLE);
-            TextView textView = (TextView)findViewById(R.id.next_unit_title);
-            textView.setText(nextUnit.getParent().getDisplayName());
-        } else {
-            newUnitReminder.setVisibility(View.GONE);
-        }
+ 
         if ( curIndex == 0 ){
             prevButton.setVisibility(View.GONE);
         } else if ( curIndex >= pagerAdapter.getCount() -1 ){
@@ -208,7 +211,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         //we should use courseComponent instead.   Requirement maybe changed?
        // unitList.addAll( courseComponent.getChildLeafs() );
         List<CourseComponent> leaves = new ArrayList<>();
-        EnumSet<BlockType> types = EnumSet.allOf(BlockType.class);
+
+        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        EnumSet<BlockType> types =  userPrefManager.isUserPrefVideoModel() ?
+                             EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
         ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
 

@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -68,14 +67,13 @@ public class VideoListFragment extends MyVideosBaseFragment {
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
-    private Api api;
+
     private final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        api = new Api(getActivity());
     }
 
     @Override
@@ -176,7 +174,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             if(adapter!=null){
                 selectedId = adapter.getVideoId();
             }
-            adapter = new OnlineVideoAdapter(getActivity(), db , storage) {
+            adapter = new OnlineVideoAdapter(getActivity(),environment) {
                 @Override
                 public void onItemClicked(final SectionItemInterface model, final int position) {
 
@@ -204,7 +202,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                                     notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                         }else{
                             //Video is downloaded. Hence play
                             startOnlinePlay(model, position);
@@ -228,7 +226,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                                     notifyAdapter();
                                 }
                             };
-                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback);
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                         }
                     } catch (Exception e) {
                         logger.error(e);
@@ -249,7 +247,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                             || openInBrowserUrl.equalsIgnoreCase("")) {
                         openInBrowserUrl = m.getSectionUrl();
                     }
-                    final DownloadEntry downloadEntry = (DownloadEntry) storage
+                    final DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
                             .getDownloadEntryfromVideoResponseModel(m);
                     adapter.add(downloadEntry);
                 }
@@ -257,13 +255,13 @@ public class VideoListFragment extends MyVideosBaseFragment {
             } else {
                 setActivityTitle(chapterName);
 
-                List<SectionItemInterface> list = ServiceManager.getInstance()
+                List<SectionItemInterface> list =  environment.getServiceManager()
                         .getLiveOrganizedVideosByChapter(enrollment.getCourse()
                             .getId(), chapterName);
                 for (SectionItemInterface m : list) {
                     if (m.isVideo()) {
                         VideoResponseModel vidmodel = (VideoResponseModel) m;
-                        DownloadEntry downloadEntry = (DownloadEntry) storage
+                        DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
                                 .getDownloadEntryfromVideoResponseModel(vidmodel);
                         adapter.add(downloadEntry);
                     } else {
@@ -322,7 +320,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             if(adapter!=null){
                 selectedId = adapter.getVideoId();
             }
-            adapter = new OfflineVideoAdapter(getActivity(), db) {
+            adapter = new OfflineVideoAdapter(getActivity(), environment) {
                 @Override
                 public void onItemClicked(SectionItemInterface model,
                         int position) {
@@ -363,14 +361,14 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
             setActivityTitle(chapterName);
 
-            List<SectionItemInterface> list = ServiceManager.getInstance()
+            List<SectionItemInterface> list = environment.getServiceManager()
                     .getLiveOrganizedVideosByChapter(enrollment.getCourse()
                         .getId(), chapterName);
             downloadAvailable = false;
             for (SectionItemInterface m : list) {
                 if (m.isVideo()) {
                     VideoResponseModel vidmodel = (VideoResponseModel) m;
-                    DownloadEntry downloadEntry = (DownloadEntry) storage
+                    DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
                             .getDownloadEntryfromVideoResponseModel(vidmodel);
                     adapter.add(downloadEntry);
                     if(downloadEntry.isDownloaded()){
@@ -400,7 +398,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 selectedId = adapter.getVideoId();
             }
 
-            adapter = new MyAllVideoAdapter(getActivity(), db) {
+            adapter = new MyAllVideoAdapter(getActivity(), environment) {
                 @Override
                 public void onItemClicked(SectionItemInterface model,
                         int position) {
@@ -440,13 +438,13 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
             setActivityTitle(enrollment.getCourse().getName());
             try{
-                segIO.screenViewsTracking("My Videos - All Videos - "
+                environment.getSegment().screenViewsTracking("My Videos - All Videos - "
                         + enrollment.getCourse().getName());
             }catch(Exception e){
                 logger.error(e);
             }
 
-            ArrayList<SectionItemInterface> list = storage
+            ArrayList<SectionItemInterface> list = environment.getStorage()
                     .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());
             downloadAvailable = false;
             if(list==null||list.size()==0){
@@ -486,7 +484,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                         .username, v.eid);
                 PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(v.eid, v.videoId);
+                VideoResponseModel vrm =  environment.getServiceManager().getVideoById(v.eid, v.videoId);
                 prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
 
                 // capture chapter name
@@ -558,7 +556,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     openInBrowserTv.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            BrowserUtil.open(getActivity(),
+                            new BrowserUtil().open(getActivity(),
                                     urlStringBuffer.toString());
                         }
                     });
@@ -807,7 +805,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 if (isActivityStarted()) {
                     if (!AppConstants.offline_flag) {
                         if (adapter != null && enrollment!=null && chapterName!=null && lecture!=null) {
-                            if(db.isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
+                            if(environment.getDatabase().isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
                                 adapter.setSelectedPosition(playingVideoIndex);
                                 adapter.notifyDataSetChanged();
                                 logger.debug("Download list reloaded");
@@ -821,7 +819,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
     };
 
     public void markPlaying() {
-        storage.markVideoPlaying(videoModel, watchedStateCallback);
+        environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     /**
@@ -832,7 +830,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
     public void addVideoDatatoDb(final DownloadEntry v) {
         try {
             if (v != null) {
-                db.addVideoData(v, new DataCallback<Long>() {
+                environment.getDatabase().addVideoData(v, new DataCallback<Long>() {
                     @Override
                     public void onResult(Long result) {
                         if(result!=-1){
@@ -855,7 +853,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                db.updateVideoLastPlayedOffset(v.videoId, offset,
+                environment.getDatabase().updateVideoLastPlayedOffset(v.videoId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
@@ -873,7 +871,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
             if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
-                db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
+                environment.getDatabase().updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                         watchedStateCallback);
             }
         } catch (Exception ex) {
@@ -890,7 +888,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 for (SectionItemInterface section : list) {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
-                        storage.removeDownload(de);
+                        environment.getStorage().removeDownload(de);
                         deletedVideoCount++;
                     }
                 }
@@ -911,7 +909,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
                         if(de.isDownloaded()){
-                            storage.removeDownload(de);
+                            environment.getStorage().removeDownload(de);
                             deletedVideoCount++;
                         }
                     }
@@ -926,11 +924,15 @@ public class VideoListFragment extends MyVideosBaseFragment {
         }
 
         if(deletedVideoCount>0){
-            String format =  ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
-                "video_num", deletedVideoCount).toString();
+            try {
+                String format = ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
+                        "video_count", deletedVideoCount).toString();
 
-            ((VideoListActivity) getActivity())
-                    .showInfoMessage(String.format(format, deletedVideoCount));
+                ((VideoListActivity) getActivity())
+                        .showInfoMessage(String.format(format, deletedVideoCount));
+            } catch (Exception ex) {
+                logger.error(ex);
+            }
         }
         getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
         getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
@@ -968,8 +970,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void startDownload(final DownloadEntry downloadEntry, final ProgressWheel progressWheel) {
         try{
-            if (storage != null) {
-                boolean isVideoFilePresentByUrl = db.isVideoFilePresentByUrl(
+            if (environment.getStorage() != null) {
+                boolean isVideoFilePresentByUrl = environment.getDatabase().isVideoFilePresentByUrl(
                         downloadEntry.url, null);
                 boolean reloadListFlag = true;
                 if(isVideoFilePresentByUrl){
@@ -979,12 +981,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     reloadListFlag = false;
                 }
 
-                if (segIO != null) {
-                    segIO.trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
+                if (environment.getSegment() != null) {
+                    environment.getSegment().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
                             downloadEntry.lmsUrl);
                 }
 
-                if (storage.addDownload(downloadEntry) != -1) {
+                if (environment.getStorage().addDownload(downloadEntry) != -1) {
                     ((VideoListActivity) getActivity())
                             .showInfoMessage(getString(R.string.msg_started_one_video_download));
                 } else {

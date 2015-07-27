@@ -3,12 +3,11 @@ package org.edx.mobile.logger;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.inject.Inject;
 
 import org.edx.mobile.util.Config;
 
 import java.io.Serializable;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by shahid on 22/1/15.
@@ -16,6 +15,9 @@ import io.fabric.sdk.android.Fabric;
 public class Logger implements Serializable {
 
     private String tag;
+
+    @Inject
+    Config config;
 
     /**
      * Initializes logger. Logs are disabled for release builds
@@ -55,7 +57,7 @@ public class Logger implements Serializable {
 
         if (submitCrashReport
                 && !LogUtil.ISDEBUG
-                && Config.getInstance().getFabricConfig().isEnabled()) {
+                &&  config.getFabricConfig().isEnabled()) {
             Crashlytics.logException(ex);
         }
     }

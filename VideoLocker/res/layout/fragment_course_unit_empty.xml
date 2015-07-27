@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -6,12 +7,11 @@
               android:gravity="center"
     >
 
-    <TextView
-        android:id="@+id/content_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="90dp"
-        android:textColor="@color/grey_3"
+    <org.edx.mobile.third_party.iconify.IconView
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        app:iconColor="@color/grey_3"
+        app:iconName="fa_list"
         android:layout_margin="20dp"/>
 
     <TextView

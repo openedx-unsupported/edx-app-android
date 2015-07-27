@@ -1,21 +1,29 @@
 package org.edx.mobile.module.notification;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.util.Config;
+
+import roboguice.receiver.RoboBroadcastReceiver;
 
 /**
  * we can not put ParseBroadcastReceiver directly into manifest file as
  * it will cause random crash when the parse notification is disabled.
  */
-public class EdxParseBroadcastReceiver extends BroadcastReceiver {
+public class EdxParseBroadcastReceiver extends RoboBroadcastReceiver {
+    @Inject
+    Config config;
+
     @Override
-    public void onReceive(Context context, Intent intent) {
-        if ( Config.getInstance().isNotificationEnabled() ) {
+    protected void handleReceive(final Context context, Intent intent){
+        if( config == null )
+            return; //FIXME
+        if ( config.isNotificationEnabled() ) {
             Config.ParseNotificationConfig parseNotificationConfig =
-                Config.getInstance().getParseNotificationConfig();
+                config.getParseNotificationConfig();
             if (parseNotificationConfig.isEnabled()) {
                 new com.parse.ParseBroadcastReceiver().onReceive(context, intent);
             }

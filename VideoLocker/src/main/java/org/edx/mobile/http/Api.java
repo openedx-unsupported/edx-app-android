@@ -6,6 +6,8 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -58,17 +60,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Singleton
 public class Api implements IApi {
 
+    @Inject
+    Config config;
+
+    @Inject
     private HttpManager http;
+
+    @Inject
     private CacheManager cache;
+
     private Context context;
     protected final Logger logger = new Logger(getClass().getName());
 
+    @Inject
     public Api(Context context) {
         this.context = context;
-        http = new HttpManager();
-        cache = new CacheManager(context);
+
     }
 
     /**
@@ -145,8 +155,7 @@ public class Api implements IApi {
             throws Exception {
         Bundle p = new Bundle();
         p.putString("grant_type", "password");
-        p.putString("client_id", Config.getInstance().getOAuthClientId());
-        p.putString("client_secret", Config.getInstance().getOAuthClientSecret());
+        p.putString("client_id", config.getOAuthClientId());
         p.putString("username", username);
         p.putString("password", password);
 
@@ -452,8 +461,7 @@ public class Api implements IApi {
      * @throws Exception
      */
     @Deprecated
-    public String getUnitUrlByVideoById(String courseId, String videoId)
-            throws Exception {
+    public String getUnitUrlByVideoById(String courseId, String videoId){
         try{
             VideoResponseModel vrm = getVideoById(courseId, videoId);
             if(vrm!=null){
@@ -988,8 +996,8 @@ public class Api implements IApi {
      * Returns API base URL for the current project configuration (mobile3 or production).
      * @return
      */
-    public static String getBaseUrl() {
-        return Config.getInstance().getApiHostURL();
+    public String getBaseUrl() {
+        return config.getApiHostURL();
     }
 
     /**
@@ -1100,11 +1108,11 @@ public class Api implements IApi {
 
         Bundle p = new Bundle();
         p.putString("access_token", accessToken);
-        p.putString("client_id",  Config.getInstance().getOAuthClientId());
+        p.putString("client_id",  config.getOAuthClientId());
 
         //oauth2/exchange_access_token/<backend>/
         logger.debug("access_token: " + accessToken);
-        logger.debug("client_id: " + Config.getInstance().getOAuthClientId());
+        logger.debug("client_id: " + config.getOAuthClientId());
         String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
         logger.debug("Url for social login: " + url);
 
@@ -1253,7 +1261,7 @@ public class Api implements IApi {
         return false;
     }
 
-    public static String getSessionTokenExchangeUrl(){
+    public  String getSessionTokenExchangeUrl(){
         return getBaseUrl() + "/oauth2/login/";
     }
 

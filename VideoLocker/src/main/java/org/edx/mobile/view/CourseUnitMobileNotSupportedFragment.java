@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.services.ViewPagerDownloadManager;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.BrowserUtil;
 
 /**
@@ -47,12 +45,10 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_course_unit_grade, container, false);
-        TextView laptop = (TextView)v.findViewById(R.id.watch_on_web_icon);
-        Iconify.setIcon(laptop, Iconify.IconValue.fa_laptop);
         v.findViewById(R.id.view_on_web_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BrowserUtil.open(getActivity(), unit.getWebUrl());
+                new BrowserUtil().open(getActivity(), unit.getWebUrl());
             }
         });
         return v;

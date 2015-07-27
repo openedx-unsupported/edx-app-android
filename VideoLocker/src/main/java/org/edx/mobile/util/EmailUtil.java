@@ -12,9 +12,9 @@ public class EmailUtil {
     private static final Logger logger = new Logger(EmailUtil.class.getName());
 
     public static void sendEmail(final FragmentActivity activityContext, final String to,
-                                 final String subject, final String email) {
+                                 final String subject, final String email, Config config) {
         // verify if the app is running on zero-rated mobile data?
-        if (NetworkUtil.isConnectedMobile(activityContext) && NetworkUtil.isOnZeroRatedNetwork(activityContext)) {
+        if (NetworkUtil.isConnectedMobile(activityContext) && NetworkUtil.isOnZeroRatedNetwork(activityContext, config)) {
             // inform user they may get charged for sending email
             IDialogCallback callback = new IDialogCallback() {
                 @Override

@@ -12,10 +12,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -50,10 +48,6 @@ public class CourseUnitVideoFragmentTest {
         assertNotNull(view);
         View messageContainer = view.findViewById(R.id.message_container);
         assertNotNull(messageContainer);
-        TextView icon = (TextView)view.findViewById(R.id.empty_document_icon);
-        assertThat(icon)
-                .hasTypeface(Iconify.getTypeface(view.getContext()))
-                .hasText(String.valueOf(Iconify.IconValue.fa_file_text_o.character()));
     }
 
 

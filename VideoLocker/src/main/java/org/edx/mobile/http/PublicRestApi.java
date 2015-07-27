@@ -33,7 +33,6 @@ public interface PublicRestApi {
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     AuthResponse doLogin(@Field("grant_type") String grant_type,
                          @Field("client_id") String client_id,
-                         @Field("client_secret") String client_secret,
                          @Field("username") String username,
                          @Field("password") String password);
 

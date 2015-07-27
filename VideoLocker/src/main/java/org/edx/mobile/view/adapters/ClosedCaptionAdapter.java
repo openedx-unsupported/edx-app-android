@@ -6,6 +6,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 
 import java.util.HashMap;
 
@@ -13,8 +14,8 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
 
     //public int selectedPosition = -1;
     public String selectedLanguage;
-    public ClosedCaptionAdapter(Context context) {
-        super(context, R.layout.row_cc_list);
+    public ClosedCaptionAdapter(Context context, IEdxEnvironment environment) {
+        super(context, R.layout.row_cc_list, environment);
     }
 
     @Override

@@ -38,9 +38,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
+
+@ContentView(R.layout.activity_lecture_list)
 public class CourseLectureListActivity extends BaseFragmentActivity {
 
-    private View offlineBar;
+    @InjectView(R.id.offline_bar)
+    View offlineBar;
     private LectureAdapter adapter;
     private DownloadSizeExceedDialog downloadFragment;
     private String openInBrowserUrl;
@@ -53,9 +58,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lecture_list);
 
-        offlineBar = (View) findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
             invalidateOptionsMenu();
@@ -87,7 +90,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     }
 
     private void initalizeAdaptor(){
-        adapter = new LectureAdapter(this) {
+        adapter = new LectureAdapter(this, environment) {
             @Override
             public void onItemClicked(LectureModel model) {
                 try {
@@ -128,7 +131,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                             adapter.notifyDataSetChanged();
                         }
                     };
-                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this, dialogCallback);
+                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this,
+                        dialogCallback, environment.getConfig());
                 }
             };
 
@@ -140,7 +144,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         int downloadCount = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         for (VideoResponseModel v : lecture.videos) {
-        DownloadEntry de = (DownloadEntry) storage
+        DownloadEntry de = (DownloadEntry) environment.getStorage()
                 .getDownloadEntryfromVideoResponseModel(v);
 
         if(de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
@@ -198,7 +202,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                 initalizeAdaptor();
             }
             if(enrollment!=null){
-                adapter.setStore(db, storage, enrollment.getCourse().getId());
+                adapter.setStore(environment.getDatabase(), environment.getStorage(), enrollment.getCourse().getId());
             }
             loadData();
             handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
@@ -273,7 +277,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             openInBrowserTv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BrowserUtil.open(CourseLectureListActivity.this, 
+                    new BrowserUtil().open(CourseLectureListActivity.this,
                             urlStringBuffer.toString());
                 }
             });
@@ -310,15 +314,15 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
     public void startDownload(ArrayList<DownloadEntry> downloadList, int noOfDownloads){
         try{
-            segIO.trackSubSectionBulkVideoDownload(downloadList.get(0).getChapterName(),
+            environment.getSegment().trackSubSectionBulkVideoDownload(downloadList.get(0).getChapterName(),
                     downloadList.get(0).getSectionName(), downloadList.get(0).getEnrollmentId(), noOfDownloads);
         }catch(Exception e){
             logger.error(e);
         }
 
-        EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(this) {
+        EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(this,downloadList) {
             @Override
-            public void onFinish(Long result) {
+            public void onSuccess(Long result) {
                 try{
                     hideProgressDialog();
                     if(isActivityStarted()){
@@ -338,7 +342,9 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                 showInfoMessage(getString(R.string.msg_video_not_downloaded));
             }
         };
-        downloadTask.execute(downloadList);
+
+         downloadTask.execute();
+
         if(downloadList.size()>=3){
             showProgressDialog();
         }
@@ -355,7 +361,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                 if (isActivityStarted()){
                     if(!AppConstants.offline_flag) {
                         if (adapter != null && chapter != null && enrollment != null) {
-                            if (db.isAnyVideoDownloadingInSection(null, enrollment.getCourse().getId(), chapter.chapter)){
+                            if (environment.getDatabase().isAnyVideoDownloadingInSection(null, enrollment.getCourse().getId(), chapter.chapter)){
                                 adapter.notifyDataSetChanged();
                             }
                         }

@@ -115,7 +115,7 @@ public class GoogleProvider implements SocialProvider{
         }
 
         @Override
-        public void onFinish(String result) {
+        public void onSuccess(String result) {
             userInfoCallback.setSocialUserInfo(((GoogleOauth2)google).getEmail(), result);
         }
 
@@ -125,7 +125,7 @@ public class GoogleProvider implements SocialProvider{
         }
 
         @Override
-        protected String doInBackground(Object... params) {
+        public String call() throws Exception{
             //try to wait a while .
             try {
                 Thread.sleep(300);

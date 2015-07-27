@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/course_unit_video"
               android:layout_width="match_parent"
@@ -38,16 +39,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/edx_white"
+        android:background="@color/white"
         android:gravity="center"
         android:layout_marginTop="45dp"
         android:id="@+id/message_container">
-        <TextView
-            android:id="@+id/empty_document_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="70dp"
-            android:textColor="@color/grey_3"
+        <org.edx.mobile.third_party.iconify.IconView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:iconColor="@color/grey_3"
+            app:iconName="fa_file_text_o"
+            android:background="@color/white"
             android:layout_margin="20dp"/>
 
         <TextView
@@ -58,6 +59,7 @@
             android:singleLine="false"
             android:textColor="@color/grey_3"
             android:textAlignment="center"
+            android:background="@color/white"
             android:gravity="center_horizontal"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"

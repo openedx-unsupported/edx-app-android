@@ -36,7 +36,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            segIO.screenViewsTracking(getString(R.string.label_my_friends_courses));
+            environment.getSegment().screenViewsTracking(getString(R.string.label_my_friends_courses));
         }catch(Exception e){
             logger.error(e);
         }
@@ -99,7 +99,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
 
-        return new CoursesAsyncLoader(getActivity(), bundle);
+        return new CoursesAsyncLoader(getActivity(), bundle, environment, environment.getServiceManager());
 
     }
 

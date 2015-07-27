@@ -2,22 +2,25 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.services.ServiceManager;
 
 public abstract class SyncLastAccessedTask extends Task<SyncLastAccessedSubsectionResponse> {
 
-    public SyncLastAccessedTask(Context context) {
+    String courseId ;
+    String lastVisitedModuleId ;
+    public SyncLastAccessedTask(Context context, String courseId, String lastVisitedModuleId) {
         super(context);
+        this.courseId = courseId;
+        this.lastVisitedModuleId = lastVisitedModuleId;
     }
 
     @Override
-    protected SyncLastAccessedSubsectionResponse doInBackground(Object... params) {
+    public SyncLastAccessedSubsectionResponse call( ) throws Exception{
         try {
-            String courseId = (String)params[0];
-            String lastVisitedModuleId = (String)params[1];
+
             if(courseId!=null && lastVisitedModuleId !=null){
-                Api api = new Api(context);
+                ServiceManager api = environment.getServiceManager();
                 SyncLastAccessedSubsectionResponse res = api.syncLastAccessedSubsection(
                         courseId, lastVisitedModuleId);
                 return res;

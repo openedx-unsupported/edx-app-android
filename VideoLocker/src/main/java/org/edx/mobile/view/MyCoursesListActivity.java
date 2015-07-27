@@ -7,13 +7,14 @@ import android.widget.TabWidget;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
-import org.edx.mobile.module.notification.UserNotificationManager;
+import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.AppConstants;
@@ -25,6 +26,10 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
 
     private IUiLifecycleHelper uiLifecycleHelper;
     private PrefManager featuresPref;
+
+    @Inject
+    NotificationDelegate notificationDelegate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
         
 
         try{
-            segIO.screenViewsTracking(getString(R.string.label_my_courses));
+            environment.getSegment().screenViewsTracking(getString(R.string.label_my_courses));
         }catch(Exception e){
             logger.error(e);
         }
@@ -121,13 +126,13 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
         invalidateOptionsMenu();
         uiLifecycleHelper.onResume();
         changeSocialMode(new FacebookProvider().isLoggedIn());
-        UserNotificationManager.getInstance().checkAppUpgrade();
+        notificationDelegate.checkAppUpgrade();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }
 
     @Override
@@ -156,14 +161,14 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
         if (list != null && list.size() > 0) {
             //update all videos in the DB as Deactivated
-            db.updateAllVideosAsDeactivated(dataCallback);
+            environment.getDatabase().updateAllVideosAsDeactivated(dataCallback);
 
             for (int i = 0; i < list.size(); i++) {
                 //Check if the flag of isIs_active is marked to true,
                 //then activate all videos
                 if (list.get(i).isIs_active()) {
                     //update all videos for a course fetched in the API as Activated
-                    db.updateVideosActivatedForCourse(list.get(i).getCourse().getId(),
+                    environment.getDatabase().updateVideosActivatedForCourse(list.get(i).getCourse().getId(),
                             dataCallback);
                 } else {
                     list.remove(i);
@@ -171,7 +176,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
             }
 
             //Delete all videos which are marked as Deactivated in the database
-            storage.deleteAllUnenrolledVideos();
+            environment.getStorage().deleteAllUnenrolledVideos();
         }
     }
 

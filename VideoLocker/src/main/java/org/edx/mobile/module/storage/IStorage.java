@@ -139,4 +139,6 @@ public interface IStorage {
      * @param watchedStateCallback
      */
     void markVideoPlaying(DownloadEntry videoModel, DataCallback<Integer> watchedStateCallback);
+
+    void repairDownloadCompletionData();
 }

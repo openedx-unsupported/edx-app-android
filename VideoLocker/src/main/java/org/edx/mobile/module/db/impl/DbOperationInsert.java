@@ -28,4 +28,9 @@ class DbOperationInsert extends DbOperationBase<Long> {
         return id;
     }
 
+    @Override
+    public Long getDefaultValue() {
+        return -1L;
+    }
+
 }

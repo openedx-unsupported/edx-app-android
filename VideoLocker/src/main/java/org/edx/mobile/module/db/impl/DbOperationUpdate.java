@@ -32,4 +32,9 @@ class DbOperationUpdate extends DbOperationBase<Integer> {
         return count;
     }
 
+    @Override
+    public Integer getDefaultValue() {
+        return 0;
+    }
+
 }

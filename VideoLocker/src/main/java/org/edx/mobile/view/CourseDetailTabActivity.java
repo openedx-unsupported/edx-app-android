@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -9,16 +7,19 @@ import android.view.Menu;
 import android.view.View;
 
 import org.edx.mobile.R;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.analytics.SegmentFactory;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
+
+@ContentView(R.layout.activity_coursedetail_tab)
 public class CourseDetailTabActivity extends BaseTabActivity {
 
     //TODO - it is out of sync here. the logic should be in TabModel.
@@ -28,6 +29,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
     public static String TAG = CourseDetailTabActivity.class.getCanonicalName();
     static final String TAB_ID = TAG + ".tabID";
 
+    @InjectView(R.id.offline_bar)
     private View offlineBar;
 
     private int selectedTab = coursewareTabIndex;
@@ -37,7 +39,6 @@ public class CourseDetailTabActivity extends BaseTabActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coursedetail_tab);
 
         if (savedInstanceState != null) {
             selectedTab = savedInstanceState.getInt(TAB_ID);
@@ -46,7 +47,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
         setApplyPrevTransitionOnRestart(true);
 
         bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        offlineBar = findViewById(R.id.offline_bar);
+
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
             invalidateOptionsMenu();
@@ -66,7 +67,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
                 if ( isAnnouncement )
                     selectedTab = courseInfoTabIndex;
                 try{
-                    segIO.screenViewsTracking(courseData.getCourse().getName());
+                    environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
                 }catch(Exception e){
                     logger.error(e);
                 }
@@ -77,13 +78,13 @@ public class CourseDetailTabActivity extends BaseTabActivity {
                 if (!handleFromNotification) {
                     //it is a good idea to go to the my course page. as loading of my courses
                     //take a while to load. that the only way to get anouncement link
-                    Router.getInstance().showMyCourses(this);
+                    environment.getRouter().showMyCourses(this);
                     finish();
                 }
             }
 
         }catch(Exception ex){
-            Router.getInstance().showMyCourses(this);
+            environment.getRouter().showMyCourses(this);
             finish();
             logger.error(ex);
         }
@@ -127,7 +128,7 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             if (!TextUtils.isEmpty(courseId)){
                 try{
                     bundle.remove(Router.EXTRA_COURSE_ID);
-                    Api api = new Api(this);
+                    ServiceManager api = environment.getServiceManager();
                     EnrolledCoursesResponse courseData = api.getCourseById(courseId);
                     if (courseData != null && courseData.getCourse() != null ) {
                         bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);

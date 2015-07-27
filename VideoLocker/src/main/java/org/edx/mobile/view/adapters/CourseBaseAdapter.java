@@ -15,6 +15,7 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -68,6 +69,8 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     @Override
     public CourseBaseAdapter.SectionRow getItem(int position) {
+        if ( position < 0 || position >= mData.size() )
+            return null;
         return mData.get(position);
     }
 
@@ -85,13 +88,13 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
         if (convertView == null) {
             switch (type) {
                 case SectionRow.ITEM:
-                    convertView = mInflater.inflate(R.layout.row_course_outline_list, null);
+                    convertView = mInflater.inflate(R.layout.row_course_outline_list, parent,false);
                     // apply a tag to this list row
                     ViewHolder tag = getTag(convertView);
                     convertView.setTag(tag);
                     break;
                 default : //SectionRow.SECTION:
-                    convertView = mInflater.inflate(R.layout.row_section_header, null);
+                    convertView = mInflater.inflate(R.layout.row_section_header, parent,false);
                     break;
             }
         }
@@ -137,37 +140,42 @@ public abstract  class CourseBaseAdapter extends BaseAdapter{
 
     public ViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();
-        holder.rowType = (TextView) convertView
+        holder.rowType = (IconView) convertView
             .findViewById(R.id.row_type);
         holder.rowTitle = (ETextView) convertView
             .findViewById(R.id.row_title);
         holder.rowSubtitle = (ETextView) convertView
             .findViewById(R.id.row_subtitle);
-        holder.rowSubtitleIcon = (TextView) convertView
+        holder.rowSubtitleIcon = (IconView) convertView
             .findViewById(R.id.row_subtitle_icon);
+        holder.rowSubtitleIcon.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_light));
         holder.noOfVideos = (TextView) convertView
             .findViewById(R.id.no_of_videos);
-        holder.bulkDownload = (TextView) convertView
+        holder.bulkDownload = (IconView) convertView
             .findViewById(R.id.bulk_download);
-        holder.bulkDownloadVideos = (LinearLayout) convertView
+        holder.bulkDownload.setIconColor(context.getResources().getColor(
+            R.color.edx_grayscale_neutral_base));
+        holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
             .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);
         holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
+        holder.wholeSeparator = convertView.findViewById(R.id.row_whole_separator);
 
         return holder;
     }
 
     public static class ViewHolder{
 
-        TextView  rowType;
+        IconView rowType;
         ETextView rowTitle;
         ETextView rowSubtitle;
-        TextView  rowSubtitleIcon;
-        TextView bulkDownload;
+        IconView rowSubtitleIcon;
+        IconView bulkDownload;
         TextView noOfVideos;
-        LinearLayout bulkDownloadVideos;
+        LinearLayout numOfVideoAndDownloadArea;
         View rowSubtitlePanel;
         View halfSeparator;
+        View wholeSeparator;
     }
 
 

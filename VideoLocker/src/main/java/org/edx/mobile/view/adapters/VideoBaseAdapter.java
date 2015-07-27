@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
@@ -14,8 +15,8 @@ public abstract class VideoBaseAdapter<T> extends BaseListAdapter<T> {
     protected String videoId;
 
     protected static boolean isPlayerOn = false;
-    public VideoBaseAdapter(Context context, int layoutResourceId) {
-        super(context, layoutResourceId);
+    public VideoBaseAdapter(Context context, int layoutResourceId, IEdxEnvironment environment) {
+        super(context, layoutResourceId, environment);
     }
 
     public void setSelectedPosition(int selectedPosition) {

@@ -5,11 +5,13 @@ import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 public class BrowserUtil {
@@ -17,6 +19,9 @@ public class BrowserUtil {
     private static final Logger logger = new Logger(BrowserUtil.class.getName());
 
     private static final String TAG = BrowserUtil.class.getCanonicalName();
+
+    @Inject
+    IEdxEnvironment environment;
 
     /**
      * Opens given URL in native browser.
@@ -27,7 +32,7 @@ public class BrowserUtil {
      * @param activity
      * @param url
      */
-    public static void open(final FragmentActivity activity, final String url) {
+    public  void open(final FragmentActivity activity, final String url) {
         if (TextUtils.isEmpty(url) || activity == null){
             logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
             return;
@@ -35,7 +40,7 @@ public class BrowserUtil {
 
         if(url.startsWith("/")) {
             // use API host as the base URL for relative paths
-            String absoluteUrl = String.format("%s%s", Config.getInstance().getApiHostURL(), url);
+            String absoluteUrl = String.format("%s%s", environment.getConfig().getApiHostURL(), url);
             logger.debug(String.format("opening relative path URL: %s", absoluteUrl));
             openInBrowser(activity, absoluteUrl);
             return;
@@ -43,10 +48,10 @@ public class BrowserUtil {
 
 
         // verify if the app is running on zero-rated mobile data?
-        if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity)) {
+        if (NetworkUtil.isConnectedMobile(activity) && NetworkUtil.isOnZeroRatedNetwork(activity, environment.getConfig())) {
 
             // check if this URL is a white-listed URL, anything outside the white-list is EXTERNAL LINK
-            if (ConfigUtil.isWhiteListedURL(url)) {
+            if (ConfigUtil.isWhiteListedURL(url, environment.getConfig())) {
                 // this is white-listed URL
                 logger.debug(String.format("opening white-listed URL: %s", url));
                 openInBrowser(activity, url);
@@ -75,7 +80,7 @@ public class BrowserUtil {
         }
     }
 
-    private static void openInBrowser(FragmentActivity context, String url) {
+    private  void openInBrowser(FragmentActivity context, String url) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
@@ -84,7 +89,7 @@ public class BrowserUtil {
             context.startActivity(intent);
 
             try{
-                ISegment segIO = SegmentFactory.getInstance();
+                ISegment segIO =  environment.getSegment();
                 segIO.trackOpenInBrowser(url);
             }catch(Exception e){
                 logger.error(e);
@@ -96,7 +101,7 @@ public class BrowserUtil {
             }
             
             // apply transition animation
-            context.overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+            context.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
             logger.debug("Next transition animation applied");
         } catch(Exception ex) {
             logger.error(ex);

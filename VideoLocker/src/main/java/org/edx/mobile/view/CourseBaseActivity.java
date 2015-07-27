@@ -10,12 +10,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -24,6 +28,8 @@ import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.ContentView;
+import roboguice.inject.InjectView;
 
 /**
  *  A base class to handle some common task
@@ -32,14 +38,26 @@ import de.greenrobot.event.EventBus;
  *  2. progress_spinner
  *  3. offline_mode_message
  */
+@ContentView(R.layout.activity_course_base)
 public abstract  class CourseBaseActivity  extends BaseFragmentActivity implements TaskProcessCallback{
 
-    private View offlineBar;
-    private View lastAccessBar;
-    protected View downloadProgressBar;
-    protected TextView downloadIndicator;
+    @InjectView(R.id.offline_bar)
+    View offlineBar;
 
-    protected ProgressBar progressWheel;
+    @InjectView(R.id.last_access_bar)
+    View lastAccessBar;
+
+    @InjectView(R.id.download_in_progress_bar)
+    View downloadProgressBar;
+
+    @InjectView(R.id.video_download_indicator)
+    IconView downloadIndicator;
+
+    @InjectView(R.id.progress_spinner)
+    ProgressBar progressWheel;
+
+    @Inject
+    CourseManager courseManager;
 
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
@@ -58,27 +76,18 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         blockDrawerFromOpening();
     }
 
-    protected int getContentViewResourceId(){
-        return R.layout.activity_course_base;
-    }
-
     protected void initialize(Bundle arg){
-        setContentView(getContentViewResourceId());
 
         setApplyPrevTransitionOnRestart(true);
-        offlineBar = findViewById(R.id.offline_bar);
-        lastAccessBar = findViewById(R.id.last_access_bar);
-        downloadProgressBar = findViewById(R.id.download_in_progress_bar);
-        downloadIndicator = (TextView)findViewById(R.id.video_download_indicator);
-        Iconify.setIcon(downloadIndicator, Iconify.IconValue.fa_spinner);
+        ((IconView)findViewById(R.id.video_download_indicator)).setIconColor(getResources().getColor(R.color.edx_brand_primary_light));
         findViewById(R.id.download_in_progress_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Router.getInstance().showDownloads(CourseBaseActivity.this);
+                environment.getRouter().showDownloads(CourseBaseActivity.this);
             }
         });
 
-        progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
+
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
             invalidateOptionsMenu();
@@ -112,7 +121,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if ( courseData != null)
-            outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+            outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
         if ( courseComponentId != null )
             outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         super.onSaveInstanceState(outState);
@@ -120,7 +129,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     protected void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
+            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
             courseComponentId =   (String)savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
 
         }
@@ -200,7 +209,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void changeMode(){
         //Creating the instance of PopupMenu
         org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
-            findViewById(R.id.action_change_mode), Gravity.START);
+            findViewById(R.id.action_change_mode), Gravity.END);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
             .inflate(R.menu.change_mode, popup.getMenu());
@@ -250,8 +259,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     public void shareOnWeb() {
         //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(this,
-                findViewById(R.id.action_share_on_web), Gravity.START);
+        PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_share_on_web),
+                Gravity.END, R.attr.edgePopupMenuStyle, R.style.CustomEdgePopupMenu);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
                 .inflate(R.menu.share_on_web, popup.getMenu());
@@ -260,7 +269,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
+                new BrowserUtil().open(CourseBaseActivity.this, getUrlForWebView());
                 return true;
             }
         });

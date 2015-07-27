@@ -2,25 +2,24 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-
-import java.util.ArrayList;
+import org.edx.mobile.services.ServiceManager;
 
 public abstract class EnrollForCourseTask extends Task<Boolean> {
 
-    public EnrollForCourseTask(Context context) {
+    String courseId;
+    boolean emailOptIn ;
+    public EnrollForCourseTask(Context context, String courseId, boolean emailOptIn) {
         super(context);
+        this.courseId = courseId;
+        this.emailOptIn = emailOptIn;
     }
 
     @Override
-    protected Boolean doInBackground(Object... params) {
+    public Boolean call( ) throws Exception{
         try {
-            String courseId = (String) (params[0]);
-            boolean emailOptIn = (boolean) (params[1]);
+
             if(courseId!=null){
-                Api api = new Api(context);
+                ServiceManager api = environment.getServiceManager();
                 try {
                     return api.enrollInACourse(courseId,emailOptIn);
                 } catch(Exception ex) {

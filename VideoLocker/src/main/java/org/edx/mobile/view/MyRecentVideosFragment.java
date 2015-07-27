@@ -18,7 +18,6 @@ import android.widget.ListView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
@@ -28,7 +27,6 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -61,7 +59,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
         View view = inflater.inflate(R.layout.fragment_video_list_with_player_container,
                 null);
         try{
-            segIO.screenViewsTracking("My Videos - Recent Videos");
+            environment.getSegment().screenViewsTracking("My Videos - Recent Videos");
         }catch(Exception e){
             logger.error(e);
         }
@@ -82,7 +80,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 if(adapter!=null){
                     selectedId = adapter.getVideoId();
                 }
-                adapter = new MyRecentVideoAdapter(getActivity(), db) {
+                adapter = new MyRecentVideoAdapter(getActivity(), environment) {
 
                     @Override
                     protected boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event) {
@@ -191,7 +189,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 selectedId = adapter.getVideoId();
             }
 
-            ArrayList<SectionItemInterface> list = storage.getRecentDownloadedVideosList();
+            ArrayList<SectionItemInterface> list = environment.getStorage().getRecentDownloadedVideosList();
             if (list != null) {
                 adapter.clear();
                 for (SectionItemInterface m : list) {
@@ -213,13 +211,13 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
     private void play(SectionItemInterface model) {
         if (model instanceof DownloadEntry) {
-            Api api = new Api(getActivity());
+
             DownloadEntry v = (DownloadEntry) model;
             try {
                 String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                         .username, v.eid);
                 PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = ServiceManager.getInstance().getVideoById(v.eid, v.videoId);
+                VideoResponseModel vrm = environment.getServiceManager().getVideoById(v.eid, v.videoId);
                 prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
 
                 if (callback != null) {
@@ -460,7 +458,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 for (SectionItemInterface section : list) {
                     if (section.isDownload()) {
                         DownloadEntry de = (DownloadEntry) section;
-                        storage.removeDownload(de);
+                        environment.getStorage().removeDownload(de);
                         deletedVideoCount++;
                     }
                 }
@@ -475,11 +473,13 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
                         String.format(format, deletedVideoCount));
             }
+
+        }catch(Exception ex){
+            logger.error(ex);
+        } finally {
             getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
             getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
-        }catch(Exception ex){
-            logger.error(ex);
         }
     }
 
@@ -547,7 +547,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
 
     public void markPlaying() {
-        storage.markVideoPlaying(videoModel, watchedStateCallback);
+        environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);
     }
 
     public void saveCurrentPlaybackPosition(int offset) {
@@ -555,7 +555,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
             DownloadEntry v = videoModel;
             if (v != null) {
                 // mark this as partially watches, as playing has started
-                db.updateVideoLastPlayedOffset(v.videoId, offset, 
+                environment.getDatabase().updateVideoLastPlayedOffset(v.videoId, offset,
                         setCurrentPositionCallback);
             }
         } catch (Exception ex) {
@@ -570,7 +570,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
                 if (v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                     videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                     // mark this as partially watches, as playing has started
-                    db.updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
+                    environment.getDatabase().updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
                             watchedStateCallback);
                 }
             }

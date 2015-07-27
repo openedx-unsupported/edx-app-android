@@ -21,7 +21,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
@@ -39,7 +38,6 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.UiUtil;
@@ -47,7 +45,6 @@ import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 
@@ -75,13 +72,14 @@ public class RegisterActivity extends BaseFragmentActivity
         runOnTick = false;
 
         try{
-            segIO.screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
+            environment.getSegment().screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
         }catch(Exception e){
             logger.error(e);
         }
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this);
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
-        boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN);
+        boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(
+            getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN, environment.getConfig());
 
         if ( !isSocialEnabled ){
             findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
@@ -92,7 +90,7 @@ public class RegisterActivity extends BaseFragmentActivity
             ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
             ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
 
-            if ( !Config.getInstance().getFacebookConfig().isEnabled() ){
+            if ( !environment.getConfig().getFacebookConfig().isEnabled() ){
                 findViewById(R.id.img_facebook).setVisibility(View.GONE);
             }
             else {
@@ -100,7 +98,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
             }
 
-            if ( !Config.getInstance().getGoogleConfig().isEnabled() ){
+            if ( !environment.getConfig().getGoogleConfig().isEnabled() ){
                 findViewById(R.id.img_google).setVisibility(View.GONE);
             }
             else {
@@ -203,7 +201,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void setupRegistrationForm() {
         try {
-            RegistrationDescription form = new Api(this).getRegistrationDescription();
+            RegistrationDescription form = environment.getServiceManager().getRegistrationDescription();
 
             LayoutInflater inflater = getLayoutInflater();
 
@@ -292,7 +290,7 @@ public class RegisterActivity extends BaseFragmentActivity
             if ( fromSocialNet ) {
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
-                parameters.putString("client_id", Config.getInstance().getOAuthClientId());
+                parameters.putString("client_id", environment.getConfig().getOAuthClientId());
             }
 
 
@@ -304,7 +302,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 String versionName = PropertyUtil.getManifestVersionName(this);
                 String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
-                segIO.trackCreateAccountClicked(appVersion, backstore);
+                environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
             }catch(Exception e){
                 logger.error(e);
             }
@@ -315,7 +313,7 @@ public class RegisterActivity extends BaseFragmentActivity
             RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
 
                 @Override
-                public void onFinish(RegisterResponse result) {
+                public void onSuccess(RegisterResponse result) {
                     if(result!=null){
                         logger.debug("registration success=" + result.isSuccess());
                         hideProgress();
@@ -350,7 +348,7 @@ public class RegisterActivity extends BaseFragmentActivity
                                 //in the future we will show different messages based on different registration
                                 //condition
                                 showProgress();
-                                Router.getInstance().showMyCourses(RegisterActivity.this);
+                                environment.getRouter().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
                                 EventBus.getDefault().postSticky(
@@ -578,18 +576,18 @@ public class RegisterActivity extends BaseFragmentActivity
     public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-        segIO.identifyUser(profile.id.toString(), profile.email , "");
+        environment.getSegment().identifyUser(profile.id.toString(), profile.email , "");
 
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
         if(backendKey!=null){
-            segIO.trackUserLogin(backendKey);
+            environment.getSegment().trackUserLogin(backendKey);
         }
 
 
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             showProgress();
-            Router.getInstance().showMyCourses(this);
+            environment.getRouter().showMyCourses(this);
         }
         // but finish this screen anyways as login is succeeded
         finish();

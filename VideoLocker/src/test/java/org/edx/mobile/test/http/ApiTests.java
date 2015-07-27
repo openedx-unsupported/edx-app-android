@@ -23,18 +23,21 @@ import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.ServiceManager;
-import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
 import org.junit.Test;
 
-import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -168,9 +171,9 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     public void login() throws Exception {
         if( shouldSkipTest ) return;
-        Config.TestAccountConfig config  = Config.getInstance().getTestAccountConfig();
+        Config.TestAccountConfig config2  = config.getTestAccountConfig();
 
-        AuthResponse res = api.auth(config.getName(), config.getPassword());
+        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
@@ -239,7 +242,7 @@ public class ApiTests extends HttpBaseTestCase {
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         final String courseId = e.getCourse().getId();
         HttpRequestDelegate<CourseComponent> requestDelegate = new HttpRequestDelegate<CourseComponent>(
-                api, null, ServiceManager.getInstance().getEndPointCourseStructure(courseId)) {
+                api, null, new ServiceManager().getEndPointCourseStructure(courseId)) {
             @Override
             public CourseComponent fromJson(String json) throws Exception{
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);

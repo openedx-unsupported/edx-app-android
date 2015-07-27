@@ -20,11 +20,11 @@ import java.lang.reflect.Type;
  */
 public abstract class HttpRequestDelegate<T> {
     protected final Logger logger = new Logger(getClass().getName());
-    protected  Api api;
+    protected  IApi api;
     protected CacheManager cacheManager;
     protected HttpRequestEndPoint endPoint;
 
-    public HttpRequestDelegate(Api api, CacheManager cacheManager, HttpRequestEndPoint endPoint){
+    public HttpRequestDelegate(IApi api, CacheManager cacheManager, HttpRequestEndPoint endPoint){
         this.api = api;
         this.cacheManager = cacheManager;
         this.endPoint = endPoint;

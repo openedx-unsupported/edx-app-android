@@ -6,7 +6,7 @@
     android:layout_marginTop="1dp"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
-    android:background="@color/brand_primary_accent"
+    android:background="@color/edx_brand_primary_accent"
     android:orientation="horizontal"
     android:id="@+id/message_panel"
     android:paddingLeft="0dp"

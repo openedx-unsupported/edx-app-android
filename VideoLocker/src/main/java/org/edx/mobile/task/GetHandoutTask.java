@@ -2,22 +2,23 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
+import org.edx.mobile.services.ServiceManager;
 
 public abstract class GetHandoutTask extends Task<HandoutModel> {
-
-    public GetHandoutTask(Context context) {
+    EnrolledCoursesResponse enrollment;
+    public GetHandoutTask(Context context,EnrolledCoursesResponse enrollment ) {
         super(context);
+        this.enrollment = enrollment;
     }
 
     @Override
-    protected HandoutModel doInBackground(Object... params) {
+    public HandoutModel call() throws Exception{
         try {
-            EnrolledCoursesResponse enrollment = (EnrolledCoursesResponse) params[0];
+
             if(enrollment!=null){
-                Api api = new Api(context);
+                ServiceManager api = environment.getServiceManager();
 
                 try {
                     // return instant data from cache
@@ -26,7 +27,11 @@ public abstract class GetHandoutTask extends Task<HandoutModel> {
                     if (model != null) {
                         handler.post(new Runnable() {
                             public void run() {
-                                onFinish(model);
+                                try {
+                                    onSuccess(model);
+                                } catch (Exception e) {
+                                    logger.error(e);
+                                }
                                 stopProgress();
                             }
                         });

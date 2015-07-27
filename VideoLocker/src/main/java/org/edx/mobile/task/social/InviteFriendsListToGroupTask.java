@@ -2,28 +2,29 @@ package org.edx.mobile.task.social;
 
 import android.content.Context;
 
-import org.edx.mobile.http.Api;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.JavaUtil;
 
 
 public abstract class InviteFriendsListToGroupTask extends Task<Void> {
 
-    public InviteFriendsListToGroupTask(Context context) {
-
+    Long[] friendList;
+    Long groupId;
+    String oauthToken;
+    public InviteFriendsListToGroupTask(Context context, Long[] friendList, Long groupId, String oauthToken) {
         super(context);
-
+        this.friendList = friendList;
+        this.groupId = groupId;
+        this.oauthToken = oauthToken;
     }
 
     @Override
-    protected Void doInBackground(Object... params) {
+    public Void call( ) {
 
-        Long[] friendList = (Long[]) params[0];
         long[] primitiveList = JavaUtil.toPrimitive(friendList);
-        Long groupId = (Long) params[1];
-        String oauthToken = (String) params[2];
 
-        Api api = new Api(context);
+        ServiceManager api = environment.getServiceManager();
 
         try {
 

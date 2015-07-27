@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.edx.mobile.view.custom.ETextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/row_header"
-    style="@style/regular_grey_text"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/row_height_cc_option"
-    android:gravity="center_vertical|start"
-    android:textColor="@color/grey_4"
-    android:textDirection="locale"
-    android:background="@drawable/rectangle_with_top_border"
-    android:padding="10dp" />
+    android:layout_height="40dp"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <View
+        android:id="@+id/row_separator"
+        android:layout_width="match_parent"
+        android:background="@color/grey_2"
+        android:layout_height="1dp"/>
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/row_header"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/row_height_cc_option"
+        android:gravity="center_vertical|start"
+        android:textColor="@color/grey_4"
+        android:textDirection="locale"
+        android:padding="10dp" />
+</LinearLayout>

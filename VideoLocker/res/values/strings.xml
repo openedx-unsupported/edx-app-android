@@ -239,7 +239,7 @@
     <!-- Tab title for course info section -->
     <string name="tab_label_course_info">Course Info</string>
     <!-- Button for last accessed course section. Will be followed by course name -->
-    <string name="last_accessed">Last Accessed - </string>
+    <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
     <string name="no_chapter_text">No courseware is currently available.</string>
     <!-- Label shown when user is enrolled in no courses -->
@@ -255,16 +255,16 @@
     <!-- Label default unit on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>
     <!-- Label showing prvious on assessment navigation bar-->
-    <string name="assessment_previous">Previous</string>
-    <!-- Label showing next on assessment navigation bar-->
-    <string name="assessment_next">Next</string>
+    <string name="assessment_previous_unit">Previous Unit</string>
 
     <!-- Label for mode switch menu item-->
     <string name="assessment_video_only">Video Only</string>
     <!-- Label for mode switch menu item-->
     <string name="assessment_full_course">Full Course</string>
 
-    <!-- Label showing assessment only available on website-->
+    <!-- Label for empty video in video only mode-->
+    <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select the Video icon above and switch to full course mode.</string>
+   <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn\'t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
@@ -282,7 +282,7 @@
 
 
     <!-- Label for warning message of graded assessment -->
-    <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the web until it is fully supported on mobile.</string>
+    <string name="assessment_graded_warning">We recommend that you complete graded exercises like this one on the <i>web</i> until it is fully supported on mobile.</string>
 
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->
@@ -523,7 +523,7 @@
         <!-- Message indicating one video deleted. {video_count} is 1-->
         <item quantity="one">{video_count} video deleted </item>
         <!-- Message indicating more than one video deleted. {video_count} is number of videos deleted-->
-        <item quantity="other">{{video_count}} videos deleted</item>
+        <item quantity="other">{video_count} videos deleted</item>
     </plurals>
 
     <!-- Notification related -->
@@ -531,5 +531,7 @@
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
     <string name="notification_toggle">Notifications</string>
+    <!-- Placeholder title for course content with no title -->
+    <string name="untitled_block">Untitled</string>
 
 </resources>

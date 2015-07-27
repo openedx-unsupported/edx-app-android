@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,11 @@ import android.widget.Toast;
 import com.facebook.Session;
 import com.facebook.widget.LoginButton;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.analytics.SegmentFactory;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.social.SocialMember;
@@ -36,7 +35,9 @@ import org.edx.mobile.view.adapters.GroupListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupsListFragment extends Fragment implements SocialProvider.Callback<List<SocialGroup>>, GroupListAdapter.GroupFriendsListener {
+import roboguice.fragment.RoboFragment;
+
+public class GroupsListFragment extends RoboFragment implements SocialProvider.Callback<List<SocialGroup>>, GroupListAdapter.GroupFriendsListener {
 
     private enum State {
         LOADING,
@@ -67,6 +68,7 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
 
     private SocialGroup lastGroupToInvite;
 
+    @Inject
     private ISegment segIO;
 
     private void launchGroup(SocialGroup group){
@@ -94,7 +96,6 @@ public class GroupsListFragment extends Fragment implements SocialProvider.Callb
         uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiLifecycleHelper.onCreate(savedInstanceState);
 
-        segIO = SegmentFactory.getInstance();
 
         try{
             segIO.screenViewsTracking("Group List");

@@ -32,4 +32,9 @@ class DbOperationGetVideos extends DbOperationSelect<List<VideoModel>> {
         return list;
     }
     
+    @Override
+    public List<VideoModel> getDefaultValue() {
+        return new ArrayList<VideoModel>();
+    }
+    
 }

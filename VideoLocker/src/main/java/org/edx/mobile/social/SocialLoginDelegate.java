@@ -4,25 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.Api;
-import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
-import org.edx.mobile.social.google.GoogleUserProfile;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
@@ -68,15 +62,15 @@ public class SocialLoginDelegate {
 
 
 
-    public SocialLoginDelegate(Activity activity, Bundle savedInstanceState, MobileLoginCallback callback){
+    public SocialLoginDelegate(Activity activity, Bundle savedInstanceState, MobileLoginCallback callback, Config config){
 
         this.activity = activity;
         this.callback = callback;
 
-        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE);
+        google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
         google.setCallback(googleCallback);
 
-        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK);
+        facebook = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, config);
         facebook.setCallback(facebookCallback);
 
         google.onActivityCreated(activity, savedInstanceState);
@@ -140,9 +134,9 @@ public class SocialLoginDelegate {
    //     Exception  ex = new RuntimeException( );
    //     callback.onUserLoginFailure(ex, accessToken, backend);
 
-        Task<?> task = new ProfileTask(activity);
+        Task<?> task = new ProfileTask(activity,accessToken, backend);
         callback.onSocialLoginSuccess(accessToken, backend, task);
-        task.execute(accessToken, backend);
+        task.execute();
     }
 
 
@@ -176,12 +170,14 @@ public class SocialLoginDelegate {
         private  String accessToken;
         private  String backend;
 
-        public ProfileTask(Context context) {
+        public ProfileTask(Context context, String accessToken, String backend) {
             super(context);
+            this.accessToken = accessToken;
+            this.backend = backend;
         }
 
         @Override
-        public void onFinish(ProfileModel result) {
+        public void onSuccess(ProfileModel result) {
             if (result != null) {
                 try {
                     if (result.email == null) {
@@ -207,12 +203,11 @@ public class SocialLoginDelegate {
         }
 
         @Override
-        protected ProfileModel doInBackground(Object... params) {
+        public ProfileModel call( ) {
             try {
-                this.accessToken = (String) params[0];
-                this.backend = (String) params[1];
 
-                Api api = new Api(context);
+
+                ServiceManager api = environment.getServiceManager();
 
                 // do SOCIAL LOGIN first
                 AuthResponse social = null;
@@ -274,7 +269,7 @@ public class SocialLoginDelegate {
                 Task<Void> logout = new Task<Void>(activity) {
 
                     @Override
-                    protected Void doInBackground(Object... arg0) {
+                    public Void call( ) {
                         try {
                             socialLogout(socialType);
                         } catch(Exception ex) {
@@ -285,7 +280,7 @@ public class SocialLoginDelegate {
                     }
 
                     @Override
-                    public void onFinish(Void result) {
+                    public void onSuccess(Void result) {
                         socialLogin(socialType);
                     }
 

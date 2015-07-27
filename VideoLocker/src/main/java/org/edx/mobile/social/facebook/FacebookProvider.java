@@ -18,6 +18,8 @@ import com.facebook.model.OpenGraphAction;
 import com.facebook.model.OpenGraphObject;
 import com.facebook.widget.FacebookDialog;
 import com.google.gson.Gson;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -32,18 +34,23 @@ import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.task.social.CreateGroupTask;
 import org.edx.mobile.task.social.InviteFriendsListToGroupTask;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SocialUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Singleton
 public class FacebookProvider implements SocialProvider {
 
     protected final Logger logger = new Logger(getClass().getName());
     private static final String TAG = FacebookProvider.class.getCanonicalName();
 
     private SocialMember userProfile;
+
+    @Inject
+    Config config;
 
     public static String createFacebookPhotoURI(long userID){
 
@@ -181,9 +188,9 @@ public class FacebookProvider implements SocialProvider {
             friendIDs[i] = friendList.get(i).getId();
         }
 
-        InviteFriendsListToGroupTask inviteFriendsListToGroupTask = new InviteFriendsListToGroupTask(context) {
+        InviteFriendsListToGroupTask inviteFriendsListToGroupTask = new InviteFriendsListToGroupTask(context, friendIDs, groupID, token) {
             @Override
-            public void onFinish(Void result) {
+            public void onSuccess(Void result) {
                 callback.onSuccess(result);
             }
 
@@ -192,19 +199,17 @@ public class FacebookProvider implements SocialProvider {
                 callback.onError(new SocialError("There was an unknown error", ex));
             }
         };
-        inviteFriendsListToGroupTask.execute(friendIDs, groupID, token);
+        inviteFriendsListToGroupTask.execute();
 
     }
 
     @Override
     public void createNewGroup(Context context, String name, String description, String admin, final Callback<Long> callback) {
 
-        String token = FacebookSessionUtil.getAccessToken();
-
-        CreateGroupTask createGroupTask = new CreateGroupTask(context) {
+        CreateGroupTask createGroupTask = new CreateGroupTask(context, name, description, admin, false) {
 
             @Override
-            public void onFinish(Long groupID) {
+            public void onSuccess(Long groupID) {
                 callback.onSuccess(groupID);
             }
 
@@ -214,7 +219,7 @@ public class FacebookProvider implements SocialProvider {
             }
 
         };
-        createGroupTask.execute(name, description, admin, false, token);
+        createGroupTask.execute();
 
     }
 
@@ -365,7 +370,7 @@ public class FacebookProvider implements SocialProvider {
 
         OpenGraphObject shareObject = OpenGraphObject.Factory.createForPost(courseShareObject);
 
-        String imageURL = course.getCourse_image(activity);
+        String imageURL = course.getCourse_image(config);
 
         shareObject.setImageUrls(Arrays.asList(imageURL));
         shareObject.setTitle(course.getName());
@@ -396,7 +401,7 @@ public class FacebookProvider implements SocialProvider {
 
         OpenGraphObject shareObject = OpenGraphObject.Factory.createForPost(certShareObject);
 
-        String imageURL = course.getCourse_image(activity);
+        String imageURL = course.getCourse_image(config);
         String certURL =  "http://www.edx.org";
 
         shareObject.setImageUrls(Arrays.asList(imageURL));

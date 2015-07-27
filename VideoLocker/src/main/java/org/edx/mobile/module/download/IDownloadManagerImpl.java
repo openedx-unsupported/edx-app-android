@@ -8,21 +8,26 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.util.Sha1Util;
 
 import java.io.File;
 
-class IDownloadManagerImpl implements IDownloadManager {
-    
+@Singleton
+public class IDownloadManagerImpl implements IDownloadManager {
+
     private Context context;
+    @Inject
     private DownloadManager dm;
     private final Logger logger = new Logger(getClass().getName());
 
-    IDownloadManagerImpl(Context context) {
+    @Inject
+    public IDownloadManagerImpl(Context context) {
         this.context = context;
-        dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
     @Override

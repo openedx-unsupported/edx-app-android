@@ -1,19 +1,5 @@
 package org.edx.mobile.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.edx.mobile.R;
-import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.adapters.DownloadEntryAdapter;
-
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +12,20 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.adapters.DownloadEntryAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadListActivity extends BaseFragmentActivity {
 
@@ -54,7 +54,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 0);
 
         try{
-            segIO.screenViewsTracking(getString
+            environment.getSegment().screenViewsTracking(getString
                     (R.string.title_download));
         }catch(Exception e){
             logger.error(e);
@@ -70,7 +70,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
         }
 
         ListView downloadListView = (ListView) findViewById(R.id.my_downloads_list);
-        adapter = new DownloadEntryAdapter(this) {
+        adapter = new DownloadEntryAdapter(this, environment) {
 
             @Override
             public void onItemClicked(DownloadEntry model) {
@@ -86,7 +86,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
             @Override
             public void onDeleteClicked(DownloadEntry model) {
-                if(storage.removeDownload(model) >= 1){
+                if(environment.getStorage().removeDownload(model) >= 1){
                     // update the list data as one download is removed
                     try{
                         adapter.remove(model);
@@ -99,10 +99,10 @@ public class DownloadListActivity extends BaseFragmentActivity {
             }
         };
 
-        adapter.setStore(storage);
+        adapter.setStore(environment.getStorage());
         downloadListView.setAdapter(adapter);
         final ArrayList<DownloadEntry> list = new ArrayList<DownloadEntry>();
-        db.getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
+        environment.getDatabase().getListOfOngoingDownloads(new DataCallback<List<VideoModel>>() {
             @Override
             public void onResult(List<VideoModel> result) {
                 if(result!=null){
@@ -124,8 +124,8 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
     private void showDownloadCompleteView(){
 
-        if(db!=null){
-            long downloadedCount = db.getVideosDownloadedCount(null);
+        if(environment.getDatabase()!=null){
+            long downloadedCount = environment.getDatabase().getVideosDownloadedCount(null);
             // display count of downloaded videos
             PrefManager p = new PrefManager(DownloadListActivity.this,
                     PrefManager.Pref.LOGIN);
