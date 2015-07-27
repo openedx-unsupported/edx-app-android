@@ -160,4 +160,14 @@
         <item name="android:actionBarItemBackground">@color/edx_brand_primary_light</item>
     </style>
 
+    <style name="section_lbl_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">150dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
+        <item name="android:layout_marginTop">-5dp</item>
+    </style>
+
 </resources>

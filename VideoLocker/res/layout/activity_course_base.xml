@@ -174,7 +174,7 @@
                           android:id="@+id/course_unit_nav_bar"
                           android:measureWithLargestChild="true"
                           android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
+                          android:layout_height="@dimen/course_unit_nav_bar_height"
                           android:padding="1dp"
                           android:layout_marginLeft="5dp"
                           android:layout_marginStart="5dp"
@@ -183,28 +183,55 @@
                           android:background="@drawable/rectangle_with_top_border"
                           android:visibility="gone"
                           android:layout_weight="0">
-                <Button android:id="@+id/goto_prev"
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical|start">
+
+                    <Button
+                        android:id="@+id/goto_prev"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:textColor="?attr/buttonTextColor"
+                        android:layout_height="@dimen/course_unit_nav_bar_btn_height"
                         android:background="@color/white"
-                        android:text="@string/assessment_previous_unit">
-                </Button>
+                        android:text="@string/assessment_previous"
+                        android:textColor="?attr/buttonTextColor" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/prev_unit_title"
+                        style="@style/section_lbl_style"
+                        android:visibility="gone" />
+
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="0px"
                     android:layout_height="0px"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
-                <Button android:id="@+id/goto_next"
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical|end|right">
+
+                    <Button
+                        android:id="@+id/goto_next"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
+                        android:layout_height="@dimen/course_unit_nav_bar_btn_height"
                         android:background="@color/white"
-                        android:textColor="?attr/buttonTextColor"
-                        android:text="@string/assessment_next_unit">
-                </Button>
+                        android:text="@string/assessment_next"
+                        android:textColor="?attr/buttonTextColor"/>
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/next_unit_title"
+                        style="@style/section_lbl_style"
+                        android:visibility="gone" />
+
+                </LinearLayout>
             </LinearLayout>
 
 
