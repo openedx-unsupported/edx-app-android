@@ -31,7 +31,6 @@
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
-        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
         <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
@@ -159,13 +158,6 @@
 
     <style name="AppTheme.Dark" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@color/edx_brand_primary_light</item>
-    </style>
-
-    <!-- used to control the space between action bar items -->
-    <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
-        <item name="android:minWidth">5dip</item>
-        <item name="android:paddingLeft">4dip</item>
-        <item name="android:paddingRight">4dip</item>
     </style>
 
 </resources>
