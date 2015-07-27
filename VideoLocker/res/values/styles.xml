@@ -31,7 +31,6 @@
         <!-- use window background for preview to avoid showing black screen -->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
-        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
         <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
@@ -84,15 +83,21 @@
     <style name="last_access_bar_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">75dp</item>
-        <item name="android:background">@color/cyan_1</item>
+        <item name="android:background">@color/edx_brand_primary_x_light</item>
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="download_in_progress_bar_style">
-        <item name="android:layout_width">match_parent</item>
+    <style name="download_in_progress_bar_style" parent="last_access_bar_style">
         <item name="android:layout_height">45dp</item>
-        <item name="android:background">@color/white</item>
-        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="separator_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+
+    <style name="course_header_separator_style" parent="separator_style">
+        <item name="android:background">@color/edx_brand_primary_base</item>
     </style>
     
     <!-- Custom menu popup -->
@@ -155,11 +160,14 @@
         <item name="android:actionBarItemBackground">@color/edx_brand_primary_light</item>
     </style>
 
-    <!-- used to control the space between action bar items -->
-    <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
-        <item name="android:minWidth">5dip</item>
-        <item name="android:paddingLeft">4dip</item>
-        <item name="android:paddingRight">4dip</item>
+    <style name="section_lbl_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxWidth">150dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
+        <item name="android:layout_marginTop">-5dp</item>
     </style>
 
 </resources>

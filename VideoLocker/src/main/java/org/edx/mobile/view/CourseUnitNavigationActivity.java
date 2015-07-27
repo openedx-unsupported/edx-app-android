@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import roboguice.inject.InjectView;
+
 
 /**
  *
@@ -43,6 +46,15 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
+
+    @InjectView(R.id.goto_next)
+    private Button mNextBtn;
+    @InjectView(R.id.goto_prev)
+    private Button mPreviousBtn;
+    @InjectView(R.id.next_unit_title)
+    private TextView mNextUnitLbl;
+    @InjectView(R.id.prev_unit_title)
+    private TextView mPreviousUnitLbl;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,27 +99,25 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
 
-        Button button = (Button) findViewById(R.id.goto_prev);
-        button.setOnClickListener(new View.OnClickListener() {
+        mPreviousBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int index = pager.getCurrentItem();
-                if ( index >  0 ) {
+                if (index > 0) {
                     PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-                    if( curView != null )
+                    if (curView != null)
                         curView.onPageDisappear();
                     pager.setCurrentItem(index - 1);
                 }
             }
         });
-        button = (Button) findViewById(R.id.goto_next);
-        button.setOnClickListener(new View.OnClickListener() {
+        mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int index = pager.getCurrentItem();
-                if( index < pagerAdapter.getCount() - 1 ) {
+                if (index < pagerAdapter.getCount() - 1) {
                     PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-                    if( curView != null )
+                    if (curView != null)
                         curView.onPageDisappear();
                     pager.setCurrentItem(index + 1);
                 }
@@ -156,16 +166,54 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     private void tryToUpdateForEndOfSequential(){
         int curIndex = pager.getCurrentItem();
-        setCurrentUnit( pagerAdapter.getUnit(curIndex) );
+        setCurrentUnit(pagerAdapter.getUnit(curIndex));
 
-        View prevButton = findViewById(R.id.goto_prev);
-        Button nextButton = (Button) findViewById(R.id.goto_next);
-        prevButton.setEnabled(curIndex > 0);
-        nextButton.setEnabled(curIndex < pagerAdapter.getCount() - 1);
+        mPreviousBtn.setEnabled(curIndex > 0);
+        mNextBtn.setEnabled(curIndex < pagerAdapter.getCount() - 1);
  
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
+
+        // fix: https://openedx.atlassian.net/browse/MA-995
+        // code below decides to show Next/Previous Unit name or only Next/Previous
+        // based on units in a subsection
+        String currentSubsectionId = selectedUnit.getParent().getId();
+        if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
+            String nextUnitSubsectionId = unitList.get(curIndex + 1).getParent().getId();
+            if (currentSubsectionId.equalsIgnoreCase(nextUnitSubsectionId)) {
+                mNextUnitLbl.setVisibility(View.GONE);
+                mNextBtn.setText(R.string.assessment_next);
+            }
+            else {
+                mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getName());
+                mNextUnitLbl.setVisibility(View.VISIBLE);
+                mNextBtn.setText(R.string.assessment_next_unit);
+            }
+        }
+        else {
+            // we have reached the end and next button is disabled
+            mNextBtn.setText(R.string.assessment_next);
+            mNextUnitLbl.setVisibility(View.GONE);
+        }
+
+        if (curIndex - 1 >= 0) {
+            String prevUnitSubsectionId = unitList.get(curIndex - 1).getParent().getId();
+            if (currentSubsectionId.equalsIgnoreCase(prevUnitSubsectionId)) {
+                mPreviousUnitLbl.setVisibility(View.GONE);
+                mPreviousBtn.setText(R.string.assessment_previous);
+            }
+            else {
+                mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getName());
+                mPreviousUnitLbl.setVisibility(View.VISIBLE);
+                mPreviousBtn.setText(R.string.assessment_previous_unit);
+            }
+        }
+        else {
+            // we have reached the start and previous button is disabled
+            mPreviousBtn.setText(R.string.assessment_previous);
+            mPreviousUnitLbl.setVisibility(View.GONE);
+        }
     }
 
     protected void initialize(Bundle arg){
