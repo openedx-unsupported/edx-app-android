@@ -252,10 +252,14 @@
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
     <!-- Assessment -->
-    <!-- Label default unit on assessment navigation bar-->
+    <!-- Label showing next sub-section on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>
-    <!-- Label showing prvious on assessment navigation bar-->
+    <!-- Label showing next unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_next">Next</string>
+    <!-- Label showing previous sub-section on assessment navigation bar-->
     <string name="assessment_previous_unit">Previous Unit</string>
+    <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_previous">Previous</string>
 
     <!-- Label for mode switch menu item-->
     <string name="assessment_video_only">Video Only</string>
