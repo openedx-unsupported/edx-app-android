@@ -7,6 +7,9 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.qualcomm.qlearn.sdk.discussion.APICallback;
+import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -73,7 +76,7 @@ public class Router {
 
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG,overrideAnimation);
+        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
         if ( context instanceof  Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         else
@@ -218,5 +221,26 @@ public class Router {
         handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
+    }
+
+    public void showDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
+        // TODO: create a new DiscussionTopicsActivity and populate it with API result
+//        Intent discussionTopicsIntent = new Intent(activity, DiscussionTopicsActivity.class);
+//        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        activity.startActivity(discussionTopicsIntent);
+
+        // TODO: move this to DiscussionTopicsActivity's onCreate/onCreateView
+        new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
+            @Override
+            public void success(CourseTopics courseTopics) {
+                // TODO: show courseTopics in the list
+                System.out.println(courseTopics);
+            }
+
+            @Override
+            public void failure(Exception e) {
+
+            }
+        });
     }
 }
