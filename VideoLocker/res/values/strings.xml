@@ -251,6 +251,10 @@
     <!-- Label shown when there is no course information available for a course -->
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
+    <!-- Discussion -->
+    <!-- Label shown for discussion topics page -->
+    <string name="discussion_topics_title">Discussion topics</string>
+    
     <!-- Assessment -->
     <!-- Label default unit on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>

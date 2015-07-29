@@ -196,6 +196,13 @@ public class Router {
 
     }
 
+    public void showDiscussions(Activity activity, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionActivity.class);
+        showDiscussionsIntent.putExtra(EXTRA_ENROLLMENT, courseData);
+        showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionsIntent);
+    }
+
     /**
      *  this method can be called either through UI [ user clicks LOGOUT button],
      *  or programmatically
