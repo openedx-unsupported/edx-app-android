@@ -32,7 +32,8 @@
                 <org.edx.mobile.view.custom.ETextView
                     android:text="@string/offline_text"
                     android:textColor="@color/edx_brand_secondary_base"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
@@ -40,8 +41,7 @@
                     android:layout_gravity="left|start|center_vertical"
                     tools:targetApi="17"/>
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    style="@style/separator_style"
                     android:background="@color/edx_brand_secondary_base"/>
             </LinearLayout>
 
