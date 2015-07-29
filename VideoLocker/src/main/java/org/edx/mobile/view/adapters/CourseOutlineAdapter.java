@@ -131,17 +131,8 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
 
         if ( !unit.isResponsiveUI() && unit.getType() != BlockType.VIDEO){
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            viewHolder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             viewHolder.rowType.setIcon(Iconify.IconValue.fa_laptop);
-            viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
-            viewHolder.rowSubtitle.setText(unit.getType().name());
-            if (unit.isGraded()) {
-                viewHolder.rowSubtitleIcon.setVisibility(View.VISIBLE);
-            } else {
-                viewHolder.rowSubtitleIcon.setVisibility(View.INVISIBLE);
-            }
-            checkAccessStatus(viewHolder, unit);
-
+            viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
         } else if (row.component instanceof VideoBlockModel){
             updateUIForVideo(position, convertView, viewHolder, row);
         } else {
@@ -176,9 +167,9 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
             @Override
             public void onResult(Boolean accessed) {
                 if( accessed ) {
-                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.grey_3));
+                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
                 } else {
-                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_3));
+                    viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
                 }
             }
             @Override
@@ -219,11 +210,11 @@ public abstract  class CourseOutlineAdapter extends CourseBaseAdapter  {
                 public void onResult(DownloadEntry.WatchedState result) {
                     DownloadEntry.WatchedState ws = result;
                     if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_3));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
                     } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                         viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.cyan_2));
                     } else {
-                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.grey_3));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
                     }
                 }
                 @Override
