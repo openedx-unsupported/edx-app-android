@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
@@ -102,7 +103,10 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     protected void modeChanged(){
-        LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+
+        if (isOnCourseOutline())
+            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+
         updateListUI();
     }
 
@@ -193,6 +197,15 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             }  catch(Exception ex) {
             logger.error(ex);
         }
+    }
+
+    protected boolean isOnCourseOutline(){
+        CourseComponent outlineComp = courseManager.getComponentById(
+                courseData.getCourse().getId(), courseComponentId);
+        BlockPath outlinePath = outlineComp.getPath();
+        int outlinePathSize = outlinePath.getPath().size();
+
+        return outlinePathSize <= 1;
     }
 
 }

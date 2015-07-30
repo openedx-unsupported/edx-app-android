@@ -46,7 +46,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                 setTitle( courseData.getCourse().getName() );
             else
                 setTitle( courseComponent.getName() );
-            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+
+            if (isOnCourseOutline())
+                LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
         }
     }
 
