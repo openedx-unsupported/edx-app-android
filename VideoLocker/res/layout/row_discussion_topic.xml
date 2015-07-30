@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/discussion_topic_name_text_view"
+        style="@style/regular_grey_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textDirection="locale"
+        android:textSize="16sp"
+        android:text="wqpoeifjq"/>
+
+</LinearLayout>

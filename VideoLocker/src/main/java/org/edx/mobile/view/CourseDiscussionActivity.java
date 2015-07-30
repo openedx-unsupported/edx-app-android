@@ -3,12 +3,21 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import roboguice.inject.InjectExtra;
+
 public class CourseDiscussionActivity extends BaseSingleFragmentActivity {
-    private Fragment fragment;
+
+    @Inject
+    private CourseDiscussionFragment discussionFragment;
+
+    @InjectExtra(Router.EXTRA_ENROLLMENT)
+    private EnrolledCoursesResponse courseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,16 +27,13 @@ public class CourseDiscussionActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        fragment = new CourseDiscussionFragment();
-        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
-                .getSerializableExtra(Router.EXTRA_ENROLLMENT);
         if (courseData != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
-            fragment.setArguments(bundle);
+            discussionFragment.setArguments(bundle);
         }
-        fragment.setRetainInstance(true);
-        return fragment;
+        discussionFragment.setRetainInstance(true);
+        return discussionFragment;
     }
 
     @Override

@@ -196,7 +196,7 @@ public class Router {
 
     }
 
-    public void showDiscussions(Activity activity, EnrolledCoursesResponse courseData) {
+    public void showDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
         Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionActivity.class);
         showDiscussionsIntent.putExtra(EXTRA_ENROLLMENT, courseData);
         showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -231,40 +231,4 @@ public class Router {
         activity.startActivity(handoutIntent);
     }
 
-    public void showDiscussionTopics(Activity activity, final EnrolledCoursesResponse courseData) {
-        // TODO: create a new DiscussionTopicsActivity and populate it with API result
-//        Intent discussionTopicsIntent = new Intent(activity, DiscussionTopicsActivity.class);
-//        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        activity.startActivity(discussionTopicsIntent);
-
-        // TODO: move this to DiscussionTopicsActivity's onCreate/onCreateView
-        new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
-            @Override
-            public void success(CourseTopics courseTopics) {
-                // TODO: show courseTopics in the list
-                System.out.println(courseTopics);
-
-                // Test get threads API - works
-//                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(), new APICallback<TopicThreads>() {
-                new DiscussionAPI().searchThreadList(courseData.getCourse().getId(), "critic", new APICallback<TopicThreads>() {
-                    @Override
-                    public void success(TopicThreads threads) {
-                        // TODO: show courseTopics in the list
-                        System.out.println(threads);
-
-                    }
-
-                    @Override
-                    public void failure(Exception e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void failure(Exception e) {
-
-            }
-        });
-    }
 }
