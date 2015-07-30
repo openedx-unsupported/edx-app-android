@@ -19,6 +19,15 @@ package com.qualcomm.qlearn.sdk.discussion;
 import java.util.List;
 
 public class CourseTopics {
-    List<DiscussionTopic> coursewareTopics;
-    List<DiscussionTopic> nonCoursewareTopics;
+    private List<DiscussionTopic> coursewareTopics;
+    private List<DiscussionTopic> nonCoursewareTopics;
+
+    public List<DiscussionTopic> getCoursewareTopics() {
+        return coursewareTopics;
+    }
+
+    public List<DiscussionTopic> getNonCoursewareTopics() {
+        return nonCoursewareTopics;
+    }
 }
+

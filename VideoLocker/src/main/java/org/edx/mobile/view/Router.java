@@ -10,6 +10,7 @@ import com.google.inject.Singleton;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
+import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -223,7 +224,7 @@ public class Router {
         activity.startActivity(handoutIntent);
     }
 
-    public void showDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
+    public void showDiscussionTopics(Activity activity, final EnrolledCoursesResponse courseData) {
         // TODO: create a new DiscussionTopicsActivity and populate it with API result
 //        Intent discussionTopicsIntent = new Intent(activity, DiscussionTopicsActivity.class);
 //        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -235,6 +236,22 @@ public class Router {
             public void success(CourseTopics courseTopics) {
                 // TODO: show courseTopics in the list
                 System.out.println(courseTopics);
+
+
+                // Test get threads API:
+                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(), new APICallback<TopicThreads>() {
+                    @Override
+                    public void success(TopicThreads threads) {
+                        // TODO: show courseTopics in the list
+                        System.out.println(threads);
+
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+
+                    }
+                });
             }
 
             @Override

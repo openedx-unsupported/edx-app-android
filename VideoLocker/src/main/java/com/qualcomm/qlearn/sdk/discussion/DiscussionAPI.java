@@ -51,7 +51,7 @@ public class DiscussionAPI {
         restBuilder.setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                request.addHeader("Accept", "application/json");
+                //request.addHeader("Accept", "application/json");
                 PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                 AuthResponse auth = pref.getCurrentAuth();
                 String token;
@@ -89,11 +89,11 @@ public class DiscussionAPI {
         });
     }
 
-    void getThreadList(String courseId, String topicId, final APICallback<List<DiscussionThread>> callback) {
+    public void getThreadList(String courseId, String topicId, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getThreadList(courseId, topicId, new Callback<List<DiscussionThread>>() {
+        discussionService.getThreadList(courseId, topicId, new Callback<TopicThreads>() {
             @Override
-            public void success(List<DiscussionThread> discussionThreads, Response response) {
+            public void success(TopicThreads discussionThreads, Response response) {
                 callback.success(discussionThreads);
             }
 
@@ -104,7 +104,7 @@ public class DiscussionAPI {
         });
     }
 
-    void getCommentList(String threadId, final APICallback<List<DiscussionComment>> callback) {
+    public void getCommentList(String threadId, final APICallback<List<DiscussionComment>> callback) {
         DiscussionService discussionService = createService();
         discussionService.getCommentList(threadId, new Callback<List<DiscussionComment>>() {
             @Override

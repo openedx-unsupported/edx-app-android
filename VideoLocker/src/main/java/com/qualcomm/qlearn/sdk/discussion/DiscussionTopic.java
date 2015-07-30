@@ -25,4 +25,12 @@ public class DiscussionTopic {
     String name;
     String threadListUrl;
     List<DiscussionTopic> children;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public List<DiscussionTopic> getChildren() {
+        return children;
+    }
 }

@@ -29,7 +29,7 @@ public interface DiscussionService {
     void getCourseTopics(@Path("courseId") String courseId, Callback<CourseTopics> callback);
 
     @GET("/api/discussion/v1/threads/")
-    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, Callback<List<DiscussionThread>> callback);
+    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, Callback<TopicThreads> callback);
 
     @GET("/api/discussion/v1/comments/")
     void getCommentList(@Query("thread_id") String threadId, Callback<List<DiscussionComment>> callback);

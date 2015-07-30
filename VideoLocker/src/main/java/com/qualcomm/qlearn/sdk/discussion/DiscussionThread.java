@@ -17,6 +17,7 @@
 package com.qualcomm.qlearn.sdk.discussion;
 
 import java.util.Date;
+import java.util.List;
 
 public class DiscussionThread {
     String identifier;
@@ -40,5 +41,5 @@ public class DiscussionThread {
     int voteCount = 0;
     Date createdAt;
     Date updatedAt;
-    String editableFields;
+    List<String> editableFields;
 }
