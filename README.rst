@@ -22,6 +22,10 @@ This project is meant to be built using Android Studio. It can also be built fro
 
 4. Click the **Run** button.
 
+*Note: Our build system requires Java 7 or later.  If you see an error
+mentioning "Unsupported major.minor version 51.0 " then you should install a
+newer Java SDK.*
+
 Configuration
 =============
 The edX mobile Android app is designed to connect to an Open edX instance. You
