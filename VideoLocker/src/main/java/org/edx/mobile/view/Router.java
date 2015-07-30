@@ -237,9 +237,9 @@ public class Router {
                 // TODO: show courseTopics in the list
                 System.out.println(courseTopics);
 
-
-                // Test get threads API:
-                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(), new APICallback<TopicThreads>() {
+                // Test get threads API - works
+//                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(), new APICallback<TopicThreads>() {
+                new DiscussionAPI().searchThreadList(courseData.getCourse().getId(), "critic", new APICallback<TopicThreads>() {
                     @Override
                     public void success(TopicThreads threads) {
                         // TODO: show courseTopics in the list

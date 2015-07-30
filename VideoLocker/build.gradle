@@ -223,7 +223,7 @@ android {
 
     buildTypes {
         debug {
-//            testCoverageEnabled true  // commented so local variables in API callback can be found
+            testCoverageEnabled true  // comment this so local variables in API callback can be found when debugging
             // disable crashlytics for debug build
             ext.enableCrashlytics = false
         }

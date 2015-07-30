@@ -31,6 +31,9 @@ public interface DiscussionService {
     @GET("/api/discussion/v1/threads/")
     void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, Callback<TopicThreads> callback);
 
+    @GET("/api/discussion/v1/threads/")
+    void searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, Callback<TopicThreads> callback);
+
     @GET("/api/discussion/v1/comments/")
     void getCommentList(@Query("thread_id") String threadId, Callback<List<DiscussionComment>> callback);
 }

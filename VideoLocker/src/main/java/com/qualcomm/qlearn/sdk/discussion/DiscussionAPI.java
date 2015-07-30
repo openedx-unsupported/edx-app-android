@@ -71,7 +71,7 @@ public class DiscussionAPI {
     }
 
     public void getTopicList(String courseId, final APICallback<CourseTopics> callback) {
-        System.out.println("courseId="+courseId);
+        System.out.println("courseId=" + courseId);
         DiscussionService discussionService = createService();
         discussionService.getCourseTopics(courseId, new Callback<CourseTopics>() {
             @Override
@@ -92,6 +92,21 @@ public class DiscussionAPI {
     public void getThreadList(String courseId, String topicId, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
         discussionService.getThreadList(courseId, topicId, new Callback<TopicThreads>() {
+            @Override
+            public void success(TopicThreads discussionThreads, Response response) {
+                callback.success(discussionThreads);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void searchThreadList(String courseId, String text, final APICallback<TopicThreads> callback) {
+        DiscussionService discussionService = createService();
+        discussionService.searchThreadList(courseId, text, new Callback<TopicThreads>() {
             @Override
             public void success(TopicThreads discussionThreads, Response response) {
                 callback.success(discussionThreads);
