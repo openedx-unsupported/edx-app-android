@@ -83,7 +83,8 @@ public class CourseDashboardFragment extends RoboFragment {
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //FIXME - hook to forum activities
+                if ( courseData != null )
+                    environment.getRouter().showDiscussionTopics(getActivity(), courseData);
             }
         });
 
