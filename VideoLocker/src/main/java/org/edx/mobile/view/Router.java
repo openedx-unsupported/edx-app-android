@@ -10,6 +10,7 @@ import com.google.inject.Singleton;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
+import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
 import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.event.LogoutEvent;
@@ -242,8 +243,21 @@ public class Router {
                 new DiscussionAPI().searchThreadList(courseData.getCourse().getId(), "critic", new APICallback<TopicThreads>() {
                     @Override
                     public void success(TopicThreads threads) {
-                        // TODO: show courseTopics in the list
                         System.out.println(threads);
+
+                        new DiscussionAPI().getCommentList(threads.getResults().get(0).getIdentifier(), new APICallback<ThreadComments>() {
+                            @Override
+                            public void success(ThreadComments comments) {
+                                // comments are actually responses
+                                System.out.println(comments);
+                            }
+
+                            @Override
+                            public void failure(Exception e) {
+
+                            }
+                        });
+
 
                     }
 

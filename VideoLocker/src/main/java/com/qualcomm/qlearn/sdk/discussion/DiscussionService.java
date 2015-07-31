@@ -16,8 +16,6 @@
 
 package com.qualcomm.qlearn.sdk.discussion;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -35,5 +33,5 @@ public interface DiscussionService {
     void searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, Callback<TopicThreads> callback);
 
     @GET("/api/discussion/v1/comments/")
-    void getCommentList(@Query("thread_id") String threadId, Callback<List<DiscussionComment>> callback);
+    void getCommentList(@Query("thread_id") String threadId, Callback<ThreadComments> callback);
 }

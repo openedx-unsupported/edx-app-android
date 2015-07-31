@@ -26,8 +26,6 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -119,12 +117,14 @@ public class DiscussionAPI {
         });
     }
 
-    public void getCommentList(String threadId, final APICallback<List<DiscussionComment>> callback) {
+    // get the responses, and all comments for each of which, of a thread
+    public void getCommentList(String threadId, final APICallback<ThreadComments> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getCommentList(threadId, new Callback<List<DiscussionComment>>() {
+        discussionService.getCommentList(threadId, new Callback<ThreadComments>() {
             @Override
-            public void success(List<DiscussionComment> discussionComments, Response response) {
-                callback.success(discussionComments);
+            public void success(ThreadComments threadComments, Response response) {
+                // each of threadComments's results has a children field which are comments for this response
+                callback.success(threadComments);
             }
 
             @Override

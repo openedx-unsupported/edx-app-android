@@ -38,6 +38,11 @@ public class DiscussionComment {
     String endorsedByLabel;
     Date endorsedAt;
     boolean abuseFlagged = false;
-    String editableFields;
+    List<String> editableFields;
     List<DiscussionComment> children;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
 }

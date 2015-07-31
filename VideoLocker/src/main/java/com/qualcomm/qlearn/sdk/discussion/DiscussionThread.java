@@ -16,11 +16,13 @@
 
 package com.qualcomm.qlearn.sdk.discussion;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
 public class DiscussionThread {
-    String identifier;
+    @SerializedName("id") String identifier;
     String type;
     String courseId;
     String topicId;
@@ -42,4 +44,8 @@ public class DiscussionThread {
     Date createdAt;
     Date updatedAt;
     List<String> editableFields;
+
+    public String getIdentifier() {
+        return identifier;
+    }
 }
