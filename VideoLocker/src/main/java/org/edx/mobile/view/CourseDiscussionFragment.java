@@ -29,9 +29,9 @@ import roboguice.inject.InjectView;
 public class CourseDiscussionFragment extends RoboFragment {
 
     @InjectView(R.id.discussion_topics_listview)
-    ListView discussion_topics_listview;
+    ListView discussionTopicsListView;
 
-    @InjectExtra(Router.EXTRA_ENROLLMENT)
+    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject
@@ -52,7 +52,7 @@ public class CourseDiscussionFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussion_topics_listview.setAdapter(discussionTopicsAdapter);
+        discussionTopicsListView.setAdapter(discussionTopicsAdapter);
 
         discussionAPI.getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
             @Override

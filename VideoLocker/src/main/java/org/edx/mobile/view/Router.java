@@ -198,7 +198,7 @@ public class Router {
 
     public void showDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
         Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionActivity.class);
-        showDiscussionsIntent.putExtra(EXTRA_ENROLLMENT, courseData);
+        showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(showDiscussionsIntent);
     }
