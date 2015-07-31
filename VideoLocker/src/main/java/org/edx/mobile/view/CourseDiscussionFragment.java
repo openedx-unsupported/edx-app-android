@@ -12,6 +12,7 @@ import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionTopicDepth;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -19,6 +20,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -59,7 +61,8 @@ public class CourseDiscussionFragment extends RoboFragment {
                 allTopics.addAll(courseTopics.getCoursewareTopics());
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
 
-                discussionTopicsAdapter.setItems(allTopics);
+                List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                discussionTopicsAdapter.setItems(allTopicsWithDepth);
             }
 
             @Override

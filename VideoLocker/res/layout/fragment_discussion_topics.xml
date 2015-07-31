@@ -3,16 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView" />
+    <!--TODO: Implement SearchView functionality-->
+    <!--<SearchView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/searchView" />-->
 
     <ListView
         android:id="@+id/discussion_topics_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ListView>
+        android:layout_height="match_parent"
+        android:background="@color/white" />
 
 </LinearLayout>
