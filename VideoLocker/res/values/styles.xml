@@ -35,6 +35,7 @@
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
         <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:actionBarTabStyle">@style/TabsStyle</item>
         <item name="buttonTextColor">@color/button_text</item>
     </style>
 
@@ -63,6 +64,12 @@
            parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- ActionBar tabs styles -->
+    <style name="TabsStyle" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
+        <!-- tab indicator -->
+        <item name="android:background">@drawable/tab_indicator</item>
     </style>
 
     <style name="offline_bar_style">

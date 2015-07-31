@@ -523,7 +523,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
             try {
                 View view = progressMenuItem.getActionView();
                 if (view != null) {
-                    view.setBackgroundResource(R.color.edx_brand_primary_accent);
+                    view.setBackgroundResource(R.color.edx_brand_primary_base);
                     totalProgress = (ProgressWheel) view
                             .findViewById(R.id.progress_wheel);
                     if (totalProgress != null) {
