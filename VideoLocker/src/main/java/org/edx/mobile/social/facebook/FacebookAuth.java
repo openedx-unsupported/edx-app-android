@@ -38,7 +38,6 @@ public class FacebookAuth extends ISocialImpl {
     @Override
     public void login() {
         Session session = Session.getActiveSession();
-        Activity activity = getActivity();
         if ( activity == null )
             return;
         if (session != null && !session.isOpened() && !session.isClosed()) {
@@ -57,6 +56,7 @@ public class FacebookAuth extends ISocialImpl {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        super.onActivityCreated(activity, savedInstanceState);
         uiHelper = IUiLifecycleHelper.Factory.getInstance(activity, statusCallback);
         uiHelper.onCreate(savedInstanceState);
 
@@ -65,16 +65,19 @@ public class FacebookAuth extends ISocialImpl {
 
     @Override
     public void onActivityDestroyed(Activity activity) {
+        super.onActivityDestroyed(activity);
         uiHelper.onDestroy();
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
+        super.onActivityPaused(activity);
         uiHelper.onPause();
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
+        super.onActivityResumed(activity);
         // For scenarios where the main activity is launched and user
         // session is not null, the session state change notification
         // may not be triggered. Trigger it if it's open/closed.
@@ -88,15 +91,8 @@ public class FacebookAuth extends ISocialImpl {
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        super.onActivitySaveInstanceState(activity, outState);
         uiHelper.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onActivityStarted(Activity activity) {
-    }
-
-    @Override
-    public void onActivityStopped(Activity activity) {
     }
 
     private void onSessionStateChange(Session session, SessionState state,
@@ -115,7 +111,6 @@ public class FacebookAuth extends ISocialImpl {
 
     private void keyHash() {
         try {
-            Activity activity = getActivity();
             if ( activity == null )
                 return;
             PackageInfo info = activity
@@ -144,7 +139,6 @@ public class FacebookAuth extends ISocialImpl {
                 //clear your preferences if saved
             }
         } else {
-            Activity activity = getActivity();
             if ( activity == null )
                 return;
             session = new Session(activity);
