@@ -45,4 +45,11 @@ public class DiscussionComment {
         return identifier;
     }
 
+    public String getThreadId() {
+        return threadId;
+    }
+    public List<DiscussionComment> getChildren() {
+        return children;
+    }
+
 }

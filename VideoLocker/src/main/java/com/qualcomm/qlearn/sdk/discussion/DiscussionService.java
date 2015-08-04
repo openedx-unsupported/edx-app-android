@@ -17,9 +17,26 @@
 package com.qualcomm.qlearn.sdk.discussion;
 
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.PATCH;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+
+class FlagBody {
+    boolean abuseFlagged;
+}
+
+class VoteBody {
+    boolean voted;
+}
+
+class FollowBody {
+    boolean following;
+}
+
+
 
 public interface DiscussionService {
 
@@ -34,4 +51,28 @@ public interface DiscussionService {
 
     @GET("/api/discussion/v1/comments/")
     void getCommentList(@Query("thread_id") String threadId, Callback<ThreadComments> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void flagThread(@Path("threadId") String threadId, @Body FlagBody flagBody, Callback<DiscussionThread> callback);
+
+    @PATCH("/api/discussion/v1/comments/{commentId}/")
+    void flagComment(@Path("commentId") String commentId, @Body FlagBody flagBody, Callback<DiscussionComment> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void voteThread(@Path("threadId") String threadId, @Body VoteBody voteBody, Callback<DiscussionThread> callback);
+
+    @PATCH("/api/discussion/v1/comments/{commentId}/")
+    void voteComment(@Path("commentId") String commentId, @Body VoteBody voteBody, Callback<DiscussionComment> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void followThread(@Path("threadId") String threadId, @Body FollowBody followBody, Callback<DiscussionThread> callback);
+
+    @POST("/api/discussion/v1/threads/")
+    void createThread(@Body ThreadBody threadBody, Callback<DiscussionThread> callback);
+
+    @POST("/api/discussion/v1/comments/")
+    void createResponse(@Body ResponseBody responseBody, Callback<DiscussionComment> callback);
+
+    @POST("/api/discussion/v1/comments/")
+    void createComment(@Body CommentBody commentBody, Callback<DiscussionComment> callback);
 }

@@ -48,4 +48,5 @@ public class DiscussionThread {
     public String getIdentifier() {
         return identifier;
     }
+
 }
