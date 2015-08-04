@@ -38,9 +38,8 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.LayoutAnimationControllerUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -446,16 +445,12 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
             logger.warn("Null view cannot be animated!");
             return;
         }
-        LayoutAnimationControllerUtil messageController;
-        messageController = new LayoutAnimationControllerUtil(view);
-        messageController.showMessageBar();
+        ViewAnimationUtil.showMessageBar(view);
     }
 
     public void stopAnimation(View view){
         if(view!=null){
-            LayoutAnimationControllerUtil messageController;
-            messageController = new LayoutAnimationControllerUtil(view);
-            messageController.stopAnimation();
+            ViewAnimationUtil.stopAnimation(view);
         }
     }
 
@@ -756,7 +751,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 if (message != null) {
                     errorMessage.setText(message);
                 }
-                UiUtil.animateLayouts(error_layout);
+                ViewAnimationUtil.showMessageBar(error_layout);
                 return true;
             }else{
                 logger.warn("Error Layout not available, so couldn't show flying message");

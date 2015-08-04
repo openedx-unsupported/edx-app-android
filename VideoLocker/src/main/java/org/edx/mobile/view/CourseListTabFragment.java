@@ -37,8 +37,8 @@ import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
@@ -208,14 +208,14 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
     }
 
     public void hideOfflinePanel() {
-        UiUtil.stopAnimation(offlinePanel);
+        ViewAnimationUtil.stopAnimation(offlinePanel);
         if(offlinePanel.getVisibility()==View.VISIBLE){
             offlinePanel.setVisibility(View.GONE);
         }
     }
 
     public void showOfflinePanel() {
-        UiUtil.animateLayouts(offlinePanel);
+        ViewAnimationUtil.showMessageBar(offlinePanel);
     }
 
     @Override

@@ -19,24 +19,6 @@ public class UiUtil {
     private static final String TAG = UiUtil.class.getCanonicalName();
     private static final Logger logger = new Logger(UiUtil.class);
 
-    public static void animateLayouts(View view){
-        if (view == null) {
-            new Logger(UiUtil.class.getSimpleName()).error(new Exception("null view cannot be animated!"));
-            return;
-        }
-        LayoutAnimationControllerUtil messageController;
-        messageController = new LayoutAnimationControllerUtil(view);
-        messageController.showMessageBar();
-    }
-
-    public static void stopAnimation(View view){
-        if (view != null) {
-            LayoutAnimationControllerUtil messageController;
-            messageController = new LayoutAnimationControllerUtil(view);
-            messageController.stopAnimation();
-        }
-    }
-
     public static void showMessage(View root, String message){
         if (root == null) {
             logger.warn("cannot show message, no views available");
@@ -45,7 +27,7 @@ public class UiUtil {
         TextView downloadMessageTv = (TextView) root.findViewById(R.id.downloadMessage);
         if (downloadMessageTv != null) {
             downloadMessageTv.setText(message);
-            animateLayouts(downloadMessageTv);
+            ViewAnimationUtil.showMessageBar(downloadMessageTv);
         } else {
             logger.warn("view downloadMessage not found");
         }
@@ -60,7 +42,7 @@ public class UiUtil {
             return;
         }
         try {
-            animateLayouts(root.findViewById(R.id.offline_access_panel));
+            ViewAnimationUtil.showMessageBar(root.findViewById(R.id.offline_access_panel));
         } catch (Exception e) {
             logger.error(e);
         }
