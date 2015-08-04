@@ -87,9 +87,9 @@ public class DiscussionAPI {
         });
     }
 
-    public void getThreadList(String courseId, String topicId, final APICallback<TopicThreads> callback) {
+    public void getThreadList(String courseId, String topicId, String view, String orderBy, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getThreadList(courseId, topicId, new Callback<TopicThreads>() {
+        discussionService.getThreadList(courseId, topicId, view, orderBy, new Callback<TopicThreads>() {
             @Override
             public void success(TopicThreads discussionThreads, Response response) {
                 callback.success(discussionThreads);

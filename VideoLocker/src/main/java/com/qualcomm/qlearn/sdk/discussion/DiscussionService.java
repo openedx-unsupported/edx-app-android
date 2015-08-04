@@ -44,7 +44,7 @@ public interface DiscussionService {
     void getCourseTopics(@Path("courseId") String courseId, Callback<CourseTopics> callback);
 
     @GET("/api/discussion/v1/threads/")
-    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, Callback<TopicThreads> callback);
+    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, @Query("view") String view, @Query("order_by") String orderBy, Callback<TopicThreads> callback);
 
     @GET("/api/discussion/v1/threads/")
     void searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, Callback<TopicThreads> callback);

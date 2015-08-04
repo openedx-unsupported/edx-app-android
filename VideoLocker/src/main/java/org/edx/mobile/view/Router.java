@@ -8,13 +8,9 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CommentBody;
 import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.ResponseBody;
-import com.qualcomm.qlearn.sdk.discussion.ThreadBody;
+import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -234,59 +230,28 @@ public class Router {
 //        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //        activity.startActivity(discussionTopicsIntent);
 
+
         new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
             @Override
             public void success(CourseTopics courseTopics) {
+                System.out.println(courseTopics);
 
-                ThreadBody threadBody = new ThreadBody();
-                threadBody.setCourseId(courseData.getCourse().getId());
-                threadBody.setTitle("Hello from Android3");
-                threadBody.setRawBody("This is a create thread test3 from Android");
-                threadBody.setTopicId(courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier());
-                threadBody.setType("discussion");
+                // "unread", "last_activity_at",
+                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(),
+                        "", "", new APICallback<TopicThreads>() {
 
-                new DiscussionAPI().createThread(threadBody, new APICallback<DiscussionThread>() {
                     @Override
-                    public void success(DiscussionThread thread) {
-                        ResponseBody responseBody = new ResponseBody();
-                        responseBody.setRawBody("new response 2 from Android");
-                        responseBody.setThreadId(thread.getIdentifier());
-                        new DiscussionAPI().createResponse(responseBody, new APICallback<DiscussionComment>() {
-                            @Override
-                            public void success(DiscussionComment response) {
-                                CommentBody commentBody = new CommentBody();
-                                commentBody.setRawBody("new comment from Android");
-                                commentBody.setThreadId(response.getThreadId());
-                                commentBody.setParentId(response.getIdentifier());
-                                new DiscussionAPI().createComment(commentBody, new APICallback<DiscussionComment>() {
-                                    @Override
-                                    public void success(DiscussionComment thread) {
-                                    }
-
-                                    @Override
-                                    public void failure(Exception e) {
-                                    }
-                                });
-
-
-                            }
-
-                            @Override
-                            public void failure(Exception e) {
-                            }
-                        });
-
+                    public void success(TopicThreads threads) {
+                        System.out.println(threads);
                     }
-
                     @Override
-                    public void failure(Exception e) {
+                    public void failure(Exception e){
                     }
                 });
-
             }
 
             @Override
-            public void failure(Exception e) {
+            public void failure(Exception e){
             }
         });
     }
