@@ -7,10 +7,6 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -230,29 +226,34 @@ public class Router {
 //        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //        activity.startActivity(discussionTopicsIntent);
 
+        Intent addCommentIntent = new Intent(activity, DiscussionAddCommentActivity.class);
+        addCommentIntent.putExtra(DiscussionAddCommentFragment.ENROLLMENT, courseData);
+        addCommentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(addCommentIntent);
 
-        new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
-            @Override
-            public void success(CourseTopics courseTopics) {
-                System.out.println(courseTopics);
 
-                // "unread", "last_activity_at",
-                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(),
-                        "", "", new APICallback<TopicThreads>() {
-
-                    @Override
-                    public void success(TopicThreads threads) {
-                        System.out.println(threads);
-                    }
-                    @Override
-                    public void failure(Exception e){
-                    }
-                });
-            }
-
-            @Override
-            public void failure(Exception e){
-            }
-        });
+//        new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
+//            @Override
+//            public void success(CourseTopics courseTopics) {
+//                System.out.println(courseTopics);
+//
+//                // "unread", "last_activity_at",
+//                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(),
+//                        "", "", new APICallback<TopicThreads>() {
+//
+//                    @Override
+//                    public void success(TopicThreads threads) {
+//                        System.out.println(threads);
+//                    }
+//                    @Override
+//                    public void failure(Exception e){
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void failure(Exception e){
+//            }
+//        });
     }
 }

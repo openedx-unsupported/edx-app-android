@@ -201,6 +201,12 @@
             android:name="org.edx.mobile.view.CreateGroupActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.edx.mobile.view.DiscussionAddCommentActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name="org.edx.mobile.view.SocialFriendPickerActivity"
             android:label="@string/app_name"
