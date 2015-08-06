@@ -13,7 +13,6 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Handouts activity should not contain the drawer(Navigation Fragment).
         blockDrawerFromOpening();
     }
 
@@ -36,13 +35,5 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
         }
 
         return fragment;
-    }
-
-    @Override
-    protected void onOffline() {
-        super.onOffline();
-//        if(fragment!=null && fragment instanceof CourseHandoutFragment){
-//            ((CourseHandoutFragment) fragment).showHandoutsOffline();
-//        }
     }
 }

@@ -34,6 +34,17 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
+enum DiscussionPostsFilter {
+    Unread,
+    Unanswered
+}
+
+enum DiscussionPostsSort {
+    LastActivityAt,
+    VoteCount
+}
+
+
 public class DiscussionAPI {
 
     @Inject
@@ -87,9 +98,11 @@ public class DiscussionAPI {
         });
     }
 
-    public void getThreadList(String courseId, String topicId, String view, String orderBy, final APICallback<TopicThreads> callback) {
+    public void getThreadList(String courseId, String topicId, DiscussionPostsFilter filter, DiscussionPostsSort orderBy, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getThreadList(courseId, topicId, view, orderBy, new Callback<TopicThreads>() {
+        String view = (filter == DiscussionPostsFilter.Unread ? "unread" : "unanswered");
+        String order = (orderBy == DiscussionPostsSort.LastActivityAt ? "last_activity_at" : "vote_count");
+        discussionService.getThreadList(courseId, topicId, view, order, new Callback<TopicThreads>() {
             @Override
             public void success(TopicThreads discussionThreads, Response response) {
                 callback.success(discussionThreads);
@@ -136,8 +149,7 @@ public class DiscussionAPI {
 
     public void flagThread(DiscussionThread thread, Boolean flagged, final APICallback<DiscussionThread> callback) {
         DiscussionService discussionService = createService();
-        FlagBody flagBody = new FlagBody();
-        flagBody.abuseFlagged = flagged;
+        FlagBody flagBody = new FlagBody(flagged);
         discussionService.flagThread(thread.getIdentifier(), flagBody, new Callback<DiscussionThread>() {
             @Override
             public void success(DiscussionThread thread, Response response) {
@@ -153,8 +165,7 @@ public class DiscussionAPI {
 
     public void flagComment(DiscussionComment comment, Boolean flagged, final APICallback<DiscussionComment> callback) {
         DiscussionService discussionService = createService();
-        FlagBody flagBody = new FlagBody();
-        flagBody.abuseFlagged = flagged;
+        FlagBody flagBody = new FlagBody(flagged);
         discussionService.flagComment(comment.getIdentifier(), flagBody, new Callback<DiscussionComment>() {
             @Override
             public void success(DiscussionComment comment, Response response) {
@@ -170,8 +181,7 @@ public class DiscussionAPI {
 
     public void voteThread(DiscussionThread thread, Boolean voted, final APICallback<DiscussionThread> callback) {
         DiscussionService discussionService = createService();
-        VoteBody voteBody = new VoteBody();
-        voteBody.voted = voted;
+        VoteBody voteBody = new VoteBody(voted);
         discussionService.voteThread(thread.getIdentifier(), voteBody, new Callback<DiscussionThread>() {
             @Override
             public void success(DiscussionThread thread, Response response) {
@@ -187,8 +197,7 @@ public class DiscussionAPI {
 
     public void voteComment(DiscussionComment comment, Boolean voted, final APICallback<DiscussionComment> callback) {
         DiscussionService discussionService = createService();
-        VoteBody voteBody = new VoteBody();
-        voteBody.voted = voted;
+        VoteBody voteBody = new VoteBody(voted);
         discussionService.voteComment(comment.getIdentifier(), voteBody, new Callback<DiscussionComment>() {
             @Override
             public void success(DiscussionComment comment, Response response) {
@@ -204,8 +213,7 @@ public class DiscussionAPI {
 
     public void followThread(DiscussionThread thread, Boolean following, final APICallback<DiscussionThread> callback) {
         DiscussionService discussionService = createService();
-        FollowBody followBody = new FollowBody();
-        followBody.following = following;
+        FollowBody followBody = new FollowBody(following);
         discussionService.followThread(thread.getIdentifier(), followBody, new Callback<DiscussionThread>() {
             @Override
             public void success(DiscussionThread thread, Response response) {

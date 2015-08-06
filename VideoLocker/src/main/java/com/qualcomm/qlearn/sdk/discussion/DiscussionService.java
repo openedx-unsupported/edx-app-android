@@ -24,16 +24,28 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-class FlagBody {
-    boolean abuseFlagged;
+final class FlagBody {
+    private boolean abuseFlagged;
+
+    public FlagBody(boolean abuseFlagged) {
+        this.abuseFlagged = abuseFlagged;
+    }
 }
 
-class VoteBody {
-    boolean voted;
+final class VoteBody {
+    private boolean voted;
+
+    public VoteBody(boolean voted) {
+        this.voted = voted;
+    }
 }
 
-class FollowBody {
-    boolean following;
+final class FollowBody {
+    private boolean following;
+
+    public FollowBody(boolean following) {
+        this.following = following;
+    }
 }
 
 

@@ -254,7 +254,7 @@
     <!-- Discussion -->
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
-    <!-- Back button title in adding a new comment -->
+    <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
     <!-- Add comment button title in adding a new comment -->
     <string name="discussion_add_comment">Add comment</string>

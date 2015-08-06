@@ -21,7 +21,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.util.NetworkUtil;
 
 import roboguice.fragment.RoboFragment;
 
@@ -81,6 +80,8 @@ public class DiscussionAddCommentFragment extends RoboFragment {
                 buttonAddComment.setEnabled(false);
                 final String newComment = editTextNewComment.getText().toString();
 
+                // This is actually API test code - after the other screens are done (topics, threads, responses, comments) only one API call (createComment) needs to happen here
+                // TODO: move the first 3 API calls elsewhere and pass the response object here
                 new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
                     @Override
                     public void success(CourseTopics courseTopics) {
@@ -136,15 +137,6 @@ public class DiscussionAddCommentFragment extends RoboFragment {
         });
 
         return fragment;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (!(NetworkUtil.isConnected(getActivity()))) {
-        }
-
     }
 
 }
