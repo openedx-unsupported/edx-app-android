@@ -279,7 +279,7 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:visibility="gone"
-                    android:background="@drawable/rectangle_with_bottom_border"
+                    android:background="@drawable/rectangle_with_bottom_border_selector"
                     android:padding="5dp">
 
                     <LinearLayout

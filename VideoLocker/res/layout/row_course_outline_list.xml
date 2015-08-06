@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:paddingTop="4dp"
-    android:paddingBottom="4dp"
     android:orientation="vertical"
     >
   <LinearLayout
@@ -150,6 +149,5 @@
         android:id="@+id/row_whole_separator"
         android:layout_width="match_parent"
         android:background="@color/grey_2"
-        android:visibility="gone"
         android:layout_height="1dp"/>
 </LinearLayout>
