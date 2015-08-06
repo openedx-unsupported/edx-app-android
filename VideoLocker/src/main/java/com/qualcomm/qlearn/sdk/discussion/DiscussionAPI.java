@@ -36,14 +36,37 @@ import retrofit.converter.GsonConverter;
 
 enum DiscussionPostsFilter {
     Unread,
-    Unanswered
+    Unanswered,
+    All
 }
 
 enum DiscussionPostsSort {
     LastActivityAt,
-    VoteCount
+    VoteCount,
+    None
 }
 
+/*
+// TODO: fix the issue - try to simplify the callback implementation
+class RetrofitAdaptor<T> extends Callback {
+    final APICallback<T> apiCallback;
+    public RetrofitAdaptor(APICallback<T> apiCallback) {
+        this.apiCallback = apiCallback;
+    }
+
+    @Override
+    void success(T t, Response response) {
+        apiCallback.success(t);
+    }
+
+    @Override
+    public void failure(RetrofitError error) {
+        if (apiCallback != null)
+            apiCallback.failure(error);
+    }
+
+}
+*/
 
 public class DiscussionAPI {
 
@@ -100,8 +123,17 @@ public class DiscussionAPI {
 
     public void getThreadList(String courseId, String topicId, DiscussionPostsFilter filter, DiscussionPostsSort orderBy, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
-        String view = (filter == DiscussionPostsFilter.Unread ? "unread" : "unanswered");
-        String order = (orderBy == DiscussionPostsSort.LastActivityAt ? "last_activity_at" : "vote_count");
+
+        String view;
+        if (filter == DiscussionPostsFilter.Unread) view = "unread";
+        else if (filter == DiscussionPostsFilter.Unanswered) view = "unanswered";
+        else view = "";
+
+        String order;
+        if (orderBy == DiscussionPostsSort.LastActivityAt) order = "last_activity_at";
+        else if (orderBy == DiscussionPostsSort.VoteCount) order = "vote_count";
+        else order = "";
+
         discussionService.getThreadList(courseId, topicId, view, order, new Callback<TopicThreads>() {
             @Override
             public void success(TopicThreads discussionThreads, Response response) {
