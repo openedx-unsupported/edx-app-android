@@ -26,8 +26,6 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -35,6 +33,40 @@ import retrofit.RestAdapter.Builder;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+
+enum DiscussionPostsFilter {
+    Unread,
+    Unanswered,
+    All
+}
+
+enum DiscussionPostsSort {
+    LastActivityAt,
+    VoteCount,
+    None
+}
+
+/*
+// TODO: fix the issue - try to simplify the callback implementation
+class RetrofitAdaptor<T> extends Callback {
+    final APICallback<T> apiCallback;
+    public RetrofitAdaptor(APICallback<T> apiCallback) {
+        this.apiCallback = apiCallback;
+    }
+
+    @Override
+    void success(T t, Response response) {
+        apiCallback.success(t);
+    }
+
+    @Override
+    public void failure(RetrofitError error) {
+        if (apiCallback != null)
+            apiCallback.failure(error);
+    }
+
+}
+*/
 
 public class DiscussionAPI {
 
@@ -89,9 +121,20 @@ public class DiscussionAPI {
         });
     }
 
-    public void getThreadList(String courseId, String topicId, final APICallback<TopicThreads> callback) {
+    public void getThreadList(String courseId, String topicId, DiscussionPostsFilter filter, DiscussionPostsSort orderBy, final APICallback<TopicThreads> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getThreadList(courseId, topicId, new Callback<TopicThreads>() {
+
+        String view;
+        if (filter == DiscussionPostsFilter.Unread) view = "unread";
+        else if (filter == DiscussionPostsFilter.Unanswered) view = "unanswered";
+        else view = "";
+
+        String order;
+        if (orderBy == DiscussionPostsSort.LastActivityAt) order = "last_activity_at";
+        else if (orderBy == DiscussionPostsSort.VoteCount) order = "vote_count";
+        else order = "";
+
+        discussionService.getThreadList(courseId, topicId, view, order, new Callback<TopicThreads>() {
             @Override
             public void success(TopicThreads discussionThreads, Response response) {
                 callback.success(discussionThreads);
@@ -119,12 +162,14 @@ public class DiscussionAPI {
         });
     }
 
-    public void getCommentList(String threadId, final APICallback<List<DiscussionComment>> callback) {
+    // get the responses, and all comments for each of which, of a thread
+    public void getCommentList(String threadId, final APICallback<ThreadComments> callback) {
         DiscussionService discussionService = createService();
-        discussionService.getCommentList(threadId, new Callback<List<DiscussionComment>>() {
+        discussionService.getCommentList(threadId, new Callback<ThreadComments>() {
             @Override
-            public void success(List<DiscussionComment> discussionComments, Response response) {
-                callback.success(discussionComments);
+            public void success(ThreadComments threadComments, Response response) {
+                // each of threadComments's results has a children field which are comments for this response
+                callback.success(threadComments);
             }
 
             @Override
@@ -133,4 +178,131 @@ public class DiscussionAPI {
             }
         });
     }
+
+    public void flagThread(DiscussionThread thread, Boolean flagged, final APICallback<DiscussionThread> callback) {
+        DiscussionService discussionService = createService();
+        FlagBody flagBody = new FlagBody(flagged);
+        discussionService.flagThread(thread.getIdentifier(), flagBody, new Callback<DiscussionThread>() {
+            @Override
+            public void success(DiscussionThread thread, Response response) {
+                callback.success(thread);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void flagComment(DiscussionComment comment, Boolean flagged, final APICallback<DiscussionComment> callback) {
+        DiscussionService discussionService = createService();
+        FlagBody flagBody = new FlagBody(flagged);
+        discussionService.flagComment(comment.getIdentifier(), flagBody, new Callback<DiscussionComment>() {
+            @Override
+            public void success(DiscussionComment comment, Response response) {
+                callback.success(comment);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void voteThread(DiscussionThread thread, Boolean voted, final APICallback<DiscussionThread> callback) {
+        DiscussionService discussionService = createService();
+        VoteBody voteBody = new VoteBody(voted);
+        discussionService.voteThread(thread.getIdentifier(), voteBody, new Callback<DiscussionThread>() {
+            @Override
+            public void success(DiscussionThread thread, Response response) {
+                callback.success(thread);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void voteComment(DiscussionComment comment, Boolean voted, final APICallback<DiscussionComment> callback) {
+        DiscussionService discussionService = createService();
+        VoteBody voteBody = new VoteBody(voted);
+        discussionService.voteComment(comment.getIdentifier(), voteBody, new Callback<DiscussionComment>() {
+            @Override
+            public void success(DiscussionComment comment, Response response) {
+                callback.success(comment);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void followThread(DiscussionThread thread, Boolean following, final APICallback<DiscussionThread> callback) {
+        DiscussionService discussionService = createService();
+        FollowBody followBody = new FollowBody(following);
+        discussionService.followThread(thread.getIdentifier(), followBody, new Callback<DiscussionThread>() {
+            @Override
+            public void success(DiscussionThread thread, Response response) {
+                callback.success(thread);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+
+    public void createThread(ThreadBody threadBody, final APICallback<DiscussionThread> callback) {
+        DiscussionService discussionService = createService();
+        discussionService.createThread(threadBody, new Callback<DiscussionThread>() {
+            @Override
+            public void success(DiscussionThread thread, Response response) {
+                callback.success(thread);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void createResponse(ResponseBody responseBody, final APICallback<DiscussionComment> callback) {
+        DiscussionService discussionService = createService();
+        discussionService.createResponse(responseBody, new Callback<DiscussionComment>() {
+            @Override
+            public void success(DiscussionComment comment, Response response) {
+                callback.success(comment);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
+    public void createComment(CommentBody commentBody, final APICallback<DiscussionComment> callback) {
+        DiscussionService discussionService = createService();
+        discussionService.createComment(commentBody, new Callback<DiscussionComment>() {
+            @Override
+            public void success(DiscussionComment comment, Response response) {
+                callback.success(comment);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                callback.failure(error);
+            }
+        });
+    }
+
 }

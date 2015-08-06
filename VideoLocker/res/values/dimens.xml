@@ -43,4 +43,7 @@
     <dimen name="signup_social_title_margin">5dp</dimen>
     <dimen name="signup_social_title_margin_large">8dp</dimen>
     <dimen name="signup_social_title_margin_bottom">1dp</dimen>
+
+    <dimen name="edx_box_radius">5dp</dimen>
+
 </resources>

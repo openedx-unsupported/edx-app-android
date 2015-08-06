@@ -251,6 +251,16 @@
     <!-- Label shown when there is no course information available for a course -->
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
+    <!-- Discussion -->
+    <!-- Title in adding a new comment -->
+    <string name="discussion_comment">Comment</string>
+    <!-- Title in showing list of comments -->
+    <string name="discussion_comments">Comments</string>
+    <!-- Add comment button title in adding a new comment -->
+    <string name="discussion_add_comment">Add comment</string>
+    <!-- Add your comment placeholder in adding a new comment -->
+    <string name="discussion_add_your_comment">Add your comment</string>
+
     <!-- Assessment -->
     <!-- Label default unit on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>
