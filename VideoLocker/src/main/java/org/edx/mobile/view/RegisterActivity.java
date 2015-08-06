@@ -38,9 +38,9 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -513,7 +513,7 @@ public class RegisterActivity extends BaseFragmentActivity
         } else {
             errorMessage.setText(getString(R.string.login_failed));
         }
-        UiUtil.animateLayouts(error_layout);
+        ViewAnimationUtil.showMessageBar(error_layout);
     }
 
     ///////section related to social login ///////////////
