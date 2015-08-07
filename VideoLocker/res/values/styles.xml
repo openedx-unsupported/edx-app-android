@@ -161,4 +161,14 @@
         <item name="android:paddingRight">4dip</item>
     </style>
 
+    <style name="search_bar_style">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_height">30dp</item>
+    </style>
+
+    <style name="discussion_topics_search_bar_style" parent="search_bar_style">
+        <item name="android:queryHint">@string/topics_search</item>
+    </style>
+
 </resources>

@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
@@ -26,7 +28,10 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionFragment extends RoboFragment {
+public class CourseDiscussionTopicsFragment extends RoboFragment {
+
+    @InjectView(R.id.discussion_topics_searchview)
+    SearchView discussionTopicsSearchView;
 
     @InjectView(R.id.discussion_topics_listview)
     ListView discussionTopicsListView;
@@ -40,7 +45,10 @@ public class CourseDiscussionFragment extends RoboFragment {
     @Inject
     DiscussionTopicsAdapter discussionTopicsAdapter;
 
-    private static final Logger logger = new Logger(CourseDiscussionFragment.class.getName());
+    @Inject
+    Router router;
+
+    private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
     @Nullable
     @Override
@@ -57,7 +65,7 @@ public class CourseDiscussionFragment extends RoboFragment {
         discussionAPI.getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
             @Override
             public void success(CourseTopics courseTopics) {
-                ArrayList<DiscussionTopic> allTopics = new ArrayList<DiscussionTopic>();
+                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getCoursewareTopics());
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
 
@@ -71,6 +79,33 @@ public class CourseDiscussionFragment extends RoboFragment {
                 // TODO: Handle error gracefully
             }
         });
+
+        discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        discussionTopicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DiscussionTopicDepth discussionTopicDepth = discussionTopicsAdapter.getItem(position);
+                DiscussionTopic discussionTopic = discussionTopicDepth.getDiscussionTopic();
+                router.showCourseDiscussionPostsForDiscussionTopic(getActivity(), discussionTopic, courseData);
+            }
+        });
+
+        // Hide the keyboard and take the focus away from the search view
+        discussionTopicsSearchView.requestFocus();
+        discussionTopicsSearchView.clearFocus();
+
     }
 
 }

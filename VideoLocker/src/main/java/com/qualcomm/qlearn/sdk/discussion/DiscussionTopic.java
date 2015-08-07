@@ -18,10 +18,11 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscussionTopic {
+public class DiscussionTopic implements Serializable {
     @SerializedName("id") String identifier = "";
     String name = "";
     String threadListUrl = "";

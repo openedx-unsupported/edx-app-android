@@ -7,10 +7,7 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -37,6 +34,8 @@ public class Router {
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
     public static final String EXTRA_COURSE_DATA = "course_data";
+    public static final String EXTRA_SEARCH_QUERY = "search_query";
+    public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -196,11 +195,27 @@ public class Router {
 
     }
 
-    public void showDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
-        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionActivity.class);
+    public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionTopicsActivity.class);
         showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(showDiscussionsIntent);
+    }
+
+    public void showCourseDiscussionPostsForSearchQuery(Activity activity, String query, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
+        showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionPostsIntent.putExtra(EXTRA_SEARCH_QUERY, query);
+        showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionPostsIntent);
+    }
+
+    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, DiscussionTopic topic, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
+        showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
+        showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionPostsIntent);
     }
 
     /**

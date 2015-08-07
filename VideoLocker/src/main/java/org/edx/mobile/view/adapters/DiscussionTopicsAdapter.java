@@ -3,19 +3,13 @@ package org.edx.mobile.view.adapters;
 import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopicDepth;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.model.api.CourseEntry;
-import org.edx.mobile.view.custom.SocialFacePileView;
 
 public class DiscussionTopicsAdapter extends BaseListAdapter<DiscussionTopicDepth> {
 
@@ -46,9 +40,7 @@ public class DiscussionTopicsAdapter extends BaseListAdapter<DiscussionTopicDept
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO: Launch thread activity
-    }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
 
     private static class ViewHolder extends BaseViewHolder {
         TextView discussionTopicNameTextView;

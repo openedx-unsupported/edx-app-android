@@ -11,10 +11,10 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import roboguice.inject.InjectExtra;
 
-public class CourseDiscussionActivity extends BaseSingleFragmentActivity {
+public class CourseDiscussionTopicsActivity extends BaseSingleFragmentActivity {
 
     @Inject
-    private CourseDiscussionFragment discussionFragment;
+    private CourseDiscussionTopicsFragment discussionFragment;
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
