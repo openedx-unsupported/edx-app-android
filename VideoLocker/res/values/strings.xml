@@ -252,6 +252,13 @@
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
     <!-- Discussion -->
+    <!-- Label shown for discussion topics page -->
+    <string name="discussion_topics_title">Discussion topics</string>
+    <!--Hint displayed in search view for discussion posts-->
+    <string name="topics_search">Search all posts</string>
+    <!--Discussion posts title after search query-->
+    <string name="discussion_posts_search_title">Search results</string>
+
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
     <!-- Title in showing list of comments -->

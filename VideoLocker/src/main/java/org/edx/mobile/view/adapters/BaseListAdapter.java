@@ -13,6 +13,7 @@ import org.edx.mobile.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnItemClickListener {
 
@@ -100,7 +101,7 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
      * This avoids null value errors. 
      * @param newItems
      */
-    public void setItems(ArrayList<T> newItems) {
+    public void setItems(List<T> newItems) {
         clear();
 
         if (newItems != null) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -33,6 +34,8 @@ public class Router {
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
     public static final String EXTRA_COURSE_DATA = "course_data";
+    public static final String EXTRA_SEARCH_QUERY = "search_query";
+    public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -192,6 +195,29 @@ public class Router {
 
     }
 
+    public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionTopicsActivity.class);
+        showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionsIntent);
+    }
+
+    public void showCourseDiscussionPostsForSearchQuery(Activity activity, String query, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
+        showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionPostsIntent.putExtra(EXTRA_SEARCH_QUERY, query);
+        showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionPostsIntent);
+    }
+
+    public void showCourseDiscussionPostsForDiscussionTopic(Activity activity, DiscussionTopic topic, EnrolledCoursesResponse courseData) {
+        Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
+        showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
+        showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionPostsIntent);
+    }
+
     /**
      *  this method can be called either through UI [ user clicks LOGOUT button],
      *  or programmatically
@@ -220,40 +246,4 @@ public class Router {
         activity.startActivity(handoutIntent);
     }
 
-    public void showDiscussionTopics(Activity activity, final EnrolledCoursesResponse courseData) {
-        // TODO: create a new DiscussionTopicsActivity and populate it with API result
-//        Intent discussionTopicsIntent = new Intent(activity, DiscussionTopicsActivity.class);
-//        discussionTopicsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        activity.startActivity(discussionTopicsIntent);
-
-        Intent addCommentIntent = new Intent(activity, DiscussionAddCommentActivity.class);
-        addCommentIntent.putExtra(DiscussionAddCommentFragment.ENROLLMENT, courseData);
-        addCommentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(addCommentIntent);
-
-
-//        new DiscussionAPI().getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
-//            @Override
-//            public void success(CourseTopics courseTopics) {
-//                System.out.println(courseTopics);
-//
-//                // "unread", "last_activity_at",
-//                new DiscussionAPI().getThreadList(courseData.getCourse().getId(), courseTopics.getCoursewareTopics().get(0).getChildren().get(0).getIdentifier(),
-//                        "", "", new APICallback<TopicThreads>() {
-//
-//                    @Override
-//                    public void success(TopicThreads threads) {
-//                        System.out.println(threads);
-//                    }
-//                    @Override
-//                    public void failure(Exception e){
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void failure(Exception e){
-//            }
-//        });
-    }
 }

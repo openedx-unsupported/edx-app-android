@@ -18,19 +18,46 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DiscussionTopic {
-    @SerializedName("id") String identifier;
-    String name;
-    String threadListUrl;
-    List<DiscussionTopic> children;
+public class DiscussionTopic implements Serializable {
+    @SerializedName("id") String identifier = "";
+    String name = "";
+    String threadListUrl = "";
+    List<DiscussionTopic> children = new ArrayList<>();
 
     public String getIdentifier() {
         return identifier;
     }
 
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getThreadListUrl() {
+        return threadListUrl;
+    }
+
+    public void setThreadListUrl(String threadListUrl) {
+        this.threadListUrl = threadListUrl;
+    }
+
     public List<DiscussionTopic> getChildren() {
         return children;
     }
+
+    public void setChildren(List<DiscussionTopic> children) {
+        this.children = children;
+    }
+
 }
