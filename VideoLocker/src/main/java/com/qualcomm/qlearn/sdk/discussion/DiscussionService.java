@@ -16,12 +16,39 @@
 
 package com.qualcomm.qlearn.sdk.discussion;
 
-import java.util.List;
-
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.PATCH;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
+
+final class FlagBody {
+    private boolean abuseFlagged;
+
+    public FlagBody(boolean abuseFlagged) {
+        this.abuseFlagged = abuseFlagged;
+    }
+}
+
+final class VoteBody {
+    private boolean voted;
+
+    public VoteBody(boolean voted) {
+        this.voted = voted;
+    }
+}
+
+final class FollowBody {
+    private boolean following;
+
+    public FollowBody(boolean following) {
+        this.following = following;
+    }
+}
+
+
 
 public interface DiscussionService {
 
@@ -29,11 +56,35 @@ public interface DiscussionService {
     void getCourseTopics(@Path("courseId") String courseId, Callback<CourseTopics> callback);
 
     @GET("/api/discussion/v1/threads/")
-    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, Callback<TopicThreads> callback);
+    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, @Query("view") String view, @Query("order_by") String orderBy, Callback<TopicThreads> callback);
 
     @GET("/api/discussion/v1/threads/")
     void searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, Callback<TopicThreads> callback);
 
     @GET("/api/discussion/v1/comments/")
-    void getCommentList(@Query("thread_id") String threadId, Callback<List<DiscussionComment>> callback);
+    void getCommentList(@Query("thread_id") String threadId, Callback<ThreadComments> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void flagThread(@Path("threadId") String threadId, @Body FlagBody flagBody, Callback<DiscussionThread> callback);
+
+    @PATCH("/api/discussion/v1/comments/{commentId}/")
+    void flagComment(@Path("commentId") String commentId, @Body FlagBody flagBody, Callback<DiscussionComment> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void voteThread(@Path("threadId") String threadId, @Body VoteBody voteBody, Callback<DiscussionThread> callback);
+
+    @PATCH("/api/discussion/v1/comments/{commentId}/")
+    void voteComment(@Path("commentId") String commentId, @Body VoteBody voteBody, Callback<DiscussionComment> callback);
+
+    @PATCH("/api/discussion/v1/threads/{threadId}/")
+    void followThread(@Path("threadId") String threadId, @Body FollowBody followBody, Callback<DiscussionThread> callback);
+
+    @POST("/api/discussion/v1/threads/")
+    void createThread(@Body ThreadBody threadBody, Callback<DiscussionThread> callback);
+
+    @POST("/api/discussion/v1/comments/")
+    void createResponse(@Body ResponseBody responseBody, Callback<DiscussionComment> callback);
+
+    @POST("/api/discussion/v1/comments/")
+    void createComment(@Body CommentBody commentBody, Callback<DiscussionComment> callback);
 }

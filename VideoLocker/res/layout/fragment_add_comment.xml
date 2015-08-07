@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView android:id="@+id/tvAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/edx_utility_success"
+        android:text="Answer"
+        android:textStyle="normal"
+        android:textSize="16sp" />
+
+    <TextView android:id="@+id/tvResponse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAnswer"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:text="response body..."
+        android:textStyle="normal"
+        android:textSize="16sp" />
+
+    <TextView android:id="@+id/tvTimeAuthor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvResponse"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/edx_grayscale_neutral_base"
+        android:textStyle="normal"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/etNewComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTimeAuthor"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:hint="@string/discussion_add_your_comment" />
+
+    <Button
+        android:id="@+id/btnAddComment"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/etNewComment"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/edx_white"
+        android:background="@drawable/create_button_radius"
+        android:text="@string/discussion_add_comment" />
+</RelativeLayout>
+</ScrollView>

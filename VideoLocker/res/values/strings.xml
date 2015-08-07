@@ -258,7 +258,16 @@
     <string name="topics_search">Search all posts</string>
     <!--Discussion posts title after search query-->
     <string name="discussion_posts_search_title">Search results</string>
-    
+
+    <!-- Title in adding a new comment -->
+    <string name="discussion_comment">Comment</string>
+    <!-- Title in showing list of comments -->
+    <string name="discussion_comments">Comments</string>
+    <!-- Add comment button title in adding a new comment -->
+    <string name="discussion_add_comment">Add comment</string>
+    <!-- Add your comment placeholder in adding a new comment -->
+    <string name="discussion_add_your_comment">Add your comment</string>
+
     <!-- Assessment -->
     <!-- Label default unit on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>

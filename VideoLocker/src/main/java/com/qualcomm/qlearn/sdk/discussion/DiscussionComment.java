@@ -22,22 +22,34 @@ import java.util.Date;
 import java.util.List;
 
 public class DiscussionComment {
-    @SerializedName("id") String identifier;
-    String parentId;
-    String threadId;
-    String rawBody;
-    String renderedBody;
-    String author;
-    String authorLabel;
-    boolean voted = false;
-    int voteCount = 0;
-    Date createdAt;
-    Date updatedAt;
-    boolean endorsed = false;
-    String endorsedBy;
-    String endorsedByLabel;
-    Date endorsedAt;
-    boolean abuseFlagged = false;
-    String editableFields;
-    List<DiscussionComment> children;
+    private @SerializedName("id") String identifier;
+    private String parentId;
+    private String threadId;
+    private String rawBody;
+    private String renderedBody;
+    private String author;
+    private String authorLabel;
+    private boolean voted = false;
+    private int voteCount = 0;
+    private Date createdAt;
+    private Date updatedAt;
+    private boolean endorsed = false;
+    private String endorsedBy;
+    private String endorsedByLabel;
+    private Date endorsedAt;
+    private boolean abuseFlagged = false;
+    private List<String> editableFields;
+    private List<DiscussionComment> children;
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public String getThreadId() {
+        return threadId;
+    }
+    public List<DiscussionComment> getChildren() {
+        return children;
+    }
+
 }
