@@ -34,18 +34,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-enum DiscussionPostsFilter {
-    Unread,
-    Unanswered,
-    All
-}
-
-enum DiscussionPostsSort {
-    LastActivityAt,
-    VoteCount,
-    None
-}
-
 /*
 // TODO: fix the issue - try to simplify the callback implementation
 class RetrofitAdaptor<T> extends Callback {
@@ -69,6 +57,18 @@ class RetrofitAdaptor<T> extends Callback {
 */
 
 public class DiscussionAPI {
+
+    public enum DiscussionPostsSort {
+        LastActivityAt,
+        VoteCount,
+        None
+    }
+
+    public enum DiscussionPostsFilter {
+        Unread,
+        Unanswered,
+        All
+    }
 
     @Inject
     Config config;

@@ -49,4 +49,88 @@ public class DiscussionThread {
         return identifier;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getRawBody() {
+        return rawBody;
+    }
+
+    public String getRenderedBody() {
+        return renderedBody;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getAuthorLabel() {
+        return authorLabel;
+    }
+
+    public String getCommentListUrl() {
+        return commentListUrl;
+    }
+
+    public boolean isHasEndorsed() {
+        return hasEndorsed;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+    public boolean isAbuseFlagged() {
+        return abuseFlagged;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public List<String> getEditableFields() {
+        return editableFields;
+    }
+
 }

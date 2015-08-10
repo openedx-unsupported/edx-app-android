@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.APICallback;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
+import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.Router;
+import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -33,6 +37,12 @@ public class CourseDiscussionPostsFragment extends RoboFragment {
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
 
+    @Inject
+    DiscussionPostsAdapter discussionPostsAdapter;
+
+    @Inject
+    DiscussionAPI discussionAPI;
+
     private final Logger logger = new Logger(getClass().getName());
 
     @Nullable
@@ -45,15 +55,55 @@ public class CourseDiscussionPostsFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // TODO: MQ-83 Implement discussion posts view
+        discussionPostsListView.setAdapter(discussionPostsAdapter);
+
         if (searchQuery != null) {
-            logger.debug("SearchQuery: " + searchQuery);
+            setIsFilterSortVisible(false);
+            populateListFromSearch();
         }
 
         if (discussionTopic != null) {
-            logger.debug("Discussion Topic name: " + discussionTopic.getName());
-            logger.debug("Discussion Topic id: " + discussionTopic.getIdentifier());
-            logger.debug("Discussion Topic thread list url: " + discussionTopic.getThreadListUrl());
+            setIsFilterSortVisible(true);
+            populateListFromThread();
         }
+
+    }
+
+    private void populateListFromThread() {
+        // TODO: Remove hardcoded filter and sort
+        discussionAPI.getThreadList(courseData.getCourse().getId(), discussionTopic.getIdentifier(),
+                DiscussionAPI.DiscussionPostsFilter.All,
+                DiscussionAPI.DiscussionPostsSort.None,
+                new APICallback<TopicThreads>() {
+                    @Override
+                    public void success(TopicThreads topicThreads) {
+                        discussionPostsAdapter.setItems(topicThreads.getResults());
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                        // TODO: Handle failure gracefully
+                    }
+                });
+    }
+
+    private void populateListFromSearch() {
+        discussionAPI.searchThreadList(courseData.getCourse().getId(), searchQuery,
+                new APICallback<TopicThreads>() {
+                    @Override
+                    public void success(TopicThreads topicThreads) {
+                        discussionPostsAdapter.setItems(topicThreads.getResults());
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+
+                    }
+                });
+    }
+
+    private void setIsFilterSortVisible(boolean isVisible) {
+        int visibility = isVisible ? View.VISIBLE : View.INVISIBLE;
+        // TODO: Set visibility of filter and sort
     }
 }
