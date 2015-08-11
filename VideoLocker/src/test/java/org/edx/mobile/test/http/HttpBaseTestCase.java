@@ -47,6 +47,9 @@ public class HttpBaseTestCase extends BaseTestCase {
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     protected Api api;
+    // Per-test configuration for whether the mock web server should create artificial delays
+    // before sending the response.
+    protected boolean useArtificialDelay = false;
     protected ServiceManager serviceManager;
     //there are third party extension to handle conditionally skip some test programmatically.
     //but i think it is not a good idea to introduce more libs only for this purpose.
@@ -278,7 +281,9 @@ public class HttpBaseTestCase extends BaseTestCase {
         @Override
         public MockResponse dispatch(RecordedRequest recordedRequest)
                 throws InterruptedException {
-            Thread.sleep(calculateDelayForCall());
+            if (useArtificialDelay) {
+                Thread.sleep(calculateDelayForCall());
+            }
             return generateMockResponse(recordedRequest);
         }
     }
