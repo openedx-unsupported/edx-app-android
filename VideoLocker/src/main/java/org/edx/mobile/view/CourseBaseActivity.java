@@ -336,19 +336,13 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
     protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
-        try{
-            lastAccessBar.setVisibility(View.VISIBLE);
-            //
-            View lastAccessTextView = v == null ? findViewById(R.id.last_access_text) :
-                v.findViewById(R.id.last_access_text);
-            ((TextView)lastAccessTextView).setText(title);
-            View detailButton = v == null ? findViewById(R.id.last_access_button) :
-                v.findViewById(R.id.last_access_button);
-            detailButton.setOnClickListener(listener);
-
-        }catch(Exception e){
-            logger.error(e);
-        }
+        lastAccessBar.setVisibility(View.VISIBLE);
+        View lastAccessTextView = v == null ? findViewById(R.id.last_access_text) :
+            v.findViewById(R.id.last_access_text);
+        ((TextView)lastAccessTextView).setText(title);
+        View detailButton = v == null ? findViewById(R.id.last_access_button) :
+            v.findViewById(R.id.last_access_button);
+        detailButton.setOnClickListener(listener);
     }
 
 

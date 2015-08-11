@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 
@@ -90,6 +92,15 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         } else {
              fragment = (CourseOutlineFragment)
                  getSupportFragmentManager().findFragmentByTag(CourseOutlineFragment.TAG);
+        }
+
+        // We need to update LastAccessed Item if we are in CourseSubsection View
+        if (!isOnCourseOutline()) {
+            CourseComponent courseComponent = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
+            String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
+                    .username, courseComponent.getCourseId());
+            final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
+            prefManager.putLastAccessedSubsection(courseComponent.getId(), false);
         }
     }
 
