@@ -39,7 +39,6 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         String threadTitle = discussionThread.getTitle();
         holder.discussionPostTitle.setText(threadTitle);
         int lineCount = holder.discussionPostTitle.getLineCount();
-        logger.debug(threadTitle + ": line count: " + lineCount);
 
         if (discussionThread.isPinned() || discussionThread.isFollowing()) {
             holder.discussionPostPinFollowIcon.setVisibility(View.VISIBLE);
@@ -62,9 +61,13 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             holder.discussionPostPinFollowTextView.setText(pinFollowTextLabel);
 
             // If the discussion thread has an extra line, add 25dp to row height
+            // TODO: Add the additional height if the title spans 2 lines
             AbsListView.LayoutParams params = (AbsListView.LayoutParams) holder.discussionPostRow.getLayoutParams();
-            params.height = params.height + context.getResources().getDimensionPixelSize(
+            int boxHeight = context.getResources().getDimensionPixelSize(
+                    R.dimen.discussion_post_box_height);
+            int extraHeight = context.getResources().getDimensionPixelSize(
                     R.dimen.discussion_post_extra_box_height);
+            params.height = boxHeight + extraHeight;
             holder.discussionPostRow.setLayoutParams(params);
         }
 
@@ -75,7 +78,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         holder.discussionPostCommentIcon.setIcon(Iconify.IconValue.fa_comment);
         holder.discussionPostCommentIcon.setIconColor(context.getResources().getColor(commentColor));
 
-        // TODO: Find out why read property is not being returned in API to get the thread list
+        // TODO: Read property is not being returned in API to get the thread list
         if (discussionThread.isRead()) {
             holder.discussionPostRow.setBackgroundColor(context.getResources().getColor(
                     R.color.edx_grayscale_neutral_xx_light));

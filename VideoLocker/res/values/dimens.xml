@@ -37,6 +37,8 @@
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
 
+    <dimen name="discussion_post_refine_layout_height">40dp</dimen>
+    <dimen name="discussion_posts_filter_menu_width">120dp</dimen>
     <dimen name="discussion_post_box_height">50dp</dimen>
     <dimen name="discussion_post_extra_box_height">25dp</dimen>
 
