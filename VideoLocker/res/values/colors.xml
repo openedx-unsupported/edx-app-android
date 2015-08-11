@@ -146,8 +146,10 @@
 
     <color name="edx_grayscale_neutral_black">#101010</color>
     <color name="edx_grayscale_neutral_dark">#646262</color>
+    <color name="edx_grayscale_neutral_x_dark">#424141</color>
     <color name="edx_grayscale_neutral_base">#A7A4A4</color>
     <color name="edx_grayscale_neutral_light">#D3D1D1</color>
+    <color name="edx_grayscale_neutral_xx_light">#F2F2F2</color>
 
     <color name="edx_utility_success">#25B85A</color>
     <color name="edx_utility_warning">#FDBC56</color>

@@ -251,13 +251,18 @@
     <!-- Label shown when there is no course information available for a course -->
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
-    <!-- Discussion -->
+    <!-- Discussion Topics -->
     <!-- Label shown for discussion topics page -->
     <string name="discussion_topics_title">Discussion topics</string>
     <!--Hint displayed in search view for discussion posts-->
     <string name="topics_search">Search all posts</string>
+
+    <!--Discussion Posts-->
     <!--Discussion posts title after search query-->
     <string name="discussion_posts_search_title">Search results</string>
+    <string name="discussion_posts_following">Following</string>
+    <string name="discussion_posts_author_label_ta">Community TA</string>
+    <string name="discussion_posts_author_label_staff">Staff</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

@@ -22,8 +22,15 @@ import java.util.Date;
 import java.util.List;
 
 public class DiscussionThread {
+
+    public static final String THREAD_TYPE_DISCUSSION = "discussion";
+    public static final String THREAD_TYPE_QUESTION = "question";
+
+    public static final String THREAD_AUTHOR_LABEL_STAFF = "staff";
+    public static final String THREAD_AUTHOR_LABEL_COMMUNITY_TA = "community_ta";
+
     private @SerializedName("id") String identifier;
-    private String type;
+    private String type = "";
     private String courseId;
     private String topicId;
     private int groupId;
@@ -32,7 +39,9 @@ public class DiscussionThread {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private String authorLabel;
+    private String authorLabel = "";
+    private int commentCount = 0;
+    private int unreadCommentCount = 0;
     private String commentListUrl;
     private boolean hasEndorsed = false;
     private boolean pinned = false;
@@ -44,6 +53,7 @@ public class DiscussionThread {
     private Date createdAt;
     private Date updatedAt;
     private List<String> editableFields;
+    private boolean read = false;
 
     public String getIdentifier() {
         return identifier;
@@ -93,6 +103,14 @@ public class DiscussionThread {
         return commentListUrl;
     }
 
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public int getUnreadCommentCount() {
+        return unreadCommentCount;
+    }
+
     public boolean isHasEndorsed() {
         return hasEndorsed;
     }
@@ -131,6 +149,10 @@ public class DiscussionThread {
 
     public List<String> getEditableFields() {
         return editableFields;
+    }
+
+    public boolean isRead() {
+        return read;
     }
 
 }

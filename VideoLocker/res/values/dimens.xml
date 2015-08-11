@@ -37,6 +37,9 @@
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
 
+    <dimen name="discussion_post_box_height">50dp</dimen>
+    <dimen name="discussion_post_extra_box_height">25dp</dimen>
+
     <!-- row height for CC language options, NONE option and the header of popup -->
     <dimen name="row_height_cc_option">40dp</dimen>
 
@@ -45,5 +48,9 @@
     <dimen name="signup_social_title_margin_bottom">1dp</dimen>
 
     <dimen name="edx_box_radius">5dp</dimen>
+
+    <!--edX typography-->
+    <dimen name="edx_small">14sp</dimen>
+    <dimen name="edx_x_small">12sp</dimen>
 
 </resources>
