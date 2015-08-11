@@ -98,6 +98,7 @@ public class CourseDiscussionPostsFragment extends RoboFragment {
         if (discussionTopic != null) {
             setIsFilterSortVisible(true);
             populateListFromThread();
+            // TODO: Add some UI polish to make the popups more closely match the wireframes
             createFilterPopupMenu();
             createSortPopupMenu();
         }

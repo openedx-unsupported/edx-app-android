@@ -7,8 +7,7 @@
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/discussion_post_type_icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        style="@style/icon_view_standard_size_style"
         android:layout_margin="15dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -40,8 +39,7 @@
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/discussion_post_pin_or_following_icon"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                style="@style/icon_view_standard_size_style"
                 android:layout_marginEnd="3dp"
                 android:layout_marginRight="3dp"
                 app:iconColor="@color/edx_grayscale_neutral_light"
@@ -69,8 +67,7 @@
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/discussion_post_comment_icon"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        style="@style/icon_view_standard_size_style"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginStart="3dp"

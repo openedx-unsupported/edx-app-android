@@ -44,8 +44,7 @@
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/discussion_posts_filter_icon_view"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                style="@style/icon_view_standard_size_style"
                 android:layout_centerVertical="true"
                 app:iconColor="@color/edx_brand_primary_base"
                 app:iconName="fa_glass" />
@@ -134,8 +133,7 @@
 
         <org.edx.mobile.third_party.iconify.IconView
             android:id="@+id/discussion_posts_create_post_icon_view"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            style="@style/icon_view_standard_size_style"
             android:layout_centerVertical="true"
             app:iconColor="@color/white"
             app:iconName="fa_plus_circle" />
