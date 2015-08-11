@@ -257,19 +257,23 @@
     <!--Hint displayed in search view for discussion posts-->
     <string name="topics_search">Search all posts</string>
 
-    <!--Discussion Posts-->
-    <!--Discussion posts title after search query-->
+    <!--Discussion Posts Fragment-->
     <string name="discussion_posts_search_title">Search results</string>
     <string name="discussion_posts_refine">Refine</string>
+    <string name="discussion_post_create_new_post">Create a new post</string>
+    <!--Discussion Posts Filter Options-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>
     <string name="discussion_posts_filter_unread_posts">Unread</string>
     <string name="discussion_posts_filter_unanswered_posts">Unanswered</string>
+    <!--Discussion Posts Sort Options-->
     <string name="discussion_posts_sort_recent_activity">Recent Activity</string>
     <string name="discussion_posts_sort_most_activity">Most Activity</string>
     <string name="discussion_posts_sort_most_votes">Most Votes</string>
+    <!--Discussion Posts List Row Pinned and Following Text -->
     <string name="discussion_posts_following">Following</string>
     <string name="discussion_posts_author_label_ta">Community TA</string>
     <string name="discussion_posts_author_label_staff">Staff</string>
+
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

@@ -85,8 +85,6 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         }
     }
 
-
-
     @Override
     public BaseViewHolder getTag(View convertView) {
         ViewHolder holder = new ViewHolder();

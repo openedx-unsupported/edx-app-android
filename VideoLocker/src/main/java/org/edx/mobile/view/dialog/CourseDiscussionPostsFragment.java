@@ -47,6 +47,9 @@ public class CourseDiscussionPostsFragment extends RoboFragment {
     @InjectView(R.id.discussion_posts_listview)
     private ListView discussionPostsListView;
 
+    @InjectView(R.id.discussion_posts_create_post_layout)
+    private RelativeLayout discussionPostsCreatePostLayout;
+
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
@@ -78,6 +81,13 @@ public class CourseDiscussionPostsFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
 
         discussionPostsListView.setAdapter(discussionPostsAdapter);
+
+        discussionPostsCreatePostLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Launch new post activity
+            }
+        });
 
         if (searchQuery != null) {
             setIsFilterSortVisible(false);
