@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
@@ -22,7 +23,10 @@ public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment {
     @InjectView(R.id.discussion_posts_listview)
     ListView discussionPostsListView;
 
-    @InjectView(R.id.discussion_posts_create_post_layout)
+    @InjectView(R.id.create_new_item_text_view)
+    TextView createNewTextView;
+
+    @InjectView(R.id.create_new_layout)
     RelativeLayout discussionPostsCreatePostLayout;
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
@@ -40,6 +44,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment {
 
         discussionPostsListView.setAdapter(discussionPostsAdapter);
         discussionPostsListView.setOnItemClickListener(discussionPostsAdapter);
+        createNewTextView.setText(R.string.discussion_post_create_new_post);
 
         discussionPostsCreatePostLayout.setOnClickListener(new View.OnClickListener() {
             @Override

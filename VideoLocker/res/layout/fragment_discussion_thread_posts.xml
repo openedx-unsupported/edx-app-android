@@ -109,6 +109,13 @@
         android:layout_below="@+id/discussion_posts_refine_layout"
         android:background="@color/edx_grayscale_neutral_light" />
 
-    <include layout="@layout/discussion_posts_thread_list_layout" />
+    <ListView
+        android:id="@+id/discussion_posts_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/discussion_posts_divider_view"
+        android:layout_above="@+id/create_new_layout" />
+
+    <include layout="@layout/create_button_layout" />
 
 </RelativeLayout>
