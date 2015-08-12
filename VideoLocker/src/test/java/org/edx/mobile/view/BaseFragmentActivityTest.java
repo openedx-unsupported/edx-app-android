@@ -463,7 +463,7 @@ public class BaseFragmentActivityTest extends UiTest {
     protected void assertNextStartedActivity(BaseFragmentActivity currentActivity,
             Class<? extends Activity> nextActivityClass) {
         ShadowActivity shadowActivity = Shadows.shadowOf(currentActivity);
-        Intent intent = shadowActivity.peekNextStartedActivity();
+        Intent intent = shadowActivity.getNextStartedActivity();
         assertThat(intent).hasComponent(currentActivity, nextActivityClass);
         assertAppliedTransitionNext(shadowActivity);
     }
