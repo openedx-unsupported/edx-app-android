@@ -36,6 +36,7 @@ public class Router {
     public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
+    public static final String EXTRA_THREAD_ID = "thread_id";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -216,6 +217,13 @@ public class Router {
         showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
         showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(showDiscussionPostsIntent);
+    }
+
+    public void showCourseDiscussionResponses(Context context, String threadId) {
+        Intent discussionResposesIntent = new Intent(context, CourseDiscussionResponsesActivity.class);
+        discussionResposesIntent.putExtra(EXTRA_THREAD_ID, threadId);
+        discussionResposesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(discussionResposesIntent);
     }
 
     /**

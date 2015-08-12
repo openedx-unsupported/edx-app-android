@@ -14,8 +14,12 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.view.Router;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
+
+    @Inject
+    Router router;
 
     private final Context context;
 
@@ -100,7 +104,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        DiscussionThread thread = getItem(position);
+        router.showCourseDiscussionResponses(parent.getContext(), thread.getIdentifier());
+    }
 
     private static class ViewHolder extends BaseViewHolder {
         RelativeLayout discussionPostRow;

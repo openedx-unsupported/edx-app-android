@@ -288,6 +288,9 @@
     <!--Label for discussion post pinned by the staff-->
     <string name="discussion_posts_author_label_staff">Staff</string>
 
+    <!--Discussion Responses-->
+    <string name="course_discussion_responses_title">Discussion Post</string>
+
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
     <!-- Title in showing list of comments -->
