@@ -3,10 +3,8 @@ package org.edx.mobile.test.http;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
@@ -17,7 +15,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.util.Config;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -163,18 +160,10 @@ public class ApiTests extends HttpBaseTestCase {
     }
 
     @Test
+    @Override
     public void login() throws Exception {
         if( shouldSkipTest ) return;
-        Config.TestAccountConfig config2  = config.getTestAccountConfig();
-
-        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
-        assertNotNull(res);
-        assertNotNull(res.access_token);
-        assertNotNull(res.token_type);
-        print(res.toString());
-
-        ProfileModel profile = api.getProfile();
-        assertNotNull(profile);
+        super.login();
     }
 
     @Test

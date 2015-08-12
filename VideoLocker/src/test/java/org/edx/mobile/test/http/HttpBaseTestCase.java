@@ -13,6 +13,8 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
@@ -29,6 +31,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  *  use MockWebService for Api test
@@ -108,6 +112,25 @@ public class HttpBaseTestCase extends BaseTestCase {
         super.inject(injector);
         injector.injectMembers(api);
         serviceManager = injector.getInstance(ServiceManager.class);
+    }
+
+    /**
+     * Utility method to be used as a prerequisite for testing most API
+     *
+     * @throws Exception If an exception was encountered during login or
+     * verification
+     */
+    protected void login() throws Exception {
+        Config.TestAccountConfig config2  = config.getTestAccountConfig();
+
+        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
+        assertNotNull(res);
+        assertNotNull(res.access_token);
+        assertNotNull(res.token_type);
+        print(res.toString());
+
+        ProfileModel profile = api.getProfile();
+        assertNotNull(profile);
     }
 
     @Override
