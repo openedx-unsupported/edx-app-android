@@ -268,6 +268,28 @@
     <!-- Add your comment placeholder in adding a new comment -->
     <string name="discussion_add_your_comment">Add your comment</string>
 
+    <!-- Title in adding a new response -->
+    <string name="discussion_response">Response</string>
+    <!-- Title in showing list of responses -->
+    <string name="discussion_responses">Responses</string>
+    <!-- Add response button title in adding a new response -->
+    <string name="discussion_add_response">Add response</string>
+    <!-- Add your respone placeholder in adding a new response -->
+    <string name="discussion_add_your_response">Add your response</string>
+
+    <!-- Title in adding a new post -->
+    <string name="discussion_post">Post</string>
+    <!-- Title in showing list of posts -->
+    <string name="discussion_posts">Posts</string>
+    <!-- Title placeholder in adding a new post -->
+    <string name="discussion_post_title">Title</string>
+    <!-- Add post button title in adding a new post -->
+    <string name="discussion_add_post">Add post</string>
+    <!-- Add your post placeholder in adding a new post -->
+    <string name="discussion_add_your_post">Add your post</string>
+    <!-- Question text in adding a new post -->
+    <string name="discussion_question">Question</string>
+
     <!-- Assessment -->
     <!-- Label default unit on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>

@@ -7,9 +7,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
-public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
+public class DiscussionAddPostActivity extends BaseSingleFragmentActivity {
     private Fragment fragment;
-    private Boolean isResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,22 +19,19 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        isResponse = getIntent()
-                .getBooleanExtra(DiscussionAddCommentFragment.IS_RESPONSE, false);
 
-        setTitle(getString(isResponse ? R.string.discussion_response : R.string.discussion_comment));
+        setTitle(getString(R.string.discussion_post));
     }
 
     @Override
     public Fragment getFirstFragment() {
 
-        fragment = new DiscussionAddCommentFragment();
+        fragment = new DiscussionAddPostFragment();
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
-                .getSerializableExtra(DiscussionAddCommentFragment.ENROLLMENT);
+                .getSerializableExtra(DiscussionAddPostFragment.ENROLLMENT);
         if (courseData != null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(DiscussionAddCommentFragment.ENROLLMENT, courseData);
-            bundle.putBoolean(DiscussionAddCommentFragment.IS_RESPONSE, isResponse);
+            bundle.putSerializable(DiscussionAddPostFragment.ENROLLMENT, courseData);
             fragment.setArguments(bundle);
         }
 

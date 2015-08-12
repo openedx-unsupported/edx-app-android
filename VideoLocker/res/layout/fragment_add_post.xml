@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+
+    <info.hoang8f.android.segmented.SegmentedGroup
+        xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/segmentedControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        segmentedgroup:border_width="2dp"
+        segmentedgroup:corner_radius="10dp">
+
+        <RadioButton
+            android:id="@+id/btnDiscussion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Discussion"
+            style="@style/RadioButton" />
+
+        <RadioButton
+            android:id="@+id/btnQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            style="@style/RadioButton" />
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <Spinner
+        android:id="@+id/spinnerTopics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/segmentedControl"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinnerTopics"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:hint="@string/discussion_post_title" />
+
+    <EditText
+        android:id="@+id/etBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:hint="@string/discussion_add_your_post" />
+
+
+    <Button
+        android:id="@+id/btnAddPost"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/etBody"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/edx_white"
+        android:background="@drawable/create_button_radius"
+        android:text="@string/discussion_add_post" />
+
+</RelativeLayout>
+</ScrollView>
