@@ -58,18 +58,6 @@ class RetrofitAdaptor<T> extends Callback {
 
 public class DiscussionAPI {
 
-    public enum DiscussionPostsSort {
-        LastActivityAt,
-        VoteCount,
-        None
-    }
-
-    public enum DiscussionPostsFilter {
-        Unread,
-        Unanswered,
-        All
-    }
-
     @Inject
     Config config;
 

@@ -30,7 +30,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         ViewHolder holder = (ViewHolder) tag;
 
         Iconify.IconValue iconValue = Iconify.IconValue.fa_comments;
-        if (discussionThread.getType().equals(DiscussionThread.THREAD_TYPE_QUESTION)) {
+        if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
             iconValue = discussionThread.isHasEndorsed() ?
                     Iconify.IconValue.fa_check_square_o : Iconify.IconValue.fa_question;
         }
@@ -38,7 +38,6 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
         String threadTitle = discussionThread.getTitle();
         holder.discussionPostTitle.setText(threadTitle);
-        int lineCount = holder.discussionPostTitle.getLineCount();
 
         if (discussionThread.isPinned() || discussionThread.isFollowing()) {
             holder.discussionPostPinFollowIcon.setVisibility(View.VISIBLE);
@@ -52,10 +51,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             if (discussionThread.isFollowing()) {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_following);
 
-            } else if (discussionThread.getAuthorLabel().equals(DiscussionThread.THREAD_AUTHOR_LABEL_STAFF)) {
+            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_staff);
 
-            } else if (discussionThread.getAuthorLabel().equals(DiscussionThread.THREAD_AUTHOR_LABEL_COMMUNITY_TA)) {
+            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_ta);
             }
             holder.discussionPostPinFollowTextView.setText(pinFollowTextLabel);

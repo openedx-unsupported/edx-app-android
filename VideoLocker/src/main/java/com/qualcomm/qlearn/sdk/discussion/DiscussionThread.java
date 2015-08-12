@@ -23,14 +23,45 @@ import java.util.List;
 
 public class DiscussionThread {
 
-    public static final String THREAD_TYPE_DISCUSSION = "discussion";
-    public static final String THREAD_TYPE_QUESTION = "question";
+    public enum ThreadType {
+        @SerializedName("discussion")
+        DISCUSSION (0),
 
-    public static final String THREAD_AUTHOR_LABEL_STAFF = "staff";
-    public static final String THREAD_AUTHOR_LABEL_COMMUNITY_TA = "community_ta";
+        @SerializedName("question")
+        QUESTION (1);
 
-    private @SerializedName("id") String identifier;
-    private String type = "";
+        private final int value;
+
+        private ThreadType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public enum PinnedAuthor {
+        @SerializedName("staff")
+        STAFF (0),
+
+        @SerializedName("community_ta")
+        COMMUNITY_TA (1);
+
+        private final int value;
+
+        private PinnedAuthor(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    @SerializedName("id")
+    private String identifier;
+    private ThreadType type;
     private String courseId;
     private String topicId;
     private int groupId;
@@ -39,7 +70,7 @@ public class DiscussionThread {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private String authorLabel = "";
+    private PinnedAuthor authorLabel;
     private int commentCount = 0;
     private int unreadCommentCount = 0;
     private String commentListUrl;
@@ -59,7 +90,7 @@ public class DiscussionThread {
         return identifier;
     }
 
-    public String getType() {
+    public ThreadType getType() {
         return type;
     }
 
@@ -95,7 +126,7 @@ public class DiscussionThread {
         return author;
     }
 
-    public String getAuthorLabel() {
+    public PinnedAuthor getAuthorLabel() {
         return authorLabel;
     }
 
