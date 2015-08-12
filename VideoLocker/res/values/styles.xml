@@ -171,4 +171,16 @@
         <item name="android:queryHint">@string/topics_search</item>
     </style>
 
+    <style name="footer_action_button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@color/edx_brand_primary_x_dark</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_white</item>
+    </style>
+
+    <style name="icon_view_standard_size_style">
+        <item name="android:layout_width">@dimen/icon_view_standard_width_height</item>
+        <item name="android:layout_height">@dimen/icon_view_standard_width_height</item>
+    </style>
+
 </resources>

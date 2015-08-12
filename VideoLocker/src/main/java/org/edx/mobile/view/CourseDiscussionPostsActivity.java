@@ -8,14 +8,16 @@ import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.view.dialog.CourseDiscussionPostsFragment;
 
 import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
 
     @Inject
-    private CourseDiscussionPostsFragment courseDiscussionPostsFragment;
+    private CourseDiscussionPostsThreadFragment courseDiscussionPostsThreadFragment;
+
+    @Inject
+    private CourseDiscussionPostsSearchFragment courseDiscussionPostsSearchFragment;
 
     @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
@@ -31,10 +33,23 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
 
     @Override
     public Fragment getFirstFragment() {
-        courseDiscussionPostsFragment.setArguments(getIntent().getExtras());
-        courseDiscussionPostsFragment.setRetainInstance(true);
+        Fragment fragment = new Fragment();
+        Bundle extras = new Bundle();
 
-        return courseDiscussionPostsFragment;
+        if (searchQuery != null) {
+            extras.putString(Router.EXTRA_SEARCH_QUERY, searchQuery);
+            fragment = courseDiscussionPostsSearchFragment;
+        }
+
+        if (discussionTopic != null) {
+            extras.putSerializable(Router.EXTRA_DISCUSSION_TOPIC, discussionTopic);
+            fragment = courseDiscussionPostsThreadFragment;
+        }
+
+        fragment.setArguments(extras);
+        fragment.setRetainInstance(true);
+
+        return fragment;
     }
 
     @Override

@@ -251,13 +251,40 @@
     <!-- Label shown when there is no course information available for a course -->
     <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
-    <!-- Discussion -->
-    <!-- Label shown for discussion topics page -->
+    <!-- Discussion Topics -->
+    <!-- Label for the discussion topics page -->
     <string name="discussion_topics_title">Discussion topics</string>
     <!--Hint displayed in search view for discussion posts-->
     <string name="topics_search">Search all posts</string>
-    <!--Discussion posts title after search query-->
+
+    <!--Discussion Posts Fragment-->
+    <!--Title for discussion post search results-->
     <string name="discussion_posts_search_title">Search results</string>
+    <!--Label for the the filter and sort options for refining the thread list -->
+    <string name="discussion_posts_refine">Refine:</string>
+    <!--Label for creating a new post-->
+    <string name="discussion_post_create_new_post">Create a new post</string>
+    <!--Discussion posts filter options-->
+    <!--Discussion posts filter for all posts-->
+    <string name="discussion_posts_filter_all_posts">All Posts</string>
+    <!--Discussion posts filter for unread posts-->
+    <string name="discussion_posts_filter_unread_posts">Unread</string>
+    <!--Discussion posts filter for unanswered posts-->
+    <string name="discussion_posts_filter_unanswered_posts">Unanswered</string>
+    <!--Discussion posts sort options-->
+    <!--Discussion posts sort by recent activity-->
+    <string name="discussion_posts_sort_recent_activity">Recent Activity</string>
+    <!--Discussion posts sort by most activity-->
+    <string name="discussion_posts_sort_most_activity">Most Activity</string>
+    <!--Discussion posts sort by most votes-->
+    <string name="discussion_posts_sort_most_votes">Most Votes</string>
+    <!--Discussion Posts List Row Pinned and Following Text -->
+    <!--Label for discussion post you are following-->
+    <string name="discussion_posts_following">Following</string>
+    <!--Label for discussion post pinned by the community TA-->
+    <string name="discussion_posts_author_label_ta">Community TA</string>
+    <!--Label for discussion post pinned by the staff-->
+    <string name="discussion_posts_author_label_staff">Staff</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

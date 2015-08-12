@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/fragment_discussion_posts">
+
+    <ListView
+        android:id="@+id/discussion_posts_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/discussion_posts_divider_view"
+        android:layout_above="@+id/discussion_posts_create_post_layout" />
+
+    <RelativeLayout
+        android:id="@+id/discussion_posts_create_post_layout"
+        style="@style/footer_action_button"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true">
+
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/discussion_posts_create_post_icon_view"
+            style="@style/icon_view_standard_size_style"
+            android:layout_centerVertical="true"
+            app:iconColor="@color/white"
+            app:iconName="fa_plus_circle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/discussion_posts_create_post_icon_view"
+            android:layout_toRightOf="@+id/discussion_posts_create_post_icon_view"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:text="@string/discussion_post_create_new_post"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edx_small" />
+
+    </RelativeLayout>
+</merge>

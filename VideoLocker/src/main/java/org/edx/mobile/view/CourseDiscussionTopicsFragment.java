@@ -102,7 +102,7 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
             }
         });
 
-        // Hide the keyboard and take the focus away from the search view
+        // TODO: Find a better way to hide the keyboard AND take the focus away from the SearchView
         discussionTopicsSearchView.requestFocus();
         discussionTopicsSearchView.clearFocus();
 

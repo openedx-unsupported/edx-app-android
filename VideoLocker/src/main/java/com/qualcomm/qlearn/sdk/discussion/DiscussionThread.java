@@ -22,8 +22,46 @@ import java.util.Date;
 import java.util.List;
 
 public class DiscussionThread {
-    private @SerializedName("id") String identifier;
-    private String type;
+
+    public enum ThreadType {
+        @SerializedName("discussion")
+        DISCUSSION (0),
+
+        @SerializedName("question")
+        QUESTION (1);
+
+        private final int value;
+
+        private ThreadType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public enum PinnedAuthor {
+        @SerializedName("staff")
+        STAFF (0),
+
+        @SerializedName("community_ta")
+        COMMUNITY_TA (1);
+
+        private final int value;
+
+        private PinnedAuthor(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    @SerializedName("id")
+    private String identifier;
+    private ThreadType type;
     private String courseId;
     private String topicId;
     private int groupId;
@@ -32,7 +70,9 @@ public class DiscussionThread {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private String authorLabel;
+    private PinnedAuthor authorLabel;
+    private int commentCount = 0;
+    private int unreadCommentCount = 0;
     private String commentListUrl;
     private boolean hasEndorsed = false;
     private boolean pinned = false;
@@ -44,9 +84,106 @@ public class DiscussionThread {
     private Date createdAt;
     private Date updatedAt;
     private List<String> editableFields;
+    private boolean read = false;
 
     public String getIdentifier() {
         return identifier;
+    }
+
+    public ThreadType getType() {
+        return type;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getRawBody() {
+        return rawBody;
+    }
+
+    public String getRenderedBody() {
+        return renderedBody;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public PinnedAuthor getAuthorLabel() {
+        return authorLabel;
+    }
+
+    public String getCommentListUrl() {
+        return commentListUrl;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public int getUnreadCommentCount() {
+        return unreadCommentCount;
+    }
+
+    public boolean isHasEndorsed() {
+        return hasEndorsed;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+    public boolean isAbuseFlagged() {
+        return abuseFlagged;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public List<String> getEditableFields() {
+        return editableFields;
+    }
+
+    public boolean isRead() {
+        return read;
     }
 
 }

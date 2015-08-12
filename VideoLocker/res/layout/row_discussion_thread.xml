@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_discussion_post_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/discussion_post_box_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <org.edx.mobile.third_party.iconify.IconView
+        android:id="@+id/discussion_post_type_icon"
+        style="@style/icon_view_standard_size_style"
+        android:layout_margin="15dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        app:iconColor="@color/edx_grayscale_neutral_light" />
+
+    <LinearLayout
+        android:id="@+id/discussion_post_linear_layout"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_toEndOf="@+id/discussion_post_type_icon"
+        android:layout_toRightOf="@+id/discussion_post_type_icon"
+        android:layout_toStartOf="@+id/discussion_post_num_comments_text_view"
+        android:layout_toLeftOf="@+id/discussion_post_num_comments_text_view"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/discussion_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edx_grayscale_neutral_x_dark"
+            android:textSize="@dimen/edx_small" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/discussion_post_pin_or_following_icon"
+                style="@style/icon_view_standard_size_style"
+                android:layout_marginEnd="3dp"
+                android:layout_marginRight="3dp"
+                app:iconColor="@color/edx_grayscale_neutral_light"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/discussion_post_pin_or_following_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_grayscale_neutral_light"
+                android:textSize="@dimen/edx_x_small"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/discussion_post_num_comments_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/discussion_post_comment_icon"
+        android:layout_toLeftOf="@+id/discussion_post_comment_icon"
+        android:layout_centerVertical="true" />
+
+    <org.edx.mobile.third_party.iconify.IconView
+        android:id="@+id/discussion_post_comment_icon"
+        style="@style/icon_view_standard_size_style"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>
