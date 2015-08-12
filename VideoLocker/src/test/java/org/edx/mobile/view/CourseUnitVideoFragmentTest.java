@@ -15,9 +15,7 @@ import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.SupportFragmentTestUtil;
 
@@ -32,7 +30,6 @@ import static org.junit.Assume.assumeNotNull;
 
 // The SDK version needs to be lesser than Lollipop because of this
 // issue: https://github.com/robolectric/robolectric/issues/1810
-@RunWith(RobolectricGradleTestRunner.class)
 @Config(sdk = 19)
 public class CourseUnitVideoFragmentTest extends UiTest {
     /**

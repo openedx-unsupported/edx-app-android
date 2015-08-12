@@ -14,9 +14,7 @@ import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
@@ -27,7 +25,6 @@ import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
-@RunWith(RobolectricGradleTestRunner.class)
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
      * Method for defining the subclass of {@link CourseBaseActivity} that

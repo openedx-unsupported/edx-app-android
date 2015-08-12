@@ -8,9 +8,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.util.ActivityController;
 
 import static org.assertj.android.api.Assertions.assertThat;
@@ -19,7 +17,6 @@ import static org.junit.Assert.*;
 // I don't understand the data model cycle behind this, and I couldn't run
 // the demo sandbox to see this Activity, so I'm not writing tests for the
 // adapter interactions yet
-@RunWith(RobolectricGradleTestRunner.class)
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}

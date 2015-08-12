@@ -43,10 +43,8 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
@@ -62,7 +60,6 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
-@RunWith(RobolectricGradleTestRunner.class)
 public class BaseFragmentActivityTest extends UiTest {
     /**
      * Method for defining the subclass of {@link BaseFragmentActivity} that
