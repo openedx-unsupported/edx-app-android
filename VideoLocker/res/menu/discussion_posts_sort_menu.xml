@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/sort_item_recent_activity"
+        android:title="@string/discussion_posts_sort_recent_activity" />
+
+    <item
+        android:id="@+id/sort_item_most_activity"
+        android:title="@string/discussion_posts_sort_most_activity" />
+
+    <item
+        android:id="@+id/sort_item_most_votes"
+        android:title="@string/discussion_posts_sort_most_votes" />
+
+</menu>
