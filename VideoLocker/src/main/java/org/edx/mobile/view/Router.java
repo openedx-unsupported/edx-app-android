@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.event.LogoutEvent;
@@ -36,7 +37,7 @@ public class Router {
     public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
-    public static final String EXTRA_THREAD_ID = "thread_id";
+    public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -219,9 +220,9 @@ public class Router {
         activity.startActivity(showDiscussionPostsIntent);
     }
 
-    public void showCourseDiscussionResponses(Context context, String threadId) {
+    public void showCourseDiscussionResponses(Context context, DiscussionThread discussionThread) {
         Intent discussionResposesIntent = new Intent(context, CourseDiscussionResponsesActivity.class);
-        discussionResposesIntent.putExtra(EXTRA_THREAD_ID, threadId);
+        discussionResposesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
         discussionResposesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(discussionResposesIntent);
     }

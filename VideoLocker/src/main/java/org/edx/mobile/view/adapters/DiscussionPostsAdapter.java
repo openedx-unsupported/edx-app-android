@@ -106,7 +106,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DiscussionThread thread = getItem(position);
-        router.showCourseDiscussionResponses(parent.getContext(), thread.getIdentifier());
+        router.showCourseDiscussionResponses(parent.getContext(), thread);
     }
 
     private static class ViewHolder extends BaseViewHolder {

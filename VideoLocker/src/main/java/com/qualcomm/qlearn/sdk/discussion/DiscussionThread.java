@@ -18,10 +18,11 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionThread {
+public class DiscussionThread implements Serializable {
 
     public enum ThreadType {
         @SerializedName("discussion")

@@ -84,11 +84,7 @@ public class DiscussionComment {
     public Date getUpdatedAt() {
         return updatedAt;
     }
-
-    public Date getEndorsedAt() {
-        return endorsedAt;
-    }
-
+    
     public boolean isEndorsed() {
         return endorsed;
     }
@@ -99,6 +95,10 @@ public class DiscussionComment {
 
     public String getEndorsedByLabel() {
         return endorsedByLabel;
+    }
+
+    public Date getEndorsedAt() {
+        return endorsedAt;
     }
 
     public boolean isAbuseFlagged() {

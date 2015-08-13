@@ -290,6 +290,8 @@
 
     <!--Discussion Responses-->
     <string name="course_discussion_responses_title">Discussion Post</string>
+    <!--Label for adding a discussion response-->
+    <string name="discussion_responses_add_response">Add a response</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

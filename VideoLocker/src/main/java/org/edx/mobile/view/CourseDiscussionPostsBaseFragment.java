@@ -24,7 +24,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment {
     ListView discussionPostsListView;
 
     @InjectView(R.id.create_new_item_text_view)
-    TextView createNewTextView;
+    TextView createNewPostTextView;
 
     @InjectView(R.id.create_new_layout)
     RelativeLayout discussionPostsCreatePostLayout;
@@ -44,7 +44,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment {
 
         discussionPostsListView.setAdapter(discussionPostsAdapter);
         discussionPostsListView.setOnItemClickListener(discussionPostsAdapter);
-        createNewTextView.setText(R.string.discussion_post_create_new_post);
+        createNewPostTextView.setText(R.string.discussion_post_create_new_post);
 
         discussionPostsCreatePostLayout.setOnClickListener(new View.OnClickListener() {
             @Override

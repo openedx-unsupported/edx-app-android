@@ -1,8 +1,10 @@
 package org.edx.mobile.core;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.Api;
@@ -70,6 +72,8 @@ public class EdxDefaultModule extends AbstractModule {
         }
 
         bind(IEdxEnvironment.class).to(EdxEnvironment.class);
+
+        bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
 
     }
 }
