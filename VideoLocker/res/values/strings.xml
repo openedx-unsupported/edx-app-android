@@ -306,8 +306,6 @@
 
     <!-- Title in adding a new post -->
     <string name="discussion_post">Post</string>
-    <!-- Title in showing list of posts -->
-    <string name="discussion_posts">Posts</string>
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
     <!-- Add post button title in adding a new post -->

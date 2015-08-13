@@ -11,7 +11,7 @@
 
     <info.hoang8f.android.segmented.SegmentedGroup
         xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/segmentedControl"
+        android:id="@+id/discussion_question_segmented_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -21,14 +21,14 @@
         segmentedgroup:corner_radius="10dp">
 
         <RadioButton
-            android:id="@+id/btnDiscussion"
+            android:id="@+id/discussion_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Discussion"
             style="@style/RadioButton" />
 
         <RadioButton
-            android:id="@+id/btnQuestion"
+            android:id="@+id/question_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Question"
@@ -36,38 +36,39 @@
     </info.hoang8f.android.segmented.SegmentedGroup>
 
     <Spinner
-        android:id="@+id/spinnerTopics"
+        android:id="@+id/topics_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/segmentedControl"
+        android:layout_below="@+id/discussion_question_segmented_group"
         android:layout_marginTop="10dp" />
 
     <EditText
-        android:id="@+id/etTitle"
+        android:id="@+id/title_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spinnerTopics"
+        android:layout_below="@+id/topics_spinner"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         android:hint="@string/discussion_post_title" />
 
     <EditText
-        android:id="@+id/etBody"
+        android:id="@+id/body_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etTitle"
+        android:layout_below="@+id/title_edit_text"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         android:hint="@string/discussion_add_your_post" />
 
 
     <Button
-        android:id="@+id/btnAddPost"
+        android:id="@+id/add_post_button"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/etBody"
+        android:layout_below="@id/body_edit_text"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/edx_white"

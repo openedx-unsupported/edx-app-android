@@ -79,6 +79,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
         // TODO: pass topics instead of making the get topics API call again in DiscussionAddPostFragment
         Intent addPostIntent = new Intent(this, DiscussionAddPostActivity.class);
         addPostIntent.putExtra(DiscussionAddPostFragment.ENROLLMENT, courseData);
+        addPostIntent.putExtra(DiscussionAddPostFragment.TOPIC, discussionTopic);
         addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         this.startActivity(addPostIntent);
 
