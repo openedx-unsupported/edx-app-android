@@ -3,13 +3,23 @@ package org.edx.mobile.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.ListView;
 
+import org.edx.mobile.R;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -64,13 +74,26 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
     @Override
     public void initializeTest() {
         super.initializeTest();
+        initialize(getIntent());
+    }
 
-        Intent intent = getIntent();
+    /**
+     * Generic method for running the initialization tests and returning the
+     * controller.
+     *
+     * @param intent The {@link Intent} to start the {@link CourseOutlineActivity} with
+     * @return The {@link ActivityController} instance used to initialize the
+     *         {@link CourseOutlineActivity}
+     */
+    private ActivityController<? extends CourseOutlineActivity> initialize(Intent intent) {
         ActivityController<? extends CourseOutlineActivity> controller =
                 Robolectric.buildActivity(getActivityClass()).withIntent(intent);
-        CourseOutlineActivity activity = controller.get();
-
-        controller.create(null).postCreate(null);
+        CourseOutlineActivity activity = controller.create(null).postCreate(null).get();
+        // Change the settings to show all courses for easier and more comprehensive testing
+        new PrefManager.UserPrefManager(activity).setUserPrefVideoModel(false);
+        activity.modeChanged();
+        activity.invalidateOptionsMenu();
+        // TODO: Write a comprehensive and isolated test suite for the Fragment
         Fragment fragment = activity.getSupportFragmentManager()
                 .findFragmentByTag(CourseOutlineFragment.TAG);
         assertNotNull(fragment);
@@ -83,5 +106,132 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
                 args.getSerializable(Router.EXTRA_ENROLLMENT));
         assertEquals(data.getString(Router.EXTRA_COURSE_COMPONENT_ID),
                 args.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+        return controller;
+    }
+
+    // Since Robolectric doesn't simulate actual Activity navigation, we
+    // can only test forward navigation, and only up to one level. This
+    // blocks us from testing the back stack restructuring upon switching
+    // to a different section from CourseUnitNavigationActivityTest.
+    /**
+     * Testing navigation to a section
+     */
+    @Test
+    public void sectionNavigationTest() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getBundleExtra(Router.EXTRA_BUNDLE);
+        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
+                extras.getSerializable(Router.EXTRA_ENROLLMENT);
+        assertNotNull(courseData);
+        CourseComponent courseComponent;
+        try {
+            courseComponent = serviceManager.getCourseStructure(
+                    courseData.getCourse().getId(),
+                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        int subsectionRowIndex = -1;
+        String subsectionId = null;
+        List<IBlock> sections = courseComponent.getChildren();
+        sectionIteration: for (@SuppressWarnings("unused") IBlock section : sections) {
+            subsectionRowIndex++;
+            for (IBlock subsection : section.getChildren()) {
+                subsectionRowIndex++;
+                if (((CourseComponent) subsection).isContainer()) {
+                    subsectionId = subsection.getId();
+                    break sectionIteration;
+                }
+            }
+        }
+        assertNotNull(subsectionId);
+        extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
+
+        ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
+        clickRow(controller, subsectionRowIndex);
+        Intent newIntent = assertNextStartedActivity(
+                controller.get(), CourseOutlineActivity.class);
+        Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
+        assertNotNull(newData);
+        assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(subsectionId, newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+    }
+
+    /**
+     * Testing navigation to a unit
+     */
+    @Test
+    public void unitNavigationTest() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getBundleExtra(Router.EXTRA_BUNDLE);
+        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
+                extras.getSerializable(Router.EXTRA_ENROLLMENT);
+        assertNotNull(courseData);
+        CourseComponent courseComponent;
+        try {
+            courseComponent = serviceManager.getCourseStructure(
+                    courseData.getCourse().getId(),
+                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        List<CourseComponent> leafComponents = new ArrayList<>();
+        courseComponent.fetchAllLeafComponents(leafComponents,
+                EnumSet.allOf(BlockType.class));
+        CourseComponent courseUnit = leafComponents.get(0);
+        courseComponent = courseUnit.getParent();
+        if (courseUnit.getPath().getPath().size() % 2 > 0) {
+            courseComponent = courseComponent.getParent();
+        }
+        int subsectionRowIndex = -1;
+        List<IBlock> sections = courseComponent.getChildren();
+        sectionIteration: for (@SuppressWarnings("unused") IBlock section : sections) {
+            subsectionRowIndex++;
+            if (courseUnit.equals(section)) {
+                break;
+            }
+            for (@SuppressWarnings("unused") IBlock subsection : section.getChildren()) {
+                subsectionRowIndex++;
+                if (courseUnit.equals(subsection)) {
+                    break sectionIteration;
+                }
+            }
+        }
+        extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
+
+        ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
+        clickRow(controller, subsectionRowIndex);
+        Intent newIntent = assertNextStartedActivity(
+                controller.get(), CourseOutlineActivity.class);
+        Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
+        assertNotNull(newData);
+        assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(courseComponent.getId(), newData.getSerializable(
+                Router.EXTRA_COURSE_COMPONENT_ID));
+        assertEquals(courseUnit, newData.getSerializable(Router.EXTRA_COURSE_UNIT));
+    }
+
+    /**
+     * Generic method for clicking on a list row provided an index with
+     * appropriate assertions
+     *
+     * @param controller The {link ActivityController} controlling the
+     *                   {@link CourseOutlineActivity}
+     * @param rowIndex The row index
+     */
+    public void clickRow(ActivityController<? extends CourseOutlineActivity> controller,
+            int rowIndex) {
+        CourseOutlineActivity activity = controller.get();
+        Fragment fragment = activity.getSupportFragmentManager()
+                .findFragmentByTag(CourseOutlineFragment.TAG);
+        controller.resume().postResume().visible();
+        View fragmentView = fragment.getView();
+        assertNotNull(fragmentView);
+        View outlineList = fragmentView.findViewById(R.id.outline_list);
+        assertNotNull(outlineList);
+        assertThat(outlineList).isInstanceOf(ListView.class);
+        ListView listView = (ListView) outlineList;
+        listView.performItemClick(listView.getChildAt(rowIndex),
+                rowIndex, listView.getItemIdAtPosition(rowIndex));
     }
 }
