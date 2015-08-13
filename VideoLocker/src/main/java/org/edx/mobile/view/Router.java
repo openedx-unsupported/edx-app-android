@@ -231,4 +231,9 @@ public class Router {
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
     }
+
+    public void showDiscussion(Activity activity) {
+        Intent discussionIntent = new Intent(activity, GroupDiscussionActivity.class);
+        activity.startActivity(discussionIntent);
+    }
 }
