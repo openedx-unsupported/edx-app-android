@@ -151,7 +151,7 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
     public boolean isContainer(){
-        return children != null && children.size() > 0;
+        return type != null ? type.isContainer() : (children != null && children.size() > 0);
     }
 
     /**

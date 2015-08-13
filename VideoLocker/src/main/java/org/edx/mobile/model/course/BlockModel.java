@@ -51,6 +51,6 @@ public class BlockModel implements Serializable{
     public BlockData data;
 
     public boolean isContainer(){
-        return descendants != null && descendants.size() > 0;
+        return type != null ? type.isContainer() : (descendants != null && descendants.size() > 0);
     }
 }
