@@ -479,12 +479,13 @@ public class BaseFragmentActivityTest extends UiTest {
      * @param currentActivity The current activity
      * @param nextActivityClass The class of the newly started activity
      */
-    protected void assertNextStartedActivity(BaseFragmentActivity currentActivity,
+    protected Intent assertNextStartedActivity(BaseFragmentActivity currentActivity,
             Class<? extends Activity> nextActivityClass) {
         ShadowActivity shadowActivity = Shadows.shadowOf(currentActivity);
         Intent intent = shadowActivity.getNextStartedActivity();
         assertThat(intent).hasComponent(currentActivity, nextActivityClass);
         assertAppliedTransitionNext(shadowActivity);
+        return intent;
     }
 
     /**
