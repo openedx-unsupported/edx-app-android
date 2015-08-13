@@ -39,6 +39,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
 
         discussionPostsListView.setAdapter(discussionPostsAdapter);
+        discussionPostsListView.setOnItemClickListener(discussionPostsAdapter);
 
         discussionPostsCreatePostLayout.setOnClickListener(new View.OnClickListener() {
             @Override

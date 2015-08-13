@@ -65,7 +65,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         sortOptions.put(R.id.sort_item_most_activity, DiscussionPostsSort.LastActivityAt);
         sortOptions.put(R.id.sort_item_most_votes, DiscussionPostsSort.VoteCount);
 
-        return inflater.inflate(R.layout.fragment_discussion_search_posts, container, false);
+        return inflater.inflate(R.layout.fragment_discussion_thread_posts, container, false);
     }
 
     @Override
