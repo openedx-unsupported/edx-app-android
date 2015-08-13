@@ -1,15 +1,25 @@
 package org.edx.mobile.view;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.view.custom.DisableableViewPager;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -22,11 +32,44 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}
      * that is being tested. Should be overridden by subclasses.
      *
-     * @return The {@link CourseUnitNavigationActivity} subclass that is being tested
+     * @return The {@link CourseUnitNavigationActivity} subclass that is being
+     * tested
      */
     @Override
     protected Class<? extends CourseUnitNavigationActivity> getActivityClass() {
         return CourseUnitNavigationActivity.class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Intent getIntent() {
+        EnrolledCoursesResponse courseData;
+        CourseComponent courseComponent;
+        try {
+            courseData = api.getEnrolledCourses().get(0);
+            courseComponent = serviceManager.getCourseStructure(
+                    courseData.getCourse().getId(),
+                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        List<CourseComponent> leafComponents = new ArrayList<>();
+        courseComponent.fetchAllLeafComponents(leafComponents,
+                EnumSet.allOf(BlockType.class));
+        CourseComponent courseUnit = leafComponents.get(0);
+        courseComponent = courseUnit.getParent();
+        if (courseUnit.getPath().getPath().size() % 2 > 0) {
+            courseComponent = courseComponent.getParent();
+        }
+        Intent intent = super.getIntent();
+        Bundle extras = new Bundle();
+        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
+        extras.putSerializable(Router.EXTRA_COURSE_UNIT, courseUnit);
+        intent.putExtra(Router.EXTRA_BUNDLE, extras);
+        return intent;
     }
 
     /**
@@ -46,7 +89,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         super.initializeTest();
 
         ActivityController<? extends CourseUnitNavigationActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         CourseUnitNavigationActivity activity = controller.get();
 
         controller.create();
@@ -87,7 +130,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
      */
     public void testOrientationSetup(int orientation) {
         ActivityController<? extends CourseUnitNavigationActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         CourseUnitNavigationActivity activity = controller.get();
         activity.getResources().getConfiguration().orientation = orientation;
         controller.create();
@@ -124,7 +167,8 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     @Test
     public void orientationChangeTest() {
         CourseUnitNavigationActivity activity =
-                Robolectric.setupActivity(CourseUnitNavigationActivity.class);
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 activity.getResources().getConfiguration().orientation);
         assertOrientationSetup(activity);

@@ -45,6 +45,7 @@ import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
@@ -69,6 +70,17 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     protected Class<? extends BaseFragmentActivity> getActivityClass() {
         return BaseFragmentActivity.class;
+    }
+
+    /**
+     * Method for constructing the {link Intent} to be used to start the
+     * {link Activity} instance. Should be overridden by subclasses to
+     * attach any additional data to be passed.
+     *
+     * @return The {@link Intent} used to start the {link Activity}
+     */
+    protected Intent getIntent() {
+        return new Intent(RuntimeEnvironment.application, getActivityClass());
     }
 
     /**
@@ -106,7 +118,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void updateActionBarShadowTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass()).create().get();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().get();
 
         // Get the content view
         View contentView = activity.findViewById(android.R.id.content);
@@ -134,7 +147,7 @@ public class BaseFragmentActivityTest extends UiTest {
     @Config(qualifiers = "land")
     public void landscapeFullscreenTest() {
         ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         BaseFragmentActivity activity = controller.get();
         activity.getResources().getConfiguration().orientation =
                 Configuration.ORIENTATION_LANDSCAPE;
@@ -158,7 +171,7 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     private void assertActionBarShowing(int orientation, boolean expected) {
         ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         BaseFragmentActivity activity = controller.get();
         activity.getResources().getConfiguration().orientation = orientation;
         controller.create().start();
@@ -226,7 +239,7 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void lifecycleTest() {
         ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         BaseFragmentActivity activity = controller.get();
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
 
@@ -306,7 +319,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void initializeOptionsMenuTest() {
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         Menu menu = Shadows.shadowOf(activity).getOptionsMenu();
         assertNotNull(menu);
         MenuItem offlineItem = menu.findItem(R.id.offline);
@@ -350,7 +364,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void setTitleTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass()).create().get();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().get();
         CharSequence title = "test";
         activity.setTitle(title);
         assertTitle(activity, title);
@@ -380,7 +395,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void animateLayoutsTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass()).create().get();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().get();
         View view = new View(activity);
         view.setVisibility(View.GONE);
         activity.setContentView(view);
@@ -412,7 +428,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void showInfoMessageTest() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass()).create().get();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().get();
         TextView messageView = new TextView(activity);
         messageView.setId(R.id.downloadMessage);
         messageView.setVisibility(View.GONE);
@@ -429,7 +446,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void showOfflineAccessMessage() {
         BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass()).create().get();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().get();
         View offlineView = new View(activity);
         offlineView.setId(R.id.offline_access_panel);
         offlineView.setVisibility(View.GONE);
@@ -446,7 +464,8 @@ public class BaseFragmentActivityTest extends UiTest {
     public void applyPrevTransitionOnRestartTest() {
         assumeTrue(appliesPrevTransitionOnRestart());
         ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).create().start();
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).create().start();
         ShadowActivity shadowActivity = Shadows.shadowOf(controller.get());
         assertAppliedTransitionNext(shadowActivity);
         controller.stop().start().resume();
@@ -479,13 +498,15 @@ public class BaseFragmentActivityTest extends UiTest {
         assumeTrue(runsOnTick());
 
         AppConstants.offline_flag = false;
-        assertFalse(Shadows.shadowOf(Robolectric.setupActivity(getActivityClass()))
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.progress_download)
                 .isVisible());
 
         AppConstants.offline_flag = true;
-        assertFalse(Shadows.shadowOf(Robolectric.setupActivity(getActivityClass()))
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.progress_download)
                 .isVisible());
@@ -509,14 +530,16 @@ public class BaseFragmentActivityTest extends UiTest {
         Long rowId = db.addVideoData(de, null);
         assertNotNull(rowId);
         assertThat(rowId).isGreaterThan(0);
-        assertFalse(Shadows.shadowOf(Robolectric.setupActivity(getActivityClass()))
+        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.progress_download)
                 .isVisible());
 
         AppConstants.offline_flag = false;
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         MenuItem progressItem = Shadows.shadowOf(activity)
                 .getOptionsMenu()
                 .findItem(R.id.progress_download);
@@ -566,7 +589,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void showWebDialogTest() {
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         String url = "https://www.edx.org";
         String title = "title";
         showWebDialogTest(activity, url, true, title);
@@ -581,7 +605,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void infoFlyingMessageDisplayTest() {
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         assumeNotNull(activity.findViewById(R.id.downloadMessage));
         String message = "message";
         EventBus eventBus = EventBus.getDefault();
@@ -633,7 +658,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void errorFlyingMessageDisplayTest() {
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         View errorView = activity.findViewById(R.id.error_layout);
         assumeNotNull(errorView);
         assumeThat(errorView, instanceOf(ViewGroup.class));
@@ -652,7 +678,8 @@ public class BaseFragmentActivityTest extends UiTest {
     @Test
     public void tryToSetUIInteractionTest() {
         BaseFragmentActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         assertFalse(activity.tryToSetUIInteraction(true));
         assertFalse(activity.tryToSetUIInteraction(false));
     }

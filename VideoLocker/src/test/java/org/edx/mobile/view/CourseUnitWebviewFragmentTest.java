@@ -4,8 +4,17 @@ import android.view.View;
 import android.webkit.WebView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockType;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.HtmlBlockModel;
 import org.junit.Test;
 import org.robolectric.util.SupportFragmentTestUtil;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -15,11 +24,34 @@ import static org.junit.Assert.*;
 // We should add mock web server and test the handling later
 public class CourseUnitWebviewFragmentTest extends UiTest {
     /**
+     * Method for iterating through the mock course response data, and
+     * returning the first video block leaf.
+     *
+     * @return The first {@link HtmlBlockModel} leaf in the mock course data
+     */
+    private HtmlBlockModel getHtmlUnit() {
+        EnrolledCoursesResponse courseData;
+        CourseComponent courseComponent;
+        try {
+            courseData = api.getEnrolledCourses().get(0);
+            courseComponent = serviceManager.getCourseStructure(
+                    courseData.getCourse().getId(),
+                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        List<CourseComponent> htmlBlockUnits = new ArrayList<>();
+        courseComponent.fetchAllLeafComponents(htmlBlockUnits,
+                EnumSet.of(BlockType.HTML));
+        return (HtmlBlockModel) htmlBlockUnits.get(0);
+    }
+
+    /**
      * Testing initialization
      */
     @Test
     public void initializeTest() {
-        CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance(null);
+        CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance(getHtmlUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment);
         View view = fragment.getView();
         assertNotNull(view);

@@ -14,6 +14,10 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import org.edx.mobile.R;
+import org.edx.mobile.http.OkHttpUtil;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
@@ -33,11 +37,31 @@ import static org.junit.Assume.assumeNotNull;
 @Config(sdk = 19)
 public class CourseUnitVideoFragmentTest extends UiTest {
     /**
+     * Method for iterating through the mock course response data, and
+     * returning the first video block leaf.
+     *
+     * @return The first {@link VideoBlockModel} leaf in the mock course data
+     */
+    private VideoBlockModel getVideoUnit() {
+        EnrolledCoursesResponse courseData;
+        CourseComponent courseComponent;
+        try {
+            courseData = api.getEnrolledCourses().get(0);
+            courseComponent = serviceManager.getCourseStructure(
+                    courseData.getCourse().getId(),
+                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return (VideoBlockModel) courseComponent.getVideos().get(0);
+    }
+
+    /**
      * Testing initialization
      */
     @Test
     public void initializeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(null);
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment);
         assertTrue(fragment.getRetainInstance());
 
@@ -57,7 +81,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
     private void assertActionBarShowing(int orientation, boolean expected) {
         FragmentActivity activity = Robolectric.setupActivity(FragmentUtilActivity.class);
         activity.getResources().getConfiguration().orientation = orientation;
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(null);
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
         activity.getSupportFragmentManager()
                 .beginTransaction().add(1, fragment, null).commit();
         assertTrue(fragment.getRetainInstance());
@@ -140,7 +164,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(null);
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
