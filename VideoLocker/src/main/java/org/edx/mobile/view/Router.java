@@ -196,10 +196,10 @@ public class Router {
     }
 
     public void showCourseDiscussionTopics(Activity activity, EnrolledCoursesResponse courseData) {
-//        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionTopicsActivity.class);
-//        showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
-//        showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        activity.startActivity(showDiscussionsIntent);
+        Intent showDiscussionsIntent = new Intent(activity, CourseDiscussionTopicsActivity.class);
+        showDiscussionsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        showDiscussionsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(showDiscussionsIntent);
 
         // add a new comment or response
 //        Intent addCommentIntent = new Intent(activity, DiscussionAddCommentActivity.class);
@@ -207,13 +207,6 @@ public class Router {
 //        addCommentIntent.putExtra(DiscussionAddCommentFragment.IS_RESPONSE, true); // or false
 //        addCommentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 //        activity.startActivity(addCommentIntent);
-
-        // add a new post
-        Intent addPostIntent = new Intent(activity, DiscussionAddPostActivity.class);
-        addPostIntent.putExtra(DiscussionAddPostFragment.ENROLLMENT, courseData);
-        addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(addPostIntent);
-
     }
 
     public void showCourseDiscussionPostsForSearchQuery(Activity activity, String query, EnrolledCoursesResponse courseData) {

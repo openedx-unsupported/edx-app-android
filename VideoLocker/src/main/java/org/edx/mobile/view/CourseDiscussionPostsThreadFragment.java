@@ -135,6 +135,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         });
     }
 
+
     @Override
     protected void populateThreadList() {
         // TODO: Add a progress indicator (spinner?) while waiting for callback

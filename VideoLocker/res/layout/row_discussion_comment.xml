@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_discussion_comment_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/discussion_comment_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textSize="@dimen/edx_small" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/discussion_comment_author_text_view"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edx_grayscale_neutral_light"
+            android:textSize="@dimen/edx_x_small"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/discussion_comment_date_text_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edx_grayscale_neutral_light"
+            android:textSize="@dimen/edx_x_small"
+            android:visibility="gone" />
+
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/discussion_comment_count_report_icon"
+            style="@style/icon_view_standard_size_style"
+            android:layout_marginEnd="3dp"
+            android:layout_marginRight="3dp"
+            app:iconColor="@color/edx_grayscale_neutral_light"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/discussion_comment_count_report_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edx_grayscale_neutral_light"
+            android:textSize="@dimen/edx_x_small"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</LinearLayout>
