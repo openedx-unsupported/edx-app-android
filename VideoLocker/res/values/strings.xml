@@ -188,6 +188,9 @@
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
 
+    <!-- Discussion -->
+    <!-- Title of discussion topics screen -->
+    <string name="discussion_topics_title">Discussion Topics</string>
 
     <!-- Title of course outline screen -->
     <string name="course_outline">Course Outline</string>
