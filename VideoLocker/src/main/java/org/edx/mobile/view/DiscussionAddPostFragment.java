@@ -163,23 +163,24 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 final String body = bodyEditText.getText().toString();
                 if (title.trim().length() == 0 || body.trim().length() == 0) return;
 
-                final String discussionQuestion;
+                final DiscussionThread.ThreadType discussionQuestion;
                 if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
-                    discussionQuestion = "discussion"; // post type passed to the create post API. case-sensitive!
+                    discussionQuestion = DiscussionThread.ThreadType.DISCUSSION;
                 } else {
-                    discussionQuestion = "question";
+                    discussionQuestion = DiscussionThread.ThreadType.QUESTION;
                 }
 
                 ThreadBody threadBody = new ThreadBody();
                 threadBody.setCourseId(courseData.getCourse().getId());
                 threadBody.setTitle(title);
                 threadBody.setRawBody(body);
-                threadBody.setTopicId(allCourseTopics.getCoursewareTopics().get(selectedTopicIndex).getChildren().get(0).getIdentifier());
+                threadBody.setTopicId(allTopicsWithDepth.get(selectedTopicIndex).getDiscussionTopic().getIdentifier());
                 threadBody.setType(discussionQuestion);
 
                 new DiscussionAPI().createThread(threadBody, new APICallback<DiscussionThread>() {
                     @Override
                     public void success(DiscussionThread thread) {
+                        addPostButton.setEnabled(true);
                     }
 
                     @Override

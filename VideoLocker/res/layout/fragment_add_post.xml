@@ -40,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/discussion_question_segmented_group"
         android:layout_marginTop="10dp" />
 
@@ -49,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/topics_spinner"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:hint="@string/discussion_post_title" />
 
@@ -58,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_edit_text"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
         android:hint="@string/discussion_add_your_post" />
 
