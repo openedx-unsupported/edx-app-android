@@ -124,6 +124,9 @@ public class DiscussionThread implements Serializable {
     }
 
     public String getAuthor() {
+        if (author == null || author.isEmpty()) {
+            return "anonymous";
+        }
         return author;
     }
 

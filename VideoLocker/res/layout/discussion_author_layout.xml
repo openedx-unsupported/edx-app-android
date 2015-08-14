@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="@layout/discussion_responses_thread_row">
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/discussion_author_layout_author_text_view"
+        style="@style/discussion_responses_small_text"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/discussion_responses_thread_row_text_view_spacing"
+        android:layout_marginRight="@dimen/discussion_responses_thread_row_text_view_spacing" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/discussion_author_layout_created_at_text_view"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/discussion_author_layout_author_text_view"
+        android:layout_toRightOf="@+id/discussion_author_layout_author_text_view"
+        android:layout_marginEnd="@dimen/discussion_responses_thread_row_text_view_spacing"
+        android:layout_marginRight="@dimen/discussion_responses_thread_row_text_view_spacing"
+        style="@style/discussion_responses_small_text" />
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/discussion_author_layout_privileged_author_text_view"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/discussion_author_layout_created_at_text_view"
+        android:layout_toRightOf="@+id/discussion_author_layout_created_at_text_view"
+        style="@style/discussion_responses_small_text" />
+</merge>

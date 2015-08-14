@@ -56,10 +56,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_following);
 
             } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
-                pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_staff);
+                pinFollowTextLabel = context.getString(R.string.discussion_priviledged_author_label_staff);
 
             } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
-                pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_ta);
+                pinFollowTextLabel = context.getString(R.string.discussion_priviledged_author_label_ta);
             }
             holder.discussionPostPinFollowTextView.setText(pinFollowTextLabel);
 

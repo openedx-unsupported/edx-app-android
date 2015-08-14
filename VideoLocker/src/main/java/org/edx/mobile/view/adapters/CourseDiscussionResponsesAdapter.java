@@ -1,22 +1,33 @@
 package org.edx.mobile.view.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
+import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.RoboGuice;
-
 public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
+
+    @Inject
+    Context context;
+
+    private static final int ROW_POSITION_THREAD = 0;
 
     private DiscussionThread discussionThread;
     private List<DiscussionComment> discussionResponses = new ArrayList<>();
@@ -46,12 +57,51 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position == 0) {
-            DiscussionThreadViewHolder discussionThreadHolder = (DiscussionThreadViewHolder) holder;
-            discussionThreadHolder.threadTitleTextView.setText(discussionThread.getTitle());
-            return;
+        if (position == ROW_POSITION_THREAD) {
+            bindViewHolderToThreadRow((DiscussionThreadViewHolder) holder);
+        } else {
+            bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
+        }
+    }
+
+    private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
+        holder.threadTitleTextView.setText(discussionThread.getTitle());
+        holder.threadBodyTextView.setText(discussionThread.getRawBody());
+
+        if (discussionThread.isPinned() || discussionThread.isFollowing()) {
+            holder.threadPinOrFollowingIconView.setVisibility(View.VISIBLE);
+            holder.threadPinOrFollowingIconView.setIcon(discussionThread.isPinned() ?
+                    Iconify.IconValue.fa_pinterest : Iconify.IconValue.fa_star);
         }
 
+        bindAuthorView(holder.authorLayoutViewHolder);
+        bindNumberResponsesView(holder.numberResponsesViewHolder);
+    }
+
+    private void bindAuthorView(AuthorLayoutViewHolder holder) {
+        holder.discussionAuthorTextView.setText(discussionThread.getAuthor());
+        holder.discussionAuthorCreatedAtTextView.setText(
+                DateUtil.formatPastDateRelativeToCurrentDate(discussionThread.getCreatedAt()));
+
+        String priviledgedAuthorText = "";
+        if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
+            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_staff);
+
+        } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
+            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_ta);
+        }
+
+        holder.discussionAuthorPrivilegedAuthorTextView.setText(priviledgedAuthorText);
+    }
+
+    private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
+        holder.numberResponsesOrCommentsIconView.setIcon(Iconify.IconValue.fa_comment);
+        holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
+        holder.numberResponsesOrCommentsLabel.setText(
+                context.getString(R.string.number_responses_or_comments_responses_label));
+    }
+
+    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
         DiscussionComment response = discussionResponses.get(position - 1);
         DiscussionResponseViewHolder responseViewHolder = (DiscussionResponseViewHolder) holder;
         responseViewHolder.responseCommentTextView.setText(response.getRawBody());
@@ -59,11 +109,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        if (discussionThread == null) {
-            return 0;
-        }
-        return 1 + discussionResponses.size();
+        return (discussionThread == null) ? 0 : 1 + discussionResponses.size();
     }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -85,21 +133,26 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public static class RoboViewHolder extends RecyclerView.ViewHolder {
-        public RoboViewHolder(View itemView) {
-            super(itemView);
-            RoboGuice.getInjector(itemView.getContext()).injectViewMembers(this);
-        }
-    }
-
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
-//        @InjectView(R.id.discussion_responses_thread_title)
         ETextView threadTitleTextView;
+        ETextView threadBodyTextView;
+        IconView threadPinOrFollowingIconView;
+
+        AuthorLayoutViewHolder authorLayoutViewHolder;
+        NumberResponsesViewHolder numberResponsesViewHolder;
 
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
-//            RoboGuice.getInjector(itemView.getContext()).injectViewMembers(DiscussionThreadViewHolder.this);
-            threadTitleTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_thread_title);
+
+            threadTitleTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_title);
+            threadBodyTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_body);
+            threadPinOrFollowingIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_pin_or_following_icon);
+
+            authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
+            numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
         }
     }
 

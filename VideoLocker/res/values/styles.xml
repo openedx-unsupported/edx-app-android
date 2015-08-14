@@ -183,4 +183,11 @@
         <item name="android:layout_height">@dimen/icon_view_standard_width_height</item>
     </style>
 
+    <style name="discussion_responses_small_text">
+        <item name="android:textSize">@dimen/edx_xxx_small</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

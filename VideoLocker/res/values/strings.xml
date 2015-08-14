@@ -284,14 +284,16 @@
     <!--Label for discussion post you are following-->
     <string name="discussion_posts_following">Following</string>
     <!--Label for discussion post pinned by the community TA-->
-    <string name="discussion_posts_author_label_ta">Community TA</string>
+    <string name="discussion_priviledged_author_label_ta">Community TA</string>
     <!--Label for discussion post pinned by the staff-->
-    <string name="discussion_posts_author_label_staff">Staff</string>
+    <string name="discussion_priviledged_author_label_staff">Staff</string>
 
     <!--Discussion Responses-->
     <string name="course_discussion_responses_title">Discussion Post</string>
     <!--Label for adding a discussion response-->
     <string name="discussion_responses_add_response">Add a response</string>
+    <!--Label for number of discussion responses-->
+    <string name="number_responses_or_comments_responses_label">responses</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
