@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_discussion_comment_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/discussion_comment_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textSize="@dimen/edx_small" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        >
+
+        <TextView
+            android:id="@+id/discussion_comment_author_text_view"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/edx_grayscale_neutral_dark"
+            android:textSize="@dimen/edx_xxx_small" />
+
+        <TextView
+            android:id="@+id/discussion_comment_date_text_view"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/discussion_comment_author_text_view"
+            android:layout_toEndOf="@+id/discussion_comment_author_text_view"
+            android:textColor="@color/edx_grayscale_neutral_dark"
+            android:textSize="@dimen/edx_xxx_small" />
+
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/discussion_comment_count_report_icon"
+            style="@style/icon_view_standard_size_style"
+            android:layout_toLeftOf="@+id/discussion_comment_count_report_text_view"
+            android:layout_toStartOf="@+id/discussion_comment_count_report_text_view"
+            app:iconColor="@color/edx_brand_primary_base"
+            android:textSize="@dimen/edx_small" />
+
+        <TextView
+            android:id="@+id/discussion_comment_count_report_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:layout_alignBottom="@+id/discussion_comment_count_report_icon"
+            android:textColor="@color/edx_brand_primary_base"
+            android:textSize="@dimen/edx_small"
+            android:clickable="true" />
+
+    </RelativeLayout>
+</LinearLayout>

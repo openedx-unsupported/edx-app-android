@@ -28,6 +28,8 @@ public class DiscussionAddCommentFragment extends RoboFragment {
 
     static public String TAG = DiscussionAddCommentFragment.class.getCanonicalName();
     static public String ENROLLMENT = TAG + ".enrollment";
+    static public String IS_RESPONSE = TAG + ".isResponse";
+
     protected final Logger logger = new Logger(getClass().getName());
     private EditText editTextNewComment;
     private Button buttonAddComment;
@@ -36,6 +38,7 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     private TextView textViewTimeAuthor;
 
     private EnrolledCoursesResponse courseData;
+    private Boolean isResponse;
 
     @Inject
     ISegment segIO;
@@ -47,6 +50,7 @@ public class DiscussionAddCommentFragment extends RoboFragment {
 
         final Bundle bundle = getArguments();
         courseData = (EnrolledCoursesResponse) bundle.getSerializable(ENROLLMENT);
+        isResponse = bundle.getBoolean(IS_RESPONSE);
 
         try{
             segIO.screenViewsTracking(courseData.getCourse().getName() +
@@ -65,7 +69,9 @@ public class DiscussionAddCommentFragment extends RoboFragment {
                 false);
 
         editTextNewComment = (EditText) fragment.findViewById(R.id.etNewComment);
+        editTextNewComment.setHint(getString(isResponse ? R.string.discussion_add_your_response : R.string.discussion_add_your_comment));
         buttonAddComment = (Button) fragment.findViewById(R.id.btnAddComment);
+        buttonAddComment.setText(getString(isResponse ? R.string.discussion_add_response : R.string.discussion_add_comment));
 
         textViewAnswer = (TextView) fragment.findViewById(R.id.tvAnswer);
         textViewResponse = (TextView) fragment.findViewById(R.id.tvResponse);

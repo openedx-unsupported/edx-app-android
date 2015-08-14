@@ -45,9 +45,70 @@ public class DiscussionComment {
         return identifier;
     }
 
+    public String getParentId() {
+        return parentId;
+    }
+
     public String getThreadId() {
         return threadId;
     }
+
+    public String getRawBody() {
+        return rawBody;
+    }
+
+    public String getRenderedBody() {
+        return renderedBody;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getAuthorLabel() {
+        return authorLabel;
+    }
+
+    public boolean isVoted() {
+        return voted;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Date getEndorsedAt() {
+        return endorsedAt;
+    }
+
+    public boolean isEndorsed() {
+        return endorsed;
+    }
+
+    public String getEndorsedBy() {
+        return endorsedBy;
+    }
+
+    public String getEndorsedByLabel() {
+        return endorsedByLabel;
+    }
+
+    public boolean isAbuseFlagged() {
+        return abuseFlagged;
+    }
+
+    public List<String> getEditableFields() {
+        return editableFields;
+    }
+
     public List<DiscussionComment> getChildren() {
         return children;
     }

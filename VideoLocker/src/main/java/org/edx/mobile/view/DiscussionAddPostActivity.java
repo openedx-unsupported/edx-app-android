@@ -3,13 +3,14 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
-public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
+public class DiscussionAddPostActivity extends BaseSingleFragmentActivity {
     private Fragment fragment;
-    private Boolean isResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,22 +21,24 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        isResponse = getIntent()
-                .getBooleanExtra(DiscussionAddCommentFragment.IS_RESPONSE, false);
 
-        setTitle(getString(isResponse ? R.string.discussion_response : R.string.discussion_comment));
+        setTitle(getString(R.string.discussion_post));
     }
 
     @Override
     public Fragment getFirstFragment() {
 
-        fragment = new DiscussionAddCommentFragment();
+        fragment = new DiscussionAddPostFragment();
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
-                .getSerializableExtra(DiscussionAddCommentFragment.ENROLLMENT);
-        if (courseData != null) {
+                .getSerializableExtra(DiscussionAddPostFragment.ENROLLMENT);
+        DiscussionTopic discussionTopic = (DiscussionTopic) getIntent()
+                .getSerializableExtra(DiscussionAddPostFragment.TOPIC);
+
+
+        if (courseData != null && discussionTopic != null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(DiscussionAddCommentFragment.ENROLLMENT, courseData);
-            bundle.putBoolean(DiscussionAddCommentFragment.IS_RESPONSE, isResponse);
+            bundle.putSerializable(DiscussionAddPostFragment.ENROLLMENT, courseData);
+            bundle.putSerializable(DiscussionAddPostFragment.TOPIC, discussionTopic);
             fragment.setArguments(bundle);
         }
 

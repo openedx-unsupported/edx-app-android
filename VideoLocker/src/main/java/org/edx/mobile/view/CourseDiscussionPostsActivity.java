@@ -1,13 +1,16 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import roboguice.inject.InjectExtra;
 
@@ -24,6 +27,10 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
+
+    @InjectExtra(Router.EXTRA_COURSE_DATA)
+    private EnrolledCoursesResponse courseData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,28 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
         if (discussionTopic != null && discussionTopic.getName() != null) {
             setTitle(discussionTopic.getName());
         }
+
+    }
+
+    static boolean flip = true; // for demo purpose. TODO: remove this
+    public void onClick(View v) {
+        // TODO: pass topics instead of making the get topics API call again in DiscussionAddPostFragment
+        if (flip) {
+            Intent addPostIntent = new Intent(this, DiscussionAddPostActivity.class);
+            addPostIntent.putExtra(DiscussionAddPostFragment.ENROLLMENT, courseData);
+            addPostIntent.putExtra(DiscussionAddPostFragment.TOPIC, discussionTopic);
+            addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivity(addPostIntent);
+        }
+        else {
+            // For test purpose. TODO: put this behind the tap on response list when it's done.
+            Intent commentListIntent = new Intent(this, CourseDiscussionCommentsActivity.class);
+            commentListIntent.putExtra(Router.EXTRA_COURSE_DATA, courseData);
+            commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivity(commentListIntent);
+        }
+
+        flip = !flip;
 
     }
 }
