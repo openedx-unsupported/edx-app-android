@@ -31,19 +31,7 @@
             android:layout_height="1dp"
             android:background="@color/edx_grayscale_neutral_xx_light" />
 
-        <RelativeLayout
-            style="@style/discussion_responses_nested_card_layout_style"
-            android:layout_height="@dimen/discussion_responses_secondary_actions_bar_height">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
+        <include layout="@layout/discussion_response_action_bar_layout" />
 
         <RelativeLayout
             style="@style/discussion_responses_nested_card_layout_style"

@@ -294,6 +294,8 @@
     <string name="discussion_responses_add_response">Add a response</string>
     <!--Label for number of discussion responses-->
     <string name="number_responses_or_comments_responses_label">responses</string>
+    <!--Label for discussion response to report as inappropriate -->
+    <string name="discussion_responses_report_label">Report</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
