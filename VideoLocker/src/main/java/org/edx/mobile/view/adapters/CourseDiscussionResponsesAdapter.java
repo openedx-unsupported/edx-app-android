@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
@@ -76,10 +77,37 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         bindNumberResponsesView(holder.numberResponsesViewHolder);
     }
 
+    private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
+        holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
+        holder.numberResponsesOrCommentsLabel.setText(context.getResources().getQuantityString(
+                R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount()));
+    }
+
     private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
         DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
         holder.responseCommentBodyTextView.setText(response.getRawBody());
+        holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Launch the comments activity
+            }
+        });
         bindAuthorView(holder.authorLayoutViewHolder, response);
+        bindNumberCommentsView(holder.numberResponsesViewHolder, response);
+    }
+
+    private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
+        int numChildren = response == null ? 0 : response.getChildren().size();
+
+        if (numChildren == 0) {
+            holder.numberResponsesOrCommentsCountTextView.setVisibility(View.GONE);
+            holder.numberResponsesOrCommentsLabel.setText(context.getString(
+                    R.string.number_responses_or_comments_add_comment_label));
+        } else {
+            holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(response.getChildren().size()));
+            holder.numberResponsesOrCommentsLabel.setText(context.getResources().
+                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren));
+        }
     }
 
     private void bindAuthorView(AuthorLayoutViewHolder holder, IAuthorData authorData) {
@@ -96,12 +124,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
 
         holder.discussionAuthorPrivilegedAuthorTextView.setText(priviledgedAuthorText);
-    }
-
-    private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
-        holder.numberResponsesOrCommentsLabel.setText(
-                context.getString(R.string.number_responses_or_comments_responses_label));
     }
 
     @Override
@@ -154,13 +176,18 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout addCommentLayout;
         ETextView responseCommentBodyTextView;
         AuthorLayoutViewHolder authorLayoutViewHolder;
+        NumberResponsesViewHolder numberResponsesViewHolder;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
+
+            addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
             responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
+            numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
         }
     }
 

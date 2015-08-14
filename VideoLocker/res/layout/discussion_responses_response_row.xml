@@ -49,6 +49,7 @@
         <include layout="@layout/discussion_response_action_bar_layout" />
 
         <RelativeLayout
+            android:id="@+id/discussion_responses_comment_relative_layout"
             style="@style/discussion_responses_nested_card_layout_style"
             android:layout_height="@dimen/discussion_responses_comments_button_height"
             android:background="@color/edx_grayscale_neutral_xx_light"

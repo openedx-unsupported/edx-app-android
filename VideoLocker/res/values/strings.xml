@@ -293,9 +293,23 @@
     <!--Label for adding a discussion response-->
     <string name="discussion_responses_add_response">Add a response</string>
     <!--Label for number of discussion responses-->
-    <string name="number_responses_or_comments_responses_label">responses</string>
+    <plurals name="number_responses_or_comments_responses_label">
+        <!--Label indicating there is only one response-->
+        <item quantity="one">response</item>
+        <!--Label indicating there are more than one response-->
+        <item quantity="other">responses</item>
+    </plurals>
+    <!--Label for number of discussion comments-->
+    <plurals name="number_responses_or_comments_comments_label">
+        <!--Label indicating there is only one comment-->
+        <item quantity="one">comment</item>
+        <!--Label indicating there are more than one response-->
+        <item quantity="other">comments</item>
+    </plurals>
     <!--Label for discussion response to report as inappropriate -->
     <string name="discussion_responses_report_label">Report</string>
+    <!--Label for adding a new comment-->
+    <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
