@@ -15,15 +15,30 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:layout_height="wrap_content"
-            android:minHeight="50dp"
+            android:id="@+id/discussion_response_body"
+            android:layout_height="50dp"
             android:paddingTop="@dimen/discussion_responses_box_padding"
+            android:paddingBottom="3dp"
             style="@style/discussion_responses_nested_card_layout_style">
 
             <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/discussion_responses_comment_text_view"
+                android:id="@+id/discussion_responses_comment_body_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/edx_x_small"
+                android:textColor="@color/edx_grayscale_neutral_dark"/>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/discussion_responses_comment_body_text_view"
+                android:layout_alignParentBottom="true"
+                android:gravity="bottom">
+
+                <include layout="@layout/discussion_author_layout" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <View

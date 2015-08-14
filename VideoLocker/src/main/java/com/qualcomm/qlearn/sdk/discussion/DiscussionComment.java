@@ -21,14 +21,14 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionComment {
+public class DiscussionComment implements IAuthorData {
     private @SerializedName("id") String identifier;
     private String parentId;
     private String threadId;
     private String rawBody;
     private String renderedBody;
     private String author;
-    private String authorLabel;
+    private PinnedAuthor authorLabel;
     private boolean voted = false;
     private int voteCount = 0;
     private Date createdAt;
@@ -65,7 +65,7 @@ public class DiscussionComment {
         return author;
     }
 
-    public String getAuthorLabel() {
+    public PinnedAuthor getAuthorLabel() {
         return authorLabel;
     }
 

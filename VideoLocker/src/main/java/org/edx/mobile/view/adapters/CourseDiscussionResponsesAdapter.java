@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import com.qualcomm.qlearn.sdk.discussion.IAuthorData;
+import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
@@ -71,20 +72,26 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             holder.threadPinnedIconView.setVisibility(View.VISIBLE);
         }
 
-        bindAuthorView(holder.authorLayoutViewHolder);
+        bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
     }
 
-    private void bindAuthorView(AuthorLayoutViewHolder holder) {
-        holder.discussionAuthorTextView.setText(discussionThread.getAuthor());
+    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
+        DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
+        holder.responseCommentBodyTextView.setText(response.getRawBody());
+        bindAuthorView(holder.authorLayoutViewHolder, response);
+    }
+
+    private void bindAuthorView(AuthorLayoutViewHolder holder, IAuthorData authorData) {
+        holder.discussionAuthorTextView.setText(authorData.getAuthor());
         holder.discussionAuthorCreatedAtTextView.setText(
-                DateUtil.formatPastDateRelativeToCurrentDate(discussionThread.getCreatedAt()));
+                DateUtil.formatPastDateRelativeToCurrentDate(authorData.getCreatedAt()));
 
         String priviledgedAuthorText = "";
-        if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
+        if (authorData.getAuthorLabel() == PinnedAuthor.STAFF) {
             priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_staff);
 
-        } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
+        } else if (authorData.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
             priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_ta);
         }
 
@@ -95,12 +102,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
         holder.numberResponsesOrCommentsLabel.setText(
                 context.getString(R.string.number_responses_or_comments_responses_label));
-    }
-
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
-        DiscussionComment response = discussionResponses.get(position - 1);
-        DiscussionResponseViewHolder responseViewHolder = (DiscussionResponseViewHolder) holder;
-        responseViewHolder.responseCommentTextView.setText(response.getRawBody());
     }
 
     @Override
@@ -153,11 +154,13 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
-        ETextView responseCommentTextView;
+        ETextView responseCommentBodyTextView;
+        AuthorLayoutViewHolder authorLayoutViewHolder;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
-            responseCommentTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_text_view);
+            responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
+            authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
         }
     }
 

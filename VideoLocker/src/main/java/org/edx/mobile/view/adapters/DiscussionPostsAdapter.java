@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -55,10 +56,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             if (discussionThread.isFollowing()) {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_following);
 
-            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
+            } else if (discussionThread.getAuthorLabel() == PinnedAuthor.STAFF) {
                 pinFollowTextLabel = context.getString(R.string.discussion_priviledged_author_label_staff);
 
-            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
+            } else if (discussionThread.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
                 pinFollowTextLabel = context.getString(R.string.discussion_priviledged_author_label_ta);
             }
             holder.discussionPostPinFollowTextView.setText(pinFollowTextLabel);

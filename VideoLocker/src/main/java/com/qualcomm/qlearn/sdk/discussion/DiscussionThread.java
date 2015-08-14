@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionThread implements Serializable {
+public class DiscussionThread implements Serializable, IAuthorData {
 
     public enum ThreadType {
         @SerializedName("discussion")
@@ -34,24 +34,6 @@ public class DiscussionThread implements Serializable {
         private final int value;
 
         private ThreadType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public enum PinnedAuthor {
-        @SerializedName("staff")
-        STAFF (0),
-
-        @SerializedName("community_ta")
-        COMMUNITY_TA (1);
-
-        private final int value;
-
-        private PinnedAuthor(int value) {
             this.value = value;
         }
 
