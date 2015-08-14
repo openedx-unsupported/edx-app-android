@@ -264,6 +264,8 @@
     <string name="discussion_posts_refine">Refine:</string>
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
+    <!--Label for creating a new comment-->
+    <string name="discussion_post_create_new_comment">Create a new comment</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>

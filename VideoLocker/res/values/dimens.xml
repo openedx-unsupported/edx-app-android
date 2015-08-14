@@ -56,5 +56,7 @@
     <!--edX typography-->
     <dimen name="edx_small">14sp</dimen>
     <dimen name="edx_x_small">12sp</dimen>
+    <dimen name="edx_xx_small">11sp</dimen>
+    <dimen name="edx_xxx_small">10sp</dimen>
 
 </resources>

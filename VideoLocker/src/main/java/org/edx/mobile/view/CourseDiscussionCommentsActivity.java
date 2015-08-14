@@ -1,7 +1,9 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.google.inject.Inject;
 
@@ -41,4 +43,14 @@ public class CourseDiscussionCommentsActivity extends BaseSingleFragmentActivity
         super.onStart();
         setTitle(getString(R.string.discussion_comments));
     }
+
+    public void onClick(View v) {
+        // add a new comment or response
+        Intent addCommentIntent = new Intent(this, DiscussionAddCommentActivity.class);
+        addCommentIntent.putExtra(DiscussionAddCommentFragment.ENROLLMENT, courseData);
+        addCommentIntent.putExtra(DiscussionAddCommentFragment.IS_RESPONSE, false);
+        addCommentIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        this.startActivity(addCommentIntent);
+    }
+
 }

@@ -74,19 +74,25 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
 
     }
 
-
+    static boolean flip = true; // for demo purpose. TODO: remove this
     public void onClick(View v) {
         // TODO: pass topics instead of making the get topics API call again in DiscussionAddPostFragment
-        Intent addPostIntent = new Intent(this, DiscussionAddPostActivity.class);
-        addPostIntent.putExtra(DiscussionAddPostFragment.ENROLLMENT, courseData);
-        addPostIntent.putExtra(DiscussionAddPostFragment.TOPIC, discussionTopic);
-        addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        this.startActivity(addPostIntent);
+        if (flip) {
+            Intent addPostIntent = new Intent(this, DiscussionAddPostActivity.class);
+            addPostIntent.putExtra(DiscussionAddPostFragment.ENROLLMENT, courseData);
+            addPostIntent.putExtra(DiscussionAddPostFragment.TOPIC, discussionTopic);
+            addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivity(addPostIntent);
+        }
+        else {
+            // For test purpose. TODO: put this behind the tap on response list when it's done.
+            Intent commentListIntent = new Intent(this, CourseDiscussionCommentsActivity.class);
+            commentListIntent.putExtra(Router.EXTRA_COURSE_DATA, courseData);
+            commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            this.startActivity(commentListIntent);
+        }
 
-        // For test purpose. TODO: put this behind the tap on response list when it's done.
-//        Intent commentListIntent = new Intent(this, CourseDiscussionCommentsActivity.class);
-//        commentListIntent.putExtra(Router.EXTRA_COURSE_DATA, courseData);
-//        commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        this.startActivity(commentListIntent);
+        flip = !flip;
+
     }
 }

@@ -1,12 +1,15 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.APICallback;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
@@ -25,22 +28,45 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
     }
 
     @Override
-    public void render(BaseViewHolder tag, DiscussionComment discussionComment) {
+    public void render(BaseViewHolder tag, final DiscussionComment discussionComment) {
         ViewHolder holder = (ViewHolder) tag;
 
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
         int childrenSize = discussionComment.getChildren().size();
-        Iconify.IconValue icon = childrenSize == 0 ? Iconify.IconValue.fa_pinterest : Iconify.IconValue.fa_flag;
+        Iconify.IconValue icon = childrenSize == 0 ? Iconify.IconValue.fa_flag : Iconify.IconValue.fa_comment; // show flag icon for comment, and comment icon for response
         holder.discussionCommentCountReportIcon.setIcon(icon);
 
         holder.discussionCommentAuthorTextView.setText(discussionComment.getAuthor());
-        holder.discussionCommentDateTextView.setText(discussionComment.getCreatedAt().toString());
-        // TODO: localization
-        holder.discussionCommentCountReportTextView.setText(childrenSize == 0 ? "Report" : (childrenSize + " comment" + (childrenSize == 1 ? "" : "s")));
-        holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_brand_primary_base));
 
+        CharSequence formattedDate = DateUtils.getRelativeTimeSpanString(
+                discussionComment.getCreatedAt().getTime(),
+                System.currentTimeMillis(),
+                DateUtils.MINUTE_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_RELATIVE);
+
+        holder.discussionCommentDateTextView.setText(formattedDate);
+        // TODO: localization
+        String report = discussionComment.isAbuseFlagged() ? "Reported" : "Report";
+        holder.discussionCommentCountReportTextView.setText(childrenSize == 0 ? report : (childrenSize + " comment" + (childrenSize == 1 ? "" : "s")));
+
+        holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                new DiscussionAPI().flagComment(discussionComment, true, new APICallback<DiscussionComment>() {
+                    @Override
+                    public void success(DiscussionComment comment) {
+                        // TODO: change Report to Reported and the flag icon color to red?
+                        TextView reportTextView = (TextView)v;
+                        reportTextView.setText("Reported");
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                    }
+                });
+            }
+        });
     }
 
     @Override
