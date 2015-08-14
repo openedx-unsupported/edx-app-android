@@ -36,7 +36,10 @@
         <RelativeLayout
             style="@style/discussion_responses_nested_card_layout_style"
             android:layout_height="@dimen/discussion_responses_comments_button_height"
-            android:background="@color/edx_grayscale_neutral_xx_light">
+            android:background="@color/edx_grayscale_neutral_xx_light"
+            android:gravity="center_horizontal|center_vertical">
+
+            <include layout="@layout/number_responses_or_comments_layout" />
 
         </RelativeLayout>
 

@@ -4,30 +4,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:showIn="@layout/discussion_responses_thread_row">
 
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/number_responses_or_comments_label"
-        style="@style/discussion_responses_small_text"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/number_responses_or_comments_count_text_view"
-        style="@style/discussion_responses_small_text"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/number_responses_or_comments_label"
-        android:layout_toLeftOf="@+id/number_responses_or_comments_label"
-        android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
-        android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing" />
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/number_responses_or_comments_icon_view"
+            android:layout_width="@dimen/edx_xxx_small"
+            android:layout_height="@dimen/edx_xxx_small"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
+            android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+            app:iconColor="@color/edx_grayscale_neutral_base"
+            app:iconName="fa_comment"/>
 
-    <org.edx.mobile.third_party.iconify.IconView
-        android:id="@+id/number_responses_or_comments_icon_view"
-        android:layout_width="@dimen/edx_xxx_small"
-        android:layout_height="@dimen/edx_xxx_small"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/number_responses_or_comments_count_text_view"
-        android:layout_toLeftOf="@+id/number_responses_or_comments_count_text_view"
-        android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
-        android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
-        app:iconColor="@color/edx_grayscale_neutral_base" />
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/number_responses_or_comments_count_text_view"
+            style="@style/discussion_responses_small_text"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/number_responses_or_comments_icon_view"
+            android:layout_toRightOf="@+id/number_responses_or_comments_icon_view"
+            android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
+            android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+            android:text="10"/>
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/number_responses_or_comments_label"
+            style="@style/discussion_responses_small_text"
+            android:layout_toEndOf="@+id/number_responses_or_comments_count_text_view"
+            android:layout_toRightOf="@+id/number_responses_or_comments_count_text_view"
+            android:layout_centerVertical="true"
+            android:text="comments"/>
+
+    </RelativeLayout>
+
 </merge>

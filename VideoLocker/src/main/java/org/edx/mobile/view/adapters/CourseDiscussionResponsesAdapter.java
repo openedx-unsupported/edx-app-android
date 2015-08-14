@@ -92,7 +92,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsIconView.setIcon(Iconify.IconValue.fa_comment);
         holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
         holder.numberResponsesOrCommentsLabel.setText(
                 context.getString(R.string.number_responses_or_comments_responses_label));
