@@ -34,6 +34,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/discussion_comment_author_text_view"
+            android:layout_toEndOf="@+id/discussion_comment_author_text_view"
             android:textColor="@color/edx_grayscale_neutral_dark"
             android:textSize="@dimen/edx_xxx_small" />
 
@@ -41,6 +42,7 @@
             android:id="@+id/discussion_comment_count_report_icon"
             style="@style/icon_view_standard_size_style"
             android:layout_toLeftOf="@+id/discussion_comment_count_report_text_view"
+            android:layout_toStartOf="@+id/discussion_comment_count_report_text_view"
             app:iconColor="@color/edx_brand_primary_base"
             android:textSize="@dimen/edx_small" />
 
