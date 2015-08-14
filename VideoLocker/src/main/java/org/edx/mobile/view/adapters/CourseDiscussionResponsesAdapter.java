@@ -2,7 +2,6 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.custom.ETextView;
+import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 
 import java.util.ArrayList;
@@ -68,10 +67,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         holder.threadTitleTextView.setText(discussionThread.getTitle());
         holder.threadBodyTextView.setText(discussionThread.getRawBody());
 
-        if (discussionThread.isPinned() || discussionThread.isFollowing()) {
-            holder.threadPinOrFollowingIconView.setVisibility(View.VISIBLE);
-            holder.threadPinOrFollowingIconView.setIcon(discussionThread.isPinned() ?
-                    Iconify.IconValue.fa_pinterest : Iconify.IconValue.fa_star);
+        if (discussionThread.isPinned()) {
+            holder.threadPinnedIconView.setVisibility(View.VISIBLE);
         }
 
         bindAuthorView(holder.authorLayoutViewHolder);
@@ -136,7 +133,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
         ETextView threadTitleTextView;
         ETextView threadBodyTextView;
-        IconView threadPinOrFollowingIconView;
+        IconView threadPinnedIconView;
 
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
@@ -145,11 +142,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             super(itemView);
 
             threadTitleTextView = (ETextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_title);
+                    findViewById(R.id.discussion_responses_thread_row_title_text_view);
             threadBodyTextView = (ETextView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_body);
-            threadPinOrFollowingIconView = (IconView) itemView.
-                    findViewById(R.id.discussion_responses_thread_row_pin_or_following_icon);
+                    findViewById(R.id.discussion_responses_thread_row_body_text_view);
+            threadPinnedIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_pinned_icon_view);
 
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);

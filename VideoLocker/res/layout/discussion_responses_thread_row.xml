@@ -4,38 +4,39 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/edx_grayscale_neutral_white"
-    android:padding="@dimen/discussion_responses_thread_row_padding">
+    android:padding="@dimen/discussion_responses_box_padding">
 
     <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/discussion_responses_thread_row_title"
+        android:id="@+id/discussion_responses_thread_row_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textSize="@dimen/edx_base"
         android:textColor="@color/edx_grayscale_neutral_x_dark"
-        android:layout_marginBottom="@dimen/discussion_responses_thread_row_margins"/>
+        android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
 
     <org.edx.mobile.view.custom.ETextView
-        android:id="@+id/discussion_responses_thread_row_body"
+        android:id="@+id/discussion_responses_thread_row_body_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/discussion_responses_thread_row_title"
+        android:layout_below="@+id/discussion_responses_thread_row_title_text_view"
         android:textSize="@dimen/edx_small"
         android:textColor="@color/edx_grayscale_neutral_dark"
-        android:layout_marginBottom="@dimen/discussion_responses_thread_row_margins"/>
+        android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
 
 
     <org.edx.mobile.third_party.iconify.IconView
-        android:id="@+id/discussion_responses_thread_row_pin_or_following_icon"
+        android:id="@+id/discussion_responses_thread_row_pinned_icon_view"
         android:layout_width="@dimen/edx_xxx_small"
         android:layout_height="@dimen/edx_xxx_small"
-        android:layout_below="@+id/discussion_responses_thread_row_body"
+        android:layout_below="@+id/discussion_responses_thread_row_body_text_view"
         android:layout_alignBottom="@+id/discussion_number_responses_relative_layout"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginEnd="@dimen/discussion_responses_thread_row_text_view_spacing"
         android:layout_marginRight="@dimen/discussion_responses_thread_row_text_view_spacing"
         app:iconColor="@color/edx_grayscale_neutral_base"
+        app:iconName="fa_thumb_tack"
         android:visibility="gone"/>
 
     <RelativeLayout
@@ -43,8 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/discussion_number_responses_relative_layout"
-        android:layout_toEndOf="@+id/discussion_responses_thread_row_pin_or_following_icon"
-        android:layout_toRightOf="@+id/discussion_responses_thread_row_pin_or_following_icon">
+        android:layout_toEndOf="@+id/discussion_responses_thread_row_pinned_icon_view"
+        android:layout_toRightOf="@+id/discussion_responses_thread_row_pinned_icon_view">
 
         <include layout="@layout/discussion_author_layout" />
 
@@ -54,7 +55,7 @@
         android:id="@+id/discussion_number_responses_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/discussion_responses_thread_row_body"
+        android:layout_below="@+id/discussion_responses_thread_row_body_text_view"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/discussion_author_relative_layout">

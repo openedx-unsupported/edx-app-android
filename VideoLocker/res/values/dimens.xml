@@ -42,9 +42,11 @@
     <dimen name="discussion_post_box_height">50dp</dimen>
     <dimen name="discussion_post_extra_box_height">25dp</dimen>
 
-    <dimen name="discussion_responses_thread_row_padding">10dp</dimen>
+    <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_row_text_view_spacing">3dp</dimen>
-    <dimen name="discussion_responses_thread_row_margins">10dp</dimen>
+    <dimen name="discussion_responses_standard_margin">10dp</dimen>
+    <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
+    <dimen name="discussion_responses_comments_button_height">25dp</dimen>
 
     <dimen name="icon_view_standard_width_height">15dp</dimen>
 

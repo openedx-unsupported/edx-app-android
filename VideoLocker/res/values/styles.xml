@@ -190,4 +190,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="discussion_responses_nested_card_layout_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">@dimen/discussion_responses_box_padding</item>
+        <item name="android:paddingRight">@dimen/discussion_responses_box_padding</item>
+    </style>
+
 </resources>
