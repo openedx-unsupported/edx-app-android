@@ -18,10 +18,11 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionComment implements IAuthorData {
+public class DiscussionComment implements Serializable, IAuthorData {
     private @SerializedName("id") String identifier;
     private String parentId;
     private String threadId;

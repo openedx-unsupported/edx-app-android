@@ -30,6 +30,7 @@ import java.util.List;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 import roboguice.fragment.RoboFragment;
+import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class DiscussionAddPostFragment extends RoboFragment {
@@ -39,6 +40,12 @@ public class DiscussionAddPostFragment extends RoboFragment {
     static public String TOPIC = TAG + ".topic";
 
     protected final Logger logger = new Logger(getClass().getName());
+
+    @InjectExtra(Router.EXTRA_COURSE_DATA)
+    private EnrolledCoursesResponse courseData;
+
+    @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC)
+    private DiscussionTopic discussionTopic;
 
     @InjectView(R.id.discussion_question_segmented_group)
     private SegmentedGroup discussionQuestionSegmentedGroup;
@@ -55,8 +62,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
     @InjectView(R.id.add_post_button)
     private Button addPostButton;
 
-    private EnrolledCoursesResponse courseData;
-
     @Inject
     ISegment segIO;
 
@@ -68,16 +73,10 @@ public class DiscussionAddPostFragment extends RoboFragment {
     private CourseTopics allCourseTopics;
     private List<DiscussionTopicDepth> allTopicsWithDepth;
     private int selectedTopicIndex;
-    private DiscussionTopic discussionTopic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Bundle bundle = getArguments();
-        courseData = (EnrolledCoursesResponse) bundle.getSerializable(ENROLLMENT);
-        discussionTopic = (DiscussionTopic)bundle.getSerializable(TOPIC);
-
 
         try{
             segIO.screenViewsTracking(courseData.getCourse().getName() +

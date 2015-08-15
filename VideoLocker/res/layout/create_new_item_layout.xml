@@ -5,7 +5,7 @@
     tools:showIn="@layout/fragment_discussion_posts">
 
     <RelativeLayout
-        android:id="@+id/create_new_layout"
+        android:id="@+id/create_new_item_relative_layout"
         style="@style/footer_action_button"
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true">
@@ -26,9 +26,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:clickable="true"
-            android:text="@string/discussion_post_create_new_post"
             android:textColor="@color/white"
             android:textSize="@dimen/edx_small" />
 

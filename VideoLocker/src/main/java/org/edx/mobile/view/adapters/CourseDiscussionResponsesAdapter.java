@@ -16,6 +16,7 @@ import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
@@ -27,6 +28,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
     @Inject
     Context context;
+
+    @Inject
+    Router router;
 
     private static final int ROW_POSITION_THREAD = 0;
 
@@ -84,14 +88,17 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
-        DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
+        final DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
+
         holder.responseCommentBodyTextView.setText(response.getRawBody());
+
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Launch the comments activity
+                router.showCourseDiscussionComments(context, response);
             }
         });
+
         bindAuthorView(holder.authorLayoutViewHolder, response);
         bindNumberCommentsView(holder.numberResponsesViewHolder, response);
     }

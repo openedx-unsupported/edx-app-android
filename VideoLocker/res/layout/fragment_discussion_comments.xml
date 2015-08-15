@@ -13,33 +13,6 @@
         android:layout_height="match_parent"
         android:background="@color/edx_grayscale_neutral_white" />
 
-    <RelativeLayout
-        android:id="@+id/discussion_posts_create_comment_layout"
-        style="@style/footer_action_button"
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true">
-
-        <org.edx.mobile.third_party.iconify.IconView
-            android:id="@+id/discussion_posts_create_comment_icon_view"
-            style="@style/icon_view_standard_size_style"
-            android:layout_centerVertical="true"
-            app:iconColor="@color/edx_white"
-            app:iconName="fa_plus_circle" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/discussion_posts_create_comment_icon_view"
-            android:layout_toRightOf="@+id/discussion_posts_create_comment_icon_view"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:onClick="onClick"
-            android:clickable="true"
-            android:text="@string/discussion_post_create_new_comment"
-            android:textColor="@color/edx_white"
-            android:textSize="@dimen/edx_small" />
-
-    </RelativeLayout>
+    <include layout="@layout/create_new_item_layout" />
 
 </RelativeLayout>

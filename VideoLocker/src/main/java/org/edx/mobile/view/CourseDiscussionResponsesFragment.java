@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Releasable;
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
@@ -18,6 +19,7 @@ import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 
 import roboguice.fragment.RoboFragment;
@@ -35,17 +37,23 @@ public class CourseDiscussionResponsesFragment extends RoboFragment {
     @InjectView(R.id.create_new_item_text_view)
     TextView addResponseTextView;
 
-    @InjectView(R.id.create_new_layout)
-    RelativeLayout discussionResponsesAddResponseLayout;
+    @InjectView(R.id.create_new_item_relative_layout)
+    RelativeLayout addResponseLayout;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
     DiscussionThread discussionThread;
+
+    @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
+    EnrolledCoursesResponse courseData;
 
     @Inject
     CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
 
     @Inject
     DiscussionAPI discussionAPI;
+
+    @Inject
+    Router router;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -77,13 +85,12 @@ public class CourseDiscussionResponsesFragment extends RoboFragment {
 
         addResponseTextView.setText(R.string.discussion_responses_add_response);
 
-        discussionResponsesAddResponseLayout.setOnClickListener(new View.OnClickListener() {
+        addResponseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Launch add response layout
+                router.showCourseDiscussionAddResponseOrComment(getActivity(), discussionThread.getTopicId(), null);
             }
         });
-
     }
 
 }

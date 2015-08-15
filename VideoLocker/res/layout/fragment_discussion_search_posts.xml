@@ -8,8 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/discussion_posts_divider_view"
-        android:layout_above="@+id/create_new_layout" />
-
-    <include layout="@layout/create_button_layout" />
+        android:layout_above="@+id/create_new_item_relative_layout" />
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
@@ -38,6 +40,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @InjectView(R.id.discussion_posts_sort_text_view)
     TextView discussionPostsSortTextView;
+
+    @InjectView(R.id.create_new_item_text_view)
+    TextView createNewPostTextView;
+
+    @InjectView(R.id.create_new_item_relative_layout)
+    RelativeLayout createNewPostRelativeLayout;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
@@ -71,6 +79,15 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        createNewPostTextView.setText(R.string.discussion_post_create_new_post);
+
+        createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
+            }
+        });
 
         // TODO: Add some UI polish to make the popups more closely match the wireframes
         createFilterPopupMenu();
