@@ -86,7 +86,7 @@
                 android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
                 android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
                 android:layout_centerVertical="true"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
+                app:iconColor="@color/edx_brand_primary_base"
                 app:iconName="fa_flag" />
 
             <org.edx.mobile.view.custom.ETextView
@@ -94,8 +94,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:textColor="@color/edx_brand_primary_base"
                 android:layout_toEndOf="@+id/discussion_responses_action_bar_report_icon_view"
                 android:layout_toRightOf="@+id/discussion_responses_action_bar_report_icon_view"
+                android:clickable="true"
                 android:text="@string/discussion_responses_report_label" />
 
         </RelativeLayout>

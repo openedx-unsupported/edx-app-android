@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.APICallback;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.IAuthorData;
@@ -69,7 +72,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
+    private void bindViewHolderToThreadRow(final DiscussionThreadViewHolder holder) {
         holder.threadTitleTextView.setText(discussionThread.getTitle());
         holder.threadBodyTextView.setText(discussionThread.getRawBody());
 
@@ -79,6 +82,29 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
+
+        holder.reportTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final TextView reportTextView = (TextView) v;
+                boolean isReport = reportTextView.getText().toString().equalsIgnoreCase("Report");
+                new DiscussionAPI().flagThread(discussionThread, isReport ? true : false, new APICallback<DiscussionThread>() {
+                    @Override
+                    public void success(DiscussionThread thread) {
+                        if (thread.isAbuseFlagged()) {
+                            reportTextView.setText("Reported");
+                            holder.reportIconView.setIconColor(context.getResources().getColor(R.color.edx_utility_error));
+                        } else {
+                            reportTextView.setText("Report");
+                            holder.reportIconView.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
+                        }
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                    }
+                });
+            }
+        });
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
@@ -87,7 +113,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                 R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount()));
     }
 
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
+    private void bindViewHolderToResponseRow(final DiscussionResponseViewHolder holder, int position) {
         final DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
         holder.responseCommentBodyTextView.setText(response.getRawBody());
@@ -105,6 +131,32 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         bindAuthorView(holder.authorLayoutViewHolder, response);
         bindNumberCommentsView(holder.numberResponsesViewHolder, response);
+
+
+        holder.reportTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final TextView reportTextView = (TextView) v;
+                boolean isReport = reportTextView.getText().toString().equalsIgnoreCase("Report");
+                new DiscussionAPI().flagComment(response, isReport ? true : false, new APICallback<DiscussionComment>() {
+                    @Override
+                    public void success(DiscussionComment comment) {
+                        if (comment.isAbuseFlagged()) {
+                            reportTextView.setText("Reported");
+                            holder.reportIconView.setIconColor(context.getResources().getColor(R.color.edx_utility_error));
+                        } else {
+                            reportTextView.setText("Report");
+                            holder.reportIconView.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
+                        }
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                    }
+                });
+            }
+        });
+
+
     }
 
     private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
@@ -168,6 +220,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         ETextView threadBodyTextView;
         IconView threadPinnedIconView;
 
+        IconView reportIconView;
+        ETextView reportTextView;
+
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
 
@@ -181,6 +236,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             threadPinnedIconView = (IconView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_pinned_icon_view);
 
+            reportIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_icon_view);
+            reportTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_text_view);
+
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
         }
@@ -193,6 +253,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         NumberResponsesViewHolder numberResponsesViewHolder;
         RelativeLayout answerLayout;
 
+        IconView reportIconView;
+        ETextView reportTextView;
+
+
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
 
@@ -201,6 +265,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
+
+            reportIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_icon_view);
+            reportTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_text_view);
+
         }
     }
 
