@@ -99,6 +99,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
+        if (response.isEndorsed()) {
+            holder.answerLayout.setVisibility(View.VISIBLE);
+        }
+
         bindAuthorView(holder.authorLayoutViewHolder, response);
         bindNumberCommentsView(holder.numberResponsesViewHolder, response);
     }
@@ -187,10 +191,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         ETextView responseCommentBodyTextView;
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
+        RelativeLayout answerLayout;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
 
+            answerLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_answer_layout);
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
             responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);

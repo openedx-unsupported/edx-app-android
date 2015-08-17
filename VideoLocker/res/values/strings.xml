@@ -310,6 +310,8 @@
     <string name="discussion_responses_report_label">Report</string>
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
+    <!--Label for indicating that a response is an answer-->
+    <string name="discussion_responses_answer">Answer</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
