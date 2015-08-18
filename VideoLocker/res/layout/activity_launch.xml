@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/bt_signin_active"
-            android:contentDescription="@string/app_name"
+            android:contentDescription="@string/sign_up_and_learn"
             android:layout_gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="16sp"
@@ -39,18 +39,18 @@
             android:layout_marginRight="50dp"
             android:layout_marginTop="25dp"/>
 
-        <org.edx.mobile.view.custom.ETextView
+        <org.edx.mobile.view.custom.EButton
             android:id="@+id/sign_in_tv"
             style="@style/bold_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:linksClickable="true"
+            android:background="@null"
             android:text="@string/already_have_an_account"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:layout_below="@id/sign_up_btn"
-            android:layout_marginTop="25dp"/>
+            android:layout_marginTop="10dp"/>
     </RelativeLayout>
 
 </RelativeLayout>

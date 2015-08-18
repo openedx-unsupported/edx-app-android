@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,9 +30,9 @@ import org.edx.mobile.task.LoginTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
@@ -130,10 +131,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
 
-        RelativeLayout closeButtonLayout = (RelativeLayout)
-                findViewById(R.id.actionbar_close_btn_layout);
-        if(closeButtonLayout!=null){
-            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
+        Button closeButton = (Button)
+                findViewById(R.id.actionbar_close_btn);
+        if(closeButton!=null){
+            closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();

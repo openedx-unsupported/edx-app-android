@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:edx="http://schemas.android.com/apk/res-auto">
-     <item android:id="@+id/action_change_mode"
-              android:title="Change Mode"
-              android:orderInCategory="100"
-              android:showAsAction="always"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_change_mode"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/course_change_mode" />
 
-     <item android:id="@+id/action_share_on_web"
-          android:title="View On Web"
-          android:orderInCategory="100"
-          android:showAsAction="always"/>
+    <item
+        android:id="@+id/action_share_on_web"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/course_view_on_web" />
 </menu>

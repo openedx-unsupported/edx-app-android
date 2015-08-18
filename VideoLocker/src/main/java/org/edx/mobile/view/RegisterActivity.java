@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,9 +39,9 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -136,10 +137,10 @@ public class RegisterActivity extends BaseFragmentActivity
             }
         });
 
-        RelativeLayout closeButtonLayout = (RelativeLayout)
-                findViewById(R.id.actionbar_close_btn_layout);
-        if(closeButtonLayout!=null){
-            closeButtonLayout.setOnClickListener(new View.OnClickListener() {
+        Button closeButton = (Button)
+                findViewById(R.id.actionbar_close_btn);
+        if(closeButton!=null){
+            closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //if user cancel the registration, do the clean up

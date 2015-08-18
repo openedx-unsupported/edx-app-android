@@ -19,9 +19,9 @@ import java.util.List;
 public class CustomSelectView<T> extends ETextView implements View.OnClickListener,
         DialogInterface.OnClickListener {
 
+    protected List<T> items;
     private String hint;
     private String prompt;
-    protected List<T> items;
     private T selectedItem;
     private int checkedItemIndex = 0;
 
@@ -46,10 +46,10 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     /**
      * This sets the common view parameters for Custom SelectView
      */
-    private void setUIParams(){
-        int padding = (int)UiUtil.getParamsInDP(getResources(),10);
-        setPadding(padding,padding,padding,padding);
-        setGravity(Gravity.START|Gravity.CENTER_VERTICAL);
+    private void setUIParams() {
+        int padding = (int) UiUtil.getParamsInDP(getResources(), 10);
+        setPadding(padding, padding, padding, padding);
+        setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
     }
 
     public void setHint(String hint) {
@@ -63,6 +63,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     private void showHint() {
         setText(hint);
         setTextColor(getResources().getColor(R.color.hint_grey_text));
+        setContentDescription(getResources().getString(R.string.dropdown_list_prefix) + hint);
     }
 
     public void setPrompt(String prompt) {
@@ -71,7 +72,8 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
 
     /**
      * Set the list of items to be displayed when the selectView is clicked
-     * @param items - List of items
+     *
+     * @param items       - List of items
      * @param defaultItem - Default item to be shown as selected
      */
     public void setItems(List<T> items, T defaultItem) {
@@ -80,7 +82,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
 
         // calculate checkedItemIndex
         if (items != null && selectedItem != null) {
-            int i=0;
+            int i = 0;
             for (T item : items) {
                 if (item.equals(selectedItem)) {
                     checkedItemIndex = i;
@@ -92,11 +94,11 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     }
 
 
-    public boolean has(T item){
-        if ( item == null || items == null )
+    public boolean has(T item) {
+        if (item == null || items == null)
             return false;
-        for(T value : items){
-            if ( item.equals( item ) )
+        for (T value : items) {
+            if (item.equals(item))
                 return true;
         }
         return false;
@@ -122,6 +124,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
 
     /**
      * Call this function when a value is selected in the Dialog for custom select
+     *
      * @param item - Selected Item
      */
     protected void select(T item) {
@@ -129,11 +132,12 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
         //The current json contains '--' as the first value
         //and hence show the hint text instead of '--' in the select view
         if (TextUtils.isEmpty(item.toString())
-                ||item.toString().equalsIgnoreCase("--")) {
+                || item.toString().equalsIgnoreCase("--")) {
             showHint();
         } else {
             setText(item.toString());
             setTextColor(getResources().getColor(R.color.grey_text));
+            setContentDescription(getResources().getString(R.string.dropdown_list_prefix) + item.toString());
         }
     }
 
@@ -144,7 +148,7 @@ public class CustomSelectView<T> extends ETextView implements View.OnClickListen
     private String[] getItemsAsStringArray() {
         if (items != null) {
             String[] stringItems = new String[items.size()];
-            for (int i=0; i<items.size(); i++) {
+            for (int i = 0; i < items.size(); i++) {
                 stringItems[i] = items.get(i).toString();
             }
             return stringItems;
