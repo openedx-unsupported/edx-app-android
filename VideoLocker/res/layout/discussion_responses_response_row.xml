@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/discussion_responses_margin"
+    android:layout_marginLeft="@dimen/discussion_responses_margin"
+    android:layout_marginRight="@dimen/discussion_responses_margin"
+    app:cardCornerRadius="@dimen/edx_box_radius">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/discussion_response_body"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/discussion_responses_box_padding"
+            android:paddingBottom="3dp"
+            style="@style/discussion_responses_nested_card_layout_style">
+
+            <RelativeLayout
+                android:id="@+id/discussion_responses_answer_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/discussion_response_answer_layout" />
+
+            </RelativeLayout>
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_comment_body_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:layout_below="@+id/discussion_responses_answer_layout"
+                android:textSize="@dimen/edx_x_small"
+                android:textColor="@color/edx_grayscale_neutral_dark"/>
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_response_row_author_label"
+                style="@style/discussion_responses_small_text"
+                android:layout_below="@+id/discussion_responses_comment_body_text_view" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_endorsed_text_view"
+                style="@style/discussion_responses_small_text"
+                android:layout_below="@+id/discussion_responses_response_row_author_label" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/edx_grayscale_neutral_xx_light" />
+
+        <include layout="@layout/discussion_response_action_bar_layout" />
+
+        <RelativeLayout
+            android:id="@+id/discussion_responses_comment_relative_layout"
+            style="@style/discussion_responses_nested_card_layout_style"
+            android:layout_height="@dimen/discussion_responses_comments_button_height"
+            android:background="@color/edx_grayscale_neutral_xx_light"
+            android:gravity="center_horizontal|center_vertical">
+
+            <include layout="@layout/number_responses_or_comments_layout" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

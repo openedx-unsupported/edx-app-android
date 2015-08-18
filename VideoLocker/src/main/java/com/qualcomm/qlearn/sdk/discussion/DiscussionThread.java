@@ -18,10 +18,11 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionThread {
+public class DiscussionThread implements Serializable {
 
     public enum ThreadType {
         @SerializedName("discussion")
@@ -41,24 +42,6 @@ public class DiscussionThread {
         }
     }
 
-    public enum PinnedAuthor {
-        @SerializedName("staff")
-        STAFF (0),
-
-        @SerializedName("community_ta")
-        COMMUNITY_TA (1);
-
-        private final int value;
-
-        private PinnedAuthor(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
     @SerializedName("id")
     private String identifier;
     private ThreadType type;
@@ -70,7 +53,7 @@ public class DiscussionThread {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private PinnedAuthor authorLabel;
+    private PriviledgedAuthor authorLabel;
     private int commentCount = 0;
     private int unreadCommentCount = 0;
     private String commentListUrl;
@@ -123,10 +106,13 @@ public class DiscussionThread {
     }
 
     public String getAuthor() {
+        if (author == null || author.isEmpty()) {
+            return "anonymous";
+        }
         return author;
     }
 
-    public PinnedAuthor getAuthorLabel() {
+    public PriviledgedAuthor getAuthorLabel() {
         return authorLabel;
     }
 

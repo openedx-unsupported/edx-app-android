@@ -42,6 +42,13 @@
     <dimen name="discussion_post_box_height">50dp</dimen>
     <dimen name="discussion_post_extra_box_height">25dp</dimen>
 
+    <dimen name="discussion_responses_box_padding">10dp</dimen>
+    <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>
+    <dimen name="discussion_responses_margin">10dp</dimen>
+    <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
+    <dimen name="discussion_responses_comments_button_height">25dp</dimen>
+    <dimen name="discussion_responses_action_bar_icon_margin">7dp</dimen>
+
     <dimen name="icon_view_standard_width_height">15dp</dimen>
 
     <!-- row height for CC language options, NONE option and the header of popup -->
@@ -54,6 +61,12 @@
     <dimen name="edx_box_radius">5dp</dimen>
 
     <!--edX typography-->
+    <dimen name="edx_xxxx_large">38sp</dimen>
+    <dimen name="edx_xxx_large">28sp</dimen>
+    <dimen name="edx_xx_large">24sp</dimen>
+    <dimen name="edx_x_large">21sp</dimen>
+    <dimen name="edx_large">18sp</dimen>
+    <dimen name="edx_base">16sp</dimen>
     <dimen name="edx_small">14sp</dimen>
     <dimen name="edx_x_small">12sp</dimen>
     <dimen name="edx_xx_small">11sp</dimen>

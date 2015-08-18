@@ -265,7 +265,7 @@
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
     <!--Label for creating a new comment-->
-    <string name="discussion_post_create_new_comment">Create a new comment</string>
+    <string name="discussion_post_create_new_comment">Add a comment</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>
@@ -284,9 +284,38 @@
     <!--Label for discussion post you are following-->
     <string name="discussion_posts_following">Following</string>
     <!--Label for discussion post pinned by the community TA-->
-    <string name="discussion_posts_author_label_ta">Community TA</string>
+    <string name="discussion_priviledged_author_label_ta">Community TA</string>
     <!--Label for discussion post pinned by the staff-->
-    <string name="discussion_posts_author_label_staff">Staff</string>
+    <string name="discussion_priviledged_author_label_staff">Staff</string>
+
+    <!--Discussion Responses-->
+    <string name="course_discussion_responses_title">Discussion Post</string>
+    <!--Label for adding a discussion response-->
+    <string name="discussion_responses_add_response">Add a response</string>
+    <!--Label for number of discussion responses-->
+    <plurals name="number_responses_or_comments_responses_label">
+        <!--Label indicating there is only one response-->
+        <item quantity="one">{quantity} response</item>
+        <!--Label indicating there are more than one response-->
+        <item quantity="other">{quantity} responses</item>
+    </plurals>
+    <!--Label for number of discussion comments-->
+    <plurals name="number_responses_or_comments_comments_label">
+        <!--Label indicating there is only one comment-->
+        <item quantity="one">{quantity} comment</item>
+        <!--Label indicating there are more than one response-->
+        <item quantity="other">{quantity} comments</item>
+    </plurals>
+    <!--Label for discussion response to report as inappropriate -->
+    <string name="discussion_responses_report_label">Report</string>
+    <!--Label for adding a new comment-->
+    <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
+    <!--Label for indicating that a response is an answer-->
+    <string name="discussion_responses_answer">Answer</string>
+    <!--Label for indicating the author of the response-->
+    <string name="discussion_responses_author">{author} {created_at} {author_label}</string>
+    <!--Label for indicating who endorsed the comment as an answer-->
+    <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

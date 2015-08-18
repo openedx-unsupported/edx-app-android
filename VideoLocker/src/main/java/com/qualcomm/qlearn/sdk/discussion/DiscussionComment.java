@@ -18,24 +18,25 @@ package com.qualcomm.qlearn.sdk.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionComment {
+public class DiscussionComment implements Serializable {
     private @SerializedName("id") String identifier;
     private String parentId;
     private String threadId;
     private String rawBody;
     private String renderedBody;
     private String author;
-    private String authorLabel;
+    private PriviledgedAuthor authorLabel;
     private boolean voted = false;
     private int voteCount = 0;
     private Date createdAt;
     private Date updatedAt;
     private boolean endorsed = false;
     private String endorsedBy;
-    private String endorsedByLabel;
+    private PriviledgedAuthor endorsedByLabel;
     private Date endorsedAt;
     private boolean abuseFlagged = false;
     private List<String> editableFields;
@@ -65,7 +66,7 @@ public class DiscussionComment {
         return author;
     }
 
-    public String getAuthorLabel() {
+    public PriviledgedAuthor getAuthorLabel() {
         return authorLabel;
     }
 
@@ -84,11 +85,7 @@ public class DiscussionComment {
     public Date getUpdatedAt() {
         return updatedAt;
     }
-
-    public Date getEndorsedAt() {
-        return endorsedAt;
-    }
-
+    
     public boolean isEndorsed() {
         return endorsed;
     }
@@ -97,8 +94,12 @@ public class DiscussionComment {
         return endorsedBy;
     }
 
-    public String getEndorsedByLabel() {
+    public PriviledgedAuthor getEndorsedByLabel() {
         return endorsedByLabel;
+    }
+
+    public Date getEndorsedAt() {
+        return endorsedAt;
     }
 
     public boolean isAbuseFlagged() {

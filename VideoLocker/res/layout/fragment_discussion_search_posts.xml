@@ -3,6 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/discussion_posts_thread_list_layout" />
+    <ListView
+        android:id="@+id/discussion_posts_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/discussion_posts_divider_view"
+        android:layout_above="@+id/create_new_item_relative_layout" />
 
 </RelativeLayout>

@@ -9,13 +9,18 @@ import android.widget.TextView;
 
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import com.qualcomm.qlearn.sdk.discussion.PriviledgedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.view.Router;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
+
+    @Inject
+    Router router;
 
     private final Context context;
 
@@ -48,15 +53,13 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             holder.discussionPostPinFollowIcon.setIcon(pinFollowIcon);
 
             String pinFollowTextLabel = "";
+
             if (discussionThread.isFollowing()) {
                 pinFollowTextLabel = context.getString(R.string.discussion_posts_following);
-
-            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.STAFF) {
-                pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_staff);
-
-            } else if (discussionThread.getAuthorLabel() == DiscussionThread.PinnedAuthor.COMMUNITY_TA) {
-                pinFollowTextLabel = context.getString(R.string.discussion_posts_author_label_ta);
+            } else {
+                pinFollowTextLabel = discussionThread.getAuthorLabel().getReadableText(context);
             }
+
             holder.discussionPostPinFollowTextView.setText(pinFollowTextLabel);
 
             // If the discussion thread has an extra line, add 25dp to row height

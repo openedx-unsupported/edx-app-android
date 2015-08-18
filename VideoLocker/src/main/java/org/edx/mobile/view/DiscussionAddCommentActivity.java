@@ -1,15 +1,25 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+
+import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import roboguice.inject.InjectExtra;
+
 public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
-    private Fragment fragment;
-    private Boolean isResponse;
+    @Inject
+    DiscussionAddCommentFragment discussionAddCommentFragment;
+
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
+    DiscussionComment discussionComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,25 +30,13 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        isResponse = getIntent()
-                .getBooleanExtra(DiscussionAddCommentFragment.IS_RESPONSE, false);
 
-        setTitle(getString(isResponse ? R.string.discussion_response : R.string.discussion_comment));
+        setTitle(getString(discussionComment == null ? R.string.discussion_response : R.string.discussion_comment));
     }
 
     @Override
     public Fragment getFirstFragment() {
-
-        fragment = new DiscussionAddCommentFragment();
-        EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) getIntent()
-                .getSerializableExtra(DiscussionAddCommentFragment.ENROLLMENT);
-        if (courseData != null) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(DiscussionAddCommentFragment.ENROLLMENT, courseData);
-            bundle.putBoolean(DiscussionAddCommentFragment.IS_RESPONSE, isResponse);
-            fragment.setArguments(bundle);
-        }
-
-        return fragment;
+        discussionAddCommentFragment.setArguments(getIntent().getExtras());
+        return discussionAddCommentFragment;
     }
 }

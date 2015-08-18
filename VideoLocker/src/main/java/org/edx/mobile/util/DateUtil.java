@@ -1,6 +1,8 @@
 package org.edx.mobile.util;
 
 import android.annotation.SuppressLint;
+import android.text.format.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -101,6 +103,21 @@ public class DateUtil {
             logger.error(e);
             return null;
         }
+    }
+
+    /*
+     *  This method tahes a Date object and returns a string that shows how far back in
+     *  time the date was in a concise, readable format. (Ex: 2 weeks ago, 1 month ago)
+     */
+    public static String formatPastDateRelativeToCurrentDate(Date pastDate) {
+        if (pastDate == null) {
+            return "";
+        }
+        return DateUtils.getRelativeTimeSpanString(
+                pastDate.getTime(),
+                System.currentTimeMillis(),
+                DateUtils.MINUTE_IN_MILLIS,
+                DateUtils.FORMAT_ABBREV_RELATIVE).toString();
     }
 
 }

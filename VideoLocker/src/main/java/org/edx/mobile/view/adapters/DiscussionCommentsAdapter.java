@@ -29,7 +29,7 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
 
     @Override
     public void render(BaseViewHolder tag, final DiscussionComment discussionComment) {
-        ViewHolder holder = (ViewHolder) tag;
+        final ViewHolder holder = (ViewHolder) tag;
 
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
@@ -53,12 +53,19 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
 
         holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                new DiscussionAPI().flagComment(discussionComment, true, new APICallback<DiscussionComment>() {
+                final TextView reportTextView = (TextView)v;
+                boolean isReport = reportTextView.getText().toString().equalsIgnoreCase("Report");
+                new DiscussionAPI().flagComment(discussionComment, isReport ? true : false, new APICallback<DiscussionComment>() {
                     @Override
                     public void success(DiscussionComment comment) {
-                        // TODO: change Report to Reported and the flag icon color to red?
-                        TextView reportTextView = (TextView)v;
-                        reportTextView.setText("Reported");
+                        if (comment.isAbuseFlagged()) {
+                            reportTextView.setText("Reported");
+                            holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(R.color.edx_utility_error));
+                        }
+                        else {
+                            reportTextView.setText("Report");
+                            holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
+                        }
                     }
 
                     @Override

@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 
 import org.edx.mobile.event.LogoutEvent;
@@ -36,6 +39,10 @@ public class Router {
     public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
+    public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
+    public static final String EXTRA_IS_RESPONSE = "is_response";
+    public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
+    public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -202,6 +209,21 @@ public class Router {
         activity.startActivity(showDiscussionsIntent);
     }
 
+    public void showCourseDiscussionAddPost(Activity activity, DiscussionTopic discussionTopic, EnrolledCoursesResponse courseData) {
+        Intent addPostIntent = new Intent(activity, DiscussionAddPostActivity.class);
+        addPostIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        addPostIntent.putExtra(EXTRA_DISCUSSION_TOPIC, discussionTopic);
+        addPostIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(addPostIntent);
+    }
+
+    public void showCourseDiscussionComments(Context context, DiscussionComment comment) {
+        Intent commentListIntent = new Intent(context, CourseDiscussionCommentsActivity.class);
+        commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT, comment);
+        commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(commentListIntent);
+    }
+
     public void showCourseDiscussionPostsForSearchQuery(Activity activity, String query, EnrolledCoursesResponse courseData) {
         Intent showDiscussionPostsIntent = new Intent(activity, CourseDiscussionPostsActivity.class);
         showDiscussionPostsIntent.putExtra(EXTRA_COURSE_DATA, courseData);
@@ -216,6 +238,24 @@ public class Router {
         showDiscussionPostsIntent.putExtra(EXTRA_DISCUSSION_TOPIC, topic);
         showDiscussionPostsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(showDiscussionPostsIntent);
+    }
+
+    public void showCourseDiscussionResponses(Context context, DiscussionThread discussionThread, EnrolledCoursesResponse courseData) {
+        Intent discussionResponsesIntent = new Intent(context, CourseDiscussionResponsesActivity.class);
+        discussionResponsesIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
+        discussionResponsesIntent.putExtra(EXTRA_COURSE_DATA, courseData);
+        discussionResponsesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(discussionResponsesIntent);
+    }
+
+    public void showCourseDiscussionAddResponseOrComment(Context context, String discussionTopicId, DiscussionComment discussionComment) {
+        Intent addResponseIntent = new Intent(context, DiscussionAddCommentActivity.class);
+        addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_ID, discussionTopicId);
+        if (discussionComment != null) {
+            addResponseIntent.putExtra(EXTRA_DISCUSSION_COMMENT, discussionComment);
+        }
+        addResponseIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(addResponseIntent);
     }
 
     /**
