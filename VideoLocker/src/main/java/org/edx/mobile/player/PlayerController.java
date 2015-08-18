@@ -109,6 +109,7 @@ public class PlayerController extends FrameLayout {
     private TextView            mTitleTextView;
     private boolean             mIsAutoHide = true;
     private String              mLmsUrl;
+    private View                mTopBar;
 
     private static final Logger logger = new Logger(PlayerController.class.getName());
 
@@ -258,6 +259,7 @@ public class PlayerController extends FrameLayout {
         installPrevNextListeners();
 
         mTitleTextView = (TextView) v.findViewById(R.id.video_title);
+        mTopBar = v.findViewById(R.id.video_top_bar);
     }
 
     /**
@@ -934,6 +936,19 @@ public class PlayerController extends FrameLayout {
                 mSettingsButton.setBackgroundResource
                 (R.drawable.ic_media_settings_inactive);
             }   
+        }
+    }
+
+
+    /**
+     * Sets the visibility of top bar of the player controller
+     * @param isVisible true=visible & false=gone
+     */
+    public void setTopBarVisibility(boolean isVisible) {
+        if (isVisible){
+            mTopBar.setVisibility(View.VISIBLE);
+        } else {
+            mTopBar.setVisibility(View.GONE);
         }
     }
 }

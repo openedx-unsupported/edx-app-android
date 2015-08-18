@@ -85,7 +85,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     private boolean isPrepared = false;
     private boolean stateSaved = false;
     private boolean orientationLocked = false;
-    private transient OrientationDetector orientation;
+    private transient OrientationDetector orientationDetector;
     private transient IPlayerEventCallback callback;
     private View.OnClickListener nextListner;
     private View.OnClickListener prevListner;
@@ -251,7 +251,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             restore(savedInstanceState);
             audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
-            orientation = new OrientationDetector(getActivity()) {
+            orientationDetector = new OrientationDetector(getActivity()) {
                 private boolean isLastRotationOn = false;
                 @Override
                 protected void onChanged() {
@@ -297,13 +297,13 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             boolean isRotationOn = DeviceSettingUtil.isDeviceRotationON(getActivity());
             if (isRotationOn) {
                 // do UI operations only if the fragment is resumed
-                if (orientation.isLandscape()) {
+                if (orientationDetector.isLandscape()) {
                     if (isScreenLandscape()) {
                         logger.debug("Allowing sensor from landscape rotation");
                         isManualFullscreen = false;
                         allowSensorOrientation();
                     }
-                } else if (orientation.isPortrait()) {
+                } else if (orientationDetector.isPortrait()) {
                     if ( !isScreenLandscape()) {
                         logger.debug("Allowing sensor from portrait rotation");
                         isManualFullscreen = false;
@@ -387,7 +387,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         uiHelper.onPause();
 
         try{
-            orientation.stop();
+            orientationDetector.stop();
             handler.removeCallbacks(unfreezeCallback);
             freezePlayer();
         }catch(Exception e){
@@ -877,9 +877,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     @Override
     public void onFullScreen(boolean isFullScreen) {
         if (isPrepared) {
-            // stop orientation updates before locking the screen
-            orientation.stop();
-
             if(!isInViewPager) {
                 freezePlayer();
             }
@@ -891,7 +888,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 exitFullScreen();
             }
         } else {
-            logger.debug("Player not prepared ?? full screnn will NOT work!");
+            logger.debug("Player not prepared ?? full screen will NOT work!");
         }
     }
 
@@ -1003,7 +1000,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     }
 
                 }
-                orientation.start();
+                orientationDetector.start();
                 handler.sendEmptyMessage(MSG_TYPE_TICK);
             }
         }
@@ -1879,5 +1876,12 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
     public void setInViewPager(boolean inViewPager){
         this.isInViewPager = inViewPager;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        player.setFullScreen(isLandscape);
     }
 }

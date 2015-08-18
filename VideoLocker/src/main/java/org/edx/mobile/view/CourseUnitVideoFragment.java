@@ -21,12 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
-import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -281,7 +281,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                         }
                         @Override
                         public void onNegativeClicked() {
-                            ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
+                            ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
                             notifyAdapter();
                         }
                     };
@@ -323,7 +323,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         long downloadSize = videoData.size;
         if (downloadSize > MemoryUtil
             .getAvailableExternalMemory(getActivity())) {
-            ((VideoListActivity) getActivity())
+            ((BaseFragmentActivity) getActivity())
                 .showInfoMessage(getString(R.string.file_size_exceeded));
             notifyAdapter();
         } else {
@@ -681,13 +681,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 }
 
                 if (environment.getStorage().addDownload(downloadEntry) != -1) {
-                    ((VideoListActivity) getActivity())
+                    ((BaseFragmentActivity) getActivity())
                         .showInfoMessage(getString(R.string.msg_started_one_video_download));
                 } else {
-                    ((VideoListActivity) getActivity())
+                    ((BaseFragmentActivity) getActivity())
                         .showInfoMessage(getString(R.string.msg_video_not_downloaded));
                 }
-                ((VideoListActivity) getActivity()).updateProgress();
 
                 //If the video is already downloaded, dont reload the adapter
                 if (reloadListFlag) {
@@ -790,6 +789,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
      * mostly the orientation changes.
      * @param newConfig
      */
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //TODO - should we use load different layout file?
