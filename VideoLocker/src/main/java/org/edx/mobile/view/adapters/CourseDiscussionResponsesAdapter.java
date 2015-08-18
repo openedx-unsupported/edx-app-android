@@ -105,6 +105,27 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                 });
             }
         });
+
+        holder.voteCountLabelTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final TextView voteTextView = (TextView) v;
+                new DiscussionAPI().voteThread(discussionThread, !discussionThread.isVoted(), new APICallback<DiscussionThread>() {
+                    @Override
+                    public void success(DiscussionThread thread) {
+                        // TODO: localization
+                        if (thread.getVoteCount() == 1)
+                            voteTextView.setText("Votes");
+                        else
+                            voteTextView.setText("Votes");
+                        holder.voteCountTextView.setText(thread.getVoteCount());
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                    }
+                });
+            }
+        });
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
@@ -156,6 +177,26 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
+        holder.voteCountLabelTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                final TextView voteTextView = (TextView) v;
+                new DiscussionAPI().voteComment(response, !response.isVoted(), new APICallback<DiscussionComment>() {
+                    @Override
+                    public void success(DiscussionComment comment) {
+                        // TODO: localization
+                        if (comment.getVoteCount() == 1)
+                            voteTextView.setText("Votes");
+                        else
+                            voteTextView.setText("Votes");
+                        holder.voteCountTextView.setText(comment.getVoteCount());
+                    }
+
+                    @Override
+                    public void failure(Exception e) {
+                    }
+                });
+            }
+        });
 
     }
 
@@ -223,6 +264,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         IconView reportIconView;
         ETextView reportTextView;
 
+        IconView voteIconView;
+        ETextView voteCountLabelTextView;
+        ETextView voteCountTextView;
+
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
 
@@ -243,6 +288,18 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
+
+            reportIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_icon_view);
+            reportTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_report_text_view);
+
+            voteIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_icon_view);
+            voteCountTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_count_text_view);
+            voteCountLabelTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_count_label);
         }
     }
 
@@ -256,6 +313,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         IconView reportIconView;
         ETextView reportTextView;
 
+        IconView voteIconView;
+        ETextView voteCountLabelTextView;
+        ETextView voteCountTextView;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
@@ -271,6 +331,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             reportTextView = (ETextView) itemView.
                     findViewById(R.id.discussion_responses_action_bar_report_text_view);
 
+            voteIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_icon_view);
+            voteCountTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_count_text_view);
+            voteCountLabelTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_action_bar_vote_count_label);
         }
     }
 
