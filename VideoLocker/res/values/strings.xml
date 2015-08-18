@@ -306,8 +306,6 @@
         <!--Label indicating there are more than one response-->
         <item quantity="other">{quantity} comments</item>
     </plurals>
-    <!--Label for discussion response to report as inappropriate -->
-    <string name="discussion_responses_report_label">Report</string>
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
     <!--Label for indicating that a response is an answer-->
@@ -317,7 +315,25 @@
     <!--Label for indicating who endorsed the comment as an answer-->
     <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
 
-    <!-- Title in adding a new comment -->
+    <!--Discussion Responses Action Bar-->
+    <!--Label to indicate number of votes-->
+    <plurals name="discussion_responses_action_bar_vote_text">
+        <!--Label indicating there is only one vote-->
+        <item quantity="one">{quantity} vote</item>
+        <!--Label indicating there are more than one votes-->
+        <item quantity="other">{quantity} votes</item>
+    </plurals>
+    <!--Label to indicate discussion response is not marked as inappropriate -->
+    <string name="discussion_responses_report_label">Report</string>
+    <!--Label for discussion response that has been marked as inappropriate-->
+    <string name="discussion_responses_reported_label">Reported</string>
+    <!--Label for a discussion thread that the user is not following-->
+    <string name="discussion_responses_action_bar_follow_text">Follow</string>
+    <!--Label for a discussion thread that the user is following-->
+    <string name="discussion_responses_action_bar_unfollow_text">Unfollow</string>
+
+    <!--Discussion Comments-->
+    <!-- Title for comments activity-->
     <string name="discussion_comment">Comment</string>
     <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
@@ -329,8 +345,6 @@
     <!-- Title in adding a new response -->
     <string name="discussion_response">Response</string>
     <!-- Title in showing list of responses -->
-    <string name="discussion_responses">Responses</string>
-    <!-- Add response button title in adding a new response -->
     <string name="discussion_add_response">Add response</string>
     <!-- Add your respone placeholder in adding a new response -->
     <string name="discussion_add_your_response">Add your response</string>

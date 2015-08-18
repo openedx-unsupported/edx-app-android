@@ -75,6 +75,7 @@ public class CourseDiscussionResponsesFragment extends RoboFragment {
             @Override
             public void success(ThreadComments threadComments) {
                 courseDiscussionResponsesAdapter.setDiscussionResponses(threadComments.getResults());
+                courseDiscussionResponsesAdapter.notifyDataSetChanged();
             }
 
             @Override
