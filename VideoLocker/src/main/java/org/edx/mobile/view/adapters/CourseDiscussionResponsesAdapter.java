@@ -10,18 +10,16 @@ import android.widget.RelativeLayout;
 import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.IAuthorData;
-import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
-import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
@@ -77,71 +75,78 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             holder.threadPinnedIconView.setVisibility(View.VISIBLE);
         }
 
-        bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
-        bindNumberResponsesView(holder.numberResponsesViewHolder);
-    }
+        HashMap<String, String> authorMap = new HashMap<>();
+        authorMap.put("author", discussionThread.getAuthor());
+        authorMap.put("created_at", DateUtil.formatPastDateRelativeToCurrentDate(discussionThread.getCreatedAt()));
+        String authorLabel = discussionThread.getAuthorLabel() == null ? "" :
+                discussionThread.getAuthorLabel().getReadableText(context);
+        authorMap.put("author_label", authorLabel);
 
-    private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
-        holder.numberResponsesOrCommentsLabel.setText(context.getResources().getQuantityString(
+        CharSequence authorText = ResourceUtil.getFormattedString(R.string.discussion_responses_author, authorMap);
+
+        holder.authorTextView.setText(authorText);
+        holder.numberResponsesTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount()));
     }
 
     private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
-        final DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
+        final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
-        holder.responseCommentBodyTextView.setText(response.getRawBody());
+        holder.responseCommentBodyTextView.setText(comment.getRawBody());
 
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionComments(context, response);
+                router.showCourseDiscussionComments(context, comment);
             }
         });
 
-        if (response.isEndorsed()) {
+        HashMap<String, String> authorMap = new HashMap<>();
+        authorMap.put("author", comment.getAuthor());
+        authorMap.put("created_at", DateUtil.formatPastDateRelativeToCurrentDate(discussionThread.getCreatedAt()));
+        String authorLabel = comment.getAuthorLabel() == null ? "" :
+                comment.getAuthorLabel().getReadableText(context);
+        authorMap.put("author_label", authorLabel);
+
+        CharSequence authorText = ResourceUtil.getFormattedString(R.string.discussion_responses_author, authorMap);
+
+        holder.authorTextView.setText(authorText);
+
+        if (comment.isEndorsed()) {
             holder.answerLayout.setVisibility(View.VISIBLE);
+            holder.endorsedTextView.setVisibility(View.VISIBLE);
+
+            String endorsedAt = DateUtil.formatPastDateRelativeToCurrentDate(comment.getEndorsedAt());
+            String endorsedAuthor = comment.getEndorsedBy();
+            String endorsedLabel = comment.getEndorsedByLabel() == null ? "" :
+                    comment.getEndorsedByLabel().getReadableText(context);
+
+            HashMap<String, String> endorsedAuthorMap = new HashMap<>();
+            endorsedAuthorMap.put("endorsed_by_author", endorsedAuthor);
+            endorsedAuthorMap.put("endorsed_at", endorsedAt);
+            endorsedAuthorMap.put("endorsed_by_label", endorsedLabel);
+
+            CharSequence endorsedByText = ResourceUtil.getFormattedString(
+                    R.string.discussion_responses_endorsed_author, endorsedAuthorMap);
+
+            holder.endorsedTextView.setText(endorsedByText);
         }
 
-        bindAuthorView(holder.authorLayoutViewHolder, response);
-        bindNumberCommentsView(holder.numberResponsesViewHolder, response);
-    }
-
-    private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
-        int numChildren = response == null ? 0 : response.getChildren().size();
+        int numChildren = comment == null ? 0 : comment.getChildren().size();
 
         if (numChildren == 0) {
-            holder.numberResponsesOrCommentsCountTextView.setVisibility(View.GONE);
-            holder.numberResponsesOrCommentsLabel.setText(context.getString(
+            holder.numberCommentsTextView.setText(context.getString(
                     R.string.number_responses_or_comments_add_comment_label));
         } else {
-            holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(response.getChildren().size()));
-            holder.numberResponsesOrCommentsLabel.setText(context.getResources().
-                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren));
+            holder.numberCommentsTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                    R.plurals.number_responses_or_comments_comments_label, numChildren));
         }
-    }
-
-    private void bindAuthorView(AuthorLayoutViewHolder holder, IAuthorData authorData) {
-        holder.discussionAuthorTextView.setText(authorData.getAuthor());
-        holder.discussionAuthorCreatedAtTextView.setText(
-                DateUtil.formatPastDateRelativeToCurrentDate(authorData.getCreatedAt()));
-
-        String priviledgedAuthorText = "";
-        if (authorData.getAuthorLabel() == PinnedAuthor.STAFF) {
-            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_staff);
-
-        } else if (authorData.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
-            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_ta);
-        }
-
-        holder.discussionAuthorPrivilegedAuthorTextView.setText(priviledgedAuthorText);
     }
 
     @Override
     public int getItemCount() {
         return (discussionThread == null) ? 0 : 1 + discussionResponses.size();
     }
-
 
     @Override
     public int getItemViewType(int position) {
@@ -167,9 +172,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         ETextView threadTitleTextView;
         ETextView threadBodyTextView;
         IconView threadPinnedIconView;
+        ETextView authorTextView;
+        ETextView numberResponsesTextView;
 
-        AuthorLayoutViewHolder authorLayoutViewHolder;
-        NumberResponsesViewHolder numberResponsesViewHolder;
 
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
@@ -180,18 +185,20 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                     findViewById(R.id.discussion_responses_thread_row_body_text_view);
             threadPinnedIconView = (IconView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_pinned_icon_view);
-
-            authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
-            numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
+            authorTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_author_label);
+            numberResponsesTextView = (ETextView) itemView.
+                    findViewById(R.id.discussion_responses_number_responses_or_comments_text_view);
         }
     }
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout addCommentLayout;
         ETextView responseCommentBodyTextView;
-        AuthorLayoutViewHolder authorLayoutViewHolder;
-        NumberResponsesViewHolder numberResponsesViewHolder;
+        ETextView numberCommentsTextView;
         RelativeLayout answerLayout;
+        ETextView endorsedTextView;
+        ETextView authorTextView;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
@@ -199,8 +206,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             answerLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_answer_layout);
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
             responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
-            authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
-            numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
+            numberCommentsTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_number_responses_or_comments_text_view);
+            endorsedTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_endorsed_text_view);
+            authorTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_response_row_author_label);
         }
     }
 

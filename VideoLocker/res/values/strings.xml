@@ -295,16 +295,16 @@
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <!--Label indicating there is only one response-->
-        <item quantity="one">response</item>
+        <item quantity="one">{quantity} response</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">responses</item>
+        <item quantity="other">{quantity} responses</item>
     </plurals>
     <!--Label for number of discussion comments-->
     <plurals name="number_responses_or_comments_comments_label">
         <!--Label indicating there is only one comment-->
-        <item quantity="one">comment</item>
+        <item quantity="one">{quantity} comment</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">comments</item>
+        <item quantity="other">{quantity} comments</item>
     </plurals>
     <!--Label for discussion response to report as inappropriate -->
     <string name="discussion_responses_report_label">Report</string>
@@ -312,6 +312,10 @@
     <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
+    <!--Label for indicating the author of the response-->
+    <string name="discussion_responses_author">{author} {created_at} {author_label}</string>
+    <!--Label for indicating who endorsed the comment as an answer-->
+    <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>

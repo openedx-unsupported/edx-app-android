@@ -21,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:textSize="@dimen/edx_base"
             android:textColor="@color/edx_grayscale_neutral_x_dark"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
+            android:layout_marginBottom="@dimen/discussion_responses_margin"/>
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/discussion_responses_thread_row_body_text_view"
@@ -31,7 +31,7 @@
             android:layout_below="@+id/discussion_responses_thread_row_title_text_view"
             android:textSize="@dimen/edx_small"
             android:textColor="@color/edx_grayscale_neutral_dark"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
+            android:layout_marginBottom="@dimen/discussion_responses_margin"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -51,16 +51,13 @@
                 app:iconName="fa_thumb_tack"
                 android:visibility="gone"/>
 
-            <RelativeLayout
-                android:id="@+id/discussion_author_relative_layout"
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_thread_row_author_label"
+                style="@style/discussion_responses_small_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/discussion_responses_thread_row_pinned_icon_view"
-                android:layout_toRightOf="@+id/discussion_responses_thread_row_pinned_icon_view">
-
-                <include layout="@layout/discussion_author_layout" />
-
-            </RelativeLayout>
+                android:layout_toRightOf="@+id/discussion_responses_thread_row_pinned_icon_view"/>
 
             <RelativeLayout
                 android:id="@+id/discussion_number_responses_relative_layout"
@@ -69,7 +66,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:gravity="end"
-                android:layout_toRightOf="@+id/discussion_author_relative_layout">
+                android:layout_toRightOf="@+id/discussion_responses_thread_row_author_label">
 
                 <include layout="@layout/number_responses_or_comments_layout" />
 

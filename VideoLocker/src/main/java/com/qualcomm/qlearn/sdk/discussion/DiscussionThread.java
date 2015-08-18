@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionThread implements Serializable, IAuthorData {
+public class DiscussionThread implements Serializable {
 
     public enum ThreadType {
         @SerializedName("discussion")
@@ -53,7 +53,7 @@ public class DiscussionThread implements Serializable, IAuthorData {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private PinnedAuthor authorLabel;
+    private PriviledgedAuthor authorLabel;
     private int commentCount = 0;
     private int unreadCommentCount = 0;
     private String commentListUrl;
@@ -112,7 +112,7 @@ public class DiscussionThread implements Serializable, IAuthorData {
         return author;
     }
 
-    public PinnedAuthor getAuthorLabel() {
+    public PriviledgedAuthor getAuthorLabel() {
         return authorLabel;
     }
 

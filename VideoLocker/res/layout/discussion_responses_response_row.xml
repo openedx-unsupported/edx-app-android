@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/discussion_responses_standard_margin"
-    android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
-    android:layout_marginRight="@dimen/discussion_responses_standard_margin"
+    android:layout_marginTop="@dimen/discussion_responses_margin"
+    android:layout_marginLeft="@dimen/discussion_responses_margin"
+    android:layout_marginRight="@dimen/discussion_responses_margin"
     app:cardCornerRadius="@dimen/edx_box_radius">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/discussion_response_body"
@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
+
                 <include layout="@layout/discussion_response_answer_layout" />
 
             </RelativeLayout>
@@ -39,16 +40,15 @@
                 android:textSize="@dimen/edx_x_small"
                 android:textColor="@color/edx_grayscale_neutral_dark"/>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/discussion_responses_comment_body_text_view"
-                android:layout_alignParentBottom="true"
-                android:gravity="bottom">
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_response_row_author_label"
+                style="@style/discussion_responses_small_text"
+                android:layout_below="@+id/discussion_responses_comment_body_text_view" />
 
-                <include layout="@layout/discussion_author_layout" />
-
-            </RelativeLayout>
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/discussion_responses_endorsed_text_view"
+                style="@style/discussion_responses_small_text"
+                android:layout_below="@+id/discussion_responses_response_row_author_label" />
 
         </RelativeLayout>
 
