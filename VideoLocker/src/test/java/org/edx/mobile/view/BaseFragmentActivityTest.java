@@ -483,9 +483,24 @@ public class BaseFragmentActivityTest extends UiTest {
             Class<? extends Activity> nextActivityClass) {
         ShadowActivity shadowActivity = Shadows.shadowOf(currentActivity);
         Intent intent = shadowActivity.getNextStartedActivity();
+        assertNotNull(intent);
         assertThat(intent).hasComponent(currentActivity, nextActivityClass);
         assertAppliedTransitionNext(shadowActivity);
         return intent;
+    }
+
+    protected Intent assertNextStartedActivityForResult(
+            BaseFragmentActivity currentActivity,
+            Class<? extends Activity> nextActivityClass, int requestCode) {
+        ShadowActivity shadowActivity = Shadows.shadowOf(currentActivity);
+        ShadowActivity.IntentForResult intentForResult =
+                shadowActivity.getNextStartedActivityForResult();
+        assertNotNull(intentForResult);
+        assertThat(intentForResult.intent).hasComponent(
+                currentActivity, nextActivityClass);
+        assertEquals(requestCode, intentForResult.requestCode);
+        assertAppliedTransitionNext(shadowActivity);
+        return intentForResult.intent;
     }
 
     /**
