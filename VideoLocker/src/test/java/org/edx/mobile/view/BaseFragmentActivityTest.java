@@ -218,7 +218,7 @@ public class BaseFragmentActivityTest extends UiTest {
      *
      * @param shadowActivity The shadow activity
      */
-    private void assertAppliedTransitionNext(ShadowActivity shadowActivity) {
+    public void assertAppliedTransitionNext(ShadowActivity shadowActivity) {
         assertOverridePendingTransition(shadowActivity,
                 R.anim.slide_in_from_end, R.anim.slide_out_to_start);
     }
@@ -228,7 +228,7 @@ public class BaseFragmentActivityTest extends UiTest {
      *
      * @param shadowActivity The shadow activity
      */
-    private void assertAppliedTransitionPrev(ShadowActivity shadowActivity) {
+    public void assertAppliedTransitionPrev(ShadowActivity shadowActivity) {
         assertOverridePendingTransition(shadowActivity,
                 R.anim.slide_in_from_start, R.anim.slide_out_to_end);
     }

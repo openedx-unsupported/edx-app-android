@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,18 +10,22 @@ import android.widget.ListView;
 import org.edx.mobile.R;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.junit.Test;
 import org.robolectric.Robolectric;
+import org.robolectric.Shadows;
+import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -133,6 +138,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         }
         int subsectionRowIndex = -1;
         String subsectionId = null;
+        CourseComponent subsectionUnit = null;
         List<IBlock> sections = courseComponent.getChildren();
         sectionIteration: for (@SuppressWarnings("unused") IBlock section : sections) {
             subsectionRowIndex++;
@@ -140,6 +146,10 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
                 subsectionRowIndex++;
                 if (((CourseComponent) subsection).isContainer()) {
                     subsectionId = subsection.getId();
+                    List<CourseComponent> leafComponents = new ArrayList<>();
+                    courseComponent.fetchAllLeafComponents(leafComponents,
+                            EnumSet.allOf(BlockType.class));
+                    subsectionUnit = leafComponents.get(0);
                     break sectionIteration;
                 }
             }
@@ -149,12 +159,43 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
 
         ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
         clickRow(controller, subsectionRowIndex);
-        Intent newIntent = assertNextStartedActivity(
-                controller.get(), CourseOutlineActivity.class);
+        CourseOutlineActivity activity = controller.get();
+        Intent newIntent = assertNextStartedActivityForResult(
+                activity, CourseOutlineActivity.class,
+                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
         assertEquals(subsectionId, newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+
+        // Back stack reconstruction upon receiving a specific path
+        Intent resultData = new Intent();
+        resultData.putExtra(Router.EXTRA_COURSE_UNIT, subsectionUnit);
+        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                Activity.RESULT_OK, resultData);
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        BlockPath outlinePath = courseComponent.getPath();
+        BlockPath leafPath = subsectionUnit.getPath();
+        int outlinePathSize = outlinePath.getPath().size();
+        for (int i = outlinePathSize + 1;; i += 2) {
+            ShadowActivity.IntentForResult intentForResult =
+                    shadowActivity.getNextStartedActivityForResult();
+            CourseComponent nextComp = leafPath.get(i);
+            if (nextComp == null || !nextComp.isContainer()) {
+                assertNull(intentForResult);
+                break;
+            }
+            assertNotNull(intentForResult);
+            assertThat(intentForResult.intent).hasComponent(
+                    activity, CourseOutlineActivity.class);
+            assertEquals(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                    intentForResult.requestCode);
+            newData = intentForResult.intent.getBundleExtra(Router.EXTRA_BUNDLE);
+            assertNotNull(newData);
+            assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+            assertEquals(nextComp.getId(), newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+        }
+        assertAppliedTransitionPrev(shadowActivity);
     }
 
     /**
@@ -179,6 +220,8 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         courseComponent.fetchAllLeafComponents(leafComponents,
                 EnumSet.allOf(BlockType.class));
         CourseComponent courseUnit = leafComponents.get(0);
+        CourseComponent lastUnit = leafComponents.get(leafComponents.size() - 1);
+        assertNotEquals(lastUnit, courseUnit);
         courseComponent = courseUnit.getParent();
         if (courseUnit.getPath().getPath().size() % 2 > 0) {
             courseComponent = courseComponent.getParent();
@@ -201,14 +244,33 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
 
         ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
         clickRow(controller, subsectionRowIndex);
-        Intent newIntent = assertNextStartedActivity(
-                controller.get(), CourseOutlineActivity.class);
+        CourseOutlineActivity activity = controller.get();
+        Intent newIntent = assertNextStartedActivityForResult(
+                activity, CourseUnitNavigationActivity.class,
+                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
         assertEquals(courseComponent.getId(), newData.getSerializable(
                 Router.EXTRA_COURSE_COMPONENT_ID));
         assertEquals(courseUnit, newData.getSerializable(Router.EXTRA_COURSE_UNIT));
+
+        // Test the back stack reconstruction upon receiving a specific path
+        // Should not perform any action if it receives a unit selection from itself
+        Intent resultData = new Intent();
+        resultData.putExtra(Router.EXTRA_COURSE_UNIT, courseUnit);
+        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                Activity.RESULT_OK, resultData);
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        assertNull(shadowActivity.getNextStartedActivityForResult());
+        assertFalse(shadowActivity.isFinishing());
+        // Should finish itself to start the new navigation back stack if it receives
+        // a unit selection from another section
+        resultData.putExtra(Router.EXTRA_COURSE_UNIT, lastUnit);
+        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                Activity.RESULT_OK, resultData);
+        assertNull(shadowActivity.getNextStartedActivityForResult());
+        assertTrue(shadowActivity.isFinishing());
     }
 
     /**
@@ -219,7 +281,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
      *                   {@link CourseOutlineActivity}
      * @param rowIndex The row index
      */
-    public void clickRow(ActivityController<? extends CourseOutlineActivity> controller,
+    private void clickRow(ActivityController<? extends CourseOutlineActivity> controller,
             int rowIndex) {
         CourseOutlineActivity activity = controller.get();
         Fragment fragment = activity.getSupportFragmentManager()

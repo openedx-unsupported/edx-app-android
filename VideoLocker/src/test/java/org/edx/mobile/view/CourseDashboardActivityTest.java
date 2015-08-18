@@ -71,6 +71,7 @@ public class CourseDashboardActivityTest extends CourseBaseActivityTest {
 
         // TODO: Create a separate test suite for CourseDashboardFragment views
 
+        // Test navigation to courseware
         View rowsContainer = fragmentView.findViewById(R.id.dashboard_detail);
         assertNotNull(rowsContainer);
         assertThat(rowsContainer).isInstanceOf(ViewGroup.class);
