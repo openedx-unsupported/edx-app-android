@@ -355,7 +355,7 @@ public class BaseFragmentActivityTest extends UiTest {
         assertThat(titleTextView).hasCurrentTextColor(
                 activity.getResources().getColor(R.color.edx_white));
         assertEquals(type, titleTextView.getTypeface());
-        assertThat(bar).hasTitle(title);
+        assertThat(bar).hasTitle("  " + title);
     }
 
     /**
