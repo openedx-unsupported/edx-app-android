@@ -281,8 +281,8 @@
     <!-- Label to show empty assessment -->
     <string name="assessment_empty_coming_soon">Coming soon.</string>
 
-    <!-- Label to show empty transcript -->
-    <string name="assessment_empty_transcript">This video\'s transcript is not available yet.</string>
+    <!-- Label to notify user to rotate device for viewing a video in full screen -->
+    <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
 
 
     <!-- Label for warning message of graded assessment -->
