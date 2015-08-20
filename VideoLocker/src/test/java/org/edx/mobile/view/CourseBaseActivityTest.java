@@ -94,7 +94,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
 
         controller.postCreate(null).resume().postResume().visible();
         // Is there any way to test options menu invalidation?
-        downloadInProgressButton.performClick();
+        assertTrue(downloadInProgressButton.performClick());
         assertNextStartedActivity(activity, DownloadListActivity.class);
     }
 
