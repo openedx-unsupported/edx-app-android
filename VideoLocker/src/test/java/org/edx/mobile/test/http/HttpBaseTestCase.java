@@ -13,6 +13,8 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
+import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
@@ -29,6 +31,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  *  use MockWebService for Api test
@@ -47,6 +51,9 @@ public class HttpBaseTestCase extends BaseTestCase {
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     protected Api api;
+    // Per-test configuration for whether the mock web server should create artificial delays
+    // before sending the response.
+    protected boolean useArtificialDelay = false;
     protected ServiceManager serviceManager;
     //there are third party extension to handle conditionally skip some test programmatically.
     //but i think it is not a good idea to introduce more libs only for this purpose.
@@ -105,6 +112,25 @@ public class HttpBaseTestCase extends BaseTestCase {
         super.inject(injector);
         injector.injectMembers(api);
         serviceManager = injector.getInstance(ServiceManager.class);
+    }
+
+    /**
+     * Utility method to be used as a prerequisite for testing most API
+     *
+     * @throws Exception If an exception was encountered during login or
+     * verification
+     */
+    protected void login() throws Exception {
+        Config.TestAccountConfig config2  = config.getTestAccountConfig();
+
+        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
+        assertNotNull(res);
+        assertNotNull(res.access_token);
+        assertNotNull(res.token_type);
+        print(res.toString());
+
+        ProfileModel profile = api.getProfile();
+        assertNotNull(profile);
     }
 
     @Override
@@ -278,7 +304,9 @@ public class HttpBaseTestCase extends BaseTestCase {
         @Override
         public MockResponse dispatch(RecordedRequest recordedRequest)
                 throws InterruptedException {
-            Thread.sleep(calculateDelayForCall());
+            if (useArtificialDelay) {
+                Thread.sleep(calculateDelayForCall());
+            }
             return generateMockResponse(recordedRequest);
         }
     }

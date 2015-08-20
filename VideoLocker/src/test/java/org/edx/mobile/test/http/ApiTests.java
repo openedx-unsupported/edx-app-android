@@ -1,14 +1,10 @@
 package org.edx.mobile.test.http;
 
-import org.apache.http.HttpStatus;
-import org.edx.mobile.http.HttpManager;
-import org.edx.mobile.http.HttpRequestDelegate;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
@@ -16,14 +12,9 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.CourseStructureJsonHandler;
-import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.services.CourseManager;
-import org.edx.mobile.services.ServiceManager;
-import org.edx.mobile.util.Config;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -169,18 +160,10 @@ public class ApiTests extends HttpBaseTestCase {
     }
 
     @Test
+    @Override
     public void login() throws Exception {
         if( shouldSkipTest ) return;
-        Config.TestAccountConfig config2  = config.getTestAccountConfig();
-
-        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
-        assertNotNull(res);
-        assertNotNull(res.access_token);
-        assertNotNull(res.token_type);
-        print(res.toString());
-
-        ProfileModel profile = api.getProfile();
-        assertNotNull(profile);
+        super.login();
     }
 
     @Test
@@ -241,29 +224,8 @@ public class ApiTests extends HttpBaseTestCase {
         // General overall testing of CourseComponent API without recursion
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
         final String courseId = e.getCourse().getId();
-        HttpRequestDelegate<CourseComponent> requestDelegate = new HttpRequestDelegate<CourseComponent>(
-                api, null, serviceManager.getEndPointCourseStructure(courseId)) {
-            @Override
-            public CourseComponent fromJson(String json) throws Exception{
-                CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);
-                assertNotNull(model);
-                assertNotNull(model.root);
-                assertNotNull(model.blockData);
-                assertNotNull(model.getBlockById(model.root));
-                return (CourseComponent) CourseManager.normalizeCourseStructure(model, courseId);
-            }
-
-            @Override
-            public HttpManager.HttpResult invokeHttpCall() throws Exception {
-                return api.getCourseStructure(this);
-            }
-        };
-        HttpManager.HttpResult result = requestDelegate.invokeHttpCall();
-        assertNotNull(result);
-        assertEquals(HttpStatus.SC_OK, result.statusCode);
-        assertNotNull(result.body);
-
-        final CourseComponent courseComponent = requestDelegate.fromJson(result.body);
+        final CourseComponent courseComponent = serviceManager.getCourseStructure(courseId,
+                OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
         assertNotNull(courseComponent);
         assertNotNull(courseComponent.getRoot());
         assertEquals(courseId, courseComponent.getCourseId());

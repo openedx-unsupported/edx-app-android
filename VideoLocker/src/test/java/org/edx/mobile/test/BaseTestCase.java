@@ -10,16 +10,14 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
+import org.edx.mobile.CustomRobolectricTestRunner;
 import org.edx.mobile.core.EdxDefaultModule;
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.InputStream;
@@ -34,7 +32,7 @@ import roboguice.RoboGuice;
  * Created by rohan on 12/31/14.
  */
 @Ignore
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(CustomRobolectricTestRunner.class)
 public class BaseTestCase {
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -67,7 +65,6 @@ public class BaseTestCase {
     protected void inject(Injector injector ){}
 
     protected void addBindings() {
-        module.addBinding(IEdxEnvironment.class, Mockito.mock(IEdxEnvironment.class));
         module.addBinding(Config.class, config);
     }
 
