@@ -59,7 +59,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertNotNull(args);
         assertEquals(data.getSerializable(Router.EXTRA_ENROLLMENT),
                 args.getSerializable(Router.EXTRA_ENROLLMENT));
-        assertEquals(data.getSerializable(Router.EXTRA_COURSE_COMPONENT_ID),
-                args.getSerializable(Router.EXTRA_COURSE_COMPONENT_ID));
+        assertEquals(data.getString(Router.EXTRA_COURSE_COMPONENT_ID),
+                args.getString(Router.EXTRA_COURSE_COMPONENT_ID));
     }
 }
