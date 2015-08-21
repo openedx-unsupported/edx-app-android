@@ -219,7 +219,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
 
-        if ( !unit.isResponsiveUI() && unit.getType() != BlockType.VIDEO){
+        if ( !unit.isMultiDevice() && unit.getType() != BlockType.VIDEO){
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowType.setIcon(Iconify.IconValue.fa_laptop);
             viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));

@@ -551,7 +551,7 @@ public class RestApiManager implements IApi{
 
     public CourseComponent getCourseStructure(String courseId, boolean preferCache) throws Exception {
         String block_count = URLEncoder.encode("video", "UTF-8");
-        String block_fields = URLEncoder.encode("graded,format,responsive_ui", "UTF-8");
+        String block_fields = URLEncoder.encode("graded,format,multi_device", "UTF-8");
         String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
 
         String response;
