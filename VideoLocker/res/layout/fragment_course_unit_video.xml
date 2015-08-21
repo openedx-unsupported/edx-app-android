@@ -1,74 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/course_unit_video"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:baselineAligned="false"
-              android:background="@color/white"
-              android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_unit_video"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:baselineAligned="false"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/bottom_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:id="@+id/open_in_browser_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <include layout="@layout/panel_external_component" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+        android:id="@+id/player_container"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:orientation="vertical"
-        android:id="@+id/player_container">
+        android:orientation="vertical">
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/message_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/white"
         android:gravity="center"
-        android:layout_marginTop="45dp"
-        android:id="@+id/message_container">
+        android:orientation="vertical">
+
         <org.edx.mobile.third_party.iconify.IconView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            app:iconColor="@color/grey_3"
-            app:iconName="fa_file_text_o"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:background="@color/white"
-            android:layout_margin="20dp"/>
+            android:rotation="90"
+            app:iconColor="@color/edx_grayscale_neutral_light"
+            app:iconName="fa_mobile_phone" />
 
         <TextView
-            android:text="@string/assessment_empty_transcript"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:singleLine="false"
-            android:textColor="@color/grey_3"
-            android:textAlignment="center"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="60dp"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"
             android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            tools:targetApi="17"
-            />
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:singleLine="false"
+            android:text="@string/assessment_rotate_for_fullscreen"
+            android:textAlignment="center"
+            android:textColor="@color/edx_grayscale_neutral_dark"
+            android:textSize="16sp"
+            tools:targetApi="17" />
     </LinearLayout>
 
 </LinearLayout>
