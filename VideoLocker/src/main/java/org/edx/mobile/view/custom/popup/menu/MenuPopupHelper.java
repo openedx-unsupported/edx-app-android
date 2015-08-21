@@ -26,6 +26,8 @@ package org.edx.mobile.view.custom.popup.menu;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
@@ -164,6 +166,18 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         }
 
         mPopup.setContentWidth(mPopupWidth);
+        int topBottomPadding = mPopupPadding - mPopupItemVerticalPadding;
+        // Top/bottom padding will be applied on the background drawable,
+        // as the ListView is both initialized and set up only after show()
+        // is called on the ListPopupWindow. Left/right padding will be
+        // set up on the list items from the adapter, to keep the correct
+        // item boundaries for the selector.
+        ShapeDrawable paddedDrawable = new ShapeDrawable();
+        paddedDrawable.setAlpha(0);
+        paddedDrawable.setPadding(0, topBottomPadding, 0, topBottomPadding);
+        Drawable background = mPopup.getBackground();
+        mPopup.setBackgroundDrawable(background == null ? paddedDrawable :
+                new LayerDrawable(new Drawable[] { background, paddedDrawable }));
         mPopup.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
         mPopup.show();
         mPopup.getListView().setOnKeyListener(this);
@@ -320,7 +334,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     public void onRestoreInstanceState(Parcelable state) {}
 
     private enum ItemType {
-        PADDING(0, false),
         HEADER(R.layout.popup_menu_header, false),
         ITEM(R.layout.popup_menu_item, true);
 
@@ -341,7 +354,7 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
 
         @Override
         public int getCount() {
-            int count = 2;
+            int count = 0;
             MenuItem expandedItem = mMenu.getExpandedItem();
             for (MenuItem item : getMenuItems()) {
                 if (item != expandedItem) {
@@ -361,10 +374,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             if (position < 0 || position >= count) {
                 throw new IndexOutOfBoundsException();
             }
-            if (position == 0 || position == count - 1) {
-                return null;
-            }
-            position--;
             int index = 0;
             MenuItem expandedItem = mMenu.getExpandedItem();
             for (MenuItem item : getMenuItems()) {
@@ -405,10 +414,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             if (position < 0 || position >= count) {
                 throw new IndexOutOfBoundsException();
             }
-            if (position == 0 || position == count - 1) {
-                return ItemType.PADDING;
-            }
-            position--;
             int index = 0;
             MenuItem expandedItem = mMenu.getExpandedItem();
             for (MenuItem item : getMenuItems()) {
@@ -442,49 +447,35 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ItemType itemType = getItemType(position);
-            switch (itemType) {
-                case PADDING: {
-                    View view;
-                    if (convertView != null) {
-                        view = convertView;
-                    } else {
-                        view = new View(mContext);
-                        view.setMinimumHeight(mPopupPadding - mPopupItemVerticalPadding);
-                    }
-                    return view;
-                } default: {
-                    TextView textView;
-                    if (convertView != null) {
-                        textView = (TextView) convertView;
-                    } else {
-                        textView = (TextView) mInflater.inflate(
-                                itemType.mLayoutRes, parent, false);
-                    }
-                    MenuItem item = getItem(position);
-                    textView.setText(item.getTitle());
-                    if (textView instanceof Checkable) {
-                        ((Checkable) textView).setChecked(item.isChecked());
-                    }
-                    Drawable icon = item.getIcon();
-                    if (icon != null) {
-                        int iconWidth = icon.getIntrinsicWidth();
-                        int iconHeight = icon.getIntrinsicHeight();
-                        if (iconWidth < 0 || iconHeight < 0) {
-                            iconWidth = iconHeight = mPopupIconDefaultSize;
-                        }
-                        icon.setBounds(0, 0, iconWidth, iconHeight);
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            textView.setCompoundDrawables(icon, null, null, null);
-                        } else {
-                            textView.setCompoundDrawablesRelative(icon, null, null, null);
-                        }
-                    }
-                    textView.setPadding(mPopupPadding, mPopupItemVerticalPadding,
-                            mPopupPadding, mPopupItemVerticalPadding);
-                    return textView;
+            TextView textView;
+            if (convertView != null) {
+                textView = (TextView) convertView;
+            } else {
+                textView = (TextView) mInflater.inflate(
+                        getItemType(position).mLayoutRes, parent, false);
+            }
+            MenuItem item = getItem(position);
+            textView.setText(item.getTitle());
+            if (textView instanceof Checkable) {
+                ((Checkable) textView).setChecked(item.isChecked());
+            }
+            Drawable icon = item.getIcon();
+            if (icon != null) {
+                int iconWidth = icon.getIntrinsicWidth();
+                int iconHeight = icon.getIntrinsicHeight();
+                if (iconWidth < 0 || iconHeight < 0) {
+                    iconWidth = iconHeight = mPopupIconDefaultSize;
+                }
+                icon.setBounds(0, 0, iconWidth, iconHeight);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    textView.setCompoundDrawables(icon, null, null, null);
+                } else {
+                    textView.setCompoundDrawablesRelative(icon, null, null, null);
                 }
             }
+            textView.setPadding(mPopupPadding, mPopupItemVerticalPadding,
+                    mPopupPadding, mPopupItemVerticalPadding);
+            return textView;
         }
     }
 }
