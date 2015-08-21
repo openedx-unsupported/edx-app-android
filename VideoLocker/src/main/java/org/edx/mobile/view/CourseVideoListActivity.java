@@ -64,28 +64,36 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                 lastAccessComponent = lastAccessComponent.getParent();
                             }
                         }
-                        //if last access section has no video and app is on video-only model,
-                        //we should hide last-access-view for now.  TODO - i believe it is a temporary solution. we should
-                        //get rid of video-only mode in the future?
-                        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-                        if ( userPrefManager.isUserPrefVideoModel() &&
-                            lastAccessComponent.getVideos().isEmpty() )
-                            return;
 
-                        final CourseComponent finalLastAccessComponent = lastAccessComponent;
-                        super.showLastAccessedView(null, " " + lastAccessComponent.getName(), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //This has been used so that if user clicks continuously on the screen,
-                                //two activities should not be opened
-                                long currentTime = SystemClock.elapsedRealtime();
-                                if (currentTime - lastClickTime > 1000) {
-                                    lastClickTime = currentTime;
-                                    environment.getRouter().showCourseContainerOutline(
-                                        CourseVideoListActivity.this, courseData, finalLastAccessComponent.getId());
+                        // Handling the border case that if the Last Accessed component turns out
+                        // to be the course root component itself, then we don't need to show it
+                        if (!lastAccessComponent.getId().equals(courseId)) {
+                            //if last access section has no video and app is on video-only model,
+                            //we should hide last-access-view for now.  TODO - i believe it is a temporary solution. we should
+                            //get rid of video-only mode in the future?
+                            PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+                            if (userPrefManager.isUserPrefVideoModel() &&
+                                    lastAccessComponent.getVideos().isEmpty())
+                                return;
+
+                            final CourseComponent finalLastAccessComponent = lastAccessComponent;
+                            super.showLastAccessedView(null, " " + lastAccessComponent.getName(), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //This has been used so that if user clicks continuously on the screen,
+                                    //two activities should not be opened
+                                    long currentTime = SystemClock.elapsedRealtime();
+                                    if (currentTime - lastClickTime > 1000) {
+                                        lastClickTime = currentTime;
+                                        environment.getRouter().showCourseContainerOutline(
+                                                CourseVideoListActivity.this, courseData, finalLastAccessComponent.getId());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else {
+                            hideLastAccessedView(view);
+                        }
                     } else {
                         hideLastAccessedView(view);
                     }
