@@ -73,7 +73,7 @@ public class ServiceManager {
             public String getUrl() {
                 try {
                     String block_count = URLEncoder.encode("video", "UTF-8");
-                    String block_fields = URLEncoder.encode("graded,format,responsive_ui", "UTF-8");
+                    String block_fields = URLEncoder.encode("graded,format,multi_device", "UTF-8");
                     String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
 
                     String url = config.getApiHostURL() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"

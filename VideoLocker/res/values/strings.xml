@@ -306,10 +306,31 @@
         <!--Label indicating there are more than one response-->
         <item quantity="other">comments</item>
     </plurals>
-    <!--Label for discussion response to report as inappropriate -->
-    <string name="discussion_responses_report_label">Report</string>
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
+    <!--Label for indicating that a response is an answer-->
+    <string name="discussion_responses_answer">Answer</string>
+    <!--Label for indicating the author of the response-->
+    <string name="discussion_responses_author">{author} {created_at} {author_label}</string>
+    <!--Label for indicating who endorsed the comment as an answer-->
+    <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
+
+    <!--Discussion Responses Action Bar-->
+    <!--Label to indicate number of votes-->
+    <plurals name="discussion_responses_action_bar_vote_text">
+        <!--Label indicating there is only one vote-->
+        <item quantity="one">{quantity} vote</item>
+        <!--Label indicating there are more than one votes-->
+        <item quantity="other">{quantity} votes</item>
+    </plurals>
+    <!--Label to indicate discussion response is not marked as inappropriate -->
+    <string name="discussion_responses_report_label">Report</string>
+    <!--Label for discussion response that has been marked as inappropriate-->
+    <string name="discussion_responses_reported_label">Reported</string>
+    <!--Label for a discussion thread that the user is not following-->
+    <string name="discussion_responses_action_bar_follow_text">Follow</string>
+    <!--Label for a discussion thread that the user is following-->
+    <string name="discussion_responses_action_bar_unfollow_text">Unfollow</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
@@ -341,10 +362,14 @@
     <string name="discussion_question">Question</string>
 
     <!-- Assessment -->
-    <!-- Label default unit on assessment navigation bar-->
+    <!-- Label showing next sub-section on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>
-    <!-- Label showing prvious on assessment navigation bar-->
+    <!-- Label showing next unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_next">Next</string>
+    <!-- Label showing previous sub-section on assessment navigation bar-->
     <string name="assessment_previous_unit">Previous Unit</string>
+    <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_previous">Previous</string>
 
     <!-- Label for mode switch menu item-->
     <string name="assessment_video_only">Video Only</string>
@@ -366,8 +391,8 @@
     <!-- Label to show empty assessment -->
     <string name="assessment_empty_coming_soon">Coming soon.</string>
 
-    <!-- Label to show empty transcript -->
-    <string name="assessment_empty_transcript">This video\'s transcript is not available yet.</string>
+    <!-- Label to notify user to rotate device for viewing a video in full screen -->
+    <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
 
 
     <!-- Label for warning message of graded assessment -->
@@ -619,7 +644,7 @@
     <!-- Template for notification title -->
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
-    <string name="notification_toggle">Notifications</string>
+    <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
 

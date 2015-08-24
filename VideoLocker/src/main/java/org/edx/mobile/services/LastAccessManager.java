@@ -89,21 +89,24 @@ public class LastAccessManager {
                 //Preference's last accessed is not synched with server,
                 //Sync with server and display the result from server on UI.
                 if(prefModuleId!=null && prefModuleId.length()>0){
-                    syncLastAccessedWithServer(prefManager, view, courseId, prefModuleId, callback);
+                    syncLastAccessedWithServer(prefManager, view, prefModuleId, courseId, callback);
                 }
             }
         }else{
             //There is no Last Accessed module on the server
             if(prefModuleId!=null && prefModuleId.length()>0){
-                syncLastAccessedWithServer(prefManager, view, courseId, prefModuleId, callback);
+                syncLastAccessedWithServer(prefManager, view, prefModuleId, courseId, callback);
             }
         }
         callback.setFetchingLastAccessed( false );
     }
 
 
-    private void syncLastAccessedWithServer(final PrefManager prefManager,final View view,
-                                           String prefModuleId, final String courseId, final LastAccessManagerCallback callback){
+    private void syncLastAccessedWithServer(final PrefManager prefManager,
+                                            final View view,
+                                            String prefModuleId,
+                                            final String courseId,
+                                            final LastAccessManagerCallback callback){
         try{
             SyncLastAccessedTask syncLastAccessTask = new SyncLastAccessedTask(
                 MainApplication.instance(),courseId, prefModuleId) {

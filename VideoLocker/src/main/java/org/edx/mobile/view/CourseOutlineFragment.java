@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
@@ -27,6 +28,8 @@ import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.edx.mobile.view.CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL;
 
 public class CourseOutlineFragment extends MyVideosBaseFragment {
 
@@ -55,8 +58,22 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 false);
         listView = (ListView)view.findViewById(R.id.outline_list);
         initializeAdapter();
-
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CourseOutlineAdapter.SectionRow row = adapter.getItem(position);
+                CourseComponent comp = row.component;
+                if ( comp.isContainer() ){
+                    environment.getRouter().showCourseContainerOutline(getActivity(),
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
+                } else {
+                    environment.getRouter().showCourseUnitDetail(getActivity(),
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseComponentId, comp);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -82,8 +99,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         //check if mode is changed
         if ( adapter != null ){
             boolean listRebuilt = adapter.checkModeChange();
-            //we will refresh list only if there are some selection
-            if ( !listRebuilt && adapter.getSelectedRow() != null ){
+            if ( !listRebuilt ){
                 adapter.notifyDataSetChanged();
             }
         }
@@ -126,35 +142,20 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     private void initializeAdapter(){
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(), environment.getStorage()) {
+            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(), environment.getStorage(), new CourseOutlineAdapter.DownloadListener() {
+                @Override
+                public void download(List<HasDownloadEntry> models) {
+                    downloadManager.downloadVideos(
+                            (List) models, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+
+                }
 
                 @Override
-                public void rowClicked(SectionRow row) {
-                    // handle click
-                    try {
-                        super.rowClicked(row);
-                        CourseComponent comp = row.component;
-                        if ( comp.isContainer() ){
-                            environment.getRouter().showCourseContainerOutline(getActivity(), courseData, comp.getId());
-                        } else {
-                            environment.getRouter().showCourseUnitDetail(getActivity(), courseData, courseComponentId, comp);
-                        }
-
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                    }
-                }
-
-                public void download(List<HasDownloadEntry> models){
-                    downloadManager.downloadVideos(
-                        (List) models, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
-                }
-
-                public  void download(DownloadEntry videoData){
+                public void download(DownloadEntry videoData) {
                     downloadManager.downloadVideo(
-                        videoData, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                            videoData, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
                 }
-            };
+            });
         }
 
         if (!(NetworkUtil.isConnected(getActivity()))) {

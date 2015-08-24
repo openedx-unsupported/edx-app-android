@@ -21,6 +21,8 @@ public class CourseEntry implements Serializable {
     private String start; // start date
     private String course_image;
     private String end; // completion date
+    private String start_display;
+    private StartType start_type;
     private String name;
     private String org;
     private String video_outline;
@@ -32,6 +34,7 @@ public class CourseEntry implements Serializable {
     private String id;
     private String number;
     private SocialURLModel social_urls;
+    private CoursewareAccess courseware_access;
 
     @Inject
     Config config;
@@ -66,6 +69,23 @@ public class CourseEntry implements Serializable {
 
     public void setEnd(String end) {
         this.end = end;
+    }
+
+    public String getStartDisplay() {
+        return start_display;
+    }
+
+    public void setStartDisplay(String start_display) {
+        this.start_display = start_display;
+    }
+
+    public StartType getStartType() {
+        if(start_type == null) start_type = StartType.NONE_START;
+        return start_type;
+    }
+
+    public void setStartType(StartType start_type) {
+        this.start_type = start_type;
     }
 
     public String getName() {
@@ -107,6 +127,11 @@ public class CourseEntry implements Serializable {
     public void setNumber(String number) {
         this.number = number;
     }
+
+
+    public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
+
+    public CoursewareAccess getCoursewareAccess() { return courseware_access; }
 
     public boolean isStarted() {
         // check if "start" date has passed

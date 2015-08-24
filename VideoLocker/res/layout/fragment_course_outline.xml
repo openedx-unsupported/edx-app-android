@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
-        />
+        android:listSelector="@drawable/course_list_item_selector"/>
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_chapter_tv"
         style="@style/bold_text"

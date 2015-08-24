@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,9 +29,9 @@ import org.edx.mobile.task.LoginTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
@@ -51,6 +53,9 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     public String emailStr;
     private TextView forgotPassword_tv;
     private TextView eulaTv;
+    private LinearLayout errorLayout;
+    private TextView errorHeader;
+    private TextView errorMessage;
     private SocialLoginDelegate socialLoginDelegate;
     
     @Override
@@ -113,6 +118,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
                 showEulaDialog();
             }
         });
+
+        errorLayout = (LinearLayout) findViewById(R.id.error_layout);
+        errorHeader = (TextView) findViewById(R.id.error_header);
+        errorMessage = (TextView) findViewById(R.id.error_message);
 
         try{
             environment.getSegment().screenViewsTracking("Login");
@@ -376,13 +385,22 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
 
-
-    public boolean showErrorMessage(String header, String message) {
+    @Override
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         if (message != null) {
-            return super.showErrorMessage(header, message);
+            return super.showErrorMessage(header, message, isPersistent);
         } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed));
+            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Animation errorMessageAnim = errorLayout.getAnimation();
+        if (errorMessageAnim == null || errorMessageAnim.hasEnded()) {
+            ViewAnimationUtil.hideMessageBar(errorLayout);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -394,7 +412,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     protected void onOffline() {
         AppConstants.offline_flag = true;
         showErrorMessage(getString(R.string.no_connectivity),
-                getString(R.string.network_not_connected));
+                getString(R.string.network_not_connected), false);
     }
 
     private void myCourseScreen() {

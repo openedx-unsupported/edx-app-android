@@ -110,7 +110,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
                         list.add((DownloadEntry) de);
                     }
                     adapter.setItems(list);
-                    showDownloadCompleteView();
                 }
             }
             @Override
@@ -118,51 +117,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
                 logger.error(ex);
             }
         });
-    }
-
-
-
-    private void showDownloadCompleteView(){
-
-        if(environment.getDatabase()!=null){
-            long downloadedCount = environment.getDatabase().getVideosDownloadedCount(null);
-            // display count of downloaded videos
-            PrefManager p = new PrefManager(DownloadListActivity.this,
-                    PrefManager.Pref.LOGIN);
-
-            // user specific data is stored in his own file
-            ProfileModel profile = p.getCurrentUserProfile();
-            p = new PrefManager(DownloadListActivity.this, profile.username);
-
-            long count = p.getLong(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED);
-
-            if(count>downloadedCount){
-                count = downloadedCount;
-            }
-
-            if (count > 0) {
-                findViewById(R.id.download_header).setVisibility(View.VISIBLE);
-                TextView tvCount = (TextView) findViewById(R.id.text_download_msg_cnt);
-                tvCount.setText(String.valueOf(count));
-
-                TextView tvCountMsg = (TextView) findViewById(R.id.text_download_msg);
-                String countMessage = getResources().getQuantityString(R.plurals.text_download_msg, (int)count);
-                tvCountMsg.setText(countMessage);
-
-                Button view_btnView = (Button) findViewById(R.id.button_view);
-                view_btnView.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent myDownloadIntent = new Intent(DownloadListActivity.this,
-                                MyVideosTabActivity.class);
-                        myDownloadIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                        startActivity( myDownloadIntent);
-                        finish();
-                    }
-                });
-            }
-        }
     }
 
     @Override

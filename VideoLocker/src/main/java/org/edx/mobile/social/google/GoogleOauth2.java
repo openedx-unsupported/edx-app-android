@@ -52,7 +52,6 @@ public class GoogleOauth2 extends ISocialImpl{
             String[] accountTypes = new String[]{"com.google"};
             Intent intent = AccountPicker.newChooseAccountIntent(null, null,
                     accountTypes, true, null, null, null, null);
-            Activity activity = getActivity();
             if ( activity == null )
                 return;
             // check if play-services are installed
@@ -79,7 +78,6 @@ public class GoogleOauth2 extends ISocialImpl{
         if (mEmail == null) {
             pickUserAccount();
         } else {
-            Activity activity = getActivity();
             if ( activity == null )
                 return;
             new FetchGoogleTokenTask(activity, mEmail, getScopes()).execute();
@@ -136,7 +134,6 @@ public class GoogleOauth2 extends ISocialImpl{
          * GoogleAuthException that may occur.
          */
         protected String fetchToken() throws IOException {
-            Activity activity = getActivity();
             if ( activity == null )
                 return null;
             try {
@@ -192,41 +189,6 @@ public class GoogleOauth2 extends ISocialImpl{
 
     
     @Override
-    public void onActivityCreated(Activity arg0, Bundle arg1) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivityDestroyed(Activity arg0) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivityPaused(Activity arg0) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivityResumed(Activity arg0) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivityStarted(Activity arg0) {
-        // nothing to do
-    }
-
-    @Override
-    public void onActivityStopped(Activity arg0) {
-        // nothing to do
-    }
-    
-    @Override
     public void login() {
         pickUserAccount();
     }
@@ -235,7 +197,6 @@ public class GoogleOauth2 extends ISocialImpl{
     public void logout() {
         if (accessToken != null) {
             try {
-                Activity activity = getActivity();
                 if ( activity == null )
                     return;
                 GoogleAuthUtil.clearToken(activity, accessToken);

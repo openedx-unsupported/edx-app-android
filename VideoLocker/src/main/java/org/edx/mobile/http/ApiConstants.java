@@ -42,7 +42,7 @@ public class ApiConstants {
 
     public static final String URL_EXCHANGE_ACCESS_TOKEN = "/oauth2/exchange_access_token/{backend}/";
 
-    public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username }/course_status_info/{courseId}";
+    public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
     public static final String URL_REGISTRATION = "/user_api/v1/account/registration/";
 

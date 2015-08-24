@@ -38,9 +38,9 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
-import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -503,11 +503,12 @@ public class RegisterActivity extends BaseFragmentActivity
         });
     }
 
-    public boolean showErrorMessage(String header, String message) {
+    @Override
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         if (message != null) {
-            return super.showErrorMessage(header, message);
+            return super.showErrorMessage(header, message, isPersistent);
         } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed));
+            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
         }
     }
 

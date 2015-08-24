@@ -28,7 +28,6 @@ public class SocialLoginTests extends HttpBaseTestCase  {
     public void testGetProfile() throws Exception {
         if ( shouldSkipTest ) return;
 
-        Api api = new Api(RuntimeEnvironment.application);
         ProfileModel profile = api.getProfile();
         assertNotNull(profile);
         assertNotNull("profile.email cannot be null", profile.email);

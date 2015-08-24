@@ -380,7 +380,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
 
             try {
-                updateLastAccess(video);
                 // capture chapter name
                 if (chapterName == null) {
                     // capture the chapter name of this video
@@ -393,18 +392,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }catch(Exception ex){
             logger.error(ex);
-        }
-    }
-
-    private void updateLastAccess(DownloadEntry video){
-        try {
-            String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                .username, video.eid);
-            PrefManager prefManager = new PrefManager(getActivity(), prefName);
-            VideoResponseModel vrm = environment.getServiceManager().getVideoById(video.eid, video.videoId);
-            prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
-        } catch (Exception e) {
-            logger.error(e);
         }
     }
 
