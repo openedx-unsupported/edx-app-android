@@ -222,7 +222,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         Class<? extends CourseUnitFragment> fragmentClass;
         if (currentUnit instanceof VideoBlockModel) {
             fragmentClass = CourseUnitVideoFragment.class;
-        } else if (!currentUnit.isResponsiveUI() ){
+        } else if (!currentUnit.isMultiDevice() ){
             fragmentClass = CourseUnitMobileNotSupportedFragment.class;
         } else if (currentUnit.getType() != BlockType.VIDEO &&
                 currentUnit.getType() != BlockType.HTML &&
