@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.IAuthorData;
@@ -17,11 +18,14 @@ import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.FlagCommentTask;
+import org.edx.mobile.task.FlagThreadTask;
 import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
@@ -31,18 +35,17 @@ import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
+public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
-    public static interface PaginationHandler{
-         void loadMoreRecord(IPagination pagination);
+    public interface PaginationHandler {
+        void loadMoreRecord(IPagination pagination);
     }
+
     @Inject
     Context context;
 
     @Inject
     Router router;
-
-    private static final int ROW_POSITION_THREAD = 0;
 
     private DiscussionThread discussionThread;
     private List<DiscussionComment> discussionResponses = new ArrayList<>();
@@ -93,15 +96,15 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int rowType = getItemViewType(position);
-        switch (rowType){
-            case RowType.THREAD :
+        switch (rowType) {
+            case RowType.THREAD:
                 bindViewHolderToThreadRow((DiscussionThreadViewHolder) holder);
                 break;
-            case RowType.RESPONSE :
-                 bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
+            case RowType.RESPONSE:
+                bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
                 break;
-            case RowType.MORE_BUTTON :
-                bindViewHolderToShowMoreRow((ShowMoreViewHolder)holder, position);
+            case RowType.MORE_BUTTON:
+                bindViewHolderToShowMoreRow((ShowMoreViewHolder) holder, position);
                 break;
         }
 
@@ -120,6 +123,31 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
         bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
+
+        holder.actionBarViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                FlagThreadTask task = new FlagThreadTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
+                    @Override
+                    public void onSuccess(DiscussionThread topicThreads) {
+                        if (topicThreads != null) {
+                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
+                            markDataChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onException(Exception ex) {
+                        logger.error(ex);
+                    }
+                };
+                task.execute();
+            }
+        });
+
+        updateActionBarVoteCount(holder.actionBarViewHolder,
+                discussionThread.isVoted(), discussionThread.getVoteCount());
+        updateActionBarFollow(holder.actionBarViewHolder, discussionThread.isFollowing());
+        updateActionBarReportFlag(holder.actionBarViewHolder, discussionThread.isAbuseFlagged());
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
@@ -128,7 +156,6 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 VoteThreadTask task = new VoteThreadTask(context, discussionThread, !discussionThread.isVoted()) {
                     @Override
                     public void onSuccess(DiscussionThread topicThreads) {
@@ -190,23 +217,48 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
 
+    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
+        final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
-    private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, int position) {
-        final DiscussionComment response = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
-
-        CharSequence charSequence = Html.fromHtml(response.getRenderedBody());
+        CharSequence charSequence = Html.fromHtml(comment.getRenderedBody());
         holder.responseCommentBodyTextView.setText(charSequence);
 
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionComments(context, response);
+                router.showCourseDiscussionComments(context, comment);
             }
         });
 
-        bindAuthorView(holder.authorLayoutViewHolder, response);
-        bindNumberCommentsView(holder.numberResponsesViewHolder, response);
-        bindSocialView(holder.socialLayoutViewHolder, position - 1, response);
+        bindAuthorView(holder.authorLayoutViewHolder, comment);
+        bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
+        final int positionInResponses = position - 1;
+        bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
+
+        holder.actionBarViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View v) {
+                FlagCommentTask task = new FlagCommentTask(context, comment, !comment.isAbuseFlagged()) {
+                    @Override
+                    public void onSuccess(DiscussionComment comment) {
+                        if (comment != null) {
+                            discussionResponses.remove(positionInResponses);
+                            discussionResponses.add(positionInResponses, comment);
+                            markDataChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onException(Exception ex) {
+                        logger.error(ex);
+                    }
+                };
+                task.execute();
+            }
+        });
+
+        updateActionBarVoteCount(holder.actionBarViewHolder, comment.isVoted(), comment.getVoteCount());
+        updateActionBarReportFlag(holder.actionBarViewHolder, comment.isAbuseFlagged());
+        holder.actionBarViewHolder.followLayout.setVisibility(View.INVISIBLE);
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int positionInResponses, final DiscussionComment response) {
@@ -236,7 +288,7 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         });
     }
 
-    private void markDataChanged(){
+    private void markDataChanged() {
         PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
         prefManager.setServerSideChangedForCourseThread(true);
         prefManager.setServerSideChangedForCourseTopic(true);
@@ -276,11 +328,11 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        if ( discussionThread == null )
+        if (discussionThread == null)
             return 0;
         int total = 1 + discussionResponses.size();
-        if ( pagination.mayHasMorePages() )
-            total ++;
+        if (pagination.mayHasMorePages())
+            total++;
         return total;
     }
 
@@ -291,7 +343,7 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             return RowType.THREAD;
         }
 
-        if ( pagination.mayHasMorePages() && position == getItemCount() - 1){
+        if (pagination.mayHasMorePages() && position == getItemCount() - 1) {
             return RowType.MORE_BUTTON;
         }
 
@@ -305,13 +357,8 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         pagination.clear();
         notifyDataSetChanged();
     }
-//
-//    public void setDiscussionResponses(List<DiscussionComment> discussionResponses) {
-//        this.discussionResponses = discussionResponses;
-//        notifyDataSetChanged();
-//    }
 
-    public void addPage(List<DiscussionComment> discussionResponses, boolean hasMore ){
+    public void addPage(List<DiscussionComment> discussionResponses, boolean hasMore) {
         this.discussionResponses.addAll(discussionResponses);
         pagination.setHasMorePages(hasMore);
         notifyDataSetChanged();
@@ -335,10 +382,8 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
-
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
-
-        //TODO ? report view?
+        ActionBarViewHolder actionBarViewHolder;
 
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
@@ -353,6 +398,7 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
+            actionBarViewHolder = new ActionBarViewHolder(itemView);
         }
     }
 
@@ -362,6 +408,7 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
+        ActionBarViewHolder actionBarViewHolder;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
@@ -371,7 +418,34 @@ public  class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
+            actionBarViewHolder = new ActionBarViewHolder(itemView);
         }
     }
 
+    void updateActionBarVoteCount(ActionBarViewHolder holder, boolean isVoted, int voteCount) {
+        CharSequence voteText = ResourceUtil.getFormattedStringForQuantity(
+                R.plurals.discussion_responses_action_bar_vote_text, voteCount);
+        holder.voteCountTextView.setText(voteText);
+
+        int iconColor = isVoted ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
+        holder.voteIconView.setIconColor(context.getResources().getColor(iconColor));
+    }
+
+    void updateActionBarFollow(ActionBarViewHolder holder, boolean isFollowing) {
+        int followStringResId = isFollowing ? R.string.discussion_responses_action_bar_unfollow_text :
+                R.string.discussion_responses_action_bar_follow_text;
+        holder.followTextView.setText(context.getString(followStringResId));
+
+        int iconColor = isFollowing ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
+        holder.followIconView.setIconColor(context.getResources().getColor(iconColor));
+    }
+
+    void updateActionBarReportFlag(ActionBarViewHolder holder, boolean isReported) {
+        int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
+                R.string.discussion_responses_report_label;
+        holder.reportTextView.setText(context.getString(reportStringResId));
+
+        int iconColor = isReported ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
+        holder.reportIconView.setIconColor(context.getResources().getColor(iconColor));
+    }
 }
