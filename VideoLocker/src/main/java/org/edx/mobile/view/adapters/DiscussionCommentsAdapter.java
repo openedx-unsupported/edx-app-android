@@ -8,8 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
@@ -18,7 +16,7 @@ import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 
-public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionComment> {
+public class DiscussionCommentsAdapter extends BaseListAdapter<DiscussionComment> {
 
     private final Context context;
     private FlagCommentTask flagCommentTask;
@@ -31,7 +29,7 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
 
     @Override
     public void render(BaseViewHolder tag, final DiscussionComment discussionComment) {
-        ViewHolder holder = (ViewHolder) tag;
+        final ViewHolder holder = (ViewHolder) tag;
 
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
@@ -55,23 +53,25 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
 
         holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                flagComment(v, discussionComment);
+                flagComment(holder, discussionComment);
             }
         });
     }
 
 
-    protected void flagComment(final View v, final DiscussionComment discussionComment) {
-
-        if ( flagCommentTask != null ){
+    protected void flagComment(final ViewHolder holder, final DiscussionComment discussionComment) {
+        if (flagCommentTask != null) {
             flagCommentTask.cancel(true);
         }
-        flagCommentTask = new FlagCommentTask(getContext(), discussionComment, true) {
+        // TODO: Smarter way to handle check if reported than string comparison
+        boolean isReport = holder.discussionCommentCountReportTextView.getText().toString().equalsIgnoreCase(getContext().getString(R.string.discussion_responses_report_label));
+        flagCommentTask = new FlagCommentTask(getContext(), discussionComment, isReport) {
             @Override
             public void onSuccess(DiscussionComment comment) {
-                // TODO: change Report to Reported and the flag icon color to red?
-                TextView reportTextView = (TextView) v;
-                reportTextView.setText("Reported");
+                int reportStringResId = comment.isAbuseFlagged() ? R.string.discussion_responses_reported_label :
+                        R.string.discussion_responses_report_label;
+                holder.discussionCommentCountReportTextView.setText(context.getString(reportStringResId));
+                holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(comment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base));
             }
 
             @Override
@@ -100,7 +100,8 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    }
 
     private static class ViewHolder extends BaseViewHolder {
         LinearLayout discussionCommentRow;
