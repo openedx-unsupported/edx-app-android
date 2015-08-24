@@ -2,10 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.CourseTopics;
 
 public abstract class GetTopicListTask extends
 Task<CourseTopics> {

@@ -2,8 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.view.adapters.IPagination;
 

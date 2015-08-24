@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
+import org.edx.mobile.discussion.DiscussionAPI;
 
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;

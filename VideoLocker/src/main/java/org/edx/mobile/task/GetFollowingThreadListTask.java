@@ -2,9 +2,9 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionPostsFilter;
+import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.view.adapters.IPagination;
 

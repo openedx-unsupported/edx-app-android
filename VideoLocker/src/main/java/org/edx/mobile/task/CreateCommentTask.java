@@ -2,9 +2,8 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.CommentBody;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.ResponseBody;
+import org.edx.mobile.discussion.CommentBody;
+import org.edx.mobile.discussion.DiscussionComment;
 
 public abstract class CreateCommentTask extends
 Task<DiscussionComment> {

@@ -11,18 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
-import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+
+import org.edx.mobile.discussion.DiscussionAPI;
+import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
 import de.greenrobot.event.EventBus;

@@ -2,8 +2,8 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.ThreadBody;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.ThreadBody;
 
 public abstract class CreateThreadTask extends
 Task<DiscussionThread> {

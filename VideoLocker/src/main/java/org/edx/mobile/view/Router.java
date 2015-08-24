@@ -7,9 +7,9 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionTopic;
 
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;

@@ -14,7 +14,7 @@
  NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -22,79 +22,36 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionThread implements Serializable, IAuthorData {
-
-    public enum ThreadType {
-        @SerializedName("discussion")
-        DISCUSSION (0),
-
-        @SerializedName("question")
-        QUESTION (1);
-
-        private final int value;
-
-        private ThreadType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    @SerializedName("id")
-    private String identifier;
-    private ThreadType type;
-    private String courseId;
-    private String topicId;
-    private int groupId;
-    private String groupName;
-    private String title;
+public class DiscussionComment implements Serializable, IAuthorData {
+    private @SerializedName("id") String identifier;
+    private String parentId;
+    private String threadId;
     private String rawBody;
     private String renderedBody;
     private String author;
     private PinnedAuthor authorLabel;
-    private int commentCount = 0;
-    private int unreadCommentCount = 0;
-    private String commentListUrl;
-    private boolean hasEndorsed = false;
-    private boolean pinned = false;
-    private boolean closed = false;
-    private boolean following = false;
-    private boolean abuseFlagged = false;
     private boolean voted = false;
     private int voteCount = 0;
     private Date createdAt;
     private Date updatedAt;
+    private boolean endorsed = false;
+    private String endorsedBy;
+    private String endorsedByLabel;
+    private Date endorsedAt;
+    private boolean abuseFlagged = false;
     private List<String> editableFields;
-    private boolean read = false;
+    private List<DiscussionComment> children;
 
     public String getIdentifier() {
         return identifier;
     }
 
-    public ThreadType getType() {
-        return type;
+    public String getParentId() {
+        return parentId;
     }
 
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public String getTitle() {
-        return title;
+    public String getThreadId() {
+        return threadId;
     }
 
     public String getRawBody() {
@@ -106,46 +63,11 @@ public class DiscussionThread implements Serializable, IAuthorData {
     }
 
     public String getAuthor() {
-        if (author == null || author.isEmpty()) {
-            return "anonymous";
-        }
         return author;
     }
 
     public PinnedAuthor getAuthorLabel() {
         return authorLabel;
-    }
-
-    public String getCommentListUrl() {
-        return commentListUrl;
-    }
-
-    public int getCommentCount() {
-        return commentCount;
-    }
-
-    public int getUnreadCommentCount() {
-        return unreadCommentCount;
-    }
-
-    public boolean isHasEndorsed() {
-        return hasEndorsed;
-    }
-
-    public boolean isPinned() {
-        return pinned;
-    }
-
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public boolean isFollowing() {
-        return following;
-    }
-
-    public boolean isAbuseFlagged() {
-        return abuseFlagged;
     }
 
     public boolean isVoted() {
@@ -163,13 +85,33 @@ public class DiscussionThread implements Serializable, IAuthorData {
     public Date getUpdatedAt() {
         return updatedAt;
     }
+    
+    public boolean isEndorsed() {
+        return endorsed;
+    }
+
+    public String getEndorsedBy() {
+        return endorsedBy;
+    }
+
+    public String getEndorsedByLabel() {
+        return endorsedByLabel;
+    }
+
+    public Date getEndorsedAt() {
+        return endorsedAt;
+    }
+
+    public boolean isAbuseFlagged() {
+        return abuseFlagged;
+    }
 
     public List<String> getEditableFields() {
         return editableFields;
     }
 
-    public boolean isRead() {
-        return read;
+    public List<DiscussionComment> getChildren() {
+        return children;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
 public class ResponseBody {
     String threadId;

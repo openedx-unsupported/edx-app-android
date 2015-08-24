@@ -1,16 +1,13 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import roboguice.inject.InjectExtra;
 

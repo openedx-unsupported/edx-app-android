@@ -10,20 +10,16 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Releasable;
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.ThreadComments;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
-import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.IPagination;
 

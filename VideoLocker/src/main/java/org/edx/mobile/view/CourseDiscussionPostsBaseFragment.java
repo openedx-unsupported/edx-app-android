@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+
+import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;

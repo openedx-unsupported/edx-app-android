@@ -8,8 +8,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.PinnedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;

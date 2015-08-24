@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.CourseDiscussionInfo;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.CourseDiscussionInfo;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -21,10 +19,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCourseDiscussionInfoTask;
-import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import roboguice.fragment.RoboFragment;

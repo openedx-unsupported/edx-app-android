@@ -1,4 +1,4 @@
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;

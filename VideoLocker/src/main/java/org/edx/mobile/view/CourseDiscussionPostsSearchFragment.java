@@ -3,13 +3,12 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.R;
 import org.edx.mobile.task.SearchThreadListTask;

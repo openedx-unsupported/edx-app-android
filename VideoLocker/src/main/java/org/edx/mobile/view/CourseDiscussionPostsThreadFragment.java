@@ -3,29 +3,20 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionPostsFilter;
+import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.event.CourseAnnouncementEvent;
-import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
@@ -35,7 +26,6 @@ import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.HashMap;
 
-import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 

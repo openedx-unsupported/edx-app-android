@@ -2,18 +2,11 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionPostsFilter;
+import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.TopicThreads;
 
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.http.OkHttpUtil;
-import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.view.CourseDiscussionPostsThreadFragment;
 import org.edx.mobile.view.adapters.IPagination;
-
-import java.util.Date;
 
 public abstract class GetThreadListTask extends
 Task<TopicThreads> {

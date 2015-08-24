@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.qualcomm.qlearn.sdk.discussion.CommentBody;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import org.edx.mobile.discussion.CommentBody;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;

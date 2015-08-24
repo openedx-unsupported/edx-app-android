@@ -2,8 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionThread;
 
 public abstract class FlagThreadTask extends
 Task<DiscussionThread> {

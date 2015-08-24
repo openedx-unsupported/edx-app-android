@@ -2,8 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionThread;
 
 public abstract class FollowThreadTask extends
 Task<DiscussionThread> {

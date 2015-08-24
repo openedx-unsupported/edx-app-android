@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;

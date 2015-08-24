@@ -14,51 +14,20 @@
  NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-public class DiscussionTopic implements Serializable {
-    public static final String FOLLOWING_TOPICS = "Posts I'm Following";
-    @SerializedName("id") String identifier = "";
-    String name = "";
-    String threadListUrl = "";
-    List<DiscussionTopic> children = new ArrayList<>();
+public class CourseTopics {
+    private List<DiscussionTopic> coursewareTopics;
+    private List<DiscussionTopic> nonCoursewareTopics;
 
-    public String getIdentifier() {
-        return identifier;
+    public List<DiscussionTopic> getCoursewareTopics() {
+        return coursewareTopics;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public List<DiscussionTopic> getNonCoursewareTopics() {
+        return nonCoursewareTopics;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getThreadListUrl() {
-        return threadListUrl;
-    }
-
-    public void setThreadListUrl(String threadListUrl) {
-        this.threadListUrl = threadListUrl;
-    }
-
-    public List<DiscussionTopic> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<DiscussionTopic> children) {
-        this.children = children;
-    }
-
 }
+

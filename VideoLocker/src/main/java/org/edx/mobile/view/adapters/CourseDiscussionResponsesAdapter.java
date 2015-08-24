@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.IAuthorData;
-import com.qualcomm.qlearn.sdk.discussion.PinnedAuthor;
+
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.IAuthorData;
+import org.edx.mobile.discussion.PinnedAuthor;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;

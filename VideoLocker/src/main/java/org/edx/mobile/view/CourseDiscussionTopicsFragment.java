@@ -10,13 +10,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopicDepth;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+
+import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionTopicDepth;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;

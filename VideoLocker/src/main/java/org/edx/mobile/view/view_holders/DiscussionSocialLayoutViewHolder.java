@@ -4,12 +4,10 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
-import org.edx.mobile.task.FollowThreadTask;
-import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.view.custom.ETextView;
 

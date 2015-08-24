@@ -14,7 +14,7 @@
  NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
 import android.content.Context;
 
@@ -25,30 +25,17 @@ import com.google.inject.Inject;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.http.GzipRequestInterceptor;
 import org.edx.mobile.http.LoggingInterceptor;
 import org.edx.mobile.http.OauthHeaderRequestInterceptor;
-import org.edx.mobile.http.OauthRestApi;
-import org.edx.mobile.http.OfflineRequestInterceptor;
-import org.edx.mobile.http.RetroApiCallback;
 import org.edx.mobile.http.RetroHttpException;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.io.File;
 
-import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.RestAdapter.Builder;
-import retrofit.RetrofitError;
 import retrofit.client.OkClient;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Query;
 
 /*
 // TODO: fix the issue - try to simplify the callback implementation

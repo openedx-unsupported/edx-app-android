@@ -2,8 +2,7 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import com.qualcomm.qlearn.sdk.discussion.CourseDiscussionInfo;
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
+import org.edx.mobile.discussion.CourseDiscussionInfo;
 
 public abstract class GetCourseDiscussionInfoTask extends
 Task<CourseDiscussionInfo> {

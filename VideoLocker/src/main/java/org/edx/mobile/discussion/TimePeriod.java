@@ -1,4 +1,4 @@
-package com.qualcomm.qlearn.sdk.discussion;
+package org.edx.mobile.discussion;
 
 import java.io.Serializable;
 import java.util.Date;
