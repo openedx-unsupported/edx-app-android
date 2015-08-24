@@ -320,14 +320,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         public Fragment getItem(int pos) {
             CourseComponent unit = getUnit(pos);
             CourseUnitFragment unitFragment = null;
-            //FIXME - for the video, let's ignore responsive_UI for now
+            //FIXME - for the video, let's ignore multiDevice for now
             if ( unit instanceof VideoBlockModel) {
                 CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
 
                 unitFragment = fragment;
             }
 
-            else if ( !unit.isResponsiveUI() ){
+            else if ( !unit.isMultiDevice() ){
                 unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
             }
 

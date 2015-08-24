@@ -26,8 +26,8 @@ public class BlockModel implements Serializable{
     @SerializedName("graded")
     public boolean graded;
 
-    @SerializedName("responsive_ui")
-    public boolean responsiveUI;
+    @SerializedName("multi_device")
+    public boolean multiDevice;
 
     @SerializedName("block_url")
     public String blockUrl;
