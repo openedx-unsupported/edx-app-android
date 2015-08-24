@@ -1,7 +1,9 @@
 package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
@@ -11,12 +13,11 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.DownloadEvent;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
@@ -27,7 +28,6 @@ import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
-@RunWith(RobolectricGradleTestRunner.class)
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
      * Method for defining the subclass of {@link CourseBaseActivity} that
@@ -38,6 +38,24 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @Override
     protected Class<? extends CourseBaseActivity> getActivityClass() {
         return CourseBaseActivity.class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Intent getIntent() {
+        EnrolledCoursesResponse courseData;
+        try {
+            courseData = api.getEnrolledCourses().get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Intent intent = super.getIntent();
+        Bundle extras = new Bundle();
+        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        intent.putExtra(Router.EXTRA_BUNDLE, extras);
+        return intent;
     }
 
     /**
@@ -55,7 +73,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @SuppressLint("RtlHardcoded")
     public void initializeTest() {
         ActivityController<? extends CourseBaseActivity> controller =
-                Robolectric.buildActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
         CourseBaseActivity activity = controller.get();
 
         controller.create();
@@ -76,7 +94,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
 
         controller.postCreate(null).resume().postResume().visible();
         // Is there any way to test options menu invalidation?
-        downloadInProgressButton.performClick();
+        assertTrue(downloadInProgressButton.performClick());
         assertNextStartedActivity(activity, DownloadListActivity.class);
     }
 
@@ -86,7 +104,8 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @Test
     public void downloadEventTest() {
         CourseBaseActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         View downloadProgressBar =
                 activity.findViewById(R.id.download_in_progress_bar);
         assumeNotNull(downloadProgressBar);
@@ -102,7 +121,8 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @Test
     public void processLifecycleTest() {
         CourseBaseActivity activity =
-                Robolectric.setupActivity(getActivityClass());
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
         ProgressBar progressWheel = (ProgressBar)
                 activity.findViewById(R.id.progress_spinner);
         if (progressWheel == null) {
@@ -124,7 +144,8 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     @Override
     public void initializeOptionsMenuTest() {
         ShadowActivity shadowActivity = Shadows.shadowOf(
-                Robolectric.setupActivity(getActivityClass()));
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get());
         Menu menu = shadowActivity.getOptionsMenu();
         assertNotNull(menu);
         MenuItem shareOnWebItem = menu.findItem(R.id.action_share_on_web);

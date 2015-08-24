@@ -26,8 +26,8 @@ public class BlockModel implements Serializable{
     @SerializedName("graded")
     public boolean graded;
 
-    @SerializedName("responsive_ui")
-    public boolean responsiveUI;
+    @SerializedName("multi_device")
+    public boolean multiDevice;
 
     @SerializedName("block_url")
     public String blockUrl;
@@ -51,6 +51,6 @@ public class BlockModel implements Serializable{
     public BlockData data;
 
     public boolean isContainer(){
-        return descendants != null && descendants.size() > 0;
+        return type != null ? type.isContainer() : (descendants != null && descendants.size() > 0);
     }
 }

@@ -1,16 +1,15 @@
 package org.edx.mobile.social;
 
 import android.app.Activity;
-
-import java.lang.ref.WeakReference;
+import android.os.Bundle;
 
 public abstract class ISocialImpl implements ISocial {
     
     protected ISocial.Callback callback;
-    private WeakReference<Activity> activity;
+    protected Activity activity;
     
     public ISocialImpl(Activity activity) {
-        this.activity = new WeakReference<Activity>(activity);
+        this.activity = activity;
     }
     
     @Override
@@ -18,11 +17,17 @@ public abstract class ISocialImpl implements ISocial {
         this.callback = callback;
     }
 
-    public Activity getActivity(){
-        Activity wrapped = activity.get();
-        if ( wrapped != null ){
-            return wrapped.isFinishing() || wrapped.isDestroyed() ? null : wrapped;
-        }
-        return wrapped;
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+        this.activity = null;
     }
+
+    // Providing empty implementations of the callbacks so that
+    // subclasses are not forced to implement all of them.
+    @Override public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    @Override public void onActivityPaused(Activity activity) {}
+    @Override public void onActivityResumed(Activity activity) {}
+    @Override public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+    @Override public void onActivityStarted(Activity activity) {}
+    @Override public void onActivityStopped(Activity activity) {}
 }

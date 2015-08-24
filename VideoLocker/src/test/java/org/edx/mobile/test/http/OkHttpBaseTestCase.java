@@ -49,11 +49,11 @@ public class OkHttpBaseTestCase extends BaseTestCase {
 
     @Override
     public void setUp() throws Exception {
-        super.setUp();
-
         server = new MockWebServer();
         server.setDispatcher(new MockResponseDispatcher());
         server.start();
+
+        super.setUp();
     }
 
     @Override

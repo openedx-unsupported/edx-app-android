@@ -19,6 +19,7 @@ import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.Config;
 import org.junit.Ignore;
 import org.mockito.Mockito;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,22 +37,19 @@ public class RestApiManagerTests extends OkHttpBaseTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        apiManager = new RestApiManager(context);
-        serviceManager = new ServiceManager();
-        glueInjections();
     }
     
     @Override
     public void addBindings() {
-        module.addBinding(IEdxEnvironment.class, Mockito.mock(IEdxEnvironment.class));
-        module.addBinding(Config.class, config);
+        super.addBindings();
         module.addBinding(IApi.class, RestApiManager.class);
     }
 
     @Override
     protected void inject(Injector injector ){
-        injector.injectMembers(apiManager);
-        injector.injectMembers(serviceManager);
+        super.inject(injector);
+        apiManager = injector.getInstance(RestApiManager.class);
+        serviceManager = injector.getInstance(ServiceManager.class);
     }
 
     public void testSyncLastSubsection() throws Exception {

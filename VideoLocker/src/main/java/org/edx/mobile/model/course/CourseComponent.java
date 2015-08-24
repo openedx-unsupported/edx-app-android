@@ -19,7 +19,7 @@ public class CourseComponent implements IBlock, IPathNode {
     private BlockType type;
     private String name;
     private boolean graded;
-    private boolean responsiveUI;
+    private boolean multiDevice;
     private String blockUrl;
     private String webUrl;
     private BlockCount blockCount;
@@ -43,7 +43,7 @@ public class CourseComponent implements IBlock, IPathNode {
         this.graded = blockModel.graded;
         this.blockUrl = blockModel.blockUrl;
         this.webUrl = blockModel.webUrl;
-        this.responsiveUI =  blockModel.responsiveUI;
+        this.multiDevice =  blockModel.multiDevice;
         this.format = blockModel.format;
         this.blockCount = blockModel.blockCount == null ? new BlockCount() : blockModel.blockCount;
         this.parent = parent;
@@ -142,16 +142,16 @@ public class CourseComponent implements IBlock, IPathNode {
     }
 
 
-    public boolean isResponsiveUI() {
-        return responsiveUI;
+    public boolean isMultiDevice() {
+        return multiDevice;
     }
 
-    public void setResponsiveUI(boolean responsiveUI) {
-        this.responsiveUI = responsiveUI;
+    public void setMultiDevice(boolean multiDevice) {
+        this.multiDevice = multiDevice;
     }
 
     public boolean isContainer(){
-        return children != null && children.size() > 0;
+        return type != null ? type.isContainer() : (children != null && children.size() > 0);
     }
 
     /**

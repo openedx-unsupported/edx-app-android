@@ -1,7 +1,5 @@
 package org.edx.mobile.http;
 
-import android.os.Looper;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -68,11 +66,6 @@ public abstract class HttpRequestDelegate<T> {
         }
         if ( requestCacheType == OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE )
             return null;
-
-        //if it is on the UI thread, we just can not make http call
-        if (Looper.getMainLooper().getThread() == Thread.currentThread()){
-            throw new RuntimeException("we should not execute code inside UI thread");
-        }
 
         // get data from server
         HttpManager.HttpResult result = invokeHttpCall();

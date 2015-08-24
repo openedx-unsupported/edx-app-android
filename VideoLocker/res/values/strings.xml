@@ -361,10 +361,14 @@
     <string name="discussion_question">Question</string>
 
     <!-- Assessment -->
-    <!-- Label default unit on assessment navigation bar-->
+    <!-- Label showing next sub-section on assessment navigation bar-->
     <string name="assessment_next_unit">Next Unit</string>
-    <!-- Label showing prvious on assessment navigation bar-->
+    <!-- Label showing next unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_next">Next</string>
+    <!-- Label showing previous sub-section on assessment navigation bar-->
     <string name="assessment_previous_unit">Previous Unit</string>
+    <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
+    <string name="assessment_previous">Previous</string>
 
     <!-- Label for mode switch menu item-->
     <string name="assessment_video_only">Video Only</string>
@@ -386,8 +390,8 @@
     <!-- Label to show empty assessment -->
     <string name="assessment_empty_coming_soon">Coming soon.</string>
 
-    <!-- Label to show empty transcript -->
-    <string name="assessment_empty_transcript">This video\'s transcript is not available yet.</string>
+    <!-- Label to notify user to rotate device for viewing a video in full screen -->
+    <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
 
 
     <!-- Label for warning message of graded assessment -->
@@ -639,7 +643,7 @@
     <!-- Template for notification title -->
     <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
-    <string name="notification_toggle">Notifications</string>
+    <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
 

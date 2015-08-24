@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
@@ -51,18 +52,31 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     public void showLastAccessedView(final String lastAccessedSubSectionId, final String courseId, final View view) {
         if (  isActivityStarted() ) {
             if (!AppConstants.offline_flag) {
-                try {
-                    if(courseId!=null && lastAccessedSubSectionId!=null){
-                        final CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
-                        if (lastAccessComponent != null) {
+                if(courseId!=null && lastAccessedSubSectionId!=null){
+                    CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
+                    if (lastAccessComponent != null) {
+                        if (!lastAccessComponent.isContainer()) {   // true means its a course unit
+                            // getting subsection
+                            if (lastAccessComponent.getParent() != null)
+                                lastAccessComponent = lastAccessComponent.getParent();
+                            // now getting section
+                            if (lastAccessComponent.getParent() != null) {
+                                lastAccessComponent = lastAccessComponent.getParent();
+                            }
+                        }
+
+                        // Handling the border case that if the Last Accessed component turns out
+                        // to be the course root component itself, then we don't need to show it
+                        if (!lastAccessComponent.getId().equals(courseId)) {
                             //if last access section has no video and app is on video-only model,
                             //we should hide last-access-view for now.  TODO - i believe it is a temporary solution. we should
                             //get rid of video-only mode in the future?
                             PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-                            if ( userPrefManager.isUserPrefVideoModel() &&
-                                lastAccessComponent.getVideos().isEmpty() )
+                            if (userPrefManager.isUserPrefVideoModel() &&
+                                    lastAccessComponent.getVideos().isEmpty())
                                 return;
 
+                            final CourseComponent finalLastAccessComponent = lastAccessComponent;
                             super.showLastAccessedView(null, " " + lastAccessComponent.getName(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -71,22 +85,18 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                     long currentTime = SystemClock.elapsedRealtime();
                                     if (currentTime - lastClickTime > 1000) {
                                         lastClickTime = currentTime;
-                                        try {
-                                            environment.getRouter().showCourseContainerOutline(
-                                                CourseVideoListActivity.this, courseData, lastAccessedSubSectionId);
-                                        } catch (Exception e) {
-                                            logger.error(e);
-                                        }
+                                        environment.getRouter().showCourseContainerOutline(
+                                                CourseVideoListActivity.this, courseData, finalLastAccessComponent.getId());
                                     }
                                 }
                             });
-                        } else {
+                        }
+                        else {
                             hideLastAccessedView(view);
                         }
+                    } else {
+                        hideLastAccessedView(view);
                     }
-                } catch (Exception e) {
-                    hideLastAccessedView(view);
-                    logger.error(e);
                 }
             } else {
                 hideLastAccessedView(view);
@@ -102,7 +112,10 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     protected void modeChanged(){
-        LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+
+        if (isOnCourseOutline())
+            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+
         updateListUI();
     }
 
@@ -193,6 +206,15 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
             }  catch(Exception ex) {
             logger.error(ex);
         }
+    }
+
+    protected boolean isOnCourseOutline(){
+        CourseComponent outlineComp = courseManager.getComponentById(
+                courseData.getCourse().getId(), courseComponentId);
+        BlockPath outlinePath = outlineComp.getPath();
+        int outlinePathSize = outlinePath.getPath().size();
+
+        return outlinePathSize <= 1;
     }
 
 }

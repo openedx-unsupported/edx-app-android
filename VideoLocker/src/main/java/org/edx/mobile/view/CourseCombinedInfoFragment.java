@@ -25,7 +25,6 @@ import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
@@ -34,8 +33,8 @@ import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.SocialUtils;
-import org.edx.mobile.view.custom.CourseImageHeader;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.SocialAffirmView;
 import org.edx.mobile.view.custom.SocialFacePileView;
@@ -43,6 +42,7 @@ import org.edx.mobile.view.custom.SocialShareView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +52,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     private final int LOADER_ID = 0x416BED;
 
-    private CourseImageHeader headerImageView;
-    private TextView courseTextName;
-    private TextView courseTextDetails;
     private EdxWebView announcementWebView;
     private LinearLayout facePileContainer;
     private SocialFacePileView facePileView;
@@ -91,12 +88,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         View view = inflater.inflate(R.layout.fragment_course_combined_info, container, false);
 
-        courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
         certificateContainer = view.findViewById(R.id.combined_course_certificate_container);
         likeButton = (SocialAffirmView) view.findViewById(R.id.course_affirm_btn);
-
-        headerImageView = (CourseImageHeader) view.findViewById(R.id.header_image_view);
 
         //Register clicks with the OnClickListener interface
         shareButton = (SocialShareView) view.findViewById(R.id.combined_course_social_share);
@@ -168,10 +161,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                     populateAnnouncements(savedAnnouncements);
                 }
 
-                courseTextName.setText(courseData.getCourse().getName());
-                CourseEntry course = courseData.getCourse();
-                courseTextDetails.setText( course.getDescription(this.getActivity()));
-
                 String url = courseData.getCourse().getCourse_url();
 
                 SocialUtils.SocialType socialType = SocialUtils.SocialType.NONE;
@@ -184,9 +173,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 }
 
                 shareButton.setSocialShareType(socialType);
-
-                String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
-                headerImageView.setImageUrl(headerImageUrl, environment.getImageCacheManager().getImageLoader() );
 
                 updateInteractiveVisibility();
 
@@ -338,21 +324,35 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     }
 
     private void populateAnnouncements(List<AnnouncementsModel> announcementsList) {
-        if(announcementsList !=null && announcementsList.size()>0) {
+        if (announcementsList != null && announcementsList.size() > 0) {
             hideEmptyAnnouncementMessage();
 
-            final String divider = "<div style='height:2px; width:100%; background-color: #E2E3E5'></div>";
-
             StringBuffer buff = new StringBuffer();
-
+            buff.append("<head>");
             // add meta viewport
             buff.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-
-            for (AnnouncementsModel m : announcementsList) {
-                String entry = String.format("%s <br/><br/> %s <br/> %s <br/><br/>", m.getDate(), divider, m.getContent());
-                buff.append(entry);
+            try {
+                String cssFileContent = FileUtil.loadTextFileFromAssets(getActivity(), "css/handouts-announcements.css");
+                // add css file
+                buff.append("<style>");
+                buff.append(cssFileContent);
+                buff.append("</style>");
+            } catch (IOException e) {
+                logger.error(e);
             }
-
+            buff.append("</head>");
+            buff.append("<body>");
+            for (AnnouncementsModel m : announcementsList) {
+                buff.append("<div class=\"announcement-header\">");
+                buff.append(m.getDate());
+                buff.append("</div>");
+                buff.append("<div class=\"announcement-separator\"></div>");
+                buff.append("<div class=\"announcement\">");
+                buff.append(m.getContent());
+                buff.append("</div>");
+            }
+            buff.append("</body>");
+            announcementWebView.clearCache(true);
             announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
         } else {
             showEmptyAnnouncementMessage();
