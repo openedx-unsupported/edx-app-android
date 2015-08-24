@@ -295,45 +295,23 @@
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <!--Label indicating there is only one response-->
-        <item quantity="one">{quantity} response</item>
+        <item quantity="one">response</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">{quantity} responses</item>
+        <item quantity="other">responses</item>
     </plurals>
     <!--Label for number of discussion comments-->
     <plurals name="number_responses_or_comments_comments_label">
         <!--Label indicating there is only one comment-->
-        <item quantity="one">{quantity} comment</item>
+        <item quantity="one">comment</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">{quantity} comments</item>
+        <item quantity="other">comments</item>
     </plurals>
+    <!--Label for discussion response to report as inappropriate -->
+    <string name="discussion_responses_report_label">Report</string>
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label">Add a comment</string>
-    <!--Label for indicating that a response is an answer-->
-    <string name="discussion_responses_answer">Answer</string>
-    <!--Label for indicating the author of the response-->
-    <string name="discussion_responses_author">{author} {created_at} {author_label}</string>
-    <!--Label for indicating who endorsed the comment as an answer-->
-    <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
 
-    <!--Discussion Responses Action Bar-->
-    <!--Label to indicate number of votes-->
-    <plurals name="discussion_responses_action_bar_vote_text">
-        <!--Label indicating there is only one vote-->
-        <item quantity="one">{quantity} vote</item>
-        <!--Label indicating there are more than one votes-->
-        <item quantity="other">{quantity} votes</item>
-    </plurals>
-    <!--Label to indicate discussion response is not marked as inappropriate -->
-    <string name="discussion_responses_report_label">Report</string>
-    <!--Label for discussion response that has been marked as inappropriate-->
-    <string name="discussion_responses_reported_label">Reported</string>
-    <!--Label for a discussion thread that the user is not following-->
-    <string name="discussion_responses_action_bar_follow_text">Follow</string>
-    <!--Label for a discussion thread that the user is following-->
-    <string name="discussion_responses_action_bar_unfollow_text">Unfollow</string>
-
-    <!--Discussion Comments-->
-    <!-- Title for comments activity-->
+    <!-- Title in adding a new comment -->
     <string name="discussion_comment">Comment</string>
     <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
@@ -345,6 +323,8 @@
     <!-- Title in adding a new response -->
     <string name="discussion_response">Response</string>
     <!-- Title in showing list of responses -->
+    <string name="discussion_responses">Responses</string>
+    <!-- Add response button title in adding a new response -->
     <string name="discussion_add_response">Add response</string>
     <!-- Add your respone placeholder in adding a new response -->
     <string name="discussion_add_your_response">Add your response</string>
@@ -642,5 +622,15 @@
     <string name="notification_toggle">Notifications</string>
     <!-- Placeholder title for course content with no title -->
     <string name="untitled_block">Untitled</string>
+
+
+    <!-- Discussion/Forum -->
+    <string name="forum_query_no_result">Query <i> \"%1$s\" </i> returns no result.</string>
+    <string name="forum_empty">No result found.</string>
+    <string name="forum_post_i_am_following">Posts I\'m Following.</string>
+    <string name="show_more_records">More...</string>
+    <string name="forum_follow">Follow</string>
+    <string name="forum_unfollow">Unfollow</string>
+
 
 </resources>

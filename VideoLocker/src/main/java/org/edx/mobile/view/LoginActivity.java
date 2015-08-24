@@ -377,17 +377,12 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
 
-    public void showErrorMessage(String header, String message) {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        TextView errorHeader = (TextView) findViewById(R.id.error_header);
-        TextView errorMessage = (TextView) findViewById(R.id.error_message);
-        errorHeader.setText(header);
+    public boolean showErrorMessage(String header, String message) {
         if (message != null) {
-            errorMessage.setText(message);
+            return super.showErrorMessage(header, message);
         } else {
-            errorMessage.setText(getString(R.string.login_failed));
+            return super.showErrorMessage(header, getString(R.string.login_failed));
         }
-        UiUtil.animateLayouts(error_layout);
     }
 
     @Override

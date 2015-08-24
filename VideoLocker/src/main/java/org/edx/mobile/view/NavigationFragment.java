@@ -112,6 +112,7 @@ public class NavigationFragment extends RoboFragment {
 
 
             TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
+            tvFindCourses.setVisibility(View.GONE);
             tvFindCourses.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

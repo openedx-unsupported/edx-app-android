@@ -7,9 +7,6 @@ import com.squareup.phrase.Phrase;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 
-import java.util.HashMap;
-import java.util.Set;
-
 
 public class ResourceUtil {
     public static final String QuantityHolder = "quantity";
@@ -38,16 +35,6 @@ public class ResourceUtil {
     public static String getResourceString(int resourceId){
         Context context = MainApplication.instance().getApplicationContext();
         return context.getString(resourceId);
-    }
-
-    public static CharSequence getFormattedString(int resourceId, HashMap<String, String> keyValMap) {
-        Phrase resourceString = Phrase.from(getResourceString(resourceId));
-        Set<String> keys = keyValMap.keySet();
-        for (String key : keys) {
-            String val = keyValMap.get(key);
-            resourceString.put(key, val == null ? "" : val);
-        }
-        return resourceString.format();
     }
 
     public static CharSequence getFormattedString(int resourceId, String key, String value){

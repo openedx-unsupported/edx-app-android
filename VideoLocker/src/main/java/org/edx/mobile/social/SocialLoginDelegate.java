@@ -304,7 +304,7 @@ public class SocialLoginDelegate {
         void onSocialLoginSuccess(String accessToken, String backend, Task task);
         void onUserLoginFailure(Exception ex, String accessToken, String backend);
         void onUserLoginSuccess(ProfileModel profile) throws LoginException;
-        void showErrorMessage(String header, String message);
+        boolean showErrorMessage(String header, String message);
     }
 
     public interface SocialUserInfoCallback{

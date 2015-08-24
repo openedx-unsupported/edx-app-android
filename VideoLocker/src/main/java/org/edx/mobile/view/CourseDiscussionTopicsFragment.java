@@ -13,13 +13,21 @@ import com.google.inject.Inject;
 import com.qualcomm.qlearn.sdk.discussion.APICallback;
 import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
 import com.qualcomm.qlearn.sdk.discussion.DiscussionTopicDepth;
+import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.GetTopicListTask;
+import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
+import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +44,26 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
     @InjectView(R.id.discussion_topics_listview)
     ListView discussionTopicsListView;
 
+    @InjectView(R.id.discussion_following_icon)
+    IconView followingIcon;
+
+    @InjectView(R.id.discussion_topic_name_text_view)
+    ETextView followingTextView;
+
+
+
+
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
-    @Inject
-    DiscussionAPI discussionAPI;
 
     @Inject
     DiscussionTopicsAdapter discussionTopicsAdapter;
 
     @Inject
     Router router;
+
+    GetTopicListTask getTopicListTask;
 
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
@@ -60,29 +77,26 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionTopicsListView.setAdapter(discussionTopicsAdapter);
+        Iconify.IconValue iconValue = Iconify.IconValue.fa_star;
+        followingIcon.setIcon(iconValue);
 
-        discussionAPI.getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
+        followingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void success(CourseTopics courseTopics) {
-                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
-                allTopics.addAll(courseTopics.getCoursewareTopics());
-                allTopics.addAll(courseTopics.getNonCoursewareTopics());
-
-                List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
-                discussionTopicsAdapter.setItems(allTopicsWithDepth);
-            }
-
-            @Override
-            public void failure(Exception e) {
-                logger.error(e, false);
-                // TODO: Handle error gracefully
+            public void onClick(View view) {
+                DiscussionTopic discussionTopic = new DiscussionTopic();
+                discussionTopic.setName( DiscussionTopic.FOLLOWING_TOPICS );
+                router.showCourseDiscussionPostsForDiscussionTopic(getActivity(), discussionTopic, courseData);
             }
         });
+
+        discussionTopicsListView.setAdapter(discussionTopicsAdapter);
 
         discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if ( query == null || query.trim().length() == 0 )
+                    return false;
+
                 router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
                 return true;
             }
@@ -106,6 +120,53 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
         discussionTopicsSearchView.requestFocus();
         discussionTopicsSearchView.clearFocus();
 
+
+        getTopicList();
+
+    }
+
+    protected void getTopicList(){
+        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        prefManager.setServerSideChangedForCourseTopic(true) ;
+
+       if ( getTopicListTask != null ){
+           getTopicListTask.cancel(true);
+       }
+        getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
+            @Override
+            public void onSuccess(CourseTopics courseTopics) {
+                if(courseTopics!=null){
+                    logger.debug("GetTopicListTask success=" + courseTopics);
+                    //  hideProgress();
+                    ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
+                    allTopics.addAll(courseTopics.getCoursewareTopics());
+                    allTopics.addAll(courseTopics.getNonCoursewareTopics());
+
+                    List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                    discussionTopicsAdapter.setItems(allTopicsWithDepth);
+                    discussionTopicsAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+            }
+        };
+        getTopicListTask.execute();
+    }
+
+    public void  onResume(){
+        super.onResume();
+        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        if ( prefManager.isServerSideChangedForCourseTopic() ){
+            getTopicList();
+        }
+    }
+
+    public void onPause(){
+        super.onPause();
     }
 
 }

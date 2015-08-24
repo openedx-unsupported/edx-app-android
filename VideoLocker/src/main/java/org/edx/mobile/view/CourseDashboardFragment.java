@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,20 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.CourseDiscussionInfo;
+import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.task.GetCourseDiscussionInfoTask;
+import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.view.common.MessageType;
+import org.edx.mobile.view.common.TaskProcessCallback;
 
 import roboguice.fragment.RoboFragment;
 
@@ -26,6 +33,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
     private TextView courseTextName;
     private TextView courseTextDetails;
+    private GetCourseDiscussionInfoTask getCourseDiscussionInfoTask;
 
     public static interface ShowCourseOutlineCallback{
         void showCourseOutline();
@@ -83,8 +91,7 @@ public class CourseDashboardFragment extends RoboFragment {
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ( courseData != null )
-                    environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
+                fetchCourseDiscussionMetaData();
             }
         });
 
@@ -116,6 +123,8 @@ public class CourseDashboardFragment extends RoboFragment {
 
         return view;
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -149,6 +158,31 @@ public class CourseDashboardFragment extends RoboFragment {
         } catch (Exception ex) {
             logger.error(ex);
         }
+    }
+
+    protected void fetchCourseDiscussionMetaData() {
+
+        if ( getCourseDiscussionInfoTask != null ){
+            getCourseDiscussionInfoTask.cancel(true);
+        }
+        getCourseDiscussionInfoTask = new GetCourseDiscussionInfoTask(getActivity(), courseData.getCourse().getId(), false) {
+            @Override
+            public void onSuccess(CourseDiscussionInfo discussionInfo) {
+                    Activity activity = getActivity();
+                    if ( activity instanceof TaskProcessCallback){
+                        if ( courseData != null )
+                            environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
+                    }
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+            }
+        };
+
+        getCourseDiscussionInfoTask.execute();
+
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){

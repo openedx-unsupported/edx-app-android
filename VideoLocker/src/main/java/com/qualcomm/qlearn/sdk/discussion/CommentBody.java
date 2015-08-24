@@ -13,7 +13,19 @@ public class CommentBody {
         this.rawBody = rawBody;
     }
 
+    public String getThreadId() {
+        return threadId;
+    }
+
+    public String getRawBody() {
+        return rawBody;
+    }
+
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public String getParentId() {
+        return parentId;
     }
 }

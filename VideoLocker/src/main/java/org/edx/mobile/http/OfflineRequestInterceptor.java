@@ -13,10 +13,17 @@ import retrofit.RequestInterceptor;
  */
 public class OfflineRequestInterceptor implements RequestInterceptor {
     protected final Logger logger = new Logger(getClass().getName());
-
+    private final static int MAX_STALE = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
     private Context context;
+    private int maxStaleTime;
     public OfflineRequestInterceptor(Context context){
+        this(context, MAX_STALE);
+    }
+
+    public OfflineRequestInterceptor(Context context, int maxStaleTime){
+
         this.context = context;
+        this.maxStaleTime = maxStaleTime;
     }
 
     @Override
@@ -27,9 +34,8 @@ public class OfflineRequestInterceptor implements RequestInterceptor {
 //            request.addHeader("Cache-Control", "public, max-age=" + maxAge);
             request.addHeader("Cache-Control", "public");
         } else {
-            int maxStale = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
             request.addHeader("Cache-Control",
-                "public, only-if-cached, max-stale=" + maxStale);
+                "public, only-if-cached, max-stale=" + maxStaleTime);
         }
     }
 

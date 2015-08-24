@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -42,7 +41,7 @@ public class Router {
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
     public static final String EXTRA_IS_RESPONSE = "is_response";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
-    public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
+    public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
 
 
     public void showDownloads(Activity sourceActivity) {
@@ -248,9 +247,11 @@ public class Router {
         context.startActivity(discussionResponsesIntent);
     }
 
-    public void showCourseDiscussionAddResponseOrComment(Context context, String discussionTopicId, DiscussionComment discussionComment) {
+    public void showCourseDiscussionAddResponseOrComment(Context context, DiscussionThread discussionTopic, DiscussionComment discussionComment) {
         Intent addResponseIntent = new Intent(context, DiscussionAddCommentActivity.class);
-        addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_ID, discussionTopicId);
+        if ( discussionTopic != null ) {
+            addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_OBJ, discussionTopic);
+        }
         if (discussionComment != null) {
             addResponseIntent.putExtra(EXTRA_DISCUSSION_COMMENT, discussionComment);
         }

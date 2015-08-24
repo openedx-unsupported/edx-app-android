@@ -44,7 +44,7 @@
 
     <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>
-    <dimen name="discussion_responses_margin">10dp</dimen>
+    <dimen name="discussion_responses_standard_margin">10dp</dimen>
     <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
     <dimen name="discussion_responses_comments_button_height">25dp</dimen>
     <dimen name="discussion_responses_action_bar_icon_margin">7dp</dimen>

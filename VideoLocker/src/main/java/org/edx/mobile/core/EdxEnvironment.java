@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
 
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;
@@ -52,6 +53,10 @@ public class EdxEnvironment implements IEdxEnvironment{
 
     @Inject
     ServiceManager serviceManager;
+
+
+    @Inject
+    DiscussionAPI discussionAPI;
 
     @Override
     public IDatabase getDatabase() {
@@ -102,4 +107,10 @@ public class EdxEnvironment implements IEdxEnvironment{
     public ServiceManager getServiceManager() {
         return serviceManager;
     }
+
+    @Override
+    public DiscussionAPI getDiscussionAPI(){
+        return discussionAPI;
+    }
+
 }

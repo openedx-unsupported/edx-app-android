@@ -16,9 +16,14 @@
 
 package com.qualcomm.qlearn.sdk.discussion;
 
+import org.edx.mobile.http.RetroHttpException;
+
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -51,40 +56,63 @@ final class FollowBody {
 
 
 public interface DiscussionService {
+    @Headers("Cache-Control: no-cache")
+    @GET("/api/discussion/v1/courses/{course_id}/")
+    CourseDiscussionInfo getCourseDiscussionInfo(@Path("course_id") String courseId) throws RetroHttpException;
 
-    @GET("/api/discussion/v1/course_topics/{courseId}")
-    void getCourseTopics(@Path("courseId") String courseId, Callback<CourseTopics> callback);
+    @GET("/api/discussion/v1/courses/{course_id}/")
+    CourseDiscussionInfo getCourseDiscussionInfoWithCacheEnabled(@Path("course_id") String courseId) throws RetroHttpException;
+
+
+
+    @GET("/api/discussion/v1/course_topics/{course_id}")
+    CourseTopics getCourseTopics(@Path("course_id") String courseId) throws RetroHttpException;
+
 
     @GET("/api/discussion/v1/threads/")
-    void getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, @Query("view") String view, @Query("order_by") String orderBy, Callback<TopicThreads> callback);
+    TopicThreads getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
+
 
     @GET("/api/discussion/v1/threads/")
-    void searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, Callback<TopicThreads> callback);
+    TopicThreads getFollowingThreadList(@Query("course_id") String courseId, @Query("following") Boolean following, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
+
+    @GET("/api/discussion/v1/threads/")
+    TopicThreads searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
+
 
     @GET("/api/discussion/v1/comments/")
-    void getCommentList(@Query("thread_id") String threadId, Callback<ThreadComments> callback);
+    ThreadComments getCommentList(@Query("thread_id") String threadId, @Query("page_size") int pageSize, @Query("page") int page) throws RetroHttpException;
 
-    @PATCH("/api/discussion/v1/threads/{threadId}/")
-    void flagThread(@Path("threadId") String threadId, @Body FlagBody flagBody, Callback<DiscussionThread> callback);
 
-    @PATCH("/api/discussion/v1/comments/{commentId}/")
-    void flagComment(@Path("commentId") String commentId, @Body FlagBody flagBody, Callback<DiscussionComment> callback);
+    @PATCH("/api/discussion/v1/threads/{thread_id}/")
+    DiscussionThread flagThread(@Path("thread_id") String threadId, @Body FlagBody flagBody) throws RetroHttpException;
 
-    @PATCH("/api/discussion/v1/threads/{threadId}/")
-    void voteThread(@Path("threadId") String threadId, @Body VoteBody voteBody, Callback<DiscussionThread> callback);
 
-    @PATCH("/api/discussion/v1/comments/{commentId}/")
-    void voteComment(@Path("commentId") String commentId, @Body VoteBody voteBody, Callback<DiscussionComment> callback);
+    @PATCH("/api/discussion/v1/comments/{comment_id}/")
+    DiscussionComment flagComment(@Path("comment_id") String commentId, @Body FlagBody flagBody) throws RetroHttpException;
 
-    @PATCH("/api/discussion/v1/threads/{threadId}/")
-    void followThread(@Path("threadId") String threadId, @Body FollowBody followBody, Callback<DiscussionThread> callback);
+
+    @PATCH("/api/discussion/v1/threads/{thread_id}/")
+    DiscussionThread voteThread(@Path("thread_id") String threadId, @Body VoteBody voteBody) throws RetroHttpException;
+
+
+    @PATCH("/api/discussion/v1/comments/{comment_id}/")
+    DiscussionComment voteComment(@Path("comment_id") String commentId, @Body VoteBody voteBody) throws RetroHttpException;
+
+
+    @PATCH("/api/discussion/v1/threads/{thread_id}/")
+    DiscussionThread followThread(@Path("thread_id") String threadId, @Body FollowBody followBody) throws RetroHttpException;
+
 
     @POST("/api/discussion/v1/threads/")
-    void createThread(@Body ThreadBody threadBody, Callback<DiscussionThread> callback);
+    DiscussionThread createThread(@Body ThreadBody threadBody) throws RetroHttpException;
+
 
     @POST("/api/discussion/v1/comments/")
-    void createResponse(@Body ResponseBody responseBody, Callback<DiscussionComment> callback);
+    DiscussionComment createResponse(@Body ResponseBody responseBody) throws RetroHttpException;
 
+
+    @FormUrlEncoded
     @POST("/api/discussion/v1/comments/")
-    void createComment(@Body CommentBody commentBody, Callback<DiscussionComment> callback);
+    DiscussionComment createComment( @Field("thread_id") String threadId,  @Field("raw_body") String rawBody, @Field("parent_id") String parentId) throws RetroHttpException;
 }

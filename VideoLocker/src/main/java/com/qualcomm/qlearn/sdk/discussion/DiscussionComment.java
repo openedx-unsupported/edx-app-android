@@ -22,21 +22,21 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class DiscussionComment implements Serializable {
+public class DiscussionComment implements Serializable, IAuthorData {
     private @SerializedName("id") String identifier;
     private String parentId;
     private String threadId;
     private String rawBody;
     private String renderedBody;
     private String author;
-    private PriviledgedAuthor authorLabel;
+    private PinnedAuthor authorLabel;
     private boolean voted = false;
     private int voteCount = 0;
     private Date createdAt;
     private Date updatedAt;
     private boolean endorsed = false;
     private String endorsedBy;
-    private PriviledgedAuthor endorsedByLabel;
+    private String endorsedByLabel;
     private Date endorsedAt;
     private boolean abuseFlagged = false;
     private List<String> editableFields;
@@ -66,7 +66,7 @@ public class DiscussionComment implements Serializable {
         return author;
     }
 
-    public PriviledgedAuthor getAuthorLabel() {
+    public PinnedAuthor getAuthorLabel() {
         return authorLabel;
     }
 
@@ -94,7 +94,7 @@ public class DiscussionComment implements Serializable {
         return endorsedBy;
     }
 
-    public PriviledgedAuthor getEndorsedByLabel() {
+    public String getEndorsedByLabel() {
         return endorsedByLabel;
     }
 

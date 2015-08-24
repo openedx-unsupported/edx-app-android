@@ -20,10 +20,12 @@ import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
 import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -74,8 +76,29 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
         createNewCommentRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionAddResponseOrComment(context, discussionComment.getThreadId(), discussionComment);
+                router.showCourseDiscussionAddResponseOrComment(context, null, discussionComment);
             }
         });
     }
+
+    public void  onResume(){
+        super.onResume();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void onPause(){
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(ServerSideDataChangedEvent event) {
+        if (event.type == ServerSideDataChangedEvent.EventType.COMMENT_ADDED) {
+            if ( event.value instanceof DiscussionComment) {
+                discussionCommentsAdapter.add((DiscussionComment) event.value);
+                discussionCommentsAdapter.notifyDataSetChanged();
+            }
+            EventBus.getDefault().removeStickyEvent(event);
+        }
+    }
+
 }

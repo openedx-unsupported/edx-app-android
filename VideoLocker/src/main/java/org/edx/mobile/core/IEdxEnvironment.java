@@ -1,6 +1,9 @@
 package org.edx.mobile.core;
 
 
+import com.google.inject.Inject;
+import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
+
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
@@ -36,4 +39,7 @@ public interface IEdxEnvironment {
     Config getConfig();
 
     ServiceManager getServiceManager();
+
+    //TODO - it should be part of ServiceManager
+    DiscussionAPI getDiscussionAPI();
 }

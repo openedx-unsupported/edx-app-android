@@ -16,23 +16,39 @@
 
 package com.qualcomm.qlearn.sdk.discussion;
 
+import android.content.Context;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
+import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.http.GzipRequestInterceptor;
+import org.edx.mobile.http.LoggingInterceptor;
+import org.edx.mobile.http.OauthHeaderRequestInterceptor;
+import org.edx.mobile.http.OauthRestApi;
+import org.edx.mobile.http.OfflineRequestInterceptor;
+import org.edx.mobile.http.RetroApiCallback;
+import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
+
+import java.io.File;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RestAdapter.Builder;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.http.Query;
 
 /*
 // TODO: fix the issue - try to simplify the callback implementation
@@ -57,240 +73,122 @@ class RetrofitAdaptor<T> extends Callback {
 */
 
 public class DiscussionAPI {
+    private final int cacheSize = 10 * 1024 * 1024; // 10 MiB
 
-    @Inject
+
     Config config;
 
-    DiscussionService createService() {
-        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+    Context context;
 
-        Builder restBuilder = new RestAdapter.Builder()
-                .setEndpoint("https://mobile-demo.sandbox.edx.org") //config.getApiHostURL())
-                .setLogLevel(RestAdapter.LogLevel.FULL) // TODO: comment this for release
-                .setConverter(new GsonConverter(gson));
-        restBuilder.setRequestInterceptor(new RequestInterceptor() {
-            @Override
-            public void intercept(RequestFacade request) {
-                //request.addHeader("Accept", "application/json");
-                PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
-                AuthResponse auth = pref.getCurrentAuth();
-                String token;
-                if (auth == null || !auth.isSuccess()) {
-                    // this might be a login with Facebook or Google
-                    token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
-                } else {
-                    token = auth.access_token;
-                }
-                request.addHeader("Authorization", "Bearer " + token);
-            }
-        });
+    final DiscussionService discussionService;
+    @Inject
+    public DiscussionAPI(Context context, Config config) {
+        this.context = context;
+        this.config = config;
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
 
-        RestAdapter restAdapter = restBuilder.build();
-        DiscussionService discussionService = restAdapter.create(DiscussionService.class);
-        return discussionService;
+
+        OkHttpClient oauthBasedClient = new OkHttpClient();
+        File cacheDirectory = new File(context.getFilesDir(), "http-cache");
+        if (!cacheDirectory.exists()) {
+            cacheDirectory.mkdirs();
+        }
+        Cache cache = new com.squareup.okhttp.Cache(cacheDirectory, cacheSize);
+        oauthBasedClient.setCache(cache);
+      //  oauthBasedClient.interceptors().add(new GzipRequestInterceptor());
+        oauthBasedClient.interceptors().add(new OauthHeaderRequestInterceptor(context));
+        oauthBasedClient.interceptors().add(new LoggingInterceptor());
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(oauthBasedClient))
+                .setEndpoint(config.getApiHostURL())
+                .setConverter(new GsonConverter(gson))
+          //      .setRequestInterceptor(new OfflineRequestInterceptor(context, 60))
+                .setErrorHandler(new RetroHttpExceptionHandler())
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        discussionService = restAdapter.create(DiscussionService.class);
     }
 
-    public void getTopicList(String courseId, final APICallback<CourseTopics> callback) {
-        System.out.println("courseId=" + courseId);
-        DiscussionService discussionService = createService();
-        discussionService.getCourseTopics(courseId, new Callback<CourseTopics>() {
-            @Override
-            public void success(CourseTopics courseTopics, Response response) {
-                // use this to see response body: new String(((TypedByteArray) response.getBody()).getBytes()));
-                if (callback != null)
-                    callback.success(courseTopics);
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                if (callback != null)
-                    callback.failure(error);
-            }
-        });
+    /**
+     * as this is the meta data for course discussion info, it wont change frequently.
+     * we should cache it in most cases?
+     * @param courseId
+     * @return
+     * @throws RetroHttpException
+     */
+    public CourseDiscussionInfo getCourseDiscussionInfo(String courseId, boolean preferCache) throws RetroHttpException{
+        if (!NetworkUtil.isConnected(context)){
+            return discussionService.getCourseDiscussionInfoWithCacheEnabled(courseId);
+        } else if (preferCache) {
+            return discussionService.getCourseDiscussionInfoWithCacheEnabled(courseId);
+        } else {
+            return discussionService.getCourseDiscussionInfo(courseId);
+        }
     }
 
-    public void getThreadList(String courseId, String topicId, DiscussionPostsFilter filter, DiscussionPostsSort orderBy, final APICallback<TopicThreads> callback) {
-        DiscussionService discussionService = createService();
 
-        String view;
-        if (filter == DiscussionPostsFilter.Unread) view = "unread";
-        else if (filter == DiscussionPostsFilter.Unanswered) view = "unanswered";
-        else view = "";
-
-        String order;
-        if (orderBy == DiscussionPostsSort.LastActivityAt) order = "last_activity_at";
-        else if (orderBy == DiscussionPostsSort.VoteCount) order = "vote_count";
-        else order = "";
-
-        discussionService.getThreadList(courseId, topicId, view, order, new Callback<TopicThreads>() {
-            @Override
-            public void success(TopicThreads discussionThreads, Response response) {
-                callback.success(discussionThreads);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+    public CourseTopics getTopicList(String courseId) throws RetroHttpException{
+         return discussionService.getCourseTopics(courseId);
     }
 
-    public void searchThreadList(String courseId, String text, final APICallback<TopicThreads> callback) {
-        DiscussionService discussionService = createService();
-        discussionService.searchThreadList(courseId, text, new Callback<TopicThreads>() {
-            @Override
-            public void success(TopicThreads discussionThreads, Response response) {
-                callback.success(discussionThreads);
-            }
+    public TopicThreads getThreadList(String courseId, String topicId, String filter, String orderBy, int pageSize, int page) throws RetroHttpException {
 
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+        return  discussionService.getThreadList(courseId, topicId, filter, orderBy, pageSize, page);
+    }
+
+    public TopicThreads getFollowingThreadList(String courseId, String filter,  String orderBy, int pageSize, int page) throws RetroHttpException {
+
+        return  discussionService.getFollowingThreadList(courseId, true, filter, orderBy, pageSize, page);
+    }
+
+
+    public TopicThreads searchThreadList(String courseId, String text, int pageSize, int page) throws RetroHttpException{
+        return discussionService.searchThreadList(courseId, text, pageSize, page);
     }
 
     // get the responses, and all comments for each of which, of a thread
-    public void getCommentList(String threadId, final APICallback<ThreadComments> callback) {
-        DiscussionService discussionService = createService();
-        discussionService.getCommentList(threadId, new Callback<ThreadComments>() {
-            @Override
-            public void success(ThreadComments threadComments, Response response) {
-                // each of threadComments's results has a children field which are comments for this response
-                callback.success(threadComments);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+    public ThreadComments getCommentList(String threadId, int pageSize, int page)  throws RetroHttpException{
+        return discussionService.getCommentList(threadId, pageSize, page);
     }
 
-    public void flagThread(DiscussionThread thread, Boolean flagged, final APICallback<DiscussionThread> callback) {
-        DiscussionService discussionService = createService();
+    public DiscussionThread flagThread(DiscussionThread thread, Boolean flagged)  throws RetroHttpException{
         FlagBody flagBody = new FlagBody(flagged);
-        discussionService.flagThread(thread.getIdentifier(), flagBody, new Callback<DiscussionThread>() {
-            @Override
-            public void success(DiscussionThread thread, Response response) {
-                callback.success(thread);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+        return discussionService.flagThread(thread.getIdentifier(), flagBody);
     }
 
-    public void flagComment(DiscussionComment comment, Boolean flagged, final APICallback<DiscussionComment> callback) {
-        DiscussionService discussionService = createService();
+    public DiscussionComment flagComment(DiscussionComment comment, Boolean flagged)  throws RetroHttpException{
         FlagBody flagBody = new FlagBody(flagged);
-        discussionService.flagComment(comment.getIdentifier(), flagBody, new Callback<DiscussionComment>() {
-            @Override
-            public void success(DiscussionComment comment, Response response) {
-                callback.success(comment);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+        return discussionService.flagComment(comment.getIdentifier(), flagBody);
     }
 
-    public void voteThread(DiscussionThread thread, Boolean voted, final APICallback<DiscussionThread> callback) {
-        DiscussionService discussionService = createService();
+    public DiscussionThread voteThread(DiscussionThread thread, Boolean voted)  throws RetroHttpException{
+         VoteBody voteBody = new VoteBody(voted);
+        return discussionService.voteThread(thread.getIdentifier(), voteBody);
+    }
+
+    public DiscussionComment voteComment(DiscussionComment comment, Boolean voted)  throws RetroHttpException{
         VoteBody voteBody = new VoteBody(voted);
-        discussionService.voteThread(thread.getIdentifier(), voteBody, new Callback<DiscussionThread>() {
-            @Override
-            public void success(DiscussionThread thread, Response response) {
-                callback.success(thread);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+        return discussionService.voteComment(comment.getIdentifier(), voteBody);
     }
 
-    public void voteComment(DiscussionComment comment, Boolean voted, final APICallback<DiscussionComment> callback) {
-        DiscussionService discussionService = createService();
-        VoteBody voteBody = new VoteBody(voted);
-        discussionService.voteComment(comment.getIdentifier(), voteBody, new Callback<DiscussionComment>() {
-            @Override
-            public void success(DiscussionComment comment, Response response) {
-                callback.success(comment);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
-    }
-
-    public void followThread(DiscussionThread thread, Boolean following, final APICallback<DiscussionThread> callback) {
-        DiscussionService discussionService = createService();
+    public DiscussionThread followThread(DiscussionThread thread, Boolean following)  throws RetroHttpException{
         FollowBody followBody = new FollowBody(following);
-        discussionService.followThread(thread.getIdentifier(), followBody, new Callback<DiscussionThread>() {
-            @Override
-            public void success(DiscussionThread thread, Response response) {
-                callback.success(thread);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+        return discussionService.followThread(thread.getIdentifier(), followBody);
     }
 
 
-    public void createThread(ThreadBody threadBody, final APICallback<DiscussionThread> callback) {
-        DiscussionService discussionService = createService();
-        discussionService.createThread(threadBody, new Callback<DiscussionThread>() {
-            @Override
-            public void success(DiscussionThread thread, Response response) {
-                callback.success(thread);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+    public DiscussionThread createThread(ThreadBody threadBody)  throws RetroHttpException{
+        return discussionService.createThread(threadBody );
     }
 
-    public void createResponse(ResponseBody responseBody, final APICallback<DiscussionComment> callback) {
-        DiscussionService discussionService = createService();
-        discussionService.createResponse(responseBody, new Callback<DiscussionComment>() {
-            @Override
-            public void success(DiscussionComment comment, Response response) {
-                callback.success(comment);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+    public DiscussionComment createResponse(ResponseBody responseBody)  throws RetroHttpException{
+        return discussionService.createResponse(responseBody);
     }
 
-    public void createComment(CommentBody commentBody, final APICallback<DiscussionComment> callback) {
-        DiscussionService discussionService = createService();
-        discussionService.createComment(commentBody, new Callback<DiscussionComment>() {
-            @Override
-            public void success(DiscussionComment comment, Response response) {
-                callback.success(comment);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                callback.failure(error);
-            }
-        });
+    public DiscussionComment createComment(CommentBody commentBody)  throws RetroHttpException{
+        return  discussionService.createComment(commentBody.threadId,  commentBody.rawBody, commentBody.parentId);
     }
 
 }

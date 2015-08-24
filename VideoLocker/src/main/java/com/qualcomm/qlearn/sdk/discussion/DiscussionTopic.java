@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscussionTopic implements Serializable {
+    public static final String FOLLOWING_TOPICS = "Posts I'm Following";
     @SerializedName("id") String identifier = "";
     String name = "";
     String threadListUrl = "";

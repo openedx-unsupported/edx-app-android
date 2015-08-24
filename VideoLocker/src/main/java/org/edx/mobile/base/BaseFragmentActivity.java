@@ -747,7 +747,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
 
-    private boolean showErrorMessage(String header, String message) {
+    protected boolean showErrorMessage(String header, String message) {
         try {
             LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
             if(error_layout!=null){
