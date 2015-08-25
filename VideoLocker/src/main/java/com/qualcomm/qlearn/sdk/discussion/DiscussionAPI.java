@@ -65,7 +65,7 @@ public class DiscussionAPI {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 
         Builder restBuilder = new RestAdapter.Builder()
-                .setEndpoint("https://mobile-demo.sandbox.edx.org") //config.getApiHostURL())
+                .setEndpoint(config.getApiHostURL())
                 .setLogLevel(RestAdapter.LogLevel.FULL) // TODO: comment this for release
                 .setConverter(new GsonConverter(gson));
         restBuilder.setRequestInterceptor(new RequestInterceptor() {
