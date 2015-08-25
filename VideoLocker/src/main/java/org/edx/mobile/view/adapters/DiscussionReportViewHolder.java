@@ -1,6 +1,5 @@
 package org.edx.mobile.view.adapters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -8,15 +7,13 @@ import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.view.custom.ETextView;
 
-public class DiscussionReportViewHolder extends RecyclerView.ViewHolder {
+public class DiscussionReportViewHolder {
 
     RelativeLayout reportLayout;
-    public IconView reportIconView;
-    public ETextView reportTextView;
+    private IconView reportIconView;
+    private ETextView reportTextView;
 
     public DiscussionReportViewHolder(View itemView) {
-        super(itemView);
-
         reportLayout = (RelativeLayout) itemView.
                 findViewById(R.id.discussion_responses_action_bar_report_layout);
         reportIconView = (IconView) itemView.
