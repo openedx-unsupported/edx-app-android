@@ -124,7 +124,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
-        holder.actionBarViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+        holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 FlagThreadTask task = new FlagThreadTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
                     @Override
@@ -144,10 +144,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
-        updateActionBarVoteCount(holder.actionBarViewHolder,
-                discussionThread.isVoted(), discussionThread.getVoteCount());
-        updateActionBarFollow(holder.actionBarViewHolder, discussionThread.isFollowing());
-        updateActionBarReportFlag(holder.actionBarViewHolder, discussionThread.isAbuseFlagged());
+        holder.discussionReportViewHolder.setReported(discussionThread.isAbuseFlagged());
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
@@ -235,7 +232,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
 
-        holder.actionBarViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
+        holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
                 FlagCommentTask task = new FlagCommentTask(context, comment, !comment.isAbuseFlagged()) {
                     @Override
@@ -256,9 +253,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
-        updateActionBarVoteCount(holder.actionBarViewHolder, comment.isVoted(), comment.getVoteCount());
-        updateActionBarReportFlag(holder.actionBarViewHolder, comment.isAbuseFlagged());
-        holder.actionBarViewHolder.followLayout.setVisibility(View.INVISIBLE);
+        holder.discussionReportViewHolder.setReported(comment.isAbuseFlagged());
+
+        holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int positionInResponses, final DiscussionComment response) {
@@ -383,7 +380,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
-        ActionBarViewHolder actionBarViewHolder;
+        DiscussionReportViewHolder discussionReportViewHolder;
 
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
@@ -398,7 +395,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
-            actionBarViewHolder = new ActionBarViewHolder(itemView);
+            discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
         }
     }
 
@@ -408,7 +405,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
-        ActionBarViewHolder actionBarViewHolder;
+        DiscussionReportViewHolder discussionReportViewHolder;
 
         public DiscussionResponseViewHolder(View itemView) {
             super(itemView);
@@ -418,34 +415,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
-            actionBarViewHolder = new ActionBarViewHolder(itemView);
+            discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
         }
-    }
-
-    void updateActionBarVoteCount(ActionBarViewHolder holder, boolean isVoted, int voteCount) {
-        CharSequence voteText = ResourceUtil.getFormattedStringForQuantity(
-                R.plurals.discussion_responses_action_bar_vote_text, voteCount);
-        holder.voteCountTextView.setText(voteText);
-
-        int iconColor = isVoted ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
-        holder.voteIconView.setIconColor(context.getResources().getColor(iconColor));
-    }
-
-    void updateActionBarFollow(ActionBarViewHolder holder, boolean isFollowing) {
-        int followStringResId = isFollowing ? R.string.discussion_responses_action_bar_unfollow_text :
-                R.string.discussion_responses_action_bar_follow_text;
-        holder.followTextView.setText(context.getString(followStringResId));
-
-        int iconColor = isFollowing ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
-        holder.followIconView.setIconColor(context.getResources().getColor(iconColor));
-    }
-
-    void updateActionBarReportFlag(ActionBarViewHolder holder, boolean isReported) {
-        int reportStringResId = isReported ? R.string.discussion_responses_reported_label :
-                R.string.discussion_responses_report_label;
-        holder.reportTextView.setText(context.getString(reportStringResId));
-
-        int iconColor = isReported ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
-        holder.reportIconView.setIconColor(context.getResources().getColor(iconColor));
     }
 }

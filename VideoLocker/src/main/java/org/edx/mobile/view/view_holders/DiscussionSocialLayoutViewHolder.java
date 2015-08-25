@@ -9,6 +9,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
@@ -43,7 +44,8 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDiscussionThread(final Context context,  final DiscussionThread discussionThread) {
-        threadVoteTextView.setText(discussionThread.getVoteCount() + "");
+        threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
         threadVoteIconView.setIconColor(discussionThread.isVoted() ?
                 context.getResources().getColor(R.color.edx_brand_primary_base) :
                 context.getResources().getColor(R.color.edx_grayscale_neutral_base));
@@ -53,7 +55,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
         if ( discussionThread.isFollowing() ){
             threadFollowTextView.setText(context.getString(R.string.forum_unfollow));
-            threadFollowIconView.setIconColor( context.getResources().getColor(R.color.edx_brand_primary_base) );
+            threadFollowIconView.setIconColor( context.getResources().getColor(R.color.edx_brand_primary_base));
         } else {
             threadFollowTextView.setText( context.getString(R.string.forum_follow));
             threadFollowIconView.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
@@ -63,7 +65,8 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setDiscussionResponse(final Context context,  final DiscussionComment discussionResponse) {
-        threadVoteTextView.setText(discussionResponse.getVoteCount() + "");
+        threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
+                R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
         threadVoteIconView.setIconColor(discussionResponse.isVoted() ?
                 context.getResources().getColor(R.color.edx_brand_primary_base) :
                 context.getResources().getColor(R.color.edx_grayscale_neutral_base));
