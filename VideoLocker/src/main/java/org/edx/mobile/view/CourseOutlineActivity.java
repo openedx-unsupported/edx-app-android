@@ -127,7 +127,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                         BlockPath outlinePath = outlineComp.getPath();
                         BlockPath leafPath = leafComp.getPath();
                         int outlinePathSize = outlinePath.getPath().size();
-                        if (!leafPath.get(outlinePathSize - 1).equals(outlineComp)) {
+                        if (!outlineComp.equals(leafPath.get(outlinePathSize - 1))) {
                             setResult(RESULT_OK, data);
                             finish();
                         } else {
