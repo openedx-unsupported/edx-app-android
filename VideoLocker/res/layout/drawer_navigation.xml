@@ -82,7 +82,6 @@
             android:textAllCaps="true"
             android:textSize="14sp" />
 
-        <include layout="@layout/divider_drawer_options" />
 
         <LinearLayout
             android:id="@+id/panel_option_find_courses"
@@ -90,6 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <include layout="@layout/divider_drawer_options" />
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/drawer_option_find_courses"
                 style="@style/drawer_option"

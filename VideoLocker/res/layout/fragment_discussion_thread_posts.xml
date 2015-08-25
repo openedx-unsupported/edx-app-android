@@ -38,7 +38,7 @@
                 style="@style/icon_view_standard_size_style"
                 android:layout_centerVertical="true"
                 app:iconColor="@color/edx_brand_primary_base"
-                app:iconName="fa_glass" />
+                app:iconName="fa_filter" />
 
             <TextView
                 android:id="@+id/discussion_posts_filter_text_view"

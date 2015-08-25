@@ -128,7 +128,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addPostButton.setEnabled(false);
                 final String title = titleEditText.getText().toString();
                 final String body = bodyEditText.getText().toString();
                 if (title.trim().length() == 0 || body.trim().length() == 0) return;
@@ -147,8 +146,8 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 threadBody.setTopicId(allTopicsWithDepth.get(selectedTopicIndex).getDiscussionTopic().getIdentifier());
                 threadBody.setType(discussionQuestion);
 
+                addPostButton.setEnabled(false);
                 createThread(threadBody);
-
             }
         });
     }
