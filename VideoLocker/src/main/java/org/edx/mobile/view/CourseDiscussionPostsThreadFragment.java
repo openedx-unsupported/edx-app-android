@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
@@ -193,6 +194,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         // TODO: Optimization: Only refresh if the comment is a reply to a currently listed post
         // TODO: Optimization: Only refresh the row that was updated, instead of the whole list
+        scheduleRefresh();
+    }
+
+    public void onEventMainThread(DiscussionThreadPostedEvent event) {
+        // TODO: Optimization: Only refresh if the new thread belongs to this topic
         scheduleRefresh();
     }
 
