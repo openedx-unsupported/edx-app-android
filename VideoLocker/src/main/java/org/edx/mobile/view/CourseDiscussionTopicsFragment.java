@@ -15,7 +15,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
-import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
@@ -27,7 +26,6 @@ import org.edx.mobile.view.custom.ETextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -61,11 +59,6 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
 
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
 
     @Nullable
     @Override
@@ -125,25 +118,7 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
 
     }
 
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-    }
-
-    private boolean listNeedsToBeRefreshed = true;
-
-    public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        // FIXME: What other events will affect this screen?
-        if (isResumed()) {
-            getTopicList();
-        } else {
-            listNeedsToBeRefreshed = true;
-        }
-    }
-
     private void getTopicList() {
-        listNeedsToBeRefreshed = false;
-
         if (getTopicListTask != null) {
             getTopicListTask.cancel(true);
         }
@@ -170,13 +145,5 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
             }
         };
         getTopicListTask.execute();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (listNeedsToBeRefreshed) {
-            getTopicList();
-        }
     }
 }
