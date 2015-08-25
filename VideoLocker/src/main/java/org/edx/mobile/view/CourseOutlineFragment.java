@@ -69,7 +69,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
                 } else {
                     environment.getRouter().showCourseUnitDetail(getActivity(),
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, courseComponentId, comp);
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
                 }
             }
         });

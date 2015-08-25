@@ -107,7 +107,7 @@ public class ISegmentImpl implements ISegment {
                     videoId, Values.VIDEO_PLAYED);
             aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-            tracker.track(Keys.PLAYED_VIDEO , aEvent.properties);
+            tracker.track(Keys.PLAYED_VIDEO, aEvent.properties);
             return aEvent.properties;
         }catch(Exception e){
             logger.error(e);
@@ -127,7 +127,7 @@ public class ISegmentImpl implements ISegment {
     public Properties trackVideoPause(String videoId, 
             Double currentTime, String courseId, String unitUrl){
         try{
-            SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
+            SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                     videoId, Values.VIDEO_PAUSED);
             aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
             tracker.track(Keys.PAUSED_VIDEO, aEvent.properties);
@@ -150,7 +150,7 @@ public class ISegmentImpl implements ISegment {
     public Properties trackVideoStop(String videoId, Double currentTime, String courseId,
             String unitUrl){
         try{
-            SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime, 
+            SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                     videoId, Values.VIDEO_STOPPED);
             aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
@@ -922,6 +922,54 @@ public class ISegmentImpl implements ISegment {
             logger.error(e);
         }
         return null;
+    }
+
+    @Override
+    public Properties trackCourseOutlineMode(boolean isVideoMode) {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.SWITCH_OUTLINE_MODE);
+        aEvent.data.putValue(Keys.NEW_OUTLINE_MODE
+                , (isVideoMode ? Values.OUTLINE_MODE_VIDEO : Values.OUTLINE_MODE_FULL));
+
+        aEvent.setAppNameContext();
+        //Add category for Google Analytics
+        String label = (isVideoMode ? Values.SWITCH_TO_VIDEO_MODE : Values.SWITCH_TO_FULL_MODE);
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.NAVIGATION, label);
+        tracker.track(Keys.SWITCH_OUTLINE_MODE, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
+    public Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait) {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.COMPONENT_VIEWED);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.ORIENTATION, (isPortrait ? Values.PORTRAIT : Values.LANDSCAPE));
+
+        aEvent.setAppNameContext();
+        //Add category for Google Analytics
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                Values.NAVIGATION, Keys.COMPONENT_VIEWED);
+        tracker.track(Keys.COMPONENT_VIEWED, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
+    public Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.OPEN_IN_BROWSER);
+        aEvent.data.putValue(Keys.BLOCK_ID, blockId);
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.SUPPORTED, isSupported);
+
+        aEvent.setAppNameContext();
+        //Add category for Google Analytics
+        String label = (isSupported ? Values.OPEN_IN_WEB_SUPPORTED : Values.OPEN_IN_WEB_NOT_SUPPORTED);
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                Values.NAVIGATION, label);
+        tracker.track(Keys.OPEN_IN_BROWSER, aEvent.properties);
+        return aEvent.properties;
     }
 
     /**

@@ -62,7 +62,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         return courseComponent == null ? "" : courseComponent.getWebUrl();
     }
 
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -122,8 +121,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                     case RESULT_OK: {
                         CourseComponent outlineComp = courseManager.getComponentById(
                                 courseData.getCourse().getId(), courseComponentId);
-                        CourseComponent leafComp = (CourseComponent)
-                                data.getSerializableExtra(Router.EXTRA_COURSE_UNIT);
+                        String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
+                        CourseComponent leafComp = courseManager.getComponentById(
+                                courseData.getCourse().getId(), leafCompId);
                         BlockPath outlinePath = outlineComp.getPath();
                         BlockPath leafPath = leafComp.getPath();
                         int outlinePathSize = outlinePath.getPath().size();

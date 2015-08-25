@@ -190,5 +190,4 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
         }
         return "";
     }
-
 }

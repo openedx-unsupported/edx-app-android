@@ -112,6 +112,12 @@ public interface ISegment {
 
     Properties coursesVisibleToFriendsChange(boolean visible);
 
+    Properties trackCourseOutlineMode(boolean isVideoMode);
+
+    Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait);
+
+    Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
+
 
 
     public static interface Keys{
@@ -158,6 +164,10 @@ public interface ISegment {
         public static final String ENROLL_COURSES = "Enroll Course Clicked";
         public static final String EMAIL_OPT_IN = "email_opt_in";
         public static final String PROVIDER = "provider";
+        public static final String BLOCK_ID = "block_id";
+        public static final String SUPPORTED = "supported";
+        public static final String NEW_OUTLINE_MODE = "new-mode";
+        public static final String ORIENTATION = "orientation";
 
         public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
         public static final String CELL_CARRIER = "cell_carrier";
@@ -185,7 +195,9 @@ public interface ISegment {
         public static final String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
         public static final String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
 
-
+        public static final String SWITCH_OUTLINE_MODE = "Switch outline mode";
+        public static final String COMPONENT_VIEWED = "Component Viewed";
+        public static final String OPEN_IN_BROWSER = "Open in browser";
     }
     
     public static interface Values{
@@ -243,6 +255,19 @@ public interface ISegment {
         public static final String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.social.certificate_share";
         public static final String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
         public static final String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
+
+        public static final String NAVIGATION = "navigation";
+        public static final String SWITCH_OUTLINE_MODE = "edx.bi.app.navigation.switched-mode.clicked";
+        public static final String COMPONENT_VIEWED = "edx.bi.app.navigation.component.viewed";
+        public static final String OPEN_IN_BROWSER = "edx.bi.app.navigation.open-in-browser";
+        public static final String OUTLINE_MODE_FULL = "full";
+        public static final String OUTLINE_MODE_VIDEO = "video";
+        public static final String SWITCH_TO_FULL_MODE = "Switch to Full Mode";
+        public static final String SWITCH_TO_VIDEO_MODE = "Switch to Video Mode";
+        public static final String OPEN_IN_WEB_SUPPORTED = "Open in web - Supported";
+        public static final String OPEN_IN_WEB_NOT_SUPPORTED = "Open in web - Unsupported";
+        public static final String LANDSCAPE = "landscape";
+        public static final String PORTRAIT = "portrait";
 
         public static final String WIFI = "wifi";
         public static final String CELL_DATA = "cell_data";
