@@ -15,13 +15,13 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.discussion.ThreadBody;
-
-import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
@@ -31,6 +31,7 @@ import org.edx.mobile.task.GetTopicListTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import info.hoang8f.android.segmented.SegmentedGroup;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -81,10 +82,10 @@ public class DiscussionAddPostFragment extends RoboFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+        try {
             segIO.screenViewsTracking(courseData.getCourse().getName() +
                     " - AddPost");
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
@@ -131,8 +132,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 if (topic.getDepth() == 0) {
                     topicsSpinner.setSelection(selectedTopicIndex);
                     Toast.makeText(container.getContext(), "Top level topic cannot be selected.", Toast.LENGTH_SHORT).show();
-                }
-                else
+                } else
                     selectedTopicIndex = position;
             }
 
@@ -146,7 +146,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addPostButton.setEnabled(false);
                 final String title = titleEditText.getText().toString();
                 final String body = bodyEditText.getText().toString();
                 if (title.trim().length() == 0 || body.trim().length() == 0) return;
@@ -165,20 +164,20 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 threadBody.setTopicId(allTopicsWithDepth.get(selectedTopicIndex).getDiscussionTopic().getIdentifier());
                 threadBody.setType(discussionQuestion);
 
-                createThread( threadBody );
-
+                addPostButton.setEnabled(false);
+                createThread(threadBody);
             }
         });
     }
 
-    protected void  createThread(ThreadBody threadBody){
-        if ( createThreadTask != null ){
+    protected void createThread(ThreadBody threadBody) {
+        if (createThreadTask != null) {
             createThreadTask.cancel(true);
         }
         createThreadTask = new CreateThreadTask(getActivity(), threadBody) {
             @Override
-            public void onSuccess(DiscussionThread  courseTopics) {
-               // addPostButton.setEnabled(true);
+            public void onSuccess(DiscussionThread courseTopics) {
+                EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));
                 getActivity().finish();
             }
 
@@ -192,13 +191,13 @@ public class DiscussionAddPostFragment extends RoboFragment {
         createThreadTask.execute();
     }
 
-    protected void getTopicList(){
-        if ( getTopicListTask != null ){
+    protected void getTopicList() {
+        if (getTopicListTask != null) {
             getTopicListTask.cancel(true);
         }
         getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
             @Override
-            public void onSuccess(CourseTopics  courseTopics) {
+            public void onSuccess(CourseTopics courseTopics) {
                 allCourseTopics = courseTopics;
                 ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getCoursewareTopics());
@@ -208,10 +207,10 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 ArrayList<String> topicList = new ArrayList<String>();
                 int i = 0;
                 for (DiscussionTopicDepth topic : allTopicsWithDepth) {
-                topicList.add((topic.getDepth() == 0 ? "" : "  ") + topic.getDiscussionTopic().getName());
-                if (discussionTopic.getName().equalsIgnoreCase(topic.getDiscussionTopic().getName()))
-                selectedTopicIndex = i;
-                i++;
+                    topicList.add((topic.getDepth() == 0 ? "" : "  ") + topic.getDiscussionTopic().getName());
+                    if (discussionTopic.getName().equalsIgnoreCase(topic.getDiscussionTopic().getName()))
+                        selectedTopicIndex = i;
+                    i++;
                 }
 
                 String[] topics = new String[topicList.size()];
