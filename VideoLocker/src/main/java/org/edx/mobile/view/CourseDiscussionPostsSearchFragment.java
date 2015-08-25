@@ -30,6 +30,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     }
 
 
+    @Override
     protected void populateThreadList(final boolean refreshView) {
 
         if ( searchThreadListTask != null ){

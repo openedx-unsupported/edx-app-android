@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.discussion.ThreadBody;
@@ -28,6 +29,7 @@ import org.edx.mobile.task.GetTopicListTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import info.hoang8f.android.segmented.SegmentedGroup;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -157,7 +159,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
         createThreadTask = new CreateThreadTask(getActivity(), threadBody) {
             @Override
             public void onSuccess(DiscussionThread courseTopics) {
-                // addPostButton.setEnabled(true);
+                EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));
                 getActivity().finish();
             }
 

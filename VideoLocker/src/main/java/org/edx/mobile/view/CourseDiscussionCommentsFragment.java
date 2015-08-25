@@ -16,7 +16,7 @@ import org.edx.mobile.discussion.DiscussionAPI;
 import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.ServerSideDataChangedEvent;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
@@ -76,24 +76,22 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
         });
     }
 
-    public void  onResume(){
-        super.onResume();
-        EventBus.getDefault().registerSticky(this);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
-    public void onPause(){
-        super.onPause();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(ServerSideDataChangedEvent event) {
-        if (event.type == ServerSideDataChangedEvent.EventType.COMMENT_ADDED) {
-            if ( event.value instanceof DiscussionComment) {
-                discussionCommentsAdapter.add((DiscussionComment) event.value);
-                discussionCommentsAdapter.notifyDataSetChanged();
-            }
-            EventBus.getDefault().removeStickyEvent(event);
+    public void onEventMainThread(DiscussionCommentPostedEvent event) {
+        if (null != event.getParent() && event.getParent().getIdentifier().equalsIgnoreCase(discussionComment.getIdentifier())) {
+            discussionCommentsAdapter.add(event.getComment());
+            discussionCommentsAdapter.notifyDataSetChanged();
         }
     }
-
 }

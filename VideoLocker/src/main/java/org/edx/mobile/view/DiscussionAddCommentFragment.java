@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -16,10 +17,8 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.event.ServerSideDataChangedEvent;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.CreateCommentTask;
 
 import de.greenrobot.event.EventBus;
@@ -105,25 +104,17 @@ public class DiscussionAddCommentFragment extends RoboFragment {
         String newComment = editTextNewComment.getText().toString();
         final boolean isResponse = (discussionComment == null);
 
-        CommentBody commentBody = new CommentBody();
+        final CommentBody commentBody = new CommentBody();
 
         commentBody.setRawBody(newComment);
         commentBody.setThreadId(isResponse ? discussionTopic.getIdentifier() : discussionComment.getThreadId());
         commentBody.setParentId(isResponse ? null : discussionComment.getIdentifier());
 
-//        commentBody.setThreadId(isResponse ? discussionTopicId : discussionComment.getThreadId());
-//        commentBody.setParentId(isResponse ? null : discussionComment.getParentId());
         createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
             @Override
-            public void onSuccess(DiscussionComment thread) {
-                if ( thread != null)
-                    logger.debug(thread.toString());
-                ServerSideDataChangedEvent.EventType t = isResponse ? ServerSideDataChangedEvent.EventType.RESPONSE_ADDED
-                        : ServerSideDataChangedEvent.EventType.COMMENT_ADDED;
-                EventBus.getDefault().postSticky(new ServerSideDataChangedEvent(t, thread));
-                PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-                prefManager.setServerSideChangedForCourseThread(true);
-                prefManager.setServerSideChangedForCourseTopic(true);
+            public void onSuccess(@NonNull DiscussionComment thread) {
+                logger.debug(thread.toString());
+                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, discussionComment));
                 getActivity().finish();
             }
 
@@ -133,7 +124,5 @@ public class DiscussionAddCommentFragment extends RoboFragment {
             }
         };
         createCommentTask.execute();
-
     }
-
 }

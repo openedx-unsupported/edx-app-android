@@ -16,7 +16,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.ThreadComments;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.ServerSideDataChangedEvent;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
@@ -118,21 +118,21 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
 
     }
 
-    public void  onResume(){
-        super.onResume();
-        EventBus.getDefault().registerSticky(this);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
-    public void onPause(){
-        super.onPause();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(ServerSideDataChangedEvent event) {
-        if (event.type == ServerSideDataChangedEvent.EventType.RESPONSE_ADDED) {
-            getCommentList(true);
-            EventBus.getDefault().removeStickyEvent(event);
-        }
+    public void onEventMainThread(DiscussionCommentPostedEvent event) {
+        // TODO: Optimization: Only refresh if it's a reply to this post or a comment on one of its replies
+        getCommentList(true);
     }
 
     /**
