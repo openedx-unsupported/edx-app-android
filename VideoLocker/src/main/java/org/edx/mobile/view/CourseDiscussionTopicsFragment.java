@@ -11,15 +11,13 @@ import android.widget.SearchView;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetTopicListTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -29,6 +27,7 @@ import org.edx.mobile.view.custom.ETextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -48,8 +47,6 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
     ETextView followingTextView;
 
 
-
-
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
@@ -63,6 +60,12 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
     GetTopicListTask getTopicListTask;
 
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 
     @Nullable
     @Override
@@ -81,7 +84,7 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
             @Override
             public void onClick(View view) {
                 DiscussionTopic discussionTopic = new DiscussionTopic();
-                discussionTopic.setName( DiscussionTopic.FOLLOWING_TOPICS );
+                discussionTopic.setName(DiscussionTopic.FOLLOWING_TOPICS);
                 router.showCourseDiscussionPostsForDiscussionTopic(getActivity(), discussionTopic, courseData);
             }
         });
@@ -91,7 +94,7 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
         discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if ( query == null || query.trim().length() == 0 )
+                if (query == null || query.trim().length() == 0)
                     return false;
 
                 router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
@@ -122,17 +125,32 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
 
     }
 
-    protected void getTopicList(){
-        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        prefManager.setServerSideChangedForCourseTopic(true) ;
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
 
-       if ( getTopicListTask != null ){
-           getTopicListTask.cancel(true);
-       }
+    private boolean listNeedsToBeRefreshed = true;
+
+    public void onEventMainThread(DiscussionCommentPostedEvent event) {
+        // FIXME: What other events will affect this screen?
+        if (isResumed()) {
+            getTopicList();
+        } else {
+            listNeedsToBeRefreshed = true;
+        }
+    }
+
+    private void getTopicList() {
+        listNeedsToBeRefreshed = false;
+
+        if (getTopicListTask != null) {
+            getTopicListTask.cancel(true);
+        }
         getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
             @Override
             public void onSuccess(CourseTopics courseTopics) {
-                if(courseTopics!=null){
+                if (courseTopics != null) {
                     logger.debug("GetTopicListTask success=" + courseTopics);
                     //  hideProgress();
                     ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
@@ -154,16 +172,11 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
         getTopicListTask.execute();
     }
 
-    public void  onResume(){
+    @Override
+    public void onResume() {
         super.onResume();
-        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        if ( prefManager.isServerSideChangedForCourseTopic() ){
+        if (listNeedsToBeRefreshed) {
             getTopicList();
         }
     }
-
-    public void onPause(){
-        super.onPause();
-    }
-
 }

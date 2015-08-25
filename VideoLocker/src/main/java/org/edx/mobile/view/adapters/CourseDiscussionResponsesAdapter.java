@@ -10,14 +10,12 @@ import android.widget.RelativeLayout;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.IAuthorData;
 import org.edx.mobile.discussion.PinnedAuthor;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.task.FlagThreadTask;
 import org.edx.mobile.task.FollowThreadTask;
@@ -34,6 +32,8 @@ import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
@@ -128,10 +128,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             public void onClick(final View v) {
                 FlagThreadTask task = new FlagThreadTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
                     @Override
-                    public void onSuccess(DiscussionThread topicThreads) {
-                        if (topicThreads != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
-                            markDataChanged();
+                    public void onSuccess(DiscussionThread topicThread) {
+                        if (topicThread != null) {
+                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThread;
+                            notifyDataSetChanged();
                         }
                     }
 
@@ -161,7 +161,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                     public void onSuccess(DiscussionThread topicThreads) {
                         if (topicThreads != null) {
                             CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
-                            markDataChanged();
+                            notifyDataSetChanged();
                         }
                     }
 
@@ -183,7 +183,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                     public void onSuccess(DiscussionThread topicThreads) {
                         if (topicThreads != null) {
                             CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
-                            markDataChanged();
+                            EventBus.getDefault().post(new DiscussionThreadFollowedEvent(topicThreads));
+                            notifyDataSetChanged();
                         }
                     }
 
@@ -243,7 +244,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                         if (comment != null) {
                             discussionResponses.remove(positionInResponses);
                             discussionResponses.add(positionInResponses, comment);
-                            markDataChanged();
+                            notifyDataSetChanged();
                         }
                     }
 
@@ -274,7 +275,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                         if (comment != null) {
                             discussionResponses.remove(positionInResponses);
                             discussionResponses.add(positionInResponses, comment);
-                            markDataChanged();
+                            notifyDataSetChanged();
                         }
                     }
 
@@ -287,14 +288,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
     }
-
-    private void markDataChanged() {
-        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        prefManager.setServerSideChangedForCourseThread(true);
-        prefManager.setServerSideChangedForCourseTopic(true);
-        notifyDataSetChanged();
-    }
-
 
     private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
         int numChildren = response == null ? 0 : response.getChildren().size();

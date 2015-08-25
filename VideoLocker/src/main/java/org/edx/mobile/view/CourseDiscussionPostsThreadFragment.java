@@ -9,15 +9,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
-
-import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.common.MessageType;
@@ -26,6 +25,7 @@ import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.HashMap;
 
+import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -63,6 +63,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private GetThreadListTask getThreadListTask;
     private GetFollowingThreadListTask getFollowingThreadListTask;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,7 +88,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if ( this.isFollowingTopics() ){
+        if (this.isFollowingTopics()) {
             createNewPostRelativeLayout.setVisibility(View.GONE);
         } else {
             createNewPostTextView.setText(R.string.discussion_post_create_new_post);
@@ -98,6 +104,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         // TODO: Add some UI polish to make the popups more closely match the wireframes
         createFilterPopupMenu();
         createSortPopupMenu();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void createFilterPopupMenu() {
@@ -158,36 +170,57 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         });
     }
 
-    private boolean isFollowingTopics(){
-        return  DiscussionTopic.FOLLOWING_TOPICS.equalsIgnoreCase(discussionTopic.getName());
+    private boolean isFollowingTopics() {
+        return DiscussionTopic.FOLLOWING_TOPICS.equalsIgnoreCase(discussionTopic.getName());
     }
 
+    private boolean listNeedsToBeRefreshed = true;
+
+    private void scheduleRefresh() {
+        if (isResumed()) {
+            populateThreadList(true);
+        } else {
+            listNeedsToBeRefreshed = true;
+        }
+    }
+
+    public void onEventMainThread(DiscussionThreadFollowedEvent event) {
+        // TODO: Optimization: Only refresh the item if the followed post is currently listed
+        // TODO: Optimization: Only refresh the row that was updated, instead of the whole list
+        scheduleRefresh();
+    }
+
+    public void onEventMainThread(DiscussionCommentPostedEvent event) {
+        // TODO: Optimization: Only refresh if the comment is a reply to a currently listed post
+        // TODO: Optimization: Only refresh the row that was updated, instead of the whole list
+        scheduleRefresh();
+    }
+
+    @Override
     protected void populateThreadList(boolean refreshView) {
+        listNeedsToBeRefreshed = false;
 
-        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        prefManager.setServerSideChangedForCourseThread(true); ;
-
-        if ( isFollowingTopics() ){
-            populateFollowingThreadList(refreshView);
+        if (refreshView) {
+            discussionPostsAdapter.clear();
         }
-        else {
-            populatePostList(refreshView);
+        if (isFollowingTopics()) {
+            populateFollowingThreadList();
+        } else {
+            populatePostList();
         }
 
     }
-    private void populateFollowingThreadList(final boolean refreshView){
-        if ( getFollowingThreadListTask != null ){
+
+    private void populateFollowingThreadList() {
+        if (getFollowingThreadListTask != null) {
             getFollowingThreadListTask.cancel(true);
         }
 
         getFollowingThreadListTask = new GetFollowingThreadListTask(getActivity(), courseData.getCourse().getId(), postsFilter,
-                postsSort, discussionPostsAdapter.getPagination() ){
+                postsSort, discussionPostsAdapter.getPagination()) {
             @Override
             public void onSuccess(TopicThreads topicThreads) {
-                if( refreshView ) {
-                    discussionPostsAdapter.setItems(null);
-                }
-                if(topicThreads!=null){
+                if (topicThreads != null) {
                     logger.debug("registration success=" + topicThreads);
                     boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
                     discussionPostsAdapter.addPage(topicThreads.getResults(), hasMore);
@@ -207,23 +240,19 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         getFollowingThreadListTask.execute();
     }
 
-    private void populatePostList(final boolean refreshView){
-        if ( getThreadListTask != null ){
+    private void populatePostList() {
+        if (getThreadListTask != null) {
             getThreadListTask.cancel(true);
         }
-
 
         getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(), discussionTopic.getIdentifier(),
                 postsFilter,
                 postsSort,
                 discussionPostsAdapter.getPagination()
-                ){
+        ) {
             @Override
             public void onSuccess(TopicThreads topicThreads) {
-                if( refreshView ) {
-                    discussionPostsAdapter.setItems(null);
-                }
-                if(topicThreads!=null){
+                if (topicThreads != null) {
                     logger.debug("registration success=" + topicThreads);
                     boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
                     discussionPostsAdapter.addPage(topicThreads.getResults(), hasMore);
@@ -254,15 +283,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
         }
     }
-    public void  onResume(){
+
+    @Override
+    public void onResume() {
         super.onResume();
-        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
-        if ( prefManager.isServerSideChangedForCourseThread()  ){
+        if (listNeedsToBeRefreshed) {
             populateThreadList(true);
         }
-    }
-
-    public void onPause(){
-        super.onPause();
     }
 }
