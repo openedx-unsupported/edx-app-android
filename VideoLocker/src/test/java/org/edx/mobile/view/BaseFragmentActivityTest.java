@@ -26,7 +26,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,8 +48,10 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowView;
 import org.robolectric.util.ActivityController;
+import org.robolectric.util.Scheduler;
 
 import de.greenrobot.event.EventBus;
 
@@ -358,18 +359,30 @@ public class BaseFragmentActivityTest extends UiTest {
      * Generic method for asserting view animation method functionality
      *
      * @param view The animated view
+     * @param trigger A {@link Runnable} that triggers the animation
      */
-    protected void assertAnimateLayouts(View view) {
+    protected void assertAnimateLayouts(View view, Runnable trigger) {
+        // The foreground scheduler needs to be paused so that the
+        // temporary visibility of the animated View can be verified.
+        Scheduler foregroundScheduler = ShadowApplication.getInstance()
+                .getForegroundThreadScheduler();
+        boolean wasPaused = foregroundScheduler.isPaused();
+        if (!wasPaused) {
+            foregroundScheduler.pause();
+        }
+        assertThat(view).isGone();
+        trigger.run();
         assertThat(view).isVisible();
         Animation animation = view.getAnimation();
         assertNotNull(animation);
         assertThat(animation.getStartTime())
                 .isLessThanOrEqualTo(AnimationUtils.currentAnimationTimeMillis());
-        assertThat(animation)
-                .hasStartOffset(0)
-                .isExactlyInstanceOf(TranslateAnimation.class);
-        TranslateAnimation translateAnimation = (TranslateAnimation) animation;
-        assertThat(translateAnimation).hasDuration(500).isFillingAfter();
+        assertThat(animation).hasStartOffset(0);
+        foregroundScheduler.unPause();
+        assertThat(view).isGone();
+        if (wasPaused) {
+            foregroundScheduler.pause();
+        }
     }
 
     /**
@@ -377,15 +390,18 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     @Test
     public void animateLayoutsTest() {
-        BaseFragmentActivity activity =
+        final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).create().get();
-        View view = new View(activity);
+        final View view = new View(activity);
         view.setVisibility(View.GONE);
         activity.setContentView(view);
-        assertThat(view).isGone();
-        activity.animateLayouts(view);
-        assertAnimateLayouts(view);
+        assertAnimateLayouts(view, new Runnable() {
+            @Override
+            public void run() {
+                activity.animateLayouts(view);
+            }
+        });
         activity.stopAnimation(view);
         assertThat(view).hasAnimation(null);
     }
@@ -395,14 +411,21 @@ public class BaseFragmentActivityTest extends UiTest {
      *
      * @param activity The activity instance
      * @param message The message that is expected to be displayed
+     * @param trigger A {@link Runnable} that triggers the showing of the
+     *                message
      */
-    protected void assertShowInfoMessage(
-            BaseFragmentActivity activity, String message) {
-        TextView messageView = (TextView)
+    protected void assertShowInfoMessage(final BaseFragmentActivity activity,
+            final String message, final Runnable trigger) {
+        final TextView messageView = (TextView)
                 activity.findViewById(R.id.downloadMessage);
         assumeNotNull(messageView);
-        assertThat(messageView).hasText(message);
-        assertAnimateLayouts(messageView);
+        assertAnimateLayouts(messageView, new Runnable() {
+            @Override
+            public void run() {
+                trigger.run();
+                assertThat(messageView).hasText(message);
+            }
+        });
     }
 
     /**
@@ -410,17 +433,21 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     @Test
     public void showInfoMessageTest() {
-        BaseFragmentActivity activity =
+        final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).create().get();
         TextView messageView = new TextView(activity);
         messageView.setId(R.id.downloadMessage);
         messageView.setVisibility(View.GONE);
         activity.setContentView(messageView);
-        assertThat(messageView).hasText("").isGone();
-        String message = "test";
-        assumeTrue(activity.showInfoMessage(message));
-        assertShowInfoMessage(activity, message);
+        assertThat(messageView).hasText("");
+        final String message = "test";
+        assertShowInfoMessage(activity, message, new Runnable() {
+            @Override
+            public void run() {
+                assumeTrue(activity.showInfoMessage(message));
+            }
+        });
     }
 
     /**
@@ -428,16 +455,19 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     @Test
     public void showOfflineAccessMessage() {
-        BaseFragmentActivity activity =
+        final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).create().get();
         View offlineView = new View(activity);
         offlineView.setId(R.id.offline_access_panel);
         offlineView.setVisibility(View.GONE);
         activity.setContentView(offlineView);
-        assertThat(offlineView).isGone();
-        activity.showOfflineAccessMessage();
-        assertAnimateLayouts(offlineView);
+        assertAnimateLayouts(offlineView, new Runnable() {
+            @Override
+            public void run() {
+                activity.showOfflineAccessMessage();
+            }
+        });
     }
 
     /**
@@ -611,12 +641,16 @@ public class BaseFragmentActivityTest extends UiTest {
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();
         assumeNotNull(activity.findViewById(R.id.downloadMessage));
-        String message = "message";
-        EventBus eventBus = EventBus.getDefault();
-        assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-        eventBus.postSticky(new FlyingMessageEvent(message));
-        assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-        assertShowInfoMessage(activity, message);
+        final String message = "message";
+        assertShowInfoMessage(activity, message, new Runnable() {
+            @Override
+            public void run() {
+                EventBus eventBus = EventBus.getDefault();
+                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
+                eventBus.postSticky(new FlyingMessageEvent(message));
+                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
+            }
+        });
     }
 
     /**
@@ -626,33 +660,34 @@ public class BaseFragmentActivityTest extends UiTest {
      * @param header The message header
      * @param message The error message
      */
-    protected void errorFlyingMessageDisplayTest(BaseFragmentActivity activity,
-            String header, String message) {
-        EventBus eventBus = EventBus.getDefault();
-        assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-        eventBus.postSticky(new FlyingMessageEvent(
-                FlyingMessageEvent.MessageType.ERROR, header, message));
-        assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-
+    protected void errorFlyingMessageDisplayTest(final BaseFragmentActivity activity,
+            final String header, final String message) {
         View errorView = activity.findViewById(R.id.error_layout);
         assertNotNull(errorView);
         assertThat(errorView).isInstanceOf(ViewGroup.class);
-        TextView errorHeaderView = (TextView)
-                activity.findViewById(R.id.error_header);
-        TextView errorMessageView = (TextView)
-                activity.findViewById(R.id.error_message);
-        assertNotNull(errorHeaderView);
-        assertNotNull(errorMessageView);
-        if (TextUtils.isEmpty(header)) {
-            assertThat(errorHeaderView).isNotVisible();
-        } else {
-            assertThat(errorHeaderView).isVisible().hasText(header);
-        }
-        if (message == null) {
-            message = "";
-        }
-        assertThat(errorMessageView).hasText(message);
-        assertAnimateLayouts(errorView);
+        assertAnimateLayouts(errorView, new Runnable() {
+            @Override
+            public void run() {
+                EventBus eventBus = EventBus.getDefault();
+                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
+                eventBus.postSticky(new FlyingMessageEvent(
+                        FlyingMessageEvent.MessageType.ERROR, header, message));
+                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
+
+                TextView errorHeaderView = (TextView)
+                        activity.findViewById(R.id.error_header);
+                TextView errorMessageView = (TextView)
+                        activity.findViewById(R.id.error_message);
+                assertNotNull(errorHeaderView);
+                assertNotNull(errorMessageView);
+                if (TextUtils.isEmpty(header)) {
+                    assertThat(errorHeaderView).isNotVisible();
+                } else {
+                    assertThat(errorHeaderView).isVisible().hasText(header);
+                }
+                assertThat(errorMessageView).hasText(message == null ? "" : message);
+            }
+        });
     }
 
     /**
