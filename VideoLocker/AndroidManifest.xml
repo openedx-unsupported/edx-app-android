@@ -234,7 +234,7 @@
 
         <activity
             android:name="org.edx.mobile.view.DiscussionAddPostActivity"
-            android:label="@string/app_name"
+            android:label="@string/discussion_post_create_new_post"
             android:screenOrientation="portrait" />
 
         <activity

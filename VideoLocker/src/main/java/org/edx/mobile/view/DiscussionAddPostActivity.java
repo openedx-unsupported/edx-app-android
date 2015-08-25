@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 
 public class DiscussionAddPostActivity extends BaseSingleFragmentActivity {
@@ -16,13 +15,6 @@ public class DiscussionAddPostActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDrawerFromOpening();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        setTitle(getString(R.string.discussion_post));
     }
 
     @Override

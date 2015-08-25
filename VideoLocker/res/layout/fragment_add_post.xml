@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -62,7 +63,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
-        android:hint="@string/discussion_add_your_post" />
+        tools:hint="@string/discussion_body_hint_discussion" />
 
 
     <Button
@@ -76,7 +77,7 @@
         android:layout_marginBottom="10dp"
         android:textColor="@color/edx_white"
         android:background="@drawable/create_button_radius"
-        android:text="@string/discussion_add_post" />
+        tools:text="@string/discussion_add_post" />
 
 </RelativeLayout>
 </ScrollView>
