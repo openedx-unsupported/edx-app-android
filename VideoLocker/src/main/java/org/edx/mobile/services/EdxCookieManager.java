@@ -53,8 +53,6 @@ public class EdxCookieManager {
         }
         PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, "");
-        //we can not get the expiration date from cookie, so just set it to expire for one day
-        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, -1);
 
     }
 
@@ -92,18 +90,12 @@ public class EdxCookieManager {
                         EventBus.getDefault().post(new SessionIdRefreshEvent(false));
                         return;
                     }
-                    long currentTime = new Date().getTime();
+                    
                     for (HttpCookie cookie : result) {
                         if (cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
                             clearWebWiewCookie(context);
                             PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
-                            long maxAgeInSecond = cookie.getMaxAge();
-                            if ( maxAgeInSecond == 0 ){
-                                pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, 0);
-                            } else {
-                                pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, currentTime + maxAgeInSecond * 1000);
-                            }
                             EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                             break;
                         }
