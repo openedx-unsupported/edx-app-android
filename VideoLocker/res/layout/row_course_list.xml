@@ -25,7 +25,6 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/course_image"
                 android:scaleType="centerCrop" />
 
             <LinearLayout
@@ -231,7 +230,6 @@
         android:layout_alignLeft="@id/course_row_layout"
         android:layout_alignRight="@id/course_row_layout"
         android:layout_alignTop="@id/course_row_layout"
-        android:background="@drawable/ic_card"
-        android:contentDescription="@string/app_name" />
+        android:background="@drawable/ic_card" />
 
 </RelativeLayout>

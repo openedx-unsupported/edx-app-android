@@ -1,6 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -484,6 +485,9 @@ public class CourseOutlineAdapter extends BaseAdapter{
         holder.rowSubtitlePanel =convertView.findViewById(R.id.row_subtitle_panel);
         holder.halfSeparator = convertView.findViewById(R.id.row_half_separator);
         holder.wholeSeparator = convertView.findViewById(R.id.row_whole_separator);
+
+        // Accessibility
+        ViewCompat.setImportantForAccessibility(holder.rowSubtitle, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
         return holder;
     }

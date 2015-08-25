@@ -86,6 +86,8 @@
     <string name="forgot_password">Forgot your password?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
     <string name="login">Sign In</string>
+    <!-- Accessible content description of sign in button on Log in screen -->
+    <string name="login_btn">Sign in button</string>
     <!-- Message shown while waiting for action -->
     <string name="progressText">Please wait....</string>
     <!-- Message shown while user waits for response to a sign in request-->
@@ -103,6 +105,10 @@
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">edX Terms of Service and Honor Code</string>
     <string name="login_title">Sign in to edX</string>
+    <!-- Accessible content description of close button on Sign in and Sign up screen -->
+    <string name="close">Close</string>
+    <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
+    <string name="dropdown_list_prefix">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
     <!-- Button text to show user Settings screen -->
@@ -224,6 +230,9 @@
 
     <!-- Label for the menu popup for viewing the course on the web -->
     <string name="course_view_on_web">View on Web</string>
+
+    <!-- Label for the menu popup for changing mode to Videos Only/Full Course -->
+    <string name="course_change_mode">Mode picker</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
@@ -560,6 +569,8 @@
     <string name="google_text">Google</string>
     <!-- Message on course list -->
     <string name="course_not_listed_text">Don\'t see one of your courses?</string>
+    <!-- Accessible content description of course not listed button on Course list screen -->
+    <string name="course_not_listed_btn">Don\'t see one of your courses button</string>
     <!-- Message on course page for course that hasn't started -->
     <string name="course_content_available_text">This course hasn\'t started yet. Come back on {start_time} to see your videos.</string>
     <!-- Button text, allowing user to open the edx website in a web browser -->
@@ -596,6 +607,8 @@
     <string name="hide_optional_text">Hide optional fields</string>
     <!-- Button text allowing user create an account -->
     <string name="create_account_text">Create my account</string>
+    <!-- Accessible content description of create account button on Registration screen -->
+    <string name="create_account_btn">Create my account button</string>
     <!-- Text shown while waiting for registration request -->
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
