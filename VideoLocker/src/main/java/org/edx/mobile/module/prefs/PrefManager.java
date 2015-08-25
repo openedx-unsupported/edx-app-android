@@ -308,6 +308,22 @@ public class PrefManager {
         public void setLastCourseStructureFetch(String courseId, long timestamp){
             super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
         }
+
+        public boolean isServerSideChangedForCourseTopic(){
+            //default is video only mode
+            return getBoolean(Key.ServerSideChangedForCourseTopic, false);
+        }
+        public void setServerSideChangedForCourseTopic(boolean enabled){
+            super.put(Key.ServerSideChangedForCourseTopic, enabled);
+        }
+
+        public boolean isServerSideChangedForCourseThread(){
+            //default is video only mode
+            return getBoolean(Key.ServerSideChangedForCourseThread, false);
+        }
+        public void setServerSideChangedForCourseThread(boolean enabled){
+            super.put(Key.ServerSideChangedForCourseThread, enabled);
+        }
     }
     /**
      * Contains preference name constants.
@@ -358,6 +374,8 @@ public class PrefManager {
         public static final String UserPrefVideoModel = "UserPrefVideoModel";
         public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
 
+        public static final String ServerSideChangedForCourseTopic = "ServerSideChangedForCourseTopic";
+        public static final String ServerSideChangedForCourseThread = "ServerSideChangedForCourseThread";
 
 
     }

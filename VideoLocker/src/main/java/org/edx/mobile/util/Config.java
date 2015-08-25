@@ -57,6 +57,7 @@ public class Config {
     public static final String NEW_COURSE_NAVIGATION_ENABLED = "NEW_COURSE_NAVIGATION_ENABLED";
     public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
 
+    private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     /**
      * Social Sharing configuration.
      */
@@ -327,6 +328,9 @@ public class Config {
     public boolean isNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
+
+
+
 
     /**
      * Empty or no config returns false.

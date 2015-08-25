@@ -8,14 +8,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
+import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnItemClickListener {
+    public static interface PaginationHandler{
+        void loadMoreRecord(IPagination pagination);
+    }
+
+    static class RowType {
+        static final int DATA_ROW = 0;
+        static final int MORE_BUTTON = 1;
+    }
 
     // constants that define selection state of list rows
     public static final int STATE_NOT_SELECTED = 0;
@@ -30,7 +40,19 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     protected LastClickedEvent lastClickedEvent = new LastClickedEvent();
 
     protected IEdxEnvironment environment;
-    
+
+    private IPagination pagination = new BasePagination(IPagination.DEFAULT_PAGE_SIZE);
+    private PaginationHandler paginationHandler;
+
+
+    public IPagination getPagination() {
+        return pagination;
+    }
+
+    public void setPaginationHandler(PaginationHandler paginationHandler) {
+        this.paginationHandler = paginationHandler;
+    }
+
     public BaseListAdapter(Context context, int layoutResourceId, IEdxEnvironment environment) {
         super(context, layoutResourceId);
         layoutResource = layoutResourceId;
@@ -105,10 +127,23 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
         clear();
 
         if (newItems != null) {
-            addAll(newItems);
+            addPage(newItems, false);
         }
     }
-    
+
+    public void addPage(Collection<? extends T> collection, boolean hasMore) {
+         super.addAll(collection);
+         pagination.addPage(collection.size());
+         pagination.setHasMorePages(hasMore);
+    }
+
+    public int getCount(){
+        if ( pagination.mayHasMorePages() ) {
+            return super.getCount() + 1;
+        } else {
+            return super.getCount() ;
+        }
+    }
     /**
      * Clears all items from this adapter.
      */
@@ -116,8 +151,22 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
         super.clear();
         selection.clear();
         lastClickedEvent = new LastClickedEvent();
+        pagination.clear();
     }
-    
+
+    public int getItemViewType(int position) {
+        if ( pagination.mayHasMorePages() ) {
+            return position == getCount() - 1 ?  RowType.MORE_BUTTON : RowType.DATA_ROW;
+        } else {
+            return RowType.DATA_ROW;
+        }
+    }
+
+    public int getViewTypeCount() {
+         return pagination.mayHasMorePages() ? 2 : 1;
+    }
+
+
     @Override
     public long getItemId(int index) {
         return index;
@@ -126,6 +175,26 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     @Override
     public View getView(int position, View convertView, ViewGroup adapter) {
         try {
+            int rowType = getItemViewType(position);
+
+            if ( rowType == RowType.MORE_BUTTON ){
+
+                if (convertView == null) {
+                    // create list row
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.show_more_button_row, adapter, false);
+
+                    convertView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (paginationHandler != null )
+                                paginationHandler.loadMoreRecord(pagination);
+                        }
+                    });
+                }
+                return convertView;
+            }
+
+
             if (convertView == null) {
                 // create list row
                 convertView = LayoutInflater.from(getContext()).inflate(layoutResource, adapter, false);

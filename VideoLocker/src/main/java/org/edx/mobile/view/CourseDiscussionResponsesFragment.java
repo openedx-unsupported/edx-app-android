@@ -10,23 +10,25 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Releasable;
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.ThreadComments;
+
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.ThreadComments;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.task.GetCommentListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
+import org.edx.mobile.view.adapters.IPagination;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionResponsesFragment extends RoboFragment {
+public class CourseDiscussionResponsesFragment extends RoboFragment implements CourseDiscussionResponsesAdapter.PaginationHandler{
 
     @Inject
     LinearLayoutManager linearLayoutManager;
@@ -50,12 +52,10 @@ public class CourseDiscussionResponsesFragment extends RoboFragment {
     CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
 
     @Inject
-    DiscussionAPI discussionAPI;
-
-    @Inject
     Router router;
 
     private final Logger logger = new Logger(getClass().getName());
+    private GetCommentListTask getCommentListTask;
 
     @Nullable
     @Override
@@ -69,29 +69,77 @@ public class CourseDiscussionResponsesFragment extends RoboFragment {
 
         discussionResponsesRecyclerView.setLayoutManager(linearLayoutManager);
 
+        courseDiscussionResponsesAdapter.setPaginationHandler(this);
         courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
-        discussionAPI.getCommentList(discussionThread.getIdentifier(), new APICallback<ThreadComments>() {
-            @Override
-            public void success(ThreadComments threadComments) {
-                courseDiscussionResponsesAdapter.setDiscussionResponses(threadComments.getResults());
-                courseDiscussionResponsesAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void failure(Exception e) {
-                // TODO: Handle failure condition
-            }
-        });
+        getCommentList(true);
 
         addResponseTextView.setText(R.string.discussion_responses_add_response);
 
         addResponseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionAddResponseOrComment(getActivity(), discussionThread.getTopicId(), null);
+                router.showCourseDiscussionAddResponseOrComment(getActivity(), discussionThread, null);
             }
         });
     }
 
+    protected void getCommentList(final boolean refresh) {
+
+        if ( getCommentListTask != null ){
+            getCommentListTask.cancel(true);
+        }
+        getCommentListTask = new GetCommentListTask(getActivity(),
+                                                    discussionThread.getIdentifier(),
+                                                    courseDiscussionResponsesAdapter.getPagination()) {
+            @Override
+            public void onSuccess(ThreadComments threadComments) {
+                if ( threadComments == null ) {
+                    logger.debug("GetCommentListTask returns null onSuccess");
+                    return;// should not happen?
+                }
+                if ( refresh ){
+                    //it clear up details and reset pagination
+                    courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
+                }
+                boolean hasMore = threadComments.next != null && threadComments.next.length() > 0;
+                courseDiscussionResponsesAdapter.addPage(threadComments.getResults(), hasMore);
+                courseDiscussionResponsesAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+            }
+        };
+        getCommentListTask.execute();
+
+    }
+
+    public void  onResume(){
+        super.onResume();
+        EventBus.getDefault().registerSticky(this);
+    }
+
+    public void onPause(){
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(ServerSideDataChangedEvent event) {
+        if (event.type == ServerSideDataChangedEvent.EventType.RESPONSE_ADDED) {
+            getCommentList(true);
+            EventBus.getDefault().removeStickyEvent(event);
+        }
+    }
+
+    /**
+     *  callback from CourseDiscussionResponsesAdapter
+     */
+    @Override
+    public void loadMoreRecord(IPagination pagination) {
+        getCommentList(false);
+    }
 }

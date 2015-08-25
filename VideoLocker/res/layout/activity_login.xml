@@ -169,7 +169,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <include layout="@layout/panel_login_error" />
+        <include layout="@layout/panel_error_message_with_title" />
     </LinearLayout>
 
     <LinearLayout
