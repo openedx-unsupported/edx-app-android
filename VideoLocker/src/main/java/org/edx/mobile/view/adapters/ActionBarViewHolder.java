@@ -26,14 +26,14 @@ public class ActionBarViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         voteLayout = (RelativeLayout) itemView.
-                findViewById(R.id.discussion_responses_action_bar_vote_layout);
+                findViewById(R.id.discussion_responses_action_bar_vote_container);
         voteIconView = (IconView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_icon_view);
         voteCountTextView = (ETextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_count_text_view);
 
         followLayout = (RelativeLayout) itemView.
-                findViewById(R.id.discussion_responses_action_bar_follow_layout);
+                findViewById(R.id.discussion_responses_action_bar_follow_relative_layout);
         followIconView = (IconView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_icon_view);
         followTextView = (ETextView) itemView.

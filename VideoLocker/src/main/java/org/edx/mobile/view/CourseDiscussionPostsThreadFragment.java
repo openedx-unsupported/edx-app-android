@@ -1,25 +1,27 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsFilter;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionPostsSort;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
-import com.qualcomm.qlearn.sdk.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionPostsFilter;
+import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.GetFollowingThreadListTask;
+import org.edx.mobile.task.GetThreadListTask;
+import org.edx.mobile.view.common.MessageType;
+import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.HashMap;
@@ -50,9 +52,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
 
-    @Inject
-    DiscussionAPI discussionAPI;
-
     DiscussionPostsFilter postsFilter = DiscussionPostsFilter.All;
     DiscussionPostsSort postsSort = DiscussionPostsSort.None;
 
@@ -60,6 +59,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private HashMap<Integer, DiscussionPostsSort> sortOptions = new HashMap<>();
 
     private final Logger logger = new Logger(getClass().getName());
+
+    private GetThreadListTask getThreadListTask;
+    private GetFollowingThreadListTask getFollowingThreadListTask;
 
     @Nullable
     @Override
@@ -80,14 +82,18 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        createNewPostTextView.setText(R.string.discussion_post_create_new_post);
+        if ( this.isFollowingTopics() ){
+            createNewPostRelativeLayout.setVisibility(View.GONE);
+        } else {
+            createNewPostTextView.setText(R.string.discussion_post_create_new_post);
 
-        createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
-            }
-        });
+            createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
+                }
+            });
+        }
 
         // TODO: Add some UI polish to make the popups more closely match the wireframes
         createFilterPopupMenu();
@@ -109,7 +115,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 postsFilter = filterOptions.get(itemId);
 
                 discussionPostsFilterTextView.setText(title);
-                populateThreadList();
+                populateThreadList(true);
 
                 return false;
             }
@@ -138,7 +144,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 postsSort = sortOptions.get(itemId);
 
                 discussionPostsSortTextView.setText(title);
-                populateThreadList();
+                populateThreadList(true);
 
                 return false;
             }
@@ -152,27 +158,111 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         });
     }
 
-
-    @Override
-    protected void populateThreadList() {
-        // TODO: Add a progress indicator (spinner?) while waiting for callback
-        discussionAPI.getThreadList(courseData.getCourse().getId(), discussionTopic.getIdentifier(),
-                postsFilter,
-                postsSort,
-                new APICallback<TopicThreads>() {
-                    @Override
-                    public void success(TopicThreads topicThreads) {
-                        if (topicThreads.getResults() != null && topicThreads.getResults().isEmpty()) {
-                            // TODO: Add text to listview to indicate if there are no results
-                        }
-                        discussionPostsAdapter.setItems(topicThreads.getResults());
-                    }
-
-                    @Override
-                    public void failure(Exception e) {
-                        // TODO: Handle failure gracefully
-                    }
-                });
+    private boolean isFollowingTopics(){
+        return  DiscussionTopic.FOLLOWING_TOPICS.equalsIgnoreCase(discussionTopic.getName());
     }
 
+    protected void populateThreadList(boolean refreshView) {
+
+        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        prefManager.setServerSideChangedForCourseThread(true); ;
+
+        if ( isFollowingTopics() ){
+            populateFollowingThreadList(refreshView);
+        }
+        else {
+            populatePostList(refreshView);
+        }
+
+    }
+    private void populateFollowingThreadList(final boolean refreshView){
+        if ( getFollowingThreadListTask != null ){
+            getFollowingThreadListTask.cancel(true);
+        }
+
+        getFollowingThreadListTask = new GetFollowingThreadListTask(getActivity(), courseData.getCourse().getId(), postsFilter,
+                postsSort, discussionPostsAdapter.getPagination() ){
+            @Override
+            public void onSuccess(TopicThreads topicThreads) {
+                if( refreshView ) {
+                    discussionPostsAdapter.setItems(null);
+                }
+                if(topicThreads!=null){
+                    logger.debug("registration success=" + topicThreads);
+                    boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
+                    discussionPostsAdapter.addPage(topicThreads.getResults(), hasMore);
+                    refreshListViewOnDataChange();
+                }
+
+                discussionPostsAdapter.notifyDataSetChanged();
+                checkNoResultView();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+            }
+        };
+        getFollowingThreadListTask.execute();
+    }
+
+    private void populatePostList(final boolean refreshView){
+        if ( getThreadListTask != null ){
+            getThreadListTask.cancel(true);
+        }
+
+
+        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(), discussionTopic.getIdentifier(),
+                postsFilter,
+                postsSort,
+                discussionPostsAdapter.getPagination()
+                ){
+            @Override
+            public void onSuccess(TopicThreads topicThreads) {
+                if( refreshView ) {
+                    discussionPostsAdapter.setItems(null);
+                }
+                if(topicThreads!=null){
+                    logger.debug("registration success=" + topicThreads);
+                    boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
+                    discussionPostsAdapter.addPage(topicThreads.getResults(), hasMore);
+                    refreshListViewOnDataChange();
+                }
+
+                discussionPostsAdapter.notifyDataSetChanged();
+                checkNoResultView();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+            }
+        };
+        getThreadListTask.execute();
+    }
+
+    private void checkNoResultView() {
+        Activity activity = getActivity();
+        if (activity instanceof TaskProcessCallback) {
+            if (discussionPostsAdapter.getCount() == 0) {
+                String resultsText = getActivity().getResources().getString(R.string.forum_empty);
+                ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
+            } else {
+                ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
+            }
+        }
+    }
+    public void  onResume(){
+        super.onResume();
+        PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+        if ( prefManager.isServerSideChangedForCourseThread()  ){
+            populateThreadList(true);
+        }
+    }
+
+    public void onPause(){
+        super.onPause();
+    }
 }

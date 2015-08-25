@@ -735,8 +735,11 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
+    public boolean showErrorMessage(String header, String message) {
+        return showErrorMessage(header, message, true);
+    }
 
-    private boolean showErrorMessage(String header, String message) {
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         try {
             LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
             if(error_layout!=null){
@@ -751,7 +754,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 if (message != null) {
                     errorMessage.setText(message);
                 }
-                ViewAnimationUtil.showMessageBar(error_layout);
+                ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
                 return true;
             }else{
                 logger.warn("Error Layout not available, so couldn't show flying message");

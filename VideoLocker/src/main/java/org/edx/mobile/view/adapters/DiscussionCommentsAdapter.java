@@ -8,18 +8,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 
-public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionComment> {
+public class DiscussionCommentsAdapter extends BaseListAdapter<DiscussionComment> {
 
     private final Context context;
+    private FlagCommentTask flagCommentTask;
 
     @Inject
     public DiscussionCommentsAdapter(Context context, IEdxEnvironment environment) {
@@ -53,27 +53,36 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
 
         holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                final TextView reportTextView = (TextView)v;
-                boolean isReport = reportTextView.getText().toString().equalsIgnoreCase("Report");
-                new DiscussionAPI().flagComment(discussionComment, isReport ? true : false, new APICallback<DiscussionComment>() {
-                    @Override
-                    public void success(DiscussionComment comment) {
-                        if (comment.isAbuseFlagged()) {
-                            reportTextView.setText("Reported");
-                            holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(R.color.edx_utility_error));
-                        }
-                        else {
-                            reportTextView.setText("Report");
-                            holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
-                        }
-                    }
-
-                    @Override
-                    public void failure(Exception e) {
-                    }
-                });
+                flagComment(holder, discussionComment);
             }
         });
+    }
+
+
+    protected void flagComment(final ViewHolder holder, final DiscussionComment discussionComment) {
+        if (flagCommentTask != null) {
+            flagCommentTask.cancel(true);
+        }
+        // TODO: Smarter way to handle check if reported than string comparison
+        boolean isReport = holder.discussionCommentCountReportTextView.getText().toString().equalsIgnoreCase(getContext().getString(R.string.discussion_responses_report_label));
+        flagCommentTask = new FlagCommentTask(getContext(), discussionComment, isReport) {
+            @Override
+            public void onSuccess(DiscussionComment comment) {
+                int reportStringResId = comment.isAbuseFlagged() ? R.string.discussion_responses_reported_label :
+                        R.string.discussion_responses_report_label;
+                holder.discussionCommentCountReportTextView.setText(context.getString(reportStringResId));
+                holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(comment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base));
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+
+            }
+        };
+        flagCommentTask.execute();
+
     }
 
     @Override
@@ -91,7 +100,8 @@ public class DiscussionCommentsAdapter extends BaseListAdapter <DiscussionCommen
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    }
 
     private static class ViewHolder extends BaseViewHolder {
         LinearLayout discussionCommentRow;

@@ -503,17 +503,13 @@ public class RegisterActivity extends BaseFragmentActivity
         });
     }
 
-    public void showErrorMessage(String header, String message) {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        TextView errorHeader = (TextView) findViewById(R.id.error_header);
-        TextView errorMessage = (TextView) findViewById(R.id.error_message);
-        errorHeader.setText(header);
+    @Override
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         if (message != null) {
-            errorMessage.setText(message);
+            return super.showErrorMessage(header, message, isPersistent);
         } else {
-            errorMessage.setText(getString(R.string.login_failed));
+            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
         }
-        ViewAnimationUtil.showMessageBar(error_layout);
     }
 
     ///////section related to social login ///////////////

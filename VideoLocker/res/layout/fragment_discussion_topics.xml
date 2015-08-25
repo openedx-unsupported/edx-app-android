@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SearchView
         android:id="@+id/discussion_topics_searchview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/discussion_topics_search_bar_style"
+        android:background="@color/white"
         android:iconifiedByDefault="false"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/edx_grayscale_neutral_light"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/discussion_following_icon"
+            style="@style/icon_view_standard_size_style"
+            android:layout_margin="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            app:iconColor="@color/edx_grayscale_neutral_dark" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/discussion_topic_name_text_view"
+            style="@style/regular_grey_text"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textDirection="locale"
+            android:text="@string/forum_post_i_am_following"
+            android:background="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/edx_grayscale_neutral_x_light"
         />
 
     <ListView

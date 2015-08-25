@@ -2,7 +2,8 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 
-import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,14 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CommentBody;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionComment;
+import org.edx.mobile.discussion.CommentBody;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.event.ServerSideDataChangedEvent;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.task.CreateCommentTask;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -29,8 +34,8 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
     DiscussionComment discussionComment;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC_ID)
-    String discussionTopicId;
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC_OBJ, optional = true)
+    DiscussionThread discussionTopic;
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -48,6 +53,7 @@ public class DiscussionAddCommentFragment extends RoboFragment {
 
     @InjectView(R.id.tvTimeAuthor)
     private TextView textViewTimeAuthor;
+    private CreateCommentTask createCommentTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,34 +69,71 @@ public class DiscussionAddCommentFragment extends RoboFragment {
         editTextNewComment.setHint(getString(isResponse ? R.string.discussion_add_your_response : R.string.discussion_add_your_comment));
         buttonAddComment.setText(getString(isResponse ? R.string.discussion_add_response : R.string.discussion_add_comment));
 
-        // TODO: replace with real data
-        textViewResponse.setText("new response from Android new response from Android new response from Android new response from Android new response from Android new response from Android ");
-        textViewTimeAuthor.setText("16 hours ago by jeffxtang");
+
+        if ( discussionComment != null ) {
+            CharSequence charSequence = Html.fromHtml(discussionComment.getRenderedBody());
+            textViewResponse.setText(charSequence  );
+            CharSequence formattedDate = DateUtils.getRelativeTimeSpanString(
+                    discussionComment.getCreatedAt().getTime(),
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE);
+            textViewTimeAuthor.setText(formattedDate + " by " + discussionComment.getAuthor());
+        } else if ( discussionTopic != null ){
+            CharSequence charSequence = Html.fromHtml(discussionTopic.getRenderedBody());
+            textViewResponse.setText(charSequence  );
+            CharSequence formattedDate = DateUtils.getRelativeTimeSpanString(
+                    discussionTopic.getCreatedAt().getTime(),
+                    System.currentTimeMillis(),
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE);
+            textViewTimeAuthor.setText(formattedDate + " by " + discussionTopic.getAuthor());
+        }
 
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                String newComment = editTextNewComment.getText().toString();
-
-                CommentBody commentBody = new CommentBody();
-
-                commentBody.setRawBody(newComment);
-                commentBody.setThreadId(isResponse ? discussionTopicId : discussionComment.getThreadId());
-                commentBody.setParentId(isResponse ? null : discussionComment.getParentId());
-
-                new DiscussionAPI().createComment(commentBody, new APICallback<DiscussionComment>() {
-                    @Override
-                    public void success(DiscussionComment thread) {
-                        // TODO: Go back to the comment screen?
-                    }
-
-                    @Override
-                    public void failure(Exception e) {
-                        // TODO: Handle failure
-                    }
-                });
+                createComment();
             }
         });
+    }
+
+    protected void createComment() {
+
+        if ( createCommentTask != null ){
+            createCommentTask.cancel(true);
+        }
+        String newComment = editTextNewComment.getText().toString();
+        final boolean isResponse = (discussionComment == null);
+
+        CommentBody commentBody = new CommentBody();
+
+        commentBody.setRawBody(newComment);
+        commentBody.setThreadId(isResponse ? discussionTopic.getIdentifier() : discussionComment.getThreadId());
+        commentBody.setParentId(isResponse ? null : discussionComment.getIdentifier());
+
+//        commentBody.setThreadId(isResponse ? discussionTopicId : discussionComment.getThreadId());
+//        commentBody.setParentId(isResponse ? null : discussionComment.getParentId());
+        createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
+            @Override
+            public void onSuccess(DiscussionComment thread) {
+                if ( thread != null)
+                    logger.debug(thread.toString());
+                ServerSideDataChangedEvent.EventType t = isResponse ? ServerSideDataChangedEvent.EventType.RESPONSE_ADDED
+                        : ServerSideDataChangedEvent.EventType.COMMENT_ADDED;
+                EventBus.getDefault().postSticky(new ServerSideDataChangedEvent(t, thread));
+                PrefManager.UserPrefManager prefManager = new PrefManager.UserPrefManager(MainApplication.instance());
+                prefManager.setServerSideChangedForCourseThread(true);
+                prefManager.setServerSideChangedForCourseTopic(true);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+            }
+        };
+        createCommentTask.execute();
+
     }
 
 }

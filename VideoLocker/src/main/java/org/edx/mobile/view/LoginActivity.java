@@ -385,19 +385,13 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
 
-
-    public void showErrorMessage(String header, String message) {
-        showErrorMessage(header, message, true);
-    }
-
-    public void showErrorMessage(String header, String message, boolean shouldPersist) {
-        errorHeader.setText(header);
+    @Override
+    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
         if (message != null) {
-            errorMessage.setText(message);
+            return super.showErrorMessage(header, message, isPersistent);
         } else {
-            errorMessage.setText(getString(R.string.login_failed));
+            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
         }
-        ViewAnimationUtil.showMessageBar(errorLayout, shouldPersist);
     }
 
     @Override

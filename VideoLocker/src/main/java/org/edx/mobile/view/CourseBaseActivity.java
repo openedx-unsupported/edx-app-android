@@ -24,6 +24,7 @@ import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
@@ -369,6 +370,10 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
      */
     public void finishProcess(){
         hideLoadingProgress();
+    }
+
+    public void onMessage(MessageType messageType, String message){
+        showErrorMessage("", message);
     }
 }
 

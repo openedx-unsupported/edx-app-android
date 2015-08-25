@@ -12,18 +12,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
-import com.qualcomm.qlearn.sdk.discussion.APICallback;
-import com.qualcomm.qlearn.sdk.discussion.CourseTopics;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionAPI;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionThread;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopic;
-import com.qualcomm.qlearn.sdk.discussion.DiscussionTopicDepth;
-import com.qualcomm.qlearn.sdk.discussion.ThreadBody;
+
+import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.discussion.ThreadBody;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.task.CreateThreadTask;
+import org.edx.mobile.task.GetTopicListTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +66,14 @@ public class DiscussionAddPostFragment extends RoboFragment {
     @Inject
     ISegment segIO;
 
-    @Inject
-    DiscussionAPI discussionAPI;
 
     private ViewGroup container;
 
     private CourseTopics allCourseTopics;
     private List<DiscussionTopicDepth> allTopicsWithDepth;
     private int selectedTopicIndex;
+    private GetTopicListTask getTopicListTask;
+    private CreateThreadTask createThreadTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,38 +102,8 @@ public class DiscussionAddPostFragment extends RoboFragment {
         discussionQuestionSegmentedGroup.setTintColor(this.getResources().getColor(R.color.edx_grayscale_neutral_base),
                 this.getResources().getColor(R.color.black));
 
-        discussionAPI.getTopicList(courseData.getCourse().getId(), new APICallback<CourseTopics>() {
-            @Override
-            public void success(CourseTopics courseTopics) {
-                allCourseTopics = courseTopics;
-                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
-                allTopics.addAll(courseTopics.getCoursewareTopics());
-                allTopics.addAll(courseTopics.getNonCoursewareTopics());
+        getTopicList();
 
-                allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
-                ArrayList<String> topicList = new ArrayList<String>();
-                int i = 0;
-                for (DiscussionTopicDepth topic : allTopicsWithDepth) {
-                    topicList.add((topic.getDepth() == 0 ? "" : "  ") + topic.getDiscussionTopic().getName());
-                    if (discussionTopic.getName().equalsIgnoreCase(topic.getDiscussionTopic().getName()))
-                        selectedTopicIndex = i;
-                    i++;
-                }
-
-                String[] topics = new String[topicList.size()];
-                topics = topicList.toArray(topics);
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, topics);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                topicsSpinner.setAdapter(adapter);
-            }
-
-            @Override
-            public void failure(Exception e) {
-                logger.error(e, false);
-                // TODO: Handle error gracefully
-            }
-        });
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -176,20 +147,70 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 threadBody.setTopicId(allTopicsWithDepth.get(selectedTopicIndex).getDiscussionTopic().getIdentifier());
                 threadBody.setType(discussionQuestion);
 
-                new DiscussionAPI().createThread(threadBody, new APICallback<DiscussionThread>() {
-                    @Override
-                    public void success(DiscussionThread thread) {
-                        addPostButton.setEnabled(true);
-                    }
-
-                    @Override
-                    public void failure(Exception e) {
-                        addPostButton.setEnabled(true);
-                    }
-                });
+                createThread( threadBody );
 
             }
         });
+    }
+
+    protected void  createThread(ThreadBody threadBody){
+        if ( createThreadTask != null ){
+            createThreadTask.cancel(true);
+        }
+        createThreadTask = new CreateThreadTask(getActivity(), threadBody) {
+            @Override
+            public void onSuccess(DiscussionThread  courseTopics) {
+               // addPostButton.setEnabled(true);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+                addPostButton.setEnabled(true);
+            }
+        };
+        createThreadTask.execute();
+    }
+
+    protected void getTopicList(){
+        if ( getTopicListTask != null ){
+            getTopicListTask.cancel(true);
+        }
+        getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
+            @Override
+            public void onSuccess(CourseTopics  courseTopics) {
+                allCourseTopics = courseTopics;
+                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
+                allTopics.addAll(courseTopics.getCoursewareTopics());
+                allTopics.addAll(courseTopics.getNonCoursewareTopics());
+
+                allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                ArrayList<String> topicList = new ArrayList<String>();
+                int i = 0;
+                for (DiscussionTopicDepth topic : allTopicsWithDepth) {
+                topicList.add((topic.getDepth() == 0 ? "" : "  ") + topic.getDiscussionTopic().getName());
+                if (discussionTopic.getName().equalsIgnoreCase(topic.getDiscussionTopic().getName()))
+                selectedTopicIndex = i;
+                i++;
+                }
+
+                String[] topics = new String[topicList.size()];
+                topics = topicList.toArray(topics);
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, topics);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                topicsSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                //  hideProgress();
+            }
+        };
+        getTopicListTask.execute();
     }
 
 }
