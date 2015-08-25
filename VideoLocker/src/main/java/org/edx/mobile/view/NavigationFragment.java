@@ -240,9 +240,13 @@ public class NavigationFragment extends RoboFragment {
         uiLifecycleHelper.onResume();
 
         if (getView() != null){
-            TextView groups_tv = (TextView) getView().findViewById(R.id.drawer_option_my_groups);
+            View groupsItemView = getView().findViewById(R.id.drawer_option_my_groups);
             boolean allowSocialFeatures = socialPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-            groups_tv.setVisibility(allowSocialFeatures ? View.VISIBLE : View.GONE);
+            groupsItemView.setVisibility(allowSocialFeatures ? View.VISIBLE : View.GONE);
+
+            View findCoursesItemView = getView().findViewById(R.id.panel_option_find_courses);
+            boolean findCoursesEnabled = environment.getConfig().getEnrollmentConfig().isEnabled();
+            findCoursesItemView.setVisibility(findCoursesEnabled ? View.VISIBLE : View.GONE);
         }
 
     }
