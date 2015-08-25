@@ -9,7 +9,8 @@
         android:id="@+id/activity_title"
         style="@style/custom_activity_title"/>
 
-    <RelativeLayout android:id="@+id/actionbar_close_btn_layout"
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/actionbar_close_btn"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
@@ -17,16 +18,10 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
-        android:orientation="vertical"
-        tools:targetApi="17">
-        <ImageView
-            android:id="@+id/actionbar_close_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_close"
-            android:contentDescription="@string/app_name"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
+        android:background="@drawable/ic_close_with_padding"
+        android:contentDescription="@string/close"
+        android:visibility="visible"
+        tools:targetApi="17" />
 
     <View
         android:id="@+id/grey_bar"

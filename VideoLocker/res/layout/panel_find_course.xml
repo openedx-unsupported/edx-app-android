@@ -52,7 +52,8 @@
             android:linksClickable="true"
             android:text="@string/course_not_listed_text"
             android:textColor="@color/cyan_text_navigation"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:contentDescription="@string/course_not_listed_btn" />
         
     </RelativeLayout>
     <!-- put a frame over this cell, so that corners look rounded -->
@@ -65,7 +66,6 @@
         android:layout_alignLeft="@id/panel_course_layout"
         android:layout_alignRight="@id/panel_course_layout"
         android:layout_alignTop="@id/panel_course_layout"
-        android:background="@drawable/bg_frame_course"
-        android:contentDescription="@string/app_name" />
+        android:background="@drawable/bg_frame_course" />
 
 </RelativeLayout>

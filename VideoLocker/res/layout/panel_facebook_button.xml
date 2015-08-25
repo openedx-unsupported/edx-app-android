@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/selector_facebook_button"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/facebook_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,6 @@
             android:layout_marginRight="9dp"
             android:layout_marginEnd="9dp"
             android:src="@drawable/ic_facebook_img"
-            android:contentDescription="@string/app_name"
             tools:targetApi="17" />
 
         <View

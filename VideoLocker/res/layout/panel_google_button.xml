@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/selector_google_button"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/google_text" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +25,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:src="@drawable/ic_googleplus"
-            android:contentDescription="@string/app_name" />
+            android:src="@drawable/ic_googleplus" />
 
         <View
             android:layout_width="1dp"

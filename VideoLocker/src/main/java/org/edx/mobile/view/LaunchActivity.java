@@ -15,7 +15,6 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.custom.EButton;
-import org.edx.mobile.view.custom.ETextView;
 
 public class LaunchActivity extends BaseFragmentActivity {
 
@@ -45,7 +44,7 @@ public class LaunchActivity extends BaseFragmentActivity {
         //The onTick method need not be run in the LaunchActivity
         runOnTick = false;
 
-        ETextView sign_in_tv = (ETextView) findViewById(R.id.sign_in_tv);
+        EButton sign_in_tv = (EButton) findViewById(R.id.sign_in_tv);
         sign_in_tv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
