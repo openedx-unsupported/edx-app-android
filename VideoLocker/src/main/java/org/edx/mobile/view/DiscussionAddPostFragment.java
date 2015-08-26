@@ -2,6 +2,8 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,7 +144,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             public void onClick(View v) {
                 final String title = titleEditText.getText().toString();
                 final String body = bodyEditText.getText().toString();
-                if (title.trim().length() == 0 || body.trim().length() == 0) return;
 
                 final DiscussionThread.ThreadType discussionQuestion;
                 if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
@@ -162,6 +163,25 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 createThread(threadBody);
             }
         });
+        addPostButton.setEnabled(false);
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String title = titleEditText.getText().toString();
+                final String body = bodyEditText.getText().toString();
+                addPostButton.setEnabled(title.trim().length() > 0 && body.trim().length() > 0);
+            }
+        };
+        titleEditText.addTextChangedListener(textWatcher);
+        bodyEditText.addTextChangedListener(textWatcher);
     }
 
     protected void createThread(ThreadBody threadBody) {

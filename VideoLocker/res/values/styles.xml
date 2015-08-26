@@ -227,7 +227,7 @@
     <style name="edX.CreationButton">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_white</item>
-        <item name="android:background">@drawable/create_button_radius</item>
+        <item name="android:background">@drawable/edx_creation_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
