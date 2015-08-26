@@ -71,7 +71,7 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
         createNewCommentRelativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionAddResponseOrComment(context, null, discussionComment);
+                router.showCourseDiscussionAddComment(context, discussionComment);
             }
         });
     }

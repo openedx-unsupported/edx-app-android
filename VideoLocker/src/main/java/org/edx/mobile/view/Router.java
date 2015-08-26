@@ -259,14 +259,16 @@ public class Router {
         context.startActivity(discussionResponsesIntent);
     }
 
-    public void showCourseDiscussionAddResponseOrComment(Context context, DiscussionThread discussionTopic, DiscussionComment discussionComment) {
+    public void showCourseDiscussionAddResponse(Context context, DiscussionThread discussionTopic) {
+        Intent addResponseIntent = new Intent(context, DiscussionAddResponseActivity.class);
+        addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_OBJ, discussionTopic);
+        addResponseIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(addResponseIntent);
+    }
+
+    public void showCourseDiscussionAddComment(Context context, DiscussionComment discussionComment) {
         Intent addResponseIntent = new Intent(context, DiscussionAddCommentActivity.class);
-        if ( discussionTopic != null ) {
-            addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_OBJ, discussionTopic);
-        }
-        if (discussionComment != null) {
-            addResponseIntent.putExtra(EXTRA_DISCUSSION_COMMENT, discussionComment);
-        }
+        addResponseIntent.putExtra(EXTRA_DISCUSSION_COMMENT, discussionComment);
         addResponseIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(addResponseIntent);
     }

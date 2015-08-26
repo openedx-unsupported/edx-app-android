@@ -1,25 +1,22 @@
 package org.edx.mobile.view.view_holders;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionTextUtils;
+import org.edx.mobile.discussion.IAuthorData;
 import org.edx.mobile.view.custom.ETextView;
 
-public class AuthorLayoutViewHolder extends RecyclerView.ViewHolder {
+public class AuthorLayoutViewHolder {
 
-    public ETextView discussionAuthorTextView;
-    public ETextView discussionAuthorCreatedAtTextView;
-    public ETextView discussionAuthorPrivilegedAuthorTextView;
+    private final ETextView discussionAuthorTextView;
 
     public AuthorLayoutViewHolder(View itemView) {
-        super(itemView);
-
         discussionAuthorTextView = (ETextView) itemView.
                 findViewById(R.id.discussion_author_layout_author_text_view);
-        discussionAuthorCreatedAtTextView = (ETextView) itemView.
-                findViewById(R.id.discussion_author_layout_created_at_text_view);
-        discussionAuthorPrivilegedAuthorTextView = (ETextView) itemView.
-                findViewById(R.id.discussion_author_layout_privileged_author_text_view);
+    }
+
+    public void setAuthorData(IAuthorData authorData) {
+        discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(authorData, discussionAuthorTextView.getResources()));
     }
 }

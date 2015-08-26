@@ -12,9 +12,8 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.IAuthorData;
-import org.edx.mobile.discussion.PinnedAuthor;
 import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.task.FlagThreadTask;
@@ -22,8 +21,6 @@ import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
@@ -113,15 +110,14 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
-        CharSequence charSequence = Html.fromHtml(discussionThread.getRenderedBody());
-        holder.threadBodyTextView.setText(charSequence);
+        holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
 
         if (discussionThread.isPinned()) {
             holder.threadPinnedIconView.setVisibility(View.VISIBLE);
         }
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-        bindAuthorView(holder.authorLayoutViewHolder, discussionThread);
+        holder.authorLayoutViewHolder.setAuthorData(discussionThread);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -218,8 +214,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
         final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
-        CharSequence charSequence = Html.fromHtml(comment.getRenderedBody());
-        holder.responseCommentBodyTextView.setText(charSequence);
+        holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
 
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,7 +223,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
-        bindAuthorView(holder.authorLayoutViewHolder, comment);
+        holder.authorLayoutViewHolder.setAuthorData(comment);
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
@@ -300,22 +295,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private void bindAuthorView(AuthorLayoutViewHolder holder, IAuthorData authorData) {
-        holder.discussionAuthorTextView.setText(authorData.getAuthor());
-        holder.discussionAuthorCreatedAtTextView.setText(
-                DateUtil.formatPastDateRelativeToCurrentDate(authorData.getCreatedAt()));
-
-        String priviledgedAuthorText = "";
-        if (authorData.getAuthorLabel() == PinnedAuthor.STAFF) {
-            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_staff);
-
-        } else if (authorData.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
-            priviledgedAuthorText = context.getString(R.string.discussion_priviledged_author_label_ta);
-        }
-
-        holder.discussionAuthorPrivilegedAuthorTextView.setText(priviledgedAuthorText);
-    }
-
     @Override
     public int getItemCount() {
         if (discussionThread == null)
@@ -325,7 +304,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             total++;
         return total;
     }
-
 
     @Override
     public int getItemViewType(int position) {

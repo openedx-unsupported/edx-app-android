@@ -5,11 +5,15 @@ import android.support.v4.app.Fragment;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
+import org.edx.mobile.discussion.DiscussionComment;
 
-public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
+import roboguice.inject.InjectExtra;
+
+public class DiscussionAddResponseActivity extends BaseSingleFragmentActivity {
     @Inject
-    DiscussionAddCommentFragment discussionAddCommentFragment;
+    DiscussionAddResponseFragment discussionAddResponseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +23,7 @@ public class DiscussionAddCommentActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        discussionAddCommentFragment.setArguments(getIntent().getExtras());
-        return discussionAddCommentFragment;
+        discussionAddResponseFragment.setArguments(getIntent().getExtras());
+        return discussionAddResponseFragment;
     }
 }
