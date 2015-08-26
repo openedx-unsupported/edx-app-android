@@ -359,14 +359,16 @@
     <!-- Add your respone placeholder in adding a new response -->
     <string name="discussion_add_your_response">Add your response</string>
 
-    <!-- Title in adding a new post -->
-    <string name="discussion_post">Post</string>
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
+    <!-- Add post button title in adding a new discussion -->
+    <string name="discussion_add_post">Post discussion</string>
     <!-- Add post button title in adding a new post -->
-    <string name="discussion_add_post">Add post</string>
+    <string name="discussion_add_question">Post question</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_add_your_post">Add your post</string>
+    <string name="discussion_body_hint_discussion">@string/discussion_title</string>
+    <!-- Add your post placeholder in adding a new post -->
+    <string name="discussion_body_hint_question">@string/discussion_question</string>
     <!-- Question text in adding a new post -->
     <string name="discussion_question">Question</string>
 

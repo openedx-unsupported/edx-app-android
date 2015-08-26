@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -99,6 +101,22 @@ public class DiscussionAddPostFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        discussionQuestionSegmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                @StringRes final int bodyHint;
+                @StringRes final int submitLabel;
+                if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
+                    bodyHint = R.string.discussion_body_hint_discussion;
+                    submitLabel = R.string.discussion_add_post;
+                } else {
+                    bodyHint = R.string.discussion_body_hint_question;
+                    submitLabel = R.string.discussion_add_question;
+                }
+                bodyEditText.setHint(bodyHint);
+                addPostButton.setText(submitLabel);
+            }
+        });
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
         discussionQuestionSegmentedGroup.setTintColor(this.getResources().getColor(R.color.edx_grayscale_neutral_base),
                 this.getResources().getColor(R.color.black));
@@ -121,10 +139,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-
-        titleEditText.setHint(getString(R.string.discussion_post_title));
-        bodyEditText.setHint(getString(R.string.discussion_add_your_post));
-        addPostButton.setText(getString(R.string.discussion_add_post));
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
