@@ -11,13 +11,13 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tvAnswer"
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
-            android:text="Answer"
+            tools:text="Title"
             android:textColor="@color/edx_utility_success"
             android:textSize="16sp"
             android:textStyle="normal" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvAnswer"
+            android:layout_below="@+id/tvTitle"
             android:layout_marginTop="10dp"
             tools:text="response body..."
             android:textColor="@color/edx_grayscale_neutral_dark"
@@ -52,7 +52,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tvTimeAuthor"
             android:layout_marginTop="10dp"
-            android:hint="@string/discussion_add_comment_hint" />
+            android:hint="@string/discussion_add_response_button" />
 
         <Button
             android:id="@+id/btnAddComment"
@@ -63,7 +63,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/create_button_radius"
-            android:text="@string/discussion_add_comment_button"
+            android:text="@string/discussion_add_response_hint"
             android:textColor="@color/edx_white" />
     </RelativeLayout>
 </ScrollView>

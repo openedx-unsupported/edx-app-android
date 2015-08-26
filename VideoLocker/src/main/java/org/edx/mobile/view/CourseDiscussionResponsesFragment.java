@@ -75,12 +75,12 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
 
         getCommentList(true);
 
-        addResponseTextView.setText(R.string.discussion_responses_add_response);
+        addResponseTextView.setText(R.string.discussion_responses_add_response_button);
 
         addResponseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionAddResponseOrComment(getActivity(), discussionThread, null);
+                router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
             }
         });
     }

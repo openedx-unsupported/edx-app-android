@@ -229,7 +229,12 @@
 
         <activity
             android:name="org.edx.mobile.view.DiscussionAddCommentActivity"
-            android:label="@string/app_name"
+            android:label="@string/discussion_add_comment_title"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="org.edx.mobile.view.DiscussionAddResponseActivity"
+            android:label="@string/discussion_add_response_title"
             android:screenOrientation="portrait" />
 
         <activity

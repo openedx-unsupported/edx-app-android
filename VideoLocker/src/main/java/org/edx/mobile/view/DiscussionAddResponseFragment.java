@@ -18,6 +18,7 @@ import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionTextUtils;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.CreateCommentTask;
 
@@ -26,12 +27,12 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class DiscussionAddCommentFragment extends RoboFragment {
+public class DiscussionAddResponseFragment extends RoboFragment {
 
-    static public String TAG = DiscussionAddCommentFragment.class.getCanonicalName();
+    static public String TAG = DiscussionAddResponseFragment.class.getCanonicalName();
 
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
-    DiscussionComment discussionComment;
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC_OBJ, optional = true)
+    DiscussionThread discussionTopic;
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -41,27 +42,27 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     @InjectView(R.id.btnAddComment)
     private Button buttonAddComment;
 
-    @InjectView(R.id.tvAnswer)
-    private TextView textViewAnswer;
+    @InjectView(R.id.tvTitle)
+    private TextView textViewTitle;
 
     @InjectView(R.id.tvResponse)
     private TextView textViewResponse;
 
     @InjectView(R.id.tvTimeAuthor)
     private TextView textViewTimeAuthor;
-
     private CreateCommentTask createCommentTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_comment, container, false);
+        return inflater.inflate(R.layout.fragment_add_response, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textViewResponse.setText(Html.fromHtml(discussionComment.getRenderedBody()));
-        textViewTimeAuthor.setText(DiscussionTextUtils.getAuthorAttributionText(discussionComment, getResources()));
+        textViewTitle.setText(discussionTopic.getTitle());
+        textViewResponse.setText(Html.fromHtml(discussionTopic.getRenderedBody()));
+        textViewTimeAuthor.setText(DiscussionTextUtils.getAuthorAttributionText(discussionTopic, getResources()));
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 createComment();
@@ -91,14 +92,14 @@ public class DiscussionAddCommentFragment extends RoboFragment {
 
         final CommentBody commentBody = new CommentBody();
         commentBody.setRawBody(editTextNewComment.getText().toString());
-        commentBody.setThreadId(discussionComment.getThreadId());
-        commentBody.setParentId(discussionComment.getIdentifier());
+        commentBody.setThreadId(discussionTopic.getIdentifier());
+        commentBody.setParentId(null);
 
         createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
             @Override
             public void onSuccess(@NonNull DiscussionComment thread) {
                 logger.debug(thread.toString());
-                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, discussionComment));
+                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, null));
                 getActivity().finish();
             }
 
