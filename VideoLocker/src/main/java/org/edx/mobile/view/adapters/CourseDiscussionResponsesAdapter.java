@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.task.FlagCommentTask;
@@ -109,8 +110,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     private void bindViewHolderToThreadRow(DiscussionThreadViewHolder holder) {
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
-        CharSequence charSequence = Html.fromHtml(discussionThread.getRenderedBody());
-        holder.threadBodyTextView.setText(charSequence);
+        holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
 
         if (discussionThread.isPinned()) {
             holder.threadPinnedIconView.setVisibility(View.VISIBLE);
@@ -214,8 +214,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     private void bindViewHolderToResponseRow(DiscussionResponseViewHolder holder, final int position) {
         final DiscussionComment comment = discussionResponses.get(position - 1); // Subtract 1 for the discussion thread row at position 0
 
-        CharSequence charSequence = Html.fromHtml(comment.getRenderedBody());
-        holder.responseCommentBodyTextView.setText(charSequence);
+        holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
 
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override

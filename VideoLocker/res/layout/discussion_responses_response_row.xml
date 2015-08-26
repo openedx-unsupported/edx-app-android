@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/discussion_responses_standard_margin"
     android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
+    android:layout_marginTop="@dimen/discussion_responses_standard_margin"
     app:cardCornerRadius="@dimen/edx_box_radius">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/discussion_response_body"
-            android:layout_height="50dp"
-            android:paddingTop="@dimen/discussion_responses_box_padding"
+            style="@style/discussion_responses_nested_card_layout_style"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingBottom="3dp"
-            style="@style/discussion_responses_nested_card_layout_style">
+            android:paddingTop="@dimen/discussion_responses_box_padding">
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/discussion_responses_comment_body_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/edx_grayscale_neutral_dark"
                 android:textSize="@dimen/edx_x_small"
-                android:textColor="@color/edx_grayscale_neutral_dark"/>
+                tools:text="This is a response"
+                android:layout_marginBottom="5dp"/>
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/discussion_responses_comment_body_text_view"
-                android:layout_alignParentBottom="true"
-                android:gravity="bottom">
+            <include layout="@layout/discussion_author_layout" />
 
-                <include layout="@layout/discussion_author_layout" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

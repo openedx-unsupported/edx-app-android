@@ -2,6 +2,9 @@ package org.edx.mobile.discussion;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.edx.mobile.R;
@@ -25,5 +28,25 @@ public abstract class DiscussionTextUtils {
         }
 
         return text;
+    }
+
+    public static CharSequence parseHtml(@NonNull String html) {
+        // If the HTML contains a paragraph at the end, there will be blank lines following the text
+        // Therefore, we need to trim the resulting CharSequence to remove those extra lines
+        return trim(Html.fromHtml(html));
+    }
+
+    public static CharSequence trim(CharSequence s) {
+        int start = 0, end = s.length();
+
+        while (start < end && Character.isWhitespace(s.charAt(start))) {
+            start++;
+        }
+
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+
+        return s.subSequence(start, end);
     }
 }
