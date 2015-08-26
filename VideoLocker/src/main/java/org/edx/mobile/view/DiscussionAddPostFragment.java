@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -230,7 +231,15 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 String[] topics = new String[topicList.size()];
                 topics = topicList.toArray(topics);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(container.getContext(), R.layout.edx_spinner_item, topics);
+                final String prefix = getString(R.string.discussion_add_post_topic_label) + ": ";
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.edx_spinner_item, topics) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        final TextView view = (TextView)super.getView(position, convertView, parent);
+                        view.setText(prefix + view.getText().toString());
+                        return view;
+                    }
+                };
                 adapter.setDropDownViewResource(R.layout.edx_spinner_dropdown_item);
                 topicsSpinner.setAdapter(adapter);
             }
