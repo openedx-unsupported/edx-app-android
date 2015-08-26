@@ -391,10 +391,12 @@ public class BaseFragmentActivityTest extends UiTest {
     public void animateLayoutsTest() {
         final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
+                        .withIntent(getIntent()).setup().get();
         final View view = new View(activity);
         view.setVisibility(View.GONE);
-        activity.setContentView(view);
+        activity.addContentView(view, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         assertAnimateLayouts(view, new Runnable() {
             @Override
             public void run() {
@@ -434,11 +436,13 @@ public class BaseFragmentActivityTest extends UiTest {
     public void showInfoMessageTest() {
         final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
+                        .withIntent(getIntent()).setup().get();
         TextView messageView = new TextView(activity);
         messageView.setId(R.id.downloadMessage);
         messageView.setVisibility(View.GONE);
-        activity.setContentView(messageView);
+        activity.addContentView(messageView, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         assertThat(messageView).hasText("");
         final String message = "test";
         assertShowInfoMessage(activity, message, new Runnable() {
@@ -456,11 +460,13 @@ public class BaseFragmentActivityTest extends UiTest {
     public void showOfflineAccessMessage() {
         final BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
+                        .withIntent(getIntent()).setup().get();
         View offlineView = new View(activity);
         offlineView.setId(R.id.offline_access_panel);
         offlineView.setVisibility(View.GONE);
-        activity.setContentView(offlineView);
+        activity.addContentView(offlineView, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         assertAnimateLayouts(offlineView, new Runnable() {
             @Override
             public void run() {
