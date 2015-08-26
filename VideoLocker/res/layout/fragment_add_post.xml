@@ -1,83 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:fillViewport="true"
+    android:background="@color/edx_grayscale_neutral_x_light">
 
-
-    <info.hoang8f.android.segmented.SegmentedGroup
-        xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/discussion_question_segmented_group"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:orientation="horizontal"
-        segmentedgroup:border_width="2dp"
-        segmentedgroup:corner_radius="10dp">
+        android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/discussion_radio_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Discussion"
-            style="@style/RadioButton" />
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/edx_margin"
+            android:paddingRight="@dimen/edx_margin"
+            android:paddingTop="@dimen/widget_margin"
+            android:paddingBottom="@dimen/widget_margin"
+            android:background="@color/edx_grayscale_neutral_white">
 
-        <RadioButton
-            android:id="@+id/question_radio_button"
-            android:layout_width="wrap_content"
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/discussion_question_segmented_group"
+                style="@style/edX.SegmentedControl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <!--suppress AndroidElementNotAllowed -->
+                <RadioButton
+                    android:id="@+id/discussion_radio_button"
+                    style="@style/edX.SegmentedControlSegment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/discussion_title" />
+
+                <!--suppress AndroidElementNotAllowed -->
+                <RadioButton
+                    android:id="@+id/question_radio_button"
+                    style="@style/edX.SegmentedControlSegment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/discussion_question" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+
+            <FrameLayout
+                style="@style/edX.SpinnerContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin">
+
+                <Spinner
+                    android:id="@+id/topics_spinner"
+                    style="@style/edX.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/edx_spinner_item" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <include layout="@layout/edx_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Question"
-            style="@style/RadioButton" />
-    </info.hoang8f.android.segmented.SegmentedGroup>
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/edx_margin"
+            android:paddingRight="@dimen/edx_margin"
+            android:paddingBottom="@dimen/widget_margin"
+            android:paddingTop="@dimen/widget_margin">
 
-    <Spinner
-        android:id="@+id/topics_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/discussion_question_segmented_group"
-        android:layout_marginTop="10dp" />
+            <EditText
+                android:id="@+id/title_edit_text"
+                style="@style/edX.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/discussion_post_title"
+                android:inputType="text"
+                android:singleLine="true" />
 
-    <EditText
-        android:id="@+id/title_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topics_spinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:hint="@string/discussion_post_title" />
+            <EditText
+                android:id="@+id/body_edit_text"
+                style="@style/edX.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:inputType="text|textMultiLine"
+                tools:hint="@string/discussion_body_hint_discussion" />
 
-    <EditText
-        android:id="@+id/body_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_edit_text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        tools:hint="@string/discussion_body_hint_discussion" />
+            <Button
+                android:id="@+id/add_post_button"
+                style="@style/edX.CreationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                tools:text="@string/discussion_add_post" />
 
-
-    <Button
-        android:id="@+id/add_post_button"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@id/body_edit_text"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/edx_white"
-        android:background="@drawable/create_button_radius"
-        tools:text="@string/discussion_add_post" />
-
-</RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

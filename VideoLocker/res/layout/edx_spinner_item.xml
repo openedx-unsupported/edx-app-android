@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"
+    android:singleLine="true"
+    android:textAlignment="inherit"
+    android:textSize="@dimen/edx_x_small"
+    android:textColor="@color/edx_grayscale_neutral_dark"
+    android:paddingLeft="@dimen/horizontal_input_padding"
+    android:paddingRight="@dimen/horizontal_input_padding"
+    android:paddingTop="@dimen/vertical_input_padding"
+    android:paddingBottom="@dimen/vertical_input_padding"
+    tools:text="Item text" />

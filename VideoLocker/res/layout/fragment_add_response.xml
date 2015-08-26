@@ -1,69 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/edx_grayscale_neutral_x_light"
+    android:fillViewport="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            tools:text="Title"
-            android:textColor="@color/edx_utility_success"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            android:background="@color/edx_grayscale_neutral_white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/widget_margin"
+            android:paddingLeft="@dimen/edx_margin"
+            android:paddingRight="@dimen/edx_margin"
+            android:paddingTop="@dimen/widget_margin">
 
-        <TextView
-            android:id="@+id/tvResponse"
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/edx_base"
+                android:textColor="@color/edx_grayscale_neutral_x_dark"
+                tools:text="Post Title" />
+
+            <TextView
+                android:id="@+id/tvResponse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                android:textSize="@dimen/edx_small"
+                android:textColor="@color/edx_grayscale_neutral_dark"
+                tools:text="Post body" />
+
+            <TextView
+                style="@style/discussion_responses_small_text"
+                android:id="@+id/tvTimeAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                tools:text="Author" />
+
+        </LinearLayout>
+
+        <include layout="@layout/edx_divider" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvTitle"
-            android:layout_marginTop="10dp"
-            tools:text="response body..."
-            android:textColor="@color/edx_grayscale_neutral_dark"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/widget_margin"
+            android:paddingLeft="@dimen/edx_margin"
+            android:paddingRight="@dimen/edx_margin"
+            android:paddingTop="@dimen/widget_margin">
 
-        <TextView
-            android:id="@+id/tvTimeAuthor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvResponse"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/edx_grayscale_neutral_base"
-            android:textSize="16sp"
-            android:textStyle="normal" />
+            <EditText
+                android:id="@+id/etNewComment"
+                style="@style/edX.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="@string/discussion_add_response_button"
+                android:inputType="text|textMultiLine" />
 
-        <EditText
-            android:id="@+id/etNewComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tvTimeAuthor"
-            android:layout_marginTop="10dp"
-            android:hint="@string/discussion_add_response_button" />
-
-        <Button
-            android:id="@+id/btnAddComment"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/etNewComment"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/create_button_radius"
-            android:text="@string/discussion_add_response_hint"
-            android:textColor="@color/edx_white" />
-    </RelativeLayout>
+            <Button
+                android:id="@+id/btnAddComment"
+                style="@style/edX.CreationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/widget_margin"
+                android:text="@string/discussion_add_response_hint" />
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

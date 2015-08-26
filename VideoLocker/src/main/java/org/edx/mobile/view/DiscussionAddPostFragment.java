@@ -118,8 +118,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             }
         });
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
-        discussionQuestionSegmentedGroup.setTintColor(this.getResources().getColor(R.color.edx_grayscale_neutral_base),
-                this.getResources().getColor(R.color.black));
 
         getTopicList();
 
@@ -212,8 +210,8 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 String[] topics = new String[topicList.size()];
                 topics = topicList.toArray(topics);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, topics);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(container.getContext(), R.layout.edx_spinner_item, topics);
+                adapter.setDropDownViewResource(R.layout.edx_spinner_dropdown_item);
                 topicsSpinner.setAdapter(adapter);
             }
 
