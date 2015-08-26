@@ -154,6 +154,9 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
             assertThat(shareOnWebIcon).isInstanceOf(IconDrawable.class);
             // IconDrawable doesn't expose any property getters..
             // should we use reflection? Or add it to the imported class?
+
+            shadowActivity.clickMenuItem(R.id.action_share_on_web);
+            // How to get the shown custom PopupMenu?
         }
 
         MenuItem changeModelItem = menu.findItem(R.id.action_change_mode);
@@ -161,9 +164,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
             Drawable shareOnWebIcon = changeModelItem.getIcon();
             assertThat(shareOnWebIcon).isInstanceOf(IconDrawable.class);
         }
-
-        shadowActivity.clickMenuItem(R.id.action_share_on_web);
-        // How to get the shown custom PopupMenu?
     }
 
     /**
