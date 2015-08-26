@@ -23,7 +23,7 @@ public class AuthResponse implements Serializable {
     @Override
     public String toString() {
         return String.format("access_token=%s; access_type=%s; "
-                + "expires_in=%d; scope=%s", token_type, access_token, expires_in, scope);
+                + "expires_in=%d; scope=%s", access_token, token_type, expires_in, scope);
     }
     
     public boolean isSuccess() {
