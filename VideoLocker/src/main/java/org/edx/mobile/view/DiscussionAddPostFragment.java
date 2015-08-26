@@ -140,10 +140,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             }
         });
 
-        titleEditText.setHint(getString(R.string.discussion_post_title));
-        bodyEditText.setHint(getString(R.string.discussion_body_hint_discussion));
-        addPostButton.setText(getString(R.string.discussion_add_post));
-
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final String title = titleEditText.getText().toString();
