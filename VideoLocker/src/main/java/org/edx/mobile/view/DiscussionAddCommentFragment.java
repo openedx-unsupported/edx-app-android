@@ -41,9 +41,6 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     @InjectView(R.id.btnAddComment)
     private Button buttonAddComment;
 
-    @InjectView(R.id.tvAnswer)
-    private TextView textViewAnswer;
-
     @InjectView(R.id.tvResponse)
     private TextView textViewResponse;
 

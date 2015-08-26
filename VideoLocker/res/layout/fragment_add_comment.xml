@@ -22,25 +22,17 @@
             android:paddingTop="@dimen/widget_margin">
 
             <TextView
-                android:id="@+id/tvAnswer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Answer"
-                android:textColor="@color/edx_utility_success"
-                android:textSize="@dimen/edx_x_small" />
-
-            <TextView
                 android:id="@+id/tvResponse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
-                android:textSize="@dimen/edx_small"
                 android:textColor="@color/edx_grayscale_neutral_dark"
+                android:textSize="@dimen/edx_small"
                 tools:text="Response body" />
 
             <TextView
-                style="@style/discussion_responses_small_text"
                 android:id="@+id/tvTimeAuthor"
+                style="@style/discussion_responses_small_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
@@ -55,10 +47,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/widget_margin"
             android:paddingLeft="@dimen/edx_margin"
             android:paddingRight="@dimen/edx_margin"
-            android:paddingBottom="@dimen/widget_margin"
             android:paddingTop="@dimen/widget_margin">
+
             <EditText
                 android:id="@+id/etNewComment"
                 style="@style/edX.EditText"
