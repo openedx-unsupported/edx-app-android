@@ -59,7 +59,13 @@
     <dimen name="signup_social_title_margin_large">8dp</dimen>
     <dimen name="signup_social_title_margin_bottom">1dp</dimen>
 
+    <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
+    <dimen name="edx_margin">15dp</dimen>
+    <dimen name="widget_margin">10dp</dimen>
+    <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
+    <dimen name="vertical_input_padding">8dp</dimen>
+    <dimen name="edx_button_height">40dp</dimen>
 
     <!--edX typography-->
     <dimen name="edx_xxxx_large">38sp</dimen>

@@ -362,6 +362,8 @@
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
     <!-- Add post button title in adding a new discussion -->
+    <string name="discussion_add_post_topic_label">Topic</string>
+    <!-- Add post button title in adding a new discussion -->
     <string name="discussion_add_post">Post discussion</string>
     <!-- Add post button title in adding a new post -->
     <string name="discussion_add_question">Post question</string>

@@ -219,7 +219,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                router.showCourseDiscussionComments(context, comment);
+                if (comment.getChildren().isEmpty()) {
+                    router.showCourseDiscussionAddComment(context, comment);
+
+                } else {
+                    router.showCourseDiscussionComments(context, comment);
+                }
             }
         });
 
@@ -289,6 +294,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             holder.numberResponsesOrCommentsLabel.setText(context.getString(
                     R.string.number_responses_or_comments_add_comment_label));
         } else {
+            holder.numberResponsesOrCommentsCountTextView.setVisibility(View.VISIBLE);
             holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(response.getChildren().size()));
             holder.numberResponsesOrCommentsLabel.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren));
