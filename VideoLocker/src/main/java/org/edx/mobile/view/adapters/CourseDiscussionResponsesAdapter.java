@@ -219,7 +219,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (0 == comment.getChildren().size()) {
+                if (comment.getChildren().isEmpty()) {
                     router.showCourseDiscussionAddComment(context, comment);
 
                 } else {
