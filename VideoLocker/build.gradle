@@ -38,7 +38,6 @@ apply plugin: 'newrelic'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-    //there is an issue for newrelic with okhttp/retrofit. we just use nightly build 2.5.0-snapshot locally
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
