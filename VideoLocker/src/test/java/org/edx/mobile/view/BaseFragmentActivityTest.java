@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -22,8 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
@@ -138,29 +135,6 @@ public class BaseFragmentActivityTest extends UiTest {
         Drawable contentForeground = ((FrameLayout) contentView).getForeground();
         assertEquals(tv.resourceId, Shadows.shadowOf(
                 contentForeground).getCreatedFromResId());
-    }
-
-    /**
-     * Testing full screen mode in landscape
-     */
-    @Test
-    @Config(qualifiers = "land")
-    public void landscapeFullscreenTest() {
-        ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
-        BaseFragmentActivity activity = controller.get();
-        activity.getResources().getConfiguration().orientation =
-                Configuration.ORIENTATION_LANDSCAPE;
-        controller.create();
-        Resources.Theme theme = activity.getTheme();
-        TypedValue tv = new TypedValue();
-        assertTrue(theme.resolveAttribute(android.R.attr.windowContentOverlay, tv, true));
-        assertEquals(TypedValue.TYPE_NULL, tv.type);
-        controller.start();
-        Window window = activity.getWindow();
-        int windowAttributes = window.getAttributes().flags;
-        assertTrue((windowAttributes & WindowManager.LayoutParams.FLAG_FULLSCREEN) > 0);
-        assertTrue(window.hasFeature(Window.FEATURE_NO_TITLE));
     }
 
     /**

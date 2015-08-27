@@ -104,11 +104,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
-        // for landscape player use full screen theme, otherwise, only hide title bar
-        if (isLandscape()) {
-            setTheme(android.R.style.Theme_NoTitleBar_Fullscreen);
-        }
-
 
         updateActionBarShadow();
 
