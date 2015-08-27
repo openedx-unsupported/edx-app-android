@@ -16,6 +16,8 @@
 
 package org.edx.mobile.discussion;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -170,6 +172,18 @@ public class DiscussionThread implements Serializable, IAuthorData {
 
     public boolean isRead() {
         return read;
+    }
+
+    public void incrementCommentCount() {
+        ++this.commentCount;
+    }
+
+    public boolean hasSameId(@NonNull DiscussionThread discussionThread) {
+        return discussionThread.getIdentifier().equals(identifier);
+    }
+
+    public boolean containsComment(@NonNull DiscussionComment comment) {
+        return comment.getThreadId().equals(identifier);
     }
 
 }

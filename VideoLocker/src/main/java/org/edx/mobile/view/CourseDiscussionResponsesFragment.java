@@ -131,8 +131,11 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     }
 
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        // TODO: Optimization: Only refresh if it's a reply to this post or a comment on one of its replies
-        getCommentList(true);
+        if (discussionThread.containsComment(event.getComment())) {
+            discussionThread.incrementCommentCount();
+            courseDiscussionResponsesAdapter.notifyDataSetChanged();
+            getCommentList(true);
+        }
     }
 
     /**

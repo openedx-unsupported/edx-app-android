@@ -10,13 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
-import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
-import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
@@ -175,36 +176,43 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         return DiscussionTopic.FOLLOWING_TOPICS.equalsIgnoreCase(discussionTopic.getName());
     }
 
-    private boolean listNeedsToBeRefreshed = true;
-
-    private void scheduleRefresh() {
-        if (isResumed()) {
-            populateThreadList(true);
-        } else {
-            listNeedsToBeRefreshed = true;
+    public void onEventMainThread(DiscussionThreadFollowedEvent event) {
+        // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
+        for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
+            if (discussionPostsAdapter.getItem(i).hasSameId(event.getDiscussionThread())) {
+                discussionPostsAdapter.replace(event.getDiscussionThread(), i);
+                break;
+            }
         }
     }
 
-    public void onEventMainThread(DiscussionThreadFollowedEvent event) {
-        // TODO: Optimization: Only refresh the item if the followed post is currently listed
-        // TODO: Optimization: Only refresh the row that was updated, instead of the whole list
-        scheduleRefresh();
-    }
-
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        // TODO: Optimization: Only refresh if the comment is a reply to a currently listed post
-        // TODO: Optimization: Only refresh the row that was updated, instead of the whole list
-        scheduleRefresh();
+        // If a new comment was posted in a listed thread, increment its comment count
+        for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
+            final DiscussionThread discussionThread = discussionPostsAdapter.getItem(i);
+            if (discussionThread.containsComment(event.getComment())) {
+                discussionThread.incrementCommentCount();
+                discussionPostsAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
-        // TODO: Optimization: Only refresh if the new thread belongs to this topic
-        scheduleRefresh();
+        // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
+        if (!isFollowingTopics() && event.getDiscussionThread().getTopicId().equalsIgnoreCase(discussionTopic.getIdentifier())) {
+            int i = 0;
+            for (; i < discussionPostsAdapter.getCount(); ++i) {
+                if (!discussionPostsAdapter.getItem(i).isPinned()) {
+                    break;
+                }
+            }
+            discussionPostsAdapter.insert(event.getDiscussionThread(), i);
+        }
     }
 
     @Override
     protected void populateThreadList(boolean refreshView) {
-        listNeedsToBeRefreshed = false;
 
         if (refreshView) {
             discussionPostsAdapter.clear();
@@ -287,14 +295,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             } else {
                 ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
             }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (listNeedsToBeRefreshed) {
-            populateThreadList(true);
         }
     }
 }
