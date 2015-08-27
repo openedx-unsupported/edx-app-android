@@ -2,6 +2,8 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -118,8 +121,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             }
         });
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
-        discussionQuestionSegmentedGroup.setTintColor(this.getResources().getColor(R.color.edx_grayscale_neutral_base),
-                this.getResources().getColor(R.color.black));
 
         getTopicList();
 
@@ -144,7 +145,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             public void onClick(View v) {
                 final String title = titleEditText.getText().toString();
                 final String body = bodyEditText.getText().toString();
-                if (title.trim().length() == 0 || body.trim().length() == 0) return;
 
                 final DiscussionThread.ThreadType discussionQuestion;
                 if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
@@ -164,6 +164,25 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 createThread(threadBody);
             }
         });
+        addPostButton.setEnabled(false);
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String title = titleEditText.getText().toString();
+                final String body = bodyEditText.getText().toString();
+                addPostButton.setEnabled(title.trim().length() > 0 && body.trim().length() > 0);
+            }
+        };
+        titleEditText.addTextChangedListener(textWatcher);
+        bodyEditText.addTextChangedListener(textWatcher);
     }
 
     protected void createThread(ThreadBody threadBody) {
@@ -212,8 +231,16 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 String[] topics = new String[topicList.size()];
                 topics = topicList.toArray(topics);
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), android.R.layout.simple_spinner_item, topics);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                final String prefix = getString(R.string.discussion_add_post_topic_label) + ": ";
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.edx_spinner_item, topics) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        final TextView view = (TextView)super.getView(position, convertView, parent);
+                        view.setText(prefix + view.getText().toString());
+                        return view;
+                    }
+                };
+                adapter.setDropDownViewResource(R.layout.edx_spinner_dropdown_item);
                 topicsSpinner.setAdapter(adapter);
             }
 
