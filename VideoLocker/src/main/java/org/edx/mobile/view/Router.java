@@ -177,21 +177,12 @@ public class Router {
         activity.startActivityForResult(courseDetail, requestCode);
     }
 
-
-
-    public void showCourseUnitDetail(Activity activity, EnrolledCoursesResponse model,
-                                     String courseId,  CourseComponent unit ) {
-
-        showCourseUnitDetail(activity, -1, model, courseId, unit);
-    }
-
     public void showCourseUnitDetail(Activity activity, int requestCode, EnrolledCoursesResponse model,
-                                     String courseId,  CourseComponent unit ) {
+                                     String courseComponentId) {
 
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
-        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseId);
-        courseBundle.putSerializable(EXTRA_COURSE_UNIT, unit);
+        courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseUnitNavigationActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);

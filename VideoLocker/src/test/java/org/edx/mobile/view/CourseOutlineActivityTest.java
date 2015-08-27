@@ -170,7 +170,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
 
         // Back stack reconstruction upon receiving a specific path
         Intent resultData = new Intent();
-        resultData.putExtra(Router.EXTRA_COURSE_UNIT, subsectionUnit);
+        resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, subsectionUnit.getId());
         activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
@@ -253,12 +253,11 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
         assertEquals(courseComponent.getId(), newData.getSerializable(
                 Router.EXTRA_COURSE_COMPONENT_ID));
-        assertEquals(courseUnit, newData.getSerializable(Router.EXTRA_COURSE_UNIT));
 
         // Test the back stack reconstruction upon receiving a specific path
         // Should not perform any action if it receives a unit selection from itself
         Intent resultData = new Intent();
-        resultData.putExtra(Router.EXTRA_COURSE_UNIT, courseUnit);
+        resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseUnit.getId());
         activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
@@ -266,7 +265,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         assertFalse(shadowActivity.isFinishing());
         // Should finish itself to start the new navigation back stack if it receives
         // a unit selection from another section
-        resultData.putExtra(Router.EXTRA_COURSE_UNIT, lastUnit);
+        resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, lastUnit.getId());
         activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         assertNull(shadowActivity.getNextStartedActivityForResult());

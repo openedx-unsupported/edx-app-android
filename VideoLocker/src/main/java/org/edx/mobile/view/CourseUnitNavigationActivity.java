@@ -58,6 +58,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
         RelativeLayout insertPoint = (RelativeLayout)findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -135,10 +136,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }catch(Exception e){
             logger.error(e);
         }
-
     }
 
-
+    @Override
     protected  String getUrlForWebView(){
         if ( selectedUnit == null ){
             return ""; //wont happen
@@ -152,6 +152,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         if ( this.selectedUnit == null  )
             return;
 
+        courseComponentId = selectedUnit.getId();
         environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
 
         String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
@@ -159,8 +160,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
         prefManager.putLastAccessedSubsection(this.selectedUnit.getId(), false);
         Intent resultData = new Intent();
-        resultData.putExtra(Router.EXTRA_COURSE_UNIT, selectedUnit);
+        resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
+
+        boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), isPortrait);
     }
 
     private void tryToUpdateForEndOfSequential(){
@@ -219,33 +223,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         super.initialize(arg);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if( selectedUnit != null )
-            outState.putSerializable(Router.EXTRA_COURSE_UNIT, selectedUnit);
-        super.onSaveInstanceState(outState);
-    }
-
-    protected void restore(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            setCurrentUnit((CourseComponent) savedInstanceState.getSerializable(Router.EXTRA_COURSE_UNIT) );
-        }
-        super.restore(savedInstanceState);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-
     private void updateDataModel(){
         unitList.clear();
         if( selectedUnit == null || selectedUnit.getRoot() == null ) {
@@ -281,9 +258,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         onBackPressed();
     }
 
-
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -295,10 +269,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
             pager.setPagingEnabled(false);
+            environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), false);
         } else {
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
             pager.setPagingEnabled(true);
+            environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), true);
         }
     }
 
@@ -323,7 +299,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             //FIXME - for the video, let's ignore multiDevice for now
             if ( unit instanceof VideoBlockModel) {
                 CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
-
                 unitFragment = fragment;
             }
 

@@ -191,4 +191,19 @@ public class ISegmentEmptyImpl implements ISegment {
     public Properties coursesVisibleToFriendsChange(boolean visible) {
         return null;
     }
+
+    @Override
+    public Properties trackCourseOutlineMode(boolean isVideoMode) {
+        return null;
+    }
+
+    @Override
+    public Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait) {
+        return null;
+    }
+
+    @Override
+    public Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+        return null;
+    }
 }

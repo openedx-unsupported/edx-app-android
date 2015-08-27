@@ -17,7 +17,6 @@ import org.edx.mobile.util.DateUtil;
  */
 public class CourseDashboardActivity extends CourseBaseActivity implements CourseDashboardFragment.ShowCourseOutlineCallback {
 
-
     protected Logger logger = new Logger(getClass().getSimpleName());
 
     private CourseDashboardFragment fragment;
