@@ -51,7 +51,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             holder.discussionPostPinFollowTextView.setVisibility(View.VISIBLE);
 
             Iconify.IconValue pinFollowIcon = discussionThread.isPinned() ?
-                    Iconify.IconValue.fa_pinterest : Iconify.IconValue.fa_star;
+                    Iconify.IconValue.fa_thumb_tack : Iconify.IconValue.fa_star;
             holder.discussionPostPinFollowIcon.setIcon(pinFollowIcon);
 
             String pinFollowTextLabel = "";

@@ -4,7 +4,7 @@ package org.edx.mobile.view.adapters;
  *
  */
 public interface IPagination {
-    public static final int DEFAULT_PAGE_SIZE = 3;
+    int DEFAULT_PAGE_SIZE = 20;
     int pageSize();
     int numOfPagesLoaded();
     int numOfRecordsLoaded();
