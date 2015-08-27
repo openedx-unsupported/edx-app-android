@@ -23,7 +23,7 @@
 
             <info.hoang8f.android.segmented.SegmentedGroup
                 android:id="@+id/discussion_question_segmented_group"
-                style="@style/edX.SegmentedControl"
+                style="@style/edX.Widget.SegmentedControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -32,7 +32,7 @@
                 <!--suppress AndroidElementNotAllowed -->
                 <RadioButton
                     android:id="@+id/discussion_radio_button"
-                    style="@style/edX.SegmentedControlSegment"
+                    style="@style/edX.Widget.SegmentedControlSegment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -41,7 +41,7 @@
                 <!--suppress AndroidElementNotAllowed -->
                 <RadioButton
                     android:id="@+id/question_radio_button"
-                    style="@style/edX.SegmentedControlSegment"
+                    style="@style/edX.Widget.SegmentedControlSegment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -49,14 +49,14 @@
             </info.hoang8f.android.segmented.SegmentedGroup>
 
             <FrameLayout
-                style="@style/edX.SpinnerContainer"
+                style="@style/edX.Widget.SpinnerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin">
 
                 <Spinner
                     android:id="@+id/topics_spinner"
-                    style="@style/edX.Spinner"
+                    style="@style/edX.Widget.Spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:listitem="@layout/edx_spinner_item" />
@@ -77,7 +77,7 @@
 
             <EditText
                 android:id="@+id/title_edit_text"
-                style="@style/edX.EditText"
+                style="@style/edX.Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/discussion_post_title"
@@ -86,7 +86,7 @@
 
             <EditText
                 android:id="@+id/body_edit_text"
-                style="@style/edX.EditText"
+                style="@style/edX.Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
@@ -97,7 +97,7 @@
 
             <Button
                 android:id="@+id/add_post_button"
-                style="@style/edX.CreationButton"
+                style="@style/edX.Widget.CreationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"

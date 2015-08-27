@@ -54,7 +54,7 @@
 
             <EditText
                 android:id="@+id/etNewComment"
-                style="@style/edX.EditText"
+                style="@style/edX.Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -64,7 +64,7 @@
 
             <Button
                 android:id="@+id/btnAddComment"
-                style="@style/edX.CreationButton"
+                style="@style/edX.Widget.CreationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"

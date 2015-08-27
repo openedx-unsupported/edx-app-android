@@ -10,7 +10,6 @@
     android:paddingRight="@dimen/horizontal_input_padding"
     android:paddingTop="@dimen/vertical_input_padding"
     android:singleLine="true"
-    android:textAlignment="inherit"
     android:textColor="@color/edx_grayscale_neutral_dark"
     android:textSize="@dimen/edx_x_small"
     tools:text="Item text" />

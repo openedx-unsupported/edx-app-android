@@ -214,8 +214,9 @@
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
     <style name="edX" />
+    <style name="edX.Widget" />
 
-    <style name="edX.EditText">
+    <style name="edX.Widget.EditText">
         <item name="android:background">@drawable/edx_input_background</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
@@ -224,28 +225,28 @@
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
     </style>
 
-    <style name="edX.CreationButton">
+    <style name="edX.Widget.CreationButton">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_white</item>
         <item name="android:background">@drawable/edx_creation_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
-    <style name="edX.Spinner" parent="@style/Widget.AppCompat.Spinner">
+    <style name="edX.Widget.Spinner" parent="@style/Widget.AppCompat.Spinner">
     </style>
 
-    <style name="edX.SpinnerContainer">
+    <style name="edX.Widget.SpinnerContainer">
         <item name="android:background">@drawable/edx_input_background</item>
     </style>
 
-    <style name="edX.SegmentedControl">
+    <style name="edX.Widget.SegmentedControl">
         <item name="border_width">@dimen/edx_hairline</item>
         <item name="checked_text_color">@color/edx_grayscale_neutral_black</item>
         <item name="corner_radius">@dimen/edx_box_radius</item>
         <item name="tint_color">@color/edx_grayscale_neutral_light</item>
     </style>
 
-    <style name="edX.SegmentedControlSegment" parent="RadioButton">
+    <style name="edX.Widget.SegmentedControlSegment" parent="RadioButton">
         <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
     </style>
