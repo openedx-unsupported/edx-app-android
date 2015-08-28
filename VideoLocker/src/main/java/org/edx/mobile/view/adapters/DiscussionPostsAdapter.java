@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
@@ -12,7 +13,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.PinnedAuthor;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -40,18 +40,28 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
         if (discussionThread.getAuthorLabel() != null) {
             holder.discussionPostPinTextView.setVisibility(View.VISIBLE);
-            String pinFollowTextLabel = "";
-            if (discussionThread.getAuthorLabel() == PinnedAuthor.STAFF) {
-                pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_staff);
-
-            } else if (discussionThread.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
-                pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_ta);
+            final String pinFollowTextLabel;
+            switch (discussionThread.getAuthorLabel()) {
+                case STAFF: {
+                    pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_staff);
+                    break;
+                }
+                case COMMUNITY_TA: {
+                    pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_ta);
+                    break;
+                }
+                default: {
+                    pinFollowTextLabel = "";
+                }
             }
-            final Drawable icon = discussionThread.isPinned() ?
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_thumb_tack).colorRes(R.color.edx_grayscale_neutral_base).sizeRes(R.dimen.edx_x_small)
-                    : null;
-            holder.discussionPostPinTextView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-            holder.discussionPostPinTextView.setText(pinFollowTextLabel);
+            final Drawable icon;
+            if (discussionThread.isPinned()) {
+                icon = new IconDrawable(getContext(), Iconify.IconValue.fa_thumb_tack).colorRes(R.color.edx_grayscale_neutral_base).sizeRes(R.dimen.edx_x_small);
+            } else {
+                icon = null;
+            }
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionPostPinTextView, icon, null, null, null);
+            holder.discussionPostPinTextView.setText(" " + pinFollowTextLabel);
 
         } else {
             holder.discussionPostPinTextView.setVisibility(View.GONE);
@@ -59,7 +69,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
         if (discussionThread.isFollowing()) {
             holder.discussionPostFollowTextView.setVisibility(View.VISIBLE);
-            holder.discussionPostFollowTextView.setCompoundDrawablesWithIntrinsicBounds(
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionPostFollowTextView,
                     new IconDrawable(getContext(), Iconify.IconValue.fa_star).colorRes(R.color.edx_grayscale_neutral_base).sizeRes(R.dimen.edx_x_small), null, null, null);
         } else {
             holder.discussionPostFollowTextView.setVisibility(View.GONE);
@@ -69,7 +79,6 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                 R.color.edx_grayscale_neutral_light : R.color.edx_brand_primary_base;
         holder.discussionPostNumCommentsTextView.setText(Integer.toString(discussionThread.getCommentCount()));
         holder.discussionPostNumCommentsTextView.setTextColor(getContext().getResources().getColor(commentColor));
-        holder.discussionPostCommentIcon.setIcon(Iconify.IconValue.fa_comment);
         holder.discussionPostCommentIcon.setIconColor(getContext().getResources().getColor(commentColor));
         holder.discussionPostRow.setBackgroundColor(getContext().getResources().getColor(
                 discussionThread.isRead() ? R.color.edx_grayscale_neutral_xx_light : R.color.edx_grayscale_neutral_white));

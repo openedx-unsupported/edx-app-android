@@ -47,7 +47,6 @@
                 android:id="@+id/discussion_post_pin_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="3dp"
                 android:layout_marginEnd="@dimen/widget_margin"
                 android:layout_marginRight="@dimen/widget_margin"
                 android:textColor="@color/edx_grayscale_neutral_base"
@@ -58,7 +57,6 @@
                 android:id="@+id/discussion_post_following_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="3dp"
                 android:textColor="@color/edx_grayscale_neutral_base"
                 android:textSize="@dimen/edx_x_small"
                 android:text="@string/discussion_posts_following"/>
@@ -84,6 +82,7 @@
         android:layout_marginLeft="3dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        app:iconName="fa_comment"/>
 
 </RelativeLayout>

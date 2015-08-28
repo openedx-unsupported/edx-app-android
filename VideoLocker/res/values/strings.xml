@@ -291,7 +291,7 @@
     <string name="discussion_posts_sort_most_votes">Most Votes</string>
     <!--Discussion Posts List Row Pinned and Following Text -->
     <!--Label for discussion post you are following-->
-    <string name="discussion_posts_following">Following</string>
+    <string name="discussion_posts_following">\u00A0Following</string>
     <!--Label for discussion post pinned by the community TA-->
     <string name="discussion_priviledged_author_label_ta">Community TA</string>
     <!--Label for discussion post pinned by the staff-->
