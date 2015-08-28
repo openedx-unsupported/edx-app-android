@@ -97,8 +97,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:multidex:1.0.0'
 
-    compile 'info.hoang8f:android-segmented:1.0.5'
-
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
         transitive = true

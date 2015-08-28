@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/edx_segmented_control_background_selector" />
+    <stroke
+        android:width="@dimen/edx_hairline"
+        android:color="@color/edx_grayscale_neutral_light" />
+    <corners
+        android:bottomLeftRadius="0dp"
+        android:bottomRightRadius="@dimen/edx_box_radius"
+        android:radius="@dimen/edx_box_radius"
+        android:topLeftRadius="0dp"
+        android:topRightRadius="@dimen/edx_box_radius" />
+</shape>
