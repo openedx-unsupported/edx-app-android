@@ -192,9 +192,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(discussionThread.getCommentCount()));
         holder.numberResponsesOrCommentsLabel.setText(context.getResources().getQuantityString(
-                R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount()));
+                R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount(), discussionThread.getCommentCount()));
     }
 
     private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder, int position) {
@@ -290,14 +289,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         int numChildren = response == null ? 0 : response.getChildren().size();
 
         if (numChildren == 0) {
-            holder.numberResponsesOrCommentsCountTextView.setVisibility(View.GONE);
             holder.numberResponsesOrCommentsLabel.setText(context.getString(
                     R.string.number_responses_or_comments_add_comment_label));
         } else {
-            holder.numberResponsesOrCommentsCountTextView.setVisibility(View.VISIBLE);
-            holder.numberResponsesOrCommentsCountTextView.setText(Integer.toString(response.getChildren().size()));
             holder.numberResponsesOrCommentsLabel.setText(context.getResources().
-                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren));
+                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren));
         }
     }
 
