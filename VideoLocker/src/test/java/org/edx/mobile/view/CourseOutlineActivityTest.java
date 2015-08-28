@@ -252,7 +252,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
-        assertEquals(courseComponent.getId(), newData.getSerializable(
+        assertEquals(courseUnit.getId(), newData.getSerializable(
                 Router.EXTRA_COURSE_COMPONENT_ID));
 
         // Test the back stack reconstruction upon receiving a specific path
