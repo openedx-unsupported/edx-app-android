@@ -251,10 +251,10 @@
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
     </style>
 
-    <style name="edX.Widget.SegmentedControlSegment.Left" parent="edX.Widget.SegmentedControlSegment">
+    <style name="edX.Widget.SegmentedControlSegment.Start" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_left_background</item>
     </style>
-    <style name="edX.Widget.SegmentedControlSegment.Right" parent="edX.Widget.SegmentedControlSegment">
+    <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_right_background</item>
     </style>
 

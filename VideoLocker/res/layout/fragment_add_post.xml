@@ -31,7 +31,7 @@
 
                 <RadioButton
                     android:id="@+id/discussion_radio_button"
-                    style="@style/edX.Widget.SegmentedControlSegment.Left"
+                    style="@style/edX.Widget.SegmentedControlSegment.Start"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -39,7 +39,7 @@
 
                 <RadioButton
                     android:id="@+id/question_radio_button"
-                    style="@style/edX.Widget.SegmentedControlSegment.Right"
+                    style="@style/edX.Widget.SegmentedControlSegment.End"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
