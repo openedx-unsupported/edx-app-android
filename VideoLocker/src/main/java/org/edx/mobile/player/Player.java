@@ -152,7 +152,7 @@ OnCompletionListener, OnInfoListener, IPlayer {
 
         @Override
         public void toggleFullScreen() {
-            isFullScreen = !isFullScreen;
+            setFullScreen(!isFullScreen);
             if (callback != null) {
                 callback.onFullScreen(isFullScreen);
             }
@@ -316,9 +316,13 @@ OnCompletionListener, OnInfoListener, IPlayer {
             return state == PlayerState.RESET;
     }
 
-    @Override
+        @Override
         public void setFullScreen(boolean isFullScreen) {
             this.isFullScreen = isFullScreen;
+
+            if (controller != null) {
+                controller.setTopBarVisibility(isFullScreen);
+            }
         }
 
         @Override
