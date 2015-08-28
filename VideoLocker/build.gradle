@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         classpath 'org.yaml:snakeyaml:1.14'
 
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:1.3.0'
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
         classpath 'io.fabric.tools:gradle:1.+'
@@ -220,13 +220,19 @@ android {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
             }
         }
+        dev {
+            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+        }
     }
 
     buildTypes {
         debug {
-            testCoverageEnabled true  // comment this so local variables in API callback can be found when debugging
-            // disable crashlytics for debug build
             ext.enableCrashlytics = false
+            testCoverageEnabled true
+        }
+        debuggable.initWith(buildTypes.debug)
+        debuggable {
+            testCoverageEnabled = false // Set to "false" to work around debugger issue: https://code.google.com/p/android/issues/detail?id=123771
         }
 
         release {
