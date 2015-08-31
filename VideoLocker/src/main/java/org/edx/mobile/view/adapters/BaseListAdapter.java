@@ -31,6 +31,7 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     public static final int STATE_NOT_SELECTED = 0;
     public static final int STATE_SELECTED = 1;
     private final int layoutResource;
+    private final List<T> objects;
 
     private SparseIntArray selection = new SparseIntArray(); 
     public static final long MIN_CLICK_INTERVAL = 1000; //in millis
@@ -54,9 +55,14 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
     }
 
     public BaseListAdapter(Context context, int layoutResourceId, IEdxEnvironment environment) {
-        super(context, layoutResourceId);
+        this(context, layoutResourceId, environment, new ArrayList<T>());
+    }
+
+    private BaseListAdapter(Context context, int layoutResourceId, IEdxEnvironment environment, List<T> list) {
+        super(context, layoutResourceId, list);
         layoutResource = layoutResourceId;
         this.environment = environment;
+        this.objects = list;
     }
     
     /**
@@ -135,6 +141,11 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
          super.addAll(collection);
          pagination.addPage(collection.size());
          pagination.setHasMorePages(hasMore);
+    }
+
+    public void replace(T item, int position) {
+        objects.set(position, item);
+        notifyDataSetChanged();
     }
 
     public int getCount(){
