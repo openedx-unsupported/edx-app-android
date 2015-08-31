@@ -815,8 +815,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         } else {
             messageContainer.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT < 16) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             } else {
                 View decorView = getActivity().getWindow().getDecorView();
                 decorView.setSystemUiVisibility(View.VISIBLE);
