@@ -157,7 +157,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:textColor">@color/new_user_txt</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="offline_mode_message" parent="@style/bold_text">

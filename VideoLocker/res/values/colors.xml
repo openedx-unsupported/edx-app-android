@@ -81,8 +81,6 @@
     <color name="offline_text">#BA2E6E</color>
     <color name="cyan_circle">#1F9FD9</color>
     <color name="grey_circle">#E6E6E7</color>
-    <color name="new_user_txt">#B82669</color>
-    <color name="new_user_txt_color">#CC3c4045</color>
     <color name="offline_panel">#E6BA2E6E</color>
     <color name="browser_panel">#E2E3E5</color>
     <color name="white_list_clicked">#F1F1F2</color>
