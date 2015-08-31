@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -122,6 +123,8 @@ public class DiscussionAddPostFragment extends RoboFragment {
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
         getTopicList();
+
+        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.edx_grayscale_neutral_dark));
 
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
