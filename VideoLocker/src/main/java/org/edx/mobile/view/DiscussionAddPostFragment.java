@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import info.hoang8f.android.segmented.SegmentedGroup;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
@@ -55,7 +54,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
     private DiscussionTopic discussionTopic;
 
     @InjectView(R.id.discussion_question_segmented_group)
-    private SegmentedGroup discussionQuestionSegmentedGroup;
+    private RadioGroup discussionQuestionSegmentedGroup;
 
     @InjectView(R.id.topics_spinner)
     private Spinner topicsSpinner;
@@ -235,7 +234,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.edx_spinner_item, topics) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
-                        final TextView view = (TextView)super.getView(position, convertView, parent);
+                        final TextView view = (TextView) super.getView(position, convertView, parent);
                         view.setText(prefix + view.getText().toString());
                         return view;
                     }

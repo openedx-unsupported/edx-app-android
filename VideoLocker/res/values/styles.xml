@@ -239,16 +239,23 @@
         <item name="android:background">@drawable/edx_input_background</item>
     </style>
 
-    <style name="edX.Widget.SegmentedControl">
-        <item name="border_width">@dimen/edx_hairline</item>
-        <item name="checked_text_color">@color/edx_grayscale_neutral_black</item>
-        <item name="corner_radius">@dimen/edx_box_radius</item>
-        <item name="tint_color">@color/edx_grayscale_neutral_light</item>
+    <style name="edX.Widget.SegmentedControlSegment">
+        <item name="android:background">@color/edx_segmented_control_background_selector</item>
+        <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
+        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
+        <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
+        <item name="android:paddingTop">@dimen/vertical_input_padding</item>
     </style>
 
-    <style name="edX.Widget.SegmentedControlSegment" parent="RadioButton">
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
-        <item name="android:textSize">@dimen/edx_x_small</item>
+    <style name="edX.Widget.SegmentedControlSegment.Start" parent="edX.Widget.SegmentedControlSegment">
+        <item name="android:background">@drawable/edx_segmented_control_left_background</item>
+    </style>
+    <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
+        <item name="android:background">@drawable/edx_segmented_control_right_background</item>
     </style>
 
 </resources>

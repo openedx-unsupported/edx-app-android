@@ -21,32 +21,30 @@
             android:paddingBottom="@dimen/widget_margin"
             android:background="@color/edx_grayscale_neutral_white">
 
-            <info.hoang8f.android.segmented.SegmentedGroup
+            <RadioGroup
                 android:id="@+id/discussion_question_segmented_group"
-                style="@style/edX.Widget.SegmentedControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clipToPadding="true">
 
-                <!--suppress AndroidElementNotAllowed -->
                 <RadioButton
                     android:id="@+id/discussion_radio_button"
-                    style="@style/edX.Widget.SegmentedControlSegment"
+                    style="@style/edX.Widget.SegmentedControlSegment.Start"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/discussion_title" />
+                    android:text="@string/discussion_title"/>
 
-                <!--suppress AndroidElementNotAllowed -->
                 <RadioButton
                     android:id="@+id/question_radio_button"
-                    style="@style/edX.Widget.SegmentedControlSegment"
+                    style="@style/edX.Widget.SegmentedControlSegment.End"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/discussion_question" />
-            </info.hoang8f.android.segmented.SegmentedGroup>
+            </RadioGroup>
 
             <FrameLayout
                 style="@style/edX.Widget.SpinnerContainer"
