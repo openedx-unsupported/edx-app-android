@@ -88,11 +88,19 @@
                 android:layout_marginTop="15dp"
                 android:gravity="center">
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_act_background" />
+
                 <org.edx.mobile.view.custom.ETextView
                     android:id="@+id/optional_field_tv"
                     style="@style/semibold_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:layout_marginRight="12dp"
                     android:layout_marginEnd="12dp"
                     android:text="@string/show_optional_text"
@@ -101,7 +109,6 @@
                     tools:targetApi="17" />
 
                 <View
-                    android:id="@+id/view2"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="1dp"

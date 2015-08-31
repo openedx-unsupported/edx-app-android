@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@android:color/white">
+    android:background="@color/edx_brand_primary_base">
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/activity_title"
-        style="@style/custom_activity_title"/>
+        style="@style/custom_activity_title" />
 
     <org.edx.mobile.view.custom.EButton
         android:id="@+id/actionbar_close_btn"
@@ -18,18 +18,9 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"
-        android:background="@drawable/ic_close_with_padding"
+        android:background="@drawable/ic_action_close"
         android:contentDescription="@string/close"
         android:visibility="visible"
         tools:targetApi="17" />
-
-    <View
-        android:id="@+id/grey_bar"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_act_background"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
 
 </RelativeLayout>
