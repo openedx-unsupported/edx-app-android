@@ -36,6 +36,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarTabStyle">@style/TabsStyle</item>
         <item name="buttonTextColor">@color/button_text</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->

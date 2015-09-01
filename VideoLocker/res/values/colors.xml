@@ -126,7 +126,7 @@
     <color name="course_banner_blue">@color/cyan_3</color>
     <color name="hint_grey_text">#8c8e90</color>
     <color name="grey_hide_optional_text">#AFAFB5</color>
-
+    <color name="last_accessed_row_blue">#E5F5FC</color>
 
     <!--  We need to adapt edX color code -->
     <!--  see  http://ux.edx.org/elements/colors/ -->

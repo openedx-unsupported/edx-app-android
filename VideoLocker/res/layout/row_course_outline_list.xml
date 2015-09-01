@@ -3,151 +3,153 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:paddingTop="4dp"
     android:orientation="vertical"
-    >
-  <LinearLayout
-    android:id="@+id/chapter_row_layout"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:background="@android:color/transparent"
-    android:gravity="center_vertical"
-    android:layout_marginStart="16dp"
-    android:layout_marginLeft="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    tools:targetApi="17" >
-
-    <org.edx.mobile.third_party.iconify.IconView
-        android:id="@+id/row_type"
-        android:layout_width="40dp"
-        android:layout_height="18dp"
-        android:paddingLeft="0dp"
-        android:paddingStart="0dp"
-        android:paddingRight="21dp"
-        android:paddingEnd="21dp"
-        android:baselineAlignBottom="true"
-        android:gravity="center_vertical"
-        android:visibility="gone" />
+    android:paddingTop="4dp"
+    android:background="?android:attr/activatedBackgroundIndicator" >
 
     <LinearLayout
-        style="@style/regular_grey_text"
-        android:layout_width="0dp"
+        android:id="@+id/chapter_row_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
         tools:targetApi="17">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/row_title"
-            style="@style/regular_grey_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textDirection="locale"
-            tools:text="@string/chapter_name"
-            android:textSize="16sp" />
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/row_type"
+            android:layout_width="40dp"
+            android:layout_height="18dp"
+            android:baselineAlignBottom="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="21dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="21dp"
+            android:paddingStart="0dp"
+            android:visibility="gone" />
 
         <LinearLayout
             style="@style/regular_grey_text"
-            android:id="@+id/row_subtitle_panel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            tools:targetApi="17">
+
             <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/row_subtitle"
-                android:textColor="@color/edx_grayscale_neutral_base"
-                android:layout_width="wrap_content"
+                android:id="@+id/row_title"
+                style="@style/regular_grey_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:ellipsize="end"
                 android:singleLine="true"
-                tools:text="@string/chapter_name"
                 android:textDirection="locale"
-                android:visibility="gone"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                tools:text="@string/chapter_name" />
 
-            <org.edx.mobile.third_party.iconify.IconView
-                android:id="@+id/row_subtitle_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:paddingLeft="2dp"
-                android:paddingStart="2dp"
-                app:iconName="fa_check"
-                android:baselineAlignBottom="true"
-                android:gravity="center_vertical"
-                android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/row_subtitle_panel"
+                style="@style/regular_grey_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/row_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/edx_grayscale_neutral_base"
+                    android:textDirection="locale"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:text="@string/chapter_name" />
+
+                <org.edx.mobile.third_party.iconify.IconView
+                    android:id="@+id/row_subtitle_icon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:baselineAlignBottom="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="2dp"
+                    android:paddingStart="2dp"
+                    android:visibility="gone"
+                    app:iconName="fa_check" />
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
 
-
-
-    <LinearLayout
-        android:id="@+id/bulk_download_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:paddingRight="5dp"
-        android:paddingEnd="5dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginEnd="2dp"
-        android:background="@android:color/transparent"
-        tools:targetApi="17" >
-
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/no_of_videos"
-            style="@style/semibold_text"
+        <LinearLayout
+            android:id="@+id/bulk_download_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp"
-            tools:text="0"
-            android:visibility="gone"
-            android:textColor="@color/edx_grayscale_neutral_base"
-            android:textSize="15sp"
-            tools:targetApi="17" />
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@android:color/transparent"
+            android:paddingEnd="5dp"
+            android:paddingRight="5dp"
+            tools:targetApi="17">
 
-        <org.edx.mobile.third_party.iconify.IconView
-            android:id="@+id/bulk_download"
-            android:gravity="center_vertical"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:paddingTop="3dp"
-            android:paddingLeft="0dp"
-            android:paddingStart="0dp"
-            android:paddingRight="1dp"
-            android:paddingEnd="1dp"
-            android:baselineAlignBottom="true"
-            app:iconName="fa_arrow_down" />
-    </LinearLayout>
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/no_of_videos"
+                style="@style/semibold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/edx_grayscale_neutral_base"
+                android:textSize="15sp"
+                android:visibility="gone"
+                tools:targetApi="17"
+                tools:text="0" />
+
+            <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/bulk_download"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:baselineAlignBottom="true"
+                android:gravity="center_vertical"
+                android:paddingEnd="1dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="1dp"
+                android:paddingStart="0dp"
+                android:paddingTop="3dp"
+                app:iconName="fa_arrow_down" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <View
         android:id="@+id/row_half_separator"
         android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp"
-        android:background="@color/grey_2"
-        android:layout_height="1dp"/>
+        android:background="@color/grey_2" />
+
     <View
         android:id="@+id/row_whole_separator"
         android:layout_width="match_parent"
-        android:background="@color/grey_2"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="@color/grey_2" />
 </LinearLayout>

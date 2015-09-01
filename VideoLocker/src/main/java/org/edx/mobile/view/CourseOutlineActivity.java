@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
@@ -8,7 +7,6 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
@@ -74,6 +72,8 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
                     bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+                    bundle.putString(Router.EXTRA_LAST_ACCESSED_ID
+                            , getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));
                     fragment.setArguments(bundle);
                 }
                 //this activity will only ever hold this lone fragment, so we
@@ -109,44 +109,4 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             fragment.reloadList();
         fragment.updateMessageView(null);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            // If user has navigated to a different unit, then we need to rearrange
-            // the activity stack to point to it.
-            case REQUEST_SHOW_COURSE_UNIT_DETAIL: {
-                switch (resultCode) {
-                    case RESULT_OK: {
-                        CourseComponent outlineComp = courseManager.getComponentById(
-                                courseData.getCourse().getId(), courseComponentId);
-                        String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
-                        CourseComponent leafComp = courseManager.getComponentById(
-                                courseData.getCourse().getId(), leafCompId);
-                        BlockPath outlinePath = outlineComp.getPath();
-                        BlockPath leafPath = leafComp.getPath();
-                        int outlinePathSize = outlinePath.getPath().size();
-                        if (!outlineComp.equals(leafPath.get(outlinePathSize - 1))) {
-                            setResult(RESULT_OK, data);
-                            finish();
-                        } else {
-                            for (int i = outlinePathSize + 1;; i += 2) {
-                                CourseComponent nextComp = leafPath.get(i);
-                                if (nextComp == null || !nextComp.isContainer()) {
-                                    break;
-                                }
-                                environment.getRouter().showCourseContainerOutline(this,
-                                        REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, nextComp.getId());
-                            }
-                            overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-                        }
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-
 }
