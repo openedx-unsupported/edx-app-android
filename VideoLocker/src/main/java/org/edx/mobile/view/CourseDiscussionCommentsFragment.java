@@ -1,23 +1,25 @@
 package org.edx.mobile.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionAPI;
 import org.edx.mobile.discussion.DiscussionComment;
-
-import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
 import de.greenrobot.event.EventBus;
@@ -25,10 +27,10 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionCommentsFragment extends RoboFragment {
+public class CourseDiscussionCommentsFragment extends RoboFragment implements DiscussionCommentsAdapter.Listener {
 
     @InjectView(R.id.discussion_comments_listview)
-    ListView discussionCommentsListView;
+    RecyclerView discussionCommentsListView;
 
     @InjectView(R.id.create_new_item_text_view)
     TextView createNewCommentTextView;
@@ -40,18 +42,15 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
     private DiscussionComment discussionComment;
 
     @Inject
-    DiscussionAPI discussionAPI;
-
-    @Inject
-    DiscussionCommentsAdapter discussionCommentsAdapter;
-
-    @Inject
     Router router;
 
     @Inject
     Context context;
 
-    private static final Logger logger = new Logger(CourseDiscussionCommentsFragment.class.getName());
+    private DiscussionCommentsAdapter discussionCommentsAdapter;
+
+    @Nullable
+    private FlagCommentTask flagCommentTask;
 
     @Nullable
     @Override
@@ -63,8 +62,17 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionComment);
+
+        discussionCommentsListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);
+        discussionCommentsListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                outRect.set(0, -overlap, 0, 0);
+            }
+        });
         discussionCommentsListView.setAdapter(discussionCommentsAdapter);
-        discussionCommentsAdapter.setItems(discussionComment.getChildren());
 
         createNewCommentTextView.setText(context.getString(R.string.discussion_post_create_new_comment));
 
@@ -88,10 +96,29 @@ public class CourseDiscussionCommentsFragment extends RoboFragment {
         EventBus.getDefault().unregister(this);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (null != event.getParent() && event.getParent().getIdentifier().equalsIgnoreCase(discussionComment.getIdentifier())) {
-            discussionCommentsAdapter.add(event.getComment());
-            discussionCommentsAdapter.notifyDataSetChanged();
+            discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
         }
+    }
+
+    @Override
+    public void reportComment(DiscussionComment comment) {
+        if (flagCommentTask != null) {
+            flagCommentTask.cancel(true);
+        }
+        flagCommentTask = new FlagCommentTask(context, comment, !comment.isAbuseFlagged()) {
+            @Override
+            public void onSuccess(DiscussionComment comment) {
+                discussionCommentsAdapter.updateComment(comment);
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+            }
+        };
+        flagCommentTask.execute();
     }
 }

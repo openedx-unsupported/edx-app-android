@@ -1,116 +1,133 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
+import android.support.annotation.DrawableRes;
+import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import org.edx.mobile.discussion.DiscussionComment;
 
 import org.edx.mobile.R;
-import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.task.FlagCommentTask;
-import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionTextUtils;
+import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 
-public class DiscussionCommentsAdapter extends BaseListAdapter<DiscussionComment> {
+public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
     private final Context context;
-    private FlagCommentTask flagCommentTask;
+    private final Listener listener;
+    private DiscussionComment response;
+
+    public interface Listener {
+        void reportComment(DiscussionComment comment);
+    }
 
     @Inject
-    public DiscussionCommentsAdapter(Context context, IEdxEnvironment environment) {
-        super(context, R.layout.row_discussion_comment, environment);
+    public DiscussionCommentsAdapter(Context context, Listener listener, DiscussionComment response) {
         this.context = context;
+        this.listener = listener;
+        this.response = response;
     }
 
     @Override
-    public void render(BaseViewHolder tag, final DiscussionComment discussionComment) {
-        final ViewHolder holder = (ViewHolder) tag;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.
+                from(parent.getContext()).
+                inflate(R.layout.row_discussion_comment, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        final ViewHolder holder = (ViewHolder) viewHolder;
+        final DiscussionComment discussionComment;
+        final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.discussionCommentRow.getLayoutParams();
+        layoutParams.topMargin = layoutParams.bottomMargin = 0;
+        @DrawableRes
+        final int backgroundRes;
+        final IconDrawable iconDrawable;
+        if (position == 0) {
+            discussionComment = response;
+            backgroundRes = R.drawable.row_discussion_first_comment_background;
+            layoutParams.topMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
+            final int childrenSize = discussionComment.getChildren().size();
+            holder.discussionCommentCountReportTextView.setText(context.getResources().
+                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, childrenSize, childrenSize));
+            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_comment).sizeRes(R.dimen.edx_xxx_small).colorRes(R.color.edx_grayscale_neutral_base);
+            holder.discussionCommentCountReportTextView.setOnClickListener(null);
+            holder.discussionCommentCountReportTextView.setClickable(false);
+
+        } else {
+            final int extraSidePadding = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
+            holder.discussionCommentRow.setPadding(extraSidePadding, 0, extraSidePadding, 0);
+
+            discussionComment = response.getChildren().get(position - 1);
+            if (position == getItemCount() - 1) {
+                backgroundRes = R.drawable.row_discussion_last_comment_background;
+                layoutParams.bottomMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
+            } else {
+                backgroundRes = R.drawable.row_discussion_comment_background;
+            }
+
+            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_flag)
+                    .sizeRes(R.dimen.edx_xxx_small)
+                    .colorRes(discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
+            holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
+            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_dark));
+
+            holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View v) {
+                    listener.reportComment(discussionComment);
+                }
+            });
+        }
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
+        holder.discussionCommentRow.setLayoutParams(layoutParams);
+        holder.discussionCommentRow.setBackgroundResource(backgroundRes);
 
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
-        int childrenSize = discussionComment.getChildren().size();
-        Iconify.IconValue icon = childrenSize == 0 ? Iconify.IconValue.fa_flag : Iconify.IconValue.fa_comment; // show flag icon for comment, and comment icon for response
-        holder.discussionCommentCountReportIcon.setIcon(icon);
-
-        holder.discussionCommentAuthorTextView.setText(discussionComment.getAuthor());
-
-        CharSequence formattedDate = DateUtils.getRelativeTimeSpanString(
-                discussionComment.getCreatedAt().getTime(),
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE);
-
-        holder.discussionCommentDateTextView.setText(formattedDate);
-        // TODO: localization
-        String report = discussionComment.isAbuseFlagged() ? "Reported" : "Report";
-        holder.discussionCommentCountReportTextView.setText(childrenSize == 0 ? report : (childrenSize + " comment" + (childrenSize == 1 ? "" : "s")));
-
-        holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View v) {
-                flagComment(holder, discussionComment);
-            }
-        });
-    }
-
-
-    protected void flagComment(final ViewHolder holder, final DiscussionComment discussionComment) {
-        if (flagCommentTask != null) {
-            flagCommentTask.cancel(true);
-        }
-        // TODO: Smarter way to handle check if reported than string comparison
-        boolean isReport = holder.discussionCommentCountReportTextView.getText().toString().equalsIgnoreCase(getContext().getString(R.string.discussion_responses_report_label));
-        flagCommentTask = new FlagCommentTask(getContext(), discussionComment, isReport) {
-            @Override
-            public void onSuccess(DiscussionComment comment) {
-                int reportStringResId = comment.isAbuseFlagged() ? R.string.discussion_responses_reported_label :
-                        R.string.discussion_responses_report_label;
-                holder.discussionCommentCountReportTextView.setText(context.getString(reportStringResId));
-                holder.discussionCommentCountReportIcon.setIconColor(context.getResources().getColor(comment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base));
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-
-            }
-        };
-        flagCommentTask.execute();
-
+        holder.discussionCommentAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(discussionComment, context.getResources()));
     }
 
     @Override
-    public BaseViewHolder getTag(View convertView) {
-        ViewHolder holder = new ViewHolder();
-
-        holder.discussionCommentRow = (LinearLayout) convertView.findViewById(R.id.row_discussion_comment_linear_layout);
-        holder.discussionCommentBody = (TextView) convertView.findViewById(R.id.discussion_comment_body);
-        holder.discussionCommentAuthorTextView = (TextView) convertView.findViewById(R.id.discussion_comment_author_text_view);
-        holder.discussionCommentDateTextView = (TextView) convertView.findViewById(R.id.discussion_comment_date_text_view);
-        holder.discussionCommentCountReportIcon = (IconView) convertView.findViewById(R.id.discussion_comment_count_report_icon);
-        holder.discussionCommentCountReportTextView = (TextView) convertView.findViewById(R.id.discussion_comment_count_report_text_view);
-
-        return holder;
+    public int getItemCount() {
+        return 1 + response.getChildren().size();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    }
-
-    private static class ViewHolder extends BaseViewHolder {
-        LinearLayout discussionCommentRow;
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+        View discussionCommentRow;
         TextView discussionCommentBody;
         TextView discussionCommentAuthorTextView;
-        TextView discussionCommentDateTextView;
-        IconView discussionCommentCountReportIcon;
         TextView discussionCommentCountReportTextView;
 
+        public ViewHolder(View itemView) {
+            super(itemView);
+            discussionCommentRow = itemView.findViewById(R.id.row_discussion_comment_layout);
+            discussionCommentBody = (TextView) itemView.findViewById(R.id.discussion_comment_body);
+            discussionCommentAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_comment_author_text_view);
+            discussionCommentCountReportTextView = (TextView) itemView.findViewById(R.id.discussion_comment_count_report_text_view);
+        }
     }
 
+    public void insertCommentAtEnd(DiscussionComment comment) {
+        response.getChildren().add(comment);
+        notifyItemInserted(response.getChildren().size());
+        notifyItemChanged(response.getChildren().size() - 1); // Last item's background is different, so must be refreshed as well
+    }
+
+    public void updateComment(DiscussionComment comment) {
+        for (int i = 0; i < response.getChildren().size(); ++i) {
+            if (response.getChildren().get(i).getIdentifier().equals(comment.getIdentifier())) {
+                response.getChildren().set(i, comment);
+                notifyItemChanged(i + 1);
+                break;
+            }
+        }
+    }
 }

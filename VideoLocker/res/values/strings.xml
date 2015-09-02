@@ -304,16 +304,16 @@
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <!--Label indicating there is only one response-->
-        <item quantity="one">response</item>
+        <item quantity="one">%s response</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">responses</item>
+        <item quantity="other">%s responses</item>
     </plurals>
     <!--Label for number of discussion comments-->
     <plurals name="number_responses_or_comments_comments_label">
         <!--Label indicating there is only one comment-->
-        <item quantity="one">comment</item>
+        <item quantity="one">%s comment</item>
         <!--Label indicating there are more than one response-->
-        <item quantity="other">comments</item>
+        <item quantity="other">%s comments</item>
     </plurals>
     <!--Label for adding a new comment-->
     <string name="number_responses_or_comments_add_comment_label">@string/discussion_add_comment_title</string>
