@@ -1,5 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -16,13 +15,13 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        
+
     </style>
 
     <!-- A theme for a custom dialog appearance. -->
     <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
-        
-        <item name="android:textColor">#faca64</item> 
+
+        <item name="android:textColor">#faca64</item>
     </style>
 
     <!-- the theme applied to the application or activity -->
@@ -41,7 +40,7 @@
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-         <item name="color">@color/white</item>
+        <item name="color">@color/white</item>
     </style>
 
     <!-- Custom Preview Screen Theme -->
@@ -60,8 +59,7 @@
     </style>
 
     <!-- ActionBar title text -->
-    <style name="MyActionBarTitleText"
-           parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="MyActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -106,7 +104,7 @@
     <style name="course_header_separator_style" parent="separator_style">
         <item name="android:background">@color/edx_brand_primary_base</item>
     </style>
-    
+
     <!-- Custom menu popup -->
     <style name="CustomPopupMenu" android:parent="Widget.Holo.Light.PopupMenu">
         <item name="android:popupBackground">@drawable/white_rounded_bordered_bg</item>
@@ -117,18 +115,18 @@
         <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
         <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
     </style>
-    
+
     <style name="CustomEdgePopupMenu" parent="@style/CustomPopupMenu">
         <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
     </style>
-    
+
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/custom_progress_bar_horizontal_red</item>
         <item name="android:minHeight">3dip</item>
         <item name="android:maxHeight">3dip</item>
     </style>
-    
+
     <style name="default_switch" parent="@style/semibold_text">
         <item name="android:textColor">@color/switch_text_color</item>
         <item name="android:textSize">14sp</item>
@@ -214,6 +212,7 @@
 
     <!-- Styles from the edX style guide will be nested under "edX" -->
     <style name="edX" />
+
     <style name="edX.Widget" />
 
     <style name="edX.Widget.EditText">
@@ -233,6 +232,9 @@
     </style>
 
     <style name="edX.Widget.Spinner" parent="@style/Widget.AppCompat.Spinner">
+        <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
+        <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
+        <item name="android:layout_marginRight">3dp</item>
     </style>
 
     <style name="edX.Widget.SpinnerContainer">
@@ -240,7 +242,6 @@
     </style>
 
     <style name="edX.Widget.SegmentedControlSegment">
-        <item name="android:background">@color/edx_segmented_control_background_selector</item>
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:button">@null</item>
@@ -254,6 +255,7 @@
     <style name="edX.Widget.SegmentedControlSegment.Start" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_left_background</item>
     </style>
+
     <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_right_background</item>
     </style>
