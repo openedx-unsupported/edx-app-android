@@ -2,12 +2,14 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -18,10 +20,9 @@ import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
-import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
-import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,6 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
 
     @InjectView(R.id.discussion_topics_listview)
     ListView discussionTopicsListView;
-
-    @InjectView(R.id.discussion_following_icon)
-    IconView followingIcon;
-
-    @InjectView(R.id.discussion_topic_name_text_view)
-    ETextView followingTextView;
 
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
@@ -70,17 +65,33 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Iconify.IconValue iconValue = Iconify.IconValue.fa_star;
-        followingIcon.setIcon(iconValue);
+        final LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-        followingTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DiscussionTopic discussionTopic = new DiscussionTopic();
-                discussionTopic.setName(DiscussionTopic.FOLLOWING_TOPICS);
-                router.showCourseDiscussionPostsForDiscussionTopic(getActivity(), discussionTopic, courseData);
-            }
-        });
+        // Add "All posts" item
+        {
+            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
+            header.setText(R.string.discussion_posts_filter_all_posts);
+
+            final DiscussionTopic discussionTopic = new DiscussionTopic();
+            discussionTopic.setIdentifier(DiscussionTopic.ALL_TOPICS_ID);
+            discussionTopic.setName(getString(R.string.discussion_posts_filter_all_posts));
+            discussionTopicsListView.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
+        }
+
+        // Add "Posts I'm following" item
+        {
+            final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
+            header.setText(R.string.forum_post_i_am_following);
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
+                    new IconDrawable(getActivity(), Iconify.IconValue.fa_star)
+                            .colorRes(R.color.edx_grayscale_neutral_dark)
+                            .sizeRes(R.dimen.edx_base),
+                    null, null, null);
+            final DiscussionTopic discussionTopic = new DiscussionTopic();
+            discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);
+            discussionTopic.setName(getString(R.string.forum_post_i_am_following));
+            discussionTopicsListView.addHeaderView(header, new DiscussionTopicDepth(discussionTopic, 0, true), true);
+        }
 
         discussionTopicsListView.setAdapter(discussionTopicsAdapter);
 
@@ -103,16 +114,16 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
         discussionTopicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DiscussionTopicDepth discussionTopicDepth = discussionTopicsAdapter.getItem(position);
-                DiscussionTopic discussionTopic = discussionTopicDepth.getDiscussionTopic();
-                router.showCourseDiscussionPostsForDiscussionTopic(getActivity(), discussionTopic, courseData);
+                router.showCourseDiscussionPostsForDiscussionTopic(
+                        getActivity(),
+                        ((DiscussionTopicDepth) parent.getItemAtPosition(position)).getDiscussionTopic(),
+                        courseData);
             }
         });
 
         // TODO: Find a better way to hide the keyboard AND take the focus away from the SearchView
         discussionTopicsSearchView.requestFocus();
         discussionTopicsSearchView.clearFocus();
-
 
         getTopicList();
 

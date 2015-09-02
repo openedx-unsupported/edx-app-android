@@ -9,13 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -31,6 +28,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateThreadTask;
 import org.edx.mobile.task.GetTopicListTask;
+import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,11 +73,10 @@ public class DiscussionAddPostFragment extends RoboFragment {
 
     private ViewGroup container;
 
-    private CourseTopics allCourseTopics;
-    private List<DiscussionTopicDepth> allTopicsWithDepth;
-    private int selectedTopicIndex;
     private GetTopicListTask getTopicListTask;
     private CreateThreadTask createThreadTask;
+
+    private int selectedTopicIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +88,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
         } catch (Exception e) {
             logger.error(e);
         }
-
     }
 
     @Override
@@ -124,24 +120,28 @@ public class DiscussionAddPostFragment extends RoboFragment {
 
         getTopicList();
 
-        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.edx_grayscale_neutral_dark));
-
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // if a top-level topic is selected, go back to previous selected position
-                DiscussionTopicDepth topic = allTopicsWithDepth.get(position);
-                if (topic.getDepth() == 0) {
-                    topicsSpinner.setSelection(selectedTopicIndex);
-                    Toast.makeText(container.getContext(), "Top level topic cannot be selected.", Toast.LENGTH_SHORT).show();
-                } else
+                // Even though we disabled topics that aren't supposed to be selected, Android still allows you to select them using keyboard or finger-dragging
+                // So, we have to revert the user's selection if they select a topic that cannot be posted to
+                final DiscussionTopicDepth item = (DiscussionTopicDepth) parent.getItemAtPosition(position);
+                if (null == item || item.isPostable()) {
                     selectedTopicIndex = position;
+                } else {
+                    // Revert selection
+                    parent.setSelection(selectedTopicIndex);
+                }
+                setPostButtonEnabledState();
             }
 
-            public void onNothingSelected(AdapterView<?> arg0) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                setPostButtonEnabledState();
             }
         });
+
+        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.edx_grayscale_neutral_dark));
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -159,7 +159,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 threadBody.setCourseId(courseData.getCourse().getId());
                 threadBody.setTitle(title);
                 threadBody.setRawBody(body);
-                threadBody.setTopicId(allTopicsWithDepth.get(selectedTopicIndex).getDiscussionTopic().getIdentifier());
+                threadBody.setTopicId(((DiscussionTopicDepth) topicsSpinner.getSelectedItem()).getDiscussionTopic().getIdentifier());
                 threadBody.setType(discussionQuestion);
 
                 addPostButton.setEnabled(false);
@@ -178,13 +178,18 @@ public class DiscussionAddPostFragment extends RoboFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                final String title = titleEditText.getText().toString();
-                final String body = bodyEditText.getText().toString();
-                addPostButton.setEnabled(title.trim().length() > 0 && body.trim().length() > 0);
+                setPostButtonEnabledState();
             }
         };
         titleEditText.addTextChangedListener(textWatcher);
         bodyEditText.addTextChangedListener(textWatcher);
+    }
+
+    private void setPostButtonEnabledState() {
+        final String title = titleEditText.getText().toString();
+        final String body = bodyEditText.getText().toString();
+        final boolean topicSelected = null != topicsSpinner.getSelectedItem();
+        addPostButton.setEnabled(topicSelected && title.trim().length() > 0 && body.trim().length() > 0);
     }
 
     protected void createThread(ThreadBody threadBody) {
@@ -215,35 +220,21 @@ public class DiscussionAddPostFragment extends RoboFragment {
         getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
             @Override
             public void onSuccess(CourseTopics courseTopics) {
-                allCourseTopics = courseTopics;
-                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
+                final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getCoursewareTopics());
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
 
-                allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
-                ArrayList<String> topicList = new ArrayList<String>();
-                int i = 0;
-                for (DiscussionTopicDepth topic : allTopicsWithDepth) {
-                    topicList.add((topic.getDepth() == 0 ? "" : "  ") + topic.getDiscussionTopic().getName());
-                    if (discussionTopic.getName().equalsIgnoreCase(topic.getDiscussionTopic().getName()))
-                        selectedTopicIndex = i;
-                    i++;
-                }
-
-                String[] topics = new String[topicList.size()];
-                topics = topicList.toArray(topics);
-
-                final String prefix = getString(R.string.discussion_add_post_topic_label) + ": ";
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(container.getContext(), R.layout.edx_spinner_item, topics) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        final TextView view = (TextView) super.getView(position, convertView, parent);
-                        view.setText(prefix + view.getText().toString());
-                        return view;
-                    }
-                };
-                adapter.setDropDownViewResource(R.layout.edx_spinner_dropdown_item);
+                final TopicSpinnerAdapter adapter = new TopicSpinnerAdapter(container.getContext(), DiscussionTopicDepth.createFromDiscussionTopics(allTopics));
                 topicsSpinner.setAdapter(adapter);
+
+                {
+                    // Attempt to select the topic that we navigated from
+                    // Otherwise, leave the default option, which is "Choose a topic..."
+                    int selectedTopicIndex = adapter.getPosition(discussionTopic);
+                    if (selectedTopicIndex >= 0) {
+                        topicsSpinner.setSelection(selectedTopicIndex);
+                    }
+                }
             }
 
             @Override

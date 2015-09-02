@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -225,7 +227,7 @@ public class Router {
         activity.startActivity(showDiscussionsIntent);
     }
 
-    public void showCourseDiscussionAddPost(Activity activity, DiscussionTopic discussionTopic, EnrolledCoursesResponse courseData) {
+    public void showCourseDiscussionAddPost(@NonNull Activity activity, @Nullable DiscussionTopic discussionTopic, @NonNull EnrolledCoursesResponse courseData) {
         Intent addPostIntent = new Intent(activity, DiscussionAddPostActivity.class);
         addPostIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         addPostIntent.putExtra(EXTRA_DISCUSSION_TOPIC, discussionTopic);

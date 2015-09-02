@@ -1,55 +1,58 @@
 package org.edx.mobile.discussion;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Decorates {@link DiscussionTopic} with a "depth" and "postable" flag to facilitate usage in adapter view
+ */
 public class DiscussionTopicDepth {
 
-    private DiscussionTopic discussionTopic;
-    private int depth = 0;
+    @NonNull
+    private final DiscussionTopic discussionTopic;
+    private final int depth;
+    private final boolean postable; // TODO: Let the API decide which topics can be posted to
 
-    public DiscussionTopicDepth(DiscussionTopic topic, int depth) {
+    public DiscussionTopicDepth(@NonNull DiscussionTopic topic, int depth, boolean postable) {
         this.discussionTopic = topic;
         this.depth = depth;
+        this.postable = postable;
     }
 
+    @NonNull
     public DiscussionTopic getDiscussionTopic() {
         return discussionTopic;
-    }
-
-    public void setDiscussionTopic(DiscussionTopic discussionTopic) {
-        this.discussionTopic = discussionTopic;
     }
 
     public int getDepth() {
         return depth;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
+    public boolean isPostable() {
+        return postable;
     }
 
-    /**
-     * This method decorates a discussion topic to add a depth parameter to indicate how deep in the tree the topic is
-     * @param discussionTopics
-     * @return List of DiscussionTopicDepth objects
-     */
-    public static List<DiscussionTopicDepth> createFromDiscussionTopics(List<DiscussionTopic> discussionTopics) {
+    @NonNull
+    public static List<DiscussionTopicDepth> createFromDiscussionTopics(@NonNull List<DiscussionTopic> discussionTopics) {
+        return createFromDiscussionTopics(discussionTopics, 0);
+    }
+
+    @NonNull
+    private static List<DiscussionTopicDepth> createFromDiscussionTopics(@NonNull List<DiscussionTopic> discussionTopics, int depth) {
         List<DiscussionTopicDepth> discussionTopicDepths = new ArrayList<>();
 
-        // TODO: To handle nested topics beyond 1 level deep, turn this into a recursive method
         for (DiscussionTopic discussionTopic : discussionTopics) {
-            discussionTopicDepths.add(new DiscussionTopicDepth(discussionTopic, 0));
-
-            List<DiscussionTopic> children = discussionTopic.getChildren();
-            if (children != null && !children.isEmpty()) {
-                for (DiscussionTopic child : children) {
-                    discussionTopicDepths.add(new DiscussionTopicDepth(child, 1));
-                }
+            final List<DiscussionTopic> children = discussionTopic.getChildren();
+            if (null == children || children.isEmpty()) {
+                discussionTopicDepths.add(new DiscussionTopicDepth(discussionTopic, depth, true));
+            } else {
+                discussionTopicDepths.add(new DiscussionTopicDepth(discussionTopic, depth, false));
+                discussionTopicDepths.addAll(createFromDiscussionTopics(children, depth + 1));
             }
         }
 
         return discussionTopicDepths;
     }
-
 }

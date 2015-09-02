@@ -363,6 +363,8 @@
     <!-- Add post button title in adding a new discussion -->
     <string name="discussion_add_post_topic_label">Topic</string>
     <!-- Add post button title in adding a new discussion -->
+    <string name="discussion_add_post_choose_a_topic">Choose a topic…</string>
+    <!-- Add post button title in adding a new discussion -->
     <string name="discussion_add_post">Post discussion</string>
     <!-- Add post button title in adding a new post -->
     <string name="discussion_add_question">Post question</string>
@@ -668,7 +670,7 @@
     <!-- Discussion/Forum -->
     <string name="forum_query_no_result">Query <i> \"%1$s\" </i> returns no result.</string>
     <string name="forum_empty">No result found.</string>
-    <string name="forum_post_i_am_following">Posts I\'m Following.</string>
+    <string name="forum_post_i_am_following">Posts I’m Following</string>
     <string name="show_more_records">More...</string>
     <string name="forum_follow">Follow</string>
     <string name="forum_unfollow">Unfollow</string>

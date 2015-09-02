@@ -90,18 +90,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (this.isFollowingTopics()) {
-            createNewPostRelativeLayout.setVisibility(View.GONE);
-        } else {
-            createNewPostTextView.setText(R.string.discussion_post_create_new_post);
+        createNewPostTextView.setText(R.string.discussion_post_create_new_post);
 
-            createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
-                }
-            });
-        }
+        createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);
+            }
+        });
 
         // TODO: Add some UI polish to make the popups more closely match the wireframes
         createFilterPopupMenu();
@@ -172,8 +168,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         });
     }
 
+    private boolean isAllTopics() {
+        return DiscussionTopic.ALL_TOPICS_ID.equals(discussionTopic.getIdentifier());
+    }
+
     private boolean isFollowingTopics() {
-        return DiscussionTopic.FOLLOWING_TOPICS.equalsIgnoreCase(discussionTopic.getName());
+        return DiscussionTopic.FOLLOWING_TOPICS_ID.equals(discussionTopic.getIdentifier());
     }
 
     public void onEventMainThread(DiscussionThreadFollowedEvent event) {
@@ -200,7 +200,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
-        if (!isFollowingTopics() && event.getDiscussionThread().getTopicId().equalsIgnoreCase(discussionTopic.getIdentifier())) {
+        if (!isFollowingTopics() && !isAllTopics() && discussionTopic.containsThread(event.getDiscussionThread())) {
             int i = 0;
             for (; i < discussionPostsAdapter.getCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
@@ -222,8 +222,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         } else {
             populatePostList();
         }
-
     }
+
 
     private void populateFollowingThreadList() {
         if (getFollowingThreadListTask != null) {
@@ -259,7 +259,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             getThreadListTask.cancel(true);
         }
 
-        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(), discussionTopic.getIdentifier(),
+        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(), isAllTopics() ? null : discussionTopic.getIdentifier(),
                 postsFilter,
                 postsSort,
                 discussionPostsAdapter.getPagination()
