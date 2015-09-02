@@ -335,7 +335,7 @@
     <!--Label to indicate discussion response is not marked as inappropriate -->
     <string name="discussion_responses_report_label">Report</string>
     <!--Label for discussion response that has been marked as inappropriate-->
-    <string name="discussion_responses_reported_label">Reported</string>
+    <string name="discussion_responses_reported_label">Unreport</string>
     <!--Label for a discussion thread that the user is not following-->
     <string name="discussion_responses_action_bar_follow_text">Follow</string>
     <!--Label for a discussion thread that the user is following-->
