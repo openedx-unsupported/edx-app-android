@@ -13,8 +13,8 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_find_course_info);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find_course_info);
 
         try{
             environment.getSegment().screenViewsTracking(ISegment.Values.COURSE_INFO_SCREEN);
