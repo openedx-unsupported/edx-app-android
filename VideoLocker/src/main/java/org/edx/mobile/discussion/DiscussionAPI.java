@@ -127,7 +127,7 @@ public class DiscussionAPI {
 
     public TopicThreads getFollowingThreadList(String courseId, String filter,  String orderBy, int pageSize, int page) throws RetroHttpException {
 
-        return  discussionService.getFollowingThreadList(courseId, true, filter, orderBy, pageSize, page);
+        return  discussionService.getFollowingThreadList(courseId, "True", filter, orderBy, pageSize, page);
     }
 
 

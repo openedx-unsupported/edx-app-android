@@ -73,7 +73,7 @@ public interface DiscussionService {
 
 
     @GET("/api/discussion/v1/threads/")
-    TopicThreads getFollowingThreadList(@Query("course_id") String courseId, @Query("following") Boolean following, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
+    TopicThreads getFollowingThreadList(@Query("course_id") String courseId, @Query("following") String following, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
 
     @GET("/api/discussion/v1/threads/")
     TopicThreads searchThreadList(@Query("course_id") String courseId, @Query("text_search") String text, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
