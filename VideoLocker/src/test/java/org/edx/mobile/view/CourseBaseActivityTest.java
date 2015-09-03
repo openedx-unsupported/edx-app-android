@@ -112,6 +112,22 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         assertThat(downloadProgressBar).isNotVisible();
         EventBus eventBus = EventBus.getDefault();
         eventBus.post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
+        assertDownloadProgressBarVisible(activity.getWindow().getDecorView(),
+                downloadProgressBar);
+    }
+
+    /**
+     * Method for asserting the functionality of
+     * {@link CourseBaseActivity#setVisibilityForDownloadProgressView} which
+     * is called upon receiving a {@link DownloadEvent}. The base
+     * implementation just makes the download progress bar visible
+     * immediately, but this behaviour may be overridden in subclasses.
+     *
+     * @param rootView The root View for finding Views by id
+     * @param downloadProgressBar The download progress bar View
+     */
+    protected void assertDownloadProgressBarVisible(
+            View rootView, View downloadProgressBar) {
         assertThat(downloadProgressBar).isVisible();
     }
 
