@@ -3,7 +3,6 @@ package org.edx.mobile.base;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -38,8 +37,8 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
 import org.edx.mobile.view.custom.ProgressWheel;
@@ -117,16 +116,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        try{
-            super.startActivityForResult(intent, requestCode);
-            applyTransitionNext();
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
@@ -184,7 +173,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
 
     private void updateActionBarShadow() {
-            //Check for JellyBeans version
+        //Check for JellyBeans version
         if (Build.VERSION.SDK_INT == 18) {
             // Get the content view
             View contentView = findViewById(android.R.id.content);
@@ -219,10 +208,11 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     protected void onRestart() {
         super.onRestart();
         isActivityStarted = true;
-        logger.debug( "activity restarted");
+        logger.debug("activity restarted");
 
         if (applyPrevTransitionOnRestart) {
-            applyTransitionPrev();
+            // apply slide transition animation
+            overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
         }
         applyPrevTransitionOnRestart = false;
     }
@@ -236,12 +226,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        applyTransitionPrev();
     }
 
     @Override
@@ -268,7 +252,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
              *  http://stackoverflow.com/questions/27117243/disable-hamburger-to-back-arrow-animation-on-toolbar
              */
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.label_close,  R.string.label_close ) {
+                    R.string.label_close,  R.string.label_close ) {
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     invalidateOptionsMenu();
@@ -640,18 +624,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      */
     protected void onConnectedToWifi() {}
 
-    private void applyTransitionNext() {
-        // apply slide transition animation
-        overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-        logger.debug( "next transition animation applied");
-    }
-
-    private void applyTransitionPrev() {
-        // apply slide transition animation
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-        logger.debug( "prev transition animation applied");
-    }
-
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -746,7 +718,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 TextView errorHeader = (TextView) findViewById(R.id.error_header);
                 TextView errorMessage = (TextView) findViewById(R.id.error_message);
                 if(header==null || header.isEmpty()){
-                   errorHeader.setVisibility(View.GONE);
+                    errorHeader.setVisibility(View.GONE);
                 }else{
                     errorHeader.setVisibility(View.VISIBLE);
                     errorHeader.setText(header);
