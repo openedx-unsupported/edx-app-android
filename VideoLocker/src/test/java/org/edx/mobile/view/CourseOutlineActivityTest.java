@@ -174,7 +174,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, subsectionUnit.getId());
         courseOutlineFragment.onActivityResult(
-                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                CourseOutlineFragment.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
         BlockPath outlinePath = courseComponent.getPath();
@@ -260,7 +260,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseUnit.getId());
         courseOutlineFragment.onActivityResult(
-                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                CourseOutlineFragment.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
         assertNull(shadowActivity.getNextStartedActivity());
@@ -269,7 +269,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         // a unit selection from another section
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, lastUnit.getId());
         courseOutlineFragment.onActivityResult(
-                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+                CourseOutlineFragment.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         assertNull(shadowActivity.getNextStartedActivity());
         assertTrue(shadowActivity.isFinishing());
