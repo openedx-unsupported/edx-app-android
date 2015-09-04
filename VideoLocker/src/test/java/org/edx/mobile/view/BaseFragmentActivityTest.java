@@ -489,6 +489,14 @@ public class BaseFragmentActivityTest extends UiTest {
         return intent;
     }
 
+    /**
+     * Generic method for asserting next started activity along with
+     * the custom transition animation override
+     *
+     * @param currentActivity The current activity
+     * @param nextActivityClass The class of the newly started activity
+     * @param requestCode The request code
+     */
     protected Intent assertNextStartedActivityForResult(
             BaseFragmentActivity currentActivity,
             Class<? extends Activity> nextActivityClass, int requestCode) {

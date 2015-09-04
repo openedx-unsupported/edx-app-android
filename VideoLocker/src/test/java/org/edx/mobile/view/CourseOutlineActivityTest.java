@@ -158,11 +158,13 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
 
         ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
-        clickRow(controller, subsectionRowIndex);
         CourseOutlineActivity activity = controller.get();
-        Intent newIntent = assertNextStartedActivityForResult(
-                activity, CourseOutlineActivity.class,
-                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL);
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(
+                CourseOutlineFragment.TAG);
+        assertThat(fragment).isInstanceOf(CourseOutlineFragment.class);
+        CourseOutlineFragment courseOutlineFragment = (CourseOutlineFragment) fragment;
+        clickRow(controller, courseOutlineFragment, subsectionRowIndex);
+        Intent newIntent = assertNextStartedActivity(activity, CourseOutlineActivity.class);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
@@ -171,26 +173,23 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         // Back stack reconstruction upon receiving a specific path
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, subsectionUnit.getId());
-        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+        courseOutlineFragment.onActivityResult(
+                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
         BlockPath outlinePath = courseComponent.getPath();
         BlockPath leafPath = subsectionUnit.getPath();
         int outlinePathSize = outlinePath.getPath().size();
         for (int i = outlinePathSize + 1;; i += 2) {
-            ShadowActivity.IntentForResult intentForResult =
-                    shadowActivity.getNextStartedActivityForResult();
+            newIntent = shadowActivity.getNextStartedActivity();
             CourseComponent nextComp = leafPath.get(i);
             if (nextComp == null || !nextComp.isContainer()) {
-                assertNull(intentForResult);
+                assertNull(newIntent);
                 break;
             }
-            assertNotNull(intentForResult);
-            assertThat(intentForResult.intent).hasComponent(
-                    activity, CourseOutlineActivity.class);
-            assertEquals(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
-                    intentForResult.requestCode);
-            newData = intentForResult.intent.getBundleExtra(Router.EXTRA_BUNDLE);
+            assertNotNull(newIntent);
+            assertThat(newIntent).hasComponent(activity, CourseOutlineActivity.class);
+            newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
             assertNotNull(newData);
             assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
             assertEquals(nextComp.getId(), newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
@@ -243,11 +242,13 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
 
         ActivityController<? extends CourseOutlineActivity> controller = initialize(intent);
-        clickRow(controller, subsectionRowIndex);
         CourseOutlineActivity activity = controller.get();
-        Intent newIntent = assertNextStartedActivityForResult(
-                activity, CourseUnitNavigationActivity.class,
-                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL);
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(
+                CourseOutlineFragment.TAG);
+        assertThat(fragment).isInstanceOf(CourseOutlineFragment.class);
+        CourseOutlineFragment courseOutlineFragment = (CourseOutlineFragment) fragment;
+        clickRow(controller, courseOutlineFragment, subsectionRowIndex);
+        Intent newIntent = assertNextStartedActivity(activity, CourseUnitNavigationActivity.class);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
         assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
@@ -258,17 +259,19 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         // Should not perform any action if it receives a unit selection from itself
         Intent resultData = new Intent();
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseUnit.getId());
-        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+        courseOutlineFragment.onActivityResult(
+                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
-        assertNull(shadowActivity.getNextStartedActivityForResult());
+        assertNull(shadowActivity.getNextStartedActivity());
         assertFalse(shadowActivity.isFinishing());
         // Should finish itself to start the new navigation back stack if it receives
         // a unit selection from another section
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, lastUnit.getId());
-        activity.onActivityResult(CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
+        courseOutlineFragment.onActivityResult(
+                CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL,
                 Activity.RESULT_OK, resultData);
-        assertNull(shadowActivity.getNextStartedActivityForResult());
+        assertNull(shadowActivity.getNextStartedActivity());
         assertTrue(shadowActivity.isFinishing());
     }
 
@@ -278,15 +281,13 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
      *
      * @param controller The {link ActivityController} controlling the
      *                   {@link CourseOutlineActivity}
+     * @param courseOutlineFragment The {@link CourseOutlineFragment} instance
      * @param rowIndex The row index
      */
     private void clickRow(ActivityController<? extends CourseOutlineActivity> controller,
-            int rowIndex) {
-        CourseOutlineActivity activity = controller.get();
-        Fragment fragment = activity.getSupportFragmentManager()
-                .findFragmentByTag(CourseOutlineFragment.TAG);
+            CourseOutlineFragment courseOutlineFragment, int rowIndex) {
         controller.resume().postResume().visible();
-        View fragmentView = fragment.getView();
+        View fragmentView = courseOutlineFragment.getView();
         assertNotNull(fragmentView);
         View outlineList = fragmentView.findViewById(R.id.outline_list);
         assertNotNull(outlineList);
