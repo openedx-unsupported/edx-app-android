@@ -526,4 +526,13 @@ public class CourseOutlineAdapter extends BaseAdapter{
             this.component = component;
         }
     }
+
+    public int getPositionByItemId(String itemId){
+        int size = getCount();
+        for (int i=0; i<size; i++) {
+            if (getItem(i).component.getId().equals(itemId))
+                return i;
+        }
+        return -1;
+    }
 }

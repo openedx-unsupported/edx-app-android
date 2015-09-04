@@ -15,12 +15,10 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-
     </style>
 
     <!-- A theme for a custom dialog appearance. -->
     <style name="Theme.CustomDialog" parent="android:style/Theme.Dialog">
-
         <item name="android:textColor">#faca64</item>
     </style>
 
@@ -36,6 +34,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarTabStyle">@style/TabsStyle</item>
         <item name="buttonTextColor">@color/button_text</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
+        <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
@@ -258,6 +258,13 @@
 
     <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_right_background</item>
+    </style>
+
+    <style name="EnterExitAnimation.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_end</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_to_start</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_from_start</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_to_end</item>
     </style>
 
 </resources>

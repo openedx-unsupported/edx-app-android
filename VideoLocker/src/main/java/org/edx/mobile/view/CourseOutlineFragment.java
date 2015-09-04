@@ -1,7 +1,10 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.SectionEntry;
+import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -35,6 +39,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
+    private static final int AUTOSCROLL_DELAY_MS = 500;
 
     private CourseOutlineAdapter adapter;
     private ListView listView;
@@ -54,21 +59,21 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_outline, container,
-                false);
+        View view = inflater.inflate(R.layout.fragment_course_outline, container, false);
         listView = (ListView)view.findViewById(R.id.outline_list);
         initializeAdapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                listView.clearChoices();
                 CourseOutlineAdapter.SectionRow row = adapter.getItem(position);
                 CourseComponent comp = row.component;
-                if ( comp.isContainer() ){
-                    environment.getRouter().showCourseContainerOutline(getActivity(),
-                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
+                if (comp.isContainer()) {
+                    environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
+                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId(), null);
                 } else {
-                    environment.getRouter().showCourseUnitDetail(getActivity(),
+                    environment.getRouter().showCourseUnitDetail(CourseOutlineFragment.this,
                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, comp.getId());
                 }
             }
@@ -81,16 +86,14 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         restore(savedInstanceState);
-        try {
-            if( courseData == null ) {
-                final Bundle bundle = getArguments();
-                courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
-                courseComponentId = (String) bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
+        final Bundle bundle = getArguments();
+        if( courseData == null ) {
+            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
+            courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
         loadData(getView());
+
+        updateRowSelection(bundle.getString(Router.EXTRA_LAST_ACCESSED_ID));
     }
 
     @Override
@@ -181,6 +184,61 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     public void reloadList(){
         if ( adapter != null ){
             adapter.reloadData();
+        }
+    }
+
+    private void updateRowSelection(String lastAccessedId){
+        if (!TextUtils.isEmpty(lastAccessedId)) {
+            final int selectedItemPosition = adapter.getPositionByItemId(lastAccessedId);
+            if (selectedItemPosition != -1) {
+                listView.setItemChecked(selectedItemPosition, true);
+                listView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        listView.smoothScrollToPosition(selectedItemPosition);
+                    }
+                }, AUTOSCROLL_DELAY_MS);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            // If user has navigated to a different unit, then we need to rearrange
+            // the activity stack to point to it.
+            case REQUEST_SHOW_COURSE_UNIT_DETAIL: {
+                switch (resultCode) {
+                    case Activity.RESULT_OK: {
+                        CourseComponent outlineComp = courseManager.getComponentById(
+                                courseData.getCourse().getId(), courseComponentId);
+                        String leafCompId = (String) data.getSerializableExtra(Router.EXTRA_COURSE_COMPONENT_ID);
+                        CourseComponent leafComp = courseManager.getComponentById(
+                                courseData.getCourse().getId(), leafCompId);
+                        BlockPath outlinePath = outlineComp.getPath();
+                        BlockPath leafPath = leafComp.getPath();
+                        int outlinePathSize = outlinePath.getPath().size();
+                        if (!outlineComp.equals(leafPath.get(outlinePathSize - 1))) {
+                            getActivity().setResult(Activity.RESULT_OK, data);
+                            getActivity().finish();
+                        } else {
+                            int leafPathSize = leafPath.getPath().size();
+                            if (outlinePathSize == leafPathSize - 2) {
+                                updateRowSelection(leafCompId);
+                            } else {
+                                for (int i = outlinePathSize + 1; i < leafPathSize - 1; i += 2) {
+                                    CourseComponent nextComp = leafPath.get(i);
+                                    environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
+                                            REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, nextComp.getId(), leafCompId);
+                                }
+                                getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
+                            }
+                        }
+                    }
+                }
+                break;
+            }
         }
     }
 }
