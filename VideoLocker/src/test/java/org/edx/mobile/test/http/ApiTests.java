@@ -205,6 +205,8 @@ public class ApiTests extends HttpBaseTestCase {
     public void testEnrollInACourse() throws Exception {
         if( shouldSkipTest ) return;
 
+        login();
+
         print("test: Enroll in a course");
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
