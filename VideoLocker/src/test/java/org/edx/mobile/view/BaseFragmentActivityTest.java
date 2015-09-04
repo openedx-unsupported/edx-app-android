@@ -214,16 +214,6 @@ public class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Assert pending transition animation override with custom slide animation
-     *
-     * @param shadowActivity The shadow activity
-     */
-    public void assertAppliedTransitionNext(ShadowActivity shadowActivity) {
-        assertOverridePendingTransition(shadowActivity,
-                R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-    }
-
-    /**
      * Assert previous transition animation override with custom slide animation
      *
      * @param shadowActivity The shadow activity
@@ -243,11 +233,7 @@ public class BaseFragmentActivityTest extends UiTest {
         BaseFragmentActivity activity = controller.get();
         ShadowActivity shadowActivity = Shadows.shadowOf(activity);
 
-        controller.create();
-        // Check custom transition animation override
-        assertAppliedTransitionNext(shadowActivity);
-
-        controller.start();
+        controller.create().start();
         // Social features state persistence
         PrefManager pmFeatures = new PrefManager(activity, PrefManager.Pref.FEATURES);
         assertEquals(NetworkUtil.isSocialFeatureFlagEnabled(activity, Mockito.mock(org.edx.mobile.util.Config.class)),
@@ -308,9 +294,6 @@ public class BaseFragmentActivityTest extends UiTest {
             activity.finish();
         }
         assertThat(activity).isFinishing();
-
-        // Check custom transition animation override
-        assertAppliedTransitionPrev(shadowActivity);
     }
 
     /**
@@ -465,11 +448,9 @@ public class BaseFragmentActivityTest extends UiTest {
         assumeTrue(appliesPrevTransitionOnRestart());
         ActivityController<? extends BaseFragmentActivity> controller =
                 Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().start();
-        ShadowActivity shadowActivity = Shadows.shadowOf(controller.get());
-        assertAppliedTransitionNext(shadowActivity);
-        controller.stop().start().resume();
-        assertAppliedTransitionPrev(shadowActivity);
+                        .withIntent(getIntent()).create().start()
+                        .stop().start().resume();
+        assertAppliedTransitionPrev(Shadows.shadowOf(controller.get()));
     }
 
     /**
@@ -485,7 +466,6 @@ public class BaseFragmentActivityTest extends UiTest {
         Intent intent = shadowActivity.getNextStartedActivity();
         assertNotNull(intent);
         assertThat(intent).hasComponent(currentActivity, nextActivityClass);
-        assertAppliedTransitionNext(shadowActivity);
         return intent;
     }
 
@@ -507,7 +487,6 @@ public class BaseFragmentActivityTest extends UiTest {
         assertThat(intentForResult.intent).hasComponent(
                 currentActivity, nextActivityClass);
         assertEquals(requestCode, intentForResult.requestCode);
-        assertAppliedTransitionNext(shadowActivity);
         return intentForResult.intent;
     }
 
