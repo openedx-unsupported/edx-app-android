@@ -1,65 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row_discussion_post_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/edx_margin"
     android:paddingBottom="@dimen/edx_margin"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingTop="@dimen/edx_margin">
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/discussion_post_type_icon"
         style="@style/icon_view_standard_size_style"
-        android:layout_margin="@dimen/edx_margin"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
+        android:layout_margin="@dimen/edx_margin"
         app:iconColor="@color/edx_grayscale_neutral_light" />
 
     <LinearLayout
         android:id="@+id/discussion_post_linear_layout"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/discussion_post_type_icon"
+        android:layout_toLeftOf="@+id/discussion_post_num_comments_text_view"
         android:layout_toRightOf="@+id/discussion_post_type_icon"
         android:layout_toStartOf="@+id/discussion_post_num_comments_text_view"
-        android:layout_toLeftOf="@+id/discussion_post_num_comments_text_view"
-        android:layout_centerVertical="true">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/discussion_post_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/edx_grayscale_neutral_x_dark"
             android:textSize="@dimen/edx_small"
-            android:maxLines="2"
-            android:ellipsize="end"
-            tools:text="This is a post title. It is a very long title to demonstrate that post titles will be truncated when they are too long."/>
+            tools:text="This is a post title. It is a very long title to demonstrate that post titles will be truncated when they are too long." />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/discussion_posts_icon_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/discussion_post_pin_icon"
+                android:layout_width="@dimen/edx_x_small"
+                android:layout_height="@dimen/edx_x_small"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa_thumb_tack" />
+
+            <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/discussion_post_following_icon"
+                android:layout_width="@dimen/edx_x_small"
+                android:layout_height="@dimen/edx_x_small"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa_star" />
 
             <TextView
-                android:id="@+id/discussion_post_pin_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/widget_margin"
-                android:layout_marginRight="@dimen/widget_margin"
-                android:textColor="@color/edx_grayscale_neutral_base"
-                android:textSize="@dimen/edx_x_small"
-                tools:text="Staff"/>
-
-            <TextView
-                android:id="@+id/discussion_post_following_text_view"
+                android:id="@+id/discussion_post_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/edx_grayscale_neutral_base"
                 android:textSize="@dimen/edx_x_small"
-                android:text="@string/discussion_posts_following"/>
+                tools:text="By Staff" />
 
         </LinearLayout>
 
@@ -69,20 +79,20 @@
         android:id="@+id/discussion_post_num_comments_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/discussion_post_comment_icon"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/discussion_post_comment_icon"
-        android:layout_centerVertical="true" />
+        android:layout_toStartOf="@+id/discussion_post_comment_icon" />
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/discussion_post_comment_icon"
         style="@style/icon_view_standard_size_style"
-        android:layout_marginEnd="@dimen/edx_margin"
-        android:layout_marginRight="@dimen/edx_margin"
-        android:layout_marginStart="3dp"
-        android:layout_marginLeft="3dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        app:iconName="fa_comment"/>
+        android:layout_marginEnd="@dimen/edx_margin"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="@dimen/edx_margin"
+        android:layout_marginStart="3dp"
+        app:iconName="fa_comment" />
 
 </RelativeLayout>

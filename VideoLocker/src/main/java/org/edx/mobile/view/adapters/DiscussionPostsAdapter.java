@@ -1,8 +1,6 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
@@ -13,7 +11,6 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 
@@ -38,41 +35,30 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         String threadTitle = discussionThread.getTitle();
         holder.discussionPostTitle.setText(threadTitle);
 
-        if (discussionThread.getAuthorLabel() != null) {
-            holder.discussionPostPinTextView.setVisibility(View.VISIBLE);
-            final String pinFollowTextLabel;
-            switch (discussionThread.getAuthorLabel()) {
-                case STAFF: {
-                    pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_staff);
-                    break;
-                }
-                case COMMUNITY_TA: {
-                    pinFollowTextLabel = getContext().getString(R.string.discussion_priviledged_author_label_ta);
-                    break;
-                }
-                default: {
-                    pinFollowTextLabel = "";
+        holder.discussionPostPinIcon.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
+        holder.discussionPostFollowIcon.setVisibility(discussionThread.isFollowing() ? View.VISIBLE : View.GONE);
+
+        {
+            String authorLabel = null;
+            if (null != discussionThread.getAuthorLabel()) {
+                switch (discussionThread.getAuthorLabel()) {
+                    case STAFF: {
+                        authorLabel = getContext().getString(R.string.discussion_priviledged_author_label_staff);
+                        break;
+                    }
+                    case COMMUNITY_TA: {
+                        authorLabel = getContext().getString(R.string.discussion_priviledged_author_label_ta);
+                        break;
+                    }
                 }
             }
-            final Drawable icon;
-            if (discussionThread.isPinned()) {
-                icon = new IconDrawable(getContext(), Iconify.IconValue.fa_thumb_tack).colorRes(R.color.edx_grayscale_neutral_base).sizeRes(R.dimen.edx_x_small);
+            if (authorLabel != null) {
+                holder.discussionPostAuthor.setVisibility(View.VISIBLE);
+                holder.discussionPostAuthor.setText(getContext().getString(R.string.discussion_priviledged_author_attribution, authorLabel));
+
             } else {
-                icon = null;
+                holder.discussionPostAuthor.setVisibility(View.GONE);
             }
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionPostPinTextView, icon, null, null, null);
-            holder.discussionPostPinTextView.setText(" " + pinFollowTextLabel);
-
-        } else {
-            holder.discussionPostPinTextView.setVisibility(View.GONE);
-        }
-
-        if (discussionThread.isFollowing()) {
-            holder.discussionPostFollowTextView.setVisibility(View.VISIBLE);
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionPostFollowTextView,
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_star).colorRes(R.color.edx_grayscale_neutral_base).sizeRes(R.dimen.edx_x_small), null, null, null);
-        } else {
-            holder.discussionPostFollowTextView.setVisibility(View.GONE);
         }
 
         final int commentColor = discussionThread.getUnreadCommentCount() == 0 ?
@@ -86,17 +72,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
     @Override
     public BaseViewHolder getTag(View convertView) {
-        final ViewHolder holder = new ViewHolder();
-
-        holder.discussionPostRow = (RelativeLayout) convertView.findViewById(R.id.row_discussion_post_relative_layout);
-        holder.discussionPostTypeIcon = (IconView) convertView.findViewById(R.id.discussion_post_type_icon);
-        holder.discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
-        holder.discussionPostPinTextView = (TextView) convertView.findViewById(R.id.discussion_post_pin_text_view);
-        holder.discussionPostFollowTextView = (TextView) convertView.findViewById(R.id.discussion_post_following_text_view);
-        holder.discussionPostNumCommentsTextView = (TextView) convertView.findViewById(R.id.discussion_post_num_comments_text_view);
-        holder.discussionPostCommentIcon = (IconView) convertView.findViewById(R.id.discussion_post_comment_icon);
-
-        return holder;
+        return new ViewHolder(convertView);
     }
 
     @Override
@@ -104,13 +80,25 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        RelativeLayout discussionPostRow;
-        IconView discussionPostTypeIcon;
-        TextView discussionPostTitle;
-        TextView discussionPostPinTextView;
-        TextView discussionPostFollowTextView;
-        TextView discussionPostNumCommentsTextView;
-        IconView discussionPostCommentIcon;
+        final RelativeLayout discussionPostRow;
+        final IconView discussionPostTypeIcon;
+        final TextView discussionPostTitle;
+        final IconView discussionPostPinIcon;
+        final IconView discussionPostFollowIcon;
+        final TextView discussionPostAuthor;
+        final TextView discussionPostNumCommentsTextView;
+        final IconView discussionPostCommentIcon;
+
+        public ViewHolder(View convertView) {
+            discussionPostRow = (RelativeLayout) convertView.findViewById(R.id.row_discussion_post_relative_layout);
+            discussionPostTypeIcon = (IconView) convertView.findViewById(R.id.discussion_post_type_icon);
+            discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
+            discussionPostPinIcon = (IconView) convertView.findViewById(R.id.discussion_post_pin_icon);
+            discussionPostFollowIcon = (IconView) convertView.findViewById(R.id.discussion_post_following_icon);
+            discussionPostAuthor = (TextView) convertView.findViewById(R.id.discussion_post_author);
+            discussionPostNumCommentsTextView = (TextView) convertView.findViewById(R.id.discussion_post_num_comments_text_view);
+            discussionPostCommentIcon = (IconView) convertView.findViewById(R.id.discussion_post_comment_icon);
+        }
 
     }
 }
