@@ -11,7 +11,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.robolectric.util.SupportFragmentTestUtil;
+import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

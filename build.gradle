@@ -37,7 +37,7 @@ task createBuildArtifactsDirectory << { task ->
 // Copies unit test reports to the 'artifacts' directory
 task copyUnitTestBuildArtifacts << { task ->
     // copy unit test reports
-    def srcPath = "VideoLocker/build/outputs/reports"
+    def srcPath = "VideoLocker/build/reports"
     task.project.exec {
         commandLine = ['cp', '-R', srcPath, 'artifacts']
     }
