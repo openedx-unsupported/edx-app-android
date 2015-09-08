@@ -2,7 +2,6 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
+import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.task.FlagThreadTask;
 import org.edx.mobile.task.FollowThreadTask;
@@ -151,9 +150,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             public void onClick(View view) {
                 VoteThreadTask task = new VoteThreadTask(context, discussionThread, !discussionThread.isVoted()) {
                     @Override
-                    public void onSuccess(DiscussionThread topicThreads) {
-                        if (topicThreads != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
+                    public void onSuccess(DiscussionThread updatedDiscussionThread) {
+                        if (updatedDiscussionThread != null) {
+                            CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
+                            EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
                             notifyDataSetChanged();
                         }
                     }
@@ -173,10 +173,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
                 FollowThreadTask task = new FollowThreadTask(context, discussionThread, !discussionThread.isFollowing()) {
                     @Override
-                    public void onSuccess(DiscussionThread topicThreads) {
-                        if (topicThreads != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThreads;
-                            EventBus.getDefault().post(new DiscussionThreadFollowedEvent(topicThreads));
+                    public void onSuccess(DiscussionThread updatedDiscussionThread) {
+                        if (updatedDiscussionThread != null) {
+                            CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
+                            EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
                             notifyDataSetChanged();
                         }
                     }

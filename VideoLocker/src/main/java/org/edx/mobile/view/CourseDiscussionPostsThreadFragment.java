@@ -14,7 +14,7 @@ import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.DiscussionThreadFollowedEvent;
+import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
@@ -176,7 +176,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         return DiscussionTopic.FOLLOWING_TOPICS_ID.equals(discussionTopic.getIdentifier());
     }
 
-    public void onEventMainThread(DiscussionThreadFollowedEvent event) {
+    public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
         for (int i = 0; i < discussionPostsAdapter.getCount(); ++i) {
             if (discussionPostsAdapter.getItem(i).hasSameId(event.getDiscussionThread())) {
@@ -241,6 +241,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     refreshListViewOnDataChange();
                 }
 
+                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VoteCount);
                 discussionPostsAdapter.notifyDataSetChanged();
                 checkNoResultView();
             }
@@ -273,6 +274,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     refreshListViewOnDataChange();
                 }
 
+                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VoteCount);
                 discussionPostsAdapter.notifyDataSetChanged();
                 checkNoResultView();
             }

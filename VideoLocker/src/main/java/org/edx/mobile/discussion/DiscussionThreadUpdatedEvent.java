@@ -4,12 +4,12 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.discussion.DiscussionThread;
 
-public class DiscussionThreadFollowedEvent {
+public class DiscussionThreadUpdatedEvent {
 
     @NonNull
     private final DiscussionThread discussionThread;
 
-    public DiscussionThreadFollowedEvent(@NonNull DiscussionThread discussionThread) {
+    public DiscussionThreadUpdatedEvent(@NonNull DiscussionThread discussionThread) {
         this.discussionThread = discussionThread;
     }
 

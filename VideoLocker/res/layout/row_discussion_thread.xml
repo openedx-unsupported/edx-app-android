@@ -23,9 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/discussion_post_type_icon"
-        android:layout_toLeftOf="@+id/discussion_post_num_comments_text_view"
+        android:layout_toLeftOf="@+id/discussion_post_indicator_text"
         android:layout_toRightOf="@+id/discussion_post_type_icon"
-        android:layout_toStartOf="@+id/discussion_post_num_comments_text_view"
+        android:layout_toStartOf="@+id/discussion_post_indicator_text"
         android:orientation="vertical">
 
         <TextView
@@ -76,15 +76,16 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/discussion_post_num_comments_text_view"
+        android:id="@+id/discussion_post_indicator_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/discussion_post_comment_icon"
-        android:layout_toStartOf="@+id/discussion_post_comment_icon" />
+        android:layout_toLeftOf="@+id/discussion_post_indicator_icon"
+        android:layout_toStartOf="@+id/discussion_post_indicator_icon"
+        tools:text="42" />
 
     <org.edx.mobile.third_party.iconify.IconView
-        android:id="@+id/discussion_post_comment_icon"
+        android:id="@+id/discussion_post_indicator_icon"
         style="@style/icon_view_standard_size_style"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -92,7 +93,6 @@
         android:layout_marginEnd="@dimen/edx_margin"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="@dimen/edx_margin"
-        android:layout_marginStart="3dp"
-        app:iconName="fa_comment" />
+        android:layout_marginStart="3dp" />
 
 </RelativeLayout>
