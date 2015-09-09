@@ -37,6 +37,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -598,6 +599,11 @@ public class BaseFragmentActivityTest extends UiTest {
      * Testing method for displaying web view dialog fragment
      */
     @Test
+    // There is currently a Robolectric issue with initializing EdxWebView:
+    // https://github.com/robolectric/robolectric/issues/793
+    // This test will be ignored until the issue is fixed.
+    // TODO: Fix it by adding appropriate shadow implementations in Robolectric
+    @Ignore
     public void showWebDialogTest() {
         BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
