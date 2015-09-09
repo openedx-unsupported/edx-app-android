@@ -37,8 +37,8 @@ import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
@@ -108,7 +108,6 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
                 environment.getRouter().showCourseDetailTabs(getActivity(), environment.getConfig(), model, true);
             }
         };
-        adapter.setImageCacheManager(environment.getImageCacheManager());
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
             @Override

@@ -4,15 +4,17 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.MemoryUtil;
+import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
 public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
     private long lastClickTime;
@@ -35,10 +37,11 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         holder.no_of_videos.setText(videos);
         holder.size_of_videos.setText(MemoryUtil.format(getContext(), enrollment.size));
 
-        holder.courseImage.setDefaultImageResId(R.drawable.edx_map);
-        holder.courseImage.setImageUrl(courseData.getCourse_image(environment.getConfig()),
-            environment.getImageCacheManager().getImageLoader());
-        holder.courseImage.setTag(courseData);
+        Glide.with(getContext())
+                .load(courseData.getCourse_image(environment.getConfig()))
+                .placeholder(R.drawable.edx_map)
+                .transform(new TopAnchorFillWidthTransformation(getContext()))
+                .into(holder.courseImage);
     }
 
     @Override
@@ -48,7 +51,7 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
                 .findViewById(R.id.course_name);
         holder.schoolCode = (TextView) convertView
                 .findViewById(R.id.school_code);
-        holder.courseImage = (NetworkImageView) convertView
+        holder.courseImage = (ImageView) convertView
                 .findViewById(R.id.course_image);
         holder.no_of_videos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
@@ -58,7 +61,7 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        NetworkImageView courseImage;
+        ImageView courseImage;
         TextView courseTitle;
         TextView schoolCode;
         TextView no_of_videos;
@@ -67,7 +70,7 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-        //This has been used so that if user clicks continuously on the screen, 
+        //This has been used so that if user clicks continuously on the screen,
         //two activities should not be opened
         long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {

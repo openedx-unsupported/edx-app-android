@@ -73,7 +73,7 @@
     <!-- Alert dialog okay button -->
     <string name="play_data_dialog_OK">OK</string>
     <!-- Alert dialog cancel button -->
-    <string name="play_data_dialog_Cancel">Cancel</string>
+    <string name="play_data_dialog_Cancel">@android:string/cancel</string>
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
@@ -198,8 +198,6 @@
     <!-- Title of course outline screen -->
     <string name="course_outline">Course Outline</string>
 
-    <!-- Accessible content description of image for a course -->
-    <string name="course_image">Course Image</string>
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
     <!-- Accessible content description of course code label for a course -->
@@ -450,6 +448,8 @@
     <string name="title_lecture_complete">You\'ve reached the end of this video.</string>
     <!-- Alert dialog prompt at end of video. -->
     <string name="msg_lecture_complete">Would you like to watch the next video?</string>
+    <!-- Accessible content description of cancel button to cancel video download -->
+    <string name="cancel">@android:string/cancel</string>
 
 
     <!-- Message shown video download in process -->
