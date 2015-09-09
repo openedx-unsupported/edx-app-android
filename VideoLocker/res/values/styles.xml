@@ -36,6 +36,7 @@
         <item name="buttonTextColor">@color/button_text</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
+        <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
@@ -235,14 +236,18 @@
         <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
         <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
         <item name="android:layout_marginRight">3dp</item>
+        <item name="android:spinnerMode">dropdown</item>
     </style>
 
     <style name="edX.Widget.SpinnerContainer">
         <item name="android:background">@drawable/edx_input_background</item>
     </style>
 
+    <style name="edX.Widget.SpinnerDropDownListView" parent="Widget.AppCompat.ListView.DropDown">
+    </style>
+
     <style name="edX.Widget.SegmentedControlSegment">
-        <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
+        <item name="android:textColor">@color/edx_input_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
