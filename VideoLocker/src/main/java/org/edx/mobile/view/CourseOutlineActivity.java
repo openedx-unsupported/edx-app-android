@@ -18,8 +18,6 @@ import org.edx.mobile.services.LastAccessManager;
  */
 public class CourseOutlineActivity extends CourseVideoListActivity {
 
-    static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
-
     private CourseOutlineFragment fragment;
 
     @Inject

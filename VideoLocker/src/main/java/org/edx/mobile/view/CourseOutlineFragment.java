@@ -33,12 +33,11 @@ import org.edx.mobile.view.custom.ETextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.edx.mobile.view.CourseOutlineActivity.REQUEST_SHOW_COURSE_UNIT_DETAIL;
-
 public class CourseOutlineFragment extends MyVideosBaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
+    static final int REQUEST_SHOW_COURSE_UNIT_DETAIL = 0;
     private static final int AUTOSCROLL_DELAY_MS = 500;
 
     private CourseOutlineAdapter adapter;
