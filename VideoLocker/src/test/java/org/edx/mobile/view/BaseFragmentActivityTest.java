@@ -33,7 +33,6 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
@@ -523,7 +522,7 @@ public class BaseFragmentActivityTest extends UiTest {
                 .findItem(R.id.progress_download)
                 .isVisible());
 
-        IDatabase db = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE);
+        IDatabase db = environment.getDatabase();
         DownloadEntry de = new DownloadEntry();
         de.username = "unittest";
         de.title = "title";
