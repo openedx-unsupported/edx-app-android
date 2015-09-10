@@ -102,6 +102,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
      * Testing functionality upon receiving a DownloadEvent
      */
     @Test
+    @Ignore // Hangs indefinitely. Fixed in https://github.com/robolectric/robolectric/pull/2017
     public void downloadEventTest() {
         CourseBaseActivity activity =
                 Robolectric.buildActivity(getActivityClass())

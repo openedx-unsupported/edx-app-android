@@ -30,10 +30,10 @@ edx {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: "jacoco"
 apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 
+apply from: 'jacoco.gradle'
 
 repositories {
     mavenCentral()
@@ -122,9 +122,9 @@ dependencies {
      testCompile ("org.mockito:mockito-core:1.9.5"){
          exclude group: 'org.hamcrest'
       }
-     testCompile "org.robolectric:robolectric:3.0-rc3"
-     testCompile "org.robolectric:shadows-support-v4:3.0-rc3"
-     testCompile "org.robolectric:shadows-multidex:3.0-rc3"
+     testCompile "org.robolectric:robolectric:3.0"
+     testCompile "org.robolectric:shadows-support-v4:3.0"
+     testCompile "org.robolectric:shadows-multidex:3.0"
     /**
      * Adding the jars statically because the assertj-android
      * module is only available in Maven Central as an AAR,
@@ -191,11 +191,6 @@ android {
             assets.srcDirs = ['assets']
         }
 
-        // code coverage with Jacoco
-        jacoco {
-            version = "0.7.1.201405082137"
-        }
-
         // Move the build types to build-types/<type>
         // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml.
         // This moves them out of default location under src/<type>/... which would
@@ -247,7 +242,12 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
-
+    testOptions { 
+         unitTests.all {
+             maxHeapSize '1024m'
+             jvmArgs '-XX:MaxPermSize=512m'
+         }
+    }
 }
 
 
@@ -266,6 +266,9 @@ android.applicationVariants.all { variant ->
 
     tasks.all {task ->
         if (task.name.startsWith("fabric")) {
+            task.mustRunAfter(configureTask)
+        }
+        if (task.name.startsWith("test")) {
             task.mustRunAfter(configureTask)
         }
     }
