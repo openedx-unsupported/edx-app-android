@@ -1,6 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
@@ -16,9 +17,24 @@ import org.edx.mobile.third_party.iconify.Iconify;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
+    private boolean voteCountsEnabled;
+
+    @ColorInt
+    private final int edx_brand_primary_base;
+    @ColorInt
+    private final int edx_grayscale_neutral_light;
+    @ColorInt
+    private final int edx_grayscale_neutral_xx_light;
+    @ColorInt
+    private final int edx_grayscale_neutral_white;
+
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
+        edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
+        edx_grayscale_neutral_light = context.getResources().getColor(R.color.edx_grayscale_neutral_light);
+        edx_grayscale_neutral_xx_light = context.getResources().getColor(R.color.edx_grayscale_neutral_xx_light);
+        edx_grayscale_neutral_white = context.getResources().getColor(R.color.edx_grayscale_neutral_white);
     }
 
     @Override
@@ -61,13 +77,27 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             }
         }
 
-        final int commentColor = discussionThread.getUnreadCommentCount() == 0 ?
-                R.color.edx_grayscale_neutral_light : R.color.edx_brand_primary_base;
-        holder.discussionPostNumCommentsTextView.setText(Integer.toString(discussionThread.getCommentCount()));
-        holder.discussionPostNumCommentsTextView.setTextColor(getContext().getResources().getColor(commentColor));
-        holder.discussionPostCommentIcon.setIconColor(getContext().getResources().getColor(commentColor));
-        holder.discussionPostRow.setBackgroundColor(getContext().getResources().getColor(
-                discussionThread.isRead() ? R.color.edx_grayscale_neutral_xx_light : R.color.edx_grayscale_neutral_white));
+        {
+            final String text;
+            final Iconify.IconValue icon;
+            @ColorInt
+            final int iconColor;
+            if (voteCountsEnabled) {
+                text = Integer.toString(discussionThread.getVoteCount());
+                icon = Iconify.IconValue.fa_plus;
+                iconColor = discussionThread.isVoted() ? edx_brand_primary_base : edx_grayscale_neutral_light;
+            } else {
+                text = Integer.toString(discussionThread.getCommentCount());
+                icon = Iconify.IconValue.fa_comment;
+                iconColor = discussionThread.getUnreadCommentCount() == 0 ? edx_grayscale_neutral_light : edx_brand_primary_base;
+
+            }
+            holder.discussionPostIndicatorTextView.setText(text);
+            holder.discussionPostIndicatorTextView.setTextColor(iconColor);
+            holder.discussionPostIndicatorIcon.setIcon(icon);
+            holder.discussionPostIndicatorIcon.setIconColor(iconColor);
+        }
+        holder.discussionPostRow.setBackgroundColor(discussionThread.isRead() ? edx_grayscale_neutral_xx_light : edx_grayscale_neutral_white);
     }
 
     @Override
@@ -79,6 +109,10 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     }
 
+    public void setVoteCountsEnabled(boolean voteCountsEnabled) {
+        this.voteCountsEnabled = voteCountsEnabled;
+    }
+
     private static class ViewHolder extends BaseViewHolder {
         final RelativeLayout discussionPostRow;
         final IconView discussionPostTypeIcon;
@@ -86,8 +120,8 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         final IconView discussionPostPinIcon;
         final IconView discussionPostFollowIcon;
         final TextView discussionPostAuthor;
-        final TextView discussionPostNumCommentsTextView;
-        final IconView discussionPostCommentIcon;
+        final TextView discussionPostIndicatorTextView;
+        final IconView discussionPostIndicatorIcon;
 
         public ViewHolder(View convertView) {
             discussionPostRow = (RelativeLayout) convertView.findViewById(R.id.row_discussion_post_relative_layout);
@@ -96,8 +130,8 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             discussionPostPinIcon = (IconView) convertView.findViewById(R.id.discussion_post_pin_icon);
             discussionPostFollowIcon = (IconView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostAuthor = (TextView) convertView.findViewById(R.id.discussion_post_author);
-            discussionPostNumCommentsTextView = (TextView) convertView.findViewById(R.id.discussion_post_num_comments_text_view);
-            discussionPostCommentIcon = (IconView) convertView.findViewById(R.id.discussion_post_comment_icon);
+            discussionPostIndicatorTextView = (TextView) convertView.findViewById(R.id.discussion_post_indicator_text);
+            discussionPostIndicatorIcon = (IconView) convertView.findViewById(R.id.discussion_post_indicator_icon);
         }
 
     }
