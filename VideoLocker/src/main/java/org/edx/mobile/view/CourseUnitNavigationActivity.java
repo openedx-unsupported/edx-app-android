@@ -58,7 +58,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
         RelativeLayout insertPoint = (RelativeLayout)findViewById(R.id.fragment_container);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -127,8 +126,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         updateUIForOrientation();
 
-        updateDataModel();
-        
         setApplyPrevTransitionOnRestart(true);
 
         try{
@@ -136,6 +133,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }catch(Exception e){
             logger.error(e);
         }
+    }
+
+    @Override
+    protected void onLoadData() {
+        selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(),
+                getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE);
+        updateDataModel();
     }
 
     @Override
@@ -240,6 +245,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                              EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
         ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
+        pagerAdapter.notifyDataSetChanged();
 
         ViewPagerDownloadManager.instance.setMainComponent(selectedUnit, unitList);
 
@@ -269,12 +275,10 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
             pager.setPagingEnabled(false);
-            environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), false);
         } else {
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
             pager.setPagingEnabled(true);
-            environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), true);
         }
     }
 

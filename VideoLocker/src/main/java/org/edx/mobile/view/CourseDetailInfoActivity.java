@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.View;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -15,9 +15,10 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 
 
-public class CourseDetailInfoActivity extends CourseBaseActivity {
+public class CourseDetailInfoActivity extends BaseFragmentActivity {
 
     private CourseCombinedInfoFragment fragment;
+    private EnrolledCoursesResponse courseData;
 
 
     public static String TAG = CourseDetailInfoActivity.class.getCanonicalName();
@@ -33,7 +34,8 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
 
         setApplyPrevTransitionOnRestart(true);
 
-        bundle = getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
+        bundle = savedInstanceState != null ? savedInstanceState :
+                getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {
             AppConstants.offline_flag = true;
@@ -43,35 +45,28 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
             }
         }
 
-        try{
-            EnrolledCoursesResponse courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable(Router.EXTRA_ENROLLMENT);
+        courseData = (EnrolledCoursesResponse) bundle
+                .getSerializable(Router.EXTRA_ENROLLMENT);
 
-            //check courseData again, it may be fetched from local cache
-            if ( courseData != null ) {
-                activityTitle = courseData.getCourse().getName();
+        //check courseData again, it may be fetched from local cache
+        if ( courseData != null ) {
+            activityTitle = courseData.getCourse().getName();
 
-                try{
-                    environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
-                }catch(Exception e){
-                    logger.error(e);
-                }
-            } else {
-
-                boolean handleFromNotification = handleIntentFromNotification();
-                //this is not from notification
-                if (!handleFromNotification) {
-                    //it is a good idea to go to the my course page. as loading of my courses
-                    //take a while to load. that the only way to get anouncement link
-                    environment.getRouter().showMyCourses(this);
-                    finish();
-                }
+            try{
+                environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
+            }catch(Exception e){
+                logger.error(e);
             }
+        } else {
 
-        }catch(Exception ex){
-            environment.getRouter().showMyCourses(this);
-            finish();
-            logger.error(ex);
+            boolean handleFromNotification = handleIntentFromNotification();
+            //this is not from notification
+            if (!handleFromNotification) {
+                //it is a good idea to go to the my course page. as loading of my courses
+                //take a while to load. that the only way to get anouncement link
+                environment.getRouter().showMyCourses(this);
+                finish();
+            }
         }
 
     }
@@ -87,7 +82,7 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
                 try{
                     bundle.remove(Router.EXTRA_COURSE_ID);
                     Api api = new Api(this);
-                    EnrolledCoursesResponse courseData = api.getCourseById(courseId);
+                    courseData = api.getCourseById(courseId);
                     if (courseData != null && courseData.getCourse() != null ) {
                         bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
                         activityTitle = courseData.getCourse().getName();
@@ -121,6 +116,12 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
             }
         }
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
     }
 
     @Override
@@ -165,7 +166,7 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
                 fragment.setRetainInstance(true);
 
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.fragment_container, fragment);
+                fragmentTransaction.add(android.R.id.content, fragment);
                 fragmentTransaction.disallowAddToBackStack();
                 fragmentTransaction.commit();
 
@@ -173,21 +174,5 @@ public class CourseDetailInfoActivity extends CourseBaseActivity {
                 logger.error(e);
             }
         }
-    }
-
-    protected boolean createOptionMenu(Menu menu) {
-        return false;
-    }
-
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return false;
-    }
-
-    @Override
-    protected String getUrlForWebView() {
-        if ( courseData != null && courseData.getCourse() != null ){
-            return courseData.getCourse().getCourse_url();
-        }
-        return "";
     }
 }

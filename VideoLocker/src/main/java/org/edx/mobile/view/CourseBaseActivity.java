@@ -19,6 +19,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
+import org.edx.mobile.task.GetCourseStructureTask;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -64,7 +65,13 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected EnrolledCoursesResponse courseData;
     protected String courseComponentId;
 
+    private GetCourseStructureTask getHierarchyTask;
+
+    private boolean isDestroyed;
+
     protected abstract String getUrlForWebView();
+
+    protected abstract void onLoadData();
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -119,22 +126,60 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (getHierarchyTask != null) {
+            getHierarchyTask.cancel(true);
+            getHierarchyTask = null;
+        }
+        isDestroyed = true;
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if ( courseData != null)
-            outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
-        if ( courseComponentId != null )
-            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         super.onSaveInstanceState(outState);
+        outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
     }
 
     protected void restore(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
-            courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+        courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
+        courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
+
+        if (courseComponentId == null) {
+            getHierarchyTask = new GetCourseStructureTask(this, courseData.getCourse().getId()) {
+                @Override
+                public void onSuccess(CourseComponent courseComponent) {
+                    if (courseComponent != null) {
+                        courseComponentId = courseComponent.getId();
+                        // Only trigger the callback if the task has not been cancelled, and
+                        // the Activity has not been destroyed. The task should be canceled
+                        // in Activity destruction anyway, so the latter check is just a
+                        // precaution.
+                        if (getHierarchyTask != null) {
+                            onLoadData();
+                            getHierarchyTask = null;
+                        }
+                    }
+                }
+
+                @Override
+                public void onException(Exception ex) {
+                    showInfoMessage(getString(R.string.no_connectivity));
+                }
+            };
+            getHierarchyTask.setTaskProcessCallback(this);
+            getHierarchyTask.setProgressDialog(progressWheel);
+            getHierarchyTask.execute();
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // If the data is available then trigger the callback
+        // after basic initialization
+        if (courseComponentId != null) {
+            onLoadData();
         }
     }
 

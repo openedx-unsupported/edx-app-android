@@ -113,6 +113,8 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     protected void modeChanged(){
 
+        if (courseComponentId == null) return;
+
         if (isOnCourseOutline())
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
 
@@ -209,6 +211,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     protected boolean isOnCourseOutline(){
+        if (courseComponentId == null) return true;
         CourseComponent outlineComp = courseManager.getComponentById(
                 courseData.getCourse().getId(), courseComponentId);
         BlockPath outlinePath = outlineComp.getPath();

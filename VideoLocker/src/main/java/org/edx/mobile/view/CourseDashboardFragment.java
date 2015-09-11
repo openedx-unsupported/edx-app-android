@@ -14,29 +14,22 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.discussion.CourseDiscussionInfo;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.GetCourseDiscussionInfoTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
-import org.edx.mobile.view.common.TaskProcessCallback;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectView;
 
 public class CourseDashboardFragment extends RoboFragment {
-    public interface ShowCourseOutlineCallback{
-        void showCourseOutline();
-    }
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";
 
     private EnrolledCoursesResponse courseData;
-    private GetCourseDiscussionInfoTask getCourseDiscussionInfoTask;
 
     @Inject
     IEdxEnvironment environment;
@@ -74,10 +67,7 @@ public class CourseDashboardFragment extends RoboFragment {
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Activity activity = getActivity();
-                if ( activity != null && activity instanceof ShowCourseOutlineCallback){
-                    ((ShowCourseOutlineCallback)activity).showCourseOutline();
-                }
+                environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
             }
         });
 
@@ -89,7 +79,7 @@ public class CourseDashboardFragment extends RoboFragment {
         holder.rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fetchCourseDiscussionMetaData();
+                environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
             }
         });
 
@@ -145,31 +135,6 @@ public class CourseDashboardFragment extends RoboFragment {
         } catch (Exception ex) {
             logger.error(ex);
         }
-    }
-
-    protected void fetchCourseDiscussionMetaData() {
-
-        if ( getCourseDiscussionInfoTask != null ){
-            getCourseDiscussionInfoTask.cancel(true);
-        }
-        getCourseDiscussionInfoTask = new GetCourseDiscussionInfoTask(getActivity(), courseData.getCourse().getId(), false) {
-            @Override
-            public void onSuccess(CourseDiscussionInfo discussionInfo) {
-                    Activity activity = getActivity();
-                    if ( activity instanceof TaskProcessCallback){
-                        if ( courseData != null )
-                            environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
-                    }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-            }
-        };
-
-        getCourseDiscussionInfoTask.execute();
-
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){
