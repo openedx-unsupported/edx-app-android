@@ -2,9 +2,9 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.v4.widget.TextViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -12,6 +12,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 
@@ -81,21 +82,28 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             final String text;
             final Iconify.IconValue icon;
             @ColorInt
-            final int iconColor;
+            final int indicatorColor;
             if (voteCountsEnabled) {
                 text = Integer.toString(discussionThread.getVoteCount());
                 icon = Iconify.IconValue.fa_plus;
-                iconColor = discussionThread.isVoted() ? edx_brand_primary_base : edx_grayscale_neutral_light;
+                indicatorColor = discussionThread.isVoted() ? edx_brand_primary_base : edx_grayscale_neutral_light;
             } else {
                 text = Integer.toString(discussionThread.getCommentCount());
                 icon = Iconify.IconValue.fa_comment;
-                iconColor = discussionThread.getUnreadCommentCount() == 0 ? edx_grayscale_neutral_light : edx_brand_primary_base;
-
+                indicatorColor = discussionThread.getUnreadCommentCount() == 0 ? edx_grayscale_neutral_light : edx_brand_primary_base;
             }
             holder.discussionPostIndicatorTextView.setText(text);
-            holder.discussionPostIndicatorTextView.setTextColor(iconColor);
-            holder.discussionPostIndicatorIcon.setIcon(icon);
-            holder.discussionPostIndicatorIcon.setIconColor(iconColor);
+            holder.discussionPostIndicatorTextView.setTextColor(indicatorColor);
+
+            final IconDrawable iconDrawable = new IconDrawable(getContext(), icon).sizePx((int) holder.discussionPostIndicatorTextView.getTextSize()).color(indicatorColor);
+            if (voteCountsEnabled) {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        holder.discussionPostIndicatorTextView, iconDrawable, null, null, null);
+            } else {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        holder.discussionPostIndicatorTextView, null, null, iconDrawable, null);
+            }
+
         }
         holder.discussionPostRow.setBackgroundColor(discussionThread.isRead() ? edx_grayscale_neutral_xx_light : edx_grayscale_neutral_white);
     }
@@ -114,24 +122,22 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     }
 
     private static class ViewHolder extends BaseViewHolder {
-        final RelativeLayout discussionPostRow;
+        final View discussionPostRow;
         final IconView discussionPostTypeIcon;
         final TextView discussionPostTitle;
         final IconView discussionPostPinIcon;
         final IconView discussionPostFollowIcon;
         final TextView discussionPostAuthor;
         final TextView discussionPostIndicatorTextView;
-        final IconView discussionPostIndicatorIcon;
 
         public ViewHolder(View convertView) {
-            discussionPostRow = (RelativeLayout) convertView.findViewById(R.id.row_discussion_post_relative_layout);
+            discussionPostRow = convertView;
             discussionPostTypeIcon = (IconView) convertView.findViewById(R.id.discussion_post_type_icon);
             discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
             discussionPostPinIcon = (IconView) convertView.findViewById(R.id.discussion_post_pin_icon);
             discussionPostFollowIcon = (IconView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostAuthor = (TextView) convertView.findViewById(R.id.discussion_post_author);
             discussionPostIndicatorTextView = (TextView) convertView.findViewById(R.id.discussion_post_indicator_text);
-            discussionPostIndicatorIcon = (IconView) convertView.findViewById(R.id.discussion_post_indicator_icon);
         }
 
     }
