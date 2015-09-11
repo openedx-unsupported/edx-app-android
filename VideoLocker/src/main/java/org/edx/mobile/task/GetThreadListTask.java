@@ -8,24 +8,26 @@ import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.view.adapters.IPagination;
 
+import java.util.List;
+
 public abstract class GetThreadListTask extends
 Task<TopicThreads> {
 
     String courseId;
-    String topicId;
+    List<String> topicIds;
     DiscussionPostsFilter filter;
     DiscussionPostsSort orderBy;
     IPagination pagination;
 
     public GetThreadListTask(Context context,
                              String courseId,
-                             String topicId,
+                             List<String> topicIds,
                              DiscussionPostsFilter filter,
                              DiscussionPostsSort orderBy,
                              IPagination pagination) {
         super(context);
         this.courseId = courseId;
-        this.topicId = topicId;
+        this.topicIds = topicIds;
         this.filter = filter;
         this.orderBy = orderBy;
         this.pagination = pagination;
@@ -51,7 +53,7 @@ Task<TopicThreads> {
                 int pageSize = pagination.pageSize();
                 int page = pagination.numOfPagesLoaded() + 1;
 
-                return environment.getDiscussionAPI().getThreadList(courseId, topicId,
+                return environment.getDiscussionAPI().getThreadList(courseId, topicIds,
                         view,
                         order,
                         pageSize,

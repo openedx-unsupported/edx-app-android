@@ -18,6 +18,8 @@ package org.edx.mobile.discussion;
 
 import org.edx.mobile.http.RetroHttpException;
 
+import java.util.List;
+
 import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -69,7 +71,7 @@ public interface DiscussionService {
 
 
     @GET("/api/discussion/v1/threads/")
-    TopicThreads getThreadList(@Query("course_id") String courseId, @Query("topic_id") String topicId, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
+    TopicThreads getThreadList(@Query("course_id") String courseId, @Query("topic_id") List<String> topicIds, @Query("view") String view, @Query("order_by") String orderBy, @Query("page_size") int pageSize, @Query("page") int page ) throws RetroHttpException;
 
 
     @GET("/api/discussion/v1/threads/")
