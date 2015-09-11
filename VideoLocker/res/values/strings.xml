@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">edX</string>
 
     <!-- Common values -->
@@ -360,10 +359,10 @@
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
-    <!-- Add post button title in adding a new discussion -->
-    <string name="discussion_add_post_topic_label">Topic</string>
-    <!-- Add post button title in adding a new discussion -->
+    <!-- Topic selection placeholder -->
     <string name="discussion_add_post_choose_a_topic">Choose a topic…</string>
+    <!-- Label for selected topic when creating a post -->
+    <string name="discussion_add_post_topic_selection">Topic: {topic}</string>
     <!-- Add post button title in adding a new discussion -->
     <string name="discussion_add_post">Post discussion</string>
     <!-- Add post button title in adding a new post -->

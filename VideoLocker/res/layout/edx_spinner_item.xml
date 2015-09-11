@@ -12,4 +12,5 @@
     android:singleLine="true"
     android:textColor="@color/edx_grayscale_neutral_dark"
     android:textSize="@dimen/edx_x_small"
+    android:textDirection="locale"
     tools:text="Item text" />

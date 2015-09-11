@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/row_discussion_comment_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/discussion_comment_body"
@@ -16,32 +17,33 @@
         android:textSize="@dimen/edx_x_small"
         tools:text="This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment." />
 
-    <TextView
-        android:id="@+id/discussion_comment_count_report_text_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/discussion_comment_body"
-        android:background="?android:selectableItemBackground"
-        android:clickable="true"
-        android:drawablePadding="5dp"
-        android:padding="@dimen/discussion_responses_box_padding"
-        android:textColor="@color/edx_grayscale_neutral_base"
-        android:textSize="@dimen/edx_xxx_small"
-        tools:text="@string/discussion_responses_report_label" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/discussion_comment_author_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/discussion_comment_body"
-        android:layout_alignStart="@id/discussion_comment_body"
-        android:layout_below="@id/discussion_comment_body"
-        android:layout_marginTop="@dimen/discussion_responses_box_padding"
-        android:layout_toLeftOf="@id/discussion_comment_count_report_text_view"
-        android:layout_toStartOf="@id/discussion_comment_count_report_text_view"
-        android:textColor="@color/edx_grayscale_neutral_base"
-        android:textSize="@dimen/edx_xxx_small"
-        tools:text="Brian 10 minutes ago" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/discussion_comment_author_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textDirection="locale"
+            android:padding="@dimen/discussion_responses_box_padding"
+            android:textColor="@color/edx_grayscale_neutral_base"
+            android:textSize="@dimen/edx_xxx_small"
+            tools:text="Brian 10 minutes ago" />
+
+        <TextView
+            android:id="@+id/discussion_comment_count_report_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:drawablePadding="5dp"
+            android:padding="@dimen/discussion_responses_box_padding"
+            android:textColor="@color/edx_grayscale_neutral_base"
+            android:textSize="@dimen/edx_xxx_small"
+            tools:text="@string/discussion_responses_report_label" />
+
+    </LinearLayout>
+</LinearLayout>

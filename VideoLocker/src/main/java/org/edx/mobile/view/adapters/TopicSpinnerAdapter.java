@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,11 @@ public class TopicSpinnerAdapter extends ArrayAdapter<DiscussionTopicDepth> {
             view = (TextView) convertView;
         }
         final DiscussionTopicDepth topic = getItem(position);
-        final String text;
+        final CharSequence text;
         if (null == topic) {
             text = getContext().getString(R.string.discussion_add_post_choose_a_topic);
         } else {
-            text = getContext().getString(R.string.discussion_add_post_topic_label) + ": " + topic.getDiscussionTopic().getName();
+            text = ResourceUtil.getFormattedString(R.string.discussion_add_post_topic_selection, "topic", topic.getDiscussionTopic().getName());
         }
         view.setText(text);
         return view;
