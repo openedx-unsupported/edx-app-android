@@ -14,8 +14,8 @@ import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
+import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.logger.Logger;
@@ -25,6 +25,7 @@ import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import de.greenrobot.event.EventBus;
@@ -260,7 +261,10 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             getThreadListTask.cancel(true);
         }
 
-        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(), isAllTopics() ? null : discussionTopic.getIdentifier(),
+        getThreadListTask = new GetThreadListTask(
+                getActivity(),
+                courseData.getCourse().getId(),
+                isAllTopics() ? Collections.EMPTY_LIST : discussionTopic.getAllTopicIds(),
                 postsFilter,
                 postsSort,
                 discussionPostsAdapter.getPagination()

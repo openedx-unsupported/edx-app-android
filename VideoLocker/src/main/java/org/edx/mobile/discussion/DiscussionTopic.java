@@ -17,6 +17,7 @@
 package org.edx.mobile.discussion;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -79,5 +80,21 @@ public class DiscussionTopic implements Serializable {
             }
         }
         return false;
+    }
+
+    @NonNull
+    public List<String> getAllTopicIds() {
+        final List<String> ids = new ArrayList<>();
+        appendTopicIds(ids);
+        return ids;
+    }
+
+    private void appendTopicIds(List<String> ids) {
+        if (!TextUtils.isEmpty(identifier)) {
+            ids.add(identifier);
+        }
+        for (DiscussionTopic child : children) {
+            child.appendTopicIds(ids);
+        }
     }
 }

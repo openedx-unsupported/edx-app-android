@@ -32,6 +32,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.io.File;
+import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -120,9 +121,9 @@ public class DiscussionAPI {
          return discussionService.getCourseTopics(courseId);
     }
 
-    public TopicThreads getThreadList(String courseId, String topicId, String filter, String orderBy, int pageSize, int page) throws RetroHttpException {
+    public TopicThreads getThreadList(String courseId, List<String> topicIds, String filter, String orderBy, int pageSize, int page) throws RetroHttpException {
 
-        return  discussionService.getThreadList(courseId, topicId, filter, orderBy, pageSize, page);
+        return  discussionService.getThreadList(courseId, topicIds, filter, orderBy, pageSize, page);
     }
 
     public TopicThreads getFollowingThreadList(String courseId, String filter,  String orderBy, int pageSize, int page) throws RetroHttpException {
