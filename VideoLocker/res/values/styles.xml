@@ -37,6 +37,7 @@
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
         <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
+        <item name="android:textDirection">locale</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->

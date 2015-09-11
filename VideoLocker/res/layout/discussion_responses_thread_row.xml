@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,7 +22,8 @@
             android:layout_alignParentTop="true"
             android:textSize="@dimen/edx_base"
             android:textColor="@color/edx_grayscale_neutral_x_dark"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
+            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+            tools:text="Thread title"/>
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/discussion_responses_thread_row_body_text_view"
@@ -31,7 +33,8 @@
             android:layout_below="@+id/discussion_responses_thread_row_title_text_view"
             android:textSize="@dimen/edx_small"
             android:textColor="@color/edx_grayscale_neutral_dark"
-            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"/>
+            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+            tools:text="Thread body"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
