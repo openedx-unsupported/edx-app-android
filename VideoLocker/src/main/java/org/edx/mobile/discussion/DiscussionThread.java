@@ -55,7 +55,7 @@ public class DiscussionThread implements Serializable, IAuthorData {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private PinnedAuthor authorLabel;
+    private String authorLabel;
     private int commentCount = 0;
     private int unreadCommentCount = 0;
     private String commentListUrl;
@@ -114,7 +114,7 @@ public class DiscussionThread implements Serializable, IAuthorData {
         return author;
     }
 
-    public PinnedAuthor getAuthorLabel() {
+    public String getAuthorLabel() {
         return authorLabel;
     }
 

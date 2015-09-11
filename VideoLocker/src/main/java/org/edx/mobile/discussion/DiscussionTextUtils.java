@@ -2,32 +2,44 @@ package org.edx.mobile.discussion;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.edx.mobile.R;
+import org.edx.mobile.util.ResourceUtil;
+
+import java.util.HashMap;
 
 public abstract class DiscussionTextUtils {
     private DiscussionTextUtils() {
     }
 
-    public static String getAuthorAttributionText(@NonNull IAuthorData authorData, @NonNull Resources resources) {
-        String text = authorData.getAuthor() + " " + DateUtils.getRelativeTimeSpanString(
+    public static CharSequence getAuthorAttributionText(@NonNull final DiscussionThread discussionThread, @NonNull final Resources resources) {
+        return getAuthorAttributionText(discussionThread, resources,
+                discussionThread.getType() == DiscussionThread.ThreadType.DISCUSSION
+                        ? R.string.discussion_thread_attribution
+                        : R.string.question_thread_attribution);
+    }
+
+    public static CharSequence getAuthorAttributionText(@NonNull final DiscussionComment discussionComment, @NonNull final Resources resources) {
+        return getAuthorAttributionText(discussionComment, resources, R.string.comment_attribution);
+    }
+
+    private static CharSequence getAuthorAttributionText(@NonNull final IAuthorData authorData, @NonNull final Resources resources, @StringRes final int stringRes) {
+        final CharSequence formattedTime = DateUtils.getRelativeTimeSpanString(
                 authorData.getCreatedAt().getTime(),
                 System.currentTimeMillis(),
                 DateUtils.MINUTE_IN_MILLIS,
                 DateUtils.FORMAT_ABBREV_RELATIVE);
 
-        if (authorData.getAuthorLabel() == PinnedAuthor.STAFF) {
-            text += "  " + resources.getString(R.string.discussion_priviledged_author_label_staff);
+        final String authorLabel = authorData.getAuthorLabel();
 
-        } else if (authorData.getAuthorLabel() == PinnedAuthor.COMMUNITY_TA) {
-            text = "  " + resources.getString(R.string.discussion_priviledged_author_label_ta);
-        }
-
-        return text;
+        return trim(ResourceUtil.getFormattedString(resources, stringRes, new HashMap<String, CharSequence>() {{
+            put("time", formattedTime);
+            put("author", authorData.getAuthor());
+            put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(resources.getConfiguration().locale));
+        }}));
     }
 
     public static CharSequence parseHtml(@NonNull String html) {

@@ -29,7 +29,7 @@ public class DiscussionComment implements Serializable, IAuthorData {
     private String rawBody;
     private String renderedBody;
     private String author;
-    private PinnedAuthor authorLabel;
+    private String authorLabel;
     private boolean voted = false;
     private int voteCount = 0;
     private Date createdAt;
@@ -66,7 +66,7 @@ public class DiscussionComment implements Serializable, IAuthorData {
         return author;
     }
 
-    public PinnedAuthor getAuthorLabel() {
+    public String getAuthorLabel() {
         return authorLabel;
     }
 

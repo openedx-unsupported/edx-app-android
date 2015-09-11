@@ -6,6 +6,6 @@ import java.util.Date;
 public interface IAuthorData {
 
     String getAuthor();
-    PinnedAuthor getAuthorLabel();
+    String getAuthorLabel();
     Date getCreatedAt();
 }

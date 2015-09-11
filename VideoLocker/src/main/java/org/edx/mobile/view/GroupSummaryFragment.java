@@ -172,8 +172,7 @@ public class GroupSummaryFragment extends RoboFragment implements View.OnClickLi
             errorLabel.setVisibility(View.VISIBLE);
         } else {
             memberCountLabel.setVisibility(View.VISIBLE);
-            String content = ResourceUtil.getFormattedStringForQuantity(R.string.group_summary_count, "members", adapter.getCount()).toString();
-            memberCountLabel.setText(content);
+            memberCountLabel.setText(ResourceUtil.getFormattedString(getResources(), R.string.group_summary_count, "members", String.valueOf(adapter.getCount())));
             listContainer.setVisibility(View.VISIBLE);
             errorLabel.setVisibility(View.GONE);
         }

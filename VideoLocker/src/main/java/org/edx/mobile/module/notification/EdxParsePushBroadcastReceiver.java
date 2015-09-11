@@ -77,7 +77,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
             CourseUpdateNotificationPayload payload = ParseHandleHelper.extractPayload(intent);
             Class activity = ParseHandleHelper.getActivityClass(payload);
             if( activity == CourseDetailTabActivity.class ){
-                String titleTemplate =  ResourceUtil.getResourceString(R.string.COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE);
+                String titleTemplate =  context.getString(R.string.COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE);
 
                 EventBus.getDefault().postSticky(new CourseAnnouncementEvent(
                         CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED, payload.getCourseId()));

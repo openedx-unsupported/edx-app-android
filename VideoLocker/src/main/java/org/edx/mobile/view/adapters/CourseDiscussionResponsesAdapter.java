@@ -116,7 +116,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-        holder.authorLayoutViewHolder.setAuthorData(discussionThread);
+        holder.authorLayoutViewHolder.discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(discussionThread, context.getResources()));
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +227,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
-        holder.authorLayoutViewHolder.setAuthorData(comment);
+        holder.authorLayoutViewHolder.discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(comment, context.getResources()));
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);

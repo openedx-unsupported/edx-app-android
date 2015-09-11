@@ -9,14 +9,10 @@ import org.edx.mobile.view.custom.ETextView;
 
 public class AuthorLayoutViewHolder {
 
-    private final ETextView discussionAuthorTextView;
+    public final ETextView discussionAuthorTextView;
 
     public AuthorLayoutViewHolder(View itemView) {
         discussionAuthorTextView = (ETextView) itemView.
                 findViewById(R.id.discussion_author_layout_author_text_view);
-    }
-
-    public void setAuthorData(IAuthorData authorData) {
-        discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(authorData, discussionAuthorTextView.getResources()));
     }
 }
