@@ -70,10 +70,6 @@
     <!-- Data Usage Dialog -->
     <!-- Alert dialog error message shown when using a feature with a required internet connection -->
     <string name="need_data">This feature requires an active internet connection.</string>
-    <!-- Alert dialog okay button -->
-    <string name="play_data_dialog_OK">OK</string>
-    <!-- Alert dialog cancel button -->
-    <string name="play_data_dialog_Cancel">@android:string/cancel</string>
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
@@ -85,6 +81,7 @@
     <!-- Button text allowing user to reset their password -->
     <string name="forgot_password">Forgot your password?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
+
     <string name="login">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
     <string name="login_btn">Sign in button</string>
@@ -448,9 +445,6 @@
     <string name="title_lecture_complete">You\'ve reached the end of this video.</string>
     <!-- Alert dialog prompt at end of video. -->
     <string name="msg_lecture_complete">Would you like to watch the next video?</string>
-    <!-- Accessible content description of cancel button to cancel video download -->
-    <string name="cancel">@android:string/cancel</string>
-
 
     <!-- Message shown video download in process -->
     <string name="video_download_in_progress">Video Downloads in Progress</string>
