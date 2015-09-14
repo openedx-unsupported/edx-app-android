@@ -2,36 +2,33 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.google.inject.Inject;
-import org.edx.mobile.discussion.CourseDiscussionInfo;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.discussion.CourseDiscussionInfo;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCourseDiscussionInfoTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
 import roboguice.fragment.RoboFragment;
+import roboguice.inject.InjectView;
 
 public class CourseDashboardFragment extends RoboFragment {
-
-    private TextView courseTextName;
-    private TextView courseTextDetails;
-    private GetCourseDiscussionInfoTask getCourseDiscussionInfoTask;
-
-    public static interface ShowCourseOutlineCallback{
+    public interface ShowCourseOutlineCallback{
         void showCourseOutline();
     }
     protected final Logger logger = new Logger(getClass().getName());
@@ -39,31 +36,36 @@ public class CourseDashboardFragment extends RoboFragment {
     static public String CourseData = TAG + ".course_data";
 
     private EnrolledCoursesResponse courseData;
+    private GetCourseDiscussionInfoTask getCourseDiscussionInfoTask;
 
     @Inject
     IEdxEnvironment environment;
-
+    @InjectView(R.id.course_detail_name)
+    private TextView courseTextName;
+    @InjectView(R.id.course_detail_extras)
+    private TextView courseTextDetails;
+    @InjectView(R.id.header_image_view)
+    private ImageView headerImageView;
+    @InjectView(R.id.dashboard_detail)
+    private LinearLayout parent;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_dashboard, container,
-                false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_course_dashboard, container, false);
+    }
 
-        courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
-        courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         //Implementation Note: - we can create a list view and populate the list.
         //but as number of rows are fixed and each row is different. the only common
         //thing is UI layout. so we reuse the same UI layout programmatically here.
-        LinearLayout parent = (LinearLayout)  view.findViewById(R.id.dashboard_detail);
-
-
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         ViewHolder holder = createViewHolder(inflater, parent);
 
         holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);
@@ -116,17 +118,11 @@ public class CourseDashboardFragment extends RoboFragment {
                     environment.getRouter().showCourseAnnouncement(getActivity(), environment.getConfig(), courseData);
             }
         });
-
-        return view;
     }
-
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
         try {
             final Bundle bundle = getArguments();
             courseData = (EnrolledCoursesResponse) bundle
@@ -135,21 +131,16 @@ public class CourseDashboardFragment extends RoboFragment {
             if ( courseData == null )
                 return;
 
-            String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
-            NetworkImageView headerImageView = (NetworkImageView)getView().findViewById(R.id.header_image_view);
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            float screenWidth = displayMetrics.widthPixels;
-            float ideaHeight = screenWidth * 9 / 16;
-
-            headerImageView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
-            headerImageView.requestLayout();
-
-            headerImageView.setImageUrl(headerImageUrl, environment.getImageCacheManager().getImageLoader() );
+            final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
+            Glide.with(CourseDashboardFragment.this)
+                    .load(headerImageUrl)
+                    .placeholder(R.drawable.edx_map_login)
+                    .transform(new TopAnchorFillWidthTransformation(getActivity()))
+                    .into(headerImageView);
 
             courseTextName.setText(courseData.getCourse().getName());
             CourseEntry course = courseData.getCourse();
-            courseTextDetails.setText( course.getDescription(this.getActivity()));
+            courseTextDetails.setText(course.getDescription(getActivity()));
 
         } catch (Exception ex) {
             logger.error(ex);

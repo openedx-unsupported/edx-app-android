@@ -39,7 +39,7 @@ public class DataUsageDialogFragment extends DialogFragment {
         int messageID = this.getArguments().getInt(MESSAGE_ID);
         builder.setMessage(messageID);
 
-        builder.setPositiveButton(R.string.play_data_dialog_OK, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (callback != null) {
@@ -48,7 +48,7 @@ public class DataUsageDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        builder.setNegativeButton(R.string.play_data_dialog_Cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dismiss();
