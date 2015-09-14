@@ -23,7 +23,7 @@
 
             <TextView
                 android:id="@+id/tvResponse"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
                 android:textColor="@color/edx_grayscale_neutral_dark"
@@ -33,7 +33,7 @@
             <TextView
                 android:id="@+id/tvTimeAuthor"
                 style="@style/discussion_responses_small_text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
                 tools:text="Author" />
