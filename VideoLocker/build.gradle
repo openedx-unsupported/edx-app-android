@@ -180,6 +180,8 @@ android {
 
         // Enabling multidex support.
         multiDexEnabled true
+
+        manifestPlaceholders = [ supportsRtl:"false"]
     }
     sourceSets {
         main {
@@ -225,6 +227,8 @@ android {
         debug {
             ext.enableCrashlytics = false
             testCoverageEnabled true
+            pseudoLocalesEnabled true // Set device language to "en_XA" to test glyphs, or "ar_XB" to test RTL support
+            manifestPlaceholders = [ supportsRtl:"true"]
         }
         debuggable.initWith(buildTypes.debug)
         debuggable {
