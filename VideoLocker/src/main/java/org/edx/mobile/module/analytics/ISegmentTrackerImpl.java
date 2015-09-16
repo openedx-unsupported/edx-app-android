@@ -14,6 +14,8 @@ import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 
+import java.util.concurrent.TimeUnit;
+
 @Singleton
 public class ISegmentTrackerImpl implements ISegmentTracker {
 
@@ -38,12 +40,11 @@ public class ISegmentTrackerImpl implements ISegmentTracker {
 
             if (writeKey != null) {
                 logger.debug("SegmentTracker created with write key: " + writeKey);
-
                 // Now Analytics.with will return the custom instance
                 analytics = new Analytics.Builder(context, writeKey)
-                        .debugging(debugging)
-                        .queueSize(queueSize)
-                        .flushInterval(flushInterval)
+                        .flushQueueSize(queueSize)
+                        .flushInterval(flushInterval, TimeUnit.SECONDS)
+                        .logLevel(debugging ? Analytics.LogLevel.VERBOSE : Analytics.LogLevel.NONE)
                         .build();
             } else {
                 logger.warn("writeKey is null, Segment analytics will not work.");
