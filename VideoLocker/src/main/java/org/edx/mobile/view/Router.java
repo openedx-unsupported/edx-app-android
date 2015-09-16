@@ -161,6 +161,10 @@ public class Router {
         activity.startActivity(courseDetail);
     }
 
+    public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model) {
+        showCourseContainerOutline(activity, model, null);
+    }
+
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model, String courseComponentId) {
         showCourseContainerOutline(activity, -1, model, courseComponentId, null);
     }

@@ -20,7 +20,7 @@ import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
-public class CourseDashboardActivityTest extends CourseBaseActivityTest {
+public class CourseDashboardActivityTest extends BaseFragmentActivityTest {
     /**
      * Method for defining the subclass of {@link CourseDashboardActivity} that
      * is being tested. Should be overridden by subclasses.
@@ -36,6 +36,24 @@ public class CourseDashboardActivityTest extends CourseBaseActivityTest {
      * {@inheritDoc}
      */
     @Override
+    protected Intent getIntent() {
+        EnrolledCoursesResponse courseData;
+        try {
+            courseData = api.getEnrolledCourses().get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Intent intent = super.getIntent();
+        Bundle extras = new Bundle();
+        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        intent.putExtra(Router.EXTRA_BUNDLE, extras);
+        return intent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected boolean appliesPrevTransitionOnRestart() {
         return true;
     }
@@ -44,10 +62,7 @@ public class CourseDashboardActivityTest extends CourseBaseActivityTest {
      * {@inheritDoc}
      */
     @Test
-    @Override
     public void initializeTest() {
-        super.initializeTest();
-
         Intent intent = getIntent();
         Bundle data = intent.getBundleExtra(Router.EXTRA_BUNDLE);
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
@@ -57,7 +72,7 @@ public class CourseDashboardActivityTest extends CourseBaseActivityTest {
         CourseDashboardActivity activity = controller.get();
         controller.create(null).postCreate(null);
         Fragment fragment = activity.getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
+                .findFragmentById(android.R.id.content);
         assertNotNull(fragment);
         assertThat(fragment).isInstanceOf(CourseDashboardFragment.class);
         assertTrue(fragment.getRetainInstance());

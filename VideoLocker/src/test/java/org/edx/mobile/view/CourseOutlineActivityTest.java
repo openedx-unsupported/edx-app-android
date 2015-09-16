@@ -20,6 +20,7 @@ import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.junit.Test;
+import org.junit.runners.Parameterized.Parameters;
 import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
@@ -28,6 +29,8 @@ import org.robolectric.util.ActivityController;
 import org.robolectric.util.Scheduler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -48,26 +51,14 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
     }
 
     /**
-     * {@inheritDoc}
+     * Provide both true and false values as the {@link #provideCourseId}
+     * parameter in order to have both states tested.
+     *
+     * @return The sets of parameters containing true and false values
      */
-    @Override
-    protected Intent getIntent() {
-        EnrolledCoursesResponse courseData;
-        CourseComponent courseComponent;
-        try {
-            courseData = api.getEnrolledCourses().get(0);
-            courseComponent = serviceManager.getCourseStructure(
-                    courseData.getCourse().getId(),
-                    OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Intent intent = super.getIntent();
-        Bundle extras = new Bundle();
-        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
-        extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
-        intent.putExtra(Router.EXTRA_BUNDLE, extras);
-        return intent;
+    @Parameters(name = "{index}: provide course id = {0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { { false }, { true } });
     }
 
     /**
@@ -115,8 +106,10 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Bundle data = intent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertEquals(data.getSerializable(Router.EXTRA_ENROLLMENT),
                 args.getSerializable(Router.EXTRA_ENROLLMENT));
-        assertEquals(data.getString(Router.EXTRA_COURSE_COMPONENT_ID),
-                args.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+        if (provideCourseId) {
+            assertEquals(data.getString(Router.EXTRA_COURSE_COMPONENT_ID),
+                    args.getString(Router.EXTRA_COURSE_COMPONENT_ID));
+        }
         return controller;
     }
 

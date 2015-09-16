@@ -13,10 +13,13 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.DownloadEvent;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runners.Parameterized.Parameter;
 import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
@@ -41,6 +44,13 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     }
 
     /**
+     * Parameterized flag for whether to provide the course ID explicitly, or
+     * allow CourseBaseActivity to fallback to loading the base course.
+     */
+    @Parameter
+    public boolean provideCourseId;
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -54,6 +64,17 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         Intent intent = super.getIntent();
         Bundle extras = new Bundle();
         extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        if (provideCourseId) {
+            CourseComponent courseComponent;
+            try {
+                courseComponent = serviceManager.getCourseStructure(
+                        courseData.getCourse().getId(),
+                        OkHttpUtil.REQUEST_CACHE_TYPE.IGNORE_CACHE);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponent.getId());
+        }
         intent.putExtra(Router.EXTRA_BUNDLE, extras);
         return intent;
     }
