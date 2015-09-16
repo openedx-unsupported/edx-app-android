@@ -13,8 +13,8 @@ import org.edx.mobile.task.GetSessesionExchangeCookieTask;
 
 import java.io.File;
 import java.net.HttpCookie;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.greenrobot.event.EventBus;
 
@@ -22,6 +22,11 @@ import de.greenrobot.event.EventBus;
  *  A central place for course data model transformation
  */
 public class EdxCookieManager {
+
+    // We'll assume that cookies are valid for at least one hour; after that
+    // they'll be requeried on API levels lesser than Marshmallow (which
+    // provides an error callback with the HTTP error code) prior to usage.
+    private static final long FRESHNESS_INTERVAL = TimeUnit.HOURS.toMillis(1);
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -53,6 +58,7 @@ public class EdxCookieManager {
         }
         PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, "");
+        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, -1);
 
     }
 
@@ -91,11 +97,13 @@ public class EdxCookieManager {
                         return;
                     }
                     
+                    long currentTime = System.currentTimeMillis();
                     for (HttpCookie cookie : result) {
                         if (cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
                             clearWebWiewCookie(context);
                             PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
                             pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
+                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, currentTime + FRESHNESS_INTERVAL);
                             EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                             break;
                         }

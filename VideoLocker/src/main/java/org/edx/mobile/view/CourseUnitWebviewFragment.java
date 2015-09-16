@@ -1,17 +1,20 @@
 package org.edx.mobile.view;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import org.apache.http.HttpStatus;
 import org.edx.mobile.R;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
@@ -22,7 +25,7 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 
-import java.util.Date;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,12 +43,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     private ProgressBar progressWheel;
     private boolean pageIsLoaded;
     private WebView webView;
-    // Before we do anything else, we have to load the session, since we have no good way of detecting
-    // if our saved cookie is bad.
-    // Over the long term, we should switch to the API added in API 23
-    // That allows us to inspect the HTTP status code returned when we load
-    // web content and only load a session if we get a 4xx response
-    private boolean loadedSession = false;
 
     /**
      * Create a new instance of fragment
@@ -77,7 +74,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
     public void onEvent(SessionIdRefreshEvent event){
         if ( event.success ){
-            loadedSession = true;
             tryToLoadWebView(false);
         } else {
             hideLoadingProgress();
@@ -111,8 +107,23 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 hideLoadingProgress();
                 pageIsLoaded = false;
                 ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
-                super.onReceivedError(view, errorCode, description, failingUrl);
             }
+
+            // TODO: Restore these annotations when we upgrade our compile SDK version to Marshmallow
+            //@Override
+            //@TargetApi(Build.VERSION_CODES.M)
+            @TargetApi(23)
+            public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                            WebResourceResponse errorResponse) {
+                switch (errorResponse.getStatusCode()) {
+                    case HttpURLConnection.HTTP_FORBIDDEN:
+                    case HttpURLConnection.HTTP_UNAUTHORIZED:
+                    case HttpURLConnection.HTTP_NOT_FOUND:
+                        EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
+                        break;
+                }
+            }
+
             public void onPageFinished(WebView view, String url) {
                 if ( url != null && url.equals("data:text/html," + EMPTY_HTML ) ){
                     //we load a local empty html page to release the memory
@@ -124,7 +135,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
-                super.onPageFinished(view, url);
                 ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
                 hideLoadingProgress();
             }
@@ -176,9 +186,14 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
             }
 
             String sessionId = pref.getString(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID);
-
-            //if session id is expired or session id is not available, we try to refresh session id
-            if ( !loadedSession ){
+            long sessionIdExpirationDate = pref.getLong(
+                    PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION);
+            // Requery the session cookie if unavailable or expired if we are on
+            // an API level lesser than Marshmallow (which provides HTTP error
+            // codes in the error callback for WebViewClient).
+            if (Build.VERSION.SDK_INT < 23 /*Build.VERSION_CODES.M*/ &&
+                    (TextUtils.isEmpty(sessionId) ||
+                            sessionIdExpirationDate < System.currentTimeMillis())) {
                 EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
             } else {
                 map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
