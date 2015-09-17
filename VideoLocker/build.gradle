@@ -123,9 +123,9 @@ dependencies {
      testCompile ("org.mockito:mockito-core:1.9.5"){
          exclude group: 'org.hamcrest'
       }
-     testCompile "org.robolectric:robolectric:3.0"
-     testCompile "org.robolectric:shadows-support-v4:3.0"
-     testCompile "org.robolectric:shadows-multidex:3.0"
+     testCompile "org.robolectric:robolectric:3.1-SNAPSHOT"
+     testCompile "org.robolectric:shadows-support-v4:3.1-SNAPSHOT"
+     testCompile "org.robolectric:shadows-multidex:3.1-SNAPSHOT"
     /**
      * Adding the jars statically because the assertj-android
      * module is only available in Maven Central as an AAR,
