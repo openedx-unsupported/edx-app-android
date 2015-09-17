@@ -43,7 +43,7 @@ public class DialogFactory {
         dialog.setMessage(activity.getString(R.string.open_external_url_desc));
         dialog.setPositiveButton(R.string.label_continue, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface d, int which) {
-                new BrowserUtil().open(activity, uri);
+                BrowserUtil.open(activity, uri);
                 d.dismiss();
             }
         });

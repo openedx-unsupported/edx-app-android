@@ -2,6 +2,8 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.TranscriptManager;
 
@@ -10,6 +12,8 @@ import java.util.List;
 public abstract class EnqueueDownloadTask extends Task<Long> {
 
 
+    @Inject
+    TranscriptManager transcriptManager;
     List<DownloadEntry> downloadList;
     public EnqueueDownloadTask(Context context, List<DownloadEntry> downloadList) {
         super(context);
@@ -27,8 +31,7 @@ public abstract class EnqueueDownloadTask extends Task<Long> {
                         if(environment.getStorage().addDownload(de)!=-1){
                             count++;
                         }
-                        TranscriptManager transManager = new TranscriptManager(context);
-                        transManager.downloadTranscriptsForVideo(de.transcript);
+                        transcriptManager.downloadTranscriptsForVideo(de.transcript);
                     }catch(Exception e){
                         logger.error(e);
                     }

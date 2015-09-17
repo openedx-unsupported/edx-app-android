@@ -11,6 +11,8 @@ import org.edx.mobile.services.ServiceManager;
 
 import java.io.IOException;
 
+import roboguice.RoboGuice;
+
 public abstract class TranscriptDownloader implements Runnable {
 
     private String srtUrl;
@@ -22,6 +24,7 @@ public abstract class TranscriptDownloader implements Runnable {
     public TranscriptDownloader(Context context, String url) {
         this.srtUrl = url;
         this.context = context;
+        RoboGuice.getInjector(context).injectMembers(this);
     }
 
     @Override

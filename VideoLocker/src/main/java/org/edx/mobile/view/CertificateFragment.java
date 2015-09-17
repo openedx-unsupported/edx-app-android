@@ -82,7 +82,7 @@ public class CertificateFragment extends RoboFragment {
 
             @Override
             public void onOpenExternalURL(String url) {
-                new BrowserUtil().open(getActivity(), url);
+                BrowserUtil.open(getActivity(), url);
             }
         };
 

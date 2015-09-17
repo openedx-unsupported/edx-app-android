@@ -81,7 +81,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
                 @Override
                 public void onOpenExternalURL(String url) {
                     // open URL in external browser
-                    new BrowserUtil().open(FindCoursesBaseActivity.this, url);
+                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
                 }
             };
 

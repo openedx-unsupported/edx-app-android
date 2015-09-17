@@ -67,7 +67,7 @@ public class CourseHandoutFragment extends RoboFragment {
 
             @Override
             public void onOpenExternalURL(String url) {
-                new BrowserUtil().open(getActivity(), url);
+                BrowserUtil.open(getActivity(), url);
             }
         };
 
@@ -105,7 +105,7 @@ public class CourseHandoutFragment extends RoboFragment {
                         webview.setWebViewClient(new WebViewClient(){
                             @Override
                             public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                                new BrowserUtil().open(getActivity(), url);
+                                BrowserUtil.open(getActivity(), url);
                                 return true;
                             }
                         });

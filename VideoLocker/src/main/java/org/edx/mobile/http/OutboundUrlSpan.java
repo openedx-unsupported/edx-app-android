@@ -28,7 +28,7 @@ public class OutboundUrlSpan extends URLSpan {
         Context context = widget.getContext();
 
         if(context instanceof FragmentActivity)
-            new BrowserUtil().open((FragmentActivity)context, getURL());
+            BrowserUtil.open((FragmentActivity)context, getURL());
     }
 
     public static Spanned interceptAllLinks(Spanned content){

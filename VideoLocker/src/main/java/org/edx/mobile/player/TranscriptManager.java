@@ -3,6 +3,9 @@ package org.edx.mobile.player;
 import android.content.Context;
 import android.os.Environment;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import org.apache.commons.io.IOUtils;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -19,12 +22,14 @@ import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import org.edx.mobile.logger.Logger;
 
+@Singleton
 public class TranscriptManager {
 
     private File transcriptFolder;
     private Context context;
     private final Logger logger = new Logger(getClass().getName());
 
+    @Inject
     public TranscriptManager(Context context) {
         try{
             this.context = context;

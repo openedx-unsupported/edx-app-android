@@ -277,7 +277,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             openInBrowserTv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new BrowserUtil().open(CourseLectureListActivity.this,
+                    BrowserUtil.open(CourseLectureListActivity.this,
                             urlStringBuffer.toString());
                 }
             });

@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.interfaces.SectionItemInterface;
@@ -67,6 +69,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
+    @Inject
+    TranscriptManager transcriptManager;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -556,7 +560,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                     openInBrowserTv.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new BrowserUtil().open(getActivity(),
+                            BrowserUtil.open(getActivity(),
                                     urlStringBuffer.toString());
                         }
                     });
@@ -999,8 +1003,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 if (reloadListFlag) {
                     adapter.notifyDataSetChanged();
                 }
-                TranscriptManager transManager = new TranscriptManager(getActivity());
-                transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
+                transcriptManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
         }catch(Exception e){
             logger.error(e);

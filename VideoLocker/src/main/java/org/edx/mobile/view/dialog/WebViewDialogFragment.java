@@ -54,7 +54,7 @@ public class WebViewDialogFragment extends DialogFragment {
                     progress.setVisibility(View.GONE);
 
                     // open URL in external browser
-                    new BrowserUtil().open(getActivity(), url);
+                    BrowserUtil.open(getActivity(), url);
                 }
             };
             client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
