@@ -114,7 +114,7 @@ public interface ISegment {
 
     Properties trackCourseOutlineMode(boolean isVideoMode);
 
-    Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait);
+    Properties trackCourseComponentViewed(String blockId, String courseId);
 
     Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
 
@@ -167,7 +167,8 @@ public interface ISegment {
         public static final String BLOCK_ID = "block_id";
         public static final String SUPPORTED = "supported";
         public static final String NEW_OUTLINE_MODE = "new-mode";
-        public static final String ORIENTATION = "orientation";
+        public static final String DEVICE_ORIENTATION = "device-orientation";
+        public static final String NAVIGATION_MODE = "navigation-mode";
 
         public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
         public static final String CELL_CARRIER = "cell_carrier";

@@ -81,17 +81,17 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if ( state == ViewPager.SCROLL_STATE_DRAGGING ){
+                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
                     int curIndex = pager.getCurrentItem();
                     PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                    if( curView != null )
+                    if (curView != null)
                         curView.onPageDisappear();
                 }
-                if ( state == ViewPager.SCROLL_STATE_IDLE ){
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
                     int curIndex = pager.getCurrentItem();
                     PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, curIndex);
-                     if( curView != null )
-                         curView.onPageShow();
+                    if (curView != null)
+                        curView.onPageShow();
                     tryToUpdateForEndOfSequential();
                 }
             }
@@ -125,7 +125,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         });
 
         updateUIForOrientation();
-
         setApplyPrevTransitionOnRestart(true);
 
         try{
@@ -138,8 +137,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     @Override
     protected void onLoadData() {
         selectedUnit = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(),
-                getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE);
         updateDataModel();
     }
 
@@ -168,8 +165,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
-        boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId(), isPortrait);
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void tryToUpdateForEndOfSequential(){
@@ -268,6 +264,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateUIForOrientation();
+        environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
     private void updateUIForOrientation(){

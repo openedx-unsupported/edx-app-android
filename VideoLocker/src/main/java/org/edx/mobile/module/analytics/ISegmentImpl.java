@@ -1,5 +1,6 @@
 package org.edx.mobile.module.analytics;
 
+import android.content.res.Configuration;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;
@@ -8,7 +9,9 @@ import com.segment.analytics.Options;
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.PrefManager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -33,15 +36,36 @@ public class ISegmentImpl implements ISegment {
             if(this.data!=null){
                 this.properties.putValue(Keys.DATA, this.data);
             }
+
+            setCustomProperties();
         }
 
-        public void setCourseContext(String courseId, String unitUrl, String component) {
+        private void setCourseContext(String courseId, String unitUrl, String component) {
             this.properties.put(Keys.CONTEXT, getEventContext(courseId, unitUrl, component));
         }
 
         //This method sets app name in the context properties
-        public void setAppNameContext() {
+        private void setAppNameContext() {
             this.properties.put(Keys.CONTEXT, getAppNameContext());
+        }
+
+        /**
+         * Properties needed to be added with each analytics event will be done using this function
+         * Currently, we are adding Google Analytics' custom dimensions using it
+         */
+        private void setCustomProperties() {
+            // Device orientation dimension
+            boolean isPortrait = MainApplication.instance().getResources()
+                    .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+            this.properties.putValue(Keys.DEVICE_ORIENTATION,
+                    (isPortrait ? Values.PORTRAIT : Values.LANDSCAPE));
+
+            // Current navigation mode dimension
+            PrefManager.UserPrefManager userPrefManager =
+                    new PrefManager.UserPrefManager(MainApplication.instance());
+            boolean isVideoMode = userPrefManager.isUserPrefVideoModel();
+            this.properties.putValue(Keys.NAVIGATION_MODE,
+                    (isVideoMode ? Values.OUTLINE_MODE_VIDEO : Values.OUTLINE_MODE_FULL));
         }
 
         public Properties properties;
@@ -940,12 +964,11 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait) {
+    public Properties trackCourseComponentViewed(String blockId, String courseId) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.COMPONENT_VIEWED);
         aEvent.data.putValue(Keys.BLOCK_ID, blockId);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
-        aEvent.data.putValue(Keys.ORIENTATION, (isPortrait ? Values.PORTRAIT : Values.LANDSCAPE));
 
         aEvent.setAppNameContext();
         //Add category for Google Analytics

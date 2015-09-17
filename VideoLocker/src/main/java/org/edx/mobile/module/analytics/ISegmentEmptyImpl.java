@@ -198,7 +198,7 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackCourseComponentViewed(String blockId, String courseId, boolean isPortrait) {
+    public Properties trackCourseComponentViewed(String blockId, String courseId) {
         return null;
     }
 
