@@ -27,29 +27,22 @@
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/course_detail_name"
-                style="@style/bold_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
-                android:textSize="20sp"
-                tools:text="test course" />
+                style="@style/course_card_title"
+                tools:text="Course Name" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/course_detail_extras"
-                style="@style/regular_text"
+                style="@style/regular_edx_gray_xdark_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:textSize="10sp"
                 tools:text="XX | xx | xxxxx" />
 
         </LinearLayout>
 
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+    <View style="@style/grey_separator" />
 
     <ScrollView
         android:layout_width="match_parent"

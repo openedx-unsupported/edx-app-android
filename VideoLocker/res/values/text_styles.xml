@@ -107,13 +107,21 @@
     <style name="regular_grey_text" parent="@style/regular_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
     </style>
-
-    <style name="light_grey_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/grey_video_size_text</item>
-    </style>
     
     <style name="regular_white_text" parent="@style/regular_text">
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="regular_edx_black_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/edx_grayscale_neutral_black</item>
+    </style>
+
+    <style name="regular_edx_gray_xdark_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/edx_grayscale_neutral_x_dark</item>
+    </style>
+
+    <style name="regular_edx_gray_base_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
     </style>
 
     <style name="drawer_option" parent="@style/regular_white_text">
@@ -209,6 +217,19 @@
         <item name="android:textSize">11sp</item>
         <item name="android:padding">5dp</item>
         <item name="font">OpenSans-Regular.ttf</item>
+    </style>
+
+    <!-- Course Card styles -->
+    <style name="course_card_title" parent="@style/regular_edx_black_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="course_card_course_run" parent="@style/regular_edx_gray_xdark_text">
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
 </resources>

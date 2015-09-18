@@ -25,8 +25,7 @@
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <!-- use window background for preview to avoid showing black screen -->
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/edx_grayscale_neutral_x_light</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_back</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>
@@ -102,8 +101,16 @@
         <item name="android:layout_height">1dp</item>
     </style>
 
-    <style name="course_header_separator_style" parent="separator_style">
+    <style name="blue_separator" parent="separator_style">
         <item name="android:background">@color/edx_brand_primary_base</item>
+    </style>
+
+    <style name="grey_separator" parent="separator_style">
+        <item name="android:background">@color/edx_grayscale_neutral_light</item>
+    </style>
+
+    <style name="red_separator" parent="separator_style">
+        <item name="android:background">@color/edx_brand_secondary_base</item>
     </style>
 
     <!-- Custom menu popup -->

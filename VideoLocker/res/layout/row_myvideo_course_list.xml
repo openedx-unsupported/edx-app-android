@@ -19,45 +19,36 @@
         android:layout_height="@dimen/course_detail_card_height"
         android:layout_gravity="bottom"
         android:background="@color/transparent_white_85"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        tools:targetApi="17">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/course_name"
-            style="@style/bold_grey_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            style="@style/course_card_title"
             android:text="@string/course_name"
-            android:textSize="16sp"
             tools:targetApi="17" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="10dp"
             android:orientation="horizontal"
             tools:targetApi="17">
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/school_code"
-                style="@style/regular_text"
+                style="@style/course_card_course_run"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxWidth="150dp"
-                android:singleLine="true"
                 android:text="@string/school_code"
-                android:textColor="@color/org_code_txt"
-                android:textSize="12sp" />
+                android:textDirection="locale" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/no_of_videos"
