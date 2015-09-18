@@ -953,8 +953,6 @@ public class ISegmentImpl implements ISegment {
     public Properties trackCourseOutlineMode(boolean isVideoMode) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SWITCH_OUTLINE_MODE);
-        aEvent.data.putValue(Keys.NEW_OUTLINE_MODE
-                , (isVideoMode ? Values.OUTLINE_MODE_VIDEO : Values.OUTLINE_MODE_FULL));
 
         aEvent.setAppNameContext();
         //Add category for Google Analytics

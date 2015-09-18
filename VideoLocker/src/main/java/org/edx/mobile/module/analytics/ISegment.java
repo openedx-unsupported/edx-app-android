@@ -200,7 +200,7 @@ public interface ISegment {
 
         public static final String SWITCH_OUTLINE_MODE = "Switch outline mode";
         public static final String COMPONENT_VIEWED = "Component Viewed";
-        public static final String OPEN_IN_BROWSER = "Open in browser";
+        public static final String OPEN_IN_BROWSER = "Browser Launched";
     }
     
     public static interface Values{
@@ -267,8 +267,8 @@ public interface ISegment {
         public static final String OUTLINE_MODE_VIDEO = "video";
         public static final String SWITCH_TO_FULL_MODE = "Switch to Full Mode";
         public static final String SWITCH_TO_VIDEO_MODE = "Switch to Video Mode";
-        public static final String OPEN_IN_WEB_SUPPORTED = "Open in web - Supported";
-        public static final String OPEN_IN_WEB_NOT_SUPPORTED = "Open in web - Unsupported";
+        public static final String OPEN_IN_WEB_SUPPORTED = "Open in browser - Supported";
+        public static final String OPEN_IN_WEB_NOT_SUPPORTED = "Open in browser - Unsupported";
         public static final String LANDSCAPE = "landscape";
         public static final String PORTRAIT = "portrait";
 
