@@ -112,7 +112,7 @@ public class FriendsInCourseFragment extends RoboFragment implements LoaderManag
                 @Override
                 public void onClick(View v) {
 
-                    new BrowserUtil().open(getActivity(), courseData.getCourse_url());
+                    BrowserUtil.open(getActivity(), courseData.getCourse_url());
 
                 }
             });

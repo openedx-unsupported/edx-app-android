@@ -101,6 +101,8 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     private TimedTextObject srt;
     private String languageSubtitle;
     private LayoutInflater layoutInflater;
+    @Inject
+    private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
 
@@ -282,7 +284,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                         } else {
                             urlStringBuffer.append( videoEntry.url);
                         }
-                        new BrowserUtil().open(getActivity(),
+                        BrowserUtil.open(getActivity(),
                                 urlStringBuffer.toString());
                     }
 
@@ -513,8 +515,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         if (trModel != null)
         {
             this.transcript = trModel;
-            TranscriptManager tm = new TranscriptManager(getActivity());
-            tm.downloadTranscriptsForVideo(trModel);
+            transcriptManager.downloadTranscriptsForVideo(trModel);
             //initializeClosedCaptioning();
         }
 
@@ -867,7 +868,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public void callLMSServer(String url) {
         try{
             if(url!=null){
-                new BrowserUtil().open(getActivity(), url);
+                BrowserUtil.open(getActivity(), url);
             }
         }catch(Exception e){
             logger.error(e);
@@ -1167,8 +1168,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             srtList = new LinkedHashMap<String, TimedTextObject>();
             try
             {
-                TranscriptManager tm = new TranscriptManager(getActivity());
-                LinkedHashMap<String, InputStream> localHashMap = tm
+                LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                         .fetchTranscriptsForVideo(transcript,getActivity());
                 
                 if (localHashMap != null){

@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
@@ -76,6 +78,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
+
+    @Inject
+    TranscriptManager transcriptManager;
 
 
     /**
@@ -499,7 +504,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     openInBrowserTv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new BrowserUtil().open(getActivity(),
+                            BrowserUtil.open(getActivity(),
                                 urlStringBuffer.toString());
                         }
                     });
@@ -692,8 +697,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 if (reloadListFlag) {
                     //adapter.notifyDataSetChanged();
                 }
-                TranscriptManager transManager = new TranscriptManager(getActivity());
-                transManager.downloadTranscriptsForVideo(downloadEntry.transcript);
+                transcriptManager.downloadTranscriptsForVideo(downloadEntry.transcript);
 
         }catch(Exception e){
             logger.error(e);

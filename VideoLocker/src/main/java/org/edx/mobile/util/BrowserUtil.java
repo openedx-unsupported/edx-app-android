@@ -20,8 +20,12 @@ public class BrowserUtil {
 
     private static final String TAG = BrowserUtil.class.getCanonicalName();
 
+    private BrowserUtil() {
+        throw new UnsupportedOperationException();
+    }
+
     @Inject
-    IEdxEnvironment environment;
+    private static IEdxEnvironment environment;
 
     /**
      * Opens given URL in native browser.
@@ -32,7 +36,7 @@ public class BrowserUtil {
      * @param activity
      * @param url
      */
-    public  void open(final FragmentActivity activity, final String url) {
+    public static void open(final FragmentActivity activity, final String url) {
         if (TextUtils.isEmpty(url) || activity == null){
             logger.warn("cannot open URL in browser, either URL or activity parameter is NULL");
             return;
@@ -80,7 +84,7 @@ public class BrowserUtil {
         }
     }
 
-    private  void openInBrowser(FragmentActivity context, String url) {
+    private static void openInBrowser(FragmentActivity context, String url) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);

@@ -120,7 +120,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
             @Override
             public void onOpenExternalURL(String url) {
-                new BrowserUtil().open(getActivity(), url);
+                BrowserUtil.open(getActivity(), url);
             }
         };
         // treat every link as external link in this view, so that all links will open in external browser

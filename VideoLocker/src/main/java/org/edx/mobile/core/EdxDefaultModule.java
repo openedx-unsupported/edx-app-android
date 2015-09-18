@@ -24,6 +24,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.notification.ParseNotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 
 public class EdxDefaultModule extends AbstractModule {
@@ -74,6 +75,8 @@ public class EdxDefaultModule extends AbstractModule {
         bind(IEdxEnvironment.class).to(EdxEnvironment.class);
 
         bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
+
+        requestStaticInjection(BrowserUtil.class);
 
     }
 }

@@ -59,7 +59,7 @@ public class CourseDetailBaseFragment extends RoboFragment {
                 openInBrowserTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new BrowserUtil().open(getActivity(),
+                        BrowserUtil.open(getActivity(),
                                 urlStringBuffer.toString());
                     }
                 });

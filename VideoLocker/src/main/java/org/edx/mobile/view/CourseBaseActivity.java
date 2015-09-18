@@ -319,7 +319,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                new BrowserUtil().open(CourseBaseActivity.this, getUrlForWebView());
+                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
                 CourseComponent courseComponent = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
                 environment.getSegment().trackOpenInBrowser(courseComponentId
                         , courseData.getCourse().getId(), courseComponent.isMultiDevice());

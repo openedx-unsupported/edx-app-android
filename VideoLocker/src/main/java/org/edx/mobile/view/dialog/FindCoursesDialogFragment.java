@@ -54,7 +54,7 @@ public class FindCoursesDialogFragment extends RoboDialogFragment {
                 // or is visible before dismissing the dialog
                 if(!isRemoving() && isVisible()){
                     String url = environment.getConfig().getEnrollmentConfig().getExternalCourseSearchUrl();
-                    new BrowserUtil().open(getActivity(), url);
+                    BrowserUtil.open(getActivity(), url);
                 }
             }
         });
