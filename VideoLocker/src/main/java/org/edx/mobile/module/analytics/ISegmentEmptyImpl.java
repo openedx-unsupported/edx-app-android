@@ -1,5 +1,7 @@
 package org.edx.mobile.module.analytics;
 
+import android.support.annotation.Nullable;
+
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
@@ -129,12 +131,12 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackNotificationReceived(String courseId){
+    public Properties trackNotificationReceived(@Nullable String courseId){
         return null;
     }
 
     @Override
-    public Properties trackNotificationTapped(String courseId){
+    public Properties trackNotificationTapped(@Nullable String courseId){
         return null;
     }
 

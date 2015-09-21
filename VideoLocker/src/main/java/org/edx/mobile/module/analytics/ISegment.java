@@ -1,5 +1,7 @@
 package org.edx.mobile.module.analytics;
 
+import android.support.annotation.Nullable;
+
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
 
@@ -79,9 +81,9 @@ public interface ISegment {
 
     Properties trackEnrollClicked(String courseId, boolean email_opt_in);
 
-    Properties trackNotificationReceived(String courseId);
+    Properties trackNotificationReceived(@Nullable String courseId);
 
-    Properties trackNotificationTapped(String courseId);
+    Properties trackNotificationTapped(@Nullable String courseId);
 
 
     /**

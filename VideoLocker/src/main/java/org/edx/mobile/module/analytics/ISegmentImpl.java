@@ -1,6 +1,7 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.inject.Inject;
@@ -736,7 +737,7 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties trackNotificationReceived(String courseId){
+    public Properties trackNotificationReceived(@Nullable String courseId){
         try {
 
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
@@ -755,7 +756,7 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties trackNotificationTapped(String courseId){
+    public Properties trackNotificationTapped(@Nullable String courseId){
         try {
 
             SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();

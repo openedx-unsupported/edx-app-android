@@ -15,7 +15,6 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 
 import org.edx.mobile.core.EdxDefaultModule;
-import org.edx.mobile.event.CourseAnnouncementEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
@@ -45,7 +44,7 @@ public class MainApplication extends MultiDexApplication {
 
     protected static MainApplication application;
 
-    public static final MainApplication instance(){
+    public static final MainApplication instance() {
         return application;
     }
 
@@ -69,7 +68,7 @@ public class MainApplication extends MultiDexApplication {
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
-            (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
+                (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
 
         Config config = injector.getInstance(Config.class);
@@ -82,14 +81,14 @@ public class MainApplication extends MultiDexApplication {
         if (config.getNewRelicConfig().isEnabled()) {
             //Crash reporting for new relic has been disabled
             NewRelic.withApplicationToken(config.getNewRelicConfig().getNewRelicKey())
-                .withCrashReportingEnabled(false)
-                .start(this);
+                    .withCrashReportingEnabled(false)
+                    .start(this);
         }
 
         // initialize Facebook SDK
         boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
-        if ( !isOnZeroRatedNetwork
-            && config.getFacebookConfig().isEnabled()) {
+        if (!isOnZeroRatedNetwork
+                && config.getFacebookConfig().isEnabled()) {
             com.facebook.Settings.setApplicationId(config.getFacebookConfig().getFacebookAppId());
         }
 
@@ -98,17 +97,17 @@ public class MainApplication extends MultiDexApplication {
         // it maybe good to support multiple notification providers running
         // at the same time, as it is less like to be the case in the future,
         // we at two level of controls just for easy change of different providers.
-        if ( config.isNotificationEnabled() ){
+        if (config.isNotificationEnabled()) {
             Config.ParseNotificationConfig parseNotificationConfig =
-                config.getParseNotificationConfig();
-            if ( parseNotificationConfig.isEnabled() ) {
+                    config.getParseNotificationConfig();
+            if (parseNotificationConfig.isEnabled()) {
                 Parse.enableLocalDatastore(this);
                 Parse.initialize(this, parseNotificationConfig.getParseApplicationId(), parseNotificationConfig.getParseClientKey());
                 tryToUpdateParseForAppUpgrade(this, needVersionUpgrade);
             }
         }
 
-        if( needVersionUpgrade ) {
+        if (needVersionUpgrade) {
             // try repair of download data if app version is updated
             injector.getInstance(IStorage.class).repairDownloadCompletionData();
 
@@ -117,42 +116,25 @@ public class MainApplication extends MultiDexApplication {
             //https://openedx.atlassian.net/browse/MA-794
             EdxCookieManager.getSharedInstance().clearWebViewCache(this);
         }
-
-        //TODO - ideally this should belong to SegmentFactory, but code refactoring is need because of the way it constructs new instances
-        EventBus.getDefault().registerSticky(this);
     }
-
-    public void onEvent(CourseAnnouncementEvent event) {
-        ISegment segment = injector.getInstance(ISegment.class);
-        if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_RECEIVED ) {
-            segment.trackNotificationReceived(event.courseId);
-            EventBus.getDefault().removeStickyEvent(event);
-        }
-        if ( event.type == CourseAnnouncementEvent.EventType.MESSAGE_TAPPED ) {
-            segment.trackNotificationTapped(event.courseId);
-            EventBus.getDefault().removeStickyEvent(event);
-        }
-    }
-
-
 
     /**
      * callback when application is launched from background or from a cold launch,
      */
-    public void onApplicationLaunchedFromBackground(){
+    public void onApplicationLaunchedFromBackground() {
         logger.debug("onApplicationLaunchedFromBackground");
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-        if ( pref.hasAuthTokenSocialCookie() ){
-            injector.getInstance(Router.class).forceLogout(this, injector.getInstance(ISegment.class),injector.getInstance(NotificationDelegate.class));
+        if (pref.hasAuthTokenSocialCookie()) {
+            injector.getInstance(Router.class).forceLogout(this, injector.getInstance(ISegment.class), injector.getInstance(NotificationDelegate.class));
         }
     }
 
-    private boolean needVersionUpgrade(Context context){
+    private boolean needVersionUpgrade(Context context) {
         boolean needVersionUpgrade = false;
         PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
         Long previousVersion = pmanager.getAppVersionCode();
-        int  curVersion = PropertyUtil.getManifestVersionCode(context);
-        if (  previousVersion < curVersion ){
+        int curVersion = PropertyUtil.getManifestVersionCode(context);
+        if (previousVersion < curVersion) {
             needVersionUpgrade = true;
             pmanager.setAppVersionCode(curVersion);
         }
@@ -161,48 +143,53 @@ public class MainApplication extends MultiDexApplication {
 
     /**
      * if app is launched from upgrading, we need to resync with parse server.
+     *
      * @param context
      */
-    private void tryToUpdateParseForAppUpgrade(Context context, boolean needVersionUpgrade){
+    private void tryToUpdateParseForAppUpgrade(Context context, boolean needVersionUpgrade) {
 
         PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
         boolean hadNotification = pmanager.isNotificationEnabled();
-        if ( needVersionUpgrade ){
-            if ( hadNotification ) {
+        if (needVersionUpgrade) {
+            if (hadNotification) {
                 pmanager.setAppUpgradeNeedSyncWithParse(true);
             }
         }
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
         final String languageKey = "preferredLanguage";
-        final String countryKey =  "preferredCountry";
+        final String countryKey = "preferredCountry";
         String savedPreferredLanguage = installation.getString(languageKey);
         String savedPreferredCountry = installation.getString(countryKey);
         Locale locale = Locale.getDefault();
         String currentPreferredLanguage = locale.getLanguage();
         String currentPreferredCountry = locale.getCountry();
         boolean dirty = false;
-        if (!currentPreferredLanguage.equals(savedPreferredLanguage) ) {
+        if (!currentPreferredLanguage.equals(savedPreferredLanguage)) {
             installation.put(languageKey, currentPreferredLanguage);
             dirty = true;
         }
-        if (!currentPreferredCountry.equals(savedPreferredCountry) ) {
+        if (!currentPreferredCountry.equals(savedPreferredCountry)) {
             installation.put(countryKey, currentPreferredCountry);
             dirty = true;
         }
-        if ( dirty ) {
+        if (dirty) {
             try {
                 installation.saveInBackground();
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
         pmanager.setNotificationEnabled(true);
     }
 
-    private final class MyActivityLifecycleCallbacks
-        implements Application.ActivityLifecycleCallbacks{
+    public Injector getInjector() {
+        return injector;
+    }
 
-        Activity  prevPausedOne;
+    private final class MyActivityLifecycleCallbacks
+            implements Application.ActivityLifecycleCallbacks {
+
+        Activity prevPausedOne;
 
         public void onActivityCreated(Activity activity, Bundle bundle) {
 
@@ -217,7 +204,7 @@ public class MainApplication extends MultiDexApplication {
         }
 
         public void onActivityResumed(Activity activity) {
-            if( null ==  prevPausedOne || prevPausedOne == activity ){
+            if (null == prevPausedOne || prevPausedOne == activity) {
                 //application launched from background,
                 onApplicationLaunchedFromBackground();
             }

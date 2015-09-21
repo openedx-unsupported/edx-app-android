@@ -334,13 +334,6 @@
                 <category android:name="org.edx.mobile" />
             </intent-filter>
         </receiver>
-
-       <!-- Used for Flyin window of remote notification -->
-        <!--
-        <service
-            android:name=".module.notification.NotificationFlyinService"
-            android:exported="true" />
-         -->
     </application>
 
 </manifest>

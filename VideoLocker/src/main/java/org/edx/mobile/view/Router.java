@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
@@ -24,9 +27,6 @@ import org.edx.mobile.util.Config;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by aleffert on 1/30/15.
- */
 @Singleton
 public class Router {
 
@@ -46,6 +46,8 @@ public class Router {
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
 
+    @Inject
+    Config config;
 
     public void showDownloads(Activity sourceActivity) {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
@@ -144,8 +146,7 @@ public class Router {
      * @param activity
      * @param model
      */
-    public void showCourseAnnouncement(Activity activity, Config config,  EnrolledCoursesResponse model ) {
-
+    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model ) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
@@ -159,6 +160,24 @@ public class Router {
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
+    }
+
+    public void showCourseAnnouncementFromNotification(@NonNull Context context, @NonNull String courseId) {
+        final Bundle courseBundle = new Bundle();
+        courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
+        courseBundle.putString(Router.EXTRA_COURSE_ID, courseId);
+
+        Intent courseDetail;
+        if ( config.isNewCourseNavigationEnabled() ) {
+            courseDetail = new Intent(context, CourseDetailInfoActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
+        }
+        else {
+            courseDetail = new Intent(context, CourseDetailTabActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
+        }
+        // TODO: It's not essential, but we may want additional activities on the back-stack (e.g. CourseDashboardActivity)
+        TaskStackBuilder.create(context)
+                .addNextIntent(courseDetail)
+                .startActivities();
     }
 
     public void showCourseContainerOutline(Activity activity, EnrolledCoursesResponse model) {
@@ -288,7 +307,6 @@ public class Router {
      *  this method can be called either through UI [ user clicks LOGOUT button],
      *  or programmatically
      */
-    @Inject
     public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate){
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.clearAuth();
@@ -311,5 +329,4 @@ public class Router {
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
     }
-
 }

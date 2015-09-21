@@ -4,9 +4,6 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by hanning on 4/17/15.
- */
 public abstract class BaseNotificationPayload {
     private @SerializedName("action") String action;
     private @SerializedName("push_hash") String pushHash;
