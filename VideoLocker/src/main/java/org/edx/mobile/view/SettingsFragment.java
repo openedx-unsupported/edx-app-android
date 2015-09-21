@@ -188,7 +188,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
             public void onSuccess(SocialMember response) {
                 if(!isAdded())
                     return;
-                CharSequence formatted =  ResourceUtil.getFormattedString(R.string.settings_facebook_login_body_logged_in,
+                CharSequence formatted =  ResourceUtil.getFormattedString(getResources(), R.string.settings_facebook_login_body_logged_in,
                          "username", response.getFullName());
                 socialConnectedText.setText(formatted);
                 socialConnectedText.setVisibility(View.VISIBLE);

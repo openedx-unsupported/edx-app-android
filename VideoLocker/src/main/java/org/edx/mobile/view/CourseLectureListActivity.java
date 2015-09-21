@@ -328,7 +328,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                     if(isActivityStarted()){
                         adapter.notifyDataSetChanged();
                         invalidateOptionsMenu();
-                        String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
+                        String content = ResourceUtil.getFormattedStringForQuantity(getResources(), R.plurals.downloading_count_videos, result.intValue()).toString();
                         showInfoMessage( content );
                     }
                 }catch(Exception e){

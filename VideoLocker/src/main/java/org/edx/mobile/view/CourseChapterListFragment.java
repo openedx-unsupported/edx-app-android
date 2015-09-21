@@ -109,7 +109,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
             StartType type = enrollment.getCourse().getStartType();
             if (error.getError_code() == AccessError.START_DATE_ERROR && !(type == StartType.NONE_START)) {
                 startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + enrollment.getCourse().getStartDisplay() + "</font>";
-                String courseScheduledText  =  ResourceUtil.getFormattedString(R.string.course_content_available_text,
+                String courseScheduledText  =  ResourceUtil.getFormattedString(getResources(), R.string.course_content_available_text,
                         "start_time", startDate).toString();
 
                 courseScheduleTv = (ETextView) view.findViewById(R.id.course_content_available_tv);
@@ -397,7 +397,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                 adapter.notifyDataSetChanged();
                 (getActivity()).invalidateOptionsMenu();
 
-                String content = ResourceUtil.getFormattedStringForQuantity(R.plurals.downloading_count_videos, result.intValue()).toString();
+                String content = ResourceUtil.getFormattedStringForQuantity(getResources(), R.plurals.downloading_count_videos, result.intValue()).toString();
 
                 UiUtil.showMessage(CourseChapterListFragment.this.getView(), content);
 

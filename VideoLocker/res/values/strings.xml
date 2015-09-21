@@ -289,6 +289,12 @@
     <string name="discussion_priviledged_author_label_staff">Staff</string>
     <!-- The label to use when indicating a post was authored by a privileged user -->
     <string name="discussion_priviledged_author_attribution">By %s</string>
+    <!-- The label to use when describing the date and author of a discussion thread -->
+    <string name="discussion_thread_attribution">Discussion posted {time} by {author} {author_label}</string>
+    <!-- The label to use when describing the date and author of a discussion question -->
+    <string name="question_thread_attribution">Question posted {time} by {author} {author_label}</string>
+    <!-- The label to use when describing the date and author of a discussion comment -->
+    <string name="comment_attribution">Posted {time} by {author} {author_label}</string>
 
     <!--Discussion Responses-->
     <string name="course_discussion_responses_title">Discussion Post</string>
@@ -312,8 +318,6 @@
     <string name="number_responses_or_comments_add_comment_label">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
-    <!--Label for indicating the author of the response-->
-    <string name="discussion_responses_author">{author} {created_at} {author_label}</string>
     <!--Label for indicating who endorsed the comment as an answer-->
     <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
 

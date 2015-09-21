@@ -227,7 +227,7 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
 
     private void insertUserName(String name){
 
-        String display = ResourceUtil.getFormattedString(R.string.connected_as, "username", name).toString();
+        String display = ResourceUtil.getFormattedString(getResources(), R.string.connected_as, "username", name).toString();
 
         connectedText.setText(display, TextView.BufferType.SPANNABLE);
 

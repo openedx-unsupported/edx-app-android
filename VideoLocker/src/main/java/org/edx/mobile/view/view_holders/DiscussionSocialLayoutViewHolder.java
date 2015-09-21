@@ -45,7 +45,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
     public void setDiscussionThread(final Context context,  final DiscussionThread discussionThread) {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
-                R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
+                context.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
         threadVoteIconView.setIconColor(discussionThread.isVoted() ?
                 context.getResources().getColor(R.color.edx_brand_primary_base) :
                 context.getResources().getColor(R.color.edx_grayscale_neutral_base));
@@ -66,7 +66,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
     public void setDiscussionResponse(final Context context,  final DiscussionComment discussionResponse) {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
-                R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
+                context.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
         threadVoteIconView.setIconColor(discussionResponse.isVoted() ?
                 context.getResources().getColor(R.color.edx_brand_primary_base) :
                 context.getResources().getColor(R.color.edx_grayscale_neutral_base));

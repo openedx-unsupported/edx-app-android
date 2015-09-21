@@ -62,8 +62,8 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
             unreadMenuItem.setVisible(true);
             View unreadTextView = unreadMenuItem.getActionView();
             ETextView unreadTV = (ETextView) unreadTextView.findViewById(R.id.unread_tv);
-            CharSequence formatted =  ResourceUtil.getFormattedStringForQuantity(R.string.unread_text,
-                    "unread_count", group.getUnread());
+            CharSequence formatted =  ResourceUtil.getFormattedString(getResources(), R.string.unread_text,
+                    "unread_count", String.valueOf(group.getUnread()));
             unreadTV.setText( formatted );
 
         }

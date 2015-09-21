@@ -56,19 +56,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         holder.discussionPostFollowIcon.setVisibility(discussionThread.isFollowing() ? View.VISIBLE : View.GONE);
 
         {
-            String authorLabel = null;
-            if (null != discussionThread.getAuthorLabel()) {
-                switch (discussionThread.getAuthorLabel()) {
-                    case STAFF: {
-                        authorLabel = getContext().getString(R.string.discussion_priviledged_author_label_staff);
-                        break;
-                    }
-                    case COMMUNITY_TA: {
-                        authorLabel = getContext().getString(R.string.discussion_priviledged_author_label_ta);
-                        break;
-                    }
-                }
-            }
+            String authorLabel = discussionThread.getAuthorLabel();
             if (authorLabel != null) {
                 holder.discussionPostAuthor.setVisibility(View.VISIBLE);
                 holder.discussionPostAuthor.setText(getContext().getString(R.string.discussion_priviledged_author_attribution, authorLabel));

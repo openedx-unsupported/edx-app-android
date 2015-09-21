@@ -929,7 +929,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
         if(deletedVideoCount>0){
             try {
-                String format = ResourceUtil.getFormattedStringForQuantity(R.plurals.deleted_video,
+                String format = ResourceUtil.getFormattedStringForQuantity(getResources(), R.plurals.deleted_video,
                         "video_count", deletedVideoCount).toString();
 
                 ((VideoListActivity) getActivity())

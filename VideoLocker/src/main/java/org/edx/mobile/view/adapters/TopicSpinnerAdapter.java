@@ -42,7 +42,7 @@ public class TopicSpinnerAdapter extends ArrayAdapter<DiscussionTopicDepth> {
         if (null == topic) {
             text = getContext().getString(R.string.discussion_add_post_choose_a_topic);
         } else {
-            text = ResourceUtil.getFormattedString(R.string.discussion_add_post_topic_selection, "topic", topic.getDiscussionTopic().getName());
+            text = ResourceUtil.getFormattedString(getContext().getResources(), R.string.discussion_add_post_topic_selection, "topic", topic.getDiscussionTopic().getName());
         }
         view.setText(text);
         return view;
