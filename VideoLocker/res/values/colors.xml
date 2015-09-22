@@ -94,7 +94,6 @@
     <color name="video_details_background_transparent">#CC1F2124</color>
     <color name="delete_panel_bg">#3E4247</color>
     <color name="empty_list_text">#c8c8c8</color>
-    <color name="button_text_disabled">@color/edx_grayscale_neutral_base</color>
     <color name="switch_default_button_color">#C3C3C3</color>
     <color name="switch_default_bg_color">#3C4045</color>
     <color name="switch_disabled_bg_color_off">@color/grey_4</color>

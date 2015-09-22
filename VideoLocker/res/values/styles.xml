@@ -32,10 +32,11 @@
         <item name="edgePopupMenuStyle">@style/CustomEdgePopupMenu</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarTabStyle">@style/TabsStyle</item>
-        <item name="buttonTextColor">@color/button_text</item>
+        <item name="disableableButtonTextColor">@color/disableable_button_text</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
         <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
+        <item name="android:buttonStyle">@style/edX.Widget.Button</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
@@ -229,6 +230,15 @@
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
         <item name="android:paddingTop">@dimen/vertical_input_padding</item>
+    </style>
+
+    <style name="edX.Widget.Button" parent="@android:style/Widget.Holo.Light.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
+        <item name="android:textColor">?attr/disableableButtonTextColor</item>
     </style>
 
     <style name="edX.Widget.CreationButton">
