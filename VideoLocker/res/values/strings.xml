@@ -289,12 +289,8 @@
     <string name="discussion_priviledged_author_label_staff">Staff</string>
     <!-- The label to use when indicating a post was authored by a privileged user -->
     <string name="discussion_priviledged_author_attribution">By %s</string>
-    <!-- The label to use when describing the date and author of a discussion thread -->
-    <string name="discussion_thread_attribution">Discussion posted {time} by {author} {author_label}</string>
-    <!-- The label to use when describing the date and author of a discussion question -->
-    <string name="question_thread_attribution">Question posted {time} by {author} {author_label}</string>
-    <!-- The label to use when describing the date and author of a discussion comment -->
-    <string name="comment_attribution">Posted {time} by {author} {author_label}</string>
+    <!-- The date and author of a discussion comment, question, or thread, e.g. "3 days ago by Brian STAFF" -->
+    <string name="post_attribution">{time} by {author} {author_label}</string>
 
     <!--Discussion Responses-->
     <string name="course_discussion_responses_title">Discussion Post</string>
