@@ -6,9 +6,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.AppConstants;
@@ -16,6 +19,9 @@ import org.edx.mobile.util.NetworkUtil;
 
 
 public class CourseDetailInfoActivity extends BaseFragmentActivity {
+
+    @Inject
+    IApi api;
 
     private CourseCombinedInfoFragment fragment;
     private EnrolledCoursesResponse courseData;
@@ -81,7 +87,6 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
             if (!TextUtils.isEmpty(courseId)){
                 try{
                     bundle.remove(Router.EXTRA_COURSE_ID);
-                    Api api = new Api(this);
                     courseData = api.getCourseById(courseId);
                     if (courseData != null && courseData.getCourse() != null ) {
                         bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);

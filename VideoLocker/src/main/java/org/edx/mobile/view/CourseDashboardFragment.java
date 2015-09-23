@@ -105,7 +105,7 @@ public class CourseDashboardFragment extends RoboFragment {
             @Override
             public void onClick(View v) {
                 if ( courseData != null )
-                    environment.getRouter().showCourseAnnouncement(getActivity(), environment.getConfig(), courseData);
+                    environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
             }
         });
     }

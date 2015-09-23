@@ -122,9 +122,9 @@ dependencies {
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:4.+'
 
-    //Included for Parse/notification service
-    compile 'com.parse.bolts:bolts-android:1.+'
-    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+    // Parse notification service
+    compile 'com.parse:parse-android:1.10.2'
+    compile 'com.parse.bolts:bolts-android:1.2.1'
 
     //Include DI framework
     compile 'org.roboguice:roboguice:3.+'
