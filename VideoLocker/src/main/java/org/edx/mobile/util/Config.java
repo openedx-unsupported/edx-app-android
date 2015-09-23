@@ -55,6 +55,7 @@ public class Config {
     public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
 
     public static final String NEW_COURSE_NAVIGATION_ENABLED = "NEW_COURSE_NAVIGATION_ENABLED";
+    public static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
@@ -344,6 +345,10 @@ public class Config {
 
     public boolean isNewCourseNavigationEnabled() {
         return getBoolean(NEW_COURSE_NAVIGATION_ENABLED, false);
+    }
+
+    public boolean isUserProfilesEnabled() {
+        return getBoolean(USER_PROFILES_ENABLED, false);
     }
 
     public boolean isDiscussionsEnabled() {

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_nav_background">
 
     <LinearLayout
@@ -11,34 +12,43 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/grey_name_background"
-        android:orientation="vertical"
-        android:padding="15dp">
+        android:orientation="horizontal"
+        android:padding="@dimen/edx_margin"
+        android:gravity="center">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/name_tv"
-            style="@style/regular_white_text"
+        <de.hdodenhof.circleimageview.CircleImageView
+            style="@style/profile_image"
+            android:id="@+id/profile_image"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginRight="@dimen/edx_margin"
+            android:layout_marginEnd="@dimen/edx_margin"
+            tools:src="@drawable/app_icon"
+            app:civ_border_width="1dp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left|start|center_vertical"
-            android:inputType="textCapWords"
-            android:maxWidth="200dp"
-            android:paddingTop="10dp"
-            android:textSize="20sp"
-            tools:text="Username"
-            tools:targetApi="17" />
+            android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:id="@+id/email_tv"
-            style="@style/regular_white_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left|start"
-            android:maxWidth="200dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:textSize="13sp"
-            tools:text="user@domain.com"
-            tools:targetApi="17" />
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/name_tv"
+                style="@style/regular_white_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                tools:text="username"
+                tools:targetApi="17" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:id="@+id/email_tv"
+                style="@style/regular_white_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:textSize="13sp"
+                tools:text="user@domain.com" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout

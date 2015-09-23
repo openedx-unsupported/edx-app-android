@@ -52,7 +52,6 @@ import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,9 +80,7 @@ public class RestApiManager implements IApi{
     @Inject
     IEdxEnvironment environment;
 
-    private final int cacheSize = 10 * 1024 * 1024; // 10 MiB
     private final OkHttpClient oauthBasedClient;
-    private final  com.squareup.okhttp.Cache cache;
     private final OauthRestApi oauthRestApi;
     private final OkHttpClient client;
     private final PublicRestApi restApi;
@@ -91,18 +88,9 @@ public class RestApiManager implements IApi{
     private Context context;
 
     @Inject
-    public RestApiManager(Context context){
+    public RestApiManager(Context context, OkHttpClient oauthBasedClient) {
         this.context = context;
-        oauthBasedClient = new OkHttpClient();
-        File cacheDirectory = new File(context.getFilesDir(), "http-cache");
-        if (!cacheDirectory.exists()) {
-            cacheDirectory.mkdirs();
-        }
-        cache = new com.squareup.okhttp.Cache(cacheDirectory, cacheSize);
-        oauthBasedClient.setCache(cache);
-        oauthBasedClient.interceptors().add(new GzipRequestInterceptor());
-        oauthBasedClient.interceptors().add(new OauthHeaderRequestInterceptor(context));
-        oauthBasedClient.interceptors().add(new LoggingInterceptor());
+        this.oauthBasedClient = oauthBasedClient;
         RestAdapter restAdapter = new RestAdapter.Builder()
             .setClient(new OkClient(oauthBasedClient))
             .setEndpoint(getBaseUrl())
@@ -117,10 +105,6 @@ public class RestApiManager implements IApi{
             .setEndpoint(getBaseUrl())
             .build();
         restApi = restAdapter.create(PublicRestApi.class);
-    }
-
-    public final OkHttpClient getOauthBasedClient(){
-        return oauthBasedClient;
     }
 
     public final OkHttpClient getClient(){

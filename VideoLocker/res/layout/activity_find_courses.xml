@@ -35,15 +35,6 @@
 
     </RelativeLayout>
 
-    <!-- FrameLayout to display Fragment for Navigation Menu -->
-
-    <FrameLayout
-        android:id="@+id/slider_menu"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="@color/black"
-        android:clickable="true"
-        tools:targetApi="17" />
+    <include layout="@layout/navigation_drawer_container" />
 
 </android.support.v4.widget.DrawerLayout>

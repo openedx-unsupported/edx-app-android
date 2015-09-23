@@ -83,7 +83,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
                 // provide user the common error message based on common error code
                 if ( ex instanceof RetroHttpException){
                     String errorMessage = "";
-                    RetrofitError cause = ((RetroHttpException)ex).cause;
+                    RetrofitError cause = ((RetroHttpException)ex).getCause();
                     if ( cause.getResponse() == null ){
                         errorMessage = "Service is not available. Please try it later.";
                     } else {
