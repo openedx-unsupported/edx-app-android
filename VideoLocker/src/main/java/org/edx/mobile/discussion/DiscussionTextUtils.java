@@ -15,18 +15,7 @@ public abstract class DiscussionTextUtils {
     private DiscussionTextUtils() {
     }
 
-    public static CharSequence getAuthorAttributionText(@NonNull final DiscussionThread discussionThread, @NonNull final Resources resources) {
-        return getAuthorAttributionText(discussionThread, resources,
-                discussionThread.getType() == DiscussionThread.ThreadType.DISCUSSION
-                        ? R.string.discussion_thread_attribution
-                        : R.string.question_thread_attribution);
-    }
-
-    public static CharSequence getAuthorAttributionText(@NonNull final DiscussionComment discussionComment, @NonNull final Resources resources) {
-        return getAuthorAttributionText(discussionComment, resources, R.string.comment_attribution);
-    }
-
-    private static CharSequence getAuthorAttributionText(@NonNull final IAuthorData authorData, @NonNull final Resources resources, @StringRes final int stringRes) {
+    public static CharSequence getAuthorAttributionText(@NonNull final IAuthorData authorData, @NonNull final Resources resources) {
         final CharSequence formattedTime = DateUtils.getRelativeTimeSpanString(
                 authorData.getCreatedAt().getTime(),
                 System.currentTimeMillis(),
@@ -35,7 +24,7 @@ public abstract class DiscussionTextUtils {
 
         final String authorLabel = authorData.getAuthorLabel();
 
-        return trim(ResourceUtil.getFormattedString(resources, stringRes, new HashMap<String, CharSequence>() {{
+        return trim(ResourceUtil.getFormattedString(resources, R.string.post_attribution, new HashMap<String, CharSequence>() {{
             put("time", formattedTime);
             put("author", authorData.getAuthor());
             put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(resources.getConfiguration().locale));
