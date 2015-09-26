@@ -22,6 +22,7 @@ package org.edx.mobile.view.custom.popup.menu;
  */
 
 import android.content.Context;
+import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.internal.view.menu.MenuPresenter;
 import android.support.v7.widget.ListPopupWindow;
@@ -176,7 +177,7 @@ public class PopupMenu implements MenuBuilder.Callback, MenuPresenter.Callback {
      * @see #getMenu()
      */
     public MenuInflater getMenuInflater() {
-        return new MenuInflater(mContext);
+        return new SupportMenuInflater(mContext);
     }
 
     /**
