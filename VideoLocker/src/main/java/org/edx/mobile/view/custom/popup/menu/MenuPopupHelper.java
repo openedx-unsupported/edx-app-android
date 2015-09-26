@@ -166,6 +166,13 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         }
 
         mPopup.setContentWidth(mPopupWidth);
+        // If vertical offset is defined as 0, then ListPopupWindow infers
+        // it as the negative of the top padding of the background, in
+        // order to anchor the content area. Since that is not the effect
+        // we want, we'll force it to use only the explicitly defined
+        // offset by explicitly setting it dynamically as well, and thus
+        // forcing it to discard it's 'unset' flag.
+        mPopup.setVerticalOffset(mPopup.getVerticalOffset());
         int topBottomPadding = mPopupPadding - mPopupItemVerticalPadding;
         // Top/bottom padding will be applied on the background drawable,
         // as the ListView is both initialized and set up only after show()
