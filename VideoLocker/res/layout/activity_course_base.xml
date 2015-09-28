@@ -100,64 +100,58 @@
 
             <LinearLayout
                 android:id="@+id/last_access_bar"
-                android:orientation="vertical"
                 style="@style/last_access_bar_style"
-                android:visibility="gone">
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     tools:targetApi="17">
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <org.edx.mobile.view.custom.ETextView
-                            android:text="@string/last_accessed"
-                            android:textColor="@color/edx_brand_primary_base"
-                            android:textSize="16sp"
-                            android:layout_height="wrap_content"
+                            style="@style/bold_edx_brand_primary_base_text"
                             android:layout_width="wrap_content"
-                            android:layout_gravity="left|start"
-                            tools:targetApi="17"/>
+                            android:layout_height="wrap_content"
+                            android:text="@string/last_accessed"
+                            android:textSize="14sp"
+                            tools:targetApi="17" />
+
                         <org.edx.mobile.view.custom.ETextView
                             android:id="@+id/last_access_text"
-                            android:textSize="16sp"
-                            android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
-                            android:layout_gravity="left|start"
-                            tools:targetApi="17"/>
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            tools:text="Course Name"
+                            tools:targetApi="17" />
                     </LinearLayout>
-
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/last_access_button"
+                        style="@style/bold_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/regular_text"
-                        android:gravity="center"
+                        android:padding="@dimen/widget_margin"
+                        android:text="@string/view_button_text"
                         android:textColor="@color/edx_brand_primary_base"
-                        android:textSize="16sp"
-                        android:padding="10dp"
-                        android:textAllCaps="true"
-                        android:text="@string/view_button_text" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
                 <View style="@style/blue_separator"/>
             </LinearLayout>
-
-
-
-
 
             <RelativeLayout
                 android:layout_width="match_parent"

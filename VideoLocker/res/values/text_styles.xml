@@ -103,6 +103,14 @@
     <style name="bold_white_text" parent="@style/bold_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
+
+    <style name="bold_cyan_text" parent="@style/bold_text">
+        <item name="android:textColor">@color/cyan_text_navigation</item>
+    </style>
+
+    <style name="semibold_white_text" parent="@style/semibold_text">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
     
     <style name="regular_grey_text" parent="@style/regular_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
@@ -110,6 +118,10 @@
     
     <style name="regular_white_text" parent="@style/regular_text">
         <item name="android:textColor">@android:color/white</item>
+    </style>
+    
+    <style name="bold_edx_brand_primary_base_text" parent="@style/bold_text">
+        <item name="android:textColor">@color/edx_brand_primary_base</item>
     </style>
 
     <style name="regular_edx_black_text" parent="@style/regular_text">
@@ -127,13 +139,9 @@
     <style name="drawer_option" parent="@style/regular_white_text">
         <item name="android:textColor">@color/drawer_option_text</item>
     </style>
-    
-    <style name="semibold_white_text" parent="@style/semibold_text">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-    
-    <style name="bold_cyan_text" parent="@style/bold_text">
-        <item name="android:textColor">@color/cyan_text_navigation</item>
+
+    <style name="bold_text">
+        <item name="font">OpenSans-Semibold.ttf</item>
     </style>
     
     <style name="semibold_text">
@@ -142,10 +150,6 @@
     
     <style name="regular_text">
         <item name="font">OpenSans-Regular.ttf</item>
-    </style>
-    
-    <style name="bold_text">
-        <item name="font">OpenSans-Semibold.ttf</item>
     </style>
     
      <style name="text_network_error" parent="@style/semibold_white_text">
