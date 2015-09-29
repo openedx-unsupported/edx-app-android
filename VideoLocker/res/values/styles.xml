@@ -87,9 +87,8 @@
 
     <style name="last_access_bar_style">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">75dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:background">@color/edx_brand_primary_x_light</item>
-        <item name="android:visibility">gone</item>
     </style>
 
     <style name="download_in_progress_bar_style" parent="last_access_bar_style">
