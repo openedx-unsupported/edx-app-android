@@ -62,22 +62,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/course_detail_card_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent_white_85">
+        android:background="@color/transparent_white_85"
+        android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        tools:targetApi="17">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/course_name"
-            style="@style/bold_grey_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/course_name"
-            android:textSize="16sp"
-            tools:targetApi="17" />
+            style="@style/course_card_title"
+            android:text="@string/course_name" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/starting_from"
@@ -87,8 +83,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/course_name"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:background="@drawable/ic_starting_mirrored"
             android:paddingEnd="10dp"
             android:paddingLeft="5dp"
@@ -106,8 +100,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@id/course_name"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             tools:targetApi="17">
 
             <View
@@ -142,8 +134,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignTop="@id/starting_from"
             android:layout_below="@id/course_name"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/starting_from"
             android:layout_toStartOf="@id/starting_from"
             android:orientation="horizontal"
@@ -151,33 +141,32 @@
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/org_code_tv"
-                style="@style/regular_text"
+                style="@style/course_card_course_run"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:singleLine="true"
-                android:textColor="@color/org_code_txt"
-                android:textSize="12sp" />
+                tools:text="MITx"/>
 
             <TextView
                 android:id="@+id/or_tv"
-                style="@style/regular_grey_text"
+                style="@style/course_card_course_run"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/or_symbol"
-                android:textSize="12sp" />
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
+                android:text="@string/or_symbol" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/school_code_tv"
-                style="@style/regular_text"
+                style="@style/course_card_course_run"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/org_code_txt"
-                android:textSize="12sp" />
+                tools:text="6.002x" />
         </LinearLayout>
     </RelativeLayout>
 

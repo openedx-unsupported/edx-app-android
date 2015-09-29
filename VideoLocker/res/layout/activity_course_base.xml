@@ -40,9 +40,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_gravity="left|start|center_vertical"
                     tools:targetApi="17"/>
-                <View
-                    style="@style/separator_style"
-                    android:background="@color/edx_brand_secondary_base"/>
+
+                <View style="@style/red_separator" />
             </LinearLayout>
 
             <LinearLayout
@@ -96,7 +95,7 @@
 
                 </LinearLayout>
 
-                <View style="@style/course_header_separator_style"/>
+                <View style="@style/blue_separator"/>
             </LinearLayout>
 
             <LinearLayout
@@ -153,7 +152,7 @@
 
                 </LinearLayout>
 
-                <View style="@style/course_header_separator_style"/>
+                <View style="@style/blue_separator"/>
             </LinearLayout>
 
 

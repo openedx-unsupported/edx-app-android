@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dashboard_navigation_element_height"
     android:background="@drawable/rectangle_with_bottom_border_selector"
     android:gravity="center_vertical"
     android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         android:id="@+id/row_type"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        app:iconColor="@color/grey_video_size_text"
+        app:iconColor="@color/edx_grayscale_neutral_light"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"  />
 
@@ -36,26 +36,26 @@
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/row_title"
-            style="@style/regular_grey_text"
+            style="@style/regular_edx_gray_xdark_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text=""
+            tools:text="Course Title"
             android:textDirection="locale"
             android:textSize="16sp" />
 
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/row_subtitle"
-            style="@style/light_grey_text"
+            style="@style/regular_edx_gray_base_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text=""
+            tools:text="Course Subtitle"
             android:textDirection="locale"
             android:textSize="12sp" />
     </LinearLayout>
@@ -63,7 +63,7 @@
     <org.edx.mobile.third_party.iconify.IconView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        app:iconColor="@color/grey_video_size_text"
+        app:iconColor="@color/edx_grayscale_neutral_light"
         app:iconName="fa_angle_right"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"  />
