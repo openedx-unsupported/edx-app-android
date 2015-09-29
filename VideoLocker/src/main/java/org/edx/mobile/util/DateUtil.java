@@ -14,7 +14,7 @@ public class DateUtil {
     private static final Logger logger = new Logger(DateUtil.class.getName());
 
     /*
-     * Converting Date in string format to Date object and coverting the Current
+     * Converting Date in string format to Date object and converting the Current
      * Stamp
      */
     public static Date convertToDate(String date) {
@@ -104,20 +104,4 @@ public class DateUtil {
             return null;
         }
     }
-
-    /*
-     *  This method tahes a Date object and returns a string that shows how far back in
-     *  time the date was in a concise, readable format. (Ex: 2 weeks ago, 1 month ago)
-     */
-    public static String formatPastDateRelativeToCurrentDate(Date pastDate) {
-        if (pastDate == null) {
-            return "";
-        }
-        return DateUtils.getRelativeTimeSpanString(
-                pastDate.getTime(),
-                System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE).toString();
-    }
-
 }
