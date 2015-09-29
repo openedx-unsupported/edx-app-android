@@ -13,7 +13,7 @@
 
         <View
             android:id="@+id/offline_bar"
-            style="@style/offline_bar_style"
+            style="@style/offline_bar"
             android:visibility="gone"
             android:layout_alignParentTop="true" />
 

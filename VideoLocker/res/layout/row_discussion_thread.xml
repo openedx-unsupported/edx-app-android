@@ -11,7 +11,7 @@
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/discussion_post_type_icon"
-        style="@style/icon_view_standard_size_style"
+        style="@style/icon_view_standard_size"
         android:layout_margin="@dimen/edx_margin"
         app:iconColor="@color/edx_grayscale_neutral_light" />
 

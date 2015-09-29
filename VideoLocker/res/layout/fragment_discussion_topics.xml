@@ -8,7 +8,7 @@
 
     <SearchView
         android:id="@+id/discussion_topics_searchview"
-        style="@style/discussion_topics_search_bar_style"
+        style="@style/discussion_topics_search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
