@@ -113,6 +113,15 @@
         <item name="android:background">@color/edx_brand_secondary_base</item>
     </style>
 
+    <style name="hairline_separator_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edx_hairline</item>
+    </style>
+
+    <style name="grey_hairline_separator" parent="hairline_separator_style">
+        <item name="android:background">@color/edx_grayscale_neutral_light</item>
+    </style>
+
     <!-- Custom menu popup -->
     <style name="CustomPopupMenu" android:parent="Widget.Holo.Light.PopupMenu">
         <item name="android:popupBackground">@drawable/white_rounded_bordered_bg</item>
