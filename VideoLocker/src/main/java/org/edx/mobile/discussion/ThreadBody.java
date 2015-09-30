@@ -7,7 +7,8 @@ public class ThreadBody {
     String topicId;
     String title;
     String rawBody;
-
+    // Automatically follow posts when creating a new post (default behavior on desktop) [MA-1380]
+    boolean following = true;
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
@@ -31,5 +32,9 @@ public class ThreadBody {
 
     public void setRawBody(String rawBody) {
         this.rawBody = rawBody;
+    }
+
+    public void setFollowing(boolean isFollowing) {
+        following = isFollowing;
     }
 }
