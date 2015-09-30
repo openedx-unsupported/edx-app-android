@@ -196,7 +196,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
         <item name="android:background">@color/edx_brand_primary_x_dark</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_white</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="icon_view_standard_size_style">
