@@ -20,7 +20,7 @@ public abstract class DiscussionTextUtils {
                 authorData.getCreatedAt().getTime(),
                 System.currentTimeMillis(),
                 DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE);
+                DateUtils.FORMAT_NUMERIC_DATE|DateUtils.FORMAT_SHOW_YEAR);
 
         final String authorLabel = authorData.getAuthorLabel();
 
