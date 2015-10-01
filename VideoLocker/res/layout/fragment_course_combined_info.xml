@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/edx_grayscale_neutral_white_t"
     tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
 
     <LinearLayout
