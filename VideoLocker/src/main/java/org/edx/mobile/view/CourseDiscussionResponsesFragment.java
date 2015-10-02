@@ -7,16 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.ThreadComments;
-
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.ThreadComments;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
@@ -39,8 +37,8 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     @InjectView(R.id.create_new_item_text_view)
     TextView addResponseTextView;
 
-    @InjectView(R.id.create_new_item_relative_layout)
-    RelativeLayout addResponseLayout;
+    @InjectView(R.id.create_new_item_layout)
+    ViewGroup addResponseLayout;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
     DiscussionThread discussionThread;

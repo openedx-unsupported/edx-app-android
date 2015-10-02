@@ -49,8 +49,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @InjectView(R.id.create_new_item_text_view)
     TextView createNewPostTextView;
 
-    @InjectView(R.id.create_new_item_relative_layout)
-    RelativeLayout createNewPostRelativeLayout;
+    @InjectView(R.id.create_new_item_layout)
+    ViewGroup createNewPostLayout;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
@@ -93,7 +93,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
 
-        createNewPostRelativeLayout.setOnClickListener(new View.OnClickListener() {
+        createNewPostLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 router.showCourseDiscussionAddPost(getActivity(), discussionTopic, courseData);

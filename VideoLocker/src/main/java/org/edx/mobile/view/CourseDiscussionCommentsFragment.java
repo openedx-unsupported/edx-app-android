@@ -9,16 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.discussion.DiscussionAPI;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
@@ -35,11 +32,8 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
     @InjectView(R.id.create_new_item_text_view)
     TextView createNewCommentTextView;
 
-    @InjectView(R.id.create_new_item_relative_layout)
-    RelativeLayout createNewCommentRelativeLayout;
-
-    @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
-    private DiscussionComment discussionComment;
+    @InjectView(R.id.create_new_item_layout)
+    ViewGroup createNewCommentLayout;
 
     @Inject
     Router router;
@@ -47,6 +41,8 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
     @Inject
     Context context;
 
+    @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
+    private DiscussionComment discussionComment;
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
@@ -76,7 +72,7 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
 
         createNewCommentTextView.setText(context.getString(R.string.discussion_post_create_new_comment));
 
-        createNewCommentRelativeLayout.setOnClickListener(new View.OnClickListener() {
+        createNewCommentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 router.showCourseDiscussionAddComment(context, discussionComment);
