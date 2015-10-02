@@ -158,38 +158,38 @@
                 android:layout_height="0px"
                 android:layout_weight="1"
                 android:id="@+id/fragment_container"
-                android:layout_below="@id/offline_bar">
+                android:layout_below="@id/offline_bar" />
 
-            </RelativeLayout>
-
-            <LinearLayout android:orientation="horizontal"
-                          android:gravity="center"
-                          android:id="@+id/course_unit_nav_bar"
-                          android:measureWithLargestChild="true"
-                          android:layout_width="match_parent"
-                          android:layout_height="@dimen/course_unit_nav_bar_height"
-                          android:padding="1dp"
-                          android:layout_marginLeft="5dp"
-                          android:layout_marginStart="5dp"
-                          android:layout_marginRight="5dp"
-                          android:layout_marginEnd="5dp"
-                          android:background="@drawable/rectangle_with_top_border"
-                          android:visibility="gone"
-                          android:layout_weight="0">
+            <LinearLayout
+                android:id="@+id/course_unit_nav_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/course_unit_nav_bar_height"
+                android:layout_weight="0"
+                android:background="@drawable/rectangle_with_top_border"
+                android:gravity="center"
+                android:measureWithLargestChild="true"
+                android:orientation="horizontal"
+                android:paddingEnd="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingStart="15dp"
+                android:visibility="gone"
+                tools:targetApi="17"
+                tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center_vertical|start">
+                    tools:targetApi="17">
 
-                    <Button
+                    <org.edx.mobile.view.custom.EButton
                         android:id="@+id/goto_prev"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                        android:background="@color/white"
                         android:text="@string/assessment_previous"
-                        android:textColor="?attr/buttonTextColor" />
+                        style="@style/edX.Widget.DisableableButton"
+                        tools:targetApi="17" />
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/prev_unit_title"
@@ -204,20 +204,20 @@
                     android:layout_height="0px"
                     android:layout_weight="1" />
 
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center_vertical|end|right">
+                    android:gravity="end"
+                    tools:targetApi="17" >
 
-                    <Button
+                    <org.edx.mobile.view.custom.EButton
                         android:id="@+id/goto_next"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/course_unit_nav_bar_btn_height"
-                        android:background="@color/white"
                         android:text="@string/assessment_next"
-                        android:textColor="?attr/buttonTextColor"/>
+                        style="@style/edX.Widget.DisableableButton"
+                        tools:targetApi="17" />
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/next_unit_title"

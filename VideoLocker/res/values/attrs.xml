@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Theme">
-        <attr name="buttonTextColor" format="color" />
+        <attr name="disableableButtonTextColor" format="color" />
         <attr name="edgePopupMenuStyle" format="reference" />
     </declare-styleable>
 
