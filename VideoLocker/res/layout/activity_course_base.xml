@@ -26,7 +26,7 @@
             <LinearLayout
                 android:id="@+id/offline_bar"
                 android:orientation="vertical"
-                style="@style/offline_msg_bar_style"
+                style="@style/offline_msg_bar"
                 android:gravity="center_vertical"
                 android:visibility="gone">
                 <org.edx.mobile.view.custom.ETextView
@@ -47,7 +47,7 @@
             <LinearLayout
                 android:id="@+id/download_in_progress_bar"
                 android:orientation="vertical"
-                style="@style/download_in_progress_bar_style"
+                style="@style/download_in_progress_bar"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -100,10 +100,9 @@
 
             <LinearLayout
                 android:id="@+id/last_access_bar"
-                style="@style/last_access_bar_style"
                 android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
+                style="@style/last_access_bar"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -193,7 +192,7 @@
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/prev_unit_title"
-                        style="@style/section_lbl_style"
+                        style="@style/section_lbl"
                         android:visibility="gone" />
 
 
@@ -221,7 +220,7 @@
 
                     <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/next_unit_title"
-                        style="@style/section_lbl_style"
+                        style="@style/section_lbl"
                         android:visibility="gone" />
 
                 </LinearLayout>

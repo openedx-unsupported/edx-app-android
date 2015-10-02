@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:showIn="@layout/discussion_responses_response_row">
     <RelativeLayout
-        style="@style/discussion_responses_nested_card_layout_style"
+        style="@style/discussion_responses_nested_card_layout"
         android:layout_height="@dimen/discussion_responses_secondary_actions_bar_height">
 
         <LinearLayout

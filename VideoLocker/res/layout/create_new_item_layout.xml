@@ -8,10 +8,12 @@
     android:orientation="horizontal"
     tools:showIn="@layout/fragment_discussion_posts">
 
+
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/create_new_icon_view"
-        style="@style/icon_view_standard_size_style"
-        app:iconColor="@color/edx_grayscale_neutral_white_t"
+        style="@style/icon_view_standard_size"
+        android:layout_centerVertical="true"
+        app:iconColor="@color/white"
         app:iconName="fa_plus_circle" />
 
     <TextView
@@ -24,3 +26,4 @@
         android:textSize="@dimen/edx_small"
         tools:text="Create a new item" />
 </LinearLayout>
+

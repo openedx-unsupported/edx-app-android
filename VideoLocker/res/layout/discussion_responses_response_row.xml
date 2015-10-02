@@ -16,7 +16,7 @@
 
         <LinearLayout
             android:id="@+id/discussion_response_body"
-            style="@style/discussion_responses_nested_card_layout_style"
+            style="@style/discussion_responses_nested_card_layout"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="3dp"
@@ -44,7 +44,7 @@
 
         <RelativeLayout
             android:id="@+id/discussion_responses_comment_relative_layout"
-            style="@style/discussion_responses_nested_card_layout_style"
+            style="@style/discussion_responses_nested_card_layout"
             android:layout_height="@dimen/discussion_responses_comments_button_height"
             android:background="@color/edx_grayscale_neutral_xx_light"
             android:gravity="center_horizontal|center_vertical">

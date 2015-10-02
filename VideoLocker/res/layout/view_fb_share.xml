@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:textColor="@color/white"
-    style="@style/custom_fb_btn_style"
+    style="@style/custom_fb_btn"
     android:textStyle="bold"
     android:textSize="12sp"
     android:gravity="center_horizontal|center_vertical"

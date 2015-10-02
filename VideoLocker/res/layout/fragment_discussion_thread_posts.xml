@@ -35,7 +35,7 @@
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/discussion_posts_filter_icon_view"
-                style="@style/icon_view_standard_size_style"
+                style="@style/icon_view_standard_size"
                 android:layout_centerVertical="true"
                 app:iconColor="@color/edx_brand_primary_base"
                 app:iconName="fa_filter" />

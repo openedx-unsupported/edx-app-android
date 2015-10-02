@@ -35,14 +35,14 @@
                 style="@style/regular_edx_gray_xdark_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:textSize="@dimen/edx_xxx_small"
                 tools:text="XX | xx | xxxxx" />
 
         </LinearLayout>
 
     </FrameLayout>
 
-    <View style="@style/grey_separator" />
+    <View style="@style/grey_hairline_separator" />
 
     <ScrollView
         android:layout_width="match_parent"

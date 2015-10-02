@@ -28,7 +28,6 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
@@ -39,12 +38,11 @@
             style="@style/regular_edx_gray_xdark_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
             tools:text="Course Title"
             android:textDirection="locale"
-            android:textSize="16sp" />
+            android:textSize="@dimen/edx_base" />
 
 
         <org.edx.mobile.view.custom.ETextView
@@ -52,12 +50,11 @@
             style="@style/regular_edx_gray_base_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:ellipsize="end"
             android:singleLine="true"
             tools:text="Course Subtitle"
             android:textDirection="locale"
-            android:textSize="12sp" />
+            android:textSize="@dimen/edx_x_small" />
     </LinearLayout>
 
     <org.edx.mobile.third_party.iconify.IconView
