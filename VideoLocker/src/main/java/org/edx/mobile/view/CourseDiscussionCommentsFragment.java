@@ -58,7 +58,7 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionComment);
+        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), router, this, discussionComment);
 
         discussionCommentsListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);

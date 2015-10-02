@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +117,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-        holder.authorLayoutViewHolder.discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(discussionThread, context.getResources()));
+        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, discussionThread, router);
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +228,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             }
         });
 
-        holder.authorLayoutViewHolder.discussionAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(comment, context.getResources()));
+        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, comment, router);
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);

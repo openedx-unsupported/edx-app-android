@@ -16,10 +16,12 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.view.Router;
 
 public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
     private final Context context;
+    private final Router router;
     private final Listener listener;
     private DiscussionComment response;
 
@@ -27,9 +29,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         void reportComment(DiscussionComment comment);
     }
 
-    @Inject
-    public DiscussionCommentsAdapter(Context context, Listener listener, DiscussionComment response) {
+    public DiscussionCommentsAdapter(Context context, Router router, Listener listener, DiscussionComment response) {
         this.context = context;
+        this.router = router;
         this.listener = listener;
         this.response = response;
     }
@@ -92,7 +94,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
-        holder.discussionCommentAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(discussionComment, context.getResources()));
+        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView, discussionComment, router);
     }
 
     @Override
