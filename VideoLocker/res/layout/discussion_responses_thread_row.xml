@@ -1,92 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/edx_grayscale_neutral_white">
+    android:background="@color/edx_grayscale_neutral_white"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:paddingTop="@dimen/discussion_responses_box_padding"
+        android:orientation="vertical"
+        android:paddingBottom="3dp"
         android:paddingLeft="@dimen/discussion_responses_box_padding"
+        android:paddingStart="@dimen/discussion_responses_box_padding"
         android:paddingRight="@dimen/discussion_responses_box_padding"
-        android:paddingBottom="3dp">
+        android:paddingEnd="@dimen/discussion_responses_box_padding"
+        android:paddingTop="@dimen/discussion_responses_box_padding">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/discussion_responses_thread_row_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:textSize="@dimen/edx_base"
-            android:textColor="@color/edx_grayscale_neutral_x_dark"
             android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+            android:textColor="@color/edx_grayscale_neutral_x_dark"
+            android:textSize="@dimen/edx_base"
             tools:text="Thread title" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/discussion_responses_thread_row_body_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:layout_below="@+id/discussion_responses_thread_row_title_text_view"
-            android:textSize="@dimen/edx_small"
-            android:textColor="@color/edx_grayscale_neutral_dark"
             android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
-            tools:text="Thread body"/>
+            android:minHeight="50dp"
+            android:textColor="@color/edx_grayscale_neutral_dark"
+            android:textSize="@dimen/edx_small"
+            tools:text="Thread body" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/discussion_responses_thread_row_body_text_view">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/discussion_responses_thread_closed_icon_view"
+                android:layout_width="@dimen/edx_xxx_small"
+                android:layout_height="@dimen/edx_xxx_small"
+                android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
+                android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+                android:visibility="gone"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa_lock" />
 
             <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/discussion_responses_thread_row_pinned_icon_view"
                 android:layout_width="@dimen/edx_xxx_small"
                 android:layout_height="@dimen/edx_xxx_small"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
                 android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+                android:visibility="gone"
                 app:iconColor="@color/edx_grayscale_neutral_base"
-                app:iconName="fa_thumb_tack"
-                android:visibility="gone"/>
+                app:iconName="fa_thumb_tack" />
 
-            <RelativeLayout
-                android:id="@+id/discussion_author_relative_layout"
-                android:layout_width="wrap_content"
+            <include
+                layout="@layout/discussion_author_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/discussion_responses_thread_row_pinned_icon_view"
-                android:layout_toRightOf="@+id/discussion_responses_thread_row_pinned_icon_view">
+                android:layout_weight="1" />
 
-                <include layout="@layout/discussion_author_layout" />
+            <include layout="@layout/number_responses_or_comments_layout" />
 
-            </RelativeLayout>
+        </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/discussion_number_responses_relative_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:gravity="end"
-                android:layout_toRightOf="@+id/discussion_author_relative_layout">
+    </LinearLayout>
 
-                <include layout="@layout/number_responses_or_comments_layout" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/discussion_responses_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/edx_grayscale_neutral_xx_light" />
+    <View style="@style/light_gray_separator" />
 
     <include layout="@layout/discussion_response_action_bar_layout" />
 
