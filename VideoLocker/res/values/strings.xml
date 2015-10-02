@@ -668,5 +668,13 @@
     <string name="forum_follow">Follow</string>
     <string name="forum_unfollow">Unfollow</string>
 
+    <!-- User Profiles -->
+    <string name="profile_toolbar_edit_button">Edit Profile</string>
+    <string name="profile_sharing_limited">You are currently sharing a limited profile</string>
+    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile. If you are over 13, make sure that you have specified a birth year when editing your profile.</string>
+    <string name="profile_consent_needed_edit_button">Account Settings</string>
+    <string name="profile_incomplete_greeting">Hi {username}!</string>
+    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
+    <string name="profile_incomplete_edit_button">Get Started</string>
 
 </resources>

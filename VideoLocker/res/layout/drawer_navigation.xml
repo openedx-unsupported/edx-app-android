@@ -1,55 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/grey_nav_background">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/name_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/grey_name_background"
-        android:orientation="horizontal"
-        android:padding="@dimen/edx_margin"
-        android:gravity="center">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            style="@style/profile_image"
-            android:id="@+id/profile_image"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_marginRight="@dimen/edx_margin"
-            android:layout_marginEnd="@dimen/edx_margin"
-            tools:src="@drawable/app_icon"
-            app:civ_border_width="1dp" />
+        android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/grey_name_background"
+            android:orientation="horizontal"
+            android:padding="@dimen/edx_margin"
+            android:gravity="center">
 
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/name_tv"
-                style="@style/regular_white_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                tools:text="username"
-                tools:targetApi="17" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                style="@style/profile_image"
+                android:id="@+id/profile_image"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginRight="@dimen/edx_margin"
+                android:layout_marginEnd="@dimen/edx_margin"
+                tools:src="@drawable/app_icon"
+                app:civ_border_width="1dp" />
 
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/email_tv"
-                style="@style/regular_white_text"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="12dp"
-                android:textSize="13sp"
-                tools:text="user@domain.com" />
+                android:orientation="vertical">
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/name_tv"
+                    style="@style/regular_white_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    tools:text="username"
+                    tools:targetApi="17" />
+
+                <org.edx.mobile.view.custom.ETextView
+                    android:id="@+id/email_tv"
+                    style="@style/regular_white_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:textSize="13sp"
+                    tools:text="user@domain.com" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/button_layout"
@@ -57,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name_layout"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:splitMotionEvents="false">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/drawer_option_my_courses"
@@ -95,11 +101,12 @@
 
         <LinearLayout
             android:id="@+id/panel_option_find_courses"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <include layout="@layout/divider_drawer_options" />
+
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/drawer_option_find_courses"
                 style="@style/drawer_option"
