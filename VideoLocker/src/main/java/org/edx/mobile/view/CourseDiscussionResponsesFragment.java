@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +13,10 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.ThreadComments;
-import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
@@ -24,21 +25,11 @@ import org.edx.mobile.view.adapters.IPagination;
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
-import roboguice.inject.InjectView;
 
-public class CourseDiscussionResponsesFragment extends RoboFragment implements CourseDiscussionResponsesAdapter.PaginationHandler{
+public class CourseDiscussionResponsesFragment extends RoboFragment implements CourseDiscussionResponsesAdapter.Listener {
 
     @Inject
     LinearLayoutManager linearLayoutManager;
-
-    @InjectView(R.id.discussion_responses_recycler_view)
-    RecyclerView discussionResponsesRecyclerView;
-
-    @InjectView(R.id.create_new_item_text_view)
-    TextView addResponseTextView;
-
-    @InjectView(R.id.create_new_item_layout)
-    ViewGroup addResponseLayout;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
     DiscussionThread discussionThread;
@@ -47,13 +38,14 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     EnrolledCoursesResponse courseData;
 
     @Inject
-    CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
-
-    @Inject
     Router router;
 
-    private final Logger logger = new Logger(getClass().getName());
+    CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
+
     private GetCommentListTask getCommentListTask;
+
+    public static class ViewHolder {
+    }
 
     @Nullable
     @Override
@@ -64,11 +56,15 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final RecyclerView discussionResponsesRecyclerView = (RecyclerView) view.findViewById(R.id.discussion_responses_recycler_view);
+        final TextView addResponseTextView = (TextView) view.findViewById(R.id.create_new_item_text_view);
+        final ViewGroup addResponseLayout = (ViewGroup) view.findViewById(R.id.create_new_item_layout);
 
         discussionResponsesRecyclerView.setLayoutManager(linearLayoutManager);
 
-        courseDiscussionResponsesAdapter.setPaginationHandler(this);
-        courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
+        // Using application context to prevent activity leak since adapter is retained across config changes
+        courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
+                getActivity().getApplicationContext(), this, discussionThread);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
         getCommentList(true);
@@ -84,20 +80,19 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     }
 
     protected void getCommentList(final boolean refresh) {
-
-        if ( getCommentListTask != null ){
+        if (getCommentListTask != null) {
             getCommentListTask.cancel(true);
         }
         getCommentListTask = new GetCommentListTask(getActivity(),
-                                                    discussionThread.getIdentifier(),
-                                                    courseDiscussionResponsesAdapter.getPagination()) {
+                discussionThread.getIdentifier(),
+                courseDiscussionResponsesAdapter.getPagination()) {
             @Override
             public void onSuccess(ThreadComments threadComments) {
-                if ( threadComments == null ) {
+                if (threadComments == null) {
                     logger.debug("GetCommentListTask returns null onSuccess");
                     return;// should not happen?
                 }
-                if ( refresh ){
+                if (refresh) {
                     //it clear up details and reset pagination
                     courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
                 }
@@ -128,6 +123,7 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
         EventBus.getDefault().unregister(this);
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (discussionThread.containsComment(event.getComment())) {
             discussionThread.incrementCommentCount();
@@ -137,10 +133,25 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     }
 
     /**
-     *  callback from CourseDiscussionResponsesAdapter
+     * callback from CourseDiscussionResponsesAdapter
      */
     @Override
-    public void loadMoreRecord(IPagination pagination) {
+    public void loadMoreRecord(@NonNull IPagination pagination) {
         getCommentList(false);
+    }
+
+    @Override
+    public void onClickAuthor(@NonNull String username) {
+        router.showUserProfile(getActivity(), username);
+    }
+
+    @Override
+    public void onClickAddComment(@NonNull DiscussionComment comment) {
+        router.showCourseDiscussionAddComment(getActivity(), comment);
+    }
+
+    @Override
+    public void onClickViewComments(@NonNull DiscussionComment comment) {
+        router.showCourseDiscussionComments(getActivity(), comment);
     }
 }

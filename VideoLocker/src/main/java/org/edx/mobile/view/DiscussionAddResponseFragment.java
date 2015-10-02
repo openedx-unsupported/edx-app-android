@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -51,6 +53,9 @@ public class DiscussionAddResponseFragment extends RoboFragment {
     private TextView textViewTimeAuthor;
     private CreateCommentTask createCommentTask;
 
+    @Inject
+    private Router router;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_add_response, container, false);
@@ -61,7 +66,12 @@ public class DiscussionAddResponseFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
         textViewTitle.setText(discussionTopic.getTitle());
         textViewResponse.setText(Html.fromHtml(discussionTopic.getRenderedBody()));
-        textViewTimeAuthor.setText(DiscussionTextUtils.getAuthorAttributionText(discussionTopic, getResources()));
+        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor, discussionTopic, new Runnable() {
+            @Override
+            public void run() {
+                router.showUserProfile(getActivity(), discussionTopic.getAuthor());
+            }
+        });
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 createComment();

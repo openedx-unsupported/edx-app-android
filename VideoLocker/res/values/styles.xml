@@ -40,6 +40,11 @@
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
         <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
+        <item name="android:textColorLink">@color/edx_brand_primary_base</item>
+    </style>
+
+    <style name="CustomActionBarTheme.NoShadow">
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
@@ -238,6 +243,15 @@
         <item name="android:textColor">@color/edx_white</item>
         <item name="android:background">@drawable/edx_creation_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
+    </style>
+
+    <style name="edX.Widget.BorderedButton">
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/edx_brand_primary_base</item>
+        <item name="android:background">@drawable/edx_bordered_button</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
     <style name="edX.Widget.Spinner" parent="@style/Widget.AppCompat.Spinner">
