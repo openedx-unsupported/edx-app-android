@@ -108,8 +108,9 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         // noinspection ConstantConditions
         TypedArray a = context.obtainStyledAttributes(null,
                 R.styleable.PopupMenu, mPopupStyleAttr, mPopupStyleRes);
-        mPopupWidth = a.getDimensionPixelOffset(
-                R.styleable.PopupMenu_android_dropDownWidth, 0);
+        mPopupWidth = a.getLayoutDimension(
+                R.styleable.PopupMenu_android_dropDownWidth,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupPadding = a.getDimensionPixelOffset(
                 R.styleable.PopupMenu_android_padding, 0);
         mPopupItemVerticalPadding = a.getDimensionPixelOffset(
