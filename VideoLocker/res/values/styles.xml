@@ -216,6 +216,12 @@
         <item name="android:paddingRight">@dimen/discussion_responses_box_padding</item>
     </style>
 
+    <style name="profile_image">
+        <item name="android:src">@color/edx_grayscale_neutral_base</item>
+        <item name="civ_border_color">@color/white</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
     <!-- Styles from the edX style guide will be nested under "edX" -->
     <style name="edX" />
 

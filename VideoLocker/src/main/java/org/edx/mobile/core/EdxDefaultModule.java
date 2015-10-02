@@ -5,10 +5,12 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
+import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
+import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.analytics.ISegmentEmptyImpl;
@@ -51,6 +53,8 @@ public class EdxDefaultModule extends AbstractModule {
         }
 
         bind(IDownloadManager.class).to(IDownloadManagerImpl.class);
+
+        bind(OkHttpClient.class).toInstance(OkHttpUtil.getOAuthBasedClient(context));
 
         if (MainApplication.RETROFIT_ENABLED ){
             bind(IApi.class).to(RestApiManager.class);

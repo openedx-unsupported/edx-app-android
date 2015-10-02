@@ -2,7 +2,9 @@ package org.edx.mobile.http;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.MediaType;
@@ -13,6 +15,7 @@ import com.squareup.okhttp.Response;
 
 import org.apache.http.cookie.Cookie;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -21,13 +24,27 @@ import java.net.HttpCookie;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * Created by hanning on 6/15/15.
- */
 public class OkHttpUtil {
     public static final MediaType JSON
         = MediaType.parse("application/json; charset=utf-8");
+
+
+    private static final int cacheSize = 10 * 1024 * 1024; // 10 MiB
+
+    public static OkHttpClient getOAuthBasedClient(@NonNull Context context) {
+        final OkHttpClient client = new OkHttpClient();
+        final File cacheDirectory = new File(context.getFilesDir(), "http-cache");
+        if (!cacheDirectory.exists()) {
+            cacheDirectory.mkdirs();
+        }
+        final Cache cache = new Cache(cacheDirectory, cacheSize);
+        client.setCache(cache);
+        client.interceptors().add(new GzipRequestInterceptor());
+        client.interceptors().add(new OauthHeaderRequestInterceptor(context));
+        client.interceptors().add(new LoggingInterceptor());
+        return client;
+    }
+
     /**
      * Sets cookie headers like "X-CSRFToken" in the given bundle.
      * This method is helpful in making API calls the way website does.
