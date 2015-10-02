@@ -1,121 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/discussion_posts_refine_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/discussion_post_refine_layout_height">
+        android:layout_height="@dimen/discussion_post_refine_layout_height"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/discussion_posts_refine_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginLeft="@dimen/edx_margin"
             android:text="@string/discussion_posts_refine"
             android:textColor="@color/edx_grayscale_neutral_base"/>
 
-        <RelativeLayout
-            android:id="@+id/discussion_posts_filter_layout"
-            android:layout_width="@dimen/discussion_posts_filter_menu_width"
+        <android.support.v7.widget.AppCompatSpinner
+            style="?attr/popupSpinnerStyle"
+            android:id="@+id/discussion_posts_filter_spinner"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/discussion_posts_refine_text_view"
-            android:layout_toRightOf="@+id/discussion_posts_refine_text_view"
-            android:gravity="center">
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_marginLeft="@dimen/edx_margin"
+            android:minWidth="@dimen/discussion_posts_filter_popup_width"
+            android:dropDownVerticalOffset="@dimen/discussion_posts_filter_popup_vertical_offset"
+            tools:listitem="@layout/row_discussion_thread_dropdown"
+            tools:targetApi="17" />
 
-            <org.edx.mobile.third_party.iconify.IconView
-                android:id="@+id/discussion_posts_filter_icon_view"
-                style="@style/icon_view_standard_size"
-                android:layout_centerVertical="true"
-                app:iconColor="@color/edx_brand_primary_base"
-                app:iconName="fa_filter" />
-
-            <TextView
-                android:id="@+id/discussion_posts_filter_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/discussion_posts_filter_icon_view"
-                android:layout_toRightOf="@+id/discussion_posts_filter_icon_view"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/edx_x_small"
-                android:textColor="@color/edx_brand_primary_base"
-                android:text="@string/discussion_posts_filter_all_posts" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/discussion_posts_sort_layout"
-            android:layout_width="@dimen/discussion_posts_filter_menu_width"
+        <android.support.v7.widget.AppCompatSpinner
+            style="?attr/popupSpinnerStyle"
+            android:id="@+id/discussion_posts_sort_spinner"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@+id/discussion_posts_filter_layout"
-            android:layout_toRightOf="@+id/discussion_posts_filter_layout">
+            android:minWidth="@dimen/discussion_posts_filter_popup_width"
+            android:dropDownVerticalOffset="@dimen/discussion_posts_filter_popup_vertical_offset"
+            tools:listitem="@layout/row_discussion_thread_dropdown"
+            tools:targetApi="17" />
 
-            <org.edx.mobile.third_party.iconify.IconView
-                android:id="@+id/discussion_posts_sort_icon_view_up"
-                android:layout_width="7dp"
-                android:layout_height="20dp"
-                android:paddingBottom="5dp"
-                android:layout_centerVertical="true"
-                app:iconColor="@color/edx_brand_primary_base"
-                app:iconName="fa_long_arrow_up" />
-
-            <org.edx.mobile.third_party.iconify.IconView
-                android:id="@+id/discussion_posts_sort_icon_view_down"
-                android:layout_width="7dp"
-                android:layout_height="20dp"
-                android:paddingTop="5dp"
-                android:layout_toEndOf="@+id/discussion_posts_sort_icon_view_up"
-                android:layout_toRightOf="@+id/discussion_posts_sort_icon_view_up"
-                android:layout_centerVertical="true"
-                app:iconColor="@color/edx_brand_primary_base"
-                app:iconName="fa_long_arrow_down" />
-
-
-            <TextView
-                android:id="@+id/discussion_posts_sort_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/discussion_posts_sort_icon_view_down"
-                android:layout_toRightOf="@+id/discussion_posts_sort_icon_view_down"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/edx_x_small"
-                android:textColor="@color/edx_brand_primary_base"
-                android:text="@string/discussion_posts_sort_recent_activity" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
     
-    <View
-        android:id="@+id/discussion_posts_divider_view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/discussion_posts_refine_layout"
-        android:background="@color/edx_grayscale_neutral_light" />
+    <View style="@style/grey_separator" />
 
     <ListView
         android:id="@+id/discussion_posts_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/discussion_posts_divider_view"
-        android:layout_above="@+id/create_new_item_layout" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <include layout="@layout/create_new_item_layout" />
 
-</RelativeLayout>
+</LinearLayout>

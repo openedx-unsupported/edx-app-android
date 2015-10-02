@@ -273,4 +273,41 @@ public class IconDrawable extends Drawable {
         return false;
     }
 
+    // Although there is no shared state associated with IconDrawable, we
+    // need to provide a non-null ConstantState in order to make it work
+    // with LayerDrawable, which uses it to create a new instance of it's
+    // children when mutated, without checking if they support it. This
+    // bug has been fixed in Marshmallow. We work around it by providing
+    // a fake ConstantState which is actually bound to the IconDrawable
+    // instance.
+    private IconState state;
+
+    @Override
+    public ConstantState getConstantState() {
+        if (state == null) {
+            state = new IconState();
+        }
+        return state;
+    }
+
+    protected class IconState extends ConstantState {
+        @Override
+        public Drawable newDrawable() {
+            IconDrawable iconDrawable = new IconDrawable(context, icon);
+            iconDrawable.sizePx(size);
+            iconDrawable.color(paint.getColor());
+            iconDrawable.setAlpha(getAlpha());
+            iconDrawable.setColorFilter(paint.getColorFilter());
+            iconDrawable.setStyle(paint.getStyle());
+            iconDrawable.setAutoMirrored(isAutoMirrored());
+            iconDrawable.setChangingConfigurations(getChangingConfigurations());
+            return iconDrawable;
+        }
+
+        @Override
+        public int getChangingConfigurations() {
+            return IconDrawable.this.getChangingConfigurations();
+        }
+    }
+
 }
