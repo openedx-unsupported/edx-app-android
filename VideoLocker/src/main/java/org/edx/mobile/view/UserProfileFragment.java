@@ -205,11 +205,7 @@ public class UserProfileFragment extends RoboFragment {
                         languageContainer.setVisibility(View.GONE);
                     } else {
                         languageContainer.setVisibility(View.VISIBLE);
-                        final List<String> languageNames = new ArrayList<>(account.getLanguageProficiencies().size());
-                        for (LanguageProficiency proficiency : account.getLanguageProficiencies()) {
-                            languageNames.add(new Locale.Builder().setLanguage(proficiency.getCode()).build().getDisplayName());
-                        }
-                        languageText.setText(TextUtils.join(", ", languageNames));
+                        languageText.setText(new Locale.Builder().setLanguage(account.getLanguageProficiencies().get(0).getCode()).build().getDisplayName());
                     }
 
                     if (TextUtils.isEmpty(account.getCountry())) {
