@@ -7,4 +7,5 @@
     android:singleLine="true"
     android:ellipsize="end"
     android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
     tools:text="Birth year: 2008" />

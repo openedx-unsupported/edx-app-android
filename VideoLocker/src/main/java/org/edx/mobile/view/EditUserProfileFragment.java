@@ -20,10 +20,13 @@ import com.bumptech.glide.Glide;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
+import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.HashMap;
@@ -36,11 +39,15 @@ public class EditUserProfileFragment extends RoboFragment {
     @InjectExtra(UserProfileActivity.EXTRA_USERNAME)
     private String username;
 
-    @Nullable
     private GetAccountTask getAccountTask;
+
+    private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
 
     @Nullable
     private Account account;
+
+    @Nullable
+    private RegistrationDescription formDescription;
 
     @Nullable
     private ViewHolder viewHolder;
@@ -59,12 +66,24 @@ public class EditUserProfileFragment extends RoboFragment {
             protected void onSuccess(Account account) throws Exception {
                 EditUserProfileFragment.this.account = account;
                 if (null != viewHolder) {
-                    viewHolder.setAccount(account);
+                    viewHolder.setData(account, formDescription);
                 }
             }
         };
         getAccountTask.setTaskProcessCallback(null); // Disable default loading indicator, we have our own
         getAccountTask.execute();
+
+        getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(getActivity()) {
+            @Override
+            protected void onSuccess(@NonNull RegistrationDescription formDescription) throws Exception {
+                EditUserProfileFragment.this.formDescription = formDescription;
+                if (null != viewHolder) {
+                    viewHolder.setData(account, formDescription);
+                }
+            }
+        };
+        getProfileFormDescriptionTask.setTaskProcessCallback(null);
+        getProfileFormDescriptionTask.execute();
     }
 
     @Nullable
@@ -78,15 +97,14 @@ public class EditUserProfileFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
         viewHolder = new ViewHolder(view);
         viewHolder.setUsername(username);
-        viewHolder.setAccount(account);
+        viewHolder.setData(account, formDescription);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != getAccountTask) {
-            getAccountTask.cancel(true);
-        }
+        getAccountTask.cancel(true);
+        getProfileFormDescriptionTask.cancel(true);
     }
 
     @Override
@@ -122,8 +140,8 @@ public class EditUserProfileFragment extends RoboFragment {
             this.username.setText(username);
         }
 
-        public void setAccount(@Nullable final Account account) {
-            if (null == account) {
+        public void setData(@Nullable final Account account, @Nullable RegistrationDescription formDescription) {
+            if (null == account || null == formDescription) {
                 content.setVisibility(View.GONE);
                 loadingIndicator.setVisibility(View.VISIBLE);
 
@@ -142,6 +160,9 @@ public class EditUserProfileFragment extends RoboFragment {
                 }
 
                 final LayoutInflater layoutInflater = LayoutInflater.from(fields.getContext());
+                for (RegistrationFormField field : formDescription.getFields()) {
+                    createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_birth_year_label, null == account.getYearOfBirth() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getYearOfBirth().toString());
+                }
                 createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_birth_year_label, null == account.getYearOfBirth() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getYearOfBirth().toString());
                 createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_country_label, TextUtils.isEmpty(account.getCountry()) ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getCountry());
                 createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_language_label, account.getLanguageProficiencies().isEmpty() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getLanguageProficiencies().get(0).getCode());
