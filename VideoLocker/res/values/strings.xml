@@ -683,10 +683,5 @@
     <string name="edit_user_profile_privacy_explanation">You must be over 13 to share a full profile. A limited profile only shares your username.</string>
     <string name="edit_user_profile_field">{label}: {value}</string>
     <string name="edit_user_profile_field_placeholder">Select</string>
-    <string name="edit_user_profile_bio_placeholder">e.g. With edX I would like to learn…</string>
-    <string name="edit_user_profile_birth_year_label">Birth year</string>
-    <string name="edit_user_profile_country_label">Location</string>
-    <string name="edit_user_profile_language_label">Primary language</string>
-    <string name="edit_user_profile_bio_label">About me</string>
 
 </resources>

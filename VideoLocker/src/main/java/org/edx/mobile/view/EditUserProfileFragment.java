@@ -25,6 +25,8 @@ import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
+import org.edx.mobile.user.FormDescription;
+import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.util.ResourceUtil;
@@ -47,7 +49,7 @@ public class EditUserProfileFragment extends RoboFragment {
     private Account account;
 
     @Nullable
-    private RegistrationDescription formDescription;
+    private FormDescription formDescription;
 
     @Nullable
     private ViewHolder viewHolder;
@@ -75,7 +77,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
         getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(getActivity()) {
             @Override
-            protected void onSuccess(@NonNull RegistrationDescription formDescription) throws Exception {
+            protected void onSuccess(@NonNull FormDescription formDescription) throws Exception {
                 EditUserProfileFragment.this.formDescription = formDescription;
                 if (null != viewHolder) {
                     viewHolder.setData(account, formDescription);
@@ -140,7 +142,7 @@ public class EditUserProfileFragment extends RoboFragment {
             this.username.setText(username);
         }
 
-        public void setData(@Nullable final Account account, @Nullable RegistrationDescription formDescription) {
+        public void setData(@Nullable final Account account, @Nullable FormDescription formDescription) {
             if (null == account || null == formDescription) {
                 content.setVisibility(View.GONE);
                 loadingIndicator.setVisibility(View.VISIBLE);
@@ -160,20 +162,16 @@ public class EditUserProfileFragment extends RoboFragment {
                 }
 
                 final LayoutInflater layoutInflater = LayoutInflater.from(fields.getContext());
-                for (RegistrationFormField field : formDescription.getFields()) {
-                    createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_birth_year_label, null == account.getYearOfBirth() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getYearOfBirth().toString());
+                for (FormField field : formDescription.getFields()) {
+                    createFieldViewHolder(layoutInflater, fields, field.getLabel(), fields.getResources().getString(R.string.edit_user_profile_field_placeholder));
                 }
-                createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_birth_year_label, null == account.getYearOfBirth() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getYearOfBirth().toString());
-                createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_country_label, TextUtils.isEmpty(account.getCountry()) ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getCountry());
-                createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_language_label, account.getLanguageProficiencies().isEmpty() ? fields.getResources().getString(R.string.edit_user_profile_field_placeholder) : account.getLanguageProficiencies().get(0).getCode());
-                createFieldViewHolder(layoutInflater, fields, R.string.edit_user_profile_bio_label, TextUtils.isEmpty(account.getBio()) ? fields.getResources().getString(R.string.edit_user_profile_bio_placeholder) : account.getBio());
             }
         }
     }
 
-    private static TextView createFieldViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @StringRes int labelRes, @NonNull final String value) {
+    private static TextView createFieldViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull String label, @NonNull final String value) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
-        final SpannableString formattedLabel = new SpannableString(parent.getResources().getString(labelRes));
+        final SpannableString formattedLabel = new SpannableString(label);
         formattedLabel.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_x_dark)), 0, formattedLabel.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         final SpannableString formattedValue = new SpannableString(value);
         formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

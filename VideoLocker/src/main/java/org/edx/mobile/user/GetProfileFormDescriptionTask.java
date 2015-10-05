@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public abstract class GetProfileFormDescriptionTask extends
-        Task<RegistrationDescription> {
+        Task<FormDescription> {
 
 
     public GetProfileFormDescriptionTask(@NonNull Context context) {
@@ -20,9 +20,9 @@ public abstract class GetProfileFormDescriptionTask extends
     }
 
 
-    public RegistrationDescription call() throws Exception {
+    public FormDescription call() throws Exception {
         try (InputStream in = context.getAssets().open("config/profiles.json")) {
-            return new Gson().fromJson(new InputStreamReader(in), RegistrationDescription.class);
+            return new Gson().fromJson(new InputStreamReader(in), FormDescription.class);
         }
     }
 }
