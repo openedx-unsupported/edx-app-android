@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,11 +25,8 @@ import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
-import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.util.ResourceUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import roboguice.fragment.RoboFragment;
@@ -114,7 +112,12 @@ public class UserProfileFragment extends RoboFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewHolder = new ViewHolder(view);
+        viewHolder = new ViewHolder(view, isViewingOwnProfile, new Runnable() {
+            @Override
+            public void run() {
+                router.showUserProfileEditor(getActivity(), username);
+            }
+        });
         viewHolder.setUsername(username);
         viewHolder.setAccount(account);
     }
@@ -133,7 +136,7 @@ public class UserProfileFragment extends RoboFragment {
         viewHolder = null;
     }
 
-    public class ViewHolder {
+    public static class ViewHolder {
         public final ImageView profileImage;
         public final TextView usernameText;
         public final View profileHeaderContent;
@@ -149,8 +152,10 @@ public class UserProfileFragment extends RoboFragment {
         public final View incompleteContainer;
         public final TextView incompleteGreeting;
         public final Button editProfileButton;
+        private final boolean isViewingOwnProfile;
 
-        public ViewHolder(View parent) {
+        public ViewHolder(@NonNull View parent, boolean isViewingOwnProfile, @NonNull final Runnable onClickEditProfile) {
+            this.isViewingOwnProfile = isViewingOwnProfile;
             this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
             this.usernameText = (TextView) parent.findViewById(R.id.username_text);
             this.profileHeaderContent = parent.findViewById(R.id.profile_header_content);
@@ -169,7 +174,7 @@ public class UserProfileFragment extends RoboFragment {
             editProfileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    router.showUserProfileEditor(getActivity(), username);
+                    onClickEditProfile.run();
                 }
             });
         }
@@ -223,13 +228,13 @@ public class UserProfileFragment extends RoboFragment {
                 if (isViewingOwnProfile && account.requiresParentalConsent()) {
                     parentalConsentRequired.setVisibility(View.VISIBLE);
                     editProfileButton.setVisibility(View.VISIBLE);
-                    editProfileButton.setText(getString(R.string.profile_consent_needed_edit_button));
+                    editProfileButton.setText(editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
 
                 } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio())) {
                     incompleteContainer.setVisibility(View.VISIBLE);
-                    incompleteGreeting.setText(ResourceUtil.getFormattedString(getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
+                    incompleteGreeting.setText(ResourceUtil.getFormattedString(incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
                     editProfileButton.setVisibility(View.VISIBLE);
-                    editProfileButton.setText(getString(R.string.profile_incomplete_edit_button));
+                    editProfileButton.setText(editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
 
                 } else {
                     bioText.setVisibility(View.VISIBLE);
