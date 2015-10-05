@@ -273,6 +273,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/CustomActionBarTheme.NoShadow"/>
 
+        <activity android:name=".view.EditUserProfileActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/edit_user_profile_title"/>
+
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
