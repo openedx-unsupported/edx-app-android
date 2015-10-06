@@ -1,5 +1,8 @@
 API_HOST_URL: 'http://10.0.2.2:8000' # localhost is 10.0.2.2 in Android
 ENVIRONMENT_DISPLAY_NAME: 'Localhost'
 FEEDBACK_EMAIL_ADDRESS: 'support@example.com'
+COURSE_ENROLLMENT:
+    ENABLED: false
+    EXTERNAL_COURSE_SEARCH_URL: 'http://10.0.2.2:8000/courses'
 SOCIAL_FEATURES_ENABLED: false
 REGISTRATION_API_DEPRECATED: true
