@@ -93,6 +93,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         View discussionResponseRow = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.discussion_responses_response_row, parent, false);
+        // CardView adds extra padding on pre-lollipop devices for shadows
+        // Since, we've set cardUseCompatPadding to true in the layout file
+        // so we need to deduct the extra padding from margins in any case to get the desired results
+        RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) discussionResponseRow.getLayoutParams();
+        params.topMargin -= discussionResponseRow.getPaddingTop();
+        params.leftMargin -= discussionResponseRow.getPaddingLeft();
+        params.rightMargin -= discussionResponseRow.getPaddingRight();
+        discussionResponseRow.setLayoutParams(params);
+
 
         return new DiscussionResponseViewHolder(discussionResponseRow);
 

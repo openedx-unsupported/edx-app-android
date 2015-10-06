@@ -7,6 +7,7 @@
     android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
     android:layout_marginTop="@dimen/discussion_responses_standard_margin"
+    app:cardUseCompatPadding="true"
     app:cardCornerRadius="@dimen/edx_box_radius">
 
     <LinearLayout
