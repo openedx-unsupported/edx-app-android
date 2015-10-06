@@ -10,7 +10,7 @@
     </declare-styleable>
 
     <declare-styleable name="PopupMenu">
-        <attr name="android:dropDownWidth" />
+        <attr name="android:minWidth" />
         <!-- Generic padding in addition to what's defined by
              the background drawable. -->
         <attr name="android:padding" />

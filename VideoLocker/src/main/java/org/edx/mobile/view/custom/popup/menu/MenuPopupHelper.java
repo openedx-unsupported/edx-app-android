@@ -3,10 +3,10 @@ package org.edx.mobile.view.custom.popup.menu;
 /*
  * This class is copied and modified according to our specifications from
  * the AOSP. It uses the appcompat implementation because it exposes it's
- * internal classes, so we only need to duplicate minimal code. We use
- * a custom attribute set to define a fixed width and other things, and
- * a custom adapter with it's own layout that automatically expands the
- * first level of submenus in order to support headers.
+ * internal classes, so we only need to duplicate minimal code. We use a
+ * custom attribute set to define the width and some other things, and a
+ * custom adapter with it's own layout that automatically expands the first
+ * level of submenus in order to support headers.
  *
  * Copyright (C) 2010 The Android Open Source Project
  *
@@ -24,6 +24,7 @@ package org.edx.mobile.view.custom.popup.menu;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -48,6 +49,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -66,7 +68,8 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private final MenuBuilder mMenu;
     private final MenuAdapter mAdapter;
     private final boolean mOverflowOnly;
-    private final int mPopupWidth;
+    private final int mPopupMinWidth;
+    private final int mPopupMaxWidth;
     private final int mPopupPadding;
     private final int mPopupItemVerticalPadding;
     private final int mPopupIconDefaultSize;
@@ -79,6 +82,21 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private Callback mPresenterCallback;
 
     boolean mForceShowIcon;
+
+    /**
+     * Dummy ListView to use as parent when measuring rows, in order to
+     * generate the row layout params and resolve layout direction
+     * inheritance (and thereby the compound drawable alignment in
+     * TextView).
+     */
+    private ListView mMeasureListView;
+
+    /** Cached content width from {@link #measureContentWidth}. */
+    private int mContentWidth = Integer.MIN_VALUE;
+
+    /** A MeasureSpec with UNSPECIFIED mode. */
+    private static final int UNSPECIFIED_MEASURE_SPEC =
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
     private int mDropDownGravity = Gravity.NO_GRAVITY;
 
@@ -105,12 +123,15 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         mPopupStyleAttr = popupStyleAttr;
         mPopupStyleRes = popupStyleRes;
 
-        // noinspection ConstantConditions
+        final Resources res = context.getResources();
+        mPopupMaxWidth = Math.max(res.getDisplayMetrics().widthPixels / 2,
+                res.getDimensionPixelSize(android.support.v7.appcompat.
+                        R.dimen.abc_config_prefDialogWidth));
+
         TypedArray a = context.obtainStyledAttributes(null,
                 R.styleable.PopupMenu, mPopupStyleAttr, mPopupStyleRes);
-        mPopupWidth = a.getLayoutDimension(
-                R.styleable.PopupMenu_android_dropDownWidth,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupMinWidth = a.getDimensionPixelOffset(
+                R.styleable.PopupMenu_android_minWidth, 0);
         mPopupPadding = a.getDimensionPixelOffset(
                 R.styleable.PopupMenu_android_padding, 0);
         mPopupItemVerticalPadding = a.getDimensionPixelOffset(
@@ -166,7 +187,10 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             return false;
         }
 
-        mPopup.setContentWidth(mPopupWidth);
+        if (mContentWidth == Integer.MIN_VALUE) {
+            mContentWidth = measureContentWidth();
+        }
+        mPopup.setContentWidth(mContentWidth);
         // If vertical offset is defined as 0, then ListPopupWindow infers
         // it as the negative of the top padding of the background, in
         // order to anchor the content area. Since that is not the effect
@@ -226,6 +250,42 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             return true;
         }
         return false;
+    }
+
+    private int measureContentWidth() {
+        // Menus don't tend to be long, so this is more sane than it looks.
+        int maxWidth = mPopupMinWidth;
+        final int count = mAdapter.getCount();
+        if (count > 0) {
+            View[] viewTypes = new View[mAdapter.getViewTypeCount()];
+            if (mMeasureListView == null) {
+                mMeasureListView = new ListView(mContext);
+            }
+            // The layout direction needs to be resolved in order for the row view
+            // items to resolve layout direction inheritance, which is needed for
+            // the TextView to resolve the icon compound drawable alignment (which
+            // is a prerequisite for measuring it).
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                mMeasureListView.setLayoutDirection(mAnchorView.getLayoutDirection());
+            }
+            for (int i = 0; i < count; i++) {
+                final int positionType = mAdapter.getItemViewType(i);
+                View itemView = viewTypes[positionType];
+                itemView = mAdapter.getView(i, itemView, mMeasureListView);
+                // Add row to the ListView to resolve layout direction inheritance.
+                mMeasureListView.addHeaderView(itemView);
+                itemView.measure(UNSPECIFIED_MEASURE_SPEC, UNSPECIFIED_MEASURE_SPEC);
+                viewTypes[positionType] = itemView;
+                final int itemWidth = itemView.getMeasuredWidth();
+                if (itemWidth >= mPopupMaxWidth) {
+                    return mPopupMaxWidth;
+                }
+                if (itemWidth > maxWidth) {
+                    maxWidth = itemWidth;
+                }
+            }
+        }
+        return maxWidth;
     }
 
     @Override

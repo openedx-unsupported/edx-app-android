@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:drawablePadding="@dimen/popupMenuIconPadding"
+    android:singleLine="true"
+    android:ellipsize="end"
     android:textColor="@color/course_modes_selected"
     android:text="@string/course_view_mode_videos_only"
     android:checkMark="@null" />

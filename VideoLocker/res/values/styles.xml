@@ -304,7 +304,7 @@
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="android:padding">@dimen/popupMenuPadding</item>
         <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
-        <item name="android:dropDownWidth">@dimen/popupMenuWidth</item>
+        <item name="android:minWidth">@dimen/popupMenuWidth</item>
         <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
         <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
     </style>
