@@ -294,14 +294,16 @@
     </style>
 
     <!-- Spinner with the popup style -->
-    <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.Holo.Light.ListPopupWindow">
+    <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">?android:attr/popupBackground</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
+        <item name="overlapAnchor">true</item>
     </style>
 
     <style name="edX.Widget.PopupMenu" android:parent="@android:style/Widget.Holo.Light.PopupMenu">
         <item name="android:popupBackground">?android:attr/popupBackground</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
+        <item name="overlapAnchor">true</item>
         <item name="android:padding">@dimen/popupMenuPadding</item>
         <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
         <item name="android:minWidth">@dimen/popupMenuWidth</item>

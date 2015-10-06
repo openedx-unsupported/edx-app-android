@@ -32,6 +32,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.internal.view.menu.MenuPresenter;
@@ -191,6 +192,18 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             mContentWidth = measureContentWidth();
         }
         mPopup.setContentWidth(mContentWidth);
+        // Invert the horizontal offset in RTL mode.
+        if (ViewCompat.getLayoutDirection(mAnchorView) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            mPopup.setHorizontalOffset(-mPopup.getHorizontalOffset());
+        }
+        // Implement right gravity manually through horizontal offset pre-KitKat.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT &&
+                (Gravity.getAbsoluteGravity(mDropDownGravity,
+                        ViewCompat.getLayoutDirection(anchor))
+                        & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.RIGHT) {
+            mPopup.setHorizontalOffset(mPopup.getHorizontalOffset() +
+                    (mAnchorView.getWidth() - mPopup.getWidth()));
+        }
         // If vertical offset is defined as 0, then ListPopupWindow infers
         // it as the negative of the top padding of the background, in
         // order to anchor the content area. Since that is not the effect
