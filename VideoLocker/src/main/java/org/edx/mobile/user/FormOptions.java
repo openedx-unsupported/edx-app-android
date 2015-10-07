@@ -4,15 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 import org.edx.mobile.module.registration.model.RegistrationOption;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FormOptions {
+public class FormOptions implements Serializable {
 
     @SerializedName("reference")
     private String reference;
 
     @SerializedName("values")
-    private List<RegistrationOption> values;
+    private List<FormOption> values;
 
     @SerializedName("range_min")
     private Integer rangeMin;
@@ -27,7 +28,7 @@ public class FormOptions {
         return reference;
     }
 
-    public List<RegistrationOption> getValues() {
+    public List<FormOption> getValues() {
         return values;
     }
 

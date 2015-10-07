@@ -27,6 +27,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
+import org.edx.mobile.user.FieldType;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
@@ -43,7 +44,7 @@ import roboguice.inject.InjectExtra;
 
 public class EditUserProfileFragment extends RoboFragment {
 
-    @InjectExtra(UserProfileActivity.EXTRA_USERNAME)
+    @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
 
     private GetAccountTask getAccountTask;
@@ -120,7 +121,7 @@ public class EditUserProfileFragment extends RoboFragment {
         viewHolder = null;
     }
 
-    public static class ViewHolder {
+    public class ViewHolder {
         public final View content;
         public final View loadingIndicator;
         public final ImageView profileImage;
@@ -218,7 +219,14 @@ public class EditUserProfileFragment extends RoboFragment {
                             } else {
                                 displayValue = value;
                             }
-                            createField(layoutInflater, fields, field, displayValue);
+                            createField(layoutInflater, fields, field, displayValue).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (field.getFieldType() == FieldType.SELECT) {
+                                        startActivity(SelectFieldActivity.newIntent(getActivity(), field, value));
+                                    }
+                                }
+                            });
                             break;
                         }
                         default: {

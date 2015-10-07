@@ -8,10 +8,11 @@ import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationOption;
 import org.edx.mobile.module.registration.model.RegistrationRestriction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FormField {
+public class FormField implements Serializable {
     private
     @SerializedName("required")
     boolean required;
