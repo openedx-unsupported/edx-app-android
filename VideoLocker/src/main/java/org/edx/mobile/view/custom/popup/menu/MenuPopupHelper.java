@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.internal.view.menu.MenuPresenter;
@@ -71,9 +72,15 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private final boolean mOverflowOnly;
     private final int mPopupMinWidth;
     private final int mPopupMaxWidth;
-    private final int mPopupPadding;
+    private final int mPopupPaddingStart;
+    private final int mPopupPaddingEnd;
+    private final int mPopupPaddingTop;
+    private final int mPopupPaddingBottom;
     private final int mPopupItemVerticalPadding;
+    private final int mPopupIconPadding;
     private final int mPopupIconDefaultSize;
+    private final int mPopupHeaderTextAppearance;
+    private final int mPopupRowTextAppearance;
     private final int mPopupStyleAttr;
     private final int mPopupStyleRes;
 
@@ -131,14 +138,39 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
 
         TypedArray a = context.obtainStyledAttributes(null,
                 R.styleable.PopupMenu, mPopupStyleAttr, mPopupStyleRes);
-        mPopupMinWidth = a.getDimensionPixelOffset(
+        mPopupMinWidth = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_android_minWidth, 0);
-        mPopupPadding = a.getDimensionPixelOffset(
-                R.styleable.PopupMenu_android_padding, 0);
-        mPopupItemVerticalPadding = a.getDimensionPixelOffset(
+        int popupPadding = a.getDimensionPixelSize(
+                R.styleable.PopupMenu_android_padding, -1);
+        if (popupPadding >= 0) {
+            mPopupPaddingStart = popupPadding;
+            mPopupPaddingEnd = popupPadding;
+            mPopupPaddingTop = popupPadding;
+            mPopupPaddingBottom = popupPadding;
+        } else {
+            mPopupPaddingStart = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingStart,
+                    a.getDimensionPixelOffset(
+                            R.styleable.PopupMenu_android_paddingLeft, 0));
+            mPopupPaddingEnd = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingEnd,
+                    a.getDimensionPixelOffset(
+                            R.styleable.PopupMenu_android_paddingRight, 0));
+            mPopupPaddingTop = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingTop, 0);
+            mPopupPaddingBottom = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingBottom, 0);
+        }
+        mPopupItemVerticalPadding = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_itemVerticalPadding, 0);
+        mPopupIconPadding = a.getDimensionPixelSize(
+                R.styleable.PopupMenu_iconPadding, 0);
         mPopupIconDefaultSize = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_iconDefaultSize, 0);
+        mPopupHeaderTextAppearance = a.getResourceId(
+                R.styleable.PopupMenu_headerTextAppearance, -1);
+        mPopupRowTextAppearance = a.getResourceId(
+                R.styleable.PopupMenu_rowTextAppearance, -1);
         a.recycle();
 
         mAnchorView = anchorView;
@@ -215,7 +247,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         // offset by explicitly setting it dynamically as well, and thus
         // forcing it to discard it's 'unset' flag.
         mPopup.setVerticalOffset(mPopup.getVerticalOffset());
-        int topBottomPadding = mPopupPadding - mPopupItemVerticalPadding;
         // Top/bottom padding will be applied on the background drawable,
         // as the ListView is both initialized and set up only after show()
         // is called on the ListPopupWindow. Left/right padding will be
@@ -223,7 +254,11 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         // item boundaries for the selector.
         ShapeDrawable paddedDrawable = new ShapeDrawable();
         paddedDrawable.setAlpha(0);
-        paddedDrawable.setPadding(0, topBottomPadding, 0, topBottomPadding);
+        // Don't apply top padding if the first item is a header, to
+        // comply with the design.
+        paddedDrawable.setPadding(0, mAdapter.hasHeader() ? 0 :
+                        (mPopupPaddingTop - mPopupItemVerticalPadding),
+                0, mPopupPaddingBottom - mPopupItemVerticalPadding);
         Drawable background = mPopup.getBackground();
         mPopup.setBackgroundDrawable(background == null ? paddedDrawable :
                 new LayerDrawable(new Drawable[] { background, paddedDrawable }));
@@ -432,6 +467,10 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     }
 
     private class MenuAdapter extends BaseAdapter {
+        boolean hasHeader() {
+            return getCount() > 0 && getItemType(0) == ItemType.HEADER;
+        }
+
         private List<? extends MenuItem> getMenuItems() {
             return mOverflowOnly ? mMenu.getNonActionItems() :
                     mMenu.getVisibleItems();
@@ -533,33 +572,41 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView;
+            ItemType itemType = getItemType(position);
             if (convertView != null) {
                 textView = (TextView) convertView;
             } else {
-                textView = (TextView) mInflater.inflate(
-                        getItemType(position).mLayoutRes, parent, false);
+                textView = (TextView) mInflater.inflate(itemType.mLayoutRes, parent, false);
             }
             MenuItem item = getItem(position);
             textView.setText(item.getTitle());
+            switch (itemType) {
+                case HEADER:
+                    textView.setTextAppearance(mContext, mPopupHeaderTextAppearance);
+                    break;
+                case ITEM:
+                    textView.setTextAppearance(mContext, mPopupRowTextAppearance);
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
             if (textView instanceof Checkable) {
                 ((Checkable) textView).setChecked(item.isChecked());
             }
             Drawable icon = item.getIcon();
             if (icon != null) {
+                textView.setCompoundDrawablePadding(mPopupIconPadding);
                 int iconWidth = icon.getIntrinsicWidth();
                 int iconHeight = icon.getIntrinsicHeight();
                 if (iconWidth < 0 || iconHeight < 0) {
                     iconWidth = iconHeight = mPopupIconDefaultSize;
                 }
                 icon.setBounds(0, 0, iconWidth, iconHeight);
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textView.setCompoundDrawables(icon, null, null, null);
-                } else {
-                    textView.setCompoundDrawablesRelative(icon, null, null, null);
-                }
+                TextViewCompat.setCompoundDrawablesRelative(textView, icon, null, null, null);
             }
-            textView.setPadding(mPopupPadding, mPopupItemVerticalPadding,
-                    mPopupPadding, mPopupItemVerticalPadding);
+            ViewCompat.setPaddingRelative(textView,
+                    mPopupPaddingStart, mPopupItemVerticalPadding,
+                    mPopupPaddingEnd, mPopupItemVerticalPadding);
             return textView;
         }
     }
