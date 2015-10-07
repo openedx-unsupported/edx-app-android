@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,15 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
@@ -29,9 +31,12 @@ import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
+import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -120,7 +125,6 @@ public class EditUserProfileFragment extends RoboFragment {
         public final View loadingIndicator;
         public final ImageView profileImage;
         public final TextView username;
-        public final RadioGroup privacyOptions;
         public final ViewGroup fields;
 
         public ViewHolder(@NonNull View parent) {
@@ -128,14 +132,7 @@ public class EditUserProfileFragment extends RoboFragment {
             this.loadingIndicator = parent.findViewById(R.id.loading_indicator);
             this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
             this.username = (TextView) parent.findViewById(R.id.username);
-            this.privacyOptions = (RadioGroup) parent.findViewById(R.id.privacy_options);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
-            this.privacyOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    fields.setBackgroundColor(fields.getResources().getColor(checkedId == R.id.privacy_option_full ? R.color.white : R.color.edx_grayscale_neutral_x_light));
-                }
-            });
         }
 
         public void setUsername(String username) {
@@ -155,23 +152,122 @@ public class EditUserProfileFragment extends RoboFragment {
                         .load(account.getProfileImage().getImageUrlMedium())
                         .into(profileImage);
 
-                if (account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
-                    privacyOptions.check(R.id.privacy_option_limited);
-                } else {
-                    privacyOptions.check(R.id.privacy_option_full);
-                }
+                final Gson gson = new Gson();
+                final JsonObject obj = (JsonObject) gson.toJsonTree(account);
 
                 final LayoutInflater layoutInflater = LayoutInflater.from(fields.getContext());
-                for (FormField field : formDescription.getFields()) {
-                    createFieldViewHolder(layoutInflater, fields, field.getLabel(), fields.getResources().getString(R.string.edit_user_profile_field_placeholder));
+                for (final FormField field : formDescription.getFields()) {
+                    if (null == field.getFieldType()) {
+                        // Missing field type; ignore this field
+                        continue;
+                    }
+                    switch (field.getFieldType()) {
+                        case SWITCH: {
+                            if (field.getOptions().getValues().size() != 2) {
+                                // We expect to have exactly two options; ignore this field.
+                                continue;
+                            }
+
+                            createSwitch(layoutInflater, fields, field, obj.get(field.getName()).getAsString(), new SwitchListener() {
+                                @Override
+                                public void onSwitch(@NonNull String value) {
+                                    // TODO: Send request to save new value
+                                    if (field.getName().equals("account_privacy")) {
+                                        final boolean isLimited = value.equals("private");
+                                        fields.setBackgroundColor(fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
+                                    }
+                                }
+                            });
+                            break;
+                        }
+                        case SELECT:
+                        case TEXTAREA: {
+                            final String value;
+                            {
+                                final JsonElement accountField = obj.get(field.getName());
+                                if (null == accountField) {
+                                    value = null;
+                                } else if (null == field.getDataType()) {
+                                    // No data type is specified, treat as generic string
+                                    value = accountField.getAsString();
+                                } else {
+                                    switch (field.getDataType()) {
+                                        case COUNTRY:
+                                            final String countryCode = accountField.getAsString();
+                                            value = TextUtils.isEmpty(countryCode) ? null : new Locale.Builder().setRegion(countryCode).build().getDisplayCountry();
+                                            break;
+                                        case LANGUAGE:
+                                            final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
+                                            }.getType());
+                                            value = languageProficiencies.isEmpty() ? null : new Locale.Builder().setLanguage(languageProficiencies.get(0).getCode()).build().getDisplayName();
+                                            break;
+                                        default:
+                                            // Unknown data type; ignore this field
+                                            continue;
+                                    }
+                                }
+                            }
+                            final String displayValue;
+                            if (TextUtils.isEmpty(value)) {
+                                final String placeholder = field.getPlaceholder();
+                                if (TextUtils.isEmpty(placeholder)) {
+                                    displayValue = fields.getResources().getString(R.string.edit_user_profile_field_placeholder);
+                                } else {
+                                    displayValue = placeholder;
+                                }
+                            } else {
+                                displayValue = value;
+                            }
+                            createField(layoutInflater, fields, field, displayValue);
+                            break;
+                        }
+                        default: {
+                            // Unknown field type; ignore this field
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
 
-    private static TextView createFieldViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull String label, @NonNull final String value) {
+    public interface SwitchListener {
+        void onSwitch(@NonNull String value);
+    }
+
+    private static View createSwitch(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull String value, @NonNull final SwitchListener switchListener) {
+        final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
+        ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
+        ((TextView) view.findViewById(R.id.instructions)).setText(field.getInstructions());
+        final RadioGroup group = ((RadioGroup) view.findViewById(R.id.options));
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
+            }
+        });
+        {
+            final RadioButton optionOne = ((RadioButton) view.findViewById(R.id.option_one));
+            final RadioButton optionTwo = ((RadioButton) view.findViewById(R.id.option_two));
+            optionOne.setText(field.getOptions().getValues().get(0).getName());
+            optionOne.setTag(field.getOptions().getValues().get(0).getValue());
+            optionTwo.setText(field.getOptions().getValues().get(1).getName());
+            optionTwo.setTag(field.getOptions().getValues().get(1).getValue());
+        }
+        for (int i = 0; i < group.getChildCount(); i++) {
+            final View child = group.getChildAt(i);
+            if (child.getTag().equals(value)) {
+                group.check(child.getId());
+                break;
+            }
+        }
+        parent.addView(view);
+        return view;
+    }
+
+    private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull final String value) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
-        final SpannableString formattedLabel = new SpannableString(label);
+        final SpannableString formattedLabel = new SpannableString(field.getLabel());
         formattedLabel.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_x_dark)), 0, formattedLabel.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         final SpannableString formattedValue = new SpannableString(value);
         formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

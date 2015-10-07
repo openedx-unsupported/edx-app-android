@@ -1,14 +1,13 @@
 {
     "fields":[
     {
-              "name" : "limited_profile",
+              "name" : "account_privacy",
               "label" : "edX learners can see my:",
               "type" : "switch",
-              "data_type" : "boolean",
               "options" : {
                 "values" : [
-                            { "name" : "Full Profile", "value" : false },
-                            { "name" : "Limited Profile",  "value" : true }
+                            { "name" : "Full Profile", "value" : "all_users" },
+                            { "name" : "Limited Profile",  "value" : "private" }
                  ]
               },
               "instructions" : "A limited profile only shares your username, though you can still choose to add your own profile photo.",
@@ -50,7 +49,7 @@
               "name" : "bio",
               "label" : "About me",
               "type" : "textarea",
-              "default" : "With edX I would like to learn..."
+              "placeholder" : "With edX I would like to learn..."
     }
     ]
 }

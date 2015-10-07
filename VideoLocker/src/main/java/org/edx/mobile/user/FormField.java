@@ -32,7 +32,10 @@ public class FormField {
     String instructions;
     private
     @SerializedName("type")
-    RegistrationFieldType fieldType;
+    FieldType fieldType;
+    private
+    @SerializedName("data_type")
+    DataType dataType;
     private
     @SerializedName("label")
     String label;
@@ -64,8 +67,12 @@ public class FormField {
         return instructions;
     }
 
-    public RegistrationFieldType getFieldType() {
+    public FieldType getFieldType() {
         return fieldType;
+    }
+
+    public DataType getDataType() {
+        return dataType;
     }
 
     public String getLabel() {

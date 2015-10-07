@@ -22,4 +22,24 @@ public class FormOptions {
 
     @SerializedName("allows_none")
     private boolean allowsNone = true;
+
+    public String getReference() {
+        return reference;
+    }
+
+    public List<RegistrationOption> getValues() {
+        return values;
+    }
+
+    public Integer getRangeMin() {
+        return rangeMin;
+    }
+
+    public Integer getRangeMax() {
+        return rangeMax;
+    }
+
+    public boolean isAllowsNone() {
+        return allowsNone;
+    }
 }

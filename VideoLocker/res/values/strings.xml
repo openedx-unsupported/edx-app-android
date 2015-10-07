@@ -676,11 +676,7 @@
     <string name="profile_incomplete_greeting">Hi {username}!</string>
     <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
     <string name="profile_incomplete_edit_button">Get Started</string>
-    <string name="edit_user_profile_privacy_label">edX learners can see my:</string>
     <string name="edit_user_profile_title">Edit profile</string>
-    <string name="edit_user_profile_privacy_full">Full Profile</string>
-    <string name="edit_user_profile_privacy_limited">Limited Profile</string>
-    <string name="edit_user_profile_privacy_explanation">You must be over 13 to share a full profile. A limited profile only shares your username.</string>
     <string name="edit_user_profile_field">{label}: {value}</string>
     <string name="edit_user_profile_field_placeholder">Select</string>
 
