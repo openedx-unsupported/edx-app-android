@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -86,5 +87,19 @@ public class UiUtil {
         } else {
             return true;
         }
+    }
+
+    /**
+     * CardView adds extra padding on pre-lollipop devices for shadows
+     * This function removes that extra padding from its margins
+     * @param cardView The CardView that needs adjustments
+     * @return float
+     */
+    public static void adjustCardViewMargins(View cardView) {
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+        params.topMargin -= cardView.getPaddingTop();
+        params.leftMargin -= cardView.getPaddingLeft();
+        params.rightMargin -= cardView.getPaddingRight();
+        cardView.setLayoutParams(params);
     }
 }
