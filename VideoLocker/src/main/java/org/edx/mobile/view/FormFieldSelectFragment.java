@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -22,18 +23,18 @@ import java.util.List;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
-public class SelectFieldFragment extends RoboFragment {
+public class FormFieldSelectFragment extends RoboFragment {
 
-    @InjectExtra(SelectFieldActivity.EXTRA_FIELD)
+    @InjectExtra(FormFieldSelectActivity.EXTRA_FIELD)
     private FormField formField;
 
-    @InjectExtra(SelectFieldActivity.EXTRA_CURRENT_VALUE)
+    @InjectExtra(FormFieldSelectActivity.EXTRA_VALUE)
     private String currentValue;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.select_field_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_form_field_select, container, false);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class SelectFieldFragment extends RoboFragment {
                 @Override
                 protected void onSuccess(List<FormOption> formOptions) throws Exception {
                     options.addAll(formOptions);
-                    ((ArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+                    ((ArrayAdapter) listView.getAdapter()).notifyDataSetChanged();
                 }
             }.execute();
 
@@ -64,7 +65,9 @@ public class SelectFieldFragment extends RoboFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final FormOption item = (FormOption) parent.getItemAtPosition(position);
-                getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent().putExtra(SelectFieldActivity.EXTRA_CURRENT_VALUE, item.getValue()));
+                getActivity().setResult(Activity.RESULT_OK, new Intent()
+                        .putExtra(FormFieldSelectActivity.EXTRA_FIELD_NAME, formField.getName())
+                        .putExtra(FormFieldSelectActivity.EXTRA_VALUE, item.getValue()));
                 getActivity().finish();
             }
         });

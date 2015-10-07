@@ -679,5 +679,6 @@
     <string name="edit_user_profile_title">Edit profile</string>
     <string name="edit_user_profile_field">{label}: {value}</string>
     <string name="edit_user_profile_field_placeholder">Select</string>
+    <string name="submit">Submit</string>
 
 </resources>

@@ -14,6 +14,8 @@ import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 
+import java.util.Collections;
+
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
@@ -42,5 +44,9 @@ public class UserAPI {
 
     public Account getAccount(@NonNull String username) throws RetroHttpException {
         return userService.getAccount(username);
+    }
+
+    public Account updateAccount(@NonNull String username, @NonNull String field, @NonNull String value) throws RetroHttpException {
+        return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 }

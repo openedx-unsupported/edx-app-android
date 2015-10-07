@@ -277,7 +277,11 @@
             android:screenOrientation="portrait"
             android:label="@string/edit_user_profile_title"/>
 
-        <activity android:name=".view.SelectFieldActivity"
+        <activity android:name=".view.FormFieldSelectActivity"
+            android:screenOrientation="portrait"
+            android:label=""/>
+
+        <activity android:name=".view.FormFieldTextAreaActivity"
             android:screenOrientation="portrait"
             android:label=""/>
 

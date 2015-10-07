@@ -1,5 +1,7 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +35,7 @@ import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
+import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.HashMap;
@@ -43,6 +46,8 @@ import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
 public class EditUserProfileFragment extends RoboFragment {
+
+    private static final int EDIT_FIELD_REQUEST = 1;
 
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
@@ -222,8 +227,11 @@ public class EditUserProfileFragment extends RoboFragment {
                             createField(layoutInflater, fields, field, displayValue).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    // TODO: Move this switch into field activity?
                                     if (field.getFieldType() == FieldType.SELECT) {
-                                        startActivity(SelectFieldActivity.newIntent(getActivity(), field, value));
+                                        startActivityForResult(FormFieldSelectActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
+                                    } else {
+                                        startActivityForResult(FormFieldTextAreaActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
                                     }
                                 }
                             });
@@ -236,6 +244,25 @@ public class EditUserProfileFragment extends RoboFragment {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_FIELD_REQUEST && resultCode == Activity.RESULT_OK) {
+            final String fieldName = data.getStringExtra(FormFieldSelectActivity.EXTRA_FIELD_NAME);
+            final String fieldValue = data.getStringExtra(FormFieldSelectActivity.EXTRA_VALUE);
+            new UpdateAccountTask(getActivity(), username, fieldName, fieldValue) {
+                @Override
+                protected void onSuccess(Account account) throws Exception {
+                    EditUserProfileFragment.this.account = account;
+                    if (null != viewHolder) {
+                        viewHolder.setData(account, formDescription);
+                    }
+                }
+            }.execute();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

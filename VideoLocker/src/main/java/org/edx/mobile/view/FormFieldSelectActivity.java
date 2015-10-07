@@ -12,19 +12,20 @@ import com.google.inject.Inject;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.user.FormField;
 
-public class SelectFieldActivity extends BaseSingleFragmentActivity {
+public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
 
     public static final String EXTRA_FIELD = "field";
-    public static final String EXTRA_CURRENT_VALUE = "currentValue";
+    public static final String EXTRA_FIELD_NAME = "fieldName";
+    public static final String EXTRA_VALUE = "value";
 
     public static Intent newIntent(@NonNull Context context, @NonNull FormField field, @Nullable String currentValue) {
-        return new Intent(context, SelectFieldActivity.class)
+        return new Intent(context, FormFieldSelectActivity.class)
                 .putExtra(EXTRA_FIELD, field)
-                .putExtra(EXTRA_CURRENT_VALUE, currentValue);
+                .putExtra(EXTRA_VALUE, currentValue);
     }
 
     @Inject
-    private SelectFieldFragment fragment;
+    private FormFieldSelectFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
