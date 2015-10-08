@@ -31,11 +31,13 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 
+import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.net.URLEncoder;
 import java.util.List;
@@ -72,22 +74,25 @@ public class ServiceManager {
         return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
-                    String block_count = URLEncoder.encode("video", "UTF-8");
-                    String block_fields = URLEncoder.encode("graded,format,multi_device", "UTF-8");
-                    String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
+                    PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
+                    String username = URLEncoder.encode(pref.getCurrentUserProfile().username, "UTF-8");
+                    String block_counts = URLEncoder.encode("video", "UTF-8");
+                    String requested_fields = URLEncoder.encode("graded,format,student_view_multi_device", "UTF-8");
+                    String student_view_data = URLEncoder.encode("video", "UTF-8");
+                    String cId = URLEncoder.encode(courseId, "UTF-8");
 
-                    String url = config.getApiHostURL() + "/api/course_structure/v0/courses/" + courseId + "/blocks+navigation/?"
-                        +"block_count=" + block_count + "&fields=" + block_fields + "&block_json=" + block_json;
+                    String url = config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + cId + "&user="
+                        + username + "&depth=all&requested_fields=" + requested_fields + "&student_view_data=" + student_view_data + "&block_counts=" + block_counts+ "&nav_depth=3";
 
                     logger.debug("GET url for enrolling in a Course: " + url);
                     return url;
-                } catch (Exception e) {
+                } catch (UnsupportedEncodingException e) {
                     logger.error(e);
                 }
                 return "";
             }
             public String getCacheKey() {
-                return config.getApiHostURL() + "/api/course_structure/v0/courses/" + courseId;
+                return config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + courseId;
             }
             public Map<String, String> getParameters() {
                 return null;
