@@ -296,8 +296,8 @@ public class PrefManager {
         }
 
         public boolean isUserPrefVideoModel(){
-            //default is video only mode
-            return getBoolean(Key.UserPrefVideoModel, true);
+            //default is full mode
+            return getBoolean(Key.UserPrefVideoModel, false);
         }
         public void setUserPrefVideoModel(boolean enabled){
             super.put(Key.UserPrefVideoModel, enabled);
