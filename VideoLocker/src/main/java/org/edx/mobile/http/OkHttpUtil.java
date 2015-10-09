@@ -39,7 +39,6 @@ public class OkHttpUtil {
         }
         final Cache cache = new Cache(cacheDirectory, cacheSize);
         client.setCache(cache);
-        client.interceptors().add(new GzipRequestInterceptor());
         client.interceptors().add(new OauthHeaderRequestInterceptor(context));
         client.interceptors().add(new LoggingInterceptor());
         return client;
