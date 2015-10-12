@@ -310,7 +310,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     public void shareOnWeb() {
         //Creating the instance of PopupMenu
         PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_share_on_web),
-                Gravity.END, R.attr.edgePopupMenuStyle, R.style.CustomEdgePopupMenu);
+                Gravity.END, R.attr.edgePopupMenuStyle, R.style.edX_Widget_EdgePopupMenu);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
                 .inflate(R.menu.share_on_web, popup.getMenu());

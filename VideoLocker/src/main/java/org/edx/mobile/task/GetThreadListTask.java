@@ -41,13 +41,13 @@ Task<TopicThreads> {
             if(courseId!=null){
 
                 String view;
-                if (filter == DiscussionPostsFilter.Unread) view = "unread";
-                else if (filter == DiscussionPostsFilter.Unanswered) view = "unanswered";
+                if (filter == DiscussionPostsFilter.UNREAD) view = "unread";
+                else if (filter == DiscussionPostsFilter.UNANSWERED) view = "unanswered";
                 else view = "";
 
                 String order;
-                if (orderBy == DiscussionPostsSort.LastActivityAt) order = "last_activity_at";
-                else if (orderBy == DiscussionPostsSort.VoteCount) order = "vote_count";
+                if (orderBy == DiscussionPostsSort.LAST_ACTIVITY_AT) order = "last_activity_at";
+                else if (orderBy == DiscussionPostsSort.VOTE_COUNT) order = "vote_count";
                 else order = "";
 
                 int pageSize = pagination.pageSize();
