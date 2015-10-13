@@ -16,20 +16,15 @@
 
 package org.edx.mobile.player;
 
-import java.lang.ref.WeakReference;
-import java.util.Formatter;
-import java.util.Locale;
-
-import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,7 +39,16 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.third_party.iconify.IconButton;
+import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.Iconify;
+
+import java.lang.ref.WeakReference;
+import java.util.Formatter;
+import java.util.Locale;
 
 /**
  * A view containing controls for a MediaPlayer. Typically contains the
@@ -94,13 +98,12 @@ public class PlayerController extends FrameLayout {
     private View.OnClickListener mNextListener, mPrevListener;
     StringBuilder               mFormatBuilder;
     Formatter                   mFormatter;
-    private ImageButton         mPauseButton;
-    private ImageButton         mFfwdButton;
+    private IconButton          mPauseButton;
     private ImageButton         mRewButton;
     private ImageButton         mNextButton;
     private ImageButton         mPrevButton;
-    private ImageButton         mFullscreenButton;
-    private ImageButton         mSettingsButton;
+    private IconButton          mFullscreenButton;
+    private IconButton          mSettingsButton;
     private ImageButton         mLmsButton;
     private ImageButton         shareButton;
     private Handler             mHandler = new MessageHandler(this);
@@ -190,13 +193,13 @@ public class PlayerController extends FrameLayout {
         PrefManager featuresPrefManager = new PrefManager(getContext(), PrefManager.Pref.FEATURES);
         boolean enableSocialFeatures = featuresPrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
 
-        mPauseButton = (ImageButton) v.findViewById(R.id.pause);
+        mPauseButton = (IconButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
         }
 
-        mFullscreenButton = (ImageButton) v.findViewById(R.id.fullscreen);
+        mFullscreenButton = (IconButton) v.findViewById(R.id.fullscreen);
         if (mFullscreenButton != null) {
             mFullscreenButton.requestFocus();
             mFullscreenButton.setOnClickListener(mFullscreenListener);
@@ -235,7 +238,7 @@ public class PlayerController extends FrameLayout {
             mLmsButton.setOnClickListener(mLmsClickListener);
         }
 
-        mSettingsButton = (ImageButton) v.findViewById(R.id.settings);
+        mSettingsButton = (IconButton) v.findViewById(R.id.settings);
         if (mSettingsButton != null) {
             mSettingsButton.requestFocus();
             mSettingsButton.setOnClickListener(mSettingsListener);
@@ -294,13 +297,6 @@ public class PlayerController extends FrameLayout {
                     mRewButton.setEnabled(true);
                 }
             }
-            if (mFfwdButton != null) {
-                if ( !mPlayer.canSeekForward()) {
-                    mFfwdButton.setEnabled(false);
-                } else {
-                    mFfwdButton.setEnabled(true);
-                }
-            }
         } catch (IncompatibleClassChangeError ex) {
             // We were given an old version of the interface, that doesn't have
             // the canPause/canSeekXYZ methods. This is OK, it just means we
@@ -325,9 +321,8 @@ public class PlayerController extends FrameLayout {
 
             FrameLayout.LayoutParams tlp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    Gravity.BOTTOM
-                    );
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            );
 
             mAnchor.addView(this, tlp);
             mShowing = true;
@@ -542,9 +537,21 @@ public class PlayerController extends FrameLayout {
 
         mPauseButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isPlaying()) {
-            mPauseButton.setImageResource(R.drawable.ic_pause_button_selector);
+            LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
+                    new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
+                            .colorRes(R.color.transparent_black_50).sizeDp(60),
+                    new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
+                            .colorRes(R.color.edx_grayscale_neutral_white_t).sizeDp(30)
+            });
+            mPauseButton.setImageDrawable(layeredIcon);
         } else {
-            mPauseButton.setImageResource(R.drawable.ic_play_button_selector);
+            LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
+                    new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
+                            .colorRes(R.color.transparent_black_50).sizeDp(60),
+                    new IconDrawable(getContext(), Iconify.IconValue.fa_play)
+                            .colorRes(R.color.edx_grayscale_neutral_white_t).sizeDp(30)
+            });
+            mPauseButton.setImageDrawable(layeredIcon);
         }
     }
 
@@ -555,11 +562,9 @@ public class PlayerController extends FrameLayout {
 
         mFullscreenButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isFullScreen()) {
-            //mFullscreenButton.setImageResource(R.drawable.ic_fullscreen_exit_selector);
-            mFullscreenButton.setBackgroundResource(R.drawable.ic_fullscreen_exit_selector);
-        } else {
-            //mFullscreenButton.setImageResource(R.drawable.ic_fullscreen_selector);
-            mFullscreenButton.setBackgroundResource(R.drawable.ic_fullscreen_selector);
+            mFullscreenButton.setIcon(Iconify.IconValue.fa_compress);
+        } else {;
+            mFullscreenButton.setIcon(Iconify.IconValue.fa_expand);
         }
     }
 
@@ -697,9 +702,6 @@ public class PlayerController extends FrameLayout {
     public void setEnabled(boolean enabled) {
         if (mPauseButton != null) {
             mPauseButton.setEnabled(enabled);
-        }
-        if (mFfwdButton != null) {
-            mFfwdButton.setEnabled(enabled);
         }
         if (mRewButton != null) {
             mRewButton.setEnabled(enabled);
@@ -930,12 +932,10 @@ public class PlayerController extends FrameLayout {
     public void setSettingsBtnDrawable(boolean isSettingEnabled){
         if(mSettingsButton!=null){
             if(isSettingEnabled){
-                mSettingsButton.setBackgroundResource
-                (R.drawable.ic_media_settings_active);
+                mSettingsButton.setIconColor(R.color.edx_brand_primary_accent);
             }else{
-                mSettingsButton.setBackgroundResource
-                (R.drawable.ic_media_settings_inactive);
-            }   
+                mSettingsButton.setIconColor(R.color.edx_grayscale_neutral_white_t);
+            }
         }
     }
 
