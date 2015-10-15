@@ -21,9 +21,9 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 style="@style/profile_image"
-                android:layout_width="166dp"
-                android:layout_height="166dp"
-                app:civ_border_width="3dp"
+                android:layout_width="@dimen/user_profile_image_diameter"
+                android:layout_height="@dimen/user_profile_image_diameter"
+                app:civ_border_width="@dimen/user_profile_image_border_width"
                 tools:src="@drawable/app_icon" />
 
             <TextView
@@ -47,14 +47,15 @@
                     android:id="@+id/language_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/x_small_icon_margin"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <org.edx.mobile.third_party.iconify.IconView
                         android:layout_width="@dimen/edx_x_small"
                         android:layout_height="@dimen/edx_x_small"
-                        android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                        android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                        android:layout_marginEnd="@dimen/x_small_icon_margin"
+                        android:layout_marginRight="@dimen/x_small_icon_margin"
                         app:iconColor="@color/edx_brand_primary_x_light"
                         app:iconName="fa_comment" />
 
@@ -72,15 +73,15 @@
                     android:id="@+id/location_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/x_small_icon_margin"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <org.edx.mobile.third_party.iconify.IconView
                         android:layout_width="@dimen/edx_x_small"
                         android:layout_height="@dimen/edx_x_small"
-                        android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                        android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                        android:layout_marginEnd="@dimen/x_small_icon_margin"
+                        android:layout_marginRight="@dimen/x_small_icon_margin"
                         app:iconColor="@color/edx_brand_primary_x_light"
                         app:iconName="fa_map_marker" />
 
@@ -97,10 +98,10 @@
                     android:id="@+id/sharing_limited"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/profile_sharing_limited"
+                    android:layout_marginTop="@dimen/x_small_icon_margin"
                     android:textColor="@color/edx_brand_primary_x_light"
-                    android:textSize="@dimen/edx_x_small" />
+                    android:textSize="@dimen/edx_x_small"
+                    tools:text="@string/profile_sharing_limited_by_you" />
             </LinearLayout>
         </LinearLayout>
 
@@ -108,6 +109,7 @@
             android:id="@+id/profile_body_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="@dimen/edx_margin">
 
@@ -123,10 +125,10 @@
                 android:id="@+id/parental_consent_required"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/edx_margin"
+                android:layout_marginLeft="@dimen/edx_margin"
+                android:layout_marginRight="@dimen/edx_margin"
                 android:gravity="center"
-                android:maxWidth="300dp"
                 android:text="@string/profile_consent_needed_explanation"
                 android:textColor="@color/edx_grayscale_neutral_x_dark"
                 android:textSize="@dimen/edx_small" />
@@ -135,13 +137,13 @@
                 android:id="@+id/incomplete_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/incomplete_greeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/edx_grayscale_neutral_x_dark"
                     android:textSize="@dimen/edx_large"
@@ -150,11 +152,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/edx_margin"
-                    android:layout_marginTop="@dimen/edx_margin"
+                    android:layout_margin="@dimen/edx_margin"
                     android:gravity="center"
-                    android:maxWidth="280dp"
                     android:text="@string/profile_incomplete_explanation"
                     android:textColor="@color/edx_grayscale_neutral_x_dark"
                     android:textSize="@dimen/edx_small" />
@@ -162,10 +161,9 @@
 
             <Button
                 android:id="@+id/edit_profile_button"
-                style="@style/edX.Widget.BorderButton"
+                style="@style/edX.Widget.BorderedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/edx_margin"
                 tools:text="@string/profile_incomplete_edit_button" />
         </LinearLayout>

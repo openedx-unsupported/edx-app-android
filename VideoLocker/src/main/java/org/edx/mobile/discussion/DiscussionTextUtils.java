@@ -14,9 +14,11 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.Router;
 
 import java.util.HashMap;
 
@@ -24,7 +26,10 @@ public abstract class DiscussionTextUtils {
     private DiscussionTextUtils() {
     }
 
-    public static void setAuthorAttributionText(@NonNull TextView textView, @NonNull final IAuthorData authorData, @NonNull final Router router) {
+    @Inject
+    private static Config config;
+
+    public static void setAuthorAttributionText(@NonNull TextView textView, @NonNull final IAuthorData authorData, @NonNull final Runnable onAuthorClickListener) {
         final CharSequence text;
         {
             final CharSequence formattedTime = DateUtils.getRelativeTimeSpanString(
@@ -35,21 +40,24 @@ public abstract class DiscussionTextUtils {
 
             final String authorLabel = authorData.getAuthorLabel();
 
-            final Context context = textView.getContext();
             final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
-            authorSpan.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    router.showUserProfile(context, authorData.getAuthor());
-                }
+            if (config.isUserProfilesEnabled()) {
+                authorSpan.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        onAuthorClickListener.run();
+                    }
 
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setColor(context.getResources().getColor(R.color.edx_brand_primary_base));
-                }
-            }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setUnderlineText(false);
+                    }
+                }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
 
+            final Context context = textView.getContext();
             text = trim(ResourceUtil.getFormattedString(context.getResources(), R.string.post_attribution, new HashMap<String, CharSequence>() {{
                 put("time", formattedTime);
                 put("author", authorSpan);

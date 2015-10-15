@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -158,10 +159,11 @@ public class EditUserProfileFragment extends RoboFragment {
                         .load(account.getProfileImage().getImageUrlMedium())
                         .into(profileImage);
 
-                final Gson gson = new Gson();
+                final Gson gson = new GsonBuilder().serializeNulls().create();
                 final JsonObject obj = (JsonObject) gson.toJsonTree(account);
 
                 final LayoutInflater layoutInflater = LayoutInflater.from(fields.getContext());
+                fields.removeAllViews();
                 for (final FormField field : formDescription.getFields()) {
                     if (null == field.getFieldType()) {
                         // Missing field type; ignore this field
@@ -173,15 +175,16 @@ public class EditUserProfileFragment extends RoboFragment {
                                 // We expect to have exactly two options; ignore this field.
                                 continue;
                             }
+                            final boolean isAccountPrivacyField = field.getName().equals(Account.ACCOUNT_PRIVACY_SERIALIZED_NAME);
+                            String value = gson.fromJson(obj.get(field.getName()), String.class);
+                            if (null == value && isAccountPrivacyField) {
+                                value = Account.PRIVATE_SERIALIZED_NAME;
+                            }
 
-                            createSwitch(layoutInflater, fields, field, obj.get(field.getName()).getAsString(), new SwitchListener() {
+                            createSwitch(layoutInflater, fields, field, value, new SwitchListener() {
                                 @Override
                                 public void onSwitch(@NonNull String value) {
-                                    // TODO: Send request to save new value
-                                    if (field.getName().equals("account_privacy")) {
-                                        final boolean isLimited = value.equals("private");
-                                        fields.setBackgroundColor(fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
-                                    }
+                                    executeUpdate(field.getName(), value);
                                 }
                             });
                             break;
@@ -195,11 +198,11 @@ public class EditUserProfileFragment extends RoboFragment {
                                     value = null;
                                 } else if (null == field.getDataType()) {
                                     // No data type is specified, treat as generic string
-                                    value = accountField.getAsString();
+                                    value = gson.fromJson(accountField, String.class);
                                 } else {
                                     switch (field.getDataType()) {
                                         case COUNTRY:
-                                            final String countryCode = accountField.getAsString();
+                                            final String countryCode = gson.fromJson(accountField, String.class);
                                             value = TextUtils.isEmpty(countryCode) ? null : new Locale.Builder().setRegion(countryCode).build().getDisplayCountry();
                                             break;
                                         case LANGUAGE:
@@ -243,6 +246,10 @@ public class EditUserProfileFragment extends RoboFragment {
                         }
                     }
                 }
+
+                final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
+                fields.setBackgroundColor(fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
+                // TODO: make fields readable / read-only (except birth year)
             }
         }
     }
@@ -252,18 +259,22 @@ public class EditUserProfileFragment extends RoboFragment {
         if (requestCode == EDIT_FIELD_REQUEST && resultCode == Activity.RESULT_OK) {
             final String fieldName = data.getStringExtra(FormFieldSelectActivity.EXTRA_FIELD_NAME);
             final String fieldValue = data.getStringExtra(FormFieldSelectActivity.EXTRA_VALUE);
-            new UpdateAccountTask(getActivity(), username, fieldName, fieldValue) {
-                @Override
-                protected void onSuccess(Account account) throws Exception {
-                    EditUserProfileFragment.this.account = account;
-                    if (null != viewHolder) {
-                        viewHolder.setData(account, formDescription);
-                    }
-                }
-            }.execute();
+            executeUpdate(fieldName, fieldValue);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void executeUpdate(String fieldName, String fieldValue) {
+        new UpdateAccountTask(getActivity(), username, fieldName, fieldValue) {
+            @Override
+            protected void onSuccess(Account account) throws Exception {
+                EditUserProfileFragment.this.account = account;
+                if (null != viewHolder) {
+                    viewHolder.setData(account, formDescription);
+                }
+            }
+        }.execute();
     }
 
     public interface SwitchListener {
@@ -275,12 +286,6 @@ public class EditUserProfileFragment extends RoboFragment {
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(field.getInstructions());
         final RadioGroup group = ((RadioGroup) view.findViewById(R.id.options));
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
-            }
-        });
         {
             final RadioButton optionOne = ((RadioButton) view.findViewById(R.id.option_one));
             final RadioButton optionTwo = ((RadioButton) view.findViewById(R.id.option_two));
@@ -296,6 +301,12 @@ public class EditUserProfileFragment extends RoboFragment {
                 break;
             }
         }
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
+            }
+        });
         parent.addView(view);
         return view;
     }

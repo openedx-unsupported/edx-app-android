@@ -1,12 +1,19 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.FloatMath;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -21,12 +28,13 @@ import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
+import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
-import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
@@ -34,17 +42,11 @@ import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
 
-    @InjectView(R.id.discussion_posts_filter_layout)
-    RelativeLayout discussionPostsFilterLayout;
+    @InjectView(R.id.discussion_posts_filter_spinner)
+    Spinner discussionPostsFilterSpinner;
 
-    @InjectView(R.id.discussion_posts_filter_text_view)
-    TextView discussionPostsFilterTextView;
-
-    @InjectView(R.id.discussion_posts_sort_layout)
-    RelativeLayout discussionPostsSortLayout;
-
-    @InjectView(R.id.discussion_posts_sort_text_view)
-    TextView discussionPostsSortTextView;
+    @InjectView(R.id.discussion_posts_sort_spinner)
+    Spinner discussionPostsSortSpinner;
 
     @InjectView(R.id.create_new_item_text_view)
     TextView createNewPostTextView;
@@ -55,11 +57,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
 
-    DiscussionPostsFilter postsFilter = DiscussionPostsFilter.All;
-    DiscussionPostsSort postsSort = DiscussionPostsSort.None;
-
-    private HashMap<Integer, DiscussionPostsFilter> filterOptions = new HashMap<>();
-    private HashMap<Integer, DiscussionPostsSort> sortOptions = new HashMap<>();
+    DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
+    DiscussionPostsSort postsSort = DiscussionPostsSort.NONE;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -75,15 +74,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        filterOptions.put(R.id.filter_item_all_posts, DiscussionPostsFilter.All);
-        filterOptions.put(R.id.filter_item_unread_posts, DiscussionPostsFilter.Unread);
-        filterOptions.put(R.id.filter_item_unanswered_posts, DiscussionPostsFilter.Unanswered);
-
-        sortOptions.put(R.id.sort_item_recent_activity, DiscussionPostsSort.None);
-        sortOptions.put(R.id.sort_item_most_activity, DiscussionPostsSort.LastActivityAt);
-        sortOptions.put(R.id.sort_item_most_votes, DiscussionPostsSort.VoteCount);
-
         return inflater.inflate(R.layout.fragment_discussion_thread_posts, container, false);
     }
 
@@ -100,73 +90,75 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
         });
 
-        // TODO: Add some UI polish to make the popups more closely match the wireframes
-        createFilterPopupMenu();
-        createSortPopupMenu();
+        discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
+                discussionPostsFilterSpinner, DiscussionPostsFilter.values(),
+                Iconify.IconValue.fa_filter));
+        discussionPostsSortSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
+                discussionPostsSortSpinner, DiscussionPostsSort.values(),
+                // Since we can't define IconDrawable in XML resources, we'll have to define
+                // this constructed dynamically in code. This is far more efficient than the
+                // alternative option of defining multiple IconView items in the layout.
+                new DiscussionPostsSpinnerAdapter.IconDrawableFactory() {
+                    @Override
+                    @NonNull
+                    public Drawable createIcon() {
+                        Context context = getActivity();
+                        LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
+                                new IconDrawable(context, Iconify.IconValue.fa_long_arrow_up)
+                                        .colorRes(R.color.edx_brand_primary_base),
+                                new IconDrawable(context, Iconify.IconValue.fa_long_arrow_down)
+                                        .colorRes(R.color.edx_brand_primary_base)
+                        });
+                        Resources resources = context.getResources();
+                        final int width = resources.getDimensionPixelSize(
+                                R.dimen.icon_view_standard_width_height);
+                        final int verticalPadding = resources.getDimensionPixelSize(
+                                R.dimen.discussion_posts_filter_popup_icon_margin);
+                        final int height = width + verticalPadding;
+                        final float halfWidth = width / 2f;
+                        final int leftIconWidth = (int) FloatMath.ceil(halfWidth);
+                        final int rightIconWidth = (int) halfWidth;
+                        layeredIcon.setLayerInset(0, 0, 0, rightIconWidth, verticalPadding);
+                        layeredIcon.setLayerInset(1, leftIconWidth, verticalPadding, 0, 0);
+                        layeredIcon.setBounds(0, 0, width, height);
+                        return layeredIcon;
+                    }
+                }));
+
+        discussionPostsFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
+                DiscussionPostsFilter selectedPostsFilter =
+                        (DiscussionPostsFilter) parent.getItemAtPosition(position);
+                if (postsFilter != selectedPostsFilter) {
+                    postsFilter = selectedPostsFilter;
+                    populateThreadList(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(@NonNull AdapterView<?> parent) {}
+        });
+        discussionPostsSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
+                DiscussionPostsSort selectedPostsSort =
+                        (DiscussionPostsSort) parent.getItemAtPosition(position);
+                if (postsSort != selectedPostsSort) {
+                    postsSort = selectedPostsSort;
+                    populateThreadList(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(@NonNull AdapterView<?> parent) {}
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    private void createFilterPopupMenu() {
-        final PopupMenu filterPopup = new PopupMenu(getActivity(), discussionPostsFilterLayout);
-        filterPopup.inflate(R.menu.discussion_posts_filter_menu);
-        filterPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(android.view.MenuItem item) {
-                int itemId = item.getItemId();
-                CharSequence title = item.getTitle();
-
-                if (postsFilter == filterOptions.get(itemId)) {
-                    return false;
-                }
-                postsFilter = filterOptions.get(itemId);
-
-                discussionPostsFilterTextView.setText(title);
-                populateThreadList(true);
-
-                return false;
-            }
-        });
-
-        discussionPostsFilterLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterPopup.show();
-            }
-        });
-    }
-
-    private void createSortPopupMenu() {
-        final PopupMenu sortPopup = new PopupMenu(getActivity(), discussionPostsSortLayout);
-        sortPopup.inflate(R.menu.discussion_posts_sort_menu);
-        sortPopup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(android.view.MenuItem item) {
-                int itemId = item.getItemId();
-                CharSequence title = item.getTitle();
-
-                if (postsSort == sortOptions.get(itemId)) {
-                    return false;
-                }
-                postsSort = sortOptions.get(itemId);
-
-                discussionPostsSortTextView.setText(title);
-                populateThreadList(true);
-
-                return false;
-            }
-        });
-
-        discussionPostsSortLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sortPopup.show();
-            }
-        });
     }
 
     private boolean isAllTopics() {
@@ -242,7 +234,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     refreshListViewOnDataChange();
                 }
 
-                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VoteCount);
+                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
                 discussionPostsAdapter.notifyDataSetChanged();
                 checkNoResultView();
             }
@@ -278,7 +270,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     refreshListViewOnDataChange();
                 }
 
-                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VoteCount);
+                discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
                 discussionPostsAdapter.notifyDataSetChanged();
                 checkNoResultView();
             }

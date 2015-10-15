@@ -6,12 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
-import com.google.inject.Inject;
-
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-
-import roboguice.inject.InjectExtra;
 
 public class UserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
@@ -21,28 +16,17 @@ public class UserProfileActivity extends BaseSingleFragmentActivity {
                 .putExtra(EXTRA_USERNAME, username);
     }
 
-    @Inject
-    private UserProfileFragment fragment;
-
-    @InjectExtra(EXTRA_USERNAME)
-    private String username;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getIntent().getStringExtra(EXTRA_USERNAME));
         blockDrawerFromOpening();
     }
 
     @Override
     public Fragment getFirstFragment() {
+        final UserProfileFragment fragment = new UserProfileFragment();
         fragment.setArguments(getIntent().getExtras());
         return fragment;
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setTitle(username);
-    }
-
 }

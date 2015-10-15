@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -44,10 +45,7 @@ public class UserProfileFragment extends RoboFragment {
     private Account account;
 
     @Nullable
-    private ViewHolder viewHolder;
-
-    @Nullable
-    MenuItem editProfileMenuItem;
+    private UserProfileViewHolder viewHolder;
 
     @Inject
     private Router router;
@@ -62,18 +60,6 @@ public class UserProfileFragment extends RoboFragment {
 
         final ProfileModel model = new PrefManager(getActivity(), PrefManager.Pref.LOGIN).getCurrentUserProfile();
         isViewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
-
-        getAccountTask = new GetAccountTask(getActivity(), username) {
-            @Override
-            protected void onSuccess(Account account) throws Exception {
-                UserProfileFragment.this.account = account;
-                if (null != viewHolder) {
-                    viewHolder.setAccount(account);
-                }
-            }
-        };
-        getAccountTask.setTaskProcessCallback(null); // Disable default loading indicator, we have our own
-        getAccountTask.execute();
     }
 
     @Override
@@ -81,7 +67,7 @@ public class UserProfileFragment extends RoboFragment {
         super.onCreateOptionsMenu(menu, inflater);
         if (isViewingOwnProfile) {
             inflater.inflate(R.menu.edit_profile, menu);
-            editProfileMenuItem = menu.findItem(R.id.edit_profile).setIcon(
+            menu.findItem(R.id.edit_profile).setIcon(
                     new IconDrawable(getActivity(), Iconify.IconValue.fa_pencil)
                             .actionBarSize().colorRes(R.color.edx_white));
         }
@@ -89,18 +75,15 @@ public class UserProfileFragment extends RoboFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.edit_profile) {
-            router.showUserProfileEditor(getActivity(), username);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.edit_profile: {
+                router.showUserProfileEditor(getActivity(), username);
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
         }
-    }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        editProfileMenuItem = null;
     }
 
     @Nullable
@@ -112,14 +95,32 @@ public class UserProfileFragment extends RoboFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewHolder = new ViewHolder(view, isViewingOwnProfile, new Runnable() {
+        viewHolder = new UserProfileViewHolder(view);
+        viewHolder.editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
+            public void onClick(View v) {
                 router.showUserProfileEditor(getActivity(), username);
             }
         });
-        viewHolder.setUsername(username);
-        viewHolder.setAccount(account);
+        viewHolder.usernameText.setText(username);
+        setAccount(account);
+
+        if (null == getAccountTask) {
+            getAccountTask = new GetAccountTask(getActivity(), username) {
+                @Override
+                protected void onSuccess(Account account) throws Exception {
+                    setAccount(account);
+                }
+
+                @Override
+                protected void onException(Exception e) throws RuntimeException {
+                    logger.error(e);
+                    showErrorMessage(e);
+                }
+            };
+            getAccountTask.setProgressDialog(viewHolder.loadingIndicator); // So that our indicator is hidden after task completes
+            getAccountTask.execute();
+        }
     }
 
     @Override
@@ -136,14 +137,91 @@ public class UserProfileFragment extends RoboFragment {
         viewHolder = null;
     }
 
-    public static class ViewHolder {
+
+    private void setAccount(@Nullable final Account account) {
+        this.account = account;
+        if (null == viewHolder) {
+            return;
+        }
+        if (null == account) {
+            viewHolder.profileHeaderContent.setVisibility(View.GONE);
+            viewHolder.profileBodyContent.setVisibility(View.GONE);
+            viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
+
+        } else {
+            viewHolder.profileHeaderContent.setVisibility(View.VISIBLE);
+            viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
+            viewHolder.loadingIndicator.setVisibility(View.GONE);
+
+            final RequestManager requestManager = Glide.with(viewHolder.profileImage.getContext());
+            requestManager
+                    .load(account.getProfileImage().getImageUrlFull())
+                    .thumbnail(requestManager.load(account.getProfileImage().getImageUrlSmall()))
+                    .into(viewHolder.profileImage);
+
+            if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
+                viewHolder.limitedView.setVisibility(View.VISIBLE);
+                viewHolder.limitedView.setText(isViewingOwnProfile
+                        ? R.string.profile_sharing_limited_by_you
+                        : R.string.profile_sharing_limited_by_other_user);
+                viewHolder.languageContainer.setVisibility(View.GONE);
+                viewHolder.locationContainer.setVisibility(View.GONE);
+            } else {
+                viewHolder.limitedView.setVisibility(View.GONE);
+                if (account.getLanguageProficiencies().isEmpty()) {
+                    viewHolder.languageContainer.setVisibility(View.GONE);
+                } else {
+                    viewHolder.languageContainer.setVisibility(View.VISIBLE);
+                    viewHolder.languageText.setText(
+                            new Locale.Builder()
+                                    .setLanguage(account.getLanguageProficiencies().get(0).getCode())
+                                    .build()
+                                    .getDisplayName());
+                }
+
+                if (TextUtils.isEmpty(account.getCountry())) {
+                    viewHolder.locationContainer.setVisibility(View.GONE);
+                } else {
+                    viewHolder.locationContainer.setVisibility(View.VISIBLE);
+                    viewHolder.locationText.setText(
+                            new Locale.Builder()
+                                    .setRegion(account.getCountry())
+                                    .build()
+                                    .getDisplayCountry());
+                }
+            }
+
+            viewHolder.incompleteContainer.setVisibility(View.GONE);
+            viewHolder.parentalConsentRequired.setVisibility(View.GONE);
+            viewHolder.bioText.setVisibility(View.GONE);
+            viewHolder.editProfileButton.setVisibility(View.GONE);
+            if (isViewingOwnProfile && account.requiresParentalConsent()) {
+                viewHolder.parentalConsentRequired.setVisibility(View.VISIBLE);
+                viewHolder.editProfileButton.setVisibility(View.VISIBLE);
+                viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
+
+            } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio())) {
+                viewHolder.incompleteContainer.setVisibility(View.VISIBLE);
+                viewHolder.incompleteGreeting.setText(ResourceUtil.getFormattedString(
+                        viewHolder.incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
+                viewHolder.editProfileButton.setVisibility(View.VISIBLE);
+                viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
+
+            } else {
+                viewHolder.bioText.setVisibility(View.VISIBLE);
+                viewHolder.bioText.setText(account.getBio());
+            }
+        }
+    }
+
+    public static class UserProfileViewHolder {
         public final ImageView profileImage;
         public final TextView usernameText;
         public final View profileHeaderContent;
         public final View profileBodyContent;
-        public final View loadingIndicator;
+        public final ProgressBar loadingIndicator;
         public final View parentalConsentRequired;
-        public final View limitedView;
+        public final TextView limitedView;
         public final TextView bioText;
         public final View languageContainer;
         public final View locationContainer;
@@ -152,17 +230,15 @@ public class UserProfileFragment extends RoboFragment {
         public final View incompleteContainer;
         public final TextView incompleteGreeting;
         public final Button editProfileButton;
-        private final boolean isViewingOwnProfile;
 
-        public ViewHolder(@NonNull View parent, boolean isViewingOwnProfile, @NonNull final Runnable onClickEditProfile) {
-            this.isViewingOwnProfile = isViewingOwnProfile;
+        public UserProfileViewHolder(@NonNull View parent) {
             this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
             this.usernameText = (TextView) parent.findViewById(R.id.username_text);
             this.profileHeaderContent = parent.findViewById(R.id.profile_header_content);
             this.profileBodyContent = parent.findViewById(R.id.profile_body_content);
-            this.loadingIndicator = parent.findViewById(R.id.loading_indicator);
+            this.loadingIndicator = (ProgressBar) parent.findViewById(R.id.loading_indicator);
             this.parentalConsentRequired = parent.findViewById(R.id.parental_consent_required);
-            this.limitedView = parent.findViewById(R.id.sharing_limited);
+            this.limitedView = (TextView) parent.findViewById(R.id.sharing_limited);
             this.bioText = (TextView) parent.findViewById(R.id.bio_text);
             this.languageContainer = parent.findViewById(R.id.language_container);
             this.languageText = (TextView) parent.findViewById(R.id.language_text);
@@ -171,76 +247,6 @@ public class UserProfileFragment extends RoboFragment {
             this.incompleteContainer = parent.findViewById(R.id.incomplete_container);
             this.incompleteGreeting = (TextView) parent.findViewById(R.id.incomplete_greeting);
             this.editProfileButton = (Button) parent.findViewById(R.id.edit_profile_button);
-            editProfileButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickEditProfile.run();
-                }
-            });
-        }
-
-        public void setUsername(String username) {
-            usernameText.setText(username);
-        }
-
-        public void setAccount(@Nullable final Account account) {
-            if (null == account) {
-                profileHeaderContent.setVisibility(View.GONE);
-                profileBodyContent.setVisibility(View.GONE);
-                loadingIndicator.setVisibility(View.VISIBLE);
-
-            } else {
-                profileHeaderContent.setVisibility(View.VISIBLE);
-                profileBodyContent.setVisibility(View.VISIBLE);
-                loadingIndicator.setVisibility(View.GONE);
-
-                final RequestManager requestManager = Glide.with(profileImage.getContext());
-                requestManager
-                        .load(account.getProfileImage().getImageUrlFull())
-                        .thumbnail(requestManager.load(account.getProfileImage().getImageUrlSmall()))
-                        .into(profileImage);
-
-                if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
-                    limitedView.setVisibility(View.VISIBLE);
-                    languageContainer.setVisibility(View.GONE);
-                    locationContainer.setVisibility(View.GONE);
-                } else {
-                    limitedView.setVisibility(View.GONE);
-                    if (account.getLanguageProficiencies().isEmpty()) {
-                        languageContainer.setVisibility(View.GONE);
-                    } else {
-                        languageContainer.setVisibility(View.VISIBLE);
-                        languageText.setText(new Locale.Builder().setLanguage(account.getLanguageProficiencies().get(0).getCode()).build().getDisplayName());
-                    }
-
-                    if (TextUtils.isEmpty(account.getCountry())) {
-                        locationContainer.setVisibility(View.GONE);
-                    } else {
-                        locationContainer.setVisibility(View.VISIBLE);
-                        locationText.setText(new Locale.Builder().setRegion(account.getCountry()).build().getDisplayCountry());
-                    }
-                }
-
-                incompleteContainer.setVisibility(View.GONE);
-                parentalConsentRequired.setVisibility(View.GONE);
-                bioText.setVisibility(View.GONE);
-                editProfileButton.setVisibility(View.GONE);
-                if (isViewingOwnProfile && account.requiresParentalConsent()) {
-                    parentalConsentRequired.setVisibility(View.VISIBLE);
-                    editProfileButton.setVisibility(View.VISIBLE);
-                    editProfileButton.setText(editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
-
-                } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio())) {
-                    incompleteContainer.setVisibility(View.VISIBLE);
-                    incompleteGreeting.setText(ResourceUtil.getFormattedString(incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
-                    editProfileButton.setVisibility(View.VISIBLE);
-                    editProfileButton.setText(editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
-
-                } else {
-                    bioText.setVisibility(View.VISIBLE);
-                    bioText.setText(account.getBio());
-                }
-            }
         }
     }
 }

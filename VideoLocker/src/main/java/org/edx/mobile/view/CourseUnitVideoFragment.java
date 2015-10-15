@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -106,7 +105,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         setRetainInstance(true);
         unit = getArguments() == null ? null :
             (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
-
     }
 
     /**
@@ -799,14 +797,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         //TODO - should we use load different layout file?
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
-            if (Build.VERSION.SDK_INT < 16) {
-                getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            } else {
-                View decorView = getActivity().getWindow().getDecorView();
-                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-                decorView.setSystemUiVisibility(uiOptions);
-            }
 
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
@@ -818,12 +810,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         } else {
             messageContainer.setVisibility(View.VISIBLE);
-            if (Build.VERSION.SDK_INT < 16) {
-                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            } else {
-                View decorView = getActivity().getWindow().getDecorView();
-                decorView.setSystemUiVisibility(View.VISIBLE);
-            }
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {

@@ -8,6 +8,7 @@ import com.google.inject.Provider;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.OkHttpUtil;
@@ -81,6 +82,8 @@ public class EdxDefaultModule extends AbstractModule {
         bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
 
         requestStaticInjection(BrowserUtil.class);
+
+        requestStaticInjection(DiscussionTextUtils.class);
 
     }
 }

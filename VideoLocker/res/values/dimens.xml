@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
+    <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
+    <dimen name="drawer_profile_image_diameter">85dp</dimen>
+    <dimen name="drawer_profile_image_border_width">1dp</dimen>
+    <dimen name="drawer_username_text">20sp</dimen>
+    <dimen name="drawer_email_text">13sp</dimen>
+
     <dimen name="popupMenuWidth">168dp</dimen>
     <dimen name="popupMenuHorizontalOffset">-6dp</dimen>
     <dimen name="popupMenuVerticalOffset">6dp</dimen>
@@ -9,6 +15,8 @@
     <dimen name="popupMenuItemVerticalPadding">6dp</dimen>
     <dimen name="popupMenuIconDefaultSize">16dp</dimen>
     <dimen name="popupMenuIconPadding">26dp</dimen>
+    <dimen name="spinnerPopupBorder">1dp</dimen>
+    <dimen name="popupSpinnerMinHeight">34dp</dimen>
     <dimen name="width_chapter_text">185dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -42,10 +50,23 @@
     <dimen name="switch_default_width">60dp</dimen>
 
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
-    <dimen name="discussion_posts_filter_menu_width">120dp</dimen>
+    <!-- Implement Spinner popup overlapping manually in pre-Lollipop SDK
+         versions. This should be the negative of the value of
+         discussion_post_refine_layout_height, which is the effective/visual
+         height of the Spinner (barring some top margin introduced to offset
+         automatic vertical offset inference from the top background padding).
+
+         TODO: This manual backporting can be removed once we upgrade to
+         appcompat v23, which adds support for this backport. The
+         overlapAnchor attribute is currently commented out in the
+         edX.Widget.Spinner.Popup style to prevent it automatically being
+         applied after the upgrade; it would need to be commented out
+         concurrently with this manual offset being removed. -->
+    <dimen name="discussion_posts_filter_popup_vertical_offset">-40dp</dimen>
+    <dimen name="discussion_posts_filter_popup_width">120dp</dimen>
+    <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>
     <dimen name="discussion_post_box_height">50dp</dimen>
     <dimen name="discussion_post_extra_box_height">25dp</dimen>
-    <dimen name="discussion_posts_icon_margin">5dp</dimen>
 
     <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>
@@ -72,6 +93,7 @@
     <dimen name="edx_button_height">40dp</dimen>
     <dimen name="create_new_item_icon_margin">3dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
+    <dimen name="x_small_icon_margin">5dp</dimen>
 
     <!--edX typography-->
     <dimen name="edx_xxxx_large">38sp</dimen>
@@ -87,4 +109,7 @@
 
     <dimen name="course_unit_nav_bar_height">55dp</dimen>
     <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
+
+    <dimen name="user_profile_image_diameter">166dp</dimen>
+    <dimen name="user_profile_image_border_width">3dp</dimen>
 </resources>

@@ -28,8 +28,8 @@ public class FormFieldSelectFragment extends RoboFragment {
     @InjectExtra(FormFieldSelectActivity.EXTRA_FIELD)
     private FormField formField;
 
-    @InjectExtra(FormFieldSelectActivity.EXTRA_VALUE)
-    private String currentValue;
+    /*@InjectExtra(value = FormFieldSelectActivity.EXTRA_VALUE, optional = true)
+    private String currentValue;*/
 
     @Nullable
     @Override

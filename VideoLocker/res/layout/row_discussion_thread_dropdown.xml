@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/widget_margin"
+    android:paddingRight="@dimen/widget_margin"
+    android:drawablePadding="@dimen/discussion_posts_filter_popup_icon_margin"
+    android:singleLine="true"
+    android:textSize="@dimen/edx_x_small"
+    android:textColor="@color/edx_brand_primary_base" />

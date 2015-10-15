@@ -38,10 +38,10 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     public void onResume(){
         super.onResume();
 
-        setTitle(courseData.getCourse().getName());
-
-        if (isOnCourseOutline())
+        if (isOnCourseOutline()) {
+            setTitle(courseData.getCourse().getName());
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+        }
     }
 
     @Override

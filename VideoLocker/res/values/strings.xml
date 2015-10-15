@@ -669,16 +669,29 @@
     <string name="forum_unfollow">Unfollow</string>
 
     <!-- User Profiles -->
+    <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
     <string name="profile_toolbar_edit_button">Edit Profile</string>
-    <string name="profile_sharing_limited">You are currently sharing a limited profile</string>
+    <!-- Shown when viewing your own profile and you are not sharing a full profile -->
+    <string name="profile_sharing_limited_by_you">You are currently sharing a limited profile</string>
+    <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
+    <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
+    <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
     <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile. If you are over 13, make sure that you have specified a birth year when editing your profile.</string>
+    <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
     <string name="profile_consent_needed_edit_button">Account Settings</string>
+    <!-- Shown when viewing your own incomplete profile -->
     <string name="profile_incomplete_greeting">Hi {username}!</string>
+    <!-- Shown when viewing your own incomplete profile, directly after the greeting -->
     <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
+    <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
     <string name="profile_incomplete_edit_button">Get Started</string>
+    <!-- Window title for edit profile screen -->
     <string name="edit_user_profile_title">Edit profile</string>
+    <!-- How most profile fields are formatted when viewing the edit screen -->
     <string name="edit_user_profile_field">{label}: {value}</string>
+    <!-- Default placeholder if a profile field is blank -->
     <string name="edit_user_profile_field_placeholder">Select</string>
-    <string name="submit">Submit</string>
+    <!-- Button that saves changes to a profile text field -->
+    <string name="edit_user_profile_textarea_submit_button">Submit</string>
 
 </resources>

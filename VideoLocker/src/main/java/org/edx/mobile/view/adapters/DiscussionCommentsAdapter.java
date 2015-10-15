@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,29 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.view.Router;
 
 public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
     private final Context context;
-    private final Router router;
     private final Listener listener;
     private DiscussionComment response;
 
     public interface Listener {
-        void reportComment(DiscussionComment comment);
+        void reportComment(@NonNull DiscussionComment comment);
+
+        void onClickAuthor(@NonNull String username);
     }
 
-    public DiscussionCommentsAdapter(Context context, Router router, Listener listener, DiscussionComment response) {
+    public DiscussionCommentsAdapter(Context context, Listener listener, DiscussionComment response) {
         this.context = context;
-        this.router = router;
         this.listener = listener;
         this.response = response;
     }
@@ -94,7 +92,12 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
-        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView, discussionComment, router);
+        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView, discussionComment, new Runnable() {
+            @Override
+            public void run() {
+                listener.onClickAuthor(discussionComment.getAuthor());
+            }
+        });
     }
 
     @Override

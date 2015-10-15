@@ -66,7 +66,12 @@ public class DiscussionAddResponseFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
         textViewTitle.setText(discussionTopic.getTitle());
         textViewResponse.setText(Html.fromHtml(discussionTopic.getRenderedBody()));
-        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor, discussionTopic, router);
+        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor, discussionTopic, new Runnable() {
+            @Override
+            public void run() {
+                router.showUserProfile(getActivity(), discussionTopic.getAuthor());
+            }
+        });
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 createComment();

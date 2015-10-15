@@ -24,12 +24,12 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 style="@style/profile_image"
                 android:id="@+id/profile_image"
-                android:layout_width="85dp"
-                android:layout_height="85dp"
+                android:layout_width="@dimen/drawer_profile_image_diameter"
+                android:layout_height="@dimen/drawer_profile_image_diameter"
                 android:layout_marginRight="@dimen/edx_margin"
                 android:layout_marginEnd="@dimen/edx_margin"
                 tools:src="@drawable/app_icon"
-                app:civ_border_width="1dp" />
+                app:civ_border_width="@dimen/drawer_profile_image_border_width" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/drawer_username_text"
                     tools:text="username"
                     tools:targetApi="17" />
 
@@ -50,8 +50,8 @@
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
-                    android:textSize="13sp"
+                    android:paddingTop="@dimen/widget_margin"
+                    android:textSize="@dimen/drawer_email_text"
                     tools:text="user@domain.com" />
             </LinearLayout>
         </LinearLayout>

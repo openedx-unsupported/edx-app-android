@@ -1,14 +1,12 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -21,7 +19,6 @@ import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
@@ -34,21 +31,28 @@ import de.greenrobot.event.EventBus;
 
 public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
-    public interface PaginationHandler {
-        void loadMoreRecord(IPagination pagination);
+    public interface Listener {
+        void loadMoreRecord(@NonNull IPagination pagination);
+
+        void onClickAuthor(@NonNull String username);
+
+        void onClickAddComment(@NonNull DiscussionComment comment);
+
+        void onClickViewComments(@NonNull DiscussionComment comment);
     }
 
-    @Inject
-    Context context;
+    @NonNull
+    private final Context context;
 
-    @Inject
-    Router router;
+    @NonNull
+    private final Listener listener;
 
+    @NonNull
     private DiscussionThread discussionThread;
+
     private List<DiscussionComment> discussionResponses = new ArrayList<>();
 
-    private PaginationHandler paginationHandler;
-
+    @NonNull
     private BasePagination pagination = new BasePagination(IPagination.DEFAULT_PAGE_SIZE);
 
     static class RowType {
@@ -57,10 +61,13 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         static final int MORE_BUTTON = 2;
     }
 
-    public void setPaginationHandler(PaginationHandler paginationHandler) {
-        this.paginationHandler = paginationHandler;
+    public CourseDiscussionResponsesAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionThread discussionThread) {
+        this.context = context;
+        this.discussionThread = discussionThread;
+        this.listener = listener;
     }
 
+    @NonNull
     public BasePagination getPagination() {
         return pagination;
     }
@@ -101,7 +108,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                 bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
                 break;
             case RowType.MORE_BUTTON:
-                bindViewHolderToShowMoreRow((ShowMoreViewHolder) holder, position);
+                bindViewHolderToShowMoreRow((ShowMoreViewHolder) holder);
                 break;
         }
 
@@ -117,7 +124,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         }
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, discussionThread, router);
+        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, discussionThread, new Runnable() {
+            @Override
+            public void run() {
+                listener.onClickAuthor(discussionThread.getAuthor());
+            }
+        });
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +156,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, DiscussionThread thread) {
-        holder.setDiscussionThread(this.context, thread);
+        holder.setDiscussionThread(thread);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,18 +205,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsLabel.setText(context.getResources().getQuantityString(
+        holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().getQuantityString(
                 R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount(), discussionThread.getCommentCount()));
     }
 
-    private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder, int position) {
-
+    private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder) {
         holder.showMoreView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (paginationHandler != null) {
-                    paginationHandler.loadMoreRecord(pagination);
-                }
+                listener.loadMoreRecord(pagination);
             }
         });
 
@@ -220,15 +229,20 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 if (comment.getChildren().isEmpty()) {
-                    router.showCourseDiscussionAddComment(context, comment);
+                    listener.onClickAddComment(comment);
 
                 } else {
-                    router.showCourseDiscussionComments(context, comment);
+                    listener.onClickViewComments(comment);
                 }
             }
         });
 
-        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, comment, router);
+        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, comment, new Runnable() {
+            @Override
+            public void run() {
+                listener.onClickAuthor(comment.getAuthor());
+            }
+        });
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
@@ -260,7 +274,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int positionInResponses, final DiscussionComment response) {
-        holder.setDiscussionResponse(this.context, response);
+        holder.setDiscussionResponse(response);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,10 +304,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         int numChildren = response == null ? 0 : response.getChildren().size();
 
         if (numChildren == 0) {
-            holder.numberResponsesOrCommentsLabel.setText(context.getString(
-                    R.string.number_responses_or_comments_add_comment_label));
+            holder.numberResponsesOrCommentsLabel.setText(R.string.number_responses_or_comments_add_comment_label);
         } else {
-            holder.numberResponsesOrCommentsLabel.setText(context.getResources().
+            holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren));
         }
     }
