@@ -68,6 +68,10 @@ public class Account {
     @Nullable // Nullability not specified by API
     private Date dateJoined;
 
+    @SerializedName("account_privacy")
+    @Nullable
+    private Privacy accountPrivacy;
+
     @NonNull
     public String getUsername() {
         return username;
@@ -199,5 +203,22 @@ public class Account {
 
     public void setDateJoined(@NonNull Date dateJoined) {
         this.dateJoined = dateJoined;
+    }
+
+    @Nullable
+    public Privacy getAccountPrivacy() {
+        return accountPrivacy;
+    }
+
+    public void setAccountPrivacy(@Nullable Privacy accountPrivacy) {
+        this.accountPrivacy = accountPrivacy;
+    }
+
+    public enum Privacy {
+        @SerializedName("private")
+        PRIVATE,
+
+        @SerializedName("all_users")
+        ALL_USERS
     }
 }

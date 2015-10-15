@@ -2,14 +2,13 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
@@ -24,10 +23,11 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
     private DiscussionComment response;
 
     public interface Listener {
-        void reportComment(DiscussionComment comment);
+        void reportComment(@NonNull DiscussionComment comment);
+
+        void onClickAuthor(@NonNull String username);
     }
 
-    @Inject
     public DiscussionCommentsAdapter(Context context, Listener listener, DiscussionComment response) {
         this.context = context;
         this.listener = listener;
@@ -92,7 +92,12 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
-        holder.discussionCommentAuthorTextView.setText(DiscussionTextUtils.getAuthorAttributionText(discussionComment, context.getResources()));
+        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView, discussionComment, new Runnable() {
+            @Override
+            public void run() {
+                listener.onClickAuthor(discussionComment.getAuthor());
+            }
+        });
     }
 
     @Override

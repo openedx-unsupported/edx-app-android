@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -112,17 +113,30 @@ public class NavigationFragment extends RoboFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.drawer_navigation, container, false);
+        final View layout = inflater.inflate(R.layout.drawer_navigation, container, false);
 
-        TextView name_tv = (TextView) layout.findViewById(R.id.name_tv);
-        TextView email_tv = (TextView) layout.findViewById(R.id.email_tv);
+        final TextView name_tv = (TextView) layout.findViewById(R.id.name_tv);
+        final TextView email_tv = (TextView) layout.findViewById(R.id.email_tv);
+        final FrameLayout nameLayout = (FrameLayout)layout.findViewById(R.id.name_layout);
         imageView = (ImageView) layout.findViewById(R.id.profile_image);
         if (config.isUserProfilesEnabled()) {
             if (null != profileImage) {
                 loadProfileImage(profileImage, imageView);
             }
+            if (profile != null && profile.username != null) {
+                nameLayout.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        environment.getRouter().showUserProfile(getActivity(), profile.username);
+                    }
+                });
+            }
         } else {
             imageView.setVisibility(View.GONE);
+
+            // Disable any on-tap effects
+            nameLayout.setClickable(false);
+            nameLayout.setForeground(null);
         }
 
         TextView tvMyCourses = (TextView) layout.findViewById(R.id.drawer_option_my_courses);

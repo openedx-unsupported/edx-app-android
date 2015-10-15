@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -100,7 +101,7 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
     }
 
     @Override
-    public void reportComment(DiscussionComment comment) {
+    public void reportComment(@NonNull DiscussionComment comment) {
         if (flagCommentTask != null) {
             flagCommentTask.cancel(true);
         }
@@ -116,5 +117,10 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
             }
         };
         flagCommentTask.execute();
+    }
+
+    @Override
+    public void onClickAuthor(@NonNull String username) {
+        router.showUserProfile(getActivity(), username);
     }
 }

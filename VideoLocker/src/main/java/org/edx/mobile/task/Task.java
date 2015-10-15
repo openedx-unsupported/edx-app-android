@@ -1,6 +1,5 @@
 package org.edx.mobile.task;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
-import org.apache.http.HttpStatus;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
@@ -79,38 +77,40 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     protected void handle(final Exception ex) {
         handler.post(new Runnable() {
             public void run() {
-                //TODO - we should be able to handle common exceptions here
-                // provide user the common error message based on common error code
-                if ( ex instanceof RetroHttpException){
-                    String errorMessage = "";
-                    RetrofitError cause = ((RetroHttpException)ex).getCause();
-                    if ( cause.getResponse() == null ){
-                        errorMessage = "Service is not available. Please try it later.";
-                    } else {
-                        int status = cause.getResponse().getStatus();
-                        //should we use HttpStatus?
-                        //TODO - we should put error message in the xml file
-
-                        if (status >= 400 && status < 500) {
-                            errorMessage = "Error occurs during request. You may need permission for finish request";
-                        } else if (status >= 500) {
-                            errorMessage = "Service is not available. Please try it later.";
-                        }
-                    }
-                    //TODO - should we show message from server response as the last option?
-                    //how about the localization?
-                    if ( errorMessage.length() > 0 ){
-                        TaskProcessCallback callback = getTaskProcessCallback();
-                        if( callback != null ){
-                            callback.onMessage(MessageType.FLYIN_ERROR, errorMessage);
-                        }
-                    }
-                }
-
-
+                showErrorMessage(ex);
                 onException(ex);
             }
         });
     }
 
+    // TODO: Make this the default behaviour?
+    protected void showErrorMessage(final Exception ex) {
+        //TODO - we should be able to handle common exceptions here
+        // provide user the common error message based on common error code
+        if ( ex instanceof RetroHttpException){
+            String errorMessage = "";
+            RetrofitError cause = ((RetroHttpException)ex).getCause();
+            if ( cause.getResponse() == null ){
+                errorMessage = "Service is not available. Please try it later.";
+            } else {
+                int status = cause.getResponse().getStatus();
+                //should we use HttpStatus?
+                //TODO - we should put error message in the xml file
+
+                if (status >= 400 && status < 500) {
+                    errorMessage = "Error occurs during request. You may need permission for finish request";
+                } else if (status >= 500) {
+                    errorMessage = "Service is not available. Please try it later.";
+                }
+            }
+            //TODO - should we show message from server response as the last option?
+            //how about the localization?
+            if ( errorMessage.length() > 0 ){
+                TaskProcessCallback callback = getTaskProcessCallback();
+                if( callback != null ){
+                    callback.onMessage(MessageType.FLYIN_ERROR, errorMessage);
+                }
+            }
+        }
+    }
 }
