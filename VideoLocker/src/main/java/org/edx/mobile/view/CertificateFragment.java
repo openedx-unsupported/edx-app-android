@@ -19,7 +19,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
@@ -78,13 +77,7 @@ public class CertificateFragment extends RoboFragment {
         progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
 
         webview = (WebView) view.findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(webview) {
-
-            @Override
-            public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
-            }
-        };
+        new URLInterceptorWebViewClient(getActivity(), webview);
 
         facebookShare = (LinearLayout) view.findViewById(R.id.share_certificate);
         facebookShare.setOnClickListener( new View.OnClickListener() {
