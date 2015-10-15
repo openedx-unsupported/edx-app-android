@@ -52,6 +52,21 @@
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
 
+    <dimen name="video_player_height">200dp</dimen>
+    <dimen name="video_player_pause_btn_width">70dp</dimen>
+    <dimen name="video_player_pause_btn_height">70dp</dimen>
+    <dimen name="video_player_pause_btn_inset">5dp</dimen>
+    <dimen name="video_player_top_control_width">20dp</dimen>
+    <dimen name="video_player_top_control_height">20dp</dimen>
+    <dimen name="video_player_bottom_control_width">25dp</dimen>
+    <dimen name="video_player_bottom_control_height">25dp</dimen>
+    <dimen name="video_player_side_control_width">30dp</dimen>
+    <dimen name="video_player_side_control_height">30dp</dimen>
+    <dimen name="video_player_control_left_margin">10dp</dimen>
+    <dimen name="video_player_control_right_margin">10dp</dimen>
+    <dimen name="video_player_bottom_control_left_margin">4dp</dimen>
+    <dimen name="video_player_bottom_control_right_margin">4dp</dimen>
+
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
     <!-- Implement Spinner popup overlapping manually in pre-Lollipop SDK
          versions. This should be the negative of the value of

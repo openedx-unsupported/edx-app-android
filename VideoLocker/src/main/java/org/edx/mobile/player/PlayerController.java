@@ -534,24 +534,30 @@ public class PlayerController extends FrameLayout {
         if (mRoot == null || mPauseButton == null || mPlayer == null) {
             return;
         }
-
-        mPauseButton.setBackgroundColor(Color.TRANSPARENT);
+        final int insetDimen = getContext().getResources()
+                .getDimensionPixelSize(R.dimen.video_player_pause_btn_inset);
         if (mPlayer.isPlaying()) {
             LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
                     new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
-                            .colorRes(R.color.transparent_black_50).sizeDp(60),
+                            .colorRes(R.color.transparent_black_80),
                     new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t).sizeDp(30)
+                            .colorRes(R.color.edx_grayscale_neutral_white_t)
             });
+            layeredIcon.setLayerInset(1, insetDimen, insetDimen, insetDimen, insetDimen);
             mPauseButton.setImageDrawable(layeredIcon);
+            mPauseButton.setContentDescription(getContext().getResources()
+                    .getString(R.string.video_player_pause));
         } else {
             LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
                     new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
-                            .colorRes(R.color.transparent_black_50).sizeDp(60),
+                            .colorRes(R.color.transparent_black_80),
                     new IconDrawable(getContext(), Iconify.IconValue.fa_play)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t).sizeDp(30)
+                            .colorRes(R.color.edx_grayscale_neutral_white_t)
             });
+            layeredIcon.setLayerInset(1, insetDimen, insetDimen, insetDimen, insetDimen);
             mPauseButton.setImageDrawable(layeredIcon);
+            mPauseButton.setContentDescription(getContext().getResources()
+                    .getString(R.string.video_player_play));
         }
     }
 
@@ -563,8 +569,13 @@ public class PlayerController extends FrameLayout {
         mFullscreenButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isFullScreen()) {
             mFullscreenButton.setIcon(Iconify.IconValue.fa_compress);
-        } else {;
+            mFullscreenButton.setContentDescription(getContext().getResources()
+                    .getString(R.string.video_player_exit_fullscreen));
+        } else {
+            ;
             mFullscreenButton.setIcon(Iconify.IconValue.fa_expand);
+            mFullscreenButton.setContentDescription(getContext().getResources()
+                    .getString(R.string.video_player_enter_fullscreen));
         }
     }
 
@@ -931,9 +942,9 @@ public class PlayerController extends FrameLayout {
     
     public void setSettingsBtnDrawable(boolean isSettingEnabled){
         if(mSettingsButton!=null){
-            if(isSettingEnabled){
+            if(isSettingEnabled) {
                 mSettingsButton.setIconColor(R.color.edx_brand_primary_accent);
-            }else{
+            } else {
                 mSettingsButton.setIconColor(R.color.edx_grayscale_neutral_white_t);
             }
         }
