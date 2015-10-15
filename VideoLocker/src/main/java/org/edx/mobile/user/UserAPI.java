@@ -46,7 +46,7 @@ public class UserAPI {
         return userService.getAccount(username);
     }
 
-    public Account updateAccount(@NonNull String username, @NonNull String field, @NonNull String value) throws RetroHttpException {
+    public Account updateAccount(@NonNull String username, @NonNull String field, @NonNull Object value) throws RetroHttpException {
         return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 }

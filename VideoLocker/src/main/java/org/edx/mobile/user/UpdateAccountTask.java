@@ -20,9 +20,9 @@ public abstract class UpdateAccountTask extends
     private final String field;
 
     @NonNull
-    private final String value;
+    private final Object value;
 
-    public UpdateAccountTask(@NonNull Context context, @NonNull String username, @NonNull String field, @NonNull String value) {
+    public UpdateAccountTask(@NonNull Context context, @NonNull String username, @NonNull String field, @NonNull Object value) {
         super(context);
         this.username = username;
         this.field = field;

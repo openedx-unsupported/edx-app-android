@@ -16,5 +16,5 @@ public interface UserService {
 
     @PATCH("/api/user/v1/accounts/{username}")
     @Headers("Content-Type: application/merge-patch+json")
-    Account updateAccount(@Path("username") String username, @Body Map<String, String> fields) throws RetroHttpException;
+    Account updateAccount(@Path("username") String username, @Body Map<String, Object> fields) throws RetroHttpException;
 }

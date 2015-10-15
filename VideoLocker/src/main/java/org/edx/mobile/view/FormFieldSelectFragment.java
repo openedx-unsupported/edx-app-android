@@ -66,7 +66,7 @@ public class FormFieldSelectFragment extends RoboFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final FormOption item = (FormOption) parent.getItemAtPosition(position);
                 getActivity().setResult(Activity.RESULT_OK, new Intent()
-                        .putExtra(FormFieldSelectActivity.EXTRA_FIELD_NAME, formField.getName())
+                        .putExtra(FormFieldSelectActivity.EXTRA_FIELD, formField)
                         .putExtra(FormFieldSelectActivity.EXTRA_VALUE, item.getValue()));
                 getActivity().finish();
             }

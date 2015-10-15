@@ -30,6 +30,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
+import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.FieldType;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
@@ -39,6 +40,7 @@ import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.ResourceUtil;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -184,7 +186,7 @@ public class EditUserProfileFragment extends RoboFragment {
                             createSwitch(layoutInflater, fields, field, value, new SwitchListener() {
                                 @Override
                                 public void onSwitch(@NonNull String value) {
-                                    executeUpdate(field.getName(), value);
+                                    executeUpdate(field, value);
                                 }
                             });
                             break;
@@ -257,7 +259,7 @@ public class EditUserProfileFragment extends RoboFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDIT_FIELD_REQUEST && resultCode == Activity.RESULT_OK) {
-            final String fieldName = data.getStringExtra(FormFieldSelectActivity.EXTRA_FIELD_NAME);
+            final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldSelectActivity.EXTRA_FIELD);
             final String fieldValue = data.getStringExtra(FormFieldSelectActivity.EXTRA_VALUE);
             executeUpdate(fieldName, fieldValue);
         } else {
@@ -265,8 +267,14 @@ public class EditUserProfileFragment extends RoboFragment {
         }
     }
 
-    private void executeUpdate(String fieldName, String fieldValue) {
-        new UpdateAccountTask(getActivity(), username, fieldName, fieldValue) {
+    private void executeUpdate(FormField field, String fieldValue) {
+        final Object valueObject;
+        if (field.getDataType() == DataType.LANGUAGE) {
+            valueObject = Collections.singletonList(new LanguageProficiency(fieldValue));
+        } else {
+            valueObject = fieldValue;
+        }
+        new UpdateAccountTask(getActivity(), username, field.getName(), valueObject) {
             @Override
             protected void onSuccess(Account account) throws Exception {
                 EditUserProfileFragment.this.account = account;

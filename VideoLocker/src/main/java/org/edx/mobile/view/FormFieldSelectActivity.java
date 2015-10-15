@@ -15,7 +15,6 @@ import org.edx.mobile.user.FormField;
 public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
 
     public static final String EXTRA_FIELD = "field";
-    public static final String EXTRA_FIELD_NAME = "fieldName";
     public static final String EXTRA_VALUE = "value";
 
     public static Intent newIntent(@NonNull Context context, @NonNull FormField field, @Nullable String currentValue) {
@@ -23,9 +22,6 @@ public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
                 .putExtra(EXTRA_FIELD, field)
                 .putExtra(EXTRA_VALUE, currentValue);
     }
-
-    @Inject
-    private FormFieldSelectFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +31,7 @@ public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
+        final Fragment fragment = new FormFieldSelectFragment();
         fragment.setArguments(getIntent().getExtras());
         return fragment;
     }
