@@ -10,12 +10,21 @@
     </declare-styleable>
 
     <declare-styleable name="PopupMenu">
-        <attr name="android:dropDownWidth" />
+        <attr name="android:minWidth" />
         <!-- Generic padding in addition to what's defined by
              the background drawable. -->
         <attr name="android:padding" />
+        <attr name="android:paddingTop" />
+        <attr name="android:paddingBottom" />
+        <attr name="android:paddingLeft" />
+        <attr name="android:paddingRight" />
+        <attr name="android:paddingStart" />
+        <attr name="android:paddingEnd" />
         <attr name="itemVerticalPadding" format="dimension" />
+        <attr name="iconPadding" format="dimension" />
         <attr name="iconDefaultSize" format="dimension" />
+        <attr name="headerTextAppearance" format="reference" />
+        <attr name="rowTextAppearance" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="IconView">

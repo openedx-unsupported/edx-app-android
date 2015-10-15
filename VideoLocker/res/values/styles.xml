@@ -31,7 +31,7 @@
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="android:popupMenuStyle">@style/edX.Widget.PopupMenu</item>
         <item name="edgePopupMenuStyle">@style/edX.Widget.EdgePopupMenu</item>
-        <item name="android:popupBackground">@drawable/white_rounded_bordered_bg</item>
+        <item name="android:popupBackground">@drawable/popup_menu</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarTabStyle">@style/TabsStyle</item>
@@ -294,24 +294,42 @@
     </style>
 
     <!-- Spinner with the popup style -->
-    <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.Holo.Light.ListPopupWindow">
+    <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">?android:attr/popupBackground</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
+        <item name="overlapAnchor">true</item>
     </style>
 
     <style name="edX.Widget.PopupMenu" android:parent="@android:style/Widget.Holo.Light.PopupMenu">
         <item name="android:popupBackground">?android:attr/popupBackground</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
-        <item name="android:padding">@dimen/popupMenuPadding</item>
+        <item name="overlapAnchor">true</item>
+        <item name="android:paddingLeft">@dimen/popupMenuHorizontalPadding</item>
+        <item name="android:paddingRight">@dimen/popupMenuHorizontalPadding</item>
+        <item name="android:paddingTop">@dimen/popupMenuVerticalPadding</item>
+        <item name="android:paddingBottom">@dimen/popupMenuVerticalPadding</item>
         <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
-        <item name="android:dropDownWidth">@dimen/popupMenuWidth</item>
+        <item name="android:minWidth">@dimen/popupMenuWidth</item>
         <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
+        <item name="iconPadding">@dimen/popupMenuIconPadding</item>
         <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
+        <item name="headerTextAppearance">@style/edX.Widget.PopupMenu.HeaderTextAppearance</item>
+        <item name="rowTextAppearance">@style/edX.Widget.PopupMenu.RowTextAppearance</item>
     </style>
 
     <!-- Menu popup that is aligned to the vertical edge of the screen -->
     <style name="edX.Widget.EdgePopupMenu" parent="@style/edX.Widget.PopupMenu">
         <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
+    </style>
+
+    <style name="edX.Widget.PopupMenu.HeaderTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textSize">@dimen/popupMenuHeaderTextSize</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+    </style>
+
+    <style name="edX.Widget.PopupMenu.RowTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textSize">@dimen/popupMenuRowTextSize</item>
+        <item name="android:textColor">@color/course_modes_selected</item>
     </style>
 
     <style name="edX.Widget.SegmentedControlSegment">
