@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
@@ -418,7 +419,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         hideLoadingProgress();
     }
 
-    public void onMessage(MessageType messageType, String message){
+    public void onMessage(@NonNull MessageType messageType, @NonNull String message){
         showErrorMessage("", message);
     }
 }

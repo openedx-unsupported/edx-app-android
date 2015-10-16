@@ -2,16 +2,21 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
+import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.lang.ref.WeakReference;
 
@@ -22,32 +27,50 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
 
     private ProgressBar progressBar;
 
-    private WeakReference<TaskProcessCallback> taskProcessCallback;
+    @Nullable
+    private WeakReference<TaskProgressCallback> progressCallback;
+    @Nullable
+    private WeakReference<TaskMessageCallback> messageCallback;
 
     protected final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
     protected IEdxEnvironment environment;
-    
+
     public Task(Context context) {
         super(context);
 
-        if ( context instanceof TaskProcessCallback ){
+        if (context instanceof TaskProcessCallback) {
             setTaskProcessCallback((TaskProcessCallback) context);
         }
     }
-    
+
     public void setProgressDialog(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 
-    public void setTaskProcessCallback(TaskProcessCallback callback){
-        this.taskProcessCallback = new WeakReference<TaskProcessCallback>(callback);
+    public void setTaskProcessCallback(@Nullable TaskProcessCallback callback) {
+        setProgressCallback(callback);
+        setMessageCallback(callback);
     }
 
-    public TaskProcessCallback getTaskProcessCallback(){
-        return this.taskProcessCallback == null ? null : this.taskProcessCallback.get();
+    public void setProgressCallback(@Nullable TaskProgressCallback callback) {
+        progressCallback = callback == null ? null : new WeakReference<>(callback);
+    }
+
+    public void setMessageCallback(@Nullable TaskMessageCallback callback) {
+        messageCallback = callback == null ? null : new WeakReference<>(callback);
+    }
+
+    @Nullable
+    private TaskProgressCallback getProgressCallback() {
+        return this.progressCallback == null ? null : this.progressCallback.get();
+    }
+
+    @Nullable
+    private TaskMessageCallback getMessageCallback() {
+        return this.messageCallback == null ? null : this.messageCallback.get();
     }
 
     @Override
@@ -55,23 +78,25 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
-        TaskProcessCallback callback = getTaskProcessCallback();
-        if ( callback != null )
+        final TaskProgressCallback callback = getProgressCallback();
+        if (callback != null) {
             callback.startProcess();
+        }
     }
 
     @Override
     protected void onFinally() {
         stopProgress();
     }
-    
+
     protected void stopProgress() {
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
-        TaskProcessCallback callback = getTaskProcessCallback();
-        if( callback != null )
+        final TaskProgressCallback callback = getProgressCallback();
+        if (callback != null) {
             callback.finishProcess();
+        }
     }
 
     protected void handle(final Exception ex) {
@@ -85,32 +110,41 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
 
     // TODO: Make this the default behaviour?
     protected void showErrorMessage(final Exception ex) {
-        //TODO - we should be able to handle common exceptions here
-        // provide user the common error message based on common error code
-        if ( ex instanceof RetroHttpException){
-            String errorMessage = "";
-            RetrofitError cause = ((RetroHttpException)ex).getCause();
-            if ( cause.getResponse() == null ){
-                errorMessage = "Service is not available. Please try it later.";
-            } else {
-                int status = cause.getResponse().getStatus();
-                //should we use HttpStatus?
-                //TODO - we should put error message in the xml file
-
-                if (status >= 400 && status < 500) {
-                    errorMessage = "Error occurs during request. You may need permission for finish request";
-                } else if (status >= 500) {
-                    errorMessage = "Service is not available. Please try it later.";
+        final TaskMessageCallback callback = getMessageCallback();
+        if (callback == null) {
+            return;
+        }
+        String errorMessage = null;
+        if (ex instanceof RetroHttpException) {
+            RetrofitError cause = ((RetroHttpException) ex).getCause();
+            switch (cause.getKind()) {
+                case NETWORK: {
+                    if (NetworkUtil.isConnected(getContext())) {
+                        errorMessage = getContext().getString(R.string.error_network);
+                    } else {
+                        errorMessage = getContext().getString(R.string.need_data);
+                    }
+                    break;
                 }
-            }
-            //TODO - should we show message from server response as the last option?
-            //how about the localization?
-            if ( errorMessage.length() > 0 ){
-                TaskProcessCallback callback = getTaskProcessCallback();
-                if( callback != null ){
-                    callback.onMessage(MessageType.FLYIN_ERROR, errorMessage);
+                case HTTP: {
+                    if (cause.getResponse() != null) {
+                        final int status = cause.getResponse().getStatus();
+                        if (status == 503) {
+                            errorMessage = getContext().getString(R.string.error_service_unavailable);
+                        }
+                    }
+                }
+                case CONVERSION:
+                case UNEXPECTED: {
+                    // Use default message
+                    break;
                 }
             }
         }
+        if (null == errorMessage) {
+            logger.error(ex, true /* Submit crash report since this is an unknown type of error */);
+            errorMessage = getContext().getString(R.string.error_unknown);
+        }
+        callback.onMessage(MessageType.FLYIN_ERROR, errorMessage);
     }
 }

@@ -243,7 +243,7 @@ public class FacebookProvider implements SocialProvider {
                 try {
                     json = graph.getInnerJSONObject().getJSONArray("data").toString();
                 } catch (Exception e) {
-                    callback.onError(new SocialError(context.getString(R.string.error_unknown), e));
+                    callback.onError(new SocialError(context.getString(R.string.error_unknown_title), e));
                     return;
                 }
 
@@ -310,7 +310,7 @@ public class FacebookProvider implements SocialProvider {
                 try {
                     json = graph.getInnerJSONObject().getJSONArray("data").toString();
                 } catch (Exception e) {
-                    callback.onError(new SocialError(context.getString(R.string.error_unknown), e));
+                    callback.onError(new SocialError(context.getString(R.string.error_unknown_title), e));
                     return;
                 }
 
