@@ -34,7 +34,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/discussion_posts_icon_margin"
+            android:layout_marginTop="@dimen/x_small_icon_margin"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -42,8 +42,8 @@
                 android:id="@+id/discussion_post_pin_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                android:layout_marginEnd="@dimen/x_small_icon_margin"
+                android:layout_marginRight="@dimen/x_small_icon_margin"
                 app:iconColor="@color/edx_grayscale_neutral_base"
                 app:iconName="fa_thumb_tack" />
 
@@ -51,8 +51,8 @@
                 android:id="@+id/discussion_post_following_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                android:layout_marginEnd="@dimen/x_small_icon_margin"
+                android:layout_marginRight="@dimen/x_small_icon_margin"
                 app:iconColor="@color/edx_grayscale_neutral_base"
                 app:iconName="fa_star" />
 

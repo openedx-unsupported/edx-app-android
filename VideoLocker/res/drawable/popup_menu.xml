@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/edx_grayscale_neutral_base" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <item android:left="@dimen/edx_hairline" android:right="@dimen/edx_hairline"
+          android:top="0px" android:bottom="1dp">
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:radius="3dp" />
+            <padding android:left="@dimen/edx_hairline" android:right="@dimen/edx_hairline"
+                android:top="3dp" android:bottom="3dp" />
+        </shape>
+    </item>
+</layer-list>

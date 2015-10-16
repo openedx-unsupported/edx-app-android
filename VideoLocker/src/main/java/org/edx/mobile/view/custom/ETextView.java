@@ -1,7 +1,6 @@
 package org.edx.mobile.view.custom;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,9 +9,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 public class ETextView extends TextView {
-
-    private final Logger logger = new Logger(getClass().getName());
-
     public ETextView(Context context) {
         super(context);
     }
@@ -22,30 +18,23 @@ public class ETextView extends TextView {
         processAttrs(context, attrs);
     }
 
-    public ETextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public ETextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         processAttrs(context, attrs);
     }
 
     private void processAttrs(Context context, AttributeSet attrs) {
-        if(isInEditMode())
-            return;
-
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.custom_view, 0, 0);
-
-        try {
-            // check for the font attribute and setup font
-            String fontFileName = a.getString(R.styleable.custom_view_font);
-            if(fontFileName==null){
-                //If font is not set for ETextView, set default font
-                fontFileName = "OpenSans-Regular.ttf";
-            }
-            Typeface font = FontFactory.getInstance().getFont(context,fontFileName);
-            setTypeface(font);
-        } catch (Exception ex) {
-            logger.error(ex);
-        } finally {
-        //  a.recycle();
+        if (isInEditMode()) return;
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.custom_view, 0, 0);
+        // Check for the font attribute and setup font
+        String fontFileName = a.getString(R.styleable.custom_view_font);
+        a.recycle();
+        if (fontFileName == null) {
+            // If font is not defined, then set default font
+            fontFileName = "OpenSans-Regular.ttf";
         }
+        Typeface font = FontFactory.getInstance().getFont(context, fontFileName);
+        setTypeface(font);
     }
 }
