@@ -120,9 +120,9 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
             switch (cause.getKind()) {
                 case NETWORK: {
                     if (NetworkUtil.isConnected(getContext())) {
-                        errorMessage = getContext().getString(R.string.error_network);
+                        errorMessage = getContext().getString(R.string.network_connected_error);
                     } else {
-                        errorMessage = getContext().getString(R.string.need_data);
+                        errorMessage = getContext().getString(R.string.reset_no_network_message);
                     }
                     break;
                 }
@@ -130,7 +130,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
                     if (cause.getResponse() != null) {
                         final int status = cause.getResponse().getStatus();
                         if (status == 503) {
-                            errorMessage = getContext().getString(R.string.error_service_unavailable);
+                            errorMessage = getContext().getString(R.string.network_service_unavailable);
                         }
                     }
                 }

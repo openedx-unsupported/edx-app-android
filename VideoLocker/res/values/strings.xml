@@ -27,14 +27,6 @@
     <string name="share_application_picture_url">https://www.edx.org/sites/default/files/theme/edx-logo-header.png</string>
     <string name="share_application_description">Free online courses</string>
 
-    <!-- Common Errors -->
-    <!-- An error ocurred but we don't know why -->
-    <string name="error_unknown">Unknown error. Please try again later.</string>
-    <!-- An error ocurred due to some kind of network failure -->
-    <string name="error_network">Connection error. Please check your internet connection and try again.</string>
-    <!-- The server we are trying to use is not available right now -->
-    <string name="error_service_unavailable">Service not available. Please try again later.</string>
-
     <!-- Settings Page -->
 
     <!-- Label for wifi only switch -->
