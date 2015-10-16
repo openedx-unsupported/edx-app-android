@@ -131,7 +131,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
                             adapter.notifyDataSetChanged();
                         }
                     };
-                    MediaConsentUtils.consentToMediaPlayback(CourseLectureListActivity.this,
+                    new MediaConsentUtils().consentToMediaPlayback(CourseLectureListActivity.this,
                         dialogCallback, environment.getConfig());
                 }
             };

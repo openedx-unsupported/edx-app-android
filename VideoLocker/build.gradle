@@ -234,6 +234,8 @@ android {
             if (fabric != null) {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
             }
+            def platformName = config.get('PLATFORM_NAME')
+            resValue "string", "app_name", platformName
         }
         dev {
             minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build

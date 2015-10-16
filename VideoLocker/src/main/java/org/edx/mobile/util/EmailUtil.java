@@ -27,7 +27,7 @@ public class EmailUtil {
                 }
             };
 
-            MediaConsentUtils.showLeavingAppDataDialog(activityContext, callback);
+            new MediaConsentUtils().showLeavingAppDataDialog(activityContext, callback);
         } else {
             openEmailClient(activityContext, to, subject, email);
         }

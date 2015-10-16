@@ -69,7 +69,7 @@ public class VideoDownloadHelper {
                     callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
                 }
             };
-            MediaConsentUtils.consentToMediaPlayback(activity, dialogCallback, config);
+            new MediaConsentUtils().consentToMediaPlayback(activity, dialogCallback, config);
 
         } catch (Exception e) {
             logger.error(e);

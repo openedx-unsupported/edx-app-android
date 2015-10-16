@@ -288,7 +288,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                             notifyAdapter();
                         }
                     };
-                    MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
+                    new MediaConsentUtils().consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                 }else{
                     if (  AppConstants.offline_flag ){
                         //TODO - should use interface to decouple
