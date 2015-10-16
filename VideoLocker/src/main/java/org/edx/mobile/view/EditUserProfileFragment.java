@@ -27,8 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
-import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
@@ -46,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -166,6 +163,9 @@ public class EditUserProfileFragment extends RoboFragment {
             final Gson gson = new GsonBuilder().serializeNulls().create();
             final JsonObject obj = (JsonObject) gson.toJsonTree(account);
 
+
+            final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
+
             final LayoutInflater layoutInflater = LayoutInflater.from(viewHolder.fields.getContext());
             viewHolder.fields.removeAllViews();
             for (final FormField field : formDescription.getFields()) {
@@ -185,7 +185,7 @@ public class EditUserProfileFragment extends RoboFragment {
                             value = Account.PRIVATE_SERIALIZED_NAME;
                         }
 
-                        createSwitch(layoutInflater, viewHolder.fields, field, value, new SwitchListener() {
+                        createSwitch(layoutInflater, viewHolder.fields, field, value, isAccountPrivacyField ? account.requiresParentalConsent() : isLimited, new SwitchListener() {
                             @Override
                             public void onSwitch(@NonNull String value) {
                                 executeUpdate(field, value);
@@ -231,7 +231,7 @@ public class EditUserProfileFragment extends RoboFragment {
                         } else {
                             displayValue = value;
                         }
-                        createField(layoutInflater, viewHolder.fields, field, displayValue).setOnClickListener(new View.OnClickListener() {
+                        createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 startActivityForResult(FormFieldActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
@@ -245,10 +245,6 @@ public class EditUserProfileFragment extends RoboFragment {
                     }
                 }
             }
-
-            final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
-            viewHolder.fields.setBackgroundColor(viewHolder.fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
-            // TODO: make fields readable / read-only (except birth year)
         }
     }
 
@@ -283,7 +279,7 @@ public class EditUserProfileFragment extends RoboFragment {
         void onSwitch(@NonNull String value);
     }
 
-    private static View createSwitch(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull String value, @NonNull final SwitchListener switchListener) {
+    private static View createSwitch(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull String value, boolean readOnly, @NonNull final SwitchListener switchListener) {
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
         ((TextView) view.findViewById(R.id.instructions)).setText(field.getInstructions());
@@ -298,22 +294,27 @@ public class EditUserProfileFragment extends RoboFragment {
         }
         for (int i = 0; i < group.getChildCount(); i++) {
             final View child = group.getChildAt(i);
+            child.setEnabled(!readOnly);
             if (child.getTag().equals(value)) {
                 group.check(child.getId());
                 break;
             }
         }
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
-            }
-        });
+        if (readOnly) {
+            group.setEnabled(false);
+        } else {
+            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switchListener.onSwitch((String) group.findViewById(checkedId).getTag());
+                }
+            });
+        }
         parent.addView(view);
         return view;
     }
 
-    private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull final String value) {
+    private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull final String value, boolean readOnly, @NonNull View.OnClickListener onClickListener) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
         final SpannableString formattedLabel = new SpannableString(field.getLabel());
         formattedLabel.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_x_dark)), 0, formattedLabel.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -324,6 +325,12 @@ public class EditUserProfileFragment extends RoboFragment {
             put("value", formattedValue);
         }}));
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, null, null, new IconDrawable(parent.getContext(), Iconify.IconValue.fa_angle_right).colorRes(R.color.edx_grayscale_neutral_light).sizeDp(24), null);
+        if (readOnly) {
+            textView.setEnabled(false);
+            textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_grayscale_neutral_x_light));
+        } else {
+            textView.setOnClickListener(onClickListener);
+        }
         parent.addView(textView);
         return textView;
     }
