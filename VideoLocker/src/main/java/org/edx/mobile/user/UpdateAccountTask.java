@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.task.Task;
+
+import de.greenrobot.event.EventBus;
 
 public abstract class UpdateAccountTask extends
         Task<Account> {
@@ -31,6 +34,8 @@ public abstract class UpdateAccountTask extends
 
 
     public Account call() throws Exception {
-        return userAPI.updateAccount(username, field, value);
+        final Account updatedAccount = userAPI.updateAccount(username, field, value);
+        EventBus.getDefault().post(new AccountUpdatedEvent(updatedAccount));
+        return updatedAccount;
     }
 }

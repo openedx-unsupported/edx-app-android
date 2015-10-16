@@ -25,7 +25,7 @@ import roboguice.inject.InjectExtra;
 
 public class FormFieldSelectFragment extends RoboFragment {
 
-    @InjectExtra(FormFieldSelectActivity.EXTRA_FIELD)
+    @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField formField;
 
     /*@InjectExtra(value = FormFieldSelectActivity.EXTRA_VALUE, optional = true)
@@ -66,8 +66,8 @@ public class FormFieldSelectFragment extends RoboFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final FormOption item = (FormOption) parent.getItemAtPosition(position);
                 getActivity().setResult(Activity.RESULT_OK, new Intent()
-                        .putExtra(FormFieldSelectActivity.EXTRA_FIELD, formField)
-                        .putExtra(FormFieldSelectActivity.EXTRA_VALUE, item.getValue()));
+                        .putExtra(FormFieldActivity.EXTRA_FIELD, formField)
+                        .putExtra(FormFieldActivity.EXTRA_VALUE, item.getValue()));
                 getActivity().finish();
             }
         });

@@ -27,11 +27,12 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
+import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
-import org.edx.mobile.user.FieldType;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -82,7 +84,7 @@ public class EditUserProfileFragment extends RoboFragment {
             protected void onSuccess(Account account) throws Exception {
                 EditUserProfileFragment.this.account = account;
                 if (null != viewHolder) {
-                    viewHolder.setData(account, formDescription);
+                    setData(account, formDescription);
                 }
             }
         };
@@ -94,7 +96,7 @@ public class EditUserProfileFragment extends RoboFragment {
             protected void onSuccess(@NonNull FormDescription formDescription) throws Exception {
                 EditUserProfileFragment.this.formDescription = formDescription;
                 if (null != viewHolder) {
-                    viewHolder.setData(account, formDescription);
+                    setData(account, formDescription);
                 }
             }
         };
@@ -112,8 +114,8 @@ public class EditUserProfileFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewHolder = new ViewHolder(view);
-        viewHolder.setUsername(username);
-        viewHolder.setData(account, formDescription);
+        viewHolder.username.setText(username);
+        setData(account, formDescription);
     }
 
     @Override
@@ -143,124 +145,118 @@ public class EditUserProfileFragment extends RoboFragment {
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
         }
+    }
 
-        public void setUsername(String username) {
-            this.username.setText(username);
+    public void setData(@Nullable final Account account, @Nullable FormDescription formDescription) {
+        if (null == viewHolder) {
+            return;
         }
+        if (null == account || null == formDescription) {
+            viewHolder.content.setVisibility(View.GONE);
+            viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
 
-        public void setData(@Nullable final Account account, @Nullable FormDescription formDescription) {
-            if (null == account || null == formDescription) {
-                content.setVisibility(View.GONE);
-                loadingIndicator.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.content.setVisibility(View.VISIBLE);
+            viewHolder.loadingIndicator.setVisibility(View.GONE);
 
-            } else {
-                content.setVisibility(View.VISIBLE);
-                loadingIndicator.setVisibility(View.GONE);
+            Glide.with(viewHolder.profileImage.getContext())
+                    .load(account.getProfileImage().getImageUrlMedium())
+                    .into(viewHolder.profileImage);
 
-                Glide.with(profileImage.getContext())
-                        .load(account.getProfileImage().getImageUrlMedium())
-                        .into(profileImage);
+            final Gson gson = new GsonBuilder().serializeNulls().create();
+            final JsonObject obj = (JsonObject) gson.toJsonTree(account);
 
-                final Gson gson = new GsonBuilder().serializeNulls().create();
-                final JsonObject obj = (JsonObject) gson.toJsonTree(account);
+            final LayoutInflater layoutInflater = LayoutInflater.from(viewHolder.fields.getContext());
+            viewHolder.fields.removeAllViews();
+            for (final FormField field : formDescription.getFields()) {
+                if (null == field.getFieldType()) {
+                    // Missing field type; ignore this field
+                    continue;
+                }
+                switch (field.getFieldType()) {
+                    case SWITCH: {
+                        if (field.getOptions().getValues().size() != 2) {
+                            // We expect to have exactly two options; ignore this field.
+                            continue;
+                        }
+                        final boolean isAccountPrivacyField = field.getName().equals(Account.ACCOUNT_PRIVACY_SERIALIZED_NAME);
+                        String value = gson.fromJson(obj.get(field.getName()), String.class);
+                        if (null == value && isAccountPrivacyField) {
+                            value = Account.PRIVATE_SERIALIZED_NAME;
+                        }
 
-                final LayoutInflater layoutInflater = LayoutInflater.from(fields.getContext());
-                fields.removeAllViews();
-                for (final FormField field : formDescription.getFields()) {
-                    if (null == field.getFieldType()) {
-                        // Missing field type; ignore this field
-                        continue;
+                        createSwitch(layoutInflater, viewHolder.fields, field, value, new SwitchListener() {
+                            @Override
+                            public void onSwitch(@NonNull String value) {
+                                executeUpdate(field, value);
+                            }
+                        });
+                        break;
                     }
-                    switch (field.getFieldType()) {
-                        case SWITCH: {
-                            if (field.getOptions().getValues().size() != 2) {
-                                // We expect to have exactly two options; ignore this field.
-                                continue;
-                            }
-                            final boolean isAccountPrivacyField = field.getName().equals(Account.ACCOUNT_PRIVACY_SERIALIZED_NAME);
-                            String value = gson.fromJson(obj.get(field.getName()), String.class);
-                            if (null == value && isAccountPrivacyField) {
-                                value = Account.PRIVATE_SERIALIZED_NAME;
-                            }
-
-                            createSwitch(layoutInflater, fields, field, value, new SwitchListener() {
-                                @Override
-                                public void onSwitch(@NonNull String value) {
-                                    executeUpdate(field, value);
-                                }
-                            });
-                            break;
-                        }
-                        case SELECT:
-                        case TEXTAREA: {
-                            final String value;
-                            {
-                                final JsonElement accountField = obj.get(field.getName());
-                                if (null == accountField) {
-                                    value = null;
-                                } else if (null == field.getDataType()) {
-                                    // No data type is specified, treat as generic string
-                                    value = gson.fromJson(accountField, String.class);
-                                } else {
-                                    switch (field.getDataType()) {
-                                        case COUNTRY:
-                                            final String countryCode = gson.fromJson(accountField, String.class);
-                                            value = TextUtils.isEmpty(countryCode) ? null : new Locale.Builder().setRegion(countryCode).build().getDisplayCountry();
-                                            break;
-                                        case LANGUAGE:
-                                            final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
-                                            }.getType());
-                                            value = languageProficiencies.isEmpty() ? null : new Locale.Builder().setLanguage(languageProficiencies.get(0).getCode()).build().getDisplayName();
-                                            break;
-                                        default:
-                                            // Unknown data type; ignore this field
-                                            continue;
-                                    }
-                                }
-                            }
-                            final String displayValue;
-                            if (TextUtils.isEmpty(value)) {
-                                final String placeholder = field.getPlaceholder();
-                                if (TextUtils.isEmpty(placeholder)) {
-                                    displayValue = fields.getResources().getString(R.string.edit_user_profile_field_placeholder);
-                                } else {
-                                    displayValue = placeholder;
-                                }
+                    case SELECT:
+                    case TEXTAREA: {
+                        final String value;
+                        {
+                            final JsonElement accountField = obj.get(field.getName());
+                            if (null == accountField) {
+                                value = null;
+                            } else if (null == field.getDataType()) {
+                                // No data type is specified, treat as generic string
+                                value = gson.fromJson(accountField, String.class);
                             } else {
-                                displayValue = value;
-                            }
-                            createField(layoutInflater, fields, field, displayValue).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // TODO: Move this switch into field activity?
-                                    if (field.getFieldType() == FieldType.SELECT) {
-                                        startActivityForResult(FormFieldSelectActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
-                                    } else {
-                                        startActivityForResult(FormFieldTextAreaActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
-                                    }
+                                switch (field.getDataType()) {
+                                    case COUNTRY:
+                                        final String countryCode = gson.fromJson(accountField, String.class);
+                                        value = TextUtils.isEmpty(countryCode) ? null : new Locale.Builder().setRegion(countryCode).build().getDisplayCountry();
+                                        break;
+                                    case LANGUAGE:
+                                        final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
+                                        }.getType());
+                                        value = languageProficiencies.isEmpty() ? null : new Locale.Builder().setLanguage(languageProficiencies.get(0).getCode()).build().getDisplayName();
+                                        break;
+                                    default:
+                                        // Unknown data type; ignore this field
+                                        continue;
                                 }
-                            });
-                            break;
+                            }
                         }
-                        default: {
-                            // Unknown field type; ignore this field
-                            break;
+                        final String displayValue;
+                        if (TextUtils.isEmpty(value)) {
+                            final String placeholder = field.getPlaceholder();
+                            if (TextUtils.isEmpty(placeholder)) {
+                                displayValue = viewHolder.fields.getResources().getString(R.string.edit_user_profile_field_placeholder);
+                            } else {
+                                displayValue = placeholder;
+                            }
+                        } else {
+                            displayValue = value;
                         }
+                        createField(layoutInflater, viewHolder.fields, field, displayValue).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivityForResult(FormFieldActivity.newIntent(getActivity(), field, value), EDIT_FIELD_REQUEST);
+                            }
+                        });
+                        break;
+                    }
+                    default: {
+                        // Unknown field type; ignore this field
+                        break;
                     }
                 }
-
-                final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
-                fields.setBackgroundColor(fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
-                // TODO: make fields readable / read-only (except birth year)
             }
+
+            final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
+            viewHolder.fields.setBackgroundColor(viewHolder.fields.getResources().getColor(isLimited ? R.color.edx_grayscale_neutral_x_light : R.color.white));
+            // TODO: make fields readable / read-only (except birth year)
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDIT_FIELD_REQUEST && resultCode == Activity.RESULT_OK) {
-            final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldSelectActivity.EXTRA_FIELD);
-            final String fieldValue = data.getStringExtra(FormFieldSelectActivity.EXTRA_VALUE);
+            final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
+            final String fieldValue = data.getStringExtra(FormFieldActivity.EXTRA_VALUE);
             executeUpdate(fieldName, fieldValue);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -278,9 +274,7 @@ public class EditUserProfileFragment extends RoboFragment {
             @Override
             protected void onSuccess(Account account) throws Exception {
                 EditUserProfileFragment.this.account = account;
-                if (null != viewHolder) {
-                    viewHolder.setData(account, formDescription);
-                }
+                setData(account, formDescription);
             }
         }.execute();
     }

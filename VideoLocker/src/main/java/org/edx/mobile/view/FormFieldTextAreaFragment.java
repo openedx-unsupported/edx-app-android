@@ -24,19 +24,19 @@ public class FormFieldTextAreaFragment extends RoboFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        final FormField formField = (FormField) getActivity().getIntent().getSerializableExtra(FormFieldTextAreaActivity.EXTRA_FIELD);
+        final FormField formField = (FormField) getActivity().getIntent().getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(formField.getLabel());
         final EditText editText = (EditText) view.findViewById(R.id.text);
         editText.setHint(formField.getPlaceholder());
-        editText.setText(getActivity().getIntent().getStringExtra(FormFieldTextAreaActivity.EXTRA_VALUE));
+        editText.setText(getActivity().getIntent().getStringExtra(FormFieldActivity.EXTRA_VALUE));
         view.findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().setResult(Activity.RESULT_OK,
                         new Intent()
-                                .putExtra(FormFieldTextAreaActivity.EXTRA_FIELD, formField)
-                                .putExtra(FormFieldTextAreaActivity.EXTRA_VALUE, editText.getText().toString()));
+                                .putExtra(FormFieldActivity.EXTRA_FIELD, formField)
+                                .putExtra(FormFieldActivity.EXTRA_VALUE, editText.getText().toString()));
                 getActivity().finish();
             }
         });

@@ -7,18 +7,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.user.FormField;
 
-public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
+import roboguice.inject.InjectExtra;
+
+public class FormFieldActivity extends BaseSingleFragmentActivity {
 
     public static final String EXTRA_FIELD = "field";
     public static final String EXTRA_VALUE = "value";
 
+    @InjectExtra(FormFieldActivity.EXTRA_FIELD)
+    private FormField field;
+
     public static Intent newIntent(@NonNull Context context, @NonNull FormField field, @Nullable String currentValue) {
-        return new Intent(context, FormFieldSelectActivity.class)
+        return new Intent(context, FormFieldActivity.class)
                 .putExtra(EXTRA_FIELD, field)
                 .putExtra(EXTRA_VALUE, currentValue);
     }
@@ -31,7 +34,20 @@ public class FormFieldSelectActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        final Fragment fragment = new FormFieldSelectFragment();
+        final Fragment fragment;
+        switch (field.getFieldType()) {
+            case SELECT: {
+                fragment = new FormFieldSelectFragment();
+                break;
+            }
+            case TEXTAREA: {
+                fragment = new FormFieldTextAreaFragment();
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException(field.getFieldType().name());
+            }
+        }
         fragment.setArguments(getIntent().getExtras());
         return fragment;
     }

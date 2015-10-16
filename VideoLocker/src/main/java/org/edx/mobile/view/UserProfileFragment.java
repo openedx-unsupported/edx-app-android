@@ -20,6 +20,7 @@ import com.bumptech.glide.RequestManager;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
@@ -30,6 +31,7 @@ import org.edx.mobile.util.ResourceUtil;
 
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -57,6 +59,7 @@ public class UserProfileFragment extends RoboFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        EventBus.getDefault().register(this);
 
         final ProfileModel model = new PrefManager(getActivity(), PrefManager.Pref.LOGIN).getCurrentUserProfile();
         isViewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
@@ -129,12 +132,20 @@ public class UserProfileFragment extends RoboFragment {
         if (null != getAccountTask) {
             getAccountTask.cancel(true);
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         viewHolder = null;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull AccountUpdatedEvent event) {
+        if (event.getAccount().getUsername().equalsIgnoreCase(username)) {
+            setAccount(event.getAccount());
+        }
     }
 
 
