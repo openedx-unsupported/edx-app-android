@@ -26,9 +26,8 @@ import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
+import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
-
-import java.util.Locale;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -173,21 +172,14 @@ public class UserProfileFragment extends RoboFragment {
                 } else {
                     viewHolder.languageContainer.setVisibility(View.VISIBLE);
                     viewHolder.languageText.setText(
-                            new Locale.Builder()
-                                    .setLanguage(account.getLanguageProficiencies().get(0).getCode())
-                                    .build()
-                                    .getDisplayName());
+                            LocaleUtils.getLanguageNameFromCode(account.getLanguageProficiencies().get(0).getCode()));
                 }
 
                 if (TextUtils.isEmpty(account.getCountry())) {
                     viewHolder.locationContainer.setVisibility(View.GONE);
                 } else {
                     viewHolder.locationContainer.setVisibility(View.VISIBLE);
-                    viewHolder.locationText.setText(
-                            new Locale.Builder()
-                                    .setRegion(account.getCountry())
-                                    .build()
-                                    .getDisplayCountry());
+                    viewHolder.locationText.setText(LocaleUtils.getCountryNameFromCode(account.getCountry()));
                 }
             }
 
