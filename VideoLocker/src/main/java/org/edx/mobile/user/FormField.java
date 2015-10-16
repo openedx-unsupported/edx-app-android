@@ -3,14 +3,8 @@ package org.edx.mobile.user;
 import com.google.gson.annotations.SerializedName;
 
 import org.edx.mobile.module.registration.model.ErrorMessage;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
-import org.edx.mobile.module.registration.model.RegistrationFieldType;
-import org.edx.mobile.module.registration.model.RegistrationOption;
-import org.edx.mobile.module.registration.model.RegistrationRestriction;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FormField implements Serializable {
     private
@@ -31,6 +25,9 @@ public class FormField implements Serializable {
     private
     @SerializedName("instructions")
     String instructions;
+    private
+    @SerializedName("sub_instructions")
+    String subInstructions;
     private
     @SerializedName("type")
     FieldType fieldType;
@@ -66,6 +63,10 @@ public class FormField implements Serializable {
 
     public String getInstructions() {
         return instructions;
+    }
+
+    public String getSubInstructions() {
+        return subInstructions;
     }
 
     public FieldType getFieldType() {

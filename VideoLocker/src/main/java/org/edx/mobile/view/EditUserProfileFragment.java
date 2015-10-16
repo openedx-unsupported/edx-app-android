@@ -199,23 +199,27 @@ public class EditUserProfileFragment extends RoboFragment {
                     case SELECT:
                     case TEXTAREA: {
                         final String value;
+                        final String text;
                         {
                             final JsonElement accountField = obj.get(field.getName());
                             if (null == accountField) {
                                 value = null;
+                                text = null;
                             } else if (null == field.getDataType()) {
                                 // No data type is specified, treat as generic string
                                 value = gson.fromJson(accountField, String.class);
+                                text = value;
                             } else {
                                 switch (field.getDataType()) {
                                     case COUNTRY:
-                                        final String countryCode = gson.fromJson(accountField, String.class);
-                                        value = TextUtils.isEmpty(countryCode) ? null : new Locale.Builder().setRegion(countryCode).build().getDisplayCountry();
+                                        value = gson.fromJson(accountField, String.class);
+                                        text = TextUtils.isEmpty(value) ? null : new Locale.Builder().setRegion(value).build().getDisplayCountry();
                                         break;
                                     case LANGUAGE:
                                         final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
                                         }.getType());
-                                        value = languageProficiencies.isEmpty() ? null : new Locale.Builder().setLanguage(languageProficiencies.get(0).getCode()).build().getDisplayName();
+                                        value = languageProficiencies.isEmpty() ? null : languageProficiencies.get(0).getCode();
+                                        text = value == null ? null : new Locale.Builder().setLanguage(value).build().getDisplayName();
                                         break;
                                     default:
                                         // Unknown data type; ignore this field
@@ -224,7 +228,7 @@ public class EditUserProfileFragment extends RoboFragment {
                             }
                         }
                         final String displayValue;
-                        if (TextUtils.isEmpty(value)) {
+                        if (TextUtils.isEmpty(text)) {
                             final String placeholder = field.getPlaceholder();
                             if (TextUtils.isEmpty(placeholder)) {
                                 displayValue = viewHolder.fields.getResources().getString(R.string.edit_user_profile_field_placeholder);
@@ -232,7 +236,7 @@ public class EditUserProfileFragment extends RoboFragment {
                                 displayValue = placeholder;
                             }
                         } else {
-                            displayValue = value;
+                            displayValue = text;
                         }
                         createField(layoutInflater, viewHolder.fields, field, displayValue, isLimited && !field.getName().equals(Account.YEAR_OF_BIRTH_SERIALIZED_NAME), new View.OnClickListener() {
                             @Override
