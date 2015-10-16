@@ -164,7 +164,7 @@ public class EditUserProfileFragment extends RoboFragment {
             final JsonObject obj = (JsonObject) gson.toJsonTree(account);
 
 
-            final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS;
+            final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS || account.requiresParentalConsent();
 
             final LayoutInflater layoutInflater = LayoutInflater.from(viewHolder.fields.getContext());
             viewHolder.fields.removeAllViews();
@@ -181,16 +181,19 @@ public class EditUserProfileFragment extends RoboFragment {
                         }
                         final boolean isAccountPrivacyField = field.getName().equals(Account.ACCOUNT_PRIVACY_SERIALIZED_NAME);
                         String value = gson.fromJson(obj.get(field.getName()), String.class);
-                        if (null == value && isAccountPrivacyField) {
+                        if (isAccountPrivacyField && null == value || account.requiresParentalConsent()) {
                             value = Account.PRIVATE_SERIALIZED_NAME;
                         }
 
-                        createSwitch(layoutInflater, viewHolder.fields, field, value, isAccountPrivacyField ? account.requiresParentalConsent() : isLimited, new SwitchListener() {
-                            @Override
-                            public void onSwitch(@NonNull String value) {
-                                executeUpdate(field, value);
-                            }
-                        });
+                        createSwitch(layoutInflater, viewHolder.fields, field, value,
+                                account.requiresParentalConsent() ? getString(R.string.profile_consent_needed_explanation) : field.getInstructions(),
+                                isAccountPrivacyField ? account.requiresParentalConsent() : isLimited,
+                                new SwitchListener() {
+                                    @Override
+                                    public void onSwitch(@NonNull String value) {
+                                        executeUpdate(field, value);
+                                    }
+                                });
                         break;
                     }
                     case SELECT:
@@ -279,10 +282,10 @@ public class EditUserProfileFragment extends RoboFragment {
         void onSwitch(@NonNull String value);
     }
 
-    private static View createSwitch(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull String value, boolean readOnly, @NonNull final SwitchListener switchListener) {
+    private static View createSwitch(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull String value, @NonNull String instructions, boolean readOnly, @NonNull final SwitchListener switchListener) {
         final View view = inflater.inflate(R.layout.edit_user_profile_switch, parent, false);
         ((TextView) view.findViewById(R.id.label)).setText(field.getLabel());
-        ((TextView) view.findViewById(R.id.instructions)).setText(field.getInstructions());
+        ((TextView) view.findViewById(R.id.instructions)).setText(instructions);
         final RadioGroup group = ((RadioGroup) view.findViewById(R.id.options));
         {
             final RadioButton optionOne = ((RadioButton) view.findViewById(R.id.option_one));
@@ -302,6 +305,7 @@ public class EditUserProfileFragment extends RoboFragment {
         }
         if (readOnly) {
             group.setEnabled(false);
+            view.setBackgroundColor(view.getResources().getColor(R.color.edx_grayscale_neutral_x_light));
         } else {
             group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override

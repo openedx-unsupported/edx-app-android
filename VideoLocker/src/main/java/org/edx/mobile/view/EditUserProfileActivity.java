@@ -20,9 +20,6 @@ public class EditUserProfileActivity extends BaseSingleFragmentActivity {
                 .putExtra(EXTRA_USERNAME, username);
     }
 
-    @Inject
-    private EditUserProfileFragment fragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +28,7 @@ public class EditUserProfileActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
+        final Fragment fragment = new EditUserProfileFragment();
         fragment.setArguments(getIntent().getExtras());
         return fragment;
     }
