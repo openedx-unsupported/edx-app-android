@@ -23,121 +23,75 @@
     <LinearLayout
         android:id="@+id/video_top_bar"
         style="@style/video_player_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:orientation="horizontal">
+        android:layout_gravity="top">
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/video_title"
             style="@style/video_player_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             tools:targetApi="17"
             tools:text="This is a very long video title meant to be truncated from end" />
 
         <org.edx.mobile.third_party.iconify.IconButton
-            android:id="@+id/lms_btn"
+            android:id="@+id/share_btn"
             style="@style/video_player_top_control"
-            android:layout_width="@dimen/video_player_top_control_width"
-            android:layout_height="@dimen/video_player_top_control_height"
-            android:contentDescription="@string/video_player_view_on_web"
-            app:iconColor="@color/edx_grayscale_neutral_white_t"
-            app:iconName="fa_share_square_o"
+            android:contentDescription="@string/video_player_share"
+            app:iconName="fa_facebook_square"
             tools:targetApi="17" />
 
         <org.edx.mobile.third_party.iconify.IconButton
-            android:id="@+id/share_btn"
+            android:id="@+id/lms_btn"
             style="@style/video_player_top_control"
-            android:layout_width="@dimen/video_player_top_control_width"
-            android:layout_height="@dimen/video_player_top_control_height"
-            android:contentDescription="@string/video_player_share"
-            app:iconColor="@color/edx_grayscale_neutral_white_t"
-            app:iconName="fa_facebook_square"
+            android:contentDescription="@string/video_player_view_on_web"
+            app:iconName="fa_share_square_o"
             tools:targetApi="17" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/panel_bottom"
         style="@style/video_player_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layoutDirection="ltr"
-        android:orientation="horizontal"
         android:padding="7dp"
         tools:targetApi="17">
 
         <org.edx.mobile.third_party.iconify.IconButton
             android:id="@+id/rew"
             style="@style/video_player_bottom_control"
-            android:layout_width="@dimen/video_player_bottom_control_width"
-            android:layout_height="@dimen/video_player_bottom_control_height"
             android:contentDescription="@string/video_player_rewind"
-            app:iconColor="@color/edx_grayscale_neutral_white_t"
             app:iconName="fa_history"
             tools:targetApi="17" />
 
         <SeekBar
             android:id="@+id/mediacontroller_progress"
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_weight="1"
-            android:background="@drawable/ic_seek_background"
-            android:max="100"
-            android:maxHeight="24dp"
-            android:minHeight="24dp"
-            android:paddingEnd="0dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:paddingStart="0dp"
-            android:progress="30"
-            android:progressDrawable="@drawable/player_seekbar_progress"
-            android:secondaryProgress="70"
-            android:thumb="@drawable/player_seekbar_thumb"
-            android:thumbOffset="0dp"
+            style="@style/video_player_seekbar_control"
+            tools:progress="30"
+            tools:secondaryProgress="70"
             tools:targetApi="17" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/time_current"
-            style="@style/semibold_white_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            style="@style/video_duration_text"
             android:paddingEnd="0dp"
-            android:paddingLeft="4dip"
+            android:paddingLeft="@dimen/video_player_duration_padding"
             android:paddingRight="0dp"
-            android:paddingStart="4dip"
-            android:paddingTop="4dip"
-            android:textSize="12sp"
+            android:paddingStart="@dimen/video_player_duration_padding"
             tools:targetApi="17"
             tools:text="00:00" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/time_slash"
-            style="@style/bold_white_text"
+            style="@style/video_duration_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="4dip"
-            android:text="@string/lbl_slash"
-            android:textSize="12sp" />
+            android:text="@string/lbl_slash" />
 
         <org.edx.mobile.view.custom.ETextView
             android:id="@+id/time"
-            style="@style/semibold_white_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingEnd="4dip"
+            style="@style/video_duration_text"
+            android:paddingEnd="@dimen/video_player_duration_padding"
             android:paddingLeft="0dp"
-            android:paddingRight="4dip"
+            android:paddingRight="@dimen/video_player_duration_padding"
             android:paddingStart="0dp"
-            android:paddingTop="4dip"
-            android:textSize="12sp"
             android:textStyle="bold"
             tools:targetApi="17"
             tools:text="02:05" />
@@ -145,59 +99,42 @@
         <org.edx.mobile.third_party.iconify.IconButton
             android:id="@+id/settings"
             style="@style/video_player_bottom_control"
-            android:layout_width="@dimen/video_player_bottom_control_width"
-            android:layout_height="@dimen/video_player_bottom_control_height"
             android:contentDescription="@string/video_player_settings"
-            app:iconColor="@color/edx_grayscale_neutral_white_t"
             app:iconName="fa_cog" />
 
 
         <org.edx.mobile.third_party.iconify.IconButton
             android:id="@+id/fullscreen"
             style="@style/video_player_bottom_control"
-            android:layout_width="@dimen/video_player_bottom_control_width"
-            android:layout_height="@dimen/video_player_bottom_control_height"
             android:contentDescription="@string/video_player_enter_fullscreen"
-            app:iconColor="@color/edx_grayscale_neutral_white_t"
-            app:iconName="fa_compress"
-            tools:targetApi="17" />
+            app:iconName="fa_compress" />
     </LinearLayout>
 
     <!-- Put play/pause button to the center of player -->
 
     <org.edx.mobile.third_party.iconify.IconButton
         android:id="@+id/pause"
-        android:layout_width="@dimen/video_player_pause_btn_width"
-        android:layout_height="@dimen/video_player_pause_btn_height"
-        android:layout_gravity="center"
-        android:background="@null"
+        style="@style/video_player_play_pause_button"
         android:contentDescription="@string/video_player_pause"
-        app:iconColor="@color/edx_grayscale_neutral_white_t"
         app:iconName="fa_pause" />
 
     <org.edx.mobile.third_party.iconify.IconButton
         android:id="@+id/prev"
-        android:layout_width="@dimen/video_player_side_control_width"
-        android:layout_height="@dimen/video_player_side_control_height"
+        style="@style/video_player_side_control"
         android:layout_gravity="center_vertical|left"
         android:layout_marginLeft="@dimen/video_player_control_left_margin"
         android:layout_marginStart="@dimen/video_player_control_left_margin"
-        android:background="@null"
         android:contentDescription="@string/video_player_previous"
-        app:iconColor="@color/edx_grayscale_neutral_white_t"
         app:iconName="fa_chevron_circle_left"
         tools:targetApi="17" />
 
     <org.edx.mobile.third_party.iconify.IconButton
         android:id="@+id/next"
-        android:layout_width="@dimen/video_player_side_control_width"
-        android:layout_height="@dimen/video_player_side_control_height"
+        style="@style/video_player_side_control"
         android:layout_gravity="center_vertical|right"
         android:layout_marginEnd="@dimen/video_player_control_right_margin"
         android:layout_marginRight="@dimen/video_player_control_right_margin"
-        android:background="@null"
         android:contentDescription="@string/video_player_next"
-        app:iconColor="@color/edx_grayscale_neutral_white_t"
         app:iconName="fa_chevron_circle_right"
         tools:targetApi="17" />
 

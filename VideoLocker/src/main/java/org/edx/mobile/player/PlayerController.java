@@ -572,7 +572,6 @@ public class PlayerController extends FrameLayout {
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_exit_fullscreen));
         } else {
-            ;
             mFullscreenButton.setIcon(Iconify.IconValue.fa_expand);
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_enter_fullscreen));
@@ -927,29 +926,16 @@ public class PlayerController extends FrameLayout {
             mPrevListener.onClick(mPrevButton);
         }
     }
-
-//  public static interface IEventListener {
-//      public void onFullScreen(boolean isFullScreen);
-//      public void onSeek(int seekTo);
-//      public void callLMSServer(String lmsUrl);
-//      //public void callSettings();
-//      //public void callSettings();
-//  }
-
-//  public IEventListener getEventListner(){
-//      return mEventListener;
-//  }
     
     public void setSettingsBtnDrawable(boolean isSettingEnabled){
-        if(mSettingsButton!=null){
-            if(isSettingEnabled) {
-                mSettingsButton.setIconColor(R.color.edx_brand_primary_accent);
+        if (mSettingsButton != null) {
+            if (isSettingEnabled) {
+                mSettingsButton.setIconColor(getResources().getColor(R.color.edx_brand_primary_accent));
             } else {
-                mSettingsButton.setIconColor(R.color.edx_grayscale_neutral_white_t);
+                mSettingsButton.setIconColor(getResources().getColor(R.color.edx_grayscale_neutral_white_t));
             }
         }
     }
-
 
     /**
      * Sets the visibility of top bar of the player controller

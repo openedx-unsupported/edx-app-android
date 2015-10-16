@@ -66,6 +66,10 @@
     <dimen name="video_player_control_right_margin">10dp</dimen>
     <dimen name="video_player_bottom_control_left_margin">4dp</dimen>
     <dimen name="video_player_bottom_control_right_margin">4dp</dimen>
+    <dimen name="video_player_seekbar_height">24dp</dimen>
+    <dimen name="video_player_seekbar_right_margin">6dp</dimen>
+    <dimen name="video_player_seekbar_padding">0dp</dimen>
+    <dimen name="video_player_duration_padding">4dp</dimen>
 
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
     <!-- Implement Spinner popup overlapping manually in pre-Lollipop SDK

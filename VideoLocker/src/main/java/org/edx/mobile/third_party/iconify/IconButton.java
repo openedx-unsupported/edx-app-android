@@ -18,7 +18,7 @@ public class IconButton extends ImageButton {
     }
 
     public IconButton(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, R.attr.iconButtonStyle);
     }
 
     public IconButton(Context context, AttributeSet attrs, int defStyleAttr) {

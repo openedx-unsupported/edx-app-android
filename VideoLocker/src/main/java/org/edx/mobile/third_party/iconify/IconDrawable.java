@@ -37,7 +37,6 @@ import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
 import static android.os.Build.VERSION_CODES.KITKAT;
 import static java.lang.String.valueOf;
 import static org.edx.mobile.third_party.iconify.Utils.convertDpToPx;
-import static org.edx.mobile.third_party.iconify.Utils.isEnabled;
 
 /**
  * Embed an icon into a Drawable that can be used as TextView icons, or ActionBar icons.
@@ -201,14 +200,6 @@ public class IconDrawable extends Drawable {
     @Override
     public boolean isStateful() {
         return true;
-    }
-
-    @Override
-    public boolean setState(int[] stateSet) {
-        int oldValue = paint.getAlpha();
-        int newValue = isEnabled(stateSet) ? alpha : alpha / 2;
-        paint.setAlpha(newValue);
-        return oldValue != newValue;
     }
 
     @Override
