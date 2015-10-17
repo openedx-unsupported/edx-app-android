@@ -301,6 +301,12 @@ public class IconDrawable extends Drawable {
             iconDrawable.setStyle(paint.getStyle());
             iconDrawable.setAutoMirrored(isAutoMirrored());
             iconDrawable.setChangingConfigurations(getChangingConfigurations());
+            // The bounds and level needs to be copied here to work around a bug
+            // in LayerDrawable where it doesn't initialize these properties in
+            // it's children when mutated or cloned. This bug has been fixed in
+            // Lollipop.
+            iconDrawable.setBounds(getBounds());
+            iconDrawable.setLevel(getLevel());
             return iconDrawable;
         }
 
