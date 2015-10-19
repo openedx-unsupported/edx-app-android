@@ -63,10 +63,8 @@ public class FormFieldSelectFragment extends RoboFragment {
             for (int i = formOptions.getRangeMax(); i > formOptions.getRangeMin(); --i) {
                 options.add(new FormOption(String.valueOf(i), String.valueOf(i)));
             }
-            selectCurrentOption();
         } else if (formOptions.getValues() != null && formOptions.getValues().size() > 0) {
             options.addAll(formOptions.getValues());
-            selectCurrentOption();
         }
         if (!TextUtils.isEmpty(formField.getInstructions())) {
             final View instructionsContainer = LayoutInflater.from(view.getContext()).inflate(R.layout.form_field_instructions_header, listView, false);
@@ -92,6 +90,7 @@ public class FormFieldSelectFragment extends RoboFragment {
                 getActivity().finish();
             }
         });
+        selectCurrentOption();
     }
 
     private void selectCurrentOption() {

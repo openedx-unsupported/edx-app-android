@@ -3,24 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/edx_margin">
 
     <EditText
         android:id="@+id/text"
+        style="@style/edX.Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="@dimen/edx_margin"
-        android:orientation="vertical"
         android:gravity="top"
         android:inputType="text|textMultiLine|textCapSentences|textAutoCorrect"
+        android:orientation="vertical"
         tools:hint="Hint" />
 
     <Button
         android:id="@+id/submit_button"
         style="@style/edX.Widget.CreationButton"
-        android:layout_margin="@dimen/edx_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/edit_user_profile_textarea_submit_button"/>
+        android:layout_marginTop="@dimen/edx_margin"
+        android:text="@string/edit_user_profile_textarea_submit_button" />
 </LinearLayout>
