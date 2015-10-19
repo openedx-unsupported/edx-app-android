@@ -693,5 +693,9 @@
     <string name="edit_user_profile_field_placeholder">Select</string>
     <!-- Button that saves changes to a profile text field -->
     <string name="edit_user_profile_textarea_submit_button">Submit</string>
+    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
+    <string name="edit_user_profile_current_language">Current language: {current_language}</string>
+    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
+    <string name="edit_user_profile_current_location">Current location: {current_location}</string>
 
 </resources>

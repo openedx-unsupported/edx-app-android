@@ -3,8 +3,14 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v4.widget.TextViewCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +20,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.FormOption;
 import org.edx.mobile.user.FormOptions;
 import org.edx.mobile.user.GetFormOptionsTask;
+import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
@@ -30,9 +40,6 @@ public class FormFieldSelectFragment extends RoboFragment {
 
     @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField formField;
-
-    /*@InjectExtra(value = FormFieldSelectActivity.EXTRA_VALUE, optional = true)
-    private String currentValue;*/
 
     @InjectView(android.R.id.list)
     private ListView listView;
@@ -49,12 +56,13 @@ public class FormFieldSelectFragment extends RoboFragment {
         getActivity().setTitle(formField.getLabel());
         final List<FormOption> options = new ArrayList<>();
         final FormOptions formOptions = formField.getOptions();
+        final ArrayAdapter<FormOption> adapter = new ArrayAdapter<>(getActivity(), R.layout.edx_selectable_list_item, options);
         if (formOptions.getReference() != null) {
             new GetFormOptionsTask(getActivity(), formOptions.getReference()) {
                 @Override
                 protected void onSuccess(List<FormOption> formOptions) throws Exception {
                     options.addAll(formOptions);
-                    ((ArrayAdapter) listView.getAdapter()).notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                     selectCurrentOption();
                 }
             }.execute();
@@ -78,8 +86,29 @@ public class FormFieldSelectFragment extends RoboFragment {
             }
             listView.addHeaderView(instructionsContainer, null, false);
         }
-        // TODO: Add header view for "current location/language"
-        listView.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.edx_selectable_list_item, options));
+        switch (formField.getDataType()) {
+            case COUNTRY: {
+                final Locale locale = Locale.getDefault();
+                addDetectedValueHeader(listView,
+                        R.string.edit_user_profile_current_location,
+                        "current_location",
+                        locale.getDisplayCountry(),
+                        locale.getCountry(),
+                        Iconify.IconValue.fa_map_marker);
+                break;
+            }
+            case LANGUAGE: {
+                final Locale locale = Locale.getDefault();
+                addDetectedValueHeader(listView,
+                        R.string.edit_user_profile_current_language,
+                        "current_language",
+                        locale.getDisplayLanguage(),
+                        locale.getLanguage(),
+                        Iconify.IconValue.fa_comment);
+                break;
+            }
+        }
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -91,6 +120,21 @@ public class FormFieldSelectFragment extends RoboFragment {
             }
         });
         selectCurrentOption();
+    }
+
+    private static void addDetectedValueHeader(@NonNull ListView listView, @StringRes int labelRes, @NonNull String labelKey, @NonNull String labelValue, @NonNull String value, @NonNull Iconify.IconValue icon) {
+        final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
+        {
+            final SpannableString labelValueSpan = new SpannableString(labelValue);
+            labelValueSpan.setSpan(new ForegroundColorSpan(listView.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, labelValueSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(ResourceUtil.getFormattedString(listView.getContext().getResources(), labelRes, labelKey, labelValueSpan));
+        }
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
+                new IconDrawable(textView.getContext(), icon)
+                        .sizeRes(R.dimen.edx_base)
+                        .colorRes(R.color.edx_grayscale_neutral_light)
+                , null, null, null);
+        listView.addHeaderView(textView, new FormOption(labelValue, value), true);
     }
 
     private void selectCurrentOption() {
