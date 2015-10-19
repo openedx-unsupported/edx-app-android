@@ -8,11 +8,14 @@
     <dimen name="drawer_username_text">20sp</dimen>
     <dimen name="drawer_email_text">13sp</dimen>
 
-    <dimen name="popupMenuWidth">168dp</dimen>
+    <dimen name="popupMenuWidth">154dp</dimen>
     <dimen name="popupMenuHorizontalOffset">-6dp</dimen>
     <dimen name="popupMenuVerticalOffset">6dp</dimen>
-    <dimen name="popupMenuPadding">16dp</dimen>
-    <dimen name="popupMenuItemVerticalPadding">6dp</dimen>
+    <dimen name="popupMenuHorizontalPadding">16dp</dimen>
+    <dimen name="popupMenuVerticalPadding">18dp</dimen>
+    <dimen name="popupMenuItemVerticalPadding">12dp</dimen>
+    <dimen name="popupMenuHeaderTextSize">13sp</dimen>
+    <dimen name="popupMenuRowTextSize">14sp</dimen>
     <dimen name="popupMenuIconDefaultSize">16dp</dimen>
     <dimen name="popupMenuIconPadding">26dp</dimen>
     <dimen name="spinnerPopupBorder">1dp</dimen>

@@ -3,10 +3,10 @@ package org.edx.mobile.view.custom.popup.menu;
 /*
  * This class is copied and modified according to our specifications from
  * the AOSP. It uses the appcompat implementation because it exposes it's
- * internal classes, so we only need to duplicate minimal code. We use
- * a custom attribute set to define a fixed width and other things, and
- * a custom adapter with it's own layout that automatically expands the
- * first level of submenus in order to support headers.
+ * internal classes, so we only need to duplicate minimal code. We use a
+ * custom attribute set to define the width and some other things, and a
+ * custom adapter with it's own layout that automatically expands the first
+ * level of submenus in order to support headers.
  *
  * Copyright (C) 2010 The Android Open Source Project
  *
@@ -24,6 +24,7 @@ package org.edx.mobile.view.custom.popup.menu;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -31,6 +32,8 @@ import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.internal.view.menu.MenuPresenter;
@@ -48,6 +51,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Checkable;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -66,10 +70,17 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private final MenuBuilder mMenu;
     private final MenuAdapter mAdapter;
     private final boolean mOverflowOnly;
-    private final int mPopupWidth;
-    private final int mPopupPadding;
+    private final int mPopupMinWidth;
+    private final int mPopupMaxWidth;
+    private final int mPopupPaddingStart;
+    private final int mPopupPaddingEnd;
+    private final int mPopupPaddingTop;
+    private final int mPopupPaddingBottom;
     private final int mPopupItemVerticalPadding;
+    private final int mPopupIconPadding;
     private final int mPopupIconDefaultSize;
+    private final int mPopupHeaderTextAppearance;
+    private final int mPopupRowTextAppearance;
     private final int mPopupStyleAttr;
     private final int mPopupStyleRes;
 
@@ -79,6 +90,21 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private Callback mPresenterCallback;
 
     boolean mForceShowIcon;
+
+    /**
+     * Dummy ListView to use as parent when measuring rows, in order to
+     * generate the row layout params and resolve layout direction
+     * inheritance (and thereby the compound drawable alignment in
+     * TextView).
+     */
+    private ListView mMeasureListView;
+
+    /** Cached content width from {@link #measureContentWidth}. */
+    private int mContentWidth = Integer.MIN_VALUE;
+
+    /** A MeasureSpec with UNSPECIFIED mode. */
+    private static final int UNSPECIFIED_MEASURE_SPEC =
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
     private int mDropDownGravity = Gravity.NO_GRAVITY;
 
@@ -105,17 +131,46 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         mPopupStyleAttr = popupStyleAttr;
         mPopupStyleRes = popupStyleRes;
 
-        // noinspection ConstantConditions
+        final Resources res = context.getResources();
+        mPopupMaxWidth = Math.max(res.getDisplayMetrics().widthPixels / 2,
+                res.getDimensionPixelSize(android.support.v7.appcompat.
+                        R.dimen.abc_config_prefDialogWidth));
+
         TypedArray a = context.obtainStyledAttributes(null,
                 R.styleable.PopupMenu, mPopupStyleAttr, mPopupStyleRes);
-        mPopupWidth = a.getDimensionPixelOffset(
-                R.styleable.PopupMenu_android_dropDownWidth, 0);
-        mPopupPadding = a.getDimensionPixelOffset(
-                R.styleable.PopupMenu_android_padding, 0);
-        mPopupItemVerticalPadding = a.getDimensionPixelOffset(
+        mPopupMinWidth = a.getDimensionPixelSize(
+                R.styleable.PopupMenu_android_minWidth, 0);
+        int popupPadding = a.getDimensionPixelSize(
+                R.styleable.PopupMenu_android_padding, -1);
+        if (popupPadding >= 0) {
+            mPopupPaddingStart = popupPadding;
+            mPopupPaddingEnd = popupPadding;
+            mPopupPaddingTop = popupPadding;
+            mPopupPaddingBottom = popupPadding;
+        } else {
+            mPopupPaddingStart = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingStart,
+                    a.getDimensionPixelOffset(
+                            R.styleable.PopupMenu_android_paddingLeft, 0));
+            mPopupPaddingEnd = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingEnd,
+                    a.getDimensionPixelOffset(
+                            R.styleable.PopupMenu_android_paddingRight, 0));
+            mPopupPaddingTop = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingTop, 0);
+            mPopupPaddingBottom = a.getDimensionPixelSize(
+                    R.styleable.PopupMenu_android_paddingBottom, 0);
+        }
+        mPopupItemVerticalPadding = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_itemVerticalPadding, 0);
+        mPopupIconPadding = a.getDimensionPixelSize(
+                R.styleable.PopupMenu_iconPadding, 0);
         mPopupIconDefaultSize = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_iconDefaultSize, 0);
+        mPopupHeaderTextAppearance = a.getResourceId(
+                R.styleable.PopupMenu_headerTextAppearance, -1);
+        mPopupRowTextAppearance = a.getResourceId(
+                R.styleable.PopupMenu_rowTextAppearance, -1);
         a.recycle();
 
         mAnchorView = anchorView;
@@ -134,6 +189,10 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
 
     public void setGravity(int gravity) {
         mDropDownGravity = gravity;
+    }
+
+    public int getGravity() {
+        return mDropDownGravity;
     }
 
     public void show() {
@@ -165,8 +224,29 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             return false;
         }
 
-        mPopup.setContentWidth(mPopupWidth);
-        int topBottomPadding = mPopupPadding - mPopupItemVerticalPadding;
+        if (mContentWidth == Integer.MIN_VALUE) {
+            mContentWidth = measureContentWidth();
+        }
+        mPopup.setContentWidth(mContentWidth);
+        // Invert the horizontal offset in RTL mode.
+        if (ViewCompat.getLayoutDirection(mAnchorView) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            mPopup.setHorizontalOffset(-mPopup.getHorizontalOffset());
+        }
+        // Implement right gravity manually through horizontal offset pre-KitKat.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT &&
+                (Gravity.getAbsoluteGravity(mDropDownGravity,
+                        ViewCompat.getLayoutDirection(anchor))
+                        & Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.RIGHT) {
+            mPopup.setHorizontalOffset(mPopup.getHorizontalOffset() +
+                    (mAnchorView.getWidth() - mPopup.getWidth()));
+        }
+        // If vertical offset is defined as 0, then ListPopupWindow infers
+        // it as the negative of the top padding of the background, in
+        // order to anchor the content area. Since that is not the effect
+        // we want, we'll force it to use only the explicitly defined
+        // offset by explicitly setting it dynamically as well, and thus
+        // forcing it to discard it's 'unset' flag.
+        mPopup.setVerticalOffset(mPopup.getVerticalOffset());
         // Top/bottom padding will be applied on the background drawable,
         // as the ListView is both initialized and set up only after show()
         // is called on the ListPopupWindow. Left/right padding will be
@@ -174,7 +254,11 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         // item boundaries for the selector.
         ShapeDrawable paddedDrawable = new ShapeDrawable();
         paddedDrawable.setAlpha(0);
-        paddedDrawable.setPadding(0, topBottomPadding, 0, topBottomPadding);
+        // Don't apply top padding if the first item is a header, to
+        // comply with the design.
+        paddedDrawable.setPadding(0, mAdapter.hasHeader() ? 0 :
+                        (mPopupPaddingTop - mPopupItemVerticalPadding),
+                0, mPopupPaddingBottom - mPopupItemVerticalPadding);
         Drawable background = mPopup.getBackground();
         mPopup.setBackgroundDrawable(background == null ? paddedDrawable :
                 new LayerDrawable(new Drawable[] { background, paddedDrawable }));
@@ -218,6 +302,42 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             return true;
         }
         return false;
+    }
+
+    private int measureContentWidth() {
+        // Menus don't tend to be long, so this is more sane than it looks.
+        int maxWidth = mPopupMinWidth;
+        final int count = mAdapter.getCount();
+        if (count > 0) {
+            View[] viewTypes = new View[mAdapter.getViewTypeCount()];
+            if (mMeasureListView == null) {
+                mMeasureListView = new ListView(mContext);
+            }
+            // The layout direction needs to be resolved in order for the row view
+            // items to resolve layout direction inheritance, which is needed for
+            // the TextView to resolve the icon compound drawable alignment (which
+            // is a prerequisite for measuring it).
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                mMeasureListView.setLayoutDirection(mAnchorView.getLayoutDirection());
+            }
+            for (int i = 0; i < count; i++) {
+                final int positionType = mAdapter.getItemViewType(i);
+                View itemView = viewTypes[positionType];
+                itemView = mAdapter.getView(i, itemView, mMeasureListView);
+                // Add row to the ListView to resolve layout direction inheritance.
+                mMeasureListView.addHeaderView(itemView);
+                itemView.measure(UNSPECIFIED_MEASURE_SPEC, UNSPECIFIED_MEASURE_SPEC);
+                viewTypes[positionType] = itemView;
+                final int itemWidth = itemView.getMeasuredWidth();
+                if (itemWidth >= mPopupMaxWidth) {
+                    return mPopupMaxWidth;
+                }
+                if (itemWidth > maxWidth) {
+                    maxWidth = itemWidth;
+                }
+            }
+        }
+        return maxWidth;
     }
 
     @Override
@@ -347,6 +467,10 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     }
 
     private class MenuAdapter extends BaseAdapter {
+        boolean hasHeader() {
+            return getCount() > 0 && getItemType(0) == ItemType.HEADER;
+        }
+
         private List<? extends MenuItem> getMenuItems() {
             return mOverflowOnly ? mMenu.getNonActionItems() :
                     mMenu.getVisibleItems();
@@ -448,33 +572,41 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView;
+            ItemType itemType = getItemType(position);
             if (convertView != null) {
                 textView = (TextView) convertView;
             } else {
-                textView = (TextView) mInflater.inflate(
-                        getItemType(position).mLayoutRes, parent, false);
+                textView = (TextView) mInflater.inflate(itemType.mLayoutRes, parent, false);
             }
             MenuItem item = getItem(position);
             textView.setText(item.getTitle());
+            switch (itemType) {
+                case HEADER:
+                    textView.setTextAppearance(mContext, mPopupHeaderTextAppearance);
+                    break;
+                case ITEM:
+                    textView.setTextAppearance(mContext, mPopupRowTextAppearance);
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
             if (textView instanceof Checkable) {
                 ((Checkable) textView).setChecked(item.isChecked());
             }
             Drawable icon = item.getIcon();
             if (icon != null) {
+                textView.setCompoundDrawablePadding(mPopupIconPadding);
                 int iconWidth = icon.getIntrinsicWidth();
                 int iconHeight = icon.getIntrinsicHeight();
                 if (iconWidth < 0 || iconHeight < 0) {
                     iconWidth = iconHeight = mPopupIconDefaultSize;
                 }
                 icon.setBounds(0, 0, iconWidth, iconHeight);
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    textView.setCompoundDrawables(icon, null, null, null);
-                } else {
-                    textView.setCompoundDrawablesRelative(icon, null, null, null);
-                }
+                TextViewCompat.setCompoundDrawablesRelative(textView, icon, null, null, null);
             }
-            textView.setPadding(mPopupPadding, mPopupItemVerticalPadding,
-                    mPopupPadding, mPopupItemVerticalPadding);
+            ViewCompat.setPaddingRelative(textView,
+                    mPopupPaddingStart, mPopupItemVerticalPadding,
+                    mPopupPaddingEnd, mPopupItemVerticalPadding);
             return textView;
         }
     }
