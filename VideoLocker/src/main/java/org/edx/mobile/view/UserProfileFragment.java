@@ -20,12 +20,14 @@ import com.bumptech.glide.RequestManager;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
+import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 
@@ -50,6 +52,8 @@ public class UserProfileFragment extends RoboFragment {
     private Router router;
 
     private boolean isViewingOwnProfile;
+
+    protected final Logger logger = new Logger(getClass().getName());
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -167,19 +171,25 @@ public class UserProfileFragment extends RoboFragment {
                 viewHolder.locationContainer.setVisibility(View.GONE);
             } else {
                 viewHolder.limitedView.setVisibility(View.GONE);
-                if (account.getLanguageProficiencies().isEmpty()) {
-                    viewHolder.languageContainer.setVisibility(View.GONE);
-                } else {
-                    viewHolder.languageContainer.setVisibility(View.VISIBLE);
-                    viewHolder.languageText.setText(
-                            LocaleUtils.getLanguageNameFromCode(account.getLanguageProficiencies().get(0).getCode()));
+                viewHolder.languageContainer.setVisibility(View.GONE);
+                if (!account.getLanguageProficiencies().isEmpty()) {
+                    try {
+                        viewHolder.languageText.setText(
+                                LocaleUtils.getLanguageNameFromCode(account.getLanguageProficiencies().get(0).getCode()));
+                        viewHolder.languageContainer.setVisibility(View.VISIBLE);
+                    } catch (InvalidLocaleException e) {
+                        logger.error(e, true);
+                    }
                 }
 
-                if (TextUtils.isEmpty(account.getCountry())) {
-                    viewHolder.locationContainer.setVisibility(View.GONE);
-                } else {
-                    viewHolder.locationContainer.setVisibility(View.VISIBLE);
-                    viewHolder.locationText.setText(LocaleUtils.getCountryNameFromCode(account.getCountry()));
+                viewHolder.locationContainer.setVisibility(View.GONE);
+                if (!TextUtils.isEmpty(account.getCountry())) {
+                    try {
+                        viewHolder.locationText.setText(LocaleUtils.getCountryNameFromCode(account.getCountry()));
+                        viewHolder.locationContainer.setVisibility(View.VISIBLE);
+                    } catch (InvalidLocaleException e) {
+                        logger.error(e, true);
+                    }
                 }
             }
 
