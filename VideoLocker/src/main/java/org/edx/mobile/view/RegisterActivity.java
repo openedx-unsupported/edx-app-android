@@ -159,7 +159,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         ETextView customTitle = (ETextView) findViewById(R.id.activity_title);
         if(customTitle!=null){
-            CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformDestinationName());
+            CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
             customTitle.setText(title);
         }
 

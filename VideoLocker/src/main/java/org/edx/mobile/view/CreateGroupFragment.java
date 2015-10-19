@@ -178,8 +178,8 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
         progress = rootView.findViewById(R.id.progress);
         formLayout = rootView.findViewById(R.id.create_group_form);
         CharSequence errorText = ResourceUtil.getFormattedString(getResources(), R.string.error_no_friends_connected, "platform_name", config.getPlatformName());
-        TextView errorMessage = (TextView)rootView.findViewById(R.id.error_message);
-        errorMessage.setText(errorText);
+        TextView errorMessageView = (TextView)rootView.findViewById(R.id.error_message);
+        errorMessageView.setText(errorText);
 
         connectedText = (TextView) rootView.findViewById(R.id.group_create_facebook_text);
         connectedText.setOnClickListener(this);

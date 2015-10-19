@@ -221,7 +221,7 @@ public class SocialLoginDelegate {
                     social = api.loginByFacebook(accessToken);
 
                     if ( social.error != null && social.error.equals("401") ) {
-                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, "platform_name", platformName);
+                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, descParams);
                         CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_fb, descParams);
                         throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                     }
@@ -229,7 +229,7 @@ public class SocialLoginDelegate {
                     social = api.loginByGoogle(accessToken);
 
                     if ( social.error != null && social.error.equals("401") ) {
-                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, "platform_name", platformName);
+                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, descParams);
                         CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_google, descParams);
                         throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                     }

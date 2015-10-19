@@ -34,7 +34,6 @@ import org.edx.mobile.util.JavaUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.FriendListAdapter;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -176,7 +175,7 @@ public class SocialFriendPickerFragment extends RoboFragment implements SocialPr
 
         searchText = (EditText) view.findViewById(R.id.search_friends_edit_text);
 
-        final CharSequence emptyHeaderMessage = ResourceUtil.getFormattedString(getResources(), R.string.friends_with_edx_accounts, "platform_name", config.getPlatformName());
+        final CharSequence emptyHeaderMessage = ResourceUtil.getFormattedString(getResources(), R.string.friends_with_platform_accounts, "platform_name", config.getPlatformName());
         searchHeader.setText(emptyHeaderMessage);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override

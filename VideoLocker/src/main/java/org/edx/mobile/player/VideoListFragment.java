@@ -206,7 +206,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                                     notifyAdapter();
                                 }
                             };
-                            new MediaConsentUtils().consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                         }else{
                             //Video is downloaded. Hence play
                             startOnlinePlay(model, position);
@@ -230,7 +230,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                                     notifyAdapter();
                                 }
                             };
-                            new MediaConsentUtils().consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
+                            MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                         }
                     } catch (Exception e) {
                         logger.error(e);

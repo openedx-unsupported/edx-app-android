@@ -75,7 +75,7 @@ public class BrowserUtil {
                     }
                 };
 
-                new MediaConsentUtils().showLeavingAppDataDialog(activity, callback);
+                MediaConsentUtils.showLeavingAppDataDialog(activity, callback);
             }
         }
         else {

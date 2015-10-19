@@ -78,8 +78,8 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
         shareBtn.setText(shareText);
         shareBtn.setOnClickListener(this);
         CharSequence errorText = ResourceUtil.getFormattedString(getResources(), R.string.error_no_friends_connected, "platform_name", platformName);
-        TextView errorMessage = (TextView)view.findViewById(R.id.error_message);
-        errorMessage.setText(errorText);
+        TextView errorMessageView = (TextView)view.findViewById(R.id.error_message);
+        errorMessageView.setText(errorText);
         return view;
 
     }

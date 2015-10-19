@@ -3,8 +3,6 @@ package org.edx.mobile.util;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.UserPrefs;
@@ -15,8 +13,6 @@ import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
  * Created by marcashman on 2014-12-04.
  */
 public class MediaConsentUtils {
-
-    @Inject Config config;
 
     private static final String TAG = MediaConsentUtils.class.getCanonicalName();
     public static final String DIALOG_TAG_CONFIRM_MOBILE_DATA = TAG + ".confirm";
@@ -31,7 +27,7 @@ public class MediaConsentUtils {
      * 2. Is connected to mobile and on zero rated network
      * 3. Is connected to mobile network and wifi preference is off
      */
-    public void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback, Config config) {
+    public static void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback, Config config) {
         // init pref file
         UserPrefs pref = new UserPrefs(activity);
         boolean wifiPreference = pref.isDownloadOverWifiOnly();
@@ -49,17 +45,17 @@ public class MediaConsentUtils {
         }
     }
 
-    private void showDialog(FragmentActivity activity, DialogFragment dialogFragment, String tag) {
+    private static void showDialog(FragmentActivity activity, DialogFragment dialogFragment, String tag) {
         dialogFragment.show(activity.getSupportFragmentManager(), tag);
     }
 
-    public void showLeavingAppDataDialog(final FragmentActivity activity, final IDialogCallback consentCallback){
+    public static void showLeavingAppDataDialog(final FragmentActivity activity, final IDialogCallback consentCallback){
 
         boolean connectedToWifi = NetworkUtil.isConnectedWifi(activity);
         if (connectedToWifi) {
             consentCallback.onPositiveClicked();
         } else {
-            String platformName = config.getPlatformName();
+            CharSequence platformName = activity.getString(R.string.platform_name);
             String title = ResourceUtil.getFormattedString(activity.getResources(), R.string.leaving_app_data_title, "platform_name", platformName).toString();
             String message = ResourceUtil.getFormattedString(activity.getResources(), R.string.leaving_app_data_message, "platform_name", platformName).toString();
             String positiveLabel = activity.getString(R.string.label_ok);
