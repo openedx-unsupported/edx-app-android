@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.TextViewCompat;
 import android.util.FloatMath;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,16 +50,16 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     Spinner discussionPostsSortSpinner;
 
     @InjectView(R.id.create_new_item_text_view)
-    TextView createNewPostTextView;
+    private TextView createNewPostTextView;
 
     @InjectView(R.id.create_new_item_layout)
-    ViewGroup createNewPostLayout;
+    private ViewGroup createNewPostLayout;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
 
-    DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
-    DiscussionPostsSort postsSort = DiscussionPostsSort.NONE;
+    private DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
+    private DiscussionPostsSort postsSort = DiscussionPostsSort.NONE;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -82,7 +83,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         super.onViewCreated(view, savedInstanceState);
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
-
+        TextViewCompat.setCompoundDrawablesRelative(createNewPostTextView,
+                new IconDrawable(getActivity(), Iconify.IconValue.fa_plus_circle)
+                        .sizeRes(R.dimen.icon_view_standard_width_height)
+                        .colorRes(R.color.edx_grayscale_neutral_white_t),
+                null, null, null
+        );
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +109,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     @NonNull
                     public Drawable createIcon() {
                         Context context = getActivity();
-                        LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
+                        LayerDrawable layeredIcon = new LayerDrawable(new Drawable[]{
                                 new IconDrawable(context, Iconify.IconValue.fa_long_arrow_up)
                                         .colorRes(R.color.edx_brand_primary_base),
                                 new IconDrawable(context, Iconify.IconValue.fa_long_arrow_down)
@@ -137,7 +143,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
 
             @Override
-            public void onNothingSelected(@NonNull AdapterView<?> parent) {}
+            public void onNothingSelected(@NonNull AdapterView<?> parent) {
+            }
         });
         discussionPostsSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -151,7 +158,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
 
             @Override
-            public void onNothingSelected(@NonNull AdapterView<?> parent) {}
+            public void onNothingSelected(@NonNull AdapterView<?> parent) {
+            }
         });
     }
 

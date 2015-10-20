@@ -42,7 +42,7 @@
 
     </FrameLayout>
 
-    <View style="@style/grey_hairline_separator" />
+    <View style="@style/gray_hairline_separator" />
 
     <ScrollView
         android:layout_width="match_parent"

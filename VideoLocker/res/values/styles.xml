@@ -113,8 +113,12 @@
         <item name="android:background">@color/edx_brand_primary_base</item>
     </style>
 
-    <style name="grey_separator" parent="separator_base">
+    <style name="gray_separator" parent="separator_base">
         <item name="android:background">@color/edx_grayscale_neutral_light</item>
+    </style>
+
+    <style name="light_gray_separator" parent="separator_base">
+        <item name="android:background">@color/edx_grayscale_neutral_xx_light</item>
     </style>
 
     <style name="red_separator" parent="separator_base">
@@ -126,7 +130,7 @@
         <item name="android:layout_height">@dimen/edx_hairline</item>
     </style>
 
-    <style name="grey_hairline_separator" parent="hairline_separator_style">
+    <style name="gray_hairline_separator" parent="hairline_separator_style">
         <item name="android:background">@color/edx_grayscale_neutral_light</item>
     </style>
 
@@ -187,7 +191,7 @@
     <style name="footer_action_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
-        <item name="android:background">@color/edx_brand_primary_x_dark</item>
+        <item name="android:background">@drawable/edx_footer_button</item>
         <item name="android:gravity">center</item>
     </style>
 

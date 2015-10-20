@@ -13,7 +13,6 @@ import android.support.v4.app.TaskStackBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
@@ -30,12 +29,10 @@ import de.greenrobot.event.EventBus;
 
 @Singleton
 public class Router {
-
     public static final String EXTRA_ANNOUNCEMENTS = "announcements";
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_ENROLLMENT = "enrollment";
-    public static final String EXTRA_SEQUENTIAL = "sequential";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
     public static final String EXTRA_COURSE_DATA = "course_data";
@@ -43,9 +40,9 @@ public class Router {
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
-    public static final String EXTRA_IS_RESPONSE = "is_response";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
+    public static final String EXTRA_DISCUSSION_TOPIC_CLOSED = "discussion_topic_closed";
 
     @Inject
     Config config;
@@ -259,9 +256,10 @@ public class Router {
         activity.startActivity(addPostIntent);
     }
 
-    public void showCourseDiscussionComments(Context context, DiscussionComment comment) {
+    public void showCourseDiscussionComments(Context context, DiscussionComment comment, boolean isThreadClosed) {
         Intent commentListIntent = new Intent(context, CourseDiscussionCommentsActivity.class);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT, comment);
+        commentListIntent.putExtra(Router.EXTRA_DISCUSSION_TOPIC_CLOSED, isThreadClosed);
         commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(commentListIntent);
     }

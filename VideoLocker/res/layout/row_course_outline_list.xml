@@ -135,11 +135,11 @@
 
     <View
         android:id="@+id/row_half_separator"
-        style="@style/grey_separator"
+        style="@style/gray_separator"
         android:layout_marginLeft="35dp"
         android:layout_marginStart="35dp" />
 
     <View
         android:id="@+id/row_whole_separator"
-        style="@style/grey_separator" />
+        style="@style/gray_separator" />
 </LinearLayout>
