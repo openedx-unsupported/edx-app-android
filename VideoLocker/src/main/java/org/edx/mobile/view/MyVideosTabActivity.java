@@ -55,11 +55,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             offlineBar.setVisibility(View.VISIBLE);
         }
 
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.label_my_videos));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(getString(R.string.label_my_videos));
 
         // now init the tabs
         initializeTab();

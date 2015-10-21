@@ -23,11 +23,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            environment.getSegment().screenViewsTracking("My Videos - All Videos");
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView("My Videos - All Videos");
     }
 
     @Override

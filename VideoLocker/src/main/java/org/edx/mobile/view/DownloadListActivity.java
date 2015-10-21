@@ -1,25 +1,19 @@
 package org.edx.mobile.view;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.DownloadEntryAdapter;
@@ -53,13 +47,8 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 0);
 
-        try{
-            environment.getSegment().screenViewsTracking(getString
+        environment.getSegment().trackScreenView(getString
                     (R.string.title_download));
-        }catch(Exception e){
-            logger.error(e);
-        }
-
 
         offlineBar = (View) findViewById(R.id.offline_bar);
         if (!(NetworkUtil.isConnected(this))) {

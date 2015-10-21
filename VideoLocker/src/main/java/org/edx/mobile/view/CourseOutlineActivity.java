@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
@@ -27,12 +28,11 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         super.onCreate(savedInstanceState);
  
         setApplyPrevTransitionOnRestart(true);
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.course_outline));
-        }catch(Exception e){
-            logger.error(e);
-        }
 
+        if (isOnCourseOutline()) {
+            environment.getSegment().trackScreenView(
+                    ISegment.Keys.COURSE_OUTLINE, courseData.getCourse().getId(), null);
+        }
     }
 
     public void onResume(){
@@ -73,6 +73,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         if (isOnCourseOutline()) {
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
         } else {
+            environment.getSegment().trackScreenView(
+                    ISegment.Keys.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getName());
+
             // Update the last accessed item reference if we are in the course subsection view
             String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
                     .username, courseComponent.getCourseId());

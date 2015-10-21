@@ -19,11 +19,7 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         // hence is shifted to onCreate() function
         configureDrawer();
 
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.find_courses_title));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(getString(R.string.find_courses_title));
 
         loadCourseSearchUrl();
     }

@@ -31,11 +31,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.label_my_courses));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(getString(R.string.label_my_courses));
     }
 
     @Override

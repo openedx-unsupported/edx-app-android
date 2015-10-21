@@ -56,13 +56,8 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_video_list_with_player_container,
-                null);
-        try{
-            environment.getSegment().screenViewsTracking("My Videos - Recent Videos");
-        }catch(Exception e){
-            logger.error(e);
-        }
+        View view = inflater.inflate(R.layout.fragment_video_list_with_player_container, null);
+        environment.getSegment().trackScreenView("My Videos - Recent Videos");
 
         return view;
     }

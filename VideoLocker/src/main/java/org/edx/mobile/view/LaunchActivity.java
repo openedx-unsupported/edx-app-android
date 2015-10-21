@@ -65,12 +65,7 @@ public class LaunchActivity extends BaseFragmentActivity {
             }
         });
 
-        try {
-            environment.getSegment().screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
-        } catch(Exception e) {
-            logger.error(e);
-        }
-
+        environment.getSegment().trackScreenView(ISegment.Values.LAUNCH_ACTIVITY);
     }
 
     @Override

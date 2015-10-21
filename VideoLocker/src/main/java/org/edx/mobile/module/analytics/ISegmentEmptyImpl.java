@@ -61,7 +61,12 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties screenViewsTracking(String screenName) {
+    public Properties trackScreenView(String screenName) {
+        return null;
+    }
+
+    @Override
+    public Properties trackScreenView(String screenName, String courseId, String value) {
         return null;
     }
 

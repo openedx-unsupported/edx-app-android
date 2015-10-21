@@ -71,12 +71,7 @@ public class FriendsInCourseFragment extends RoboFragment implements LoaderManag
             adapter = new FriendsInCourseAdapter(getActivity());
         }
  
-        try{
-            environment.getSegment().screenViewsTracking("Friends In This Course");
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        environment.getSegment().trackScreenView("Friends In This Course");
     }
 
     @Override

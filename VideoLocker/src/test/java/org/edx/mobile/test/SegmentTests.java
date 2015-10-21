@@ -419,7 +419,7 @@ public class SegmentTests extends BaseTestCase {
     @Test
     public void testScreenView() throws Exception {
         String screenName = "testscreen";
-        Properties props = segment.screenViewsTracking(screenName);
+        Properties props = segment.trackScreenView(screenName);
 
         // verify that the identity method was called
         Mockito.verify(tracker).screen(Mockito.anyString(),

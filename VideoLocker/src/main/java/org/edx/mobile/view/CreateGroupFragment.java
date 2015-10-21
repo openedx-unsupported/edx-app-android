@@ -147,12 +147,7 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
             new FacebookProvider().getMyFriends(getActivity(), getFriendsCallback);
         }
 
-        try{
-            segment.screenViewsTracking("Create Games Group");
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        segment.trackScreenView("Create Games Group");
     }
 
     @Override

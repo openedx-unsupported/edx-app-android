@@ -47,7 +47,9 @@ public interface ISegment {
 
     /* Events not mentioned in PDF */
 
-    Properties screenViewsTracking(String screenName);
+    Properties trackScreenView(String screenName);
+
+    Properties trackScreenView(String screenName, String courseId, String value);
 
     Properties trackDownloadComplete(String videoId, String courseId,
             String unitUrl);
@@ -121,161 +123,167 @@ public interface ISegment {
     Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported);
 
 
+    interface Keys {
+        String NAME = "name";
+        String OLD_TIME = "old_time";
+        String NEW_TIME = "new_time";
+        String SEEK_TYPE = "seek_type";
+        String REQUESTED_SKIP_INTERVAL = "requested_skip_interval";
+        String MODULE_ID = "module_id";
+        String CODE = "code";
+        String CURRENT_TIME = "current_time";
+        String COURSE_ID = "course_id";
+        String OPEN_BROWSER = "open_in_browser_url";
+        String COMPONENT = "component";
+        String COURSE_SECTION = "course_section";
+        String COURSE_SUBSECTION = "course_subsection";
+        String NO_OF_VIDEOS = "number_of_videos";
+        String FULLSCREEN = "settings.video.fullscreen";
+        String LANGUAGE = "language";
+        String TARGET_URL = "target_url";
+        String CONTEXT = "context";
+        String DATA = "data";
+        String METHOD = "method";
+        String APP = "app_name";
+        String LOADED_VIDEO = "Loaded Video";
+        String PLAYED_VIDEO = "Played Video";
+        String PAUSED_VIDEO = "Paused Video";
+        String STOPPED_VIDEO = "Stopped Video";
+        String SEEK_VIDEO = "Seeked Video";
+        String SHOW_TRANSCRIPT = "Show Transcript";
+        String HIDE_TRANSCRIPT = "Hide Transcript";
+        String VIDEO_DOWNLOADED = "Video Downloaded";
+        String BULK_DOWNLOAD_SECTION = "Bulk Download Section";
+        String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";
+        String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
+        String SCREEN_TOGGLED = "Screen Toggled";
+        String USER_LOGIN = "User Login";
+        String USER_LOGOUT = "User Logout";
+        String BROWSER_LAUNCHED = "Browser Launched";
+        String LANGUAGE_CLICKED = "Language Clicked";
+        String SIGN_UP = "Sign up Clicked";
+        String FIND_COURSES = "Find Courses Clicked";
+        String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
+        String ENROLL_COURSES = "Enroll Course Clicked";
+        String EMAIL_OPT_IN = "email_opt_in";
+        String PROVIDER = "provider";
+        String BLOCK_ID = "block_id";
+        String SUPPORTED = "supported";
+        String NEW_OUTLINE_MODE = "new-mode";
+        String DEVICE_ORIENTATION = "device-orientation";
+        String NAVIGATION_MODE = "navigation-mode";
 
-    public static interface Keys{
-        public static final String NAME = "name";
-        public static final String OLD_TIME = "old_time";
-        public static final String NEW_TIME = "new_time";
-        public static final String SEEK_TYPE = "seek_type";
-        public static final String REQUESTED_SKIP_INTERVAL = "requested_skip_interval";
-        public static final String MODULE_ID = "module_id";
-        public static final String CODE = "code";
-        public static final String CURRENT_TIME = "current_time";
-        public static final String COURSE_ID = "course_id";
-        public static final String OPEN_BROWSER = "open_in_browser_url";
-        public static final String COMPONENT = "component";
-        public static final String COURSE_SECTION = "course_section";
-        public static final String COURSE_SUBSECTION = "course_subsection";
-        public static final String NO_OF_VIDEOS = "number_of_videos";
-        public static final String FULLSCREEN = "settings.video.fullscreen";
-        public static final String LANGUAGE = "language";
-        public static final String TARGET_URL = "target_url";
-        public static final String CONTEXT = "context";
-        public static final String DATA = "data";
-        public static final String METHOD = "method";
-        public static final String APP = "app_name";
-        public static final String LOADED_VIDEO = "Loaded Video";
-        public static final String PLAYED_VIDEO = "Played Video";
-        public static final String PAUSED_VIDEO = "Paused Video";
-        public static final String STOPPED_VIDEO = "Stopped Video";
-        public static final String SEEK_VIDEO = "Seeked Video";
-        public static final String SHOW_TRANSCRIPT = "Show Transcript";
-        public static final String HIDE_TRANSCRIPT = "Hide Transcript";
-        public static final String VIDEO_DOWNLOADED = "Video Downloaded";
-        public static final String BULK_DOWNLOAD_SECTION = "Bulk Download Section";
-        public static final String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";
-        public static final String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
-        public static final String SCREEN_TOGGLED = "Screen Toggled";
-        public static final String USER_LOGIN = "User Login";
-        public static final String USER_LOGOUT = "User Logout";
-        public static final String BROWSER_LAUNCHED = "Browser Launched";
-        public static final String LANGUAGE_CLICKED = "Language Clicked";
-        public static final String SIGN_UP = "Sign up Clicked";
-        public static final String FIND_COURSES = "Find Courses Clicked";
-        public static final String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
-        public static final String ENROLL_COURSES = "Enroll Course Clicked";
-        public static final String EMAIL_OPT_IN = "email_opt_in";
-        public static final String PROVIDER = "provider";
-        public static final String BLOCK_ID = "block_id";
-        public static final String SUPPORTED = "supported";
-        public static final String NEW_OUTLINE_MODE = "new-mode";
-        public static final String DEVICE_ORIENTATION = "device-orientation";
-        public static final String NAVIGATION_MODE = "navigation-mode";
+        String TRACK_CELL_CONNECTION = "Cell Connection Established";
+        String CELL_CARRIER = "cell_carrier";
+        String CELL_ZERO_RATED = "cell_zero_rated";
 
-        public static final String TRACK_CELL_CONNECTION = "Cell Connection Established";
-        public static final String CELL_CARRIER = "cell_carrier";
-        public static final String CELL_ZERO_RATED = "cell_zero_rated";
+        String SPEED = "Connected Speed Report";
+        String CONNECTION_TYPE = "connection_type";
+        String CONNECTION_SPEED = "connection_speed";
 
-        public static final String SPEED = "Connected Speed Report";
-        public static final String CONNECTION_TYPE = "connection_type";
-        public static final String CONNECTION_SPEED = "connection_speed";
+        String GROUP_ID = "group_id";
+        String GROUP_USER_COUNT = "group_user_count";
+        String GROUP_INVITED_USER_COUNT = "group_invited_count";
+        String SOCIAL_NETWORK = "social_network";
+        String SOCIAL_CONNECTION_STATE = "social_connection_state";
+        String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
+        String CATEGORY = "category";
+        String LABEL = "label";
+        String ACTION = "action";
 
-        public static final String GROUP_ID = "group_id";
-        public static final String GROUP_USER_COUNT = "group_user_count";
-        public static final String GROUP_INVITED_USER_COUNT = "group_invited_count";
-        public static final String SOCIAL_NETWORK = "social_network";
-        public static final String SOCIAL_CONNECTION_STATE = "social_connection_state";
-        public static final String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
-        public static final String CATEGORY = "category";
-        public static final String LABEL = "label";
+        String COURSE_GROUP_ACCESSED = "Course Group Accessed";
+        String GAME_GROUP_ACCESSED = "Game Group Accessed";
+        String GAME_GROUP_CREATE = "Game Group Created";
+        String GAME_GROUP_INVITE = "Game Group Invited";
+        String SOCIAL_COURSE_SHARED = "Social Course Shared";
+        String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
+        String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
+        String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
 
-        public static final String COURSE_GROUP_ACCESSED = "Course Group Accessed";
-        public static final String GAME_GROUP_ACCESSED = "Game Group Accessed";
-        public static final String GAME_GROUP_CREATE = "Game Group Created";
-        public static final String GAME_GROUP_INVITE = "Game Group Invited";
-        public static final String SOCIAL_COURSE_SHARED = "Social Course Shared";
-        public static final String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
-        public static final String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
-        public static final String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
-
-        public static final String SWITCH_OUTLINE_MODE = "Switch outline mode";
-        public static final String COMPONENT_VIEWED = "Component Viewed";
-        public static final String OPEN_IN_BROWSER = "Browser Launched";
+        String SWITCH_OUTLINE_MODE = "Switch outline mode";
+        String COMPONENT_VIEWED = "Component Viewed";
+        String OPEN_IN_BROWSER = "Browser Launched";
+        String COURSE_DASHBOARD = "Course Dashboard";
+        String COURSE_OUTLINE = "Course Outline";
+        String SECTION_OUTLINE = "Section Outline";
+        String UNIT_DETAIL = "Unit Detail";
     }
-    
-    public static interface Values{
-        public static final String SKIP = "skip";
-        public static final String SLIDE = "slide";
-        public static final String MOBILE = "mobile";
-        public static final String VIDEOPLAYER = "videoplayer";
-        public static final String PASSWORD = "Password";
-        public static final String FACEBOOK = "Google";
-        public static final String GOOGLE = "Facebook";
-        public static final String DOWNLOAD_MODULE = "downloadmodule";
-        public static final String VIDEO_LOADED = "edx.video.loaded";
-        public static final String VIDEO_PLAYED = "edx.video.played";
-        public static final String VIDEO_PAUSED = "edx.video.paused";
-        public static final String VIDEO_STOPPED = "edx.video.stopped";
+
+    interface Values {
+        String SCREEN = "screen";
+        String SKIP = "skip";
+        String SLIDE = "slide";
+        String MOBILE = "mobile";
+        String VIDEOPLAYER = "videoplayer";
+        String PASSWORD = "Password";
+        String FACEBOOK = "Google";
+        String GOOGLE = "Facebook";
+        String DOWNLOAD_MODULE = "downloadmodule";
+        String VIDEO_LOADED = "edx.video.loaded";
+        String VIDEO_PLAYED = "edx.video.played";
+        String VIDEO_PAUSED = "edx.video.paused";
+        String VIDEO_STOPPED = "edx.video.stopped";
         //The seek event name has been changed as per MOB-1273
-        public static final String VIDEO_SEEKED = "edx.video.position.changed";
-        public static final String TRANSCRIPT_SHOWN = "edx.video.transcript.shown";
-        public static final String TRANSCRIPT_HIDDEN = "edx.video.transcript.hidden";
-        public static final String TRANSCRIPT_LANGUAGE = "edx.bi.video.transcript.language.selected";
-        public static final String FULLSREEN_TOGGLED = "edx.bi.video.screen.fullscreen.toggled";
-        public static final String BROWSER_LAUNCHED = "edx.bi.app.browser.launched";
-        public static final String SINGLE_VIDEO_DOWNLOAD = "edx.bi.video.download.requested";
-        public static final String BULKDOWNLOAD_SECTION = "edx.bi.video.section.bulkdownload.requested";
-        public static final String BULK_DOWNLOAD_SUBSECTION = "edx.bi.video.subsection.bulkdownload.requested";
-        public static final String VIDEO_DOWNLOADED = "edx.bi.video.downloaded";
-        public static final String USERLOGOUT = "edx.bi.app.user.logout";
-        public static final String USERLOGIN = "edx.bi.app.user.login";
-        public static final String APP_NAME = "edx.mobileapp.android";
-        public static final String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
-        public static final String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
-        public static final String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
-        public static final String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
-        public static final String CONVERSION = "conversion";
-        public static final String USER_ENGAGEMENT = "user-engagement";
-        public static final String COURSE_DISCOVERY = "course-discovery";
+        String VIDEO_SEEKED = "edx.video.position.changed";
+        String TRANSCRIPT_SHOWN = "edx.video.transcript.shown";
+        String TRANSCRIPT_HIDDEN = "edx.video.transcript.hidden";
+        String TRANSCRIPT_LANGUAGE = "edx.bi.video.transcript.language.selected";
+        String FULLSREEN_TOGGLED = "edx.bi.video.screen.fullscreen.toggled";
+        String BROWSER_LAUNCHED = "edx.bi.app.browser.launched";
+        String SINGLE_VIDEO_DOWNLOAD = "edx.bi.video.download.requested";
+        String BULKDOWNLOAD_SECTION = "edx.bi.video.section.bulkdownload.requested";
+        String BULK_DOWNLOAD_SUBSECTION = "edx.bi.video.subsection.bulkdownload.requested";
+        String VIDEO_DOWNLOADED = "edx.bi.video.downloaded";
+        String USERLOGOUT = "edx.bi.app.user.logout";
+        String USERLOGIN = "edx.bi.app.user.login";
+        String APP_NAME = "edx.mobileapp.android";
+        String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
+        String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
+        String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
+        String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
+        String CONVERSION = "conversion";
+        String USER_ENGAGEMENT = "user-engagement";
+        String COURSE_DISCOVERY = "course-discovery";
 
-        public static final String PUSH_NOTIFICATION = "notifications";
-        public static final String PUSH_NOTIFICATION_RECEIVED = "notification-received";
-        public static final String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
-        public static final String ANNOUNCEMENT = "announcement";
+        String PUSH_NOTIFICATION = "notifications";
+        String PUSH_NOTIFICATION_RECEIVED = "notification-received";
+        String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
+        String ANNOUNCEMENT = "announcement";
 
 
-        public static final String CONNECTION_CELL = "edx.bi.app.connection.cell";
-        public static final String CONNECTION_SPEED = "edx.bi.app.connection.speed";
+        String CONNECTION_CELL = "edx.bi.app.connection.cell";
+        String CONNECTION_SPEED = "edx.bi.app.connection.speed";
 
-        public static final String NOTIFICATION_RECEIVED = "edx.bi.app.notification.course.update.received";
-        public static final String NOTIFICATION_TAPPED = "edx.bi.app.notification.course.update.tapped";
+        String NOTIFICATION_RECEIVED = "edx.bi.app.notification.course.update.received";
+        String NOTIFICATION_TAPPED = "edx.bi.app.notification.course.update.tapped";
 
-        public static final String ACCESS_COURSE_GROUP = "edx.bi.app.groups.course_access";
-        public static final String ACCESS_GAME_GROUP = "edx.bi.app.groups.game_access";
-        public static final String CREATE_GAME_GROUP = "edx.bi.app.groups.game_create";
-        public static final String INVITE_GAME_GROUP = "edx.bi.app.groups.game_invite";
-        public static final String SOCIAL_COURSE_SHARED = "edx.bi.app.social.course_share";
-        public static final String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.social.certificate_share";
-        public static final String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
-        public static final String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
+        String ACCESS_COURSE_GROUP = "edx.bi.app.groups.course_access";
+        String ACCESS_GAME_GROUP = "edx.bi.app.groups.game_access";
+        String CREATE_GAME_GROUP = "edx.bi.app.groups.game_create";
+        String INVITE_GAME_GROUP = "edx.bi.app.groups.game_invite";
+        String SOCIAL_COURSE_SHARED = "edx.bi.app.social.course_share";
+        String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.social.certificate_share";
+        String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
+        String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
 
-        public static final String NAVIGATION = "navigation";
-        public static final String SWITCH_OUTLINE_MODE = "edx.bi.app.navigation.switched-mode.clicked";
-        public static final String COMPONENT_VIEWED = "edx.bi.app.navigation.component.viewed";
-        public static final String OPEN_IN_BROWSER = "edx.bi.app.navigation.open-in-browser";
-        public static final String OUTLINE_MODE_FULL = "full";
-        public static final String OUTLINE_MODE_VIDEO = "video";
-        public static final String SWITCH_TO_FULL_MODE = "Switch to Full Mode";
-        public static final String SWITCH_TO_VIDEO_MODE = "Switch to Video Mode";
-        public static final String OPEN_IN_WEB_SUPPORTED = "Open in browser - Supported";
-        public static final String OPEN_IN_WEB_NOT_SUPPORTED = "Open in browser - Unsupported";
-        public static final String LANDSCAPE = "landscape";
-        public static final String PORTRAIT = "portrait";
+        String NAVIGATION = "navigation";
+        String SWITCH_OUTLINE_MODE = "edx.bi.app.navigation.switched-mode.clicked";
+        String COMPONENT_VIEWED = "edx.bi.app.navigation.component.viewed";
+        String OPEN_IN_BROWSER = "edx.bi.app.navigation.open-in-browser";
+        String OUTLINE_MODE_FULL = "full";
+        String OUTLINE_MODE_VIDEO = "video";
+        String SWITCH_TO_FULL_MODE = "Switch to Full Mode";
+        String SWITCH_TO_VIDEO_MODE = "Switch to Video Mode";
+        String OPEN_IN_WEB_SUPPORTED = "Open in browser - Supported";
+        String OPEN_IN_WEB_NOT_SUPPORTED = "Open in browser - Unsupported";
+        String LANDSCAPE = "landscape";
+        String PORTRAIT = "portrait";
 
-        public static final String WIFI = "wifi";
-        public static final String CELL_DATA = "cell_data";
+        String WIFI = "wifi";
+        String CELL_DATA = "cell_data";
 
-        public static final String COURSE_INFO_SCREEN = "Course Info";
-        public static final String LAUNCH_ACTIVITY = "Launch";
+        String COURSE_INFO_SCREEN = "Course Info";
+        String LAUNCH_ACTIVITY = "Launch";
+
     }
 }

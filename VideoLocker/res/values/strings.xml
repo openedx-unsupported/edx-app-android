@@ -166,8 +166,6 @@
     <string name="end_user_title">End User License Agreement</string>
 
     <!-- My Courses -->
-    <!-- Title of course dashboard screen -->
-    <string name="course_home">Course Home</string>
     <!-- Row of course on dashboard screen -->
     <string name="courseware_title">Courseware</string>
     <!-- Row of course on dashboard screen -->
@@ -188,10 +186,6 @@
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
-
-
-    <!-- Title of course outline screen -->
-    <string name="course_outline">Course Outline</string>
 
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>

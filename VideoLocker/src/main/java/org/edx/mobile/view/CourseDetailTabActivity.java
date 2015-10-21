@@ -64,13 +64,8 @@ public class CourseDetailTabActivity extends BaseTabActivity {
             if ( courseData != null ) {
                 activityTitle = courseData.getCourse().getName();
                 boolean isAnnouncement = bundle.getBoolean(Router.EXTRA_ANNOUNCEMENTS, false);
-                if ( isAnnouncement )
-                    selectedTab = courseInfoTabIndex;
-                try{
-                    environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
-                }catch(Exception e){
-                    logger.error(e);
-                }
+                if ( isAnnouncement ) selectedTab = courseInfoTabIndex;
+                environment.getSegment().trackScreenView(courseData.getCourse().getName());
             } else {
 
                 boolean handleFromNotification = handleIntentFromNotification();

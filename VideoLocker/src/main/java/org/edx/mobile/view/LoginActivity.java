@@ -128,12 +128,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         errorHeader = (TextView) findViewById(R.id.error_header);
         errorMessage = (TextView) findViewById(R.id.error_message);
 
-        try {
-            environment.getSegment().screenViewsTracking("Login");
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
+        environment.getSegment().trackScreenView("Login");
 
         Button closeButton = (Button)
                 findViewById(R.id.actionbar_close_btn);

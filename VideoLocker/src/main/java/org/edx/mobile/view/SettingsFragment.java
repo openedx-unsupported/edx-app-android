@@ -58,12 +58,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        try{
-            environment.getSegment().screenViewsTracking("Settings");
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView("Settings");
 
         PrefManager featurePrefManager = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
         showSocialFeatures = featurePrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
