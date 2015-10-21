@@ -65,12 +65,12 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
 
     @Nullable
     private TaskProgressCallback getProgressCallback() {
-        return this.progressCallback == null ? null : this.progressCallback.get();
+        return progressCallback == null ? null : progressCallback.get();
     }
 
     @Nullable
     private TaskMessageCallback getMessageCallback() {
-        return this.messageCallback == null ? null : this.messageCallback.get();
+        return messageCallback == null ? null : messageCallback.get();
     }
 
     @Override

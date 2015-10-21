@@ -14,13 +14,13 @@
     <!-- Alert dialog content shown when a network request fails because the user has no internet connection -->
     <string name="reset_no_network_message">You are not connected to the Internet. Please check your Internet connection.</string>
     <!-- An error ocurred due to some kind of network failure -->
-    <string name="network_connected_error">Connection error. Please check your internet connection and try again.</string>
+    <string name="network_connected_error">Connection error. Please check your Internet connection.</string>
     <!-- Title of prompt indicating issue loading a video -->
     <string name="network_error_header">Problem loading video</string>
     <!-- Content of prompt indicating issue loading a video -->
     <string name="network_error_message">Please check your Internet Connection.</string>
     <!-- The server we are trying to use is not available right now -->
-    <string name="network_service_unavailable">Service not available. Please try again later.</string>
+    <string name="network_service_unavailable">Service is unavailable. Please try again later.</string>
 
     <!-- Login error messages -->
     <!-- Error shown during login when user attempts login without entering a username or e-mail -->
