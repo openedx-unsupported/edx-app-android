@@ -276,7 +276,7 @@
     <style name="edX.Widget.Spinner.Popup" parent="@style/Widget.AppCompat.Spinner.DropDown">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:minHeight">@dimen/popupSpinnerMinHeight</item>
-        <item name="android:popupBackground">@drawable/spinner_popup</item>
+        <item name="android:popupBackground">@drawable/spinner_popup_background</item>
         <!-- We need to set a top margin equal to the top padding of the
              background, because ListPopupWindow (which is used internally by
              Spinner) sets it's vertical offset to be the inverse of that by
@@ -298,13 +298,13 @@
 
     <!-- Spinner with the popup style -->
     <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.AppCompat.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/popup_menu</item>
+        <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
     <style name="edX.Widget.PopupMenu" android:parent="@android:style/Widget.Holo.Light.PopupMenu">
-        <item name="android:popupBackground">@drawable/popup_menu</item>
+        <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
         <item name="android:paddingLeft">@dimen/popupMenuHorizontalPadding</item>
