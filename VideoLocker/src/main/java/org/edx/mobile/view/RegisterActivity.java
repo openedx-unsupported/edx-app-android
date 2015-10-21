@@ -41,6 +41,7 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.custom.ETextView;
 
@@ -108,7 +109,9 @@ public class RegisterActivity extends BaseFragmentActivity
              }
         }
 
-
+        TextView agreementMessageView = (TextView)findViewById(R.id.by_creating_account_tv);
+        CharSequence agreementMessage = ResourceUtil.getFormattedString(getResources(), R.string.by_creating_account, "platform_name", environment.getConfig().getPlatformName());
+        agreementMessageView.setText(agreementMessage);
 
         createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +159,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
         ETextView customTitle = (ETextView) findViewById(R.id.activity_title);
         if(customTitle!=null){
-            customTitle.setText(getString(R.string.register_title));
+            CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
+            customTitle.setText(title);
         }
 
         AppConstants.offline_flag = !NetworkUtil.isConnected(this);
@@ -441,8 +445,9 @@ public class RegisterActivity extends BaseFragmentActivity
             signUpSuccessString = getString(R.string.sign_up_with_google_ok);
         }
         StringBuilder sb = new StringBuilder();
+        CharSequence extraInfoPrompt = ResourceUtil.getFormattedString(getResources(), R.string.sign_up_with_social_ok, "platform_name", environment.getConfig().getPlatformName());
         sb.append( signUpSuccessString.replace(socialTypeString, "<b><strong>" + socialTypeString + "</strong></b>") )
-            .append("<br>").append( getString(R.string.sign_up_with_social_ok) );
+            .append("<br>").append(extraInfoPrompt);
 
         Spanned result = Html.fromHtml(sb.toString());
         messageView.setText(result);

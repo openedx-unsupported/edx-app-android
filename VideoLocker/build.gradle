@@ -165,6 +165,7 @@ configurations {
 }
 
 android {
+    def config = new TaskHelper().loadConfig(project)
 
     signingConfigs {
         releasekey {
@@ -199,6 +200,9 @@ android {
         multiDexEnabled true
 
         manifestPlaceholders = [ supportsRtl:"false"]
+
+        def platformName = config.get('PLATFORM_NAME')
+        resValue "string", "platform_name", platformName
     }
     sourceSets {
         main {
@@ -229,7 +233,6 @@ android {
 
     productFlavors {
         prod {
-            def config = new TaskHelper().loadConfig(project)
             def fabric = config.get('FABRIC')
             if (fabric != null) {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
