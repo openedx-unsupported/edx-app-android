@@ -30,13 +30,13 @@
     <!-- Error shown during login when user attempts login without entering a password -->
     <string name="error_enter_password">Please enter your password and try again.</string>
     <!-- Title of alert shown during login when user attempts login via Facebook without having linked their account -->
-    <string name="error_account_not_linked_title_fb">Facebook account not associated with edX account</string>
+    <string name="error_account_not_linked_title_fb">Facebook account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
-    <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your edX account on edx.org</string>
+    <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your {platform_name} account on {platform_destination}</string>
     <!-- Title of alert shown during login when user attempts login via Google without having linked their account -->
-    <string name="error_account_not_linked_title_google">Google account not associated with edX account</string>
+    <string name="error_account_not_linked_title_google">Google account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
-    <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your edX account on edx.org</string>
+    <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your {platform_name} account on {platform_destination}</string>
     
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->

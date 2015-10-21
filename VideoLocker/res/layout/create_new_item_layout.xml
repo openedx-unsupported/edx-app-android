@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/create_new_item_layout"
     style="@style/footer_action_button"
@@ -8,22 +7,14 @@
     android:orientation="horizontal"
     tools:showIn="@layout/fragment_discussion_posts">
 
-
-    <org.edx.mobile.third_party.iconify.IconView
-        android:id="@+id/create_new_icon_view"
-        style="@style/icon_view_standard_size"
-        android:layout_centerVertical="true"
-        app:iconColor="@color/white"
-        app:iconName="fa_plus_circle" />
-
     <TextView
         android:id="@+id/create_new_item_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/create_new_item_icon_margin"
-        android:layout_marginStart="@dimen/create_new_item_icon_margin"
+        android:drawablePadding="@dimen/create_new_item_icon_margin"
         android:textColor="@color/edx_grayscale_neutral_white_t"
         android:textSize="@dimen/edx_small"
+        android:layout_gravity="center"
         tools:text="Create a new item" />
-</LinearLayout>
+</FrameLayout>
 

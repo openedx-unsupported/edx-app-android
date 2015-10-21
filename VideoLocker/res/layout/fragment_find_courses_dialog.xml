@@ -41,7 +41,7 @@
         android:layout_below="@id/find_courses_dialog_tv2"
         android:layout_margin="25dp"
         android:background="@drawable/bt_blue"
-        android:text="@string/open_edx_btn_text"
+        tools:text="@string/open_destination_btn_text"
         android:textAllCaps="true"
         android:textSize="16sp"
         android:gravity="center_vertical|center_horizontal"

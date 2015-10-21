@@ -27,6 +27,7 @@ import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
@@ -62,6 +63,9 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
 
     @Inject
     ISegment segment;
+
+    @Inject
+    Config config;
 
     private SocialProvider.Callback<List<SocialMember>> getFriendsCallback = new SocialProvider.Callback<List<SocialMember>>() {
         @Override
@@ -165,12 +169,17 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
         addButton = (Button) rootView.findViewById(R.id.next_create_group);
         addButton.setOnClickListener(this);
 
-        View shareAppButton = rootView.findViewById(R.id.btn_share_app);
+        TextView shareAppButton = (TextView)rootView.findViewById(R.id.btn_share_app);
+        CharSequence message = ResourceUtil.getFormattedString(getResources(), R.string.btn_share_app, "platform_name", config.getPlatformName());
+        shareAppButton.setText(message);
         shareAppButton.setOnClickListener(this);
 
         errorLayout = rootView.findViewById(R.id.error_layout);
         progress = rootView.findViewById(R.id.progress);
         formLayout = rootView.findViewById(R.id.create_group_form);
+        CharSequence errorText = ResourceUtil.getFormattedString(getResources(), R.string.error_no_friends_connected, "platform_name", config.getPlatformName());
+        TextView errorMessageView = (TextView)rootView.findViewById(R.id.error_message);
+        errorMessageView.setText(errorText);
 
         connectedText = (TextView) rootView.findViewById(R.id.group_create_facebook_text);
         connectedText.setOnClickListener(this);

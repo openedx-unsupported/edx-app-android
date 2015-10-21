@@ -711,7 +711,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
             LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
             if(error_layout!=null){
                 TextView errorHeader = (TextView) findViewById(R.id.error_header);
-                TextView errorMessage = (TextView) findViewById(R.id.error_message);
+                TextView errorMessageView = (TextView) findViewById(R.id.error_message);
                 if(header==null || header.isEmpty()){
                     errorHeader.setVisibility(View.GONE);
                 }else{
@@ -719,7 +719,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                     errorHeader.setText(header);
                 }
                 if (message != null) {
-                    errorMessage.setText(message);
+                    errorMessageView.setText(message);
                 }
                 ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
                 return true;

@@ -19,6 +19,7 @@ import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
+import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
@@ -119,9 +120,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
 
-        if (discussionThread.isPinned()) {
-            holder.threadPinnedIconView.setVisibility(View.VISIBLE);
-        }
+        holder.threadClosedIconView.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);
+        holder.threadPinnedIconView.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
         DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, discussionThread, new Runnable() {
@@ -225,17 +225,22 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
 
-        holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (comment.getChildren().isEmpty()) {
-                    listener.onClickAddComment(comment);
-
-                } else {
-                    listener.onClickViewComments(comment);
+        if (discussionThread.isClosed() && comment.getChildren().isEmpty()) {
+            holder.addCommentLayout.setEnabled(false);
+        }
+        else {
+            holder.addCommentLayout.setEnabled(true);
+            holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (comment.getChildren().isEmpty()) {
+                        listener.onClickAddComment(comment);
+                    } else {
+                        listener.onClickViewComments(comment);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, comment, new Runnable() {
             @Override
@@ -304,10 +309,20 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         int numChildren = response == null ? 0 : response.getChildren().size();
 
         if (numChildren == 0) {
-            holder.numberResponsesOrCommentsLabel.setText(R.string.number_responses_or_comments_add_comment_label);
+            if (discussionThread.isClosed()) {
+                holder.numberResponsesOrCommentsLabel.setText(context.getString(
+                        R.string.discussion_add_comment_disabled_title));
+                holder.numberResponsesIconView.setIcon(Iconify.IconValue.fa_lock);
+            }
+            else {
+                holder.numberResponsesOrCommentsLabel.setText(context.getString(
+                        R.string.number_responses_or_comments_add_comment_label));
+                holder.numberResponsesIconView.setIcon(Iconify.IconValue.fa_comment);
+            }
         } else {
             holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren));
+            holder.numberResponsesIconView.setIcon(Iconify.IconValue.fa_comment);
         }
     }
 
@@ -362,6 +377,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
         ETextView threadTitleTextView;
         ETextView threadBodyTextView;
+        IconView threadClosedIconView;
         IconView threadPinnedIconView;
 
         AuthorLayoutViewHolder authorLayoutViewHolder;
@@ -376,6 +392,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                     findViewById(R.id.discussion_responses_thread_row_title_text_view);
             threadBodyTextView = (ETextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_body_text_view);
+            threadClosedIconView = (IconView) itemView.
+                    findViewById(R.id.discussion_responses_thread_closed_icon_view);
             threadPinnedIconView = (IconView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_pinned_icon_view);
 

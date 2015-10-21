@@ -52,6 +52,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         String threadTitle = discussionThread.getTitle();
         holder.discussionPostTitle.setText(threadTitle);
 
+        holder.discussionPostClosedIcon.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);
         holder.discussionPostPinIcon.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
         holder.discussionPostFollowIcon.setVisibility(discussionThread.isFollowing() ? View.VISIBLE : View.GONE);
 
@@ -113,6 +114,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         final View discussionPostRow;
         final IconView discussionPostTypeIcon;
         final TextView discussionPostTitle;
+        final IconView discussionPostClosedIcon;
         final IconView discussionPostPinIcon;
         final IconView discussionPostFollowIcon;
         final TextView discussionPostAuthor;
@@ -122,6 +124,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             discussionPostRow = convertView;
             discussionPostTypeIcon = (IconView) convertView.findViewById(R.id.discussion_post_type_icon);
             discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
+            discussionPostClosedIcon = (IconView) convertView.findViewById(R.id.discussion_post_closed_icon);
             discussionPostPinIcon = (IconView) convertView.findViewById(R.id.discussion_post_pin_icon);
             discussionPostFollowIcon = (IconView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostAuthor = (TextView) convertView.findViewById(R.id.discussion_post_author);

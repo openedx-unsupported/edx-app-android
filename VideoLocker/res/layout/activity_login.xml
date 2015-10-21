@@ -143,7 +143,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:linksClickable="true"
-                        android:text="@string/licensing_agreement"
+                        tools:text="@string/licensing_agreement"
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="11sp" />
 

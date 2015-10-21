@@ -56,7 +56,7 @@
         android:paddingStart="20dp"
         android:paddingRight="0dp"
         android:paddingEnd="0dp"
-        android:text="@string/friends_with_edx_accounts"
+        tools:text="@string/friends_with_edx_accounts"
         android:gravity="center_vertical"
         tools:targetApi="17" />
 
