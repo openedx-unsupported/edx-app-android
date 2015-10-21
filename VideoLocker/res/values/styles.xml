@@ -31,7 +31,6 @@
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="android:popupMenuStyle">@style/edX.Widget.PopupMenu</item>
         <item name="edgePopupMenuStyle">@style/edX.Widget.EdgePopupMenu</item>
-        <item name="android:popupBackground">@drawable/popup_menu</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarTabStyle">@style/TabsStyle</item>
@@ -299,13 +298,13 @@
 
     <!-- Spinner with the popup style -->
     <style name="edX.Widget.ListPopupWindow" android:parent="@style/Widget.AppCompat.ListPopupWindow">
-        <item name="android:popupBackground">?android:attr/popupBackground</item>
+        <item name="android:popupBackground">@drawable/popup_menu</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
     <style name="edX.Widget.PopupMenu" android:parent="@android:style/Widget.Holo.Light.PopupMenu">
-        <item name="android:popupBackground">?android:attr/popupBackground</item>
+        <item name="android:popupBackground">@drawable/popup_menu</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
         <item name="android:paddingLeft">@dimen/popupMenuHorizontalPadding</item>
