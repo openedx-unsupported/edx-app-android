@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.widget.FacebookDialog;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.exception.AuthException;
@@ -20,6 +21,8 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
+import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.util.ArrayList;
@@ -31,6 +34,9 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
 
     private final int FREINDS_COURSES_LOADER_ID = 0x605000;
     private LinearLayout noFriendsLayout;
+
+    @Inject
+    Config config;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,12 +69,17 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        String platformName = config.getPlatformName();
 
         View view = super.onCreateView(inflater, container, savedInstanceState);
         noFriendsLayout = (LinearLayout) view.findViewById(R.id.friends_course_no_friends_layout);
         TextView shareBtn = (TextView) view.findViewById(R.id.friends_course_no_btn_share_app);
+        CharSequence shareText = ResourceUtil.getFormattedString(getResources(), R.string.btn_share_app, "platform_name", platformName);
+        shareBtn.setText(shareText);
         shareBtn.setOnClickListener(this);
-
+        CharSequence errorText = ResourceUtil.getFormattedString(getResources(), R.string.error_no_friends_connected, "platform_name", platformName);
+        TextView errorMessageView = (TextView)view.findViewById(R.id.error_message);
+        errorMessageView.setText(errorText);
         return view;
 
     }

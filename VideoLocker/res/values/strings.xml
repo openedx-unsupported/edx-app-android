@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">edX</string>
-
+    <string name="app_name">@string/platform_name</string>
     <!-- Common values -->
     <!-- Button to visit course group on facebook -->
     <string name="course_details_fb_group">Official course Facebook group</string>
@@ -22,7 +21,7 @@
     <!-- Title of friends in course screen -->
     <string name="friends_in_this_course">Friends in This Course</string>
 
-    <string name="share_application_title">edX for Android</string>
+    <string name="share_application_title">{platform_name} for Android</string>
     <string name="share_application_link_url">http://www.edx.org</string>
     <string name="share_application_picture_url">https://www.edx.org/sites/default/files/theme/edx-logo-header.png</string>
     <string name="share_application_description">Free online courses</string>
@@ -99,8 +98,8 @@
     <!-- Button text allowing a user to go to the register screen -->
     <string name="new_user">Need an account?</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
-    <string name="licensing_agreement">edX Terms of Service and Honor Code</string>
-    <string name="login_title">Sign in to edX</string>
+    <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
+    <string name="login_title">Sign in to {platform_name}</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->
@@ -157,9 +156,9 @@
     <!-- Alert dialog button label -->
     <string name="delete_successful_dialog_title_help">Delete</string>
     <!-- Alert dialog title for users with zero rated data -->
-    <string name="leaving_app_data_title">Leaving the edX App</string>
+    <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
-    <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free edX content. Data charges may apply.</string>
+    <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
 
     <!-- Reset Dialog Fragment Place Holder messages -->
     <string name="reset_dialog_title">Reset Title</string>
@@ -336,6 +335,8 @@
 
     <!-- Title in adding a new comment -->
     <string name="discussion_add_comment_title">Add a comment</string>
+    <!-- Title when adding a new comment is disabled -->
+    <string name="discussion_add_comment_disabled_title">Comments are closed for this response</string>
     <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
     <!-- Add comment button title in adding a new comment -->
@@ -345,6 +346,8 @@
 
     <!-- Title in adding a new response -->
     <string name="discussion_add_response_title">Add a response</string>
+    <!-- Title when adding a new response is disabled -->
+    <string name="discussion_add_response_disabled_title">Responses are closed for this post</string>
     <!-- Title in showing list of responses -->
     <string name="discussion_responses">Responses</string>
     <!-- Add response button title in adding a new response -->
@@ -490,7 +493,7 @@
     <!-- Hint text for description field in study group creation screen -->
     <string name="hint_group_desc">Enter Group Description</string>
     <!-- Disclaimer message shown when creating a new study group -->
-    <string name="create_group_disclaimer">Creating an edX group will also create a Facebook group. The group discussion can only be seen by group members.</string>
+    <string name="create_group_disclaimer">Creating an {platform_name} group will also create a Facebook group. The group discussion can only be seen by group members.</string>
     <!-- Next button for creating a study group -->
     <string name="create_group_next">Next</string>
     <!-- Label indicating social feature provider (like facebook) username when creating a study group -->
@@ -518,7 +521,7 @@
     <!-- Error message shown when attempting to use Facebook enabled features without connecting a facebook account -->
     <string name="error_no_fb">Error not connected to Facebook</string>
     <!-- Error message shown when attempting to invite friends to a study group, but user has no facebook friends -->
-    <string name="error_no_friends_connected">None of your Facebook friends are connected to edX</string>
+    <string name="error_no_friends_connected">None of your Facebook friends are connected to {platform_name}</string>
     <!-- Header on study groups screen encouraging users to create a group -->
     <string name="empty_groups_header">More minds are better than one</string>
     <!-- Message on study groups screen encouraging users to create a group -->
@@ -530,9 +533,9 @@
     <!-- Message shown after inviting friends to a study group -->
     <string name="friends_invited">Friends Invited</string>
     <!-- Button title for action that allows users to share this app -->
-    <string name="btn_share_app">Tell your friends about edX</string>
+    <string name="btn_share_app">Tell your friends about {platform_name}</string>
     <!-- Header for social friends list -->
-    <string name="friends_with_edx_accounts">Friends with edX accounts</string>
+    <string name="friends_with_platform_accounts">Friends with {platform_name} accounts</string>
     <!-- Header for friends search -->
     <string name="search_results">Search results</string>
     <!-- Button allowing a user to search for friends -->
@@ -572,8 +575,8 @@
     <string name="course_not_listed_btn">Don\'t see one of your courses button</string>
     <!-- Message on course page for course that hasn't started -->
     <string name="course_content_available_text">This course hasn\'t started yet. Come back on {start_time} to see your videos.</string>
-    <!-- Button text, allowing user to open the edx website in a web browser -->
-    <string name="open_edx_btn_text">Open edx.org in my browser</string>
+    <!-- Button text, allowing user to open the platform's website in a web browser -->
+    <string name="open_destination_btn_text">Open {platform_destination} in my browser</string>
     <!-- Message shown when linking to the external course list when in app course registration is not enabled -->
     <string name="find_courses_dialog_text_1">Our team is currently working hard to let you enroll in courses within the app.</string>
     <!-- Message shown when linking to the external course list when in app course registration is not enabled -->
@@ -599,7 +602,7 @@
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an edX account, you agree to the </string>
+    <string name="by_creating_account">By creating an {platform_name} account, you agree to the </string>
     <!-- Button text allowing user to show hidden optional registration fields -->
     <string name="show_optional_text">Show optional fields</string>
     <!-- Button text allowing user to hide visible optional registration fields -->
@@ -611,11 +614,11 @@
     <!-- Text shown while waiting for registration request -->
     <string name="creating_account_text">Creating account...</string>
     <!-- Registration screen title -->
-    <string name="register_title">Sign up for edX</string>
+    <string name="register_title">Sign up for {platform_name}</string>
     <!-- Text for successful registration with social token  -->
     <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook.</string>
     <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google.</string>
-    <string name="sign_up_with_social_ok">We just need a little more information before you start learning with edX.</string>
+    <string name="sign_up_with_social_ok">We just need a little more information before you start learning with {platform_name}.</string>
     <!-- Continue registration after social login -->
     <string name="complete_registration">Complete your registration</string>
     <!-- Message shown when enrolling in a course fails-->

@@ -30,6 +30,8 @@ public class Config {
     /* Individual configuration keys */
     private static final String API_HOST_URL = "API_HOST_URL";
     private static final String ENVIRONMENT_DISPLAY_NAME = "ENVIRONMENT_DISPLAY_NAME";
+    private static final String PLATFORM_NAME = "PLATFORM_NAME";
+    private static final String PLATFORM_DESTINATION_NAME = "PLATFORM_DESTINATION_NAME";
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
@@ -314,6 +316,17 @@ public class Config {
         return getString(API_HOST_URL);
     }
 
+    // User facing name of the platform like "edX"
+    public String getPlatformName() {
+        return getString(PLATFORM_NAME);
+    }
+
+    // User facing name of the platform as a destination like "edx.org"
+    public String getPlatformDestinationName() {
+        return getString(PLATFORM_DESTINATION_NAME);
+    }
+
+    // Debug name of the current configuration
     public String getEnvironmentDisplayName() {
         return getString(ENVIRONMENT_DISPLAY_NAME);
     }

@@ -32,6 +32,7 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
@@ -113,6 +114,9 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         });
 
         eulaTv = (TextView) findViewById(R.id.end_user_agreement_tv);
+        String platformName = environment.getConfig().getPlatformName();
+        CharSequence licenseText = ResourceUtil.getFormattedString(getResources(), R.string.licensing_agreement, "platform_name", platformName);
+        eulaTv.setText(licenseText);
         eulaTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

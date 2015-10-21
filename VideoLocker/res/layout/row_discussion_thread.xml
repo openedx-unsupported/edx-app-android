@@ -39,6 +39,15 @@
             android:orientation="horizontal">
 
             <org.edx.mobile.third_party.iconify.IconView
+                android:id="@+id/discussion_post_closed_icon"
+                android:layout_width="@dimen/edx_x_small"
+                android:layout_height="@dimen/edx_x_small"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa_lock" />
+
+            <org.edx.mobile.third_party.iconify.IconView
                 android:id="@+id/discussion_post_pin_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"

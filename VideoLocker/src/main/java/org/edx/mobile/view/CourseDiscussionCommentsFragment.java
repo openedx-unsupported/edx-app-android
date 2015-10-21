@@ -17,6 +17,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
@@ -28,19 +29,22 @@ import roboguice.inject.InjectView;
 public class CourseDiscussionCommentsFragment extends RoboFragment implements DiscussionCommentsAdapter.Listener {
 
     @InjectView(R.id.discussion_comments_listview)
-    RecyclerView discussionCommentsListView;
+    private RecyclerView discussionCommentsListView;
 
     @InjectView(R.id.create_new_item_text_view)
-    TextView createNewCommentTextView;
+    private TextView createNewCommentTextView;
 
     @InjectView(R.id.create_new_item_layout)
-    ViewGroup createNewCommentLayout;
+    private ViewGroup createNewCommentLayout;
 
     @Inject
-    Router router;
+    private Router router;
 
     @Inject
-    Context context;
+    private Context context;
+
+    @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC_CLOSED)
+    private boolean isTopicClosed;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
     private DiscussionComment discussionComment;
@@ -71,14 +75,15 @@ public class CourseDiscussionCommentsFragment extends RoboFragment implements Di
         });
         discussionCommentsListView.setAdapter(discussionCommentsAdapter);
 
-        createNewCommentTextView.setText(context.getString(R.string.discussion_post_create_new_comment));
-
-        createNewCommentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                router.showCourseDiscussionAddComment(context, discussionComment);
-            }
-        });
+        DiscussionUtils.setStateOnTopicClosed(isTopicClosed,
+                createNewCommentTextView, R.string.discussion_post_create_new_comment,
+                R.string.discussion_add_comment_disabled_title, createNewCommentLayout,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        router.showCourseDiscussionAddComment(context, discussionComment);
+                    }
+                });
     }
 
     @Override
