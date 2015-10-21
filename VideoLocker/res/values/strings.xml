@@ -335,6 +335,8 @@
 
     <!-- Title in adding a new comment -->
     <string name="discussion_add_comment_title">Add a comment</string>
+    <!-- Title when adding a new comment is disabled -->
+    <string name="discussion_add_comment_disabled_title">Comments are closed for this response</string>
     <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
     <!-- Add comment button title in adding a new comment -->
@@ -344,6 +346,8 @@
 
     <!-- Title in adding a new response -->
     <string name="discussion_add_response_title">Add a response</string>
+    <!-- Title when adding a new response is disabled -->
+    <string name="discussion_add_response_disabled_title">Responses are closed for this post</string>
     <!-- Title in showing list of responses -->
     <string name="discussion_responses">Responses</string>
     <!-- Add response button title in adding a new response -->

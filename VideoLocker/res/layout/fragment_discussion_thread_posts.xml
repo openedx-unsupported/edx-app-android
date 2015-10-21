@@ -45,7 +45,7 @@
 
     </LinearLayout>
     
-    <View style="@style/grey_separator" />
+    <View style="@style/gray_separator" />
 
     <ListView
         android:id="@+id/discussion_posts_listview"

@@ -70,6 +70,7 @@
     <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>
     <dimen name="discussion_post_box_height">50dp</dimen>
     <dimen name="discussion_post_extra_box_height">25dp</dimen>
+    <dimen name="discussion_posts_icon_margin">5dp</dimen>
 
     <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>

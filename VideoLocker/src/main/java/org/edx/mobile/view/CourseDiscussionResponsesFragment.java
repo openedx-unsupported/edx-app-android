@@ -16,6 +16,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.discussion.ThreadComments;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
@@ -25,22 +26,32 @@ import org.edx.mobile.view.adapters.IPagination;
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
 
 public class CourseDiscussionResponsesFragment extends RoboFragment implements CourseDiscussionResponsesAdapter.Listener {
 
     @Inject
-    LinearLayoutManager linearLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
+
+    @InjectView(R.id.discussion_responses_recycler_view)
+    private RecyclerView discussionResponsesRecyclerView;
+
+    @InjectView(R.id.create_new_item_text_view)
+    private TextView addResponseTextView;
+
+    @InjectView(R.id.create_new_item_layout)
+    private ViewGroup addResponseLayout;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
-    DiscussionThread discussionThread;
+    private DiscussionThread discussionThread;
 
     @InjectExtra(value = Router.EXTRA_COURSE_DATA, optional = true)
-    EnrolledCoursesResponse courseData;
+    private EnrolledCoursesResponse courseData;
+
+    private CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
 
     @Inject
-    Router router;
-
-    CourseDiscussionResponsesAdapter courseDiscussionResponsesAdapter;
+    private Router router;
 
     private GetCommentListTask getCommentListTask;
 
@@ -56,9 +67,6 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final RecyclerView discussionResponsesRecyclerView = (RecyclerView) view.findViewById(R.id.discussion_responses_recycler_view);
-        final TextView addResponseTextView = (TextView) view.findViewById(R.id.create_new_item_text_view);
-        final ViewGroup addResponseLayout = (ViewGroup) view.findViewById(R.id.create_new_item_layout);
 
         discussionResponsesRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -69,14 +77,15 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
 
         getCommentList(true);
 
-        addResponseTextView.setText(R.string.discussion_responses_add_response_button);
-
-        addResponseLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
-            }
-        });
+        DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
+                addResponseTextView, R.string.discussion_responses_add_response_button,
+                R.string.discussion_add_response_disabled_title, addResponseLayout,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
+                    }
+                });
     }
 
     protected void getCommentList(final boolean refresh) {
@@ -152,6 +161,6 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
 
     @Override
     public void onClickViewComments(@NonNull DiscussionComment comment) {
-        router.showCourseDiscussionComments(getActivity(), comment);
+        router.showCourseDiscussionComments(getActivity(), comment, discussionThread.isClosed());
     }
 }
