@@ -8,6 +8,7 @@
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
     android:layout_marginTop="@dimen/discussion_responses_standard_margin"
     app:cardUseCompatPadding="true"
+    app:cardPreventCornerOverlap="false"
     app:cardCornerRadius="@dimen/edx_box_radius">
 
     <LinearLayout
@@ -47,7 +48,7 @@
             android:id="@+id/discussion_responses_comment_relative_layout"
             style="@style/discussion_responses_nested_card_layout"
             android:layout_height="@dimen/discussion_responses_comments_button_height"
-            android:background="@color/edx_grayscale_neutral_xx_light"
+            android:background="@drawable/discussion_add_comment_background"
             android:gravity="center_horizontal|center_vertical">
 
             <include layout="@layout/number_responses_or_comments_layout" />
