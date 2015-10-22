@@ -18,7 +18,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
 
         //Included for NewRelic
-        classpath "com.newrelic.agent.android:agent-gradle-plugin:4.+"
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:5.3.1"
 
     }
 }
@@ -121,7 +121,7 @@ dependencies {
     }
 
     //New Relic Integration
-    compile 'com.newrelic.agent.android:android-agent:4.+'
+    compile 'com.newrelic.agent.android:android-agent:5.3.1'
 
     // Parse notification service
     compile 'com.parse:parse-android:1.10.2'
@@ -165,6 +165,7 @@ configurations {
 }
 
 android {
+    def config = new TaskHelper().loadConfig(project)
 
     signingConfigs {
         releasekey {
@@ -199,6 +200,9 @@ android {
         multiDexEnabled true
 
         manifestPlaceholders = [ supportsRtl:"false"]
+
+        def platformName = config.get('PLATFORM_NAME')
+        resValue "string", "platform_name", platformName
     }
     sourceSets {
         main {
@@ -229,7 +233,6 @@ android {
 
     productFlavors {
         prod {
-            def config = new TaskHelper().loadConfig(project)
             def fabric = config.get('FABRIC')
             if (fabric != null) {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null

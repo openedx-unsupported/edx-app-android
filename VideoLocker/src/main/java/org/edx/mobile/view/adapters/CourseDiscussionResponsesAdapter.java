@@ -20,6 +20,7 @@ import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
+import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
@@ -93,6 +94,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         View discussionResponseRow = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.discussion_responses_response_row, parent, false);
+        // CardView adds extra padding on pre-lollipop devices for shadows
+        // Since, we've set cardUseCompatPadding to true in the layout file
+        // so we need to deduct the extra padding from margins in any case to get the desired results
+        UiUtil.adjustCardViewMargins(discussionResponseRow);
 
         return new DiscussionResponseViewHolder(discussionResponseRow);
 

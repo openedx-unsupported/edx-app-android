@@ -55,8 +55,9 @@ public class MediaConsentUtils {
         if (connectedToWifi) {
             consentCallback.onPositiveClicked();
         } else {
-            String title = activity.getString(R.string.leaving_app_data_title);
-            String message = activity.getString(R.string.leaving_app_data_message);
+            CharSequence platformName = activity.getString(R.string.platform_name);
+            String title = ResourceUtil.getFormattedString(activity.getResources(), R.string.leaving_app_data_title, "platform_name", platformName).toString();
+            String message = ResourceUtil.getFormattedString(activity.getResources(), R.string.leaving_app_data_message, "platform_name", platformName).toString();
             String positiveLabel = activity.getString(R.string.label_ok);
             String negativeLabel = activity.getString(R.string.label_cancel);
 

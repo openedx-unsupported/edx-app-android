@@ -158,11 +158,15 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
      */
     @Test
     public void processLifecycleTest() {
-        CourseBaseActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
+        // We need to retrieve the progressWheel view before calling visible(), since that
+        // initializes fragment views as well, which might add other views with the same id
+        ActivityController<? extends CourseBaseActivity> controller =
+                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent())
+                        .create().start().postCreate(null).resume();
+        CourseBaseActivity activity = controller.get();
         ProgressBar progressWheel = (ProgressBar)
                 activity.findViewById(R.id.progress_spinner);
+        controller.visible();
         if (progressWheel == null) {
             activity.startProcess();
             activity.finishProcess();

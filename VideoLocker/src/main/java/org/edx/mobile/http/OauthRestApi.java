@@ -22,7 +22,6 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-
 import static org.edx.mobile.http.ApiConstants.*;
 
 /**
@@ -48,16 +47,18 @@ public interface OauthRestApi {
 
     @Headers("Cache-Control: no-cache")
     @GET(URL_COURSE_OUTLINE)
-    String getCourseOutlineNoCache(@Path(COURSE_ID) String courseId,
-                                              @Query("block_count") String blockCount,
-                                              @Query("fields") String fields,
-                                              @Query("block_json") String blockJson);
+    String getCourseOutlineNoCache(@Query("course_id") String courseId,
+                                   @Query("user") String username,
+                                   @Query("requested_fields") String fields,
+                                   @Query("student_view_data") String blockJson,
+                                   @Query("block_counts") String blockCount);
 
     @GET(URL_COURSE_OUTLINE)
-    String getCourseOutline(@Path(COURSE_ID) String courseId,
-                            @Query("block_count") String blockCount,
-                            @Query("fields") String fields,
-                            @Query("block_json") String blockJson);
+    String getCourseOutline(@Query("course_id") String courseId,
+                            @Query("user") String username,
+                            @Query("requested_fields") String fields,
+                            @Query("student_view_data") String blockJson,
+                            @Query("block_counts") String blockCount);
 
     /**
      * Returns enrolled courses of given user.

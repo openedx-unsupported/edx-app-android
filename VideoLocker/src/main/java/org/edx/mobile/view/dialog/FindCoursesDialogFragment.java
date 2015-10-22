@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import roboguice.fragment.RoboDialogFragment;
@@ -48,6 +49,8 @@ public class FindCoursesDialogFragment extends RoboDialogFragment {
 
         // Watch for button clicks.
         Button find_courses_button = (Button) v.findViewById(R.id.open_edx_in_browser_btn);
+        CharSequence promptText = ResourceUtil.getFormattedString(getResources(), R.string.open_destination_btn_text, "platform_destination", environment.getConfig().getPlatformDestinationName());
+        find_courses_button.setText(promptText);
         find_courses_button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)

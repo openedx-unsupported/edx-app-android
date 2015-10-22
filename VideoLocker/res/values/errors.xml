@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- An error occurred but we don't know why -->
+    <string name="error_unknown">Unknown error. Please try again later.</string>
+
     <!-- Network error messages -->
     <!-- Error shown when  user attempts an action but needs an internet connection -->
     <string name="network_not_connected">You are not connected to the Internet.</string>
@@ -10,10 +13,14 @@
     <string name="reset_no_network_title">Connection Error</string>
     <!-- Alert dialog content shown when a network request fails because the user has no internet connection -->
     <string name="reset_no_network_message">You are not connected to the Internet. Please check your Internet connection.</string>
+    <!-- An error ocurred due to some kind of network failure -->
+    <string name="network_connected_error">Connection error. Please check your Internet connection.</string>
     <!-- Title of prompt indicating issue loading a video -->
     <string name="network_error_header">Problem loading video</string>
     <!-- Content of prompt indicating issue loading a video -->
     <string name="network_error_message">Please check your Internet Connection.</string>
+    <!-- The server we are trying to use is not available right now -->
+    <string name="network_service_unavailable">Service is unavailable. Please try again later.</string>
 
     <!-- Login error messages -->
     <!-- Error shown during login when user attempts login without entering a username or e-mail -->
@@ -23,13 +30,13 @@
     <!-- Error shown during login when user attempts login without entering a password -->
     <string name="error_enter_password">Please enter your password and try again.</string>
     <!-- Title of alert shown during login when user attempts login via Facebook without having linked their account -->
-    <string name="error_account_not_linked_title_fb">Facebook account not associated with edX account</string>
+    <string name="error_account_not_linked_title_fb">Facebook account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Facebook without having linked their account -->
-    <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your edX account on edx.org</string>
+    <string name="error_account_not_linked_desc_fb">Make sure your Facebook account is associated with your {platform_name} account on {platform_destination}</string>
     <!-- Title of alert shown during login when user attempts login via Google without having linked their account -->
-    <string name="error_account_not_linked_title_google">Google account not associated with edX account</string>
+    <string name="error_account_not_linked_title_google">Google account not associated with {platform_name} account</string>
     <!-- Content of alert shown during login when user attempts login via Google without having linked their account -->
-    <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your edX account on edx.org</string>
+    <string name="error_account_not_linked_desc_google">Make sure your Google account is associated with your {platform_name} account on {platform_destination}</string>
     
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->

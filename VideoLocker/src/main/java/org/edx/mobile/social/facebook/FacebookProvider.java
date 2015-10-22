@@ -35,6 +35,7 @@ import org.edx.mobile.task.social.CreateGroupTask;
 import org.edx.mobile.task.social.InviteFriendsListToGroupTask;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.util.ArrayList;
@@ -243,7 +244,7 @@ public class FacebookProvider implements SocialProvider {
                 try {
                     json = graph.getInnerJSONObject().getJSONArray("data").toString();
                 } catch (Exception e) {
-                    callback.onError(new SocialError(context.getString(R.string.error_unknown), e));
+                    callback.onError(new SocialError(context.getString(R.string.error_unknown_title), e));
                     return;
                 }
 
@@ -310,7 +311,7 @@ public class FacebookProvider implements SocialProvider {
                 try {
                     json = graph.getInnerJSONObject().getJSONArray("data").toString();
                 } catch (Exception e) {
-                    callback.onError(new SocialError(context.getString(R.string.error_unknown), e));
+                    callback.onError(new SocialError(context.getString(R.string.error_unknown_title), e));
                     return;
                 }
 
@@ -345,9 +346,10 @@ public class FacebookProvider implements SocialProvider {
         }
 
         FacebookDialog.ShareDialogBuilder dialogBuilder = new FacebookDialog.ShareDialogBuilder(activity);
+        String name = ResourceUtil.getFormattedString(activity.getResources(), R.string.share_application_title, "platform_name", config.getPlatformName()).toString();
         dialogBuilder.setLink(activity.getString(R.string.share_application_link_url));
         dialogBuilder.setPicture(activity.getString(R.string.share_application_picture_url));
-        dialogBuilder.setName(activity.getString(R.string.share_application_title));
+        dialogBuilder.setName(name);
         dialogBuilder.setDescription(activity.getString(R.string.share_application_description));
 
         return dialogBuilder.build();
