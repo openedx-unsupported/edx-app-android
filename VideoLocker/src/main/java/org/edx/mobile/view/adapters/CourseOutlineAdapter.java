@@ -294,13 +294,10 @@ public class CourseOutlineAdapter extends BaseAdapter{
             new DataCallback<DownloadEntry.WatchedState>(true) {
                 @Override
                 public void onResult(DownloadEntry.WatchedState result) {
-                    DownloadEntry.WatchedState ws = result;
-                    if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
-                    } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+                    if(result != null && result == DownloadEntry.WatchedState.WATCHED) {
                         viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
                     } else {
-                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
+                        viewHolder.rowType.setIconColor(context.getResources().getColor(R.color.edx_brand_primary_base));
                     }
                 }
                 @Override
