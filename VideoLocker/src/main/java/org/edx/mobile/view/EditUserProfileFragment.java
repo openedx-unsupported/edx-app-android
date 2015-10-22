@@ -65,6 +65,8 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
 
+    private SetAccountImageTask setAccountImageTask;
+
     @Nullable
     private Account account;
 
@@ -137,6 +139,9 @@ public class EditUserProfileFragment extends RoboFragment {
         super.onDestroy();
         getAccountTask.cancel(true);
         getProfileFormDescriptionTask.cancel(true);
+        if (null != setAccountImageTask) {
+            setAccountImageTask.cancel(true);
+        }
         helper.onDestroy();
     }
 
@@ -292,7 +297,10 @@ public class EditUserProfileFragment extends RoboFragment {
                                 AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
                     }
                     // TODO: Test this with "Don't keep activities"
-                    final SetAccountImageTask task = new SetAccountImageTask(getActivity(), username, imageUri) {
+                    if (null != setAccountImageTask) {
+                        setAccountImageTask.cancel(true);
+                    }
+                    setAccountImageTask = new SetAccountImageTask(getActivity(), username, imageUri) {
                         @Override
                         protected void onSuccess(Void aVoid) throws Exception {
                             hideLoading();
@@ -311,8 +319,8 @@ public class EditUserProfileFragment extends RoboFragment {
                             viewHolder.profileImageProgress.setVisibility(View.GONE);
                         }
                     };
-                    task.setProgressCallback(null); // Hide default loading indicator
-                    task.execute();
+                    setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
+                    setAccountImageTask.execute();
                 }
                 break;
             }
