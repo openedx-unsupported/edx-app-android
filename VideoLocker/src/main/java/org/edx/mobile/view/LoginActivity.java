@@ -59,7 +59,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     private TextView errorHeader;
     private TextView errorMessage;
     private SocialLoginDelegate socialLoginDelegate;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +73,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
-        imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
-        imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
+        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
+        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
+        imgFacebook.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
+        imgGoogle.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
 
 
         email_et = (EditText) findViewById(R.id.email_et);
@@ -128,16 +128,16 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         errorHeader = (TextView) findViewById(R.id.error_header);
         errorMessage = (TextView) findViewById(R.id.error_message);
 
-        try{
+        try {
             environment.getSegment().screenViewsTracking("Login");
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
 
         Button closeButton = (Button)
                 findViewById(R.id.actionbar_close_btn);
-        if(closeButton!=null){
+        if (closeButton != null) {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -159,42 +159,39 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             if (!config.getFacebookConfig().isEnabled()
                     && !config.getGoogleConfig().isEnabled()) {
                 findViewById(R.id.panel_login_social).setVisibility(View.GONE);
-            }
-            else if (!config.getFacebookConfig().isEnabled()) {
+            } else if (!config.getFacebookConfig().isEnabled()) {
                 findViewById(R.id.facebook_layout).setVisibility(View.GONE);
-            }
-            else if (!config.getGoogleConfig().isEnabled()) {
+            } else if (!config.getGoogleConfig().isEnabled()) {
                 findViewById(R.id.google_layout).setVisibility(View.GONE);
             }
         }
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
-        if(customTitle!=null){
-            customTitle.setText(getString(R.string.login_title));
+        if (customTitle != null) {
+            customTitle.setText(ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
         }
 
-        TextView version_tv = (TextView)  findViewById(R.id.tv_version_no);
-        try{
+        TextView version_tv = (TextView) findViewById(R.id.tv_version_no);
+        try {
             String envDisplayName = config.getEnvironmentDisplayName();
 
-            if(envDisplayName != null && envDisplayName.length() > 0 ) {
+            if (envDisplayName != null && envDisplayName.length() > 0) {
                 version_tv.setVisibility(View.VISIBLE);
                 String versionName = PropertyUtil.getManifestVersionName(this);
                 String text = String.format("%s %s %s",
                         getString(R.string.label_version), versionName, envDisplayName);
                 version_tv.setText(text);
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e);
         }
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         socialLoginDelegate.onActivityDestroyed();
     }
-
 
 
     @Override
@@ -209,7 +206,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onStart() {
         super.onStart();
-        if(email_et.getText().toString().length()==0){
+        if (email_et.getText().toString().length() == 0) {
             displayLastEmailId();
         }
 
@@ -220,7 +217,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             email_et.setText(savedInstanceState.getString("username"));
         }
     }
@@ -233,9 +230,9 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
 
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        PrefManager pm =new PrefManager(LoginActivity.this, PrefManager.Pref.LOGIN);
+        PrefManager pm = new PrefManager(LoginActivity.this, PrefManager.Pref.LOGIN);
         //MOB-1343 : app enter here when user in the login window and lock the screen
         if (pm.getCurrentUserProfile() != null) {
             Intent intent = new Intent(LoginActivity.this, MyCoursesListActivity.class);
@@ -250,7 +247,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         email_et.setText(emailId);
     }
 
-    public ProgressBar getProgressBar(){
+    public ProgressBar getProgressBar() {
         return this.progressbar;
     }
 
@@ -264,15 +261,11 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_email));
                 email_et.requestFocus();
-            }
-
-            else if (password_et != null && passwordStr.length() == 0) {
+            } else if (password_et != null && passwordStr.length() == 0) {
                 showErrorMessage(getString(R.string.login_error),
                         getString(R.string.error_enter_password));
                 password_et.requestFocus();
-            }
-
-            else {
+            } else {
                 email_et.setEnabled(false);
                 password_et.setEnabled(false);
                 forgotPassword_tv.setEnabled(false);
@@ -280,8 +273,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
                 clearDialogs();
 
-                LoginTask logintask = new LoginTask(this,email_et.getText().toString().trim(),
-                    password_et.getText().toString()) {
+                LoginTask logintask = new LoginTask(this, email_et.getText().toString().trim(),
+                        password_et.getText().toString()) {
                     @Override
                     public void onSuccess(AuthResponse result) {
                         try {
@@ -294,7 +287,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
                                                 getString(R.string.login_failed));
                                 throw new LoginException(errorMsg);
                             }
-                        } catch(LoginException ex) {
+                        } catch (LoginException ex) {
                             logger.error(ex);
                             handle(ex);
                         }
@@ -336,7 +329,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             @Override
             protected void onResetSuccessful() {
                 super.onResetSuccessful();
-                if(isActivityStarted())
+                if (isActivityStarted())
                     showResetSuccessDialog();
             }
 
@@ -368,7 +361,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         showWebDialog(getString(R.string.eula_file_link), true,
                 getString(R.string.end_user_title));
     }
-    
+
     public void showResetFailure(String text) {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.title_reset_password_failed));
@@ -429,8 +422,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
     }
 
-    private void clearDialogs(){
-        if(resetDialog!=null){
+    private void clearDialogs() {
+        if (resetDialog != null) {
             resetDialog.dismiss();
         }
     }
@@ -442,17 +435,17 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
 
-
     /**
      * Starts fetching profile of the user after login by Facebook or Google.
+     *
      * @param accessToken
      * @param backend
      */
-    public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
+    public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
         tryToSetUIInteraction(false);
         task.setProgressDialog(progressbar);
     }
-    
+
     public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         // save this email id
@@ -461,11 +454,11 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
 
-        environment.getSegment().identifyUser(profile.id.toString(), profile.email ,
+        environment.getSegment().identifyUser(profile.id.toString(), profile.email,
                 email_et.getText().toString().trim());
-        
+
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
-        if(backendKey!=null){
+        if (backendKey != null) {
             environment.getSegment().trackUserLogin(backendKey);
         }
 
@@ -474,7 +467,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         myCourseScreen();
     }
-    
+
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
         tryToSetUIInteraction(true);
 
@@ -501,8 +494,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
 
     @Override
-    public boolean tryToSetUIInteraction(boolean enable){
-        if ( enable ){
+    public boolean tryToSetUIInteraction(boolean enable) {
+        if (enable) {
             unblockTouch();
             loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
             loginButtonLayout.setEnabled(enable);
@@ -515,8 +508,8 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         }
 
 
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
+        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
         imgFacebook.setClickable(enable);
         imgGoogle.setClickable(enable);
 
