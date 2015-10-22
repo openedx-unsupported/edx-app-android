@@ -86,26 +86,28 @@ public class FormFieldSelectFragment extends RoboFragment {
             }
             listView.addHeaderView(instructionsContainer, null, false);
         }
-        switch (formField.getDataType()) {
-            case COUNTRY: {
-                final Locale locale = Locale.getDefault();
-                addDetectedValueHeader(listView,
-                        R.string.edit_user_profile_current_location,
-                        "current_location",
-                        locale.getDisplayCountry(),
-                        locale.getCountry(),
-                        Iconify.IconValue.fa_map_marker);
-                break;
-            }
-            case LANGUAGE: {
-                final Locale locale = Locale.getDefault();
-                addDetectedValueHeader(listView,
-                        R.string.edit_user_profile_current_language,
-                        "current_language",
-                        locale.getDisplayLanguage(),
-                        locale.getLanguage(),
-                        Iconify.IconValue.fa_comment);
-                break;
+        if (null != formField.getDataType()) {
+            switch (formField.getDataType()) {
+                case COUNTRY: {
+                    final Locale locale = Locale.getDefault();
+                    addDetectedValueHeader(listView,
+                            R.string.edit_user_profile_current_location,
+                            "current_location",
+                            locale.getDisplayCountry(),
+                            locale.getCountry(),
+                            Iconify.IconValue.fa_map_marker);
+                    break;
+                }
+                case LANGUAGE: {
+                    final Locale locale = Locale.getDefault();
+                    addDetectedValueHeader(listView,
+                            R.string.edit_user_profile_current_language,
+                            "current_language",
+                            locale.getDisplayLanguage(),
+                            locale.getLanguage(),
+                            Iconify.IconValue.fa_comment);
+                    break;
+                }
             }
         }
         listView.setAdapter(adapter);
