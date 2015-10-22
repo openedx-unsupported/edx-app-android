@@ -10,6 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Account {
+
+    public static final String ACCOUNT_PRIVACY_SERIALIZED_NAME = "account_privacy";
+    public static final String PRIVATE_SERIALIZED_NAME = "private";
+    public static final String YEAR_OF_BIRTH_SERIALIZED_NAME = "year_of_birth";
+
     @SerializedName("username")
     @NonNull
     private String username;
@@ -36,7 +41,7 @@ public class Account {
     @NonNull
     private ProfileImage profileImage;
 
-    @SerializedName("year_of_birth")
+    @SerializedName(YEAR_OF_BIRTH_SERIALIZED_NAME)
     @Nullable
     private Integer yearOfBirth;
 
@@ -68,7 +73,7 @@ public class Account {
     @Nullable // Nullability not specified by API
     private Date dateJoined;
 
-    @SerializedName("account_privacy")
+    @SerializedName(ACCOUNT_PRIVACY_SERIALIZED_NAME)
     @Nullable
     private Privacy accountPrivacy;
 
@@ -215,7 +220,8 @@ public class Account {
     }
 
     public enum Privacy {
-        @SerializedName("private")
+
+        @SerializedName(PRIVATE_SERIALIZED_NAME)
         PRIVATE,
 
         @SerializedName("all_users")
