@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class CourseStructureV1Model implements Serializable{
 
-    @SerializedName("blocks+navigation")
+    @SerializedName("blocks")
     public BlockList blockData;
 
     @SerializedName("root")

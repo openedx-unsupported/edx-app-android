@@ -2,22 +2,18 @@ package org.edx.mobile.test.http;
 
 import android.text.TextUtils;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.test.BaseTestCase;
-import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,20 +53,11 @@ public class OkHttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    protected Config createConfig(){
-        // Set up a new config instance that serves the mock host url
-        JsonObject properties;
-        try {
-            InputStream in = context.getAssets().open("config/config.json");
-            JsonParser parser = new JsonParser();
-            JsonElement config = parser.parse(new InputStreamReader(in));
-            properties = config.getAsJsonObject();
-        } catch (Exception e) {
-            properties = new JsonObject();
-            logger.error(e);
-        }
+    protected JsonObject generateConfigProperties() throws IOException {
+        // Add the mock host url in the test config properties
+        JsonObject properties = super.generateConfigProperties();
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
-        return new Config(properties);
+        return properties;
     }
 
     @Override

@@ -37,7 +37,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -46,6 +45,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowView;
+import org.robolectric.shadows.ShadowWebView;
 import org.robolectric.util.ActivityController;
 import org.robolectric.util.Scheduler;
 
@@ -570,7 +570,7 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     protected static void showWebDialogTest(BaseFragmentActivity activity,
             String url, boolean showTitle, String title) {
-        activity.showWebDialog(url, true, title);
+        activity.showWebDialog(url, showTitle, title);
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         fragmentManager.executePendingTransactions();
         Fragment webViewFragment = fragmentManager.findFragmentByTag("web-view-dialog");
@@ -583,11 +583,15 @@ public class BaseFragmentActivityTest extends UiTest {
         assertNotNull(dialogView);
         WebView webView = (WebView) dialogView.findViewById(R.id.eula_webView);
         assertNotNull(webView);
-        assertThat(webView).hasUrl(url);
+        ShadowWebView shadowWebView = Shadows.shadowOf(webView);
+        assertEquals(shadowWebView.getLastLoadedUrl(), url);
         TextView titleView = (TextView) dialogView.findViewById(R.id.tv_dialog_title);
         assertNotNull(titleView);
         if (showTitle) {
-            assertThat(titleView).isVisible().hasText(title);
+            assertThat(titleView).isVisible();
+            if (title != null) {
+                assertThat(titleView).hasText(title);
+            }
         } else {
             assertThat(titleView).isNotVisible();
         }
@@ -599,11 +603,6 @@ public class BaseFragmentActivityTest extends UiTest {
      * Testing method for displaying web view dialog fragment
      */
     @Test
-    // There is currently a Robolectric issue with initializing EdxWebView:
-    // https://github.com/robolectric/robolectric/issues/793
-    // This test will be ignored until the issue is fixed.
-    // TODO: Fix it by adding appropriate shadow implementations in Robolectric
-    @Ignore
     public void showWebDialogTest() {
         BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())

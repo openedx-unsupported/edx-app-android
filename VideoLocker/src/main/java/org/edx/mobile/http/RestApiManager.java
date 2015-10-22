@@ -534,17 +534,19 @@ public class RestApiManager implements IApi{
     }
 
     public CourseComponent getCourseStructure(String courseId, boolean preferCache) throws Exception {
-        String block_count = URLEncoder.encode("video", "UTF-8");
-        String block_fields = URLEncoder.encode("graded,format,multi_device", "UTF-8");
-        String block_json = URLEncoder.encode("{\"video\":{\"profiles\":[\"mobile_high\",\"mobile_low\"]}}", "UTF-8");
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        String username = URLEncoder.encode(pref.getCurrentUserProfile().username, "UTF-8");
+        String block_counts = URLEncoder.encode("video", "UTF-8");
+        String requested_fields = URLEncoder.encode("graded,format,student_view_multi_device", "UTF-8");
+        String student_view_data = URLEncoder.encode("video", "UTF-8");
 
         String response;
         if (!NetworkUtil.isConnected(context)){
-            response = oauthRestApi.getCourseOutline(courseId, block_count, block_fields, block_json);
+            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts);
         } else if (preferCache) {
-            response = oauthRestApi.getCourseOutline(courseId, block_count, block_fields, block_json);
+            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts);
         } else {
-            response = oauthRestApi.getCourseOutlineNoCache(courseId,block_count,block_fields,block_json);
+            response = oauthRestApi.getCourseOutlineNoCache(courseId, username, requested_fields, student_view_data, block_counts);
         }
 
         CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(response);

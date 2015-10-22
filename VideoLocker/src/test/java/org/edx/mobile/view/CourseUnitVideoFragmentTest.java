@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
@@ -18,14 +17,16 @@ import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static org.assertj.android.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
 
 // We should add mock downloads, mock play, and state retention tests
@@ -36,7 +37,6 @@ import static org.junit.Assume.assumeNotNull;
 // The SDK version needs to be lesser than Lollipop because of this
 // issue: https://github.com/robolectric/robolectric/issues/1810
 @Config(sdk = 19)
-@Ignore // These tests require videos, which are not present in current mock data
 public class CourseUnitVideoFragmentTest extends UiTest {
     /**
      * Method for iterating through the mock course response data, and
@@ -134,19 +134,10 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         } else {
             assertThat(messageContainer).isVisible();
         }
-        if (Build.VERSION.SDK_INT < 16) {
-            Window window = fragment.getActivity().getWindow();
-            int windowAttributes = window.getAttributes().flags;
-            int expectedFullscreenFlag = isLandscape ?
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN :
-                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN;
-            assertTrue((windowAttributes & expectedFullscreenFlag) > 0);
-        } else {
-            View decorView = fragment.getActivity().getWindow().getDecorView();
-            int expectedVisibilityFlag = isLandscape ?
-                    View.SYSTEM_UI_FLAG_FULLSCREEN : View.VISIBLE;
-            assertEquals(expectedVisibilityFlag, decorView.getSystemUiVisibility());
-        }
+        Window window = fragment.getActivity().getWindow();
+        int windowAttributes = window.getAttributes().flags;
+        int expectedFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+        assertEquals(isLandscape, (windowAttributes & expectedFlag) > 0);
 
         View playerContainer = view.findViewById(R.id.player_container);
         if (playerContainer != null) {

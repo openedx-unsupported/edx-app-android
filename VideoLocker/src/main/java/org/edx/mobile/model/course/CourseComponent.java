@@ -41,11 +41,11 @@ public class CourseComponent implements IBlock, IPathNode {
         this.type = blockModel.type;
         this.name = blockModel.displayName;
         this.graded = blockModel.graded;
-        this.blockUrl = blockModel.blockUrl;
-        this.webUrl = blockModel.webUrl;
-        this.multiDevice =  blockModel.multiDevice;
+        this.blockUrl = blockModel.studentViewUrl;
+        this.webUrl = blockModel.lmsWebUrl;
+        this.multiDevice =  blockModel.studentViewMultiDevice;
         this.format = blockModel.format;
-        this.blockCount = blockModel.blockCount == null ? new BlockCount() : blockModel.blockCount;
+        this.blockCount = blockModel.blockCounts == null ? new BlockCount() : blockModel.blockCounts;
         this.parent = parent;
         if ( parent == null){
             this.root = this;

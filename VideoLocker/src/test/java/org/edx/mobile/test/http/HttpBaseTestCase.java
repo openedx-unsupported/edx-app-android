@@ -2,9 +2,7 @@ package org.edx.mobile.test.http;
 
 import android.text.TextUtils;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.inject.Injector;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -25,7 +23,6 @@ import org.robolectric.RuntimeEnvironment;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Random;
@@ -85,20 +82,11 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    protected Config createConfig(){
-        // Set up a new config instance that serves the mock host url
-        JsonObject properties;
-        try {
-            InputStream in = context.getAssets().open("config/config.json");
-            JsonParser parser = new JsonParser();
-            JsonElement config = parser.parse(new InputStreamReader(in));
-            properties = config.getAsJsonObject();
-        } catch (Exception e) {
-            properties = new JsonObject();
-            logger.error(e);
-        }
+    protected JsonObject generateConfigProperties() throws IOException {
+        // Add the mock host url in the test config properties
+        JsonObject properties = super.generateConfigProperties();
         properties.addProperty(API_HOST_URL, getBaseMockUrl());
-        return new Config(properties);
+        return properties;
     }
 
     @Override
@@ -284,7 +272,7 @@ public class HttpBaseTestCase extends BaseTestCase {
                     // TODO: Find out if this is a wrong API call or server issue
                     response.setResponseCode(404);
                     response.setBody("{\"detail\": \"Not found\"}");
-                } else if (urlMatches(path, "/api/course_structure/v0/courses/[^/]+/[^/]+/[^/]+/blocks\\+navigation")) {
+                } else if (urlMatches(path, "/api/courses/v1/blocks/")) {
                     // TODO: Return different responses based on the parameters?
                     response.setBody(getMockResponse("get_course_structure"));
                     response.setResponseCode(200);

@@ -24,14 +24,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
-import org.robolectric.util.Scheduler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.ListIterator;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +38,9 @@ import static org.junit.Assert.*;
 // I don't understand the data model cycle behind this, and I couldn't run
 // the demo sandbox to see this Activity, so I'm not writing tests for the
 // adapter interactions yet
+// The SDK version needs to be lesser than Lollipop because of this
+// issue: https://github.com/robolectric/robolectric/issues/1810
+@Config(sdk = 19)
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}
@@ -77,6 +78,11 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
         extras.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseUnit.getId());
         intent.putExtra(Router.EXTRA_BUNDLE, extras);
+
+        // Change the settings to show all the course content for easier and
+        // more comprehensive testing
+        new PrefManager.UserPrefManager(RuntimeEnvironment.application)
+                .setUserPrefVideoModel(false);
         return intent;
     }
 
@@ -95,11 +101,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     @Override
     public void initializeTest() {
         super.initializeTest();
-
-        // Change the settings to show all the course content for easier and
-        // more comprehensive testing
-        new PrefManager.UserPrefManager(RuntimeEnvironment.application)
-                .setUserPrefVideoModel(false);
 
         Intent intent = getIntent();
         ActivityController<? extends CourseUnitNavigationActivity> controller =
@@ -356,18 +357,16 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         CourseUnitNavigationActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();
-        assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
+        // Orientation needs to be explicitly set as PORTRAIT since its UNDEFINED initially
+        testOrientationChange(activity, Configuration.ORIENTATION_PORTRAIT);
+        assertEquals(Configuration.ORIENTATION_PORTRAIT,
                 activity.getResources().getConfiguration().orientation);
         assertOrientationSetup(activity);
 
         testOrientationChange(activity, Configuration.ORIENTATION_LANDSCAPE);
-        // There is a strange issue with animations not running after the first
-        // time in Robolectric, which causes the action bar visibility change to
-        // not be registered here. Unfortunately, I was not even able to track
-        // the source of the issue by debugging (a variable seems to change
-        // value magically), so not sure what we can do to address it.
-        // TODO: Look into it again at some point
-        //testOrientationChange(activity, Configuration.ORIENTATION_PORTRAIT);
+        assertEquals(Configuration.ORIENTATION_LANDSCAPE,
+                activity.getResources().getConfiguration().orientation);
+        assertOrientationSetup(activity);
     }
 
     /**
