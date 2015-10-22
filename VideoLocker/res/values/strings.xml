@@ -688,5 +688,17 @@
     <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
     <string name="profile_incomplete_edit_button">Get Started</string>
+    <!-- Window title for edit profile screen -->
+    <string name="edit_user_profile_title">Edit profile</string>
+    <!-- How most profile fields are formatted when viewing the edit screen -->
+    <string name="edit_user_profile_field">{label}: {value}</string>
+    <!-- Default placeholder if a profile field is blank -->
+    <string name="edit_user_profile_field_placeholder">Select</string>
+    <!-- Button that saves changes to a profile text field -->
+    <string name="edit_user_profile_textarea_submit_button">Submit</string>
+    <!-- An option that will set the user profile's primary language to the language of their device's configured locale -->
+    <string name="edit_user_profile_current_language">Current language: {current_language}</string>
+    <!-- An option that will set the user profile's location to the country of their device's configured locale -->
+    <string name="edit_user_profile_current_location">Current location: {current_location}</string>
 
 </resources>

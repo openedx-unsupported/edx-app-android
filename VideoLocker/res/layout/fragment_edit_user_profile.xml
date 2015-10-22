@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/white">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:divider="@drawable/edx_divider"
+            app:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/widget_margin"
+                android:paddingBottom="@dimen/widget_margin"
+                android:paddingLeft="@dimen/edx_margin"
+                android:paddingRight="@dimen/edx_margin"
+                android:background="@color/white">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    style="@style/profile_image"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    app:civ_border_color="@color/edx_brand_primary_base"
+                    app:civ_border_width="1dp"
+                    tools:src="@drawable/app_icon" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/edx_margin"
+                    android:layout_marginStart="@dimen/edx_margin"
+                    android:textColor="@color/edx_grayscale_neutral_x_dark"
+                    android:textSize="@dimen/edx_base"
+                    tools:text="username" />
+            </LinearLayout>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/fields"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:divider="@drawable/edx_divider"
+                app:showDividers="middle|end" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/edx_margin" />
+
+    </FrameLayout>
+</ScrollView>

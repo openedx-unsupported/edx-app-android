@@ -98,6 +98,7 @@
     <dimen name="create_new_item_icon_margin">3dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
     <dimen name="x_small_icon_margin">5dp</dimen>
+    <dimen name="base_icon_margin">7dp</dimen>
 
     <!--edX typography-->
     <dimen name="edx_xxxx_large">38sp</dimen>
