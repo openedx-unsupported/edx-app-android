@@ -117,11 +117,12 @@ public class UserProfileFragment extends RoboFragment {
 
                 @Override
                 protected void onException(Exception e) throws RuntimeException {
+                    viewHolder.loadingIndicator.setVisibility(View.GONE);
                     logger.error(e);
                     showErrorMessage(e);
                 }
             };
-            getAccountTask.setProgressDialog(viewHolder.loadingIndicator); // So that our indicator is hidden after task completes
+            getAccountTask.setProgressCallback(null); // Disable built-in loading indicator
             getAccountTask.execute();
         }
     }

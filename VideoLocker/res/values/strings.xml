@@ -511,7 +511,7 @@
     <!-- Button title for action that allows users to share this app -->
     <string name="button_share_app">Share app to friends</string>
     <!-- Alert dialog title for unknown type of error -->
-    <string name="error_unknown">Unknown Error</string>
+    <string name="error_unknown_title">Unknown Error</string>
     <!-- Alert dialog error shown when inviting a user to a study group fails -->
     <string name="error_group_invite">Error inviting user {username} to group</string>
     <!-- Error message shown accessing Facebook -->
