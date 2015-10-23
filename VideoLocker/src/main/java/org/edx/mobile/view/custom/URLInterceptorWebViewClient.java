@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -15,12 +16,12 @@ import com.google.inject.Inject;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import roboguice.RoboGuice;
 
 /**
  * Created by rohan on 2/2/15.
@@ -34,7 +35,7 @@ import java.util.Map;
  * than the current one, then treats it as an external link and may open in external browser.
  *
  */
-public abstract class URLInterceptorWebViewClient extends WebViewClient {
+public class URLInterceptorWebViewClient extends WebViewClient {
 
     // URL forms to be intercepted
     private static final String URL_TYPE_ENROLL         = "edxapp://enroll";
@@ -42,7 +43,8 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     public static final String PARAM_PATH_ID           = "path_id";
     public static final String COURSE                  = "course/";
 
-    private Logger logger = new Logger(URLInterceptorWebViewClient.class);
+    private final Logger logger = new Logger(URLInterceptorWebViewClient.class);
+    private final FragmentActivity activity;
     private IActionListener actionListener;
     private IPageStatusListener pageStatusListener;
     private String hostForThisPage = null;
@@ -54,7 +56,9 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
      */
     private boolean isAllLinksExternal = false;
 
-    public URLInterceptorWebViewClient(WebView webView) {
+    public URLInterceptorWebViewClient(FragmentActivity activity, WebView webView) {
+        this.activity = activity;
+        RoboGuice.injectMembers(activity, this);
         setupWebView(webView);
     }
 
@@ -98,13 +102,9 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
 
-        try {
-            // hold on the host of this page, just once
-            if (this.hostForThisPage == null) {
-                this.hostForThisPage = Uri.parse(url).getHost();
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
+        // hold on the host of this page, just once
+        if (this.hostForThisPage == null && url != null) {
+            this.hostForThisPage = Uri.parse(url).getHost();
         }
 
         if (pageStatusListener != null) {
@@ -131,35 +131,28 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        try {
-            if (actionListener == null) {
-                logger.warn("you have not set IActionLister to this WebViewClient, " +
-                        "you might miss some event");
-            }
-            logger.debug("loading: " + url);
-
-            if (isCourseInfoLink(url)) {
-                // we handled this URL
-                return true;
-            } else if(isEnrollLink(url)) {
-                // we handled this URL
-                return true;
-            } else if (isAllLinksExternal || isExternalLink(url)) {
-                // open URL in external web browser
-                // return true means the host application handles the url
-                // this should open the URL in the browser with user's confirmation
-                view.stopLoading();
-                // let activity handle this
-                onOpenExternalURL(url);
-                return false;
-            } else {
-                // return false means the current WebView handles the url.
-                return false;
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
+        if (actionListener == null) {
+            logger.warn("you have not set IActionLister to this WebViewClient, " +
+                    "you might miss some event");
         }
-        return super.shouldOverrideUrlLoading(view, url);
+        logger.debug("loading: " + url);
+
+        if (isCourseInfoLink(url)) {
+            // we handled this URL
+            return true;
+        } else if(isEnrollLink(url)) {
+            // we handled this URL
+            return true;
+        } else if (isAllLinksExternal || isExternalLink(url)) {
+            // open URL in external web browser
+            // return true means the host application handles the url
+            // this should open the URL in the browser with user's confirmation
+            BrowserUtil.open(activity, url);
+            return true;
+        } else {
+            // return false means the current WebView handles the url.
+            return false;
+        }
     }
 
     public void setAllLinksAsExternal(boolean isAllLinksExternal) {
@@ -167,19 +160,16 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-        try {
-            Context context = view.getContext().getApplicationContext();
+        Context context = view.getContext().getApplicationContext();
 
-            // suppress external links on ZeroRated network
-            if (isExternalLink(url)
-                    && !ConfigUtil.isWhiteListedURL(url, config)
-                    && NetworkUtil.isOnZeroRatedNetwork(context, config)
-                    && NetworkUtil.isConnectedMobile(context)) {
-                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
+        // suppress external links on ZeroRated network
+        if (isExternalLink(url)
+                && !ConfigUtil.isWhiteListedURL(url, config)
+                && NetworkUtil.isOnZeroRatedNetwork(context, config)
+                && NetworkUtil.isConnectedMobile(context)) {
+            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
         }
         return super.shouldInterceptRequest(view, url);
     }
@@ -187,21 +177,7 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        try {
-            Context context = view.getContext().getApplicationContext();
-
-            // suppress external links on ZeroRated network
-            String url = request.getUrl().toString();
-            if (isExternalLink(url)
-                    && !ConfigUtil.isWhiteListedURL(url, config)
-                    && NetworkUtil.isOnZeroRatedNetwork(context, config)
-                    && NetworkUtil.isConnectedMobile(context)) {
-                return new WebResourceResponse("text/html", HTTP.UTF_8, null);
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
-        return super.shouldInterceptRequest(view, request);
+        return shouldInterceptRequest(view, request.getUrl().toString());
     }
 
     /**
@@ -214,27 +190,22 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
      * @return
      */
     private boolean isCourseInfoLink(String strUrl) {
-        try {
-            if (strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
-                Uri uri = Uri.parse(strUrl);
-                String pathId = uri.getQueryParameter(PARAM_PATH_ID);
-                if(pathId.startsWith(URLInterceptorWebViewClient.COURSE)){
-                    pathId = pathId.replaceFirst(URLInterceptorWebViewClient.COURSE,"").trim();
+        if (actionListener != null && strUrl != null &&
+                strUrl.startsWith(URL_TYPE_COURSE_INFO)) {
+            Uri uri = Uri.parse(strUrl);
+            String pathId = uri.getQueryParameter(PARAM_PATH_ID);
+            if (pathId != null) {
+                if (pathId.startsWith(URLInterceptorWebViewClient.COURSE)) {
+                    pathId = pathId.replaceFirst(URLInterceptorWebViewClient.COURSE, "").trim();
                 }
-
                 //String pathId = strUrl.replace(URL_TYPE_COURSE_INFO, "").trim();
-                if (pathId==null || pathId.isEmpty()) {
-                    return false;
-                }
 
-                if (actionListener != null) {
+                if (!pathId.isEmpty()) {
                     actionListener.onClickCourseInfo(pathId);
                     logger.debug("found course-info URL: " + strUrl);
                     return true;
                 }
             }
-        } catch(Exception ex) {
-            logger.error(ex);
         }
 
         return false;
@@ -247,17 +218,8 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
      * @return
      */
     private boolean isExternalLink(String strUrl) {
-        try {
-            Uri uri = Uri.parse(strUrl);
-            if (hostForThisPage == null || uri.getHost().equals(hostForThisPage)) {
-                // this is not an external link
-                return false;
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
-
-        return true;
+        return hostForThisPage != null && strUrl != null &&
+                !hostForThisPage.equals(Uri.parse(strUrl).getHost());
     }
 
     /**
@@ -270,39 +232,21 @@ public abstract class URLInterceptorWebViewClient extends WebViewClient {
      * @return
      */
     private boolean isEnrollLink(String strUrl) {
-        try {
-            if (strUrl.startsWith(URL_TYPE_ENROLL)) {
-                Uri uri = Uri.parse(strUrl);
+        if (actionListener != null && strUrl != null &&
+                strUrl.startsWith(URL_TYPE_ENROLL)) {
+            Uri uri = Uri.parse(strUrl);
 
-                String query = uri.getQuery().trim();
-                String[] params = query.split("&");
-                Map<String, String> queryParams = new HashMap<>();
-                for (String q : params) {
-                    String[] parts = q.split("=");
-                    queryParams.put(parts[0], parts[1]);
-                }
-
-                String courseId = queryParams.get("course_id");
-                boolean emailOptIn = Boolean.parseBoolean(queryParams.get("email_opt_in"));
-
-                if (actionListener != null) {
-                    actionListener.onClickEnroll(courseId, emailOptIn);
-                    logger.debug("found enroll URL: " + strUrl);
-                    return true;
-                }
+            String courseId = uri.getQueryParameter("course_id");
+            if (courseId != null) {
+                boolean emailOptIn = Boolean.parseBoolean(uri.getQueryParameter("email_opt_in"));
+                actionListener.onClickEnroll(courseId, emailOptIn);
+                logger.debug("found enroll URL: " + strUrl);
+                return true;
             }
-        } catch(Exception ex) {
-            logger.error(ex);
         }
 
         return false;
     }
-
-    /**
-     * Callback that gets called when an external URL is being loaded.
-     * @param url
-     */
-    public abstract void onOpenExternalURL(String url);
 
     /**
      * Action listener interface for handling enroll link click action
