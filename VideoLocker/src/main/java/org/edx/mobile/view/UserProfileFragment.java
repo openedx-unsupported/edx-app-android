@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
@@ -158,6 +159,8 @@ public class UserProfileFragment extends RoboFragment {
         if (event.getUsername().equalsIgnoreCase(username)) {
             Glide.with(viewHolder.profileImage.getContext())
                     .load(event.getUri())
+                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(viewHolder.profileImage);
         }
     }

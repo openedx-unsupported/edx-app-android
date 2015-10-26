@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.inject.Inject;
@@ -384,6 +385,8 @@ public class NavigationFragment extends RoboFragment {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
             Glide.with(NavigationFragment.this)
                     .load(event.getUri())
+                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(imageView);
         }
     }

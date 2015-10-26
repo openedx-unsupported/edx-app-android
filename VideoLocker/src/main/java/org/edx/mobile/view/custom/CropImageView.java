@@ -2,8 +2,10 @@ package org.edx.mobile.view.custom;
 
 import android.content.Context;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
 import org.edx.mobile.R;
@@ -115,5 +117,19 @@ public class CropImageView extends ImageViewTouch {
         } else {
             return extraPadding;
         }
+    }
+
+    @NonNull
+    public Rect getCropRect() {
+        final RectF rect = getBitmapRect();
+        final float scale = getScale();
+        final float verticalPadding = getVerticalPadding();
+        final float horizontalPadding = getHorizontalPadding();
+        final Rect cropRect = new Rect();
+        cropRect.left = (int)((horizontalPadding - rect.left) / scale);
+        cropRect.top = (int)((verticalPadding - rect.top) / scale);
+        cropRect.right = (int)(cropRect.left + (getWidth() - horizontalPadding * 2) / scale);
+        cropRect.bottom = (int)(cropRect.top + (getHeight() - verticalPadding * 2) / scale);
+        return cropRect;
     }
 }
