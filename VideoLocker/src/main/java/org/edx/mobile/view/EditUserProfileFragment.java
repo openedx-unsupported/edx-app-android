@@ -14,10 +14,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -57,6 +55,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CHOOSE_PHOTO_REQUEST = 2;
+    private static final int CROP_PHOTO_REQUEST = 3;
 
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
@@ -287,6 +286,13 @@ public class EditUserProfileFragment extends RoboFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CHOOSE_PHOTO_REQUEST: {
+                final Uri imageUri = helper.onActivityResult(resultCode, data);
+                if (null != imageUri) {
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri), CROP_PHOTO_REQUEST);
+                }
+                break;
+            }
+            case CROP_PHOTO_REQUEST: {
                 final Uri imageUri = helper.onActivityResult(resultCode, data);
                 if (null != imageUri) {
                     Glide.with(viewHolder.profileImage.getContext())

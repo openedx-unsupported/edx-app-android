@@ -117,4 +117,5 @@
 
     <dimen name="user_profile_image_diameter">166dp</dimen>
     <dimen name="user_profile_image_border_width">3dp</dimen>
+    <dimen name="crop_image_guideline_width">3dp</dimen>
 </resources>
