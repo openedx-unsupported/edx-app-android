@@ -18,7 +18,6 @@ import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -76,14 +75,7 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
     private void setupWebView() {
         if(webview!=null){
             isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webview) {
-
-                @Override
-                public void onOpenExternalURL(String url) {
-                    // open URL in external browser
-                    BrowserUtil.open(FindCoursesBaseActivity.this, url);
-                }
-            };
+            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
 
             // if all the links are to be treated as external
             client.setAllLinksAsExternal(isAllLinksExternal());

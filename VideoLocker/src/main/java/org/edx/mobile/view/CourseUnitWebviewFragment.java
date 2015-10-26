@@ -11,7 +11,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -24,6 +23,7 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
+import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -100,10 +100,11 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
         webView.clearCache(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient() {
+        URLInterceptorWebViewClient client =
+                new URLInterceptorWebViewClient(getActivity(), webView) {
             @Override
             public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
+                    String description, String failingUrl) {
                 hideLoadingProgress();
                 pageIsLoaded = false;
                 ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
@@ -114,7 +115,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
             //@TargetApi(Build.VERSION_CODES.M)
             @TargetApi(23)
             public void onReceivedHttpError(WebView view, WebResourceRequest request,
-                                            WebResourceResponse errorResponse) {
+                    WebResourceResponse errorResponse) {
                 switch (errorResponse.getStatusCode()) {
                     case HttpURLConnection.HTTP_FORBIDDEN:
                     case HttpURLConnection.HTTP_UNAUTHORIZED:
@@ -125,7 +126,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
             }
 
             public void onPageFinished(WebView view, String url) {
-                if ( url != null && url.equals("data:text/html," + EMPTY_HTML ) ){
+                if (url != null && url.equals("data:text/html," + EMPTY_HTML)) {
                     //we load a local empty html page to release the memory
                 } else {
                     pageIsLoaded = true;
@@ -134,16 +135,12 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 //TODO -disable it for now. as it causes some issues for assessment
                 //webview to fit in the screen. But we still need it to show additional
                 //compenent below the webview in the future?
-               // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
+                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
                 hideLoadingProgress();
             }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-               return false;
-            }
-        });
+        };
+        client.setAllLinksAsExternal(true);
         //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
         if(  ViewPagerDownloadManager.USING_UI_PRELOADING ) {

@@ -85,41 +85,32 @@ public class BrowserUtil {
     }
 
     private static void openInBrowser(FragmentActivity context, String url) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.addCategory(Intent.CATEGORY_BROWSABLE);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse(url));
-            context.startActivity(intent);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
 
-            try{
-                ISegment segIO =  environment.getSegment();
-                segIO.trackOpenInBrowser(url);
-            }catch(Exception e){
-                logger.error(e);
-            }
+        ISegment segIO =  environment.getSegment();
+        segIO.trackOpenInBrowser(url);
 
-            // apply transition when user gets back from browser
-            if (context instanceof BaseFragmentActivity) {
-                ((BaseFragmentActivity) context).setApplyPrevTransitionOnRestart(true);
-            }
-            
-            // apply transition animation
-            context.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-            logger.debug("Next transition animation applied");
-        } catch(Exception ex) {
-            logger.error(ex);
+        // apply transition when user gets back from browser
+        if (context instanceof BaseFragmentActivity) {
+            ((BaseFragmentActivity) context).setApplyPrevTransitionOnRestart(true);
         }
+
+        // apply transition animation
+        context.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
+        logger.debug("Next transition animation applied");
     }
 
     public static boolean isUrlOfHost(String url, String host) {
-        try {
-            Uri uri = Uri.parse(url);
-            return (uri.getHost().toString().contains(host));
-        } catch(Exception ex) {
-            logger.error(ex);
+        if (url != null && host != null) {
+            String urlHost = Uri.parse(url).getHost();
+            if (urlHost != null) {
+                return urlHost.matches("^(.+\\.)?" + host + "$");
+            }
         }
-
         return false;
     }
 }
