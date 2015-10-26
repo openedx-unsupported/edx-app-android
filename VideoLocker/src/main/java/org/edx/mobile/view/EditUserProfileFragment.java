@@ -178,10 +178,12 @@ public class EditUserProfileFragment extends RoboFragment {
         if (null == account || null == formDescription) {
             viewHolder.content.setVisibility(View.GONE);
             viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
+            viewHolder.changePhoto.setVisibility(View.GONE);
 
         } else {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
+            viewHolder.changePhoto.setVisibility(account.requiresParentalConsent() ? View.GONE : View.VISIBLE);
 
             Glide.with(viewHolder.profileImage.getContext())
                     .load(account.getProfileImage().getImageUrlMedium())
@@ -189,7 +191,6 @@ public class EditUserProfileFragment extends RoboFragment {
 
             final Gson gson = new GsonBuilder().serializeNulls().create();
             final JsonObject obj = (JsonObject) gson.toJsonTree(account);
-
 
             final boolean isLimited = account.getAccountPrivacy() != Account.Privacy.ALL_USERS || account.requiresParentalConsent();
 
