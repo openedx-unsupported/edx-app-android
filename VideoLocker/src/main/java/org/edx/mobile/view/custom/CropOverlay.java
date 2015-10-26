@@ -1,4 +1,4 @@
-package org.edx.mobile.view.custom.popup;
+package org.edx.mobile.view.custom;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.View;
+
+import org.edx.mobile.R;
 
 public class CropOverlay extends View {
 
@@ -37,7 +39,7 @@ public class CropOverlay extends View {
         borderPaint.setStrokeWidth(3 * context.getResources().getDisplayMetrics().density);
         borderPaint.setStyle(Paint.Style.STROKE);
         backgroundPaint = new Paint();
-        backgroundPaint.setColor(Color.argb(100, 0, 0, 0));
+        backgroundPaint.setColor(Color.argb(150, 0, 0, 0));
     }
 
     @Override
@@ -45,7 +47,7 @@ public class CropOverlay extends View {
         super.onDraw(canvas);
 
         // Draw background with transparent circular hole
-        final float radius = (Math.min(canvas.getWidth(), canvas.getHeight()) - (10 * getResources().getDisplayMetrics().density)) / 2;
+        final float radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 2 - getResources().getDimension(R.dimen.widget_margin);
         mRectF.set(canvas.getWidth() / 2 - radius, canvas.getHeight() / 2 - radius, canvas.getWidth() / 2 + radius, canvas.getHeight() / 2 + radius);
         circleSelectionPath.addOval(mRectF, Path.Direction.CW);
         canvas.clipPath(circleSelectionPath, Region.Op.XOR);

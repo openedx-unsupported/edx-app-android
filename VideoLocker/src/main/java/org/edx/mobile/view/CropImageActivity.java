@@ -3,10 +3,13 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.Window;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -20,6 +23,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class CropImageActivity extends Activity {
     public static final String EXTRA_IMAGE_URI = "imageUri";
+    public static final String EXTRA_CROP_RECT = "cropRect";
 
     public static Intent newIntent(@NonNull Context context, @NonNull Uri imageUri) {
         return new Intent(context, CropImageActivity.class)
@@ -29,6 +33,7 @@ public class CropImageActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_crop_image);
         final ImageViewTouch imageView = (ImageViewTouch) findViewById(R.id.image);
         imageView.setDisplayType(ImageViewTouchBase.DisplayType.NONE);
@@ -42,11 +47,28 @@ public class CropImageActivity extends Activity {
             @Override
             public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                 final float minZoom = Math.max(
-                        (float)resource.getIntrinsicWidth() / imageView.getWidth(),
-                        (float)resource.getIntrinsicHeight() / imageView.getHeight());
+                        (float) resource.getIntrinsicWidth() / imageView.getWidth(),
+                        (float) resource.getIntrinsicHeight() / imageView.getHeight());
                 imageView.setImageDrawable(resource, null, minZoom, 10.0f);
                 return true;
             }
         }).into(imageView);
+
+        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Determine crop rect
+                final Rect cropRect = new Rect();
+                setResult(Activity.RESULT_OK, getIntent().putExtra(EXTRA_CROP_RECT, cropRect));
+                finish();
+            }
+        });
     }
 }
