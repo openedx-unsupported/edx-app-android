@@ -34,8 +34,8 @@ public class CropImageView extends ImageViewTouch {
             final int height = getHeight();
             final float verticalPadding = getVerticalPadding();
             final float horizontalPadding = getHorizontalPadding();
-            // TODO: account for padding in here
-            if (bitmapRect.top >= 0.0F && bitmapRect.bottom <= (float) height) {
+            // TODO: account for padding in here and uncomment
+            /*if (bitmapRect.top >= 0.0F && bitmapRect.bottom <= (float) height) {
                 scrollRect.top = 0.0F;
             }
 
@@ -57,8 +57,7 @@ public class CropImageView extends ImageViewTouch {
 
             if (bitmapRect.right + scrollRect.left <= (float) (width - 0)) {
                 scrollRect.left = (float) ((int) ((float) (width - 0) - bitmapRect.right));
-            }
-
+            }*/
         }
     }
 
