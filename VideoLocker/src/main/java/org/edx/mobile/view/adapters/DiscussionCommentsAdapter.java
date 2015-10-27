@@ -57,7 +57,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
             final int childrenSize = discussionComment.getChildren().size();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childrenSize, childrenSize));
-            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_comment).sizeRes(R.dimen.edx_xxx_small).colorRes(R.color.edx_grayscale_neutral_base);
+            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_comment)
+                    .sizeRes(context, R.dimen.edx_xxx_small)
+                    .colorRes(context, R.color.edx_grayscale_neutral_base);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
             holder.discussionCommentCountReportTextView.setClickable(false);
 
@@ -74,8 +76,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
             }
 
             iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_flag)
-                    .sizeRes(R.dimen.edx_xxx_small)
-                    .colorRes(discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
+                    .sizeRes(context, R.dimen.edx_xxx_small)
+                    .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
             holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
             holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_dark));
 

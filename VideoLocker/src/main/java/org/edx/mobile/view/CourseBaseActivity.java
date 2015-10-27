@@ -91,7 +91,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     protected void initialize(Bundle arg){
 
         setApplyPrevTransitionOnRestart(true);
-        ((IconView)findViewById(R.id.video_download_indicator)).setIconColor(getResources().getColor(R.color.edx_brand_primary_light));
+        ((IconView)findViewById(R.id.video_download_indicator)).setIconColorResource(R.color.edx_brand_primary_light);
         findViewById(R.id.download_in_progress_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,18 +224,18 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         if( menu.findItem(R.id.action_share_on_web) != null)
             menu.findItem(R.id.action_share_on_web).setIcon(
                 new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
-                    .actionBarSize().colorRes(R.color.edx_white));
+                    .actionBarSize(this).colorRes(this, R.color.edx_white));
         PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
 
         if (  menu.findItem(R.id.action_change_mode) != null ) {
             if (userPrefManager.isUserPrefVideoModel()) {
                 menu.findItem(R.id.action_change_mode).setIcon(
                     new IconDrawable(this, Iconify.IconValue.fa_list)
-                        .actionBarSize().colorRes(R.color.edx_white));
+                        .actionBarSize(this).colorRes(this, R.color.edx_white));
             } else {
                 menu.findItem(R.id.action_change_mode).setIcon(
                     new IconDrawable(this, Iconify.IconValue.fa_film)
-                        .actionBarSize().colorRes(R.color.edx_white));
+                        .actionBarSize(this).colorRes(this, R.color.edx_white));
             }
         }
         return true;
@@ -274,12 +274,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         // Setting checked states
         if (userPrefManager.isUserPrefVideoModel()) {
             videoOnlyItem.setChecked(true);
-            videoOnlyIcon.colorRes(R.color.cyan_4);
-            fullCourseIcon.colorRes(R.color.black);
+            videoOnlyIcon.colorRes(this, R.color.cyan_4);
+            fullCourseIcon.colorRes(this, R.color.black);
         } else {
             fullCourseItem.setChecked(true);
-            fullCourseIcon.colorRes(R.color.cyan_4);
-            videoOnlyIcon.colorRes(R.color.black);
+            fullCourseIcon.colorRes(this, R.color.cyan_4);
+            videoOnlyIcon.colorRes(this, R.color.black);
         }
 
         //registering popup with OnMenuItemClickListener
