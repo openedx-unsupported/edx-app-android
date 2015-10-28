@@ -9,6 +9,13 @@ public class LanguageProficiency {
     @SerializedName("code")
     String code;
 
+    public LanguageProficiency() {
+    }
+
+    public LanguageProficiency(@NonNull String code) {
+        this.code = code;
+    }
+
     @NonNull
     public String getCode() {
         return code;

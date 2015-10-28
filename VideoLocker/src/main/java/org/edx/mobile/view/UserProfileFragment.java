@@ -20,6 +20,8 @@ import com.bumptech.glide.RequestManager;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.AccountUpdatedEvent;
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
@@ -31,6 +33,7 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -60,6 +63,7 @@ public class UserProfileFragment extends RoboFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        EventBus.getDefault().register(this);
 
         final ProfileModel model = new PrefManager(getActivity(), PrefManager.Pref.LOGIN).getCurrentUserProfile();
         isViewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
@@ -133,6 +137,7 @@ public class UserProfileFragment extends RoboFragment {
         if (null != getAccountTask) {
             getAccountTask.cancel(true);
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -141,6 +146,21 @@ public class UserProfileFragment extends RoboFragment {
         viewHolder = null;
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull AccountUpdatedEvent event) {
+        if (event.getAccount().getUsername().equalsIgnoreCase(username)) {
+            setAccount(event.getAccount());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
+        if (event.getUsername().equalsIgnoreCase(username)) {
+            Glide.with(viewHolder.profileImage.getContext())
+                    .load(event.getUri())
+                    .into(viewHolder.profileImage);
+        }
+    }
 
     private void setAccount(@Nullable final Account account) {
         this.account = account;
@@ -160,7 +180,6 @@ public class UserProfileFragment extends RoboFragment {
             final RequestManager requestManager = Glide.with(viewHolder.profileImage.getContext());
             requestManager
                     .load(account.getProfileImage().getImageUrlFull())
-                    .thumbnail(requestManager.load(account.getProfileImage().getImageUrlSmall()))
                     .into(viewHolder.profileImage);
 
             if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
