@@ -34,7 +34,7 @@ public class CourseDashboardActivity extends BaseFragmentActivity {
         //  configureDrawer();
 
         environment.getSegment().trackScreenView(
-                ISegment.Keys.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
+                ISegment.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
 
     }
 

@@ -23,6 +23,7 @@ import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
@@ -128,7 +129,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         errorHeader = (TextView) findViewById(R.id.error_header);
         errorMessage = (TextView) findViewById(R.id.error_message);
 
-        environment.getSegment().trackScreenView("Login");
+        environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
 
         Button closeButton = (Button)
                 findViewById(R.id.actionbar_close_btn);

@@ -72,7 +72,7 @@ public class RegisterActivity extends BaseFragmentActivity
         //The onTick method need not be run in the RegisterActivity
         runOnTick = false;
 
-        environment.getSegment().trackScreenView(ISegment.Values.LAUNCH_ACTIVITY);
+        environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 

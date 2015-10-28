@@ -91,7 +91,7 @@ public class SocialFriendPickerFragment extends RoboFragment implements SocialPr
 
         });
 
-        segIO.trackScreenView("Social Friend Picker");
+        segIO.trackScreenView(ISegment.Screens.SOCIAL_FRIEND_PICKER);
     }
 
 

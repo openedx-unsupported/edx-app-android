@@ -18,7 +18,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        environment.getSegment().trackScreenView(ISegment.Values.COURSE_INFO_SCREEN);
+        environment.getSegment().trackScreenView(ISegment.Screens.COURSE_INFO_SCREEN);
     }
 
     @Override

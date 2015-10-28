@@ -22,6 +22,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesVisibleLoader;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
@@ -58,7 +59,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        environment.getSegment().trackScreenView("Settings");
+        environment.getSegment().trackScreenView(ISegment.Screens.SETTINGS);
 
         PrefManager featurePrefManager = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
         showSocialFeatures = featurePrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);

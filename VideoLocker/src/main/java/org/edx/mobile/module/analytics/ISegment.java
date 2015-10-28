@@ -199,14 +199,9 @@ public interface ISegment {
         String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
         String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
         String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
-
         String SWITCH_OUTLINE_MODE = "Switch outline mode";
         String COMPONENT_VIEWED = "Component Viewed";
         String OPEN_IN_BROWSER = "Browser Launched";
-        String COURSE_DASHBOARD = "Course Dashboard";
-        String COURSE_OUTLINE = "Course Outline";
-        String SECTION_OUTLINE = "Section Outline";
-        String UNIT_DETAIL = "Unit Detail";
     }
 
     interface Values {
@@ -281,9 +276,28 @@ public interface ISegment {
 
         String WIFI = "wifi";
         String CELL_DATA = "cell_data";
+    }
 
+    interface Screens {
         String COURSE_INFO_SCREEN = "Course Info";
         String LAUNCH_ACTIVITY = "Launch";
-
+        String COURSE_DASHBOARD = "Course Dashboard";
+        String COURSE_OUTLINE = "Course Outline";
+        String SECTION_OUTLINE = "Section Outline";
+        String UNIT_DETAIL = "Unit Detail";
+        String CERTIFICATE = "Certificate";
+        String CREATE_GAME_GROUPS = "Create Games Group";
+        String DOWNLOADS = "Downloads";
+        String FIND_COURSES = "Find Courses";
+        String FRIENDS_IN_COURSE = "Friends In This Course";
+        String GROUP_LIST = "Group List";
+        String LOGIN = "Login";
+        String MY_VIDEOS = "My Videos";
+        String MY_VIDEOS_ALL = "My Videos - All Videos";
+        String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
+        String MY_COURSES = "My Courses";
+        String MY_FRIENDS_COURSES = "My Friends' Courses";
+        String SETTINGS = "Settings";
+        String SOCIAL_FRIEND_PICKER = "Social Friend Picker";
     }
 }

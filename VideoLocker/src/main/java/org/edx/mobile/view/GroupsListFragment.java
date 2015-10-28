@@ -96,7 +96,7 @@ public class GroupsListFragment extends RoboFragment implements SocialProvider.C
         uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), null);
         uiLifecycleHelper.onCreate(savedInstanceState);
 
-        segIO.trackScreenView("Group List");
+        segIO.trackScreenView(ISegment.Screens.GROUP_LIST);
     }
 
     @Override

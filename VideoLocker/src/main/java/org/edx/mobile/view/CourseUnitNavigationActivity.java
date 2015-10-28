@@ -161,7 +161,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         setResult(RESULT_OK, resultData);
 
         environment.getSegment().trackScreenView(
-                ISegment.Keys.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getName());
+                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getName());
         environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 

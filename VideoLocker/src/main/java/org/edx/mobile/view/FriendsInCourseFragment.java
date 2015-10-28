@@ -20,6 +20,7 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.FriendsInCourseLoader;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.BrowserUtil;
@@ -71,7 +72,7 @@ public class FriendsInCourseFragment extends RoboFragment implements LoaderManag
             adapter = new FriendsInCourseAdapter(getActivity());
         }
  
-        environment.getSegment().trackScreenView("Friends In This Course");
+        environment.getSegment().trackScreenView(ISegment.Screens.FRIENDS_IN_COURSE);
     }
 
     @Override
