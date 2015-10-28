@@ -109,7 +109,6 @@ public class NavigationFragment extends RoboFragment {
         final RequestManager requestManager = Glide.with(NavigationFragment.this);
         requestManager
                 .load(profileImage.getImageUrlLarge())
-                .thumbnail(requestManager.load(profileImage.getImageUrlSmall()))
                 .into(imageView);
     }
 

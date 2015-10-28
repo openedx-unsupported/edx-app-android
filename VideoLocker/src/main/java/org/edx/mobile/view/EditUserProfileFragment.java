@@ -14,10 +14,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -186,7 +184,7 @@ public class EditUserProfileFragment extends RoboFragment {
             viewHolder.changePhoto.setVisibility(account.requiresParentalConsent() ? View.GONE : View.VISIBLE);
 
             Glide.with(viewHolder.profileImage.getContext())
-                    .load(account.getProfileImage().getImageUrlMedium())
+                    .load(account.getProfileImage().getImageUrlLarge())
                     .into(viewHolder.profileImage);
 
             final Gson gson = new GsonBuilder().serializeNulls().create();

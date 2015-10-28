@@ -180,7 +180,6 @@ public class UserProfileFragment extends RoboFragment {
             final RequestManager requestManager = Glide.with(viewHolder.profileImage.getContext());
             requestManager
                     .load(account.getProfileImage().getImageUrlFull())
-                    .thumbnail(requestManager.load(account.getProfileImage().getImageUrlSmall()))
                     .into(viewHolder.profileImage);
 
             if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
