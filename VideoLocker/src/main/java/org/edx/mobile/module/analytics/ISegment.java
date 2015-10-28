@@ -145,26 +145,6 @@ public interface ISegment {
         String DATA = "data";
         String METHOD = "method";
         String APP = "app_name";
-        String LOADED_VIDEO = "Loaded Video";
-        String PLAYED_VIDEO = "Played Video";
-        String PAUSED_VIDEO = "Paused Video";
-        String STOPPED_VIDEO = "Stopped Video";
-        String SEEK_VIDEO = "Seeked Video";
-        String SHOW_TRANSCRIPT = "Show Transcript";
-        String HIDE_TRANSCRIPT = "Hide Transcript";
-        String VIDEO_DOWNLOADED = "Video Downloaded";
-        String BULK_DOWNLOAD_SECTION = "Bulk Download Section";
-        String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";
-        String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
-        String SCREEN_TOGGLED = "Screen Toggled";
-        String USER_LOGIN = "User Login";
-        String USER_LOGOUT = "User Logout";
-        String BROWSER_LAUNCHED = "Browser Launched";
-        String LANGUAGE_CLICKED = "Language Clicked";
-        String SIGN_UP = "Sign up Clicked";
-        String FIND_COURSES = "Find Courses Clicked";
-        String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
-        String ENROLL_COURSES = "Enroll Course Clicked";
         String EMAIL_OPT_IN = "email_opt_in";
         String PROVIDER = "provider";
         String BLOCK_ID = "block_id";
@@ -173,11 +153,9 @@ public interface ISegment {
         String DEVICE_ORIENTATION = "device-orientation";
         String NAVIGATION_MODE = "navigation-mode";
 
-        String TRACK_CELL_CONNECTION = "Cell Connection Established";
         String CELL_CARRIER = "cell_carrier";
         String CELL_ZERO_RATED = "cell_zero_rated";
 
-        String SPEED = "Connected Speed Report";
         String CONNECTION_TYPE = "connection_type";
         String CONNECTION_SPEED = "connection_speed";
 
@@ -191,17 +169,7 @@ public interface ISegment {
         String LABEL = "label";
         String ACTION = "action";
 
-        String COURSE_GROUP_ACCESSED = "Course Group Accessed";
-        String GAME_GROUP_ACCESSED = "Game Group Accessed";
-        String GAME_GROUP_CREATE = "Game Group Created";
-        String GAME_GROUP_INVITE = "Game Group Invited";
-        String SOCIAL_COURSE_SHARED = "Social Course Shared";
-        String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
-        String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
-        String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
-        String SWITCH_OUTLINE_MODE = "Switch outline mode";
         String COMPONENT_VIEWED = "Component Viewed";
-        String OPEN_IN_BROWSER = "Browser Launched";
     }
 
     interface Values {
@@ -241,10 +209,7 @@ public interface ISegment {
         String COURSE_DISCOVERY = "course-discovery";
 
         String PUSH_NOTIFICATION = "notifications";
-        String PUSH_NOTIFICATION_RECEIVED = "notification-received";
-        String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
         String ANNOUNCEMENT = "announcement";
-
 
         String CONNECTION_CELL = "edx.bi.app.connection.cell";
         String CONNECTION_SPEED = "edx.bi.app.connection.speed";
@@ -299,5 +264,43 @@ public interface ISegment {
         String MY_FRIENDS_COURSES = "My Friends' Courses";
         String SETTINGS = "Settings";
         String SOCIAL_FRIEND_PICKER = "Social Friend Picker";
+    }
+
+    interface Events {
+        String LOADED_VIDEO = "Loaded Video";
+        String PLAYED_VIDEO = "Played Video";
+        String PAUSED_VIDEO = "Paused Video";
+        String STOPPED_VIDEO = "Stopped Video";
+        String SEEK_VIDEO = "Seeked Video";
+        String SHOW_TRANSCRIPT = "Show Transcript";
+        String HIDE_TRANSCRIPT = "Hide Transcript";
+        String VIDEO_DOWNLOADED = "Video Downloaded";
+        String BULK_DOWNLOAD_SECTION = "Bulk Download Section";
+        String BULK_DOWNLOAD_SUBSECTION = "Bulk Download Subsection";
+        String SINGLE_VIDEO_DOWNLOAD = "Single Video Download";
+        String SCREEN_TOGGLED = "Screen Toggled";
+        String USER_LOGIN = "User Login";
+        String USER_LOGOUT = "User Logout";
+        String BROWSER_LAUNCHED = "Browser Launched";
+        String LANGUAGE_CLICKED = "Language Clicked";
+        String SIGN_UP = "Sign up Clicked";
+        String FIND_COURSES = "Find Courses Clicked";
+        String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
+        String ENROLL_COURSES = "Enroll Course Clicked";
+        String TRACK_CELL_CONNECTION = "Cell Connection Established";
+        String SPEED = "Connected Speed Report";
+        String COURSE_GROUP_ACCESSED = "Course Group Accessed";
+        String GAME_GROUP_ACCESSED = "Game Group Accessed";
+        String GAME_GROUP_CREATE = "Game Group Created";
+        String GAME_GROUP_INVITE = "Game Group Invited";
+        String SOCIAL_COURSE_SHARED = "Social Course Shared";
+        String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
+        String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
+        String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
+        String SWITCH_OUTLINE_MODE = "Switch outline mode";
+        String COMPONENT_VIEWED = "Component Viewed";
+        String OPEN_IN_BROWSER = "Browser Launched";
+        String PUSH_NOTIFICATION_RECEIVED = "notification-received";
+        String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
     }
 }

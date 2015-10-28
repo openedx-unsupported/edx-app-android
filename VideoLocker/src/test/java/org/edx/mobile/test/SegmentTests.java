@@ -70,7 +70,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoPlaying(videoId, currentTime,
                 courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.PLAYED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.PLAYED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -91,7 +91,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoPause(videoId, currentTime, courseId,
                 unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.PAUSED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.PAUSED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -113,7 +113,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoStop(videoId, currentTime, courseId,
                 unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.STOPPED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.STOPPED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -132,7 +132,7 @@ public class SegmentTests extends BaseTestCase {
         String unitUrl = "uniturl";
         Properties props = segment.trackVideoLoading(videoId, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.LOADED_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.LOADED_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -154,7 +154,7 @@ public class SegmentTests extends BaseTestCase {
         double currentTime=10.11;
         Properties props = segment.trackShowTranscript(videoId, currentTime, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SHOW_TRANSCRIPT),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SHOW_TRANSCRIPT),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -177,7 +177,7 @@ public class SegmentTests extends BaseTestCase {
                 courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.HIDE_TRANSCRIPT),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.HIDE_TRANSCRIPT),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -200,7 +200,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackVideoSeek(videoId, oldTime,
                 newTime, courseId, unitUrl, skipSeek);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SEEK_VIDEO),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SEEK_VIDEO),
                 (Properties) Mockito.any());
 
         // verify root level properties
@@ -245,7 +245,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackDownloadComplete(videoId, courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.VIDEO_DOWNLOADED),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.VIDEO_DOWNLOADED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
@@ -263,7 +263,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackOpenInBrowser(url);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.BROWSER_LAUNCHED),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BROWSER_LAUNCHED),
                 (Properties) Mockito.any());
         // verify root level properties
 
@@ -287,7 +287,7 @@ public class SegmentTests extends BaseTestCase {
                 section, videoCount);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.BULK_DOWNLOAD_SECTION),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BULK_DOWNLOAD_SECTION),
                 (Properties) Mockito.any());
         // verify root level properties
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -308,7 +308,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackSubSectionBulkVideoDownload(section,
                 subSection, enrollmentId, videoCount);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.BULK_DOWNLOAD_SUBSECTION),(Properties) Mockito.any());
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.BULK_DOWNLOAD_SUBSECTION),(Properties) Mockito.any());
 
         // verify root level properties
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -327,7 +327,7 @@ public class SegmentTests extends BaseTestCase {
     public void testUserLogout() throws Exception {
         Properties props= segment.trackUserLogout();
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_LOGOUT),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.USER_LOGOUT),
                 (Properties) Mockito.any());
         
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -346,7 +346,7 @@ public class SegmentTests extends BaseTestCase {
         String lang="lang";
         Properties props = segment.trackTranscriptLanguage(videoId, currentTime, lang, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.LANGUAGE_CLICKED),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.LANGUAGE_CLICKED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
@@ -367,7 +367,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackSingleVideoDownload(videoId, courseId, unitUrl);
 
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SINGLE_VIDEO_DOWNLOAD),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SINGLE_VIDEO_DOWNLOAD),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
@@ -389,7 +389,7 @@ public class SegmentTests extends BaseTestCase {
         boolean isLandscape=true;
         Properties props = segment.trackVideoOrientation(videoId, currentTime, isLandscape, courseId, unitUrl);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SCREEN_TOGGLED),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SCREEN_TOGGLED),
                 (Properties) Mockito.any());
         // verify root level properties
         //testCommonProperties(props);
@@ -406,7 +406,7 @@ public class SegmentTests extends BaseTestCase {
         String method = "Password";
         Properties props = segment.trackUserLogin(method);
         // verify that the track method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.USER_LOGIN),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.USER_LOGIN),
                 (Properties) Mockito.any());
         assertTrue(props.containsKey(ISegment.Keys.NAME));
         assertTrue(props.containsKey(ISegment.Keys.CONTEXT));
@@ -435,7 +435,7 @@ public class SegmentTests extends BaseTestCase {
 
         Properties props = segment.trackUserSignUpForAccount();
 
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.SIGN_UP),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.SIGN_UP),
                 (Properties) Mockito.any());
             
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -451,7 +451,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackUserFindsCourses();
 
         // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.FIND_COURSES),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.FIND_COURSES),
                 (Properties) Mockito.any());
             
         assertTrue(props.containsKey(ISegment.Keys.NAME));
@@ -472,7 +472,7 @@ public class SegmentTests extends BaseTestCase {
         Properties props = segment.trackCreateAccountClicked(appVersion, source);
 
         // verify that the identity method was called
-        Mockito.verify(tracker).track(Mockito.eq(ISegment.Keys.CREATE_ACCOUNT_CLICKED),
+        Mockito.verify(tracker).track(Mockito.eq(ISegment.Events.CREATE_ACCOUNT_CLICKED),
                 (Properties) Mockito.any());
 
         assertTrue(props.containsKey(ISegment.Keys.NAME));

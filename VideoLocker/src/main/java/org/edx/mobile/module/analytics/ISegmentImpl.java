@@ -99,7 +99,7 @@ public class ISegmentImpl implements ISegment {
     public Properties trackVideoLoading(String videoId, String courseId, String unitUrl){
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.track(Keys.LOADED_VIDEO, aEvent.properties);
+        tracker.track(Events.LOADED_VIDEO, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -118,7 +118,7 @@ public class ISegmentImpl implements ISegment {
                 videoId, Values.VIDEO_PLAYED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-        tracker.track(Keys.PLAYED_VIDEO, aEvent.properties);
+        tracker.track(Events.PLAYED_VIDEO, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -136,7 +136,7 @@ public class ISegmentImpl implements ISegment {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PAUSED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
-        tracker.track(Keys.PAUSED_VIDEO, aEvent.properties);
+        tracker.track(Events.PAUSED_VIDEO, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -155,7 +155,7 @@ public class ISegmentImpl implements ISegment {
                 videoId, Values.VIDEO_STOPPED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-        tracker.track(Keys.STOPPED_VIDEO, aEvent.properties);
+        tracker.track(Events.STOPPED_VIDEO, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -186,7 +186,7 @@ public class ISegmentImpl implements ISegment {
         else {aEvent.data.putValue(Keys.SEEK_TYPE, Values.SLIDE);}
         aEvent.data.putValue(Keys.REQUESTED_SKIP_INTERVAL, skipInterval);
 
-        tracker.track(Keys.SEEK_VIDEO, aEvent.properties);
+        tracker.track(Events.SEEK_VIDEO, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -205,7 +205,7 @@ public class ISegmentImpl implements ISegment {
                 videoId, Values.TRANSCRIPT_SHOWN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-        tracker.track(Keys.SHOW_TRANSCRIPT, aEvent.properties);
+        tracker.track(Events.SHOW_TRANSCRIPT, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -225,7 +225,7 @@ public class ISegmentImpl implements ISegment {
                 videoId, Values.TRANSCRIPT_HIDDEN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-        tracker.track(Keys.HIDE_TRANSCRIPT, aEvent.properties);
+        tracker.track(Events.HIDE_TRANSCRIPT, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -330,7 +330,7 @@ public class ISegmentImpl implements ISegment {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
-        tracker.track(Keys.VIDEO_DOWNLOADED, aEvent.properties);
+        tracker.track(Events.VIDEO_DOWNLOADED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -354,7 +354,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.setCourseContext(enrollmentId,
                 null, Values.DOWNLOAD_MODULE);
 
-        tracker.track(Keys.BULK_DOWNLOAD_SECTION, aEvent.properties);
+        tracker.track(Events.BULK_DOWNLOAD_SECTION, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -380,7 +380,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.setCourseContext(enrollmentId,
                 null, Values.DOWNLOAD_MODULE);
 
-        tracker.track(Keys.BULK_DOWNLOAD_SUBSECTION, aEvent.properties);
+        tracker.track(Events.BULK_DOWNLOAD_SUBSECTION, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -398,7 +398,7 @@ public class ISegmentImpl implements ISegment {
                 Values.SINGLE_VIDEO_DOWNLOAD);
         aEvent.setCourseContext(courseId,
                 unitUrl, Values.DOWNLOAD_MODULE);
-        tracker.track(Keys.SINGLE_VIDEO_DOWNLOAD, aEvent.properties);
+        tracker.track(Events.SINGLE_VIDEO_DOWNLOAD, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -419,7 +419,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
 
-        tracker.track(Keys.SCREEN_TOGGLED, aEvent.properties);
+        tracker.track(Events.SCREEN_TOGGLED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -438,7 +438,7 @@ public class ISegmentImpl implements ISegment {
 
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.USER_LOGIN, aEvent.properties);
+        tracker.track(Events.USER_LOGIN, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -452,7 +452,7 @@ public class ISegmentImpl implements ISegment {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGOUT);
         aEvent.setAppNameContext();
-        tracker.track(Keys.USER_LOGOUT, aEvent.properties);
+        tracker.track(Events.USER_LOGOUT, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -509,7 +509,7 @@ public class ISegmentImpl implements ISegment {
         }
         aEvent.setAppNameContext();
 
-        tracker.track(Keys.BROWSER_LAUNCHED, aEvent.properties);
+        tracker.track(Events.BROWSER_LAUNCHED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -525,7 +525,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.setCourseContext(courseId, unitUrl,
                 Values.VIDEOPLAYER);
 
-        tracker.track(Keys.LANGUAGE_CLICKED, aEvent.properties);
+        tracker.track(Events.LANGUAGE_CLICKED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -538,7 +538,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.properties.putValue(Keys.NAME, Values.USER_NO_ACCOUNT);
         aEvent.setAppNameContext();
 
-        tracker.track(Keys.SIGN_UP, aEvent.properties);
+        tracker.track(Events.SIGN_UP, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -556,7 +556,7 @@ public class ISegmentImpl implements ISegment {
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.USER_ENGAGEMENT, Values.COURSE_DISCOVERY);
-        tracker.track(Keys.FIND_COURSES, aEvent.properties);
+        tracker.track(Events.FIND_COURSES, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -575,7 +575,7 @@ public class ISegmentImpl implements ISegment {
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.CONVERSION, appVersion);
-        tracker.track(Keys.CREATE_ACCOUNT_CLICKED, aEvent.properties);
+        tracker.track(Events.CREATE_ACCOUNT_CLICKED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -596,7 +596,7 @@ public class ISegmentImpl implements ISegment {
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.CONVERSION, courseId);
-        tracker.track(Keys.ENROLL_COURSES, aEvent.properties);
+        tracker.track(Events.ENROLL_COURSES, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -611,7 +611,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.CELL_ZERO_RATED, isZeroRated);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.TRACK_CELL_CONNECTION, aEvent.properties);
+        tracker.track(Events.TRACK_CELL_CONNECTION, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -624,7 +624,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.CONNECTION_SPEED, connectionSpeed);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.SPEED, aEvent.properties);
+        tracker.track(Events.SPEED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -636,7 +636,7 @@ public class ISegmentImpl implements ISegment {
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
-        tracker.track(Values.NOTIFICATION_RECEIVED, aEvent.properties);
+        tracker.track(Events.PUSH_NOTIFICATION_RECEIVED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -648,7 +648,7 @@ public class ISegmentImpl implements ISegment {
 
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.PUSH_NOTIFICATION, courseId);
-        tracker.track(Values.NOTIFICATION_TAPPED, aEvent.properties);
+        tracker.track(Events.PUSH_NOTIFICATION_TAPPED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -660,7 +660,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.COURSE_ID, courseName);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.COURSE_GROUP_ACCESSED, aEvent.properties);
+        tracker.track(Events.COURSE_GROUP_ACCESSED, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -674,7 +674,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.GROUP_USER_COUNT, groupUserCount);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.GAME_GROUP_ACCESSED, aEvent.properties);
+        tracker.track(Events.GAME_GROUP_ACCESSED, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -688,7 +688,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.GAME_GROUP_CREATE, aEvent.properties);
+        tracker.track(Events.GAME_GROUP_CREATE, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -702,7 +702,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.GAME_GROUP_INVITE, aEvent.properties);
+        tracker.track(Events.GAME_GROUP_INVITE, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -715,7 +715,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.SOCIAL_COURSE_SHARED, aEvent.properties);
+        tracker.track(Events.SOCIAL_COURSE_SHARED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -728,7 +728,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
+        tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -741,7 +741,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.SOCIAL_CONNECTION_CHANGE, aEvent.properties);
+        tracker.track(Events.SOCIAL_CONNECTION_CHANGE, aEvent.properties);
         return aEvent.properties;
 
     }
@@ -754,7 +754,7 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.SETTING_COURSES_VISIBLE_STATE, visible);
 
         aEvent.setAppNameContext();
-        tracker.track(Keys.SETTING_COURSES_VISIBLE_CHANGE, aEvent.properties);
+        tracker.track(Events.SETTING_COURSES_VISIBLE_CHANGE, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -767,7 +767,7 @@ public class ISegmentImpl implements ISegment {
         //Add category for Google Analytics
         String label = (isVideoMode ? Values.SWITCH_TO_VIDEO_MODE : Values.SWITCH_TO_FULL_MODE);
         aEvent.properties = addCategoryToBiEvents(aEvent.properties, Values.NAVIGATION, label);
-        tracker.track(Keys.SWITCH_OUTLINE_MODE, aEvent.properties);
+        tracker.track(Events.SWITCH_OUTLINE_MODE, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -782,7 +782,7 @@ public class ISegmentImpl implements ISegment {
         //Add category for Google Analytics
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.NAVIGATION, Keys.COMPONENT_VIEWED);
-        tracker.track(Keys.COMPONENT_VIEWED, aEvent.properties);
+        tracker.track(Events.COMPONENT_VIEWED, aEvent.properties);
         return aEvent.properties;
     }
 
@@ -799,7 +799,7 @@ public class ISegmentImpl implements ISegment {
         String label = (isSupported ? Values.OPEN_IN_WEB_SUPPORTED : Values.OPEN_IN_WEB_NOT_SUPPORTED);
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.NAVIGATION, label);
-        tracker.track(Keys.OPEN_IN_BROWSER, aEvent.properties);
+        tracker.track(Events.OPEN_IN_BROWSER, aEvent.properties);
         return aEvent.properties;
     }
 
