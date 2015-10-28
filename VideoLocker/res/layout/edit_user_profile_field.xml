@@ -8,4 +8,5 @@
     android:ellipsize="end"
     android:gravity="center_vertical"
     android:background="?android:attr/selectableItemBackground"
+    android:textSize="@dimen/edx_base"
     tools:text="Birth year: 2008" />

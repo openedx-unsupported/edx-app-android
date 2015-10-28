@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 
 import roboguice.inject.InjectExtra;
@@ -23,6 +24,7 @@ public class EditUserProfileActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle(getString(R.string.edit_user_profile_title));
         blockDrawerFromOpening();
     }
 

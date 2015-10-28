@@ -202,7 +202,7 @@ public class EditUserProfileFragment extends RoboFragment {
             viewHolder.changePhoto.setVisibility(account.requiresParentalConsent() ? View.GONE : View.VISIBLE);
 
             Glide.with(viewHolder.profileImage.getContext())
-                    .load(account.getProfileImage().getImageUrlMedium())
+                    .load(account.getProfileImage().getImageUrlLarge())
                     .into(viewHolder.profileImage);
 
             final Gson gson = new GsonBuilder().serializeNulls().create();
