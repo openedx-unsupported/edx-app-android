@@ -225,7 +225,7 @@
 
     <style name="edX.Widget.EditText">
         <item name="android:background">@drawable/edx_input_background</item>
-        <item name="android:textSize">@dimen/edx_x_small</item>
+        <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
         <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
         <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
