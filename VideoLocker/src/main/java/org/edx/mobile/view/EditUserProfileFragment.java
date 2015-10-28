@@ -314,8 +314,10 @@ public class EditUserProfileFragment extends RoboFragment {
                         }
 
                         private void hideLoading() {
-                            viewHolder.profileImageProgress.clearAnimation();
-                            viewHolder.profileImageProgress.setVisibility(View.GONE);
+                            if (null != viewHolder) {
+                                viewHolder.profileImageProgress.clearAnimation();
+                                viewHolder.profileImageProgress.setVisibility(View.GONE);
+                            }
                         }
                     };
                     setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
