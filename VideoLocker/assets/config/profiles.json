@@ -10,7 +10,7 @@
                             { "name" : "Limited Profile",  "value" : "private" }
                  ]
               },
-              "instructions" : "A limited profile only shares your username, though you can still choose to add your own profile photo.",
+              "instructions" : "A limited profile only shares your username and profile photo.",
               "accessibility_hint" : "Change what information is shared with others."
     },
     {
