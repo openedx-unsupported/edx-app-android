@@ -77,8 +77,9 @@ public class CropImageView extends ImageViewTouch {
             if (vertical) {
                 int viewHeight = getHeight();
                 final float padding = getVerticalPadding();
-                if (height < (float) viewHeight) {
-                    deltaY = ((float) viewHeight - height) / 2.0F - rect.top;
+                final float viewportHeight = viewHeight - padding * 2;
+                if (height < viewportHeight) {
+                    deltaY = ((float)viewHeight - height) / 2.0F - rect.top;
                 } else if (rect.top > padding) {
                     deltaY = padding - rect.top;
                 } else if (rect.bottom < (float) viewHeight - padding) {
@@ -89,7 +90,8 @@ public class CropImageView extends ImageViewTouch {
             if (horizontal) {
                 int viewWidth = getWidth();
                 final float padding = getHorizontalPadding();
-                if (width < (float) viewWidth) {
+                final float viewportWidth = viewWidth - padding * 2;
+                if (width < (float) viewportWidth) {
                     deltaX = ((float) viewWidth - width) / 2.0F - rect.left;
                 } else if (rect.left > padding) {
                     deltaX = padding - rect.left;

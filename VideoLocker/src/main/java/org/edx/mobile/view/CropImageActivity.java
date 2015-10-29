@@ -59,9 +59,10 @@ public class CropImageActivity extends Activity {
 
             @Override
             public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                // TODO: account for padding around crop circle
                 final float minZoom = Math.max(
-                        (float) resource.getIntrinsicWidth() / imageView.getWidth(),
-                        (float) resource.getIntrinsicHeight() / imageView.getHeight());
+                        (float) imageView.getWidth() / resource.getIntrinsicWidth(),
+                        (float) imageView.getWidth() / resource.getIntrinsicHeight());
                 imageView.setImageDrawable(resource, null, minZoom, 10.0f);
                 return true;
             }
