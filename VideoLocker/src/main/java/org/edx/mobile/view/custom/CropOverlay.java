@@ -39,7 +39,7 @@ public class CropOverlay extends View {
         borderPaint.setStrokeWidth(3 * context.getResources().getDisplayMetrics().density);
         borderPaint.setStyle(Paint.Style.STROKE);
         backgroundPaint = new Paint();
-        backgroundPaint.setColor(Color.argb(150, 0, 0, 0));
+        backgroundPaint.setColor(Color.argb(200, 0, 0, 0));
     }
 
     @Override

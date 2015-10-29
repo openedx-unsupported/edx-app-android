@@ -124,7 +124,7 @@ public class CropImageView extends ImageViewTouch {
     @NonNull
     public Rect getCropRect() {
         final RectF rect = getBitmapRect();
-        final float scale = getScale();
+        final float scale = getScale() * getBaseScale();
         final float verticalPadding = getVerticalPadding();
         final float horizontalPadding = getHorizontalPadding();
         final Rect cropRect = new Rect();
