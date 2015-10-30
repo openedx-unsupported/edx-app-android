@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.edx.mobile.view.custom.CropImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <org.edx.mobile.view.custom.CropOverlay
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:padding="@dimen/widget_margin"
+            android:text="@string/edit_user_profile_photo_crop_title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/edx_large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/cancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/widget_margin"
+                android:text="@string/edit_user_profile_photo_crop_cancel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/edx_base" />
+
+            <Button
+                android:id="@+id/save"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/widget_margin"
+                android:text="@string/edit_user_profile_photo_crop_save"
+                android:textColor="@color/white"
+                android:textSize="@dimen/edx_base" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

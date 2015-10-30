@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -29,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
@@ -40,14 +43,16 @@ import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UpdateAccountTask;
+import org.edx.mobile.util.InvalidLocaleException;
+import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.LocalImageChooserHelper;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -55,6 +60,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CHOOSE_PHOTO_REQUEST = 2;
+    private static final int CROP_PHOTO_REQUEST = 3;
 
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
@@ -85,6 +91,7 @@ public class EditUserProfileFragment extends RoboFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        EventBus.getDefault().register(this);
 
         getAccountTask = new GetAccountTask(getActivity(), username) {
             @Override
@@ -141,12 +148,24 @@ public class EditUserProfileFragment extends RoboFragment {
             setAccountImageTask.cancel(true);
         }
         helper.onDestroy();
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         viewHolder = null;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
+        Glide.with(this)
+                .load(event.getUri())
+                .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(viewHolder.profileImage);
+
     }
 
     public class ViewHolder {
@@ -239,13 +258,21 @@ public class EditUserProfileFragment extends RoboFragment {
                                 switch (field.getDataType()) {
                                     case COUNTRY:
                                         value = gson.fromJson(accountField, String.class);
-                                        text = TextUtils.isEmpty(value) ? null : new Locale.Builder().setRegion(value).build().getDisplayCountry();
+                                        try {
+                                            text = TextUtils.isEmpty(value) ? null : LocaleUtils.getCountryNameFromCode(value);
+                                        } catch (InvalidLocaleException e) {
+                                            continue;
+                                        }
                                         break;
                                     case LANGUAGE:
                                         final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
                                         }.getType());
                                         value = languageProficiencies.isEmpty() ? null : languageProficiencies.get(0).getCode();
-                                        text = value == null ? null : new Locale.Builder().setLanguage(value).build().getDisplayName();
+                                        try {
+                                            text = value == null ? null : LocaleUtils.getLanguageNameFromCode(value);
+                                        } catch (InvalidLocaleException e) {
+                                            continue;
+                                        }
                                         break;
                                     default:
                                         // Unknown data type; ignore this field
@@ -287,9 +314,17 @@ public class EditUserProfileFragment extends RoboFragment {
             case CHOOSE_PHOTO_REQUEST: {
                 final Uri imageUri = helper.onActivityResult(resultCode, data);
                 if (null != imageUri) {
-                    Glide.with(viewHolder.profileImage.getContext())
-                            .load(imageUri)
-                            .into(viewHolder.profileImage);
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri), CROP_PHOTO_REQUEST);
+                }
+                break;
+            }
+            case CROP_PHOTO_REQUEST: {
+                if (resultCode != Activity.RESULT_OK) {
+                    break;
+                }
+                final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
+                final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
+                if (null != imageUri && null != cropRect) {
                     viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
                     if (viewHolder.profileImageProgress.getAnimation() == null) {
                         viewHolder.profileImageProgress.startAnimation(
@@ -299,7 +334,7 @@ public class EditUserProfileFragment extends RoboFragment {
                     if (null != setAccountImageTask) {
                         setAccountImageTask.cancel(true);
                     }
-                    setAccountImageTask = new SetAccountImageTask(getActivity(), username, imageUri) {
+                    setAccountImageTask = new SetAccountImageTask(getActivity(), username, imageUri, cropRect) {
                         @Override
                         protected void onSuccess(Void aVoid) throws Exception {
                             hideLoading();
@@ -310,7 +345,6 @@ public class EditUserProfileFragment extends RoboFragment {
                             super.onException(e);
                             showErrorMessage(e);
                             hideLoading();
-                            setData(account, formDescription); // Revert to previous profile image URI
                         }
 
                         private void hideLoading() {

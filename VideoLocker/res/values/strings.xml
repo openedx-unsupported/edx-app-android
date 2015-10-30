@@ -696,5 +696,11 @@
     <string name="edit_user_profile_current_location">Current location: {current_location}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
     <string name="edit_user_profile_change_photo">Change</string>
+    <!-- Title when cropping newly selected profile photo -->
+    <string name="edit_user_profile_photo_crop_title">Crop and Resize</string>
+    <!-- Button that will exit the crop tool without saving the image -->
+    <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
+    <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
+    <string name="edit_user_profile_photo_crop_save">Choose</string>
 
 </resources>

@@ -3,8 +3,6 @@ package org.edx.mobile.event;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.edx.mobile.user.Account;
-
 public class ProfilePhotoUpdatedEvent {
     @NonNull
     private final String username;

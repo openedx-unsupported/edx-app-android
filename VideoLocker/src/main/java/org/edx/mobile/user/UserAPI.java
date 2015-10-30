@@ -1,9 +1,7 @@
 package org.edx.mobile.user;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.FieldNamingPolicy;
@@ -13,8 +11,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.edx.mobile.discussion.RetroHttpExceptionHandler;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.RetroHttpException;
@@ -22,9 +18,8 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
@@ -32,7 +27,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 import retrofit.http.Path;
-import retrofit.mime.TypedOutput;
+import retrofit.mime.TypedFile;
 
 @Singleton
 public class UserAPI {
@@ -66,50 +61,13 @@ public class UserAPI {
         return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 
-    public void setProfileImage(@Path("username") String username, @NonNull final ContentResolver contentResolver, @NonNull final Uri uri) throws RetroHttpException, IOException {
-        final String mimeType;
-        {
-            String resolverMimeType = contentResolver.getType(uri);
-            if (null == resolverMimeType) {
-                // Content resolver might not expose mime type from certain apps, so guess it from the filename
-                String ext = FilenameUtils.getExtension(uri.toString());
-                if (TextUtils.isEmpty(ext)) {
-                    // Oh well, let's assume it's a jpeg
-                    mimeType = "image/jpeg";
-                } else {
-                    mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
-                }
-            } else {
-                mimeType = resolverMimeType;
-            }
-        }
-        logger.debug("Uploading file of type " + mimeType + " from " + uri);
+    public void setProfileImage(@Path("username") String username, @NonNull final File file) throws RetroHttpException, IOException {
+        final String mimeType = "image/jpeg";
+        logger.debug("Uploading file of type " + mimeType + " from " + file.toString());
         userService.setProfileImage(
                 username,
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
-                new TypedOutput() {
-                    @Override
-                    public String fileName() {
-                        return null;
-                    }
-
-                    @Override
-                    public String mimeType() {
-                        return mimeType;
-                    }
-
-                    @Override
-                    public long length() {
-                        return -1;
-                    }
-
-                    @Override
-                    public void writeTo(OutputStream out) throws IOException {
-                        try (InputStream inputStream = contentResolver.openInputStream(uri)) {
-                            IOUtils.copy(inputStream, out);
-                        }
-                    }
-                });
-        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, uri));
+                new TypedFile(mimeType, file));
+        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, Uri.fromFile(file)));
     }
 }

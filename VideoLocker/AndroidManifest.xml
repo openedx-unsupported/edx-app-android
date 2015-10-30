@@ -281,6 +281,10 @@
             android:label=""
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity android:name=".view.CropImageActivity"
+            android:screenOrientation="portrait"
+            android:label=""/>
+
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
