@@ -19,9 +19,7 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerActivity;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
@@ -78,13 +76,8 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             setTitle(getString(R.string.label_my_videos));
         }
 
-        try{
-            if(recentVideosFragment!=null){
-                recentVideosFragment.setCallback(this);
-            }
-            clearDownloadCount();
-        }catch(Exception ex){
-            logger.error(ex);
+        if (recentVideosFragment != null) {
+            recentVideosFragment.setCallback(this);
         }
     }
 
@@ -150,18 +143,6 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             }
         } catch(Exception ex) {
             logger.error(ex);
-        }
-    }
-
-    private void clearDownloadCount() {
-        try{
-            PrefManager p = new PrefManager(this, PrefManager.Pref.LOGIN);
-            // user specific data is stored in his own file
-            ProfileModel profile = p.getCurrentUserProfile();
-            p = new PrefManager(this, profile.username);
-            p.put(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED, 0);
-        }catch(Exception e){
-            logger.error(e);
         }
     }
 

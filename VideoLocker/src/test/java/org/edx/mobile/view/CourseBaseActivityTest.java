@@ -8,11 +8,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
@@ -25,11 +23,8 @@ import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
-import de.greenrobot.event.EventBus;
-
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
 public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
     /**
@@ -100,10 +95,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         controller.create();
         assertNotNull(activity.findViewById(R.id.offline_bar));
         assertNotNull(activity.findViewById(R.id.last_access_bar));
-        assertNotNull(activity.findViewById(R.id.video_download_indicator));
-        View downloadInProgressButton =
-                activity.findViewById(R.id.download_in_progress_button);
-        assertNotNull(downloadInProgressButton);
         DrawerLayout drawerLayout = (DrawerLayout)
                 activity.findViewById(R.id.drawer_layout);
         if (drawerLayout != null) {
@@ -114,43 +105,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         }
 
         controller.postCreate(null).resume().postResume().visible();
-        // Is there any way to test options menu invalidation?
-        assertTrue(downloadInProgressButton.performClick());
-        assertNextStartedActivity(activity, DownloadListActivity.class);
-    }
-
-    /**
-     * Testing functionality upon receiving a DownloadEvent
-     */
-    @Test
-    @Ignore // Hangs indefinitely. Fixed in https://github.com/robolectric/robolectric/pull/2017
-    public void downloadEventTest() {
-        CourseBaseActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        View downloadProgressBar =
-                activity.findViewById(R.id.download_in_progress_bar);
-        assumeNotNull(downloadProgressBar);
-        assertThat(downloadProgressBar).isNotVisible();
-        EventBus eventBus = EventBus.getDefault();
-        eventBus.post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-        assertDownloadProgressBarVisible(activity.getWindow().getDecorView(),
-                downloadProgressBar);
-    }
-
-    /**
-     * Method for asserting the functionality of
-     * {@link CourseBaseActivity#setVisibilityForDownloadProgressView} which
-     * is called upon receiving a {@link DownloadEvent}. The base
-     * implementation just makes the download progress bar visible
-     * immediately, but this behaviour may be overridden in subclasses.
-     *
-     * @param rootView The root View for finding Views by id
-     * @param downloadProgressBar The download progress bar View
-     */
-    protected void assertDownloadProgressBarVisible(
-            View rootView, View downloadProgressBar) {
-        assertThat(downloadProgressBar).isVisible();
     }
 
     /**

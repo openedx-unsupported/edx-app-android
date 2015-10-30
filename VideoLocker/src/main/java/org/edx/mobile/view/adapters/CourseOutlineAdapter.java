@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
@@ -21,20 +20,16 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Used for pinned behavior.
@@ -46,6 +41,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
     public interface DownloadListener {
         void download(List<HasDownloadEntry> models);
         void download(DownloadEntry videoData);
+        void viewDownloadsStatus();
     }
 
     private CourseComponent rootComponent;
@@ -110,7 +106,8 @@ public class CourseOutlineAdapter extends BaseAdapter{
 
         int type = getItemViewType(position);
 
-        if (convertView == null) {
+        // FIXME: Re-enable row recycling in favor of better DB communication [MA-1640]
+        //if (convertView == null) {
             switch (type) {
                 case SectionRow.ITEM: {
                     convertView = mInflater.inflate(R.layout.row_course_outline_list, parent, false);
@@ -124,7 +121,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
                     break;
                 }
             }
-        }
+        //}
 
         switch (type) {
             case SectionRow.ITEM:
@@ -175,7 +172,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
 
     public void reloadData(){
         if (  this.rootComponent != null )
-            setData(this.rootComponent);
+             setData(this.rootComponent);
     }
 
     public View getRowView(int position, View convertView, ViewGroup parent) {
@@ -278,84 +275,62 @@ public class CourseOutlineAdapter extends BaseAdapter{
         viewHolder.rowSubtitle.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitle.setText(videoData.getDurationReadable());
 
-        if (videoData.downloaded == DownloadEntry.DownloadedState.DOWNLOADING) {
-
-            NativeDownloadModel downloadModel = storage.
-                getNativeDownlaod(videoData.dmId);
-            if(downloadModel!=null){
-                int percent = downloadModel.getPercent();
-                if(percent>=0 && percent < 100){
-                    EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-                }
-            }
-        }
-
         dbStore.getWatchedStateForVideoId(videoData.videoId,
-            new DataCallback<DownloadEntry.WatchedState>(true) {
-                @Override
-                public void onResult(DownloadEntry.WatchedState result) {
-                    if(result != null && result == DownloadEntry.WatchedState.WATCHED) {
-                        viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
-                    } else {
-                        viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
-                    }
-                }
-                @Override
-                public void onFail(Exception ex) {
-                    logger.error(ex);
-                }
-            });
-
-        dbStore.getDownloadedStateForVideoId(videoData.videoId,
-                new DataCallback<DownloadEntry.DownloadedState>(true) {
+                new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
-                    public void onResult(DownloadEntry.DownloadedState result) {
-                        DownloadEntry.DownloadedState ds = result;
-                        if (ds == null || ds == DownloadEntry.DownloadedState.ONLINE) {
-                            // not yet downloaded
-                            viewHolder.bulkDownload.setVisibility(View.VISIBLE);
-                            viewHolder.numOfVideoAndDownloadArea.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-                                    logger.debug("Download Button Clicked");
-                                    //notifyDataSetChanged();
-                                    mDownloadListener.download(videoData);
-                                }
-                            });
-                        } else if (ds == DownloadEntry.DownloadedState.DOWNLOADING) {
-                            // may be download in progress
-                            EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-                            viewHolder.bulkDownload.setVisibility(View.GONE);
-                            storage.getDownloadProgressByDmid(videoData.dmId, new DataCallback<Integer>(true) {
-                                @Override
-                                public void onResult(Integer result) {
-                                    if (result >= 0 && result < 100) {
-                                        EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.STARTED));
-                                    } else if (result == 100) {
-                                        EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.COMPLETED));
-                                    }
-                                }
-
-                                @Override
-                                public void onFail(Exception ex) {
-                                    logger.error(ex);
-                                    viewHolder.bulkDownload.setVisibility(View.VISIBLE);
-                                }
-                            });
-                        } else if (ds == DownloadEntry.DownloadedState.DOWNLOADED) {
-                            // downloaded
-                            viewHolder.bulkDownload.setVisibility(View.GONE);
+                    public void onResult(DownloadEntry.WatchedState result) {
+                        if (result != null && result == DownloadEntry.WatchedState.WATCHED) {
+                            viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                        } else {
+                            viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
                         }
-
                     }
 
                     @Override
                     public void onFail(Exception ex) {
                         logger.error(ex);
-                        viewHolder.bulkDownload.setVisibility(View.VISIBLE);
                     }
                 });
+
+        if (videoData.isVideoForWebOnly()) {
+            viewHolder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
+        }
+        else {
+            viewHolder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
+            dbStore.getDownloadedStateForVideoId(videoData.videoId,
+                    new DataCallback<DownloadEntry.DownloadedState>(true) {
+                        @Override
+                        public void onResult(DownloadEntry.DownloadedState state) {
+                            if (state == null || state == DownloadEntry.DownloadedState.ONLINE) {
+                                // not yet downloaded
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.ONLINE,
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                mDownloadListener.download(videoData);
+                                            }
+                                        });
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADING) {
+                                // may be download in progress
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADING,
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                mDownloadListener.viewDownloadsStatus();
+                                            }
+                                        });
+                            } else if (state == DownloadEntry.DownloadedState.DOWNLOADED) {
+                                setRowStateOnDownload(viewHolder, DownloadEntry.DownloadedState.DOWNLOADED, null);
+                            }
+                        }
+
+                        @Override
+                        public void onFail(Exception ex) {
+                            logger.error(ex);
+                            viewHolder.bulkDownload.setVisibility(View.VISIBLE);
+                        }
+                    });
+        }
 
     }
 
@@ -379,50 +354,73 @@ public class CourseOutlineAdapter extends BaseAdapter{
             holder.rowSubtitle.setText(component.getFormat());
         }
 
-        //support video download for video type
-        final int totalCount = component.getBlockCount().videoCount;
-        if (totalCount == 0 ){
+        // support video download for video type excluding the ones only viewable on web
+        int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
+        final int totalDownloadableVideos = component.getBlockCount().videoCount - webOnlyCount;
+        if (totalDownloadableVideos == 0 ){
             holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
+            holder.bulkDownload.setVisibility(View.VISIBLE);
             holder.noOfVideos.setVisibility(View.VISIBLE);
-            holder.noOfVideos.setText("" + totalCount);
+            holder.noOfVideos.setText("" + totalDownloadableVideos);
 
-            if (  row.numOfVideoNotDownloaded == 0 ){
-                holder.bulkDownload.setVisibility(View.GONE);
+            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId, chapterId, sequentialId, null);
+
+            if (downloadedCount == totalDownloadableVideos) {
+                holder.noOfVideos.setVisibility(View.VISIBLE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADED, null);
+            } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId, sequentialId, null)
+                    + downloadedCount == totalDownloadableVideos) {
+                holder.noOfVideos.setVisibility(View.GONE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADING
+                    , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View downloadView) {
+                                mDownloadListener.viewDownloadsStatus();
+                            }
+                        });
             } else {
-                int inProcessCount = dbStore.getVideosCountBySection(courseId, chapterId, sequentialId, null);
-                int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
-                row.numOfVideoNotDownloaded = totalCount - inProcessCount - webOnlyCount;
-                if (row.numOfVideoNotDownloaded > 0) {
-                    holder.bulkDownload.setVisibility(View.VISIBLE);
-                    holder.numOfVideoAndDownloadArea
-                        .setOnClickListener(new View.OnClickListener() {
+                holder.noOfVideos.setVisibility(View.VISIBLE);
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.ONLINE
+                    , new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
                                 mDownloadListener.download(component.getVideos());
                             }
                         });
-                } else {
-                    holder.bulkDownload.setVisibility(View.GONE);
-                }
             }
-        }
-
-        if (AppConstants.offline_flag) {
-            holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
-            boolean isVideoDownloaded = dbStore.isVideoDownloadedInSection
-                (courseId, chapterId, sequentialId, null);
-            if(isVideoDownloaded)
-            {
-                //TODO - any UI update
-            }else{
-                //TODO - any UI update
-            }
-        } else {
-           //TODO - any UI update?
         }
 
         return convertView;
+    }
+
+    /**
+     * Makes various changes to the row based on a video element's download status
+     *
+     * @param row      ViewHolder of the row view
+     * @param state    current state of video download
+     * @param listener the listener to attach to the video download button
+     */
+    private void setRowStateOnDownload(ViewHolder row, DownloadEntry.DownloadedState state
+            , View.OnClickListener listener) {
+        switch (state) {
+            case DOWNLOADING:
+                row.bulkDownload.setIcon(Iconify.IconValue.fa_spinner);
+                row.bulkDownload.setRotating(true);
+                row.bulkDownload.setIconColorResource(R.color.edx_brand_primary_base);
+                break;
+            case DOWNLOADED:
+                row.bulkDownload.setIcon(Iconify.IconValue.fa_check);
+                row.bulkDownload.setRotating(false);
+                row.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                break;
+            case ONLINE:
+                row.bulkDownload.setIcon(Iconify.IconValue.fa_arrow_down);
+                row.bulkDownload.setRotating(false);
+                row.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                break;
+        }
+        row.numOfVideoAndDownloadArea.setOnClickListener(listener);
     }
 
     public  View getHeaderView(int position, View convertView, ViewGroup parent){
@@ -508,9 +506,6 @@ public class CourseOutlineAdapter extends BaseAdapter{
         public final int type;
         public final boolean topComponent;
         public final CourseComponent component;
-
-        //field to cache the temp value
-        public int numOfVideoNotDownloaded = -1;
 
         public SectionRow(int type, CourseComponent component) {
             this(type, false, component);

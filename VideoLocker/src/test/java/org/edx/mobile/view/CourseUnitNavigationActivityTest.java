@@ -20,7 +20,6 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.view.custom.DisableableViewPager;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -368,13 +367,4 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 activity.getResources().getConfiguration().orientation);
         assertOrientationSetup(activity);
     }
-
-    /**
-     * Ignoring functionality testing upon receiving a DownloadEvent, as
-     * {@link CourseUnitNavigationActivity} also overrides and ignores it
-     */
-    @Override
-    @Ignore
-    @Test
-    public void downloadEventTest() {}
 }

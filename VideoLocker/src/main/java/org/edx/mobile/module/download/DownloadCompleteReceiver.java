@@ -7,7 +7,6 @@ import android.content.Intent;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -16,7 +15,6 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 
-import de.greenrobot.event.EventBus;
 import roboguice.receiver.RoboBroadcastReceiver;
 
 public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
@@ -54,18 +52,6 @@ public class DownloadCompleteReceiver extends RoboBroadcastReceiver {
                                 ISegment segIO = environment.getSegment();
                                 segIO.trackDownloadComplete(download.videoId, download.eid, 
                                         download.lmsUrl);
-
-                                // update count of downloaded videos
-                                // store user's data in his own preference file, so as to keep it unique
-                                PrefManager p = new PrefManager(context, download.username);
-                                long count = p.getLong(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED);
-                                if (count < 0) {
-                                    count = 0;
-                                }
-                                count ++;
-                                p.put(PrefManager.Key.COUNT_OF_VIDEOS_DOWNLOADED, count);
-
-                                EventBus.getDefault().post(new DownloadEvent(DownloadEvent.DownloadStatus.COMPLETED));
                             }
                         }
 

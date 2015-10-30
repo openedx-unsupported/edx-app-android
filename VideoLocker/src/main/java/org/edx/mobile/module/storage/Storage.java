@@ -219,19 +219,15 @@ public class Storage implements IStorage {
     @Override
     public void getAverageDownloadProgressInSection(String enrollmentId,
             String chapter, String section, DataCallback<Integer> callback) {
-        List<Long> dmidList = db.getDownloadingVideoDmIdsForSection(enrollmentId, chapter, section, null);
-        if (dmidList == null || dmidList.isEmpty()) {
-            callback.onResult(Integer.valueOf(0));
+        long[] dmidArray = db.getDownloadingVideoDmIdsForSection(enrollmentId, chapter, section, null);
+        if (dmidArray == null || dmidArray.length == 0) {
+            callback.onResult(0);
             return;
         }
 
         try {
-            long[] dmidArray = new long[dmidList.size()];
-            for (int i=0; i< dmidList.size(); i++) {
-                dmidArray[i] = dmidList.get(i);
-            }
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult(Integer.valueOf(progress));
+            callback.sendResult((int)progress);
         } catch(Exception ex) {
             logger.error(ex);
             callback.sendException(ex);

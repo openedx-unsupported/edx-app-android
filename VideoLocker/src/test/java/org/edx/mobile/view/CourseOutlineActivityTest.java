@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.BlockPath;
@@ -18,15 +15,12 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.third_party.iconify.IconView;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.robolectric.Robolectric;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.util.ActivityController;
-import org.robolectric.util.Scheduler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -294,41 +288,5 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         ListView listView = (ListView) outlineList;
         listView.performItemClick(listView.getChildAt(rowIndex),
                 rowIndex, listView.getItemIdAtPosition(rowIndex));
-    }
-
-    /**
-     * Method for asserting the functionality of
-     * {@link CourseBaseActivity#setVisibilityForDownloadProgressView} which
-     * is called upon receiving a {@link DownloadEvent}. This overrides the
-     * base implementation, as {@link CourseVideoListActivity} performs a
-     * delayed callback with a more detailed implementation.
-     *
-     * @param rootView The root View for finding Views by id
-     * @param downloadProgressBar The download progress bar View
-     */
-    @Override
-    protected void assertDownloadProgressBarVisible(
-            View rootView, View downloadProgressBar) {
-        View downloadIndicatorView = rootView.findViewById(
-                R.id.video_download_indicator);
-        assertNotNull(downloadIndicatorView);
-        assertThat(downloadIndicatorView).isInstanceOf(IconView.class);
-        boolean indicatorHadAnimation =
-                downloadIndicatorView.getAnimation() != null;
-
-        // The animation is started from a delayed callback, so the
-        // foreground scheduler needs to be advanced to it.
-        Scheduler foregroundScheduler = ShadowApplication.getInstance()
-                .getForegroundThreadScheduler();
-        foregroundScheduler.advanceToNextPostedRunnable();
-        assertThat(downloadProgressBar).isVisible();
-        if (!indicatorHadAnimation) {
-            assertThat(downloadIndicatorView).isVisible();
-            Animation animation = downloadIndicatorView.getAnimation();
-            assertNotNull(animation);
-            assertThat(animation.getStartTime())
-                    .isLessThanOrEqualTo(AnimationUtils.currentAnimationTimeMillis());
-            assertThat(animation).hasStartOffset(0);
-        }
     }
 }

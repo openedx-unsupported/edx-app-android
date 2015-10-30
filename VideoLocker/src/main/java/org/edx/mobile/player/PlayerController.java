@@ -534,12 +534,12 @@ public class PlayerController extends FrameLayout {
         }
         if (mPlayer.isPlaying()) {
             mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
-                    .colorRes(R.color.edx_grayscale_neutral_white_t));
+                    .colorRes(getContext(), R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
             mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_play)
-                    .colorRes(R.color.edx_grayscale_neutral_white_t));
+                    .colorRes(getContext(),R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
         }
