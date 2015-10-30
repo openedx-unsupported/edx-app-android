@@ -3,10 +3,10 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 
 
 /**
@@ -22,7 +22,7 @@ public class CourseDashboardActivity extends BaseFragmentActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
- 
+
         setApplyPrevTransitionOnRestart(true);
 
         Bundle data = savedInstanceState != null ? savedInstanceState :
@@ -31,13 +31,10 @@ public class CourseDashboardActivity extends BaseFragmentActivity {
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
-      //  configureDrawer();
+        //  configureDrawer();
 
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.course_home));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(
+                ISegment.Screens.COURSE_DASHBOARD, courseData.getCourse().getId(), null);
 
     }
 

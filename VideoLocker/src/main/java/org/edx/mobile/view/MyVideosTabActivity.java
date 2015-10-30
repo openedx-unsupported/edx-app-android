@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.PlayerActivity;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
@@ -55,11 +56,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             offlineBar.setVisibility(View.VISIBLE);
         }
 
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.label_my_videos));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS);
 
         // now init the tabs
         initializeTab();
