@@ -20,8 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -534,28 +532,14 @@ public class PlayerController extends FrameLayout {
         if (mRoot == null || mPauseButton == null || mPlayer == null) {
             return;
         }
-        final int insetDimen = getContext().getResources()
-                .getDimensionPixelSize(R.dimen.video_player_pause_btn_inset);
         if (mPlayer.isPlaying()) {
-            LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
-                            .colorRes(R.color.transparent_black_80),
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t)
-            });
-            layeredIcon.setLayerInset(1, insetDimen, insetDimen, insetDimen, insetDimen);
-            mPauseButton.setImageDrawable(layeredIcon);
+            mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
+                    .colorRes(R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
-            LayerDrawable layeredIcon = new LayerDrawable(new Drawable[] {
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_circle)
-                            .colorRes(R.color.transparent_black_80),
-                    new IconDrawable(getContext(), Iconify.IconValue.fa_play)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t)
-            });
-            layeredIcon.setLayerInset(1, insetDimen, insetDimen, insetDimen, insetDimen);
-            mPauseButton.setImageDrawable(layeredIcon);
+            mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_play)
+                    .colorRes(R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
         }

@@ -147,7 +147,8 @@
     <style name="video_player_play_pause_button">
         <item name="android:layout_width">@dimen/video_player_pause_btn_width</item>
         <item name="android:layout_height">@dimen/video_player_pause_btn_height</item>
-        <item name="android:background">@null</item>
+        <item name="android:background">@drawable/semi_transparent_gray_circle</item>
+        <item name="android:padding">@dimen/video_player_pause_btn_padding</item>
         <item name="android:layout_gravity">center</item>
         <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
     </style>

@@ -55,7 +55,7 @@
     <dimen name="video_player_height">200dp</dimen>
     <dimen name="video_player_pause_btn_width">70dp</dimen>
     <dimen name="video_player_pause_btn_height">70dp</dimen>
-    <dimen name="video_player_pause_btn_inset">5dp</dimen>
+    <dimen name="video_player_pause_btn_padding">15dp</dimen>
     <dimen name="video_player_top_control_width">20dp</dimen>
     <dimen name="video_player_top_control_height">20dp</dimen>
     <dimen name="video_player_bottom_control_width">25dp</dimen>
