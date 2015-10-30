@@ -29,11 +29,7 @@ public class CropOverlay extends View {
     }
 
     public CropOverlay(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public CropOverlay(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         borderPaint = new Paint();
         borderPaint.setColor(Color.WHITE);
         borderPaint.setStrokeWidth(3 * context.getResources().getDisplayMetrics().density);
