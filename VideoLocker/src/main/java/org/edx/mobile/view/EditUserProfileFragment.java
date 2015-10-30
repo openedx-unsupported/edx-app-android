@@ -43,13 +43,14 @@ import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UpdateAccountTask;
+import org.edx.mobile.util.InvalidLocaleException;
+import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.LocalImageChooserHelper;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
@@ -257,13 +258,21 @@ public class EditUserProfileFragment extends RoboFragment {
                                 switch (field.getDataType()) {
                                     case COUNTRY:
                                         value = gson.fromJson(accountField, String.class);
-                                        text = TextUtils.isEmpty(value) ? null : new Locale.Builder().setRegion(value).build().getDisplayCountry();
+                                        try {
+                                            text = TextUtils.isEmpty(value) ? null : LocaleUtils.getCountryNameFromCode(value);
+                                        } catch (InvalidLocaleException e) {
+                                            continue;
+                                        }
                                         break;
                                     case LANGUAGE:
                                         final List<LanguageProficiency> languageProficiencies = gson.fromJson(accountField, new TypeToken<List<LanguageProficiency>>() {
                                         }.getType());
                                         value = languageProficiencies.isEmpty() ? null : languageProficiencies.get(0).getCode();
-                                        text = value == null ? null : new Locale.Builder().setLanguage(value).build().getDisplayName();
+                                        try {
+                                            text = value == null ? null : LocaleUtils.getLanguageNameFromCode(value);
+                                        } catch (InvalidLocaleException e) {
+                                            continue;
+                                        }
                                         break;
                                     default:
                                         // Unknown data type; ignore this field

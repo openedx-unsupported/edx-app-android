@@ -232,7 +232,7 @@ public class UserProfileFragment extends RoboFragment {
                 viewHolder.editProfileButton.setVisibility(View.VISIBLE);
                 viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
 
-            } else {
+            } else if (account.getAccountPrivacy() != Account.Privacy.PRIVATE) {
                 viewHolder.bioText.setVisibility(View.VISIBLE);
                 viewHolder.bioText.setText(account.getBio());
             }
