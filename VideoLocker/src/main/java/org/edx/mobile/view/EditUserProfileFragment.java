@@ -310,6 +310,9 @@ public class EditUserProfileFragment extends RoboFragment {
                 break;
             }
             case CROP_PHOTO_REQUEST: {
+                if (resultCode != Activity.RESULT_OK) {
+                    break;
+                }
                 final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
                 final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
                 if (null != imageUri && null != cropRect) {

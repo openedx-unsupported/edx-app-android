@@ -17,6 +17,7 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.social.facebook.FacebookProvider;
@@ -41,12 +42,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.label_my_friends_courses));
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        environment.getSegment().trackScreenView(ISegment.Screens.MY_FRIENDS_COURSES);
     }
 
     @Override

@@ -86,12 +86,8 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                     .getSerializable(Router.EXTRA_ENROLLMENT);
             if(enrollment!=null) {
                 courseId = enrollment.getCourse().getId();
-                try {
-                    environment.getSegment().screenViewsTracking(enrollment.getCourse().getName()
+                environment.getSegment().trackScreenView(enrollment.getCourse().getName()
                         + " - Courseware");
-                } catch (Exception e) {
-                    logger.error(e);
-                }
             }
         }
     }

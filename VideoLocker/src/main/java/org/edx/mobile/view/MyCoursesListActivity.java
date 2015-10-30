@@ -45,12 +45,7 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
 
         setTitle(getString(R.string.label_my_courses));
         
-
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.label_my_courses));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(getString(R.string.label_my_courses));
 
         Session.StatusCallback statusCallback = new Session.StatusCallback() {
             @Override

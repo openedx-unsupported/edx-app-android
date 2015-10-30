@@ -40,27 +40,9 @@ public abstract class SetAccountImageTask extends
 
 
     public Void call() throws Exception {
-        final File cropped = crop();
+        final File cropped = new File(context.getExternalCacheDir(), "cropped-image" + System.currentTimeMillis() + ".jpg");
+        CropUtil.crop(getContext(), uri, cropRect, 500, 500, cropped);
         userAPI.setProfileImage(username, cropped);
         return null;
-    }
-
-    private File crop() throws IOException {
-        final File file = new File(context.getExternalCacheDir(), "cropped-image.jpg");
-        final Bitmap croppedImage = CropUtil.decodeRegionCrop(getContext(), uri, cropRect, 500, 500);
-        try {
-            try (OutputStream outputStream = new FileOutputStream(file)) {
-                croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
-            }
-        } finally {
-            croppedImage.recycle();
-        }
-
-        CropUtil.copyExifRotation(
-                CropUtil.getFromMediaUri(getContext(), getContext().getContentResolver(), uri),
-                file
-        );
-
-        return file;
     }
 }

@@ -39,7 +39,7 @@ public class CropOverlay extends View {
         borderPaint.setStrokeWidth(3 * context.getResources().getDisplayMetrics().density);
         borderPaint.setStyle(Paint.Style.STROKE);
         backgroundPaint = new Paint();
-        backgroundPaint.setColor(Color.argb(150, 0, 0, 0));
+        backgroundPaint.setColor(Color.argb(200, 0, 0, 0));
     }
 
     @Override
@@ -47,14 +47,15 @@ public class CropOverlay extends View {
         super.onDraw(canvas);
 
         // Draw background with transparent circular hole
-        final float radius = Math.min(canvas.getWidth(), canvas.getHeight()) / 2 - getResources().getDimension(R.dimen.widget_margin);
-        mRectF.set(canvas.getWidth() / 2 - radius, canvas.getHeight() / 2 - radius, canvas.getWidth() / 2 + radius, canvas.getHeight() / 2 + radius);
+        final float radius = Math.min((float)canvas.getWidth(), canvas.getHeight()) / 2 - getResources().getDimension(R.dimen.widget_margin);
+        mRectF.set((float)canvas.getWidth() / 2 - radius, (float)canvas.getHeight() / 2 - radius, (float)canvas.getWidth() / 2 + radius, (float)canvas.getHeight() / 2 + radius);
+        circleSelectionPath.reset();
         circleSelectionPath.addOval(mRectF, Path.Direction.CW);
         canvas.clipPath(circleSelectionPath, Region.Op.XOR);
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
         canvas.restore();
 
         // Draw circle border
-        canvas.drawCircle(canvas.getWidth() / 2, canvas.getHeight() / 2, radius, borderPaint);
+        canvas.drawCircle((float)canvas.getWidth() / 2, (float)canvas.getHeight() / 2, radius, borderPaint);
     }
 }

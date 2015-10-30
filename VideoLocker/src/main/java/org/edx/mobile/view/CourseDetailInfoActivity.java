@@ -10,7 +10,6 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -58,11 +57,7 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
         if ( courseData != null ) {
             activityTitle = courseData.getCourse().getName();
 
-            try{
-                environment.getSegment().screenViewsTracking(courseData.getCourse().getName());
-            }catch(Exception e){
-                logger.error(e);
-            }
+            environment.getSegment().trackScreenView(courseData.getCourse().getName());
         } else {
 
             boolean handleFromNotification = handleIntentFromNotification();

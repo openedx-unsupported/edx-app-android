@@ -32,12 +32,8 @@ public class SocialFriendPickerActivity extends BaseSingleFragmentActivity {
             overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay_put);
         }
 
-        try{
-            String analyticsID = addState ? "Social Friend Picker - existing group" : "Social Friend Picker - new group";
-            environment.getSegment().screenViewsTracking(analyticsID);
-        }catch(Exception e){
-            logger.error(e);
-        }
+        String analyticsID = addState ? "Social Friend Picker - existing group" : "Social Friend Picker - new group";
+        environment.getSegment().trackScreenView(analyticsID);
     }
 
     @Override
