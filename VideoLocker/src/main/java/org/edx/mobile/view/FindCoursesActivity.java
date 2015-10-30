@@ -5,6 +5,7 @@ import android.webkit.WebView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
+import org.edx.mobile.module.analytics.ISegment;
 
 import roboguice.inject.ContentView;
 
@@ -19,11 +20,7 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         // hence is shifted to onCreate() function
         configureDrawer();
 
-        try{
-            environment.getSegment().screenViewsTracking(getString(R.string.find_courses_title));
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
 
         loadCourseSearchUrl();
     }

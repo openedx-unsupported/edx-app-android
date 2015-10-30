@@ -76,12 +76,7 @@ public class GroupSummaryFragment extends RoboFragment implements View.OnClickLi
             adapter = new GroupSummaryAdapter(getActivity());
         }
 
-        try{
-            segIO.screenViewsTracking("Group Summary - " + Long.toString(group.getId()));
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        segIO.trackScreenView("Group Summary - " + Long.toString(group.getId()));
     }
 
     @Override

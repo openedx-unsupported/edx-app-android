@@ -57,12 +57,7 @@ public class CertificateFragment extends RoboFragment {
         uiHelper = new UiLifecycleHelper(getActivity(), null);
         uiHelper.onCreate(savedInstanceState);
 
-
-        try{
-            segIO.screenViewsTracking("Certificate");
-        }catch(Exception e){
-            logger.error(e);
-        }
+        segIO.trackScreenView(ISegment.Screens.CERTIFICATE);
 
     }
 

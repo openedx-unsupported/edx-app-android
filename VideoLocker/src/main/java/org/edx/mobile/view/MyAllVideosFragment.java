@@ -11,6 +11,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 
@@ -23,11 +24,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
-            environment.getSegment().screenViewsTracking("My Videos - All Videos");
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_ALL);
     }
 
     @Override

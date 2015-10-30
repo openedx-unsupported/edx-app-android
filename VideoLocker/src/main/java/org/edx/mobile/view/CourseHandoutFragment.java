@@ -44,13 +44,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 .getSerializable(ENROLLMENT);
 
 
-        try{
-            segIO.screenViewsTracking(courseData.getCourse().getName() +
-                    " - Handouts");
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        segIO.trackScreenView(courseData.getCourse().getName() + " - Handouts");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
