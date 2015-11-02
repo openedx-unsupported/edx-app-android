@@ -27,10 +27,12 @@ import roboguice.activity.RoboActivity;
 public class CropImageActivity extends RoboActivity {
     public static final String EXTRA_IMAGE_URI = "imageUri";
     public static final String EXTRA_CROP_RECT = "cropRect";
+    public static final String EXTRA_FROM_CAMERA = "fromCamera";
 
-    public static Intent newIntent(@NonNull Context context, @NonNull Uri imageUri) {
+    public static Intent newIntent(@NonNull Context context, @NonNull Uri imageUri, boolean isFromCamera) {
         return new Intent(context, CropImageActivity.class)
-                .putExtra(EXTRA_IMAGE_URI, imageUri);
+                .putExtra(EXTRA_IMAGE_URI, imageUri)
+                .putExtra(EXTRA_FROM_CAMERA, isFromCamera);
     }
 
     @Nullable
@@ -41,6 +43,10 @@ public class CropImageActivity extends RoboActivity {
     @Nullable
     public static Rect getCropRectFromResult(@NonNull Intent data) {
         return data.getParcelableExtra(EXTRA_CROP_RECT);
+    }
+
+    public static boolean isResultFromCamera(@NonNull Intent data) {
+        return data.getBooleanExtra(EXTRA_FROM_CAMERA, false);
     }
 
     private SaveUriToFileTask task;
@@ -86,6 +92,7 @@ public class CropImageActivity extends RoboActivity {
                         setResult(Activity.RESULT_OK, new Intent()
                                         .putExtra(EXTRA_CROP_RECT, imageView.getCropRect())
                                         .putExtra(EXTRA_IMAGE_URI, imageUri)
+                                        .putExtra(EXTRA_FROM_CAMERA, getIntent().getBooleanExtra(EXTRA_FROM_CAMERA, false))
                         );
                         finish();
                     }

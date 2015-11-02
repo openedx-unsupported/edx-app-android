@@ -1,6 +1,7 @@
 package org.edx.mobile.module.analytics;
 
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -800,6 +801,28 @@ public class ISegmentImpl implements ISegment {
         aEvent.properties = addCategoryToBiEvents(aEvent.properties,
                 Values.NAVIGATION, label);
         tracker.track(Events.OPEN_IN_BROWSER, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
+    public Properties trackProfileViewed(@NonNull String username) {
+        final SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.PROFILE_VIEWED);
+        aEvent.setAppNameContext();
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                Values.PROFILE, username);
+        tracker.track(Events.PROFILE_VIEWED, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
+    public Properties trackProfilePhotoSet(boolean fromCamera) {
+        final SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.PROFILE_PHOTO_SET);
+        aEvent.setAppNameContext();
+        aEvent.properties = addCategoryToBiEvents(aEvent.properties,
+                Values.PROFILE, fromCamera ? Values.CAMERA : Values.LIBRARY);
+        tracker.track(Events.PROFILE_PHOTO_SET, aEvent.properties);
         return aEvent.properties;
     }
 
