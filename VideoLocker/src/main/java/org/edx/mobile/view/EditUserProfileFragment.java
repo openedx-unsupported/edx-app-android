@@ -41,6 +41,7 @@ import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
+import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.InvalidLocaleException;

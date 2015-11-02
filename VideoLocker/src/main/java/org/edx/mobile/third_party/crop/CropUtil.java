@@ -30,6 +30,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,7 +43,7 @@ import java.io.OutputStream;
  */
 public class CropUtil {
 
-    public static int getExifRotation(int rotation) {
+    public static int getExifOrientationFromRotation(int rotation) {
         switch (rotation) {
             case 90:
                 return ExifInterface.ORIENTATION_ROTATE_90;
@@ -54,30 +56,49 @@ public class CropUtil {
         }
     }
 
+    public static int getRotationFromExifOrientation(int rotation) {
+        switch (rotation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+            default:
+                return 0;
+        }
+    }
+
     public static void setExifOrientation(int rotation, @NonNull File destFile) throws IOException {
         ExifInterface exif = new ExifInterface(destFile.getAbsolutePath());
         if (rotation != 0) {
-            exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(getExifRotation(rotation)));
+            exif.setAttribute(ExifInterface.TAG_ORIENTATION, String.valueOf(getExifOrientationFromRotation(rotation)));
             exif.saveAttributes();
         }
     }
 
-    public static int getOrientation(@NonNull Context context, @NonNull Uri photoUri) {
-        try (Cursor cursor = context.getContentResolver().query(photoUri,
-                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null)) {
-
-            if (null == cursor || cursor.getCount() != 1) {
-                return -1;
+    public static int getOrientationFromContentResolver(@NonNull Context context, @NonNull Uri photoUri) {
+        final Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[]{MediaStore.Images.ImageColumns.ORIENTATION}, null, null, null);
+        if (null == cursor) {
+            return 0;
+        }
+        try {
+            if (cursor.getCount() != 1) {
+                return 0;
             }
-
             cursor.moveToFirst();
             return cursor.getInt(0);
+
+        } finally {
+            cursor.close();
         }
     }
 
     public static Bitmap decodeRegionCrop(@NonNull Context context, @NonNull Uri sourceUri, Rect rect, int outWidth, int outHeight, int rotation) throws IOException, OutOfMemoryError {
         Bitmap croppedImage;
-        try (InputStream is = context.getContentResolver().openInputStream(sourceUri)) {
+        final InputStream is = context.getContentResolver().openInputStream(sourceUri);
+        try {
             BitmapRegionDecoder decoder = BitmapRegionDecoder.newInstance(is, false);
             final int width = decoder.getWidth();
             final int height = decoder.getHeight();
@@ -107,16 +128,24 @@ public class CropUtil {
                 throw new IllegalArgumentException("Rectangle " + rect + " is outside of the image ("
                         + width + "," + height + "," + rotation + ")", e);
             }
+        } finally {
+            is.close();
         }
         return croppedImage;
     }
 
     public static void crop(@NonNull Context context, @NonNull Uri uri, @NonNull Rect cropRect, int width, int height, @NonNull File file) throws IOException {
-        int rotation = getOrientation(context, uri);
+        int rotation = getOrientationFromContentResolver(context, uri);
+        if (0 == rotation) {
+            rotation = getOrientationFromUri(uri.getPath());
+        }
         final Bitmap croppedImage = CropUtil.decodeRegionCrop(context, uri, cropRect, width, height, rotation);
         try {
-            try (OutputStream outputStream = new FileOutputStream(file)) {
+            final OutputStream outputStream = new FileOutputStream(file);
+            try {
                 croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            } finally {
+                outputStream.close();
             }
         } finally {
             croppedImage.recycle();
@@ -126,6 +155,15 @@ public class CropUtil {
                 rotation,
                 file
         );
+    }
 
+    public static int getOrientationFromUri(@NonNull String path) {
+        final ExifInterface exif;
+        try {
+            exif = new ExifInterface(path);
+        } catch (IOException e) {
+            return 0;
+        }
+        return getRotationFromExifOrientation(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED));
     }
 }
