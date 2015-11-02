@@ -682,6 +682,8 @@
     <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
     <string name="profile_incomplete_edit_button">Get Started</string>
+    <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
+    <string name="profile_incomplete_about_me">No about me info provided.</string>
     <!-- Window title for edit profile screen -->
     <string name="edit_user_profile_title">Edit profile</string>
     <!-- How most profile fields are formatted when viewing the edit screen -->
