@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
 import roboguice.fragment.RoboFragment;
-import roboguice.inject.InjectView;
 
 public class CourseDashboardFragment extends RoboFragment {
     protected final Logger logger = new Logger(getClass().getName());
@@ -30,111 +28,124 @@ public class CourseDashboardFragment extends RoboFragment {
     static public String CourseData = TAG + ".course_data";
 
     private EnrolledCoursesResponse courseData;
+    private boolean IS_COURSEWARE_ACCESSIBLE = true;
 
     @Inject
     IEdxEnvironment environment;
-    @InjectView(R.id.course_detail_name)
     private TextView courseTextName;
-    @InjectView(R.id.course_detail_extras)
     private TextView courseTextDetails;
-    @InjectView(R.id.header_image_view)
     private ImageView headerImageView;
-    @InjectView(R.id.dashboard_detail)
     private LinearLayout parent;
+    private TextView errorText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Bundle bundle = getArguments();
+        courseData = (EnrolledCoursesResponse) bundle.getSerializable(CourseData);
+        if (courseData != null) {
+            IS_COURSEWARE_ACCESSIBLE = courseData.getCourse().getCoursewareAccess().hasAccess();
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_course_dashboard, container, false);
+        View view;
+        if (IS_COURSEWARE_ACCESSIBLE) {
+            view = inflater.inflate(R.layout.fragment_course_dashboard, container, false);
+            courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
+            courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
+            headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
+            parent = (LinearLayout) view.findViewById(R.id.dashboard_detail);
+        }
+        else {
+            view = inflater.inflate(R.layout.fragment_course_dashboard_disabled, container, false);
+            errorText = (TextView) view.findViewById(R.id.error_msg);
+        }
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Implementation Note: - we can create a list view and populate the list.
-        //but as number of rows are fixed and each row is different. the only common
-        //thing is UI layout. so we reuse the same UI layout programmatically here.
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        ViewHolder holder = createViewHolder(inflater, parent);
+        if (IS_COURSEWARE_ACCESSIBLE) {
+            //Implementation Note: - we can create a list view and populate the list.
+            //but as number of rows are fixed and each row is different. the only common
+            //thing is UI layout. so we reuse the same UI layout programmatically here.
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            ViewHolder holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);
-        holder.titleView.setText(R.string.courseware_title);
-        holder.subtitleView.setText(R.string.courseware_subtitle);
-        holder.rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
-            }
-        });
+            holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);
+            holder.titleView.setText(R.string.courseware_title);
+            holder.subtitleView.setText(R.string.courseware_subtitle);
+            holder.rowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    environment.getRouter().showCourseContainerOutline(getActivity(), courseData);
+                }
+            });
 
-        holder = createViewHolder(inflater, parent);
+            holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
-        holder.titleView.setText(R.string.discussion_title);
-        holder.subtitleView.setText(R.string.discussion_subtitle);
-        holder.rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
-            }
-        });
+            holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
+            holder.titleView.setText(R.string.discussion_title);
+            holder.subtitleView.setText(R.string.discussion_subtitle);
+            holder.rowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
+                }
+            });
 
-        holder = createViewHolder(inflater, parent);
+            holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(Iconify.IconValue.fa_file_text_o);
-        holder.titleView.setText(R.string.handouts_title);
-        holder.subtitleView.setText(R.string.handouts_subtitle);
-        holder.rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ( courseData != null )
-                    environment.getRouter().showHandouts(getActivity(), courseData);
-            }
-        });
+            holder.typeView.setIcon(Iconify.IconValue.fa_file_text_o);
+            holder.titleView.setText(R.string.handouts_title);
+            holder.subtitleView.setText(R.string.handouts_subtitle);
+            holder.rowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (courseData != null)
+                        environment.getRouter().showHandouts(getActivity(), courseData);
+                }
+            });
 
-        holder = createViewHolder(inflater, parent);
+            holder = createViewHolder(inflater, parent);
 
-        holder.typeView.setIcon(Iconify.IconValue.fa_bullhorn);
-        holder.titleView.setText(R.string.announcement_title);
-        holder.subtitleView.setText(R.string.announcement_subtitle);
-        holder.rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ( courseData != null )
-                    environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
-            }
-        });
+            holder.typeView.setIcon(Iconify.IconValue.fa_bullhorn);
+            holder.titleView.setText(R.string.announcement_title);
+            holder.subtitleView.setText(R.string.announcement_subtitle);
+            holder.rowView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (courseData != null)
+                        environment.getRouter().showCourseAnnouncement(getActivity(), courseData);
+                }
+            });
+        } else {
+            errorText.setText(courseData.getCourse().getCoursewareAccess().getUser_message());
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        try {
-            final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable(CourseData);
 
-            if ( courseData == null )
-                return;
+        if (courseData == null || !IS_COURSEWARE_ACCESSIBLE)
+            return;
 
-            final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
-            Glide.with(CourseDashboardFragment.this)
-                    .load(headerImageUrl)
-                    .placeholder(R.drawable.edx_map_login)
-                    .transform(new TopAnchorFillWidthTransformation(getActivity()))
-                    .into(headerImageView);
+        final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
+        Glide.with(CourseDashboardFragment.this)
+                .load(headerImageUrl)
+                .placeholder(R.drawable.edx_map_login)
+                .transform(new TopAnchorFillWidthTransformation(getActivity()))
+                .into(headerImageView);
 
-            courseTextName.setText(courseData.getCourse().getName());
-            CourseEntry course = courseData.getCourse();
-            courseTextDetails.setText(course.getDescription(getActivity()));
-
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+        courseTextName.setText(courseData.getCourse().getName());
+        CourseEntry course = courseData.getCourse();
+        courseTextDetails.setText(course.getDescription(getActivity()));
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){
