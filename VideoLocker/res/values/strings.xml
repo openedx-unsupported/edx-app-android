@@ -196,11 +196,11 @@
     <!-- Label indicating new course content has been downloaded -->
     <string name="new_course_content">New Course Content</string>
     <!-- Label for date when course starts -->
-    <string name="label_starting_from">Starting</string>
+    <string name="label_starting">Starting - {date}</string>
     <!-- Label for course that has ended -->
-    <string name="label_ended">Ended</string>
+    <string name="label_ended">Ended - {date}</string>
     <!-- Label for date when course is ending -->
-    <string name="label_ending_on">Ending</string>
+    <string name="label_ending">Ending - {date}</string>
     <!-- List for table listing courses friends are in -->
     <string name="label_my_friends_courses">My Friends’ Courses</string>
     <!-- Label on course indicating that user earned a certificate in that course -->
@@ -393,8 +393,8 @@
     <string name="assessment_homework">Homework</string>
     <!-- Label to show empty assessment -->
     <string name="assessment_empty">There are no learning material in this section.</string>
-    <!-- Label to show empty assessment -->
-    <string name="assessment_empty_coming_soon">Coming soon.</string>
+    <!-- Label to show a course will be starting soon -->
+    <string name="assessment_soon">Soon</string>
 
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
@@ -460,8 +460,6 @@
     <string name="login_error">Sign-in Error</string>
     <!-- Alert dialog title when login fails due to lack of internet -->
     <string name="no_connectivity">Connection Error</string>
-    <!-- Visual separator like A | B -->
-    <string name="or_symbol"> | </string>
 
     <!-- Wifi New Message -->
     <!-- Toggle to allow downloads using cellular data -->

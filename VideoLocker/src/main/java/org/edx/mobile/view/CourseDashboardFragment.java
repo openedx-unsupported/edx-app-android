@@ -146,7 +146,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
         courseTextName.setText(courseData.getCourse().getName());
         CourseEntry course = courseData.getCourse();
-        courseTextDetails.setText(course.getDescription(getActivity()));
+        courseTextDetails.setText(course.getDescription(getActivity(), true));
     }
 
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {

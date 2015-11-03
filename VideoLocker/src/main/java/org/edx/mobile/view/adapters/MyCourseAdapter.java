@@ -15,17 +15,12 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.model.api.AccessError;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.StartType;
 import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 import org.edx.mobile.view.custom.SocialFacePileView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -63,25 +58,9 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         CourseEntry courseData = enrollment.getCourse();
         holder.courseTitle.setText(courseData.getName());
 
-        if (courseData.getOrg() != null) {
-            holder.orgCodeTv.setVisibility(View.VISIBLE);
-            holder.orgCodeTv.setText(courseData.getOrg()+" ");
-        }else{
-            holder.orSymbolTv.setVisibility(View.GONE);
-            holder.orgCodeTv.setVisibility(View.GONE);
-        }
-
-        if (courseData.getNumber() != null) {
-            holder.orSymbolTv.setVisibility(View.VISIBLE);
-            holder.schoolCodeTv.setText(" "+courseData.getNumber());
-        }else{
-            holder.orSymbolTv.setVisibility(View.GONE);
-            holder.schoolCodeTv.setVisibility(View.GONE);
-        }
-
         if (enrollment.getCourse().hasUpdates()) {
+            holder.startingFrom.setVisibility(View.GONE);
             holder.newCourseContent.setVisibility(View.VISIBLE);
-            holder.starting_from.setVisibility(View.GONE);
             holder.newCourseContent.setTag(courseData);
             holder.newCourseContent
             .setOnClickListener(new OnClickListener() {
@@ -92,51 +71,10 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
                 }
             });
         } else {
-            try{
-                holder.newCourseContent.setVisibility(View.GONE);
-                holder.starting_from.setVisibility(View.VISIBLE);
-
-                SimpleDateFormat dateformat = new SimpleDateFormat("MMMM dd");
-
-                Date startDate = DateUtil.convertToDate(courseData.getStart());
-                String startDt; 
-                Date endDate = DateUtil.convertToDate(courseData.getEnd());
-                String endDt;
-                AccessError error = enrollment.getCourse().getCoursewareAccess().getError_code();
-                if (error == AccessError.START_DATE_ERROR) {
-                    StartType type = enrollment.getCourse().getStartType();
-                    if(type.equals(StartType.TIMESTAMP_START)){
-                        startDt = getContext().getString(R.string.label_starting_from)
-                                + " - " + dateformat.format(startDate);                 
-                        holder.starting_from.setText(startDt);
-                        holder.starting_from.setVisibility(View.VISIBLE);
-                    }else{
-                        holder.starting_from.setVisibility(View.GONE);
-                    }
-                }
-                else if (courseData.isStarted() && courseData.isEnded()) {
-                    if(endDate!=null){
-                        endDt = getContext().getString(R.string.label_ended)
-                                + " - " + dateformat.format(endDate);
-                        holder.starting_from.setText(endDt);
-                        holder.starting_from.setVisibility(View.VISIBLE);
-                    }else{
-                        holder.starting_from.setVisibility(View.GONE);
-                    }
-                } else if (courseData.isStarted() && !courseData.isEnded()) {
-                    if(endDate!=null){
-                        endDt = getContext().getString(R.string.label_ending_on)
-                                + " - " + dateformat.format(endDate);
-                        holder.starting_from.setText(endDt);
-
-                    }else{
-                        holder.starting_from.setVisibility(View.GONE);
-                    }
-                }
-            } catch (Exception ex) {
-                logger.error(ex);
-            }
-
+            holder.newCourseContent.setVisibility(View.GONE);
+            holder.startingFrom.setVisibility(View.VISIBLE);
+            holder.courseRun.setText(courseData.getDescription(getContext(), false));
+            holder.startingFrom.setText(courseData.getFormattedStartDate(getContext()));
         }
 
         if(enrollment.isCertificateEarned()){
@@ -175,13 +113,9 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         ViewHolder holder = new ViewHolder();
         holder.courseTitle = (TextView) convertView
                 .findViewById(R.id.course_name);
-        holder.orgCodeTv = (TextView) convertView.
-                findViewById(R.id.org_code_tv);
-        holder.orSymbolTv = (TextView) convertView.
-                findViewById(R.id.or_tv);
-        holder.schoolCodeTv = (TextView) convertView
-                .findViewById(R.id.school_code_tv);
-        holder.starting_from = (TextView) convertView
+        holder.courseRun = (TextView) convertView
+                .findViewById(R.id.course_run);
+        holder.startingFrom = (TextView) convertView
                 .findViewById(R.id.starting_from);
         holder.courseImage = (ImageView) convertView
                 .findViewById(R.id.course_image);
@@ -199,10 +133,8 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
     private static class ViewHolder extends BaseViewHolder {
         ImageView courseImage;
         TextView courseTitle;
-        TextView schoolCodeTv;
-        TextView orgCodeTv;
-        TextView orSymbolTv;
-        TextView starting_from;
+        TextView courseRun;
+        TextView startingFrom;
         View certificateBanner;
         View newCourseContent;
         ViewGroup facePileContainer;
