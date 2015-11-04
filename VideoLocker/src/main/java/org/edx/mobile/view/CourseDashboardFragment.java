@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,13 @@ import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 import roboguice.fragment.RoboFragment;
 
 public class CourseDashboardFragment extends RoboFragment {
-    protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";
-
-    private EnrolledCoursesResponse courseData;
-    private boolean isCoursewareAccessible = true;
-
+    protected final Logger logger = new Logger(getClass().getName());
     @Inject
     IEdxEnvironment environment;
+    private EnrolledCoursesResponse courseData;
+    private boolean isCoursewareAccessible = true;
     private TextView courseTextName;
     private TextView courseTextDetails;
     private ImageView headerImageView;
@@ -86,17 +85,22 @@ public class CourseDashboardFragment extends RoboFragment {
                 }
             });
 
-            holder = createViewHolder(inflater, parent);
 
-            holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
-            holder.titleView.setText(R.string.discussion_title);
-            holder.subtitleView.setText(R.string.discussion_subtitle);
-            holder.rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
-                }
-            });
+            if (courseData != null
+                    && !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())
+                    && environment.getConfig().isDiscussionsEnabled()) {
+                holder = createViewHolder(inflater, parent);
+
+                holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
+                holder.titleView.setText(R.string.discussion_title);
+                holder.subtitleView.setText(R.string.discussion_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        environment.getRouter().showCourseDiscussionTopics(getActivity(), courseData);
+                    }
+                });
+            }
 
             holder = createViewHolder(inflater, parent);
 
@@ -131,7 +135,6 @@ public class CourseDashboardFragment extends RoboFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (courseData == null || !isCoursewareAccessible) return;
 
         final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
@@ -146,7 +149,7 @@ public class CourseDashboardFragment extends RoboFragment {
         courseTextDetails.setText(course.getDescription(getActivity()));
     }
 
-    private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent){
+    private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.row_course_dashboard_list, null);
         holder.typeView = (IconView) holder.rowView.findViewById(R.id.row_type);

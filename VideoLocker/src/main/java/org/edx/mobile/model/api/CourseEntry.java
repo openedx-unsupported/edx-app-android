@@ -33,6 +33,7 @@ public class CourseEntry implements Serializable {
     private String course_url;
     private String id;
     private String number;
+    private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
 
@@ -128,10 +129,17 @@ public class CourseEntry implements Serializable {
         this.number = number;
     }
 
+    public String getDiscussionUrl(){
+        return discussion_url;
+    }
 
-    public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
+    public void setDiscussionUrl(String url){
+        discussion_url = url;
+    }
 
     public CoursewareAccess getCoursewareAccess() { return courseware_access; }
+
+    public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
 
     public boolean isStarted() {
         // check if "start" date has passed
