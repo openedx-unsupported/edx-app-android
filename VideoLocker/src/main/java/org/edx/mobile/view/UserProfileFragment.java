@@ -220,6 +220,7 @@ public class UserProfileFragment extends RoboFragment {
             viewHolder.parentalConsentRequired.setVisibility(View.GONE);
             viewHolder.bioText.setVisibility(View.GONE);
             viewHolder.editProfileButton.setVisibility(View.GONE);
+            viewHolder.noAboutMe.setVisibility(View.GONE);
             if (isViewingOwnProfile && account.requiresParentalConsent()) {
                 viewHolder.parentalConsentRequired.setVisibility(View.VISIBLE);
                 viewHolder.editProfileButton.setVisibility(View.VISIBLE);
@@ -233,8 +234,12 @@ public class UserProfileFragment extends RoboFragment {
                 viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
 
             } else if (account.getAccountPrivacy() != Account.Privacy.PRIVATE) {
-                viewHolder.bioText.setVisibility(View.VISIBLE);
-                viewHolder.bioText.setText(account.getBio());
+                if (TextUtils.isEmpty(account.getBio())) {
+                    viewHolder.noAboutMe.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.bioText.setVisibility(View.VISIBLE);
+                    viewHolder.bioText.setText(account.getBio());
+                }
             }
         }
     }
@@ -255,6 +260,7 @@ public class UserProfileFragment extends RoboFragment {
         public final View incompleteContainer;
         public final TextView incompleteGreeting;
         public final Button editProfileButton;
+        public final View noAboutMe;
 
         public UserProfileViewHolder(@NonNull View parent) {
             this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
@@ -272,6 +278,7 @@ public class UserProfileFragment extends RoboFragment {
             this.incompleteContainer = parent.findViewById(R.id.incomplete_container);
             this.incompleteGreeting = (TextView) parent.findViewById(R.id.incomplete_greeting);
             this.editProfileButton = (Button) parent.findViewById(R.id.edit_profile_button);
+            this.noAboutMe = (TextView) parent.findViewById(R.id.no_about_me);
         }
     }
 }
