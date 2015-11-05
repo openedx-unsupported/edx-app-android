@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_white_t"
     android:gravity="center"
     android:orientation="vertical">
 
     <org.edx.mobile.third_party.iconify.IconView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/large_indicator_icon_width"
+        android:layout_height="@dimen/large_indicator_icon_height"
         app:iconColor="@color/edx_grayscale_neutral_light"
         app:iconName="fa_exclamation_circle" />
 

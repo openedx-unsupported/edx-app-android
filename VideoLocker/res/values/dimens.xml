@@ -38,6 +38,8 @@
     <dimen name="course_card_height">190dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
     <dimen name="dashboard_navigation_element_height">70dp</dimen>
+    <dimen name="large_indicator_icon_width">100dp</dimen>
+    <dimen name="large_indicator_icon_height">100dp</dimen>
 
     <dimen name="width_video_text">200dp</dimen>
     <dimen name="checkbox_margin">10dp</dimen>

@@ -28,7 +28,7 @@ public class CourseDashboardFragment extends RoboFragment {
     static public String CourseData = TAG + ".course_data";
 
     private EnrolledCoursesResponse courseData;
-    private boolean IS_COURSEWARE_ACCESSIBLE = true;
+    private boolean isCoursewareAccessible = true;
 
     @Inject
     IEdxEnvironment environment;
@@ -42,24 +42,23 @@ public class CourseDashboardFragment extends RoboFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Bundle bundle = getArguments();
-        courseData = (EnrolledCoursesResponse) bundle.getSerializable(CourseData);
+        final Bundle args = getArguments();
+        courseData = (EnrolledCoursesResponse) args.getSerializable(CourseData);
         if (courseData != null) {
-            IS_COURSEWARE_ACCESSIBLE = courseData.getCourse().getCoursewareAccess().hasAccess();
+            isCoursewareAccessible = courseData.getCourse().getCoursewareAccess().hasAccess();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-        if (IS_COURSEWARE_ACCESSIBLE) {
+        if (isCoursewareAccessible) {
             view = inflater.inflate(R.layout.fragment_course_dashboard, container, false);
             courseTextName = (TextView) view.findViewById(R.id.course_detail_name);
             courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
             headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
             parent = (LinearLayout) view.findViewById(R.id.dashboard_detail);
-        }
-        else {
+        } else {
             view = inflater.inflate(R.layout.fragment_course_dashboard_disabled, container, false);
             errorText = (TextView) view.findViewById(R.id.error_msg);
         }
@@ -70,7 +69,7 @@ public class CourseDashboardFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (IS_COURSEWARE_ACCESSIBLE) {
+        if (isCoursewareAccessible) {
             //Implementation Note: - we can create a list view and populate the list.
             //but as number of rows are fixed and each row is different. the only common
             //thing is UI layout. so we reuse the same UI layout programmatically here.
@@ -125,7 +124,7 @@ public class CourseDashboardFragment extends RoboFragment {
                 }
             });
         } else {
-            errorText.setText(courseData.getCourse().getCoursewareAccess().getUser_message());
+            errorText.setText(R.string.course_not_started);
         }
     }
 
@@ -133,8 +132,7 @@ public class CourseDashboardFragment extends RoboFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (courseData == null || !IS_COURSEWARE_ACCESSIBLE)
-            return;
+        if (courseData == null || !isCoursewareAccessible) return;
 
         final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
         Glide.with(CourseDashboardFragment.this)
