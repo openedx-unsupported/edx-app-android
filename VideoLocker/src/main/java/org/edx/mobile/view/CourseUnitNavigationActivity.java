@@ -22,6 +22,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.view.common.PageViewStateCallback;
@@ -126,12 +127,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         updateUIForOrientation();
         setApplyPrevTransitionOnRestart(true);
-
-        try{
-            environment.getSegment().screenViewsTracking("Assessment");
-        }catch(Exception e){
-            logger.error(e);
-        }
     }
 
     @Override
@@ -165,6 +160,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         resultData.putExtra(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
         setResult(RESULT_OK, resultData);
 
+        environment.getSegment().trackScreenView(
+                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getName());
         environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 

@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
@@ -47,16 +46,8 @@ public class WebViewDialogFragment extends DialogFragment {
 
         try{
             WebView webView = (WebView)v.findViewById(R.id.eula_webView);
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(webView) {
-
-                @Override
-                public void onOpenExternalURL(String url) {
-                    progress.setVisibility(View.GONE);
-
-                    // open URL in external browser
-                    BrowserUtil.open(getActivity(), url);
-                }
-            };
+            URLInterceptorWebViewClient client =
+                    new URLInterceptorWebViewClient(getActivity(), webView);
             client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
 
                 @Override

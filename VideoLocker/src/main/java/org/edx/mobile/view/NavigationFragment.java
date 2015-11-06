@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.inject.Inject;
@@ -27,6 +28,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -42,6 +44,7 @@ import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 
 
@@ -100,13 +103,13 @@ public class NavigationFragment extends RoboFragment {
             getAccountTask.setTaskProcessCallback(null); // Disable global loading indicator
             getAccountTask.execute();
         }
+        EventBus.getDefault().register(this);
     }
 
     private void loadProfileImage(@NonNull ProfileImage profileImage, @NonNull ImageView imageView) {
         final RequestManager requestManager = Glide.with(NavigationFragment.this);
         requestManager
                 .load(profileImage.getImageUrlLarge())
-                .thumbnail(requestManager.load(profileImage.getImageUrlSmall()))
                 .into(imageView);
     }
 
@@ -117,7 +120,7 @@ public class NavigationFragment extends RoboFragment {
 
         final TextView name_tv = (TextView) layout.findViewById(R.id.name_tv);
         final TextView email_tv = (TextView) layout.findViewById(R.id.email_tv);
-        final FrameLayout nameLayout = (FrameLayout)layout.findViewById(R.id.name_layout);
+        final FrameLayout nameLayout = (FrameLayout) layout.findViewById(R.id.name_layout);
         imageView = (ImageView) layout.findViewById(R.id.profile_image);
         if (config.isUserProfilesEnabled()) {
             if (null != profileImage) {
@@ -327,6 +330,7 @@ public class NavigationFragment extends RoboFragment {
         if (null != getAccountTask) {
             getAccountTask.cancel(true);
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -373,6 +377,17 @@ public class NavigationFragment extends RoboFragment {
                 }
             }
         });
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
+        if (event.getUsername().equalsIgnoreCase(profile.username)) {
+            Glide.with(NavigationFragment.this)
+                    .load(event.getUri())
+                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(imageView);
+        }
     }
 
     protected void showWifiDialog() {

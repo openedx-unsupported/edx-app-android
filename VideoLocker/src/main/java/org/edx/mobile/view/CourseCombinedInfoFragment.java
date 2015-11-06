@@ -32,7 +32,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.custom.EdxWebView;
@@ -116,13 +115,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         groupLauncher.setOnClickListener(this);
 
         announcementWebView = (EdxWebView) view.findViewById(R.id.announcement_webview);
-        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(announcementWebView) {
-
-            @Override
-            public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
-            }
-        };
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
+                getActivity(), announcementWebView);
         // treat every link as external link in this view, so that all links will open in external browser
         client.setAllLinksAsExternal(true);
 

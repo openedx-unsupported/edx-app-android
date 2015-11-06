@@ -333,7 +333,7 @@ public class Router {
         context.startActivity(UserProfileActivity.newIntent(context, username));
     }
 
-    public void showUserProfileEditor(@NonNull Context activity, @NonNull String username) {
-        // TODO
+    public void showUserProfileEditor(@NonNull Context context, @NonNull String username) {
+        context.startActivity(EditUserProfileActivity.newIntent(context, username));
     }
 }

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
@@ -19,7 +18,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetHandoutTask;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
@@ -46,13 +44,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 .getSerializable(ENROLLMENT);
 
 
-        try{
-            segIO.screenViewsTracking(courseData.getCourse().getName() +
-                    " - Handouts");
-        }catch(Exception e){
-            logger.error(e);
-        }
-
+        segIO.trackScreenView(courseData.getCourse().getName() + " - Handouts");
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -63,13 +55,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 false);
 
         webview = (WebView) view.findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(webview) {
-
-            @Override
-            public void onOpenExternalURL(String url) {
-                BrowserUtil.open(getActivity(), url);
-            }
-        };
+        new URLInterceptorWebViewClient(getActivity(), webview);
 
         return view;
     }
@@ -102,13 +88,6 @@ public class CourseHandoutFragment extends RoboFragment {
                         hideEmptyHandoutMessage();
                         webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), result.handouts_html,
                                 "text/html",Encoding.UTF_8.toString(),null);
-                        webview.setWebViewClient(new WebViewClient(){
-                            @Override
-                            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-                                BrowserUtil.open(getActivity(), url);
-                                return true;
-                            }
-                        });
                     }else{
                         showEmptyHandoutMessage();
                     }

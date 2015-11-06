@@ -27,7 +27,6 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
@@ -441,12 +440,8 @@ public class VideoListFragment extends MyVideosBaseFragment {
             videoListView.setOnItemClickListener(adapter);
 
             setActivityTitle(enrollment.getCourse().getName());
-            try{
-                environment.getSegment().screenViewsTracking("My Videos - All Videos - "
-                        + enrollment.getCourse().getName());
-            }catch(Exception e){
-                logger.error(e);
-            }
+            environment.getSegment().trackScreenView("My Videos - All Videos - "
+                    + enrollment.getCourse().getName());
 
             ArrayList<SectionItemInterface> list = environment.getStorage()
                     .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());

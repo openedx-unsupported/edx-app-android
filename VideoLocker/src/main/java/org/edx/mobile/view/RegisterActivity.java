@@ -42,7 +42,6 @@ import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
@@ -73,11 +72,8 @@ public class RegisterActivity extends BaseFragmentActivity
         //The onTick method need not be run in the RegisterActivity
         runOnTick = false;
 
-        try{
-            environment.getSegment().screenViewsTracking(ISegment.Values.LAUNCH_ACTIVITY);
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
+
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
         boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(

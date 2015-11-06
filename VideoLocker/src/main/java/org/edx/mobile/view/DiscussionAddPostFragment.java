@@ -31,7 +31,6 @@ import org.edx.mobile.task.GetTopicListTask;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
@@ -82,12 +81,7 @@ public class DiscussionAddPostFragment extends RoboFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            segIO.screenViewsTracking(courseData.getCourse().getName() +
-                    " - AddPost");
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        segIO.trackScreenView(courseData.getCourse().getName() + " - AddPost");
     }
 
     @Override
