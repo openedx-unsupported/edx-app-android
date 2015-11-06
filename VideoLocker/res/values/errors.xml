@@ -44,7 +44,7 @@
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">The size of the download exceeds the remaining device storage space.</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
-    <string name="download_exceed_message">The videos you\'ve selected are larger than 1 GB. 
+    <string name="download_exceed_message">The videos you’ve selected are larger than 1 GB. 
         Do you want to download these videos?</string>
     
     <!-- Message shown when user attempts to download a video over cellular data,
@@ -56,12 +56,12 @@
     <!-- Label shown when user attempts to view a course section that hasn't been synced -->
     <string name="section_offline_header">This section is not available in offline mode</string>
     <!-- Label shown when user attempts to view a course section that hasn't been synced -->
-    <string name="section_offline_message">If you\'ve downloaded content for a different section, 
+    <string name="section_offline_message">If you’ve downloaded content for a different section, 
         \ngo to that section to view the content.</string>
     <!-- Alert dialog title shown when user attempts to view a video that hasn't been synced -->
     <string name="video_offline_header">This video is not available offline.</string>
     <!-- Alert dialog content shown when user attempts to view a video that hasn't been synced -->
-    <string name="video_offline_message">Please select a video that you\'ve downloaded onto your device.</string>
+    <string name="video_offline_message">Please select a video that you’ve downloaded onto your device.</string>
 
     <!-- Registration Error Messages -->
 
@@ -75,6 +75,6 @@
     <string name="error_max_length">%1$s cannot have more than %2$d characters.</string>
 
     <!-- Error message shown when a course hasn't started yet -->
-    <string name="course_not_started">This course hasn\'t started yet.</string>
+    <string name="course_not_started">This course hasn’t started yet.</string>
 
 </resources>
