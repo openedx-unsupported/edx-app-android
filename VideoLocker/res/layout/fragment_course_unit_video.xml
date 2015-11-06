@@ -12,10 +12,10 @@
     <LinearLayout
         android:id="@+id/player_container"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_height="@dimen/video_player_height"
+        android:clickable="true"
+        android:contentDescription="@string/video_player"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:id="@+id/message_container"

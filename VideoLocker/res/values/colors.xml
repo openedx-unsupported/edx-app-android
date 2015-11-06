@@ -90,8 +90,6 @@
     <color name="last_viewed_layout">#F6FCFF</color>
     <color name="red_download_failed_text">#fd7575</color>
     <color name="tab_bg">#3E4247</color>
-    <color name="video_details_background">#1F2124</color>
-    <color name="video_details_background_transparent">#CC1F2124</color>
     <color name="delete_panel_bg">#3E4247</color>
     <color name="empty_list_text">#c8c8c8</color>
     <color name="switch_default_button_color">#C3C3C3</color>

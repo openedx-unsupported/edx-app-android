@@ -159,6 +159,18 @@
                     android:textSize="@dimen/edx_small" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/no_about_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/edx_margin"
+                android:layout_marginLeft="@dimen/edx_margin"
+                android:layout_marginRight="@dimen/edx_margin"
+                android:gravity="center"
+                android:text="@string/profile_incomplete_about_me"
+                android:textColor="@color/edx_grayscale_neutral_x_dark"
+                android:textSize="@dimen/edx_small" />
+
             <Button
                 android:id="@+id/edit_profile_button"
                 style="@style/edX.Widget.BorderedButton"
