@@ -74,4 +74,7 @@
     <!-- Error prompt shown during registration when a field entry is too long. Arguments are 1) a field name, 2) a number -->
     <string name="error_max_length">%1$s cannot have more than %2$d characters.</string>
 
+    <!-- Error message shown when a course hasn't started yet -->
+    <string name="course_not_started">This course hasn\'t started yet.</string>
+
 </resources>
