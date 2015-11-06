@@ -77,7 +77,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
                                 return;
 
                             final CourseComponent finalLastAccessComponent = lastAccessComponent;
-                            super.showLastAccessedView(null, lastAccessComponent.getName(), new View.OnClickListener() {
+                            super.showLastAccessedView(null, lastAccessComponent.getDisplayName(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     //This has been used so that if user clicks continuously on the screen,

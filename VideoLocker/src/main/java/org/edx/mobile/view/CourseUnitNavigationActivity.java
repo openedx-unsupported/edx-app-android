@@ -161,7 +161,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         setResult(RESULT_OK, resultData);
 
         environment.getSegment().trackScreenView(
-                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getName());
+                ISegment.Screens.UNIT_DETAIL, courseData.getCourse().getId(), selectedUnit.getInternalName());
         environment.getSegment().trackCourseComponentViewed(selectedUnit.getId(), courseData.getCourse().getId());
     }
 
@@ -187,7 +187,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mNextBtn.setText(R.string.assessment_next);
             }
             else {
-                mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getName());
+                mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
                 mNextUnitLbl.setVisibility(View.VISIBLE);
                 mNextBtn.setText(R.string.assessment_next_unit);
             }
@@ -205,7 +205,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                 mPreviousBtn.setText(R.string.assessment_previous);
             }
             else {
-                mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getName());
+                mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
                 mPreviousUnitLbl.setVisibility(View.VISIBLE);
                 mPreviousBtn.setText(R.string.assessment_previous_unit);
             }
