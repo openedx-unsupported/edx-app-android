@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class LocalImageChooserHelper {
 
@@ -32,7 +33,7 @@ public class LocalImageChooserHelper {
         onDestroy();
         try {
             outputFile = File.createTempFile(
-                    "JPEG_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + "_",
+                    "JPEG_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date()) + "_",
                     ".jpg",
                     context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             );
