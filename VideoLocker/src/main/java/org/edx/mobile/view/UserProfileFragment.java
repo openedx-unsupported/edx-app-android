@@ -234,7 +234,7 @@ public class UserProfileFragment extends RoboFragment {
                 viewHolder.editProfileButton.setVisibility(View.VISIBLE);
                 viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
 
-            } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio())) {
+            } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio()) && account.getAccountPrivacy() != Account.Privacy.ALL_USERS) {
                 viewHolder.incompleteContainer.setVisibility(View.VISIBLE);
                 viewHolder.incompleteGreeting.setText(ResourceUtil.getFormattedString(
                         viewHolder.incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
