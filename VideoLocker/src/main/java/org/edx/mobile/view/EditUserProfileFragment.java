@@ -387,7 +387,11 @@ public class EditUserProfileFragment extends RoboFragment {
     private void executeUpdate(FormField field, String fieldValue) {
         final Object valueObject;
         if (field.getDataType() == DataType.LANGUAGE) {
-            valueObject = Collections.singletonList(new LanguageProficiency(fieldValue));
+            if (TextUtils.isEmpty(fieldValue)) {
+                valueObject = Collections.emptyList();
+            } else {
+                valueObject = Collections.singletonList(new LanguageProficiency(fieldValue));
+            }
         } else {
             valueObject = fieldValue;
         }

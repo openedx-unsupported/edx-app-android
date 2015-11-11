@@ -34,10 +34,8 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="@string/no_videos_to_display"
-        android:textSize="21sp"
         android:visibility="gone"
-        android:textColor="@color/empty_list_text"
-        style="@style/bold_text"
+        style="@style/empty_content_text"
         android:layout_margin="20dp" />
 
 </RelativeLayout>

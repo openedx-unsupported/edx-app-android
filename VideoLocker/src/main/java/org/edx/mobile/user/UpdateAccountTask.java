@@ -2,6 +2,7 @@ package org.edx.mobile.user;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 
@@ -22,10 +23,10 @@ public abstract class UpdateAccountTask extends
     @NonNull
     private final String field;
 
-    @NonNull
+    @Nullable
     private final Object value;
 
-    public UpdateAccountTask(@NonNull Context context, @NonNull String username, @NonNull String field, @NonNull Object value) {
+    public UpdateAccountTask(@NonNull Context context, @NonNull String username, @NonNull String field, @Nullable Object value) {
         super(context);
         this.username = username;
         this.field = field;

@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -34,7 +35,6 @@ import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
-import org.edx.mobile.util.ResourceUtil;
 
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
@@ -114,12 +114,16 @@ public class UserProfileFragment extends RoboFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewHolder = new UserProfileViewHolder(view);
-        viewHolder.editProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                router.showUserProfileEditor(getActivity(), username);
-            }
-        });
+        {
+            final View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    router.showUserProfileEditor(getActivity(), username);
+                }
+            };
+            viewHolder.parentalConsentRequired.setOnClickListener(listener);
+            viewHolder.incompleteEditProfileButton.setOnClickListener(listener);
+        }
         viewHolder.usernameText.setText(username);
         setAccount(account);
 
@@ -180,15 +184,20 @@ public class UserProfileFragment extends RoboFragment {
         if (null == viewHolder) {
             return;
         }
+
+        // These views are all mutually exclusive; hide them all here, then show only the correct one
+        viewHolder.incompleteContainer.setVisibility(View.GONE);
+        viewHolder.parentalConsentRequired.setVisibility(View.GONE);
+        viewHolder.bioText.setVisibility(View.GONE);
+        viewHolder.noAboutMe.setVisibility(View.GONE);
+        viewHolder.loadingIndicator.setVisibility(View.GONE);
+
         if (null == account) {
             viewHolder.profileHeaderContent.setVisibility(View.GONE);
-            viewHolder.profileBodyContent.setVisibility(View.GONE);
             viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
 
         } else {
             viewHolder.profileHeaderContent.setVisibility(View.VISIBLE);
-            viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
-            viewHolder.loadingIndicator.setVisibility(View.GONE);
 
             final RequestManager requestManager = Glide.with(viewHolder.profileImage.getContext());
             requestManager
@@ -226,22 +235,12 @@ public class UserProfileFragment extends RoboFragment {
                 }
             }
 
-            viewHolder.incompleteContainer.setVisibility(View.GONE);
-            viewHolder.parentalConsentRequired.setVisibility(View.GONE);
-            viewHolder.bioText.setVisibility(View.GONE);
-            viewHolder.editProfileButton.setVisibility(View.GONE);
-            viewHolder.noAboutMe.setVisibility(View.GONE);
+            @ColorRes int bodyBackgroundColor = R.color.edx_grayscale_neutral_xx_light;
             if (isViewingOwnProfile && account.requiresParentalConsent()) {
                 viewHolder.parentalConsentRequired.setVisibility(View.VISIBLE);
-                viewHolder.editProfileButton.setVisibility(View.VISIBLE);
-                viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
 
             } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio()) && account.getAccountPrivacy() != Account.Privacy.ALL_USERS) {
                 viewHolder.incompleteContainer.setVisibility(View.VISIBLE);
-                viewHolder.incompleteGreeting.setText(ResourceUtil.getFormattedString(
-                        viewHolder.incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));
-                viewHolder.editProfileButton.setVisibility(View.VISIBLE);
-                viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_incomplete_edit_button));
 
             } else if (account.getAccountPrivacy() != Account.Privacy.PRIVATE) {
                 if (TextUtils.isEmpty(account.getBio())) {
@@ -249,8 +248,10 @@ public class UserProfileFragment extends RoboFragment {
                 } else {
                     viewHolder.bioText.setVisibility(View.VISIBLE);
                     viewHolder.bioText.setText(account.getBio());
+                    bodyBackgroundColor = R.color.white;
                 }
             }
+            viewHolder.profileBodyContent.setBackgroundColor(getResources().getColor(bodyBackgroundColor));
         }
     }
 
@@ -268,8 +269,8 @@ public class UserProfileFragment extends RoboFragment {
         public final TextView languageText;
         public final TextView locationText;
         public final View incompleteContainer;
-        public final TextView incompleteGreeting;
-        public final Button editProfileButton;
+        public final Button consentEditProfileButton;
+        public final Button incompleteEditProfileButton;
         public final View noAboutMe;
 
         public UserProfileViewHolder(@NonNull View parent) {
@@ -286,9 +287,9 @@ public class UserProfileFragment extends RoboFragment {
             this.locationContainer = parent.findViewById(R.id.location_container);
             this.locationText = (TextView) parent.findViewById(R.id.location_text);
             this.incompleteContainer = parent.findViewById(R.id.incomplete_container);
-            this.incompleteGreeting = (TextView) parent.findViewById(R.id.incomplete_greeting);
-            this.editProfileButton = (Button) parent.findViewById(R.id.edit_profile_button);
-            this.noAboutMe = (TextView) parent.findViewById(R.id.no_about_me);
+            this.consentEditProfileButton = (Button) parent.findViewById(R.id.parental_consent_edit_profile_button);
+            this.incompleteEditProfileButton = (Button) parent.findViewById(R.id.incomplete_edit_profile_button);
+            this.noAboutMe = parent.findViewById(R.id.no_about_me);
         }
     }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 app:civ_border_width="@dimen/user_profile_image_border_width"
                 tools:src="@drawable/app_icon" />
 
-            <TextView
+            <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/username_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +60,7 @@
                         app:iconColor="@color/edx_brand_primary_x_light"
                         app:iconName="fa_comment" />
 
-                    <TextView
+                    <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/language_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -85,7 +86,7 @@
                         app:iconColor="@color/edx_brand_primary_x_light"
                         app:iconName="fa_map_marker" />
 
-                    <TextView
+                    <org.edx.mobile.view.custom.ETextView
                         android:id="@+id/location_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,7 +95,7 @@
                         tools:text="Mexico" />
                 </LinearLayout>
 
-                <TextView
+                <org.edx.mobile.view.custom.ETextView
                     android:id="@+id/sharing_limited"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -105,15 +106,19 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/profile_body_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/edx_margin">
+            android:paddingBottom="@dimen/edx_margin"
+            android:paddingLeft="@dimen/edx_double_margin"
+            android:paddingRight="@dimen/edx_double_margin"
+            android:paddingTop="@dimen/edx_margin">
 
-            <TextView
+            <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/bio_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,72 +126,75 @@
                 android:textSize="@dimen/edx_base"
                 tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/parental_consent_required"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/edx_margin"
-                android:layout_marginLeft="@dimen/edx_margin"
-                android:layout_marginRight="@dimen/edx_margin"
-                android:gravity="center"
-                android:text="@string/profile_consent_needed_explanation"
-                android:textColor="@color/edx_grayscale_neutral_x_dark"
-                android:textSize="@dimen/edx_small" />
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <org.edx.mobile.view.custom.ETextView
+                    style="@style/empty_content_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/edx_margin"
+                    android:layout_marginLeft="@dimen/edx_margin"
+                    android:layout_marginRight="@dimen/edx_margin"
+                    android:gravity="center"
+                    android:text="@string/profile_consent_needed_explanation" />
+
+                <Button
+                    android:id="@+id/parental_consent_edit_profile_button"
+                    style="@style/edX.Widget.BorderedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_margin"
+                    android:text="@string/profile_consent_needed_edit_button" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/incomplete_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/incomplete_greeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/edx_grayscale_neutral_x_dark"
-                    android:textSize="@dimen/edx_large"
-                    tools:text="@string/profile_incomplete_greeting" />
-
-                <TextView
+                <org.edx.mobile.view.custom.ETextView
+                    style="@style/empty_content_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/edx_margin"
                     android:gravity="center"
-                    android:text="@string/profile_incomplete_explanation"
-                    android:textColor="@color/edx_grayscale_neutral_x_dark"
-                    android:textSize="@dimen/edx_small" />
+                    android:text="@string/profile_incomplete_explanation" />
+
+                <Button
+                    android:id="@+id/incomplete_edit_profile_button"
+                    style="@style/edX.Widget.BorderedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/edx_margin"
+                    android:text="@string/profile_incomplete_edit_button" />
             </LinearLayout>
 
-            <TextView
+            <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/no_about_me"
+                style="@style/empty_content_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/edx_margin"
-                android:layout_marginLeft="@dimen/edx_margin"
-                android:layout_marginRight="@dimen/edx_margin"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/profile_incomplete_about_me"
-                android:textColor="@color/edx_grayscale_neutral_x_dark"
-                android:textSize="@dimen/edx_small" />
+                android:text="@string/profile_incomplete_about_me" />
 
-            <Button
-                android:id="@+id/edit_profile_button"
-                style="@style/edX.Widget.BorderedButton"
+            <ProgressBar
+                android:id="@+id/loading_indicator"
+                style="@style/api_progress_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/edx_margin"
-                tools:text="@string/profile_incomplete_edit_button" />
-        </LinearLayout>
-
-        <ProgressBar
-            android:id="@+id/loading_indicator"
-            style="@style/api_progress_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/edx_margin" />
-
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/edx_margin" />
+        </FrameLayout>
     </LinearLayout>
 </ScrollView>
