@@ -130,7 +130,16 @@ public class NavigationFragment extends RoboFragment {
                 nameLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        environment.getRouter().showUserProfile(getActivity(), profile.username);
+                        final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
+                        act.closeDrawer();
+
+                        if (!(act instanceof UserProfileActivity)) {
+                            environment.getRouter().showUserProfileWithNavigationDrawer(getActivity(), profile.username);
+
+                            if (!(act instanceof MyCoursesListActivity)) {
+                                act.finish();
+                            }
+                        }
                     }
                 });
             }

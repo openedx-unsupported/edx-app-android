@@ -25,6 +25,7 @@ import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -55,6 +56,9 @@ public class UserProfileFragment extends RoboFragment {
     @Inject
     private Router router;
 
+    @Inject
+    private ISegment segment;
+
     private boolean isViewingOwnProfile;
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -68,6 +72,10 @@ public class UserProfileFragment extends RoboFragment {
 
         final ProfileModel model = new PrefManager(getActivity(), PrefManager.Pref.LOGIN).getCurrentUserProfile();
         isViewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
+
+        if (null == savedInstanceState) {
+            segment.trackProfileViewed(username);
+        }
     }
 
     @Override
