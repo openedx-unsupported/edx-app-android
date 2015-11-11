@@ -330,7 +330,11 @@ public class Router {
     }
 
     public void showUserProfile(@NonNull Context context, @NonNull String username) {
-        context.startActivity(UserProfileActivity.newIntent(context, username));
+        context.startActivity(UserProfileActivity.newIntent(context, username, false));
+    }
+
+    public void showUserProfileWithNavigationDrawer(@NonNull Context context, @NonNull String username) {
+        context.startActivity(UserProfileActivity.newIntent(context, username, true));
     }
 
     public void showUserProfileEditor(@NonNull Context context, @NonNull String username) {
