@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
@@ -41,7 +42,6 @@ import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
-import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.InvalidLocaleException;
@@ -83,6 +83,9 @@ public class EditUserProfileFragment extends RoboFragment {
 
     @Inject
     private Router router;
+
+    @Inject
+    private ISegment segment;
 
     @NonNull
     private final LocalImageChooserHelper helper = new LocalImageChooserHelper();
@@ -313,9 +316,13 @@ public class EditUserProfileFragment extends RoboFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CHOOSE_PHOTO_REQUEST: {
-                final Uri imageUri = helper.onActivityResult(resultCode, data);
+                if (resultCode != Activity.RESULT_OK) {
+                    break;
+                }
+                final Uri imageUri = helper.getImageUriFromResult(data);
                 if (null != imageUri) {
-                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri), CROP_PHOTO_REQUEST);
+                    final boolean isFromCamera = helper.isResultFromCamera(data);
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, isFromCamera), CROP_PHOTO_REQUEST);
                 }
                 break;
             }
@@ -357,6 +364,7 @@ public class EditUserProfileFragment extends RoboFragment {
                     };
                     setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
                     setAccountImageTask.execute();
+                    segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
             }
