@@ -23,7 +23,6 @@ public class UserProfileActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getIntent().getStringExtra(EXTRA_USERNAME));
 
         if (getIntent().getBooleanExtra(EXTRA_SHOW_NAVIGATION_DRAWER, false)) {
             configureDrawer();

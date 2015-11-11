@@ -271,7 +271,8 @@
 
         <activity android:name=".view.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/CustomActionBarTheme.NoShadow"/>
+            android:theme="@style/CustomActionBarTheme.NoShadow"
+            android:label=""/>
 
         <activity android:name=".view.EditUserProfileActivity"
             android:screenOrientation="portrait"/>
