@@ -148,6 +148,10 @@
         <item name="android:textColor">@color/edx_grayscale_neutral_x_dark</item>
     </style>
 
+    <style name="regular_edx_gray_dark_text" parent="@style/regular_text">
+        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+    </style>
+
     <style name="regular_edx_gray_base_text" parent="@style/regular_text">
         <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
     </style>

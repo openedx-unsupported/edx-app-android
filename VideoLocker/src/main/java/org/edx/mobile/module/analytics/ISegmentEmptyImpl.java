@@ -1,5 +1,6 @@
 package org.edx.mobile.module.analytics;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.segment.analytics.Properties;
@@ -211,6 +212,16 @@ public class ISegmentEmptyImpl implements ISegment {
 
     @Override
     public Properties trackOpenInBrowser(String blockId, String courseId, boolean isSupported) {
+        return null;
+    }
+
+    @Override
+    public Properties trackProfileViewed(@NonNull String username) {
+        return null;
+    }
+
+    @Override
+    public Properties trackProfilePhotoSet(boolean fromCamera) {
         return null;
     }
 }

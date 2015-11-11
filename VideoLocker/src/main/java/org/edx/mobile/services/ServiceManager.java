@@ -81,7 +81,7 @@ public class ServiceManager {
                     String student_view_data = URLEncoder.encode("video", "UTF-8");
                     String cId = URLEncoder.encode(courseId, "UTF-8");
 
-                    String url = config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + cId + "&user="
+                    String url = config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + cId + "&username="
                         + username + "&depth=all&requested_fields=" + requested_fields + "&student_view_data=" + student_view_data + "&block_counts=" + block_counts+ "&nav_depth=3";
 
                     logger.debug("GET url for enrolling in a Course: " + url);

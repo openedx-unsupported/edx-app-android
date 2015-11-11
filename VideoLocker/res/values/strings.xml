@@ -13,7 +13,7 @@
     <!-- Label congratulation user on finishing course -->
     <string name="course_details_congratulations">Congratulations!</string>
     <!-- Message for user who has successfully completed a certificate course -->
-    <string name="course_details_earned_cert">You\'ve earned a certificate</string>
+    <string name="course_details_earned_cert">You’ve earned a certificate</string>
     <!-- Header for list of friends in a given course. Argument is a course name -->
     <string name="friends_in_course">Friends in {courseName}</string>
     <!-- Link to web course page -->
@@ -35,14 +35,14 @@
     <!-- Label explaining switch allowing other users to see courses -->
     <string name="settings_make_courses_visible_top">Make courses visible to friends</string>
     <!-- Label explaining switch allowing other users to see courses -->
-    <string name="settings_make_courses_visible_bottom">Allow my friends to see what courses I\'m taking</string>
+    <string name="settings_make_courses_visible_bottom">Allow my friends to see what courses I’m taking</string>
     <!-- Label for facebook login section -->
     <string name="settings_facebook_login">Facebook login</string>
     <!-- Label for facebook login section. Argument is a user name -->
     <string name="settings_facebook_login_body_logged_in">Currently logged in as {username}</string>
     <!-- Label for button allowing user to connect a facebook account -->
     <string name="settings_facebook_login_body_logged_out">Log in with your Facebook account</string>
-    <!-- Error shown attempting to connect a facebook accoutn fails -->
+    <!-- Error shown attempting to connect a facebook account fails -->
     <string name="settings_facebook_login_error">Unable to contact Facebook</string>
     <!-- Status label shown when connecting to facebook -->
     <string name="settings_facebook_login_fetch">Contacting Facebook...</string>
@@ -141,10 +141,10 @@
     <!-- Label for switch controlling whether users permit downloading using cellular data or only wifi -->
     <string name="wifi_dialog_title_help">Allow cellular download</string>
     <!-- Password reset sent succesfully alert -->
-    <string name="success_dialog_message_help">We\'ve sent a message with password reset instructions to your e-mail address. 
-        If you don\'t see it in the next few minutes, make sure to check your spam folder.</string>
+    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address. 
+        If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
-    <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we\'ll send you instructions to reset your password.</string>
+    <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
     <!-- Label explaining toggle for cellular data access -->
     <string name="wifi_dialog_message_help">Allow your device to download videos over your cellular connection when Wi-Fi is not available. Data charges may apply.</string>
     <!-- Confirmation text for delete video dialog -->
@@ -202,7 +202,7 @@
     <!-- Label for date when course is ending -->
     <string name="label_ending_on">Ending</string>
     <!-- List for table listing courses friends are in -->
-    <string name="label_my_friends_courses">My Friends\' Courses</string>
+    <string name="label_my_friends_courses">My Friends’ Courses</string>
     <!-- Label on course indicating that user earned a certificate in that course -->
     <string name="course_banner_certified">Certificate Earned</string>
     <!-- Header ror list of users' friends enrolled in a course -->
@@ -384,7 +384,7 @@
     <!-- Label for empty video in video only mode-->
     <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select the Video icon above and switch to full course mode.</string>
    <!-- Label showing assessment only available on website-->
-    <string name="assessment_not_available">This interactive component isn\'t yet available on mobile.</string>
+    <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
     <!-- Button to show wiew on web for assessment-->
@@ -417,7 +417,7 @@
     <!-- Label indicating user has no internet connection -->
     <string name="offline_text">Offline Mode</string>
     <!-- Label shown in videos section when user has no videos downloaded -->
-    <string name="no_videos_to_display">You haven\'t downloaded any videos.</string>
+    <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
 
     <!-- My Downloads -->
     <!-- Message indicating videos downloaded -->
@@ -439,7 +439,7 @@
     <string name="download_exceed_title">Large Download</string>
 
     <!-- Alert dialog text at end of video -->
-    <string name="title_lecture_complete">You\'ve reached the end of this video.</string>
+    <string name="title_lecture_complete">You’ve reached the end of this video.</string>
     <!-- Alert dialog prompt at end of video. -->
     <string name="msg_lecture_complete">Would you like to watch the next video?</string>
 
@@ -467,7 +467,7 @@
     <!-- Toggle to allow downloads using cellular data -->
     <string name="allow">Allow</string>
     <!-- Toggle to disallow downloads using cellular data -->
-    <string name="do_not_allow">Don\'T allow</string>
+    <string name="do_not_allow">Don’T allow</string>
 
     <!-- Player Settings -->
     <!-- Label for closed captions in video player -->
@@ -586,17 +586,17 @@
     <!-- Google login method -->
     <string name="google_text">Google</string>
     <!-- Message on course list -->
-    <string name="course_not_listed_text">Don\'t see one of your courses?</string>
+    <string name="course_not_listed_text">Don’t see one of your courses?</string>
     <!-- Accessible content description of course not listed button on Course list screen -->
-    <string name="course_not_listed_btn">Don\'t see one of your courses button</string>
+    <string name="course_not_listed_btn">Don’t see one of your courses button</string>
     <!-- Message on course page for course that hasn't started -->
-    <string name="course_content_available_text">This course hasn\'t started yet. Come back on {start_time} to see your videos.</string>
+    <string name="course_content_available_text">This course hasn’t started yet. Come back on {start_time} to see your videos.</string>
     <!-- Button text, allowing user to open the platform's website in a web browser -->
     <string name="open_destination_btn_text">Open {platform_destination} in my browser</string>
     <!-- Message shown when linking to the external course list when in app course registration is not enabled -->
     <string name="find_courses_dialog_text_1">Our team is currently working hard to let you enroll in courses within the app.</string>
     <!-- Message shown when linking to the external course list when in app course registration is not enabled -->
-    <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you\'ll need to log in, enroll, and then return to the app when you\'re done.</string>
+    <string name="find_courses_dialog_text_2">In the meantime, &lt;b&gt;you can enroll in courses through our website&lt;/b&gt; - you’ll need to log in, enroll, and then return to the app when you’re done.</string>
     <!-- Title of find course screen -->
     <string name="find_courses_title">Find Courses</string>
     <!-- Message shown when attempting to find courses with no internet connection -->
@@ -632,8 +632,8 @@
     <!-- Registration screen title -->
     <string name="register_title">Sign up for {platform_name}</string>
     <!-- Text for successful registration with social token  -->
-    <string name="sign_up_with_facebook_ok">You\'ve successfully signed in with Facebook.</string>
-    <string name="sign_up_with_google_ok">You\'ve successfully signed in with Google.</string>
+    <string name="sign_up_with_facebook_ok">You’ve successfully signed in with Facebook.</string>
+    <string name="sign_up_with_google_ok">You’ve successfully signed in with Google.</string>
     <string name="sign_up_with_social_ok">We just need a little more information before you start learning with {platform_name}.</string>
     <!-- Continue registration after social login -->
     <string name="complete_registration">Complete your registration</string>

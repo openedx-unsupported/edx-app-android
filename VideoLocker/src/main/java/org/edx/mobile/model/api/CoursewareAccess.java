@@ -27,4 +27,8 @@ public class CoursewareAccess implements Serializable {
     public String getUser_message() {
         return user_message;
     }
+
+    public boolean hasAccess() {
+        return has_access;
+    }
 }
