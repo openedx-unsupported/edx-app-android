@@ -48,7 +48,7 @@ public class ApiConstants {
 
     public static final String URL_ENROLLMENT = "/api/enrollment/v1/enrollment";
 
-    public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&user={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
+    public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
 
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
 
