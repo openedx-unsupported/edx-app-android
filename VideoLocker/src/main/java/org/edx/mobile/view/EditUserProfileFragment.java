@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
@@ -41,7 +43,6 @@ import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
-import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.user.SetAccountImageTask;
 import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.InvalidLocaleException;
@@ -83,6 +84,9 @@ public class EditUserProfileFragment extends RoboFragment {
 
     @Inject
     private Router router;
+
+    @Inject
+    private ISegment segment;
 
     @NonNull
     private final LocalImageChooserHelper helper = new LocalImageChooserHelper();
@@ -313,9 +317,13 @@ public class EditUserProfileFragment extends RoboFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CHOOSE_PHOTO_REQUEST: {
-                final Uri imageUri = helper.onActivityResult(resultCode, data);
+                if (resultCode != Activity.RESULT_OK) {
+                    break;
+                }
+                final Uri imageUri = helper.getImageUriFromResult(data);
                 if (null != imageUri) {
-                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri), CROP_PHOTO_REQUEST);
+                    final boolean isFromCamera = helper.isResultFromCamera(data);
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, isFromCamera), CROP_PHOTO_REQUEST);
                 }
                 break;
             }
@@ -357,6 +365,7 @@ public class EditUserProfileFragment extends RoboFragment {
                     };
                     setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
                     setAccountImageTask.execute();
+                    segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
             }
@@ -441,7 +450,11 @@ public class EditUserProfileFragment extends RoboFragment {
             put("label", formattedLabel);
             put("value", formattedValue);
         }}));
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, null, null, new IconDrawable(parent.getContext(), Iconify.IconValue.fa_angle_right).colorRes(R.color.edx_grayscale_neutral_light).sizeDp(24), null);
+        Context context = parent.getContext();
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                textView, null, null, new IconDrawable(context, Iconify.IconValue.fa_angle_right)
+                        .colorRes(context, R.color.edx_grayscale_neutral_light)
+                        .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);
             textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_grayscale_neutral_x_light));

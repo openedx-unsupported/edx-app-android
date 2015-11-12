@@ -42,26 +42,24 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
     public void setDiscussionThread(final DiscussionThread discussionThread) {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
-        threadVoteIconView.setIconColor(discussionThread.isVoted() ?
-                threadVoteIconView.getResources().getColor(R.color.edx_brand_primary_base) :
-                threadVoteIconView.getResources().getColor(R.color.edx_grayscale_neutral_base));
+        threadVoteIconView.setIconColorResource(discussionThread.isVoted() ?
+                R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
 
         threadFollowContainer.setVisibility(View.VISIBLE);
 
         if (discussionThread.isFollowing()) {
             threadFollowTextView.setText(R.string.forum_unfollow);
-            threadFollowIconView.setIconColor(threadFollowIconView.getResources().getColor(R.color.edx_brand_primary_base));
+            threadFollowIconView.setIconColorResource(R.color.edx_brand_primary_base);
         } else {
             threadFollowTextView.setText(R.string.forum_follow);
-            threadFollowIconView.setIconColor(threadFollowIconView.getResources().getColor(R.color.edx_grayscale_neutral_base));
+            threadFollowIconView.setIconColorResource(R.color.edx_grayscale_neutral_base);
         }
     }
 
     public void setDiscussionResponse(final DiscussionComment discussionResponse) {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
-        threadVoteIconView.setIconColor(discussionResponse.isVoted() ?
-                threadVoteIconView.getResources().getColor(R.color.edx_brand_primary_base) :
-                threadVoteIconView.getResources().getColor(R.color.edx_grayscale_neutral_base));
+        threadVoteIconView.setIconColorResource(discussionResponse.isVoted() ?
+                R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
     }
 }

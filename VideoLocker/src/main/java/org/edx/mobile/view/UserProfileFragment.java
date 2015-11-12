@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
@@ -55,6 +57,9 @@ public class UserProfileFragment extends RoboFragment {
     @Inject
     private Router router;
 
+    @Inject
+    private ISegment segment;
+
     private boolean isViewingOwnProfile;
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -68,6 +73,10 @@ public class UserProfileFragment extends RoboFragment {
 
         final ProfileModel model = new PrefManager(getActivity(), PrefManager.Pref.LOGIN).getCurrentUserProfile();
         isViewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
+
+        if (null == savedInstanceState) {
+            segment.trackProfileViewed(username);
+        }
     }
 
     @Override
@@ -75,9 +84,10 @@ public class UserProfileFragment extends RoboFragment {
         super.onCreateOptionsMenu(menu, inflater);
         if (isViewingOwnProfile) {
             inflater.inflate(R.menu.edit_profile, menu);
+            Context context = getActivity();
             menu.findItem(R.id.edit_profile).setIcon(
-                    new IconDrawable(getActivity(), Iconify.IconValue.fa_pencil)
-                            .actionBarSize().colorRes(R.color.edx_white));
+                    new IconDrawable(context, Iconify.IconValue.fa_pencil)
+                            .actionBarSize(context).colorRes(context, R.color.edx_white));
         }
     }
 
@@ -226,7 +236,7 @@ public class UserProfileFragment extends RoboFragment {
                 viewHolder.editProfileButton.setVisibility(View.VISIBLE);
                 viewHolder.editProfileButton.setText(viewHolder.editProfileButton.getResources().getString(R.string.profile_consent_needed_edit_button));
 
-            } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio())) {
+            } else if (isViewingOwnProfile && TextUtils.isEmpty(account.getBio()) && account.getAccountPrivacy() != Account.Privacy.ALL_USERS) {
                 viewHolder.incompleteContainer.setVisibility(View.VISIBLE);
                 viewHolder.incompleteGreeting.setText(ResourceUtil.getFormattedString(
                         viewHolder.incompleteGreeting.getResources(), R.string.profile_incomplete_greeting, "username", account.getUsername()));

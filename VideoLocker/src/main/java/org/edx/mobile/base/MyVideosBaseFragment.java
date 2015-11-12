@@ -5,11 +5,9 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.event.DownloadEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.Router;
 
-import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
 
 public abstract class MyVideosBaseFragment extends RoboFragment {
@@ -22,25 +20,7 @@ public abstract class MyVideosBaseFragment extends RoboFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if ( !EventBus.getDefault().isRegistered(this) )
-            EventBus.getDefault().register(this);
     }
-
-    /**
-     * used by EventBus callback
-     * @param event
-     */
-    public void onEvent(DownloadEvent event) {
-        reloadList();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
 
     /**
      * Call this function when Video completes downloading

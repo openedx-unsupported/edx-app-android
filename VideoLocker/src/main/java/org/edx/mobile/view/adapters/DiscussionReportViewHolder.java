@@ -29,6 +29,6 @@ public class DiscussionReportViewHolder {
         reportTextView.setText(reportTextView.getResources().getString(reportStringResId));
 
         int iconColor = isReported ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base;
-        reportIconView.setIconColor(reportIconView.getResources().getColor(iconColor));
+        reportIconView.setIconColorResource(iconColor);
     }
 }

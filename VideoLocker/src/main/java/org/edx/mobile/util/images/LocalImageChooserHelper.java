@@ -55,13 +55,16 @@ public class LocalImageChooserHelper {
     }
 
     @Nullable
-    public Uri onActivityResult(int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            return data == null || MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction())
-                    ? outputFileUri
-                    : data.getData();
+    public Uri getImageUriFromResult(Intent data) {
+        if (isResultFromCamera(data)) {
+            return outputFileUri;
+        } else {
+            return data.getData();
         }
-        return null;
+    }
+
+    public boolean isResultFromCamera(Intent data) {
+        return data == null || MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
     }
 
     public void onDestroy() {

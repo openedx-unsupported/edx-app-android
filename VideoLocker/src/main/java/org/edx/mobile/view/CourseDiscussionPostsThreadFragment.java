@@ -83,10 +83,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         super.onViewCreated(view, savedInstanceState);
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
+        Context context = getActivity();
         TextViewCompat.setCompoundDrawablesRelative(createNewPostTextView,
-                new IconDrawable(getActivity(), Iconify.IconValue.fa_plus_circle)
-                        .sizeRes(R.dimen.icon_view_standard_width_height)
-                        .colorRes(R.color.edx_grayscale_neutral_white_t),
+                new IconDrawable(context, Iconify.IconValue.fa_plus_circle)
+                        .sizeRes(context, R.dimen.icon_view_standard_width_height)
+                        .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                 null, null, null
         );
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {
@@ -111,9 +112,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                         Context context = getActivity();
                         LayerDrawable layeredIcon = new LayerDrawable(new Drawable[]{
                                 new IconDrawable(context, Iconify.IconValue.fa_long_arrow_up)
-                                        .colorRes(R.color.edx_brand_primary_base),
+                                        .colorRes(context, R.color.edx_brand_primary_base),
                                 new IconDrawable(context, Iconify.IconValue.fa_long_arrow_down)
-                                        .colorRes(R.color.edx_brand_primary_base)
+                                        .colorRes(context, R.color.edx_brand_primary_base)
                         });
                         Resources resources = context.getResources();
                         final int width = resources.getDimensionPixelSize(
