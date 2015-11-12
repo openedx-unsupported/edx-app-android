@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,32 +140,37 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         }
     }
 
-    private void initializeAdapter(){
+    private void initializeAdapter() {
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(), environment.getStorage(), new CourseOutlineAdapter.DownloadListener() {
+            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(),
+                    environment.getStorage(), new CourseOutlineAdapter.DownloadListener() {
                 @Override
                 public void download(List<HasDownloadEntry> models) {
-                    downloadManager.downloadVideos(
-                            (List) models, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
-
+                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                    if (NetworkUtil.verifyDownloadPossible(activity)) {
+                        downloadManager.downloadVideos(models, getActivity(),
+                                (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                    }
                 }
 
                 @Override
                 public void download(DownloadEntry videoData) {
-                    downloadManager.downloadVideo(
-                            videoData, (FragmentActivity) getActivity(), (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                    if (NetworkUtil.verifyDownloadPossible(activity)) {
+                        downloadManager.downloadVideo(videoData, activity, activity);
+                    }
+                }
+
+                @Override
+                public void viewDownloadsStatus() {
+                    environment.getRouter().showDownloads(getActivity());
                 }
             });
         }
 
-        if (!(NetworkUtil.isConnected(getActivity()))) {
-            AppConstants.offline_flag = true;
-        } else {
-            AppConstants.offline_flag = false;
-        }
+        AppConstants.offline_flag = !NetworkUtil.isConnected(getActivity());
     }
-
 
 
     @Override

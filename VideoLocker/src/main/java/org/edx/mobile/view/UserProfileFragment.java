@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,9 +84,10 @@ public class UserProfileFragment extends RoboFragment {
         super.onCreateOptionsMenu(menu, inflater);
         if (isViewingOwnProfile) {
             inflater.inflate(R.menu.edit_profile, menu);
+            Context context = getActivity();
             menu.findItem(R.id.edit_profile).setIcon(
-                    new IconDrawable(getActivity(), Iconify.IconValue.fa_pencil)
-                            .actionBarSize().colorRes(R.color.edx_white));
+                    new IconDrawable(context, Iconify.IconValue.fa_pencil)
+                            .actionBarSize(context).colorRes(context, R.color.edx_white));
         }
     }
 

@@ -8,7 +8,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
+import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.PrefManager;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -167,5 +170,29 @@ public class NetworkUtil {
 
         return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context, config));
 
+    }
+
+    /**
+     * Verify that there is an active network connection on which downloading is allowed. If
+     * there is no such connection, then an appropriate message is displayed.
+     *
+     * @param activity Delegate of type {@link BaseFragmentActivity} to show proper error messages
+     * @return If downloads can be performed, returns true; else returns false.
+     */
+
+    public static boolean verifyDownloadPossible(BaseFragmentActivity activity) {
+        if (new PrefManager(activity, PrefManager.Pref.WIFI).getBoolean(PrefManager.Key
+                .DOWNLOAD_ONLY_ON_WIFI, true)) {
+            if (!isConnectedWifi(activity)) {
+                activity.showInfoMessage(activity.getString(R.string.wifi_off_message));
+                return false;
+            }
+        } else {
+            if (AppConstants.offline_flag) {
+                activity.showInfoMessage(activity.getString(R.string.network_not_connected));
+                return false;
+            }
+        }
+        return true;
     }
 }

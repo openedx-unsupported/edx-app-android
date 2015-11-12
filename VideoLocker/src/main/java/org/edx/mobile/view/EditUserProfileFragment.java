@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -449,7 +450,11 @@ public class EditUserProfileFragment extends RoboFragment {
             put("label", formattedLabel);
             put("value", formattedValue);
         }}));
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, null, null, new IconDrawable(parent.getContext(), Iconify.IconValue.fa_angle_right).colorRes(R.color.edx_grayscale_neutral_light).sizeDp(24), null);
+        Context context = parent.getContext();
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                textView, null, null, new IconDrawable(context, Iconify.IconValue.fa_angle_right)
+                        .colorRes(context, R.color.edx_grayscale_neutral_light)
+                        .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);
             textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_grayscale_neutral_x_light));

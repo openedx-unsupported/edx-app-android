@@ -339,7 +339,6 @@ public class PrefManager {
         public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";
         public static final String DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi";
         public static final String DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG = "download_off_wifi_dialog_flag";
-        public static final String COUNT_OF_VIDEOS_DOWNLOADED = "count_videos_downloaded";
         public static final String TRANSCRIPT_LANGUAGE = "transcript_language";
         public static final String ALLOW_SOCIAL_FEATURES = "allow_social_features";
         public static final String LAST_ACCESS_MODIFICATION_TIME = "last_access_modification_time";
