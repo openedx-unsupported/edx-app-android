@@ -107,10 +107,13 @@ public class NavigationFragment extends RoboFragment {
     }
 
     private void loadProfileImage(@NonNull ProfileImage profileImage, @NonNull ImageView imageView) {
-        final RequestManager requestManager = Glide.with(NavigationFragment.this);
-        requestManager
-                .load(profileImage.getImageUrlLarge())
-                .into(imageView);
+        if (profileImage.hasImage()) {
+            Glide.with(NavigationFragment.this)
+                    .load(profileImage.getImageUrlLarge())
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.xsie);
+        }
     }
 
     @Override
@@ -391,11 +394,15 @@ public class NavigationFragment extends RoboFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
-            Glide.with(NavigationFragment.this)
-                    .load(event.getUri())
-                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(imageView);
+            if (null == event.getUri()) {
+                imageView.setImageResource(R.drawable.xsie);
+            } else {
+                Glide.with(NavigationFragment.this)
+                        .load(event.getUri())
+                        .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(imageView);
+            }
         }
     }
 

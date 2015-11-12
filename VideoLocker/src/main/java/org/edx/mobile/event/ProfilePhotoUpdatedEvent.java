@@ -2,14 +2,15 @@ package org.edx.mobile.event;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class ProfilePhotoUpdatedEvent {
     @NonNull
     private final String username;
-    @NonNull
-    private final Uri uri;
+    @Nullable
+    private final Uri uri; // Null if photo was deleted
 
-    public ProfilePhotoUpdatedEvent(@NonNull String username, @NonNull Uri uri) {
+    public ProfilePhotoUpdatedEvent(@NonNull String username, @Nullable Uri uri) {
         this.username = username;
         this.uri = uri;
     }
@@ -19,7 +20,7 @@ public class ProfilePhotoUpdatedEvent {
         return username;
     }
 
-    @NonNull
+    @Nullable
     public Uri getUri() {
         return uri;
     }

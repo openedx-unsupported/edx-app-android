@@ -14,9 +14,9 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,10 +34,13 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.task.Task;
 import org.edx.mobile.third_party.iconify.IconDrawable;
+import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
+import org.edx.mobile.user.DeleteAccountImageTask;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
 import org.edx.mobile.user.GetAccountTask;
@@ -48,7 +51,8 @@ import org.edx.mobile.user.UpdateAccountTask;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.images.LocalImageChooserHelper;
+import org.edx.mobile.util.images.ImageCaptureHelper;
+import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,8 +65,9 @@ import roboguice.inject.InjectExtra;
 public class EditUserProfileFragment extends RoboFragment {
 
     private static final int EDIT_FIELD_REQUEST = 1;
-    private static final int CHOOSE_PHOTO_REQUEST = 2;
-    private static final int CROP_PHOTO_REQUEST = 3;
+    private static final int CAPTURE_PHOTO_REQUEST = 2;
+    private static final int CHOOSE_PHOTO_REQUEST = 3;
+    private static final int CROP_PHOTO_REQUEST = 4;
 
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
@@ -71,7 +76,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
 
-    private SetAccountImageTask setAccountImageTask;
+    private Task setAccountImageTask;
 
     @Nullable
     private Account account;
@@ -89,7 +94,7 @@ public class EditUserProfileFragment extends RoboFragment {
     private ISegment segment;
 
     @NonNull
-    private final LocalImageChooserHelper helper = new LocalImageChooserHelper();
+    private final ImageCaptureHelper helper = new ImageCaptureHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,10 +143,65 @@ public class EditUserProfileFragment extends RoboFragment {
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(helper.createChooserIntent(getActivity()), CHOOSE_PHOTO_REQUEST);
+                final PopupMenu popup = new PopupMenu(getActivity(), v);
+                popup.getMenuInflater().inflate(R.menu.change_photo, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.take_photo: {
+                                startActivityForResult(
+                                        helper.createCaptureIntent(getActivity()),
+                                        CAPTURE_PHOTO_REQUEST);
+                                break;
+                            }
+                            case R.id.choose_photo: {
+                                final Intent galleryIntent = new Intent()
+                                        .setType("image/*")
+                                        .setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(galleryIntent, CHOOSE_PHOTO_REQUEST);
+                                break;
+                            }
+                            case R.id.remove_photo: {
+                                executePhotoTask(new DeleteAccountImageTask(getActivity(), username) {
+                                    @Override
+                                    protected void onSuccess(Void aVoid) throws Exception {
+                                        hideLoading();
+                                    }
+
+                                    @Override
+                                    protected void onException(Exception e) throws RuntimeException {
+                                        super.onException(e);
+                                        showErrorMessage(e);
+                                    }
+
+                                    private void hideLoading() {
+                                        if (null != viewHolder) {
+                                            viewHolder.profileImageProgress.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
         setData(account, formDescription);
+    }
+
+    private void executePhotoTask(Task task) {
+        viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
+        viewHolder.profileImageProgress.setRotating(true);
+        // TODO: Test this with "Don't keep activities"
+        if (null != setAccountImageTask) {
+            setAccountImageTask.cancel(true);
+        }
+        setAccountImageTask = task;
+        setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
+        task.execute();
     }
 
     @Override
@@ -152,7 +212,7 @@ public class EditUserProfileFragment extends RoboFragment {
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
         }
-        helper.onDestroy();
+        helper.deleteTemporaryFile();
 
         EventBus.getDefault().unregister(this);
     }
@@ -165,11 +225,15 @@ public class EditUserProfileFragment extends RoboFragment {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
-        Glide.with(this)
-                .load(event.getUri())
-                .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(viewHolder.profileImage);
+        if (null == event.getUri()) {
+            viewHolder.profileImage.setImageResource(R.drawable.xsie);
+        } else {
+            Glide.with(this)
+                    .load(event.getUri())
+                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(viewHolder.profileImage);
+        }
 
     }
 
@@ -180,7 +244,7 @@ public class EditUserProfileFragment extends RoboFragment {
         public final TextView username;
         public final ViewGroup fields;
         public final View changePhoto;
-        public final View profileImageProgress;
+        public final IconView profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
@@ -189,7 +253,7 @@ public class EditUserProfileFragment extends RoboFragment {
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
             this.changePhoto = parent.findViewById(R.id.change_photo);
-            this.profileImageProgress = parent.findViewById(R.id.profile_image_progress);
+            this.profileImageProgress = (IconView) parent.findViewById(R.id.profile_image_progress);
         }
     }
 
@@ -207,9 +271,13 @@ public class EditUserProfileFragment extends RoboFragment {
             viewHolder.loadingIndicator.setVisibility(View.GONE);
             viewHolder.changePhoto.setVisibility(account.requiresParentalConsent() ? View.GONE : View.VISIBLE);
 
-            Glide.with(viewHolder.profileImage.getContext())
-                    .load(account.getProfileImage().getImageUrlLarge())
-                    .into(viewHolder.profileImage);
+            if (account.getProfileImage().hasImage()) {
+                Glide.with(viewHolder.profileImage.getContext())
+                        .load(account.getProfileImage().getImageUrlLarge())
+                        .into(viewHolder.profileImage);
+            } else {
+                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+            }
 
             final Gson gson = new GsonBuilder().serializeNulls().create();
             final JsonObject obj = (JsonObject) gson.toJsonTree(account);
@@ -315,35 +383,30 @@ public class EditUserProfileFragment extends RoboFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
         switch (requestCode) {
-            case CHOOSE_PHOTO_REQUEST: {
-                if (resultCode != Activity.RESULT_OK) {
-                    break;
-                }
-                final Uri imageUri = helper.getImageUriFromResult(data);
+            case CAPTURE_PHOTO_REQUEST: {
+                final Uri imageUri = helper.getImageUriFromResult();
                 if (null != imageUri) {
-                    final boolean isFromCamera = helper.isResultFromCamera(data);
-                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, isFromCamera), CROP_PHOTO_REQUEST);
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, true), CROP_PHOTO_REQUEST);
+                }
+                break;
+            }
+            case CHOOSE_PHOTO_REQUEST: {
+                final Uri imageUri = data.getData();
+                if (null != imageUri) {
+                    startActivityForResult(CropImageActivity.newIntent(getActivity(), imageUri, false), CROP_PHOTO_REQUEST);
                 }
                 break;
             }
             case CROP_PHOTO_REQUEST: {
-                if (resultCode != Activity.RESULT_OK) {
-                    break;
-                }
                 final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
                 final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
                 if (null != imageUri && null != cropRect) {
-                    viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-                    if (viewHolder.profileImageProgress.getAnimation() == null) {
-                        viewHolder.profileImageProgress.startAnimation(
-                                AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-                    }
-                    // TODO: Test this with "Don't keep activities"
-                    if (null != setAccountImageTask) {
-                        setAccountImageTask.cancel(true);
-                    }
-                    setAccountImageTask = new SetAccountImageTask(getActivity(), username, imageUri, cropRect) {
+                    executePhotoTask(new SetAccountImageTask(getActivity(), username, imageUri, cropRect) {
                         @Override
                         protected void onSuccess(Void aVoid) throws Exception {
                             hideLoading();
@@ -358,27 +421,18 @@ public class EditUserProfileFragment extends RoboFragment {
 
                         private void hideLoading() {
                             if (null != viewHolder) {
-                                viewHolder.profileImageProgress.clearAnimation();
                                 viewHolder.profileImageProgress.setVisibility(View.GONE);
                             }
                         }
-                    };
-                    setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
-                    setAccountImageTask.execute();
+                    });
                     segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
             }
             case EDIT_FIELD_REQUEST: {
-                if (resultCode == Activity.RESULT_OK) {
-                    final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
-                    final String fieldValue = data.getStringExtra(FormFieldActivity.EXTRA_VALUE);
-                    executeUpdate(fieldName, fieldValue);
-                }
-                break;
-            }
-            default: {
-                super.onActivityResult(requestCode, resultCode, data);
+                final FormField fieldName = (FormField) data.getSerializableExtra(FormFieldActivity.EXTRA_FIELD);
+                final String fieldValue = data.getStringExtra(FormFieldActivity.EXTRA_VALUE);
+                executeUpdate(fieldName, fieldValue);
                 break;
             }
         }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
@@ -24,4 +25,7 @@ public interface UserService {
 
     @POST("/api/user/v1/accounts/{username}/image")
     Response setProfileImage(@Path("username") String username, @Header("Content-Disposition") String contentDisposition, @Body TypedOutput file) throws RetroHttpException;
+
+    @DELETE("/api/user/v1/accounts/{username}/image")
+    Response deleteProfileImage(@Path("username") String username) throws RetroHttpException;
 }
