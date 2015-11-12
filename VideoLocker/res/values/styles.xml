@@ -402,7 +402,7 @@
 
     <style name="edX.Widget.PopupMenu.RowTextAppearance" parent="@android:style/TextAppearance.Holo.Small">
         <item name="android:textSize">@dimen/popupMenuRowTextSize</item>
-        <item name="android:textColor">@color/course_modes_selected</item>
+        <item name="android:textColor">@color/course_mode</item>
     </style>
 
     <style name="edX.Widget.SegmentedControlSegment">

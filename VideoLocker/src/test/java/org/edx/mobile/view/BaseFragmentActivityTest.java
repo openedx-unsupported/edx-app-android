@@ -259,11 +259,11 @@ public class BaseFragmentActivityTest extends UiTest {
         }
 
         // Action bar home button
-        shadowActivity.clickMenuItem(android.R.id.home);
+        assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
         if (hasDrawer) {
             assertNotNull(mDrawerLayout);
             assertTrue(mDrawerLayout.isDrawerOpen(Gravity.START));
-            shadowActivity.clickMenuItem(android.R.id.home);
+            assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
             assertFalse(mDrawerLayout.isDrawerOpen(Gravity.START));
             activity.finish();
         }
@@ -552,11 +552,12 @@ public class BaseFragmentActivityTest extends UiTest {
         BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();
-        MenuItem progressItem = Shadows.shadowOf(activity)
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        assertTrue(shadowActivity
                 .getOptionsMenu()
-                .findItem(R.id.progress_download);
-        assertTrue(progressItem.isVisible());
-        assertTrue(ShadowView.clickOn(progressItem.getActionView()));
+                .findItem(R.id.progress_download)
+                .isVisible());
+        assertTrue(shadowActivity.clickMenuItem(R.id.progress_download));
         assertNextStartedActivity(activity, DownloadListActivity.class);
     }
 

@@ -392,13 +392,31 @@ public class ProgressWheel extends View {
         setProgress(p);
     }
 
+    /**
+     * Get the current progress.
+     *
+     * @return The current progress.
+     */
+    public int getProgress() {
+        return progress;
+    }
+
     //----------------------------------
     //Getters + setters
     //----------------------------------
 
     /**
-     * Set the text in the progress bar
-     * Doesn't invalidate the view
+     * Get the text in the progress bar.
+     *
+     * @return The text
+     */
+    public String getText() {
+        return text;
+    }
+
+    /**
+     * Set the text in the progress bar.
+     * Doesn't invalidate the view.
      *
      * @param text the text to show ('\n' constitutes a new line)
      */

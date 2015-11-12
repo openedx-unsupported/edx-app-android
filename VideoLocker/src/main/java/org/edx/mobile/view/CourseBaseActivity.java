@@ -59,6 +59,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     private GetCourseStructureTask getHierarchyTask;
 
+    private boolean isDestroyed;
+
     protected abstract String getUrlForWebView();
 
     protected abstract void onLoadData();
@@ -100,6 +102,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             getHierarchyTask.cancel(true);
             getHierarchyTask = null;
         }
+        isDestroyed = true;
     }
 
     @Override
@@ -123,7 +126,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
                         // the Activity has not been destroyed. The task should be canceled
                         // in Activity destruction anyway, so the latter check is just a
                         // precaution.
-                        if (getHierarchyTask != null) {
+                        if (getHierarchyTask != null && !isDestroyed) {
+                            invalidateOptionsMenu();
                             onLoadData();
                             getHierarchyTask = null;
                         }
@@ -173,122 +177,91 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     @Override
     protected boolean createOptionMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.course_detail, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if( menu.findItem(R.id.action_share_on_web) != null)
+        if (courseComponentId != null) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.course_detail, menu);
             menu.findItem(R.id.action_share_on_web).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
-                    .actionBarSize(this).colorRes(this, R.color.edx_white));
-        PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
-
-        if (  menu.findItem(R.id.action_change_mode) != null ) {
-            if (userPrefManager.isUserPrefVideoModel()) {
-                menu.findItem(R.id.action_change_mode).setIcon(
-                    new IconDrawable(this, Iconify.IconValue.fa_list)
-                        .actionBarSize(this).colorRes(this, R.color.edx_white));
-            } else {
-                menu.findItem(R.id.action_change_mode).setIcon(
-                    new IconDrawable(this, Iconify.IconValue.fa_film)
-                        .actionBarSize(this).colorRes(this, R.color.edx_white));
-            }
+                    new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
+                            .actionBarSize(this).colorRes(this, R.color.edx_white));
+            Iconify.IconValue changeModeIcon = new PrefManager.UserPrefManager(this)
+                    .isUserPrefVideoModel() ? Iconify.IconValue.fa_list :
+                    Iconify.IconValue.fa_film;
+            menu.findItem(R.id.action_change_mode).setIcon(
+                    new IconDrawable(this, changeModeIcon)
+                            .actionBarSize(this).colorRes(this, R.color.edx_white));
+            return true;
         }
-        return true;
+        return false;
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
+    protected boolean handleOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_share_on_web:
-                shareOnWeb();
+            case R.id.action_share_on_web: {
+                PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_share_on_web),
+                        Gravity.END, R.attr.edgePopupMenuStyle, R.style.edX_Widget_EdgePopupMenu);
+                popup.getMenuInflater().inflate(R.menu.share_on_web, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
+                        CourseComponent courseComponent = courseManager.getComponentById(
+                                courseData.getCourse().getId(), courseComponentId);
+                        environment.getSegment().trackOpenInBrowser(courseComponentId,
+                                courseData.getCourse().getId(), courseComponent.isMultiDevice());
+                        return true;
+                    }
+                });
+                popup.show();
                 return true;
-            case R.id.action_change_mode:
-                changeMode();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void changeMode(){
-        //Creating the instance of PopupMenu
-        org.edx.mobile.view.custom.popup.menu.PopupMenu popup = new org.edx.mobile.view.custom.popup.menu.PopupMenu(this,
-            findViewById(R.id.action_change_mode), Gravity.END);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-            .inflate(R.menu.change_mode, popup.getMenu());
-        final PrefManager.UserPrefManager userPrefManager =
-            new PrefManager.UserPrefManager(this);
-        final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
-        MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
-        // Initializing the font awesome icons
-        IconDrawable videoOnlyIcon = new IconDrawable(this, Iconify.IconValue.fa_film);
-        IconDrawable fullCourseIcon = new IconDrawable(this, Iconify.IconValue.fa_list);
-        videoOnlyItem.setIcon(videoOnlyIcon);
-        fullCourseItem.setIcon(fullCourseIcon);
-        // Setting checked states
-        if (userPrefManager.isUserPrefVideoModel()) {
-            videoOnlyItem.setChecked(true);
-            videoOnlyIcon.colorRes(this, R.color.cyan_4);
-            fullCourseIcon.colorRes(this, R.color.black);
-        } else {
-            fullCourseItem.setChecked(true);
-            fullCourseIcon.colorRes(this, R.color.cyan_4);
-            videoOnlyIcon.colorRes(this, R.color.black);
-        }
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new org.edx.mobile.view.custom.popup.menu.PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                PrefManager.UserPrefManager userPrefManager =
-                    new PrefManager.UserPrefManager(CourseBaseActivity.this);
-                boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-                boolean selectedVideoMode = videoOnlyItem == item;
-                if ( currentVideoMode == selectedVideoMode )
-                    return true;
-
-                userPrefManager.setUserPrefVideoModel(selectedVideoMode);
-                modeChanged();
-                invalidateOptionsMenu();
-
-                environment.getSegment().trackCourseOutlineMode(selectedVideoMode);
-                return true;
-            }
-        });
-
-        popup.show(); //showing popup menu
-
-    }
-
-    protected void modeChanged(){};
-
-
-    public void shareOnWeb() {
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_share_on_web),
-                Gravity.END, R.attr.edgePopupMenuStyle, R.style.edX_Widget_EdgePopupMenu);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-                .inflate(R.menu.share_on_web, popup.getMenu());
-
-
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                BrowserUtil.open(CourseBaseActivity.this, getUrlForWebView());
-                CourseComponent courseComponent = courseManager.getComponentById(courseData.getCourse().getId(), courseComponentId);
-                environment.getSegment().trackOpenInBrowser(courseComponentId
-                        , courseData.getCourse().getId(), courseComponent.isMultiDevice());
+            } case R.id.action_change_mode: {
+                PopupMenu popup = new PopupMenu(this, findViewById(R.id.action_change_mode), Gravity.END);
+                popup.getMenuInflater().inflate(R.menu.change_mode, popup.getMenu());
+                final PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
+                final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
+                MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
+                videoOnlyItem.setIcon(new IconDrawable(this, Iconify.IconValue.fa_film)
+                        .colorRes(this, R.color.course_mode));
+                fullCourseItem.setIcon(new IconDrawable(this, Iconify.IconValue.fa_list)
+                        .colorRes(this, R.color.course_mode));
+                // Setting checked states
+                // Only calling setChecked(true) in the selected menu item, to avoid a bug
+                // in the MenuItem implementation in the framework and appcompat library
+                // which causes setChecked(false) to be evaluated to setChecked(true) in
+                // the case where it is part of a group with checkable behavior set to
+                // 'single'. It's reported as part of another issue in
+                // http://b.android.com/178709
+                if (userPrefManager.isUserPrefVideoModel()) {
+                    videoOnlyItem.setChecked(true);
+                } else {
+                    fullCourseItem.setChecked(true);
+                }
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
+                        boolean selectedVideoMode = videoOnlyItem == item;
+                        if (currentVideoMode != selectedVideoMode) {
+                            userPrefManager.setUserPrefVideoModel(selectedVideoMode);
+                            item.setChecked(true);
+                            Iconify.IconValue filterIcon = selectedVideoMode ?
+                                    Iconify.IconValue.fa_list : Iconify.IconValue.fa_film;
+                            item.setIcon(
+                                    new IconDrawable(CourseBaseActivity.this, filterIcon)
+                                            .actionBarSize(CourseBaseActivity.this)
+                                            .colorRes(CourseBaseActivity.this, R.color.edx_white));
+                            modeChanged();
+                            environment.getSegment().trackCourseOutlineMode(selectedVideoMode);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
                 return true;
             }
-        });
-
-        popup.show(); //showing popup menu
+        }
+        return false;
     }
+
+    protected void modeChanged() {}
 
     /**
      * This function shows the offline mode message
