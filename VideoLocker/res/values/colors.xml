@@ -119,6 +119,9 @@
     <color name="friend_picker_item_text_disabled">#bfbfbf</color>
     <color name="avatar_overflow_text">#8c8c8c</color>
 
+    <color name="crop_circle_border_color">@color/edx_grayscale_neutral_white_t</color>
+    <color name="crop_circle_overlay_color">#c8000000</color>
+
     <color name="groups_grey">#c8c8c8</color>
     <color name="facebook_msg_grey">#454951</color>
     <color name="course_banner_blue">@color/cyan_3</color>
