@@ -1,5 +1,6 @@
 package org.edx.mobile.discussion;
 
+import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.view.View;
@@ -26,12 +27,13 @@ public abstract class DiscussionUtils {
                                              @StringRes int negativeTextResId,
                                              ViewGroup creationLayout,
                                              View.OnClickListener listener) {
+        Context context = textView.getContext();
         if (isTopicClosed) {
             textView.setText(negativeTextResId);
             TextViewCompat.setCompoundDrawablesRelative(textView,
-                    new IconDrawable(textView.getContext(), Iconify.IconValue.fa_lock)
-                            .sizeRes(R.dimen.icon_view_standard_width_height)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t),
+                    new IconDrawable(context, Iconify.IconValue.fa_lock)
+                            .sizeRes(context, R.dimen.icon_view_standard_width_height)
+                            .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                     null, null, null
             );
             creationLayout.setOnClickListener(null);
@@ -39,8 +41,8 @@ public abstract class DiscussionUtils {
             textView.setText(positiveTextResId);
             TextViewCompat.setCompoundDrawablesRelative(textView,
                     new IconDrawable(textView.getContext(), Iconify.IconValue.fa_plus_circle)
-                            .sizeRes(R.dimen.icon_view_standard_width_height)
-                            .colorRes(R.color.edx_grayscale_neutral_white_t),
+                            .sizeRes(context, R.dimen.icon_view_standard_width_height)
+                            .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                     null, null, null
             );
             creationLayout.setOnClickListener(listener);

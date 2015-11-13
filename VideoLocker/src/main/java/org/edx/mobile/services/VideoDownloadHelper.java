@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @Singleton
 public class VideoDownloadHelper {
-    public static interface DownloadManagerCallback{
+    public interface DownloadManagerCallback{
         void onDownloadSuccess(Long result);
         void onDownloadFailure();
         void showProgressDialog(int numDownloads);

@@ -92,16 +92,19 @@ public class CourseDashboardActivityTest extends BaseFragmentActivityTest {
         assertThat(rowsContainer).isInstanceOf(ViewGroup.class);
         ViewGroup rowsContainerGroup = (ViewGroup) rowsContainer;
 
-        View coursewareRowView = rowsContainerGroup.getChildAt(0);
+        int rowNum = 0;
+        View coursewareRowView = rowsContainerGroup.getChildAt(rowNum++);
         assertRow(coursewareRowView, Iconify.IconValue.fa_list_alt,
                 R.string.courseware_title, R.string.courseware_subtitle);
-        View discussionRowView = rowsContainerGroup.getChildAt(1);
-        assertRow(discussionRowView, Iconify.IconValue.fa_comments_o,
-                R.string.discussion_title, R.string.discussion_subtitle);
-        View handoutsRowView = rowsContainerGroup.getChildAt(2);
+        if (config.isDiscussionsEnabled()) {
+            View discussionRowView = rowsContainerGroup.getChildAt(rowNum++);
+            assertRow(discussionRowView, Iconify.IconValue.fa_comments_o,
+                    R.string.discussion_title, R.string.discussion_subtitle);
+        }
+        View handoutsRowView = rowsContainerGroup.getChildAt(rowNum++);
         assertRow(handoutsRowView, Iconify.IconValue.fa_file_text_o,
                 R.string.handouts_title, R.string.handouts_subtitle);
-        View announcementRowView = rowsContainerGroup.getChildAt(3);
+        View announcementRowView = rowsContainerGroup.getChildAt(rowNum++);
         assertRow(announcementRowView, Iconify.IconValue.fa_bullhorn,
                 R.string.announcement_title, R.string.announcement_subtitle);
 

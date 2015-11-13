@@ -8,19 +8,27 @@ import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 
+import roboguice.inject.InjectExtra;
+
 public class UserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
+    public static final String EXTRA_SHOW_NAVIGATION_DRAWER = "showNavigationDrawer";
 
-    public static Intent newIntent(@NonNull Context context, @NonNull String username) {
+    public static Intent newIntent(@NonNull Context context, @NonNull String username, boolean showNavigationDrawer) {
         return new Intent(context, UserProfileActivity.class)
-                .putExtra(EXTRA_USERNAME, username);
+                .putExtra(EXTRA_USERNAME, username)
+                .putExtra(EXTRA_SHOW_NAVIGATION_DRAWER, showNavigationDrawer);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(getIntent().getStringExtra(EXTRA_USERNAME));
-        blockDrawerFromOpening();
+
+        if (getIntent().getBooleanExtra(EXTRA_SHOW_NAVIGATION_DRAWER, false)) {
+            configureDrawer();
+        } else {
+            blockDrawerFromOpening();
+        }
     }
 
     @Override

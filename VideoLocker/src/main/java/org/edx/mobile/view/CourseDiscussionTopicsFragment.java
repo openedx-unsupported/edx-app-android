@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
@@ -82,10 +83,11 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
         {
             final TextView header = (TextView) inflater.inflate(R.layout.row_discussion_topic, discussionTopicsListView, false);
             header.setText(R.string.forum_post_i_am_following);
+            Context context = getActivity();
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
-                    new IconDrawable(getActivity(), Iconify.IconValue.fa_star)
-                            .colorRes(R.color.edx_grayscale_neutral_dark)
-                            .sizeRes(R.dimen.edx_base),
+                    new IconDrawable(context, Iconify.IconValue.fa_star)
+                            .colorRes(context, R.color.edx_grayscale_neutral_dark)
+                            .sizeRes(context, R.dimen.edx_base),
                     null, null, null);
             final DiscussionTopic discussionTopic = new DiscussionTopic();
             discussionTopic.setIdentifier(DiscussionTopic.FOLLOWING_TOPICS_ID);

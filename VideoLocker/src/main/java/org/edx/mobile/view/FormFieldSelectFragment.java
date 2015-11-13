@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -131,10 +132,11 @@ public class FormFieldSelectFragment extends RoboFragment {
             labelValueSpan.setSpan(new ForegroundColorSpan(listView.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, labelValueSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(ResourceUtil.getFormattedString(listView.getContext().getResources(), labelRes, labelKey, labelValueSpan));
         }
+        Context context = textView.getContext();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                new IconDrawable(textView.getContext(), icon)
-                        .sizeRes(R.dimen.edx_base)
-                        .colorRes(R.color.edx_grayscale_neutral_light)
+                new IconDrawable(context, icon)
+                        .sizeRes(context, R.dimen.edx_base)
+                        .colorRes(context, R.color.edx_grayscale_neutral_light)
                 , null, null, null);
         listView.addHeaderView(textView, new FormOption(labelValue, value), true);
     }

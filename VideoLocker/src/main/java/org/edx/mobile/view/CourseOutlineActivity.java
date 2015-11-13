@@ -102,8 +102,9 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     @Override
     public void updateListUI() {
-        if( fragment != null )
+        if( fragment != null ) {
             fragment.reloadList();
-        fragment.updateMessageView(null);
+            fragment.updateMessageView(null);
+        }
     }
 }
