@@ -31,11 +31,10 @@ public class CertificateFragment extends RoboFragment {
 
     public WebView webview;
 
-    private ProgressBar progressBar;
     private LinearLayout facebookShare;
 
-    static public String TAG = CertificateFragment.class.getCanonicalName();
-    static public String ENROLLMENT = TAG + ".enrollment";
+    static public final String TAG = CertificateFragment.class.getCanonicalName();
+    static public final String ENROLLMENT = "enrollment";
 
     private EnrolledCoursesResponse courseData;
 
@@ -43,12 +42,6 @@ public class CertificateFragment extends RoboFragment {
 
     @Inject
     private ISegment segIO;
-
-    private enum CertificateState {
-        CERT_LOADING,
-        CERT_READY,
-        NO_CERT
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,24 +62,24 @@ public class CertificateFragment extends RoboFragment {
         View view = inflater.inflate(R.layout.fragment_certificate, container,
                 false);
 
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
 
         webview = (WebView) view.findViewById(R.id.webview);
         new URLInterceptorWebViewClient(getActivity(), webview);
 
         facebookShare = (LinearLayout) view.findViewById(R.id.share_certificate);
-        facebookShare.setOnClickListener( new View.OnClickListener() {
+        facebookShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                try{
+                try {
                     segIO.certificateShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
-                }catch(Exception e){
+                } catch (Exception e) {
                     logger.error(e);
                 }
 
                 FacebookProvider fbProvider = new FacebookProvider();
-                if (fbProvider.isLoggedIn()){
+                if (fbProvider.isLoggedIn()) {
                     FacebookDialog dialog = (FacebookDialog) fbProvider.shareCertificate(getActivity(), courseData.getCourse());
                     if (dialog != null) {
                         uiHelper.trackPendingDialogCall(dialog.present());
@@ -105,17 +98,8 @@ public class CertificateFragment extends RoboFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        try {
-
-            final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle
-                    .getSerializable(ENROLLMENT);
-            webview.loadUrl(courseData.getCertificateURL());
-
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+        courseData = (EnrolledCoursesResponse) getActivity().getIntent().getSerializableExtra(ENROLLMENT);
+        webview.loadUrl(courseData.getCertificateURL());
         FacebookProvider fbProvider = new FacebookProvider();
 
         SocialUtils.SocialType type = SocialUtils.SocialType.NONE;
@@ -154,7 +138,7 @@ public class CertificateFragment extends RoboFragment {
     private void changeSocialState(SocialUtils.SocialType state) {
 
         facebookShare.setVisibility(View.GONE);
-        switch (state){
+        switch (state) {
 
             case FACEBOOK:
                 facebookShare.setVisibility(View.VISIBLE);
@@ -162,21 +146,4 @@ public class CertificateFragment extends RoboFragment {
         }
 
     }
-
-    private void changeDisplayState(CertificateState state){
-
-        switch (state){
-
-            case CERT_READY:
-                break;
-            case NO_CERT:
-                break;
-            case CERT_LOADING:
-                break;
-
-        }
-
-    }
-
-
 }

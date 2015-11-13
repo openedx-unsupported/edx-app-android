@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -54,8 +53,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     private EdxWebView announcementWebView;
     private LinearLayout facePileContainer;
     private SocialFacePileView facePileView;
-    private LayoutInflater inflater;
-    private View certificateContainer;
     private TextView groupLauncher;
     private View notificationSettingRow;
     private Switch notificationSwitch;
@@ -87,15 +84,11 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
         View view = inflater.inflate(R.layout.fragment_course_combined_info, container, false);
 
-        certificateContainer = view.findViewById(R.id.combined_course_certificate_container);
         likeButton = (SocialAffirmView) view.findViewById(R.id.course_affirm_btn);
 
         //Register clicks with the OnClickListener interface
         shareButton = (SocialShareView) view.findViewById(R.id.combined_course_social_share);
         shareButton.setOnClickListener(this);
-
-        TextView certificateButton = (TextView) view.findViewById(R.id.view_cert_button);
-        certificateButton.setOnClickListener(this);
 
         facePileContainer = (LinearLayout) view.findViewById(R.id.social_face_pile_container);
         facePileContainer.setOnClickListener(this);
@@ -112,7 +105,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         client.setAllLinksAsExternal(true);
 
         notificationSettingRow = view.findViewById(R.id.notificaton_setting_row);
-        notificationSwitch =  (Switch) view.findViewById(R.id.notification_switch);
+        notificationSwitch = (Switch) view.findViewById(R.id.notification_switch);
 
         return view;
     }
@@ -136,10 +129,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
             FacebookProvider fbProvider = new FacebookProvider();
 
-            if(courseData != null) {
-
+            if (courseData != null) {
                 //Create the inflater used to create the announcement list
-                inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 if (savedAnnouncements == null) {
                     loadAnnouncementData(courseData);
                 } else {
@@ -149,7 +140,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 String url = courseData.getCourse().getCourse_url();
 
                 SocialUtils.SocialType socialType = SocialUtils.SocialType.NONE;
-                if (fbProvider.isLoggedIn()){
+                if (fbProvider.isLoggedIn()) {
                     socialType = SocialUtils.SocialType.FACEBOOK;
                 }
 
@@ -164,8 +155,8 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             }
             showSocialEnabled(fbProvider.isLoggedIn());
 
-            if ( environment.getConfig().isNotificationEnabled()
-                    && courseData != null && courseData.getCourse() != null){
+            if (environment.getConfig().isNotificationEnabled()
+                    && courseData != null && courseData.getCourse() != null) {
                 notificationSettingRow.setVisibility(View.VISIBLE);
                 final String courseId = courseData.getCourse().getId();
                 final String subscriptionId = courseData.getCourse().getSubscription_id();
@@ -173,7 +164,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 notificationSwitch.setChecked(isSubscribed);
                 notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         environment.getNotificationDelegate().changeNotificationSetting(
                                 courseId, subscriptionId, isChecked);
                     }
@@ -254,11 +245,11 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     }
 
-    private void showSocialEnabled(boolean enabled){
+    private void showSocialEnabled(boolean enabled) {
 
         View view = getView();
 
-        if (view != null){
+        if (view != null) {
             boolean allowSocialFeatures = featuresPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
 
             View loggedInLayout = view.findViewById(R.id.social_layout);
@@ -284,7 +275,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     }
 
-    private void fetchCourseMembers(){
+    private void fetchCourseMembers() {
 
         Bundle args = new Bundle();
 
@@ -295,7 +286,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
 
     }
 
-    private void populateFacePile(){
+    private void populateFacePile() {
         List<SocialMember> courseFriends = courseData.getCourse().getMembers_list();
 
         facePileView.clearAvatars();
@@ -345,63 +336,45 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     }
 
     private void updateInteractiveVisibility() {
-
-        if (certificateContainer != null) {
-            certificateContainer.setVisibility((courseData != null && courseData.isCertificateEarned()) ? View.VISIBLE : View.GONE);
-        }
-
         if (groupLauncher != null) {
             groupLauncher.setVisibility((courseData != null && courseData.getCourse().isGroupAvailable(SocialUtils.SocialType.FACEBOOK)) ? View.VISIBLE : View.GONE);
         }
 
     }
 
-    public void showEmptyAnnouncementMessage(){
-        try{
-            if(getView()!=null){
+    public void showEmptyAnnouncementMessage() {
+        try {
+            if (getView() != null) {
                 getView().findViewById(R.id.no_announcement_tv).setVisibility(View.VISIBLE);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
     }
 
-    private void hideEmptyAnnouncementMessage(){
-        try{
-            if(getView()!=null){
+    private void hideEmptyAnnouncementMessage() {
+        try {
+            if (getView() != null) {
                 getView().findViewById(R.id.no_announcement_tv).setVisibility(View.GONE);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     @Override
     public void onClick(View view) {
-
-        switch (view.getId()){
-            case R.id.view_cert_button:
-                if (courseData != null) {
-                    Intent certificateIntent = new Intent(getActivity(),
-                            CertificateActivity.class);
-                    certificateIntent.putExtra(CertificateFragment.ENROLLMENT, courseData);
-                    startActivity(certificateIntent);
-                }
-                break;
+        switch (view.getId()) {
             case R.id.combined_course_social_share:
                 FacebookProvider fbProvider = new FacebookProvider();
                 FacebookDialog dialog = (FacebookDialog) fbProvider.shareCourse(getActivity(), courseData.getCourse());
                 if (dialog != null) {
-
-                    try{
-
+                    try {
                         environment.getSegment().courseShared(courseData.getCourse().getId(), SocialUtils.Values.FACEBOOK);
-
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         logger.error(e);
                     }
-
                     uiHelper.trackPendingDialogCall(dialog.present());
                 } else {
                     new InstallFacebookDialog().show(getFragmentManager(), null);
@@ -416,19 +389,15 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 }
                 break;
             case R.id.combined_course_social_group:
-
-                try{
+                try {
                     environment.getSegment().courseGroupAccessed(courseData.getCourse().getId());
-                }catch(Exception e){
+                } catch (Exception e) {
                     logger.error(e);
                 }
-
-                Intent groupLaunchIntent =  SocialUtils.makeGroupLaunchIntent(getActivity(), String.valueOf(courseData.getCourse().getCourseGroup(SocialUtils.SocialType.FACEBOOK)), SocialUtils.SocialType.FACEBOOK);
+                Intent groupLaunchIntent = SocialUtils.makeGroupLaunchIntent(getActivity(), String.valueOf(courseData.getCourse().getCourseGroup(SocialUtils.SocialType.FACEBOOK)), SocialUtils.SocialType.FACEBOOK);
                 startActivity(groupLaunchIntent);
                 break;
-
         }
-
     }
 
     @Override

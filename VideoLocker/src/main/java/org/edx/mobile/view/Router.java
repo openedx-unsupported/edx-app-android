@@ -315,4 +315,8 @@ public class Router {
     public void showUserProfileEditor(@NonNull Context context, @NonNull String username) {
         context.startActivity(EditUserProfileActivity.newIntent(context, username));
     }
+
+    public void showCertificate(@NonNull Context context, @NonNull EnrolledCoursesResponse courseData) {
+        context.startActivity(CertificateActivity.newIntent(context, courseData));
+    }
 }

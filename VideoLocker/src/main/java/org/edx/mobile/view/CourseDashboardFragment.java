@@ -76,7 +76,7 @@ public class CourseDashboardFragment extends RoboFragment {
                 child.findViewById(R.id.get_certificate).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: Open certificate view
+                        environment.getRouter().showCertificate(getActivity(), courseData);
                     }
                 });
                 parent.addView(child);
