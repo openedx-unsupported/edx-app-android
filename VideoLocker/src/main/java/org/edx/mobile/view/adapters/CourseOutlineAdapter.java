@@ -2,7 +2,6 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,13 +233,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
             }
             checkAccessStatus(viewHolder, unit);
         }
-        String title = unit.getDisplayName();
-        if (TextUtils.isEmpty(title)) {
-            //TODO - wait for production decision
-            viewHolder.rowTitle.setText(R.string.untitled_block);
-        } else {
-            viewHolder.rowTitle.setText(unit.getDisplayName());
-        }
+        viewHolder.rowTitle.setText(unit.getDisplayName());
         return convertView;
     }
 

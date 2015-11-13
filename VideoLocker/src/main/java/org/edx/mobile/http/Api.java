@@ -310,7 +310,7 @@ public class Api implements IApi {
             // add each video to its corresponding chapter and section
 
             // add this as a chapter
-            String cname = m.getChapter().getName();
+            String cname = m.getChapter().getDisplayName();
 
             // carry this courseId with video model
             m.setCourseId(courseId);
@@ -327,11 +327,11 @@ public class Api implements IApi {
             }
 
             // add this video to section inside in this chapter
-            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().getName());
+            ArrayList<VideoResponseModel> videos = s.sections.get(m.getSection().getDisplayName());
             if (videos == null) {
-                s.sections.put(m.getSection().getName(),
+                s.sections.put(m.getSection().getDisplayName(),
                         new ArrayList<VideoResponseModel>());
-                videos = s.sections.get(m.getSection().getName());
+                videos = s.sections.get(m.getSection().getDisplayName());
             }
 
             //This has been commented out because for some Videos thereare no english srt's and hence returning empty
@@ -1024,12 +1024,12 @@ public class Api implements IApi {
             ArrayList<VideoResponseModel> videos = getVideosByCourseId(courseId, true);
             for (VideoResponseModel v : videos) {
                 // filter videos by chapter
-                if (v.getChapter().getName().equals(chapter)) {
+                if (v.getChapter().getDisplayName().equals(chapter)) {
                     // this video is under the specified chapter
 
                     // sort out the section of this video
-                    if (sections.containsKey(v.getSection().getName())) {
-                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().getName());
+                    if (sections.containsKey(v.getSection().getDisplayName())) {
+                        ArrayList<VideoResponseModel> sv = sections.get(v.getSection().getDisplayName());
                         if (sv == null) {
                             sv = new ArrayList<VideoResponseModel>();
                         }
@@ -1037,7 +1037,7 @@ public class Api implements IApi {
                     } else {
                         ArrayList<VideoResponseModel> vlist = new ArrayList<VideoResponseModel>();
                         vlist.add(v);
-                        sections.put(v.getSection().getName(), vlist);
+                        sections.put(v.getSection().getDisplayName(), vlist);
                     }
                 }
             }

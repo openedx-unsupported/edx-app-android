@@ -116,11 +116,11 @@ public class VideoResponseModel implements SectionItemInterface, HasDownloadEntr
     }
 
     public String getChapterName() {
-        return getChapter().getName();
+        return getChapter().getDisplayName();
     }
 
     public String getSequentialName() {
-        return getSection().getName();
+        return getSection().getDisplayName();
     }
 
     public String getUnitUrl() {

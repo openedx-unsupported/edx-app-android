@@ -48,7 +48,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
     protected void onLoadData() {
         CourseComponent courseComponent = courseManager.getComponentById(
                 courseData.getCourse().getId(), courseComponentId);
-        setTitle(courseComponent.getName());
+        setTitle(courseComponent.getDisplayName());
 
         if (fragment == null) {
             fragment = new CourseOutlineFragment();
@@ -74,7 +74,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
         } else {
             environment.getSegment().trackScreenView(
-                    ISegment.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getName());
+                    ISegment.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
 
             // Update the last accessed item reference if we are in the course subsection view
             String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()

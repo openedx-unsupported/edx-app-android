@@ -1,5 +1,9 @@
 package org.edx.mobile.model.course;
 
+import android.text.TextUtils;
+
+import org.edx.mobile.R;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
@@ -78,6 +82,9 @@ public class CourseComponent implements IBlock, IPathNode {
 
     @Override
     public String getDisplayName() {
+        if (TextUtils.isEmpty(name)) {
+            return MainApplication.instance().getString(R.string.untitled_block);
+        }
         return name;
     }
 
@@ -322,9 +329,11 @@ public class CourseComponent implements IBlock, IPathNode {
         return  getType().name().toLowerCase(Locale.ENGLISH);
     }
 
-    @Override
-    public String getName() {
-        return  getDisplayName();
+    /**
+     * Not meant to be user facing. See {@link #getDisplayName()}
+     */
+    public String getInternalName() {
+        return name;
     }
 
     @Override

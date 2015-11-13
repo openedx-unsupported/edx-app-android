@@ -40,7 +40,8 @@ public class PathModel implements Serializable, IPathNode {
         this.category = category;
     }
 
-    public String getName() {
+    @Override
+    public String getDisplayName() {
         return name;
     }
 

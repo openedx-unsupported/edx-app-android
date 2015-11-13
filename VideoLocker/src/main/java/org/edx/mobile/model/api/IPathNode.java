@@ -13,7 +13,7 @@ public interface IPathNode {
 
     public String getCategory();
 
-    public String getName();
+    public String getDisplayName();
 
     public String getId();
 

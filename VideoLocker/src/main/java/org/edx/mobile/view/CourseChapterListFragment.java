@@ -521,7 +521,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
                             TextView lastAccessedVideoTv = (TextView) v
                                 .findViewById(R.id.last_viewed_tv);
                             lastAccessedVideoTv.setText(" "
-                                + videoModel.getSection().getName());
+                                + videoModel.getSection().getDisplayName());
 
                             lastAccessedLayout.setOnClickListener(new OnClickListener() {
                                 @Override

@@ -172,7 +172,7 @@ public class CourseManager {
         for(IBlock block : courseComponent.getChildren()){
             CourseComponent chapter = (CourseComponent)block;
             SectionEntry entry = new SectionEntry();
-            entry.chapter = chapter.getName();
+            entry.chapter = chapter.getDisplayName();
             entry.isChapter = true;
             entry.section_url = chapter.getBlockUrl();
             map.put(entry.chapter, entry);
@@ -180,7 +180,7 @@ public class CourseManager {
             for( IBlock subBlock : chapter.getChildren() ){
                 CourseComponent section = (CourseComponent)subBlock;
 
-                entry.sections.put(section.getName(),
+                entry.sections.put(section.getDisplayName(),
                     (ArrayList)CourseManager.mappingAllVideoResponseModelFrom(section, null));
             }
         }
