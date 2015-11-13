@@ -59,7 +59,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private DiscussionTopic discussionTopic;
 
     private DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
-    private DiscussionPostsSort postsSort = DiscussionPostsSort.NONE;
+    private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
     private final Logger logger = new Logger(getClass().getName());
 
