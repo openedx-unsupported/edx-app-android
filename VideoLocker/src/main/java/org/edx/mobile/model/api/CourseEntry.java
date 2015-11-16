@@ -1,20 +1,25 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 
 import com.google.inject.Inject;
+
+import org.edx.mobile.R;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("serial")
 public class CourseEntry implements Serializable {
-
     private List<SocialMember> members_list;
 
     private LatestUpdateModel latest_updates;
@@ -81,7 +86,7 @@ public class CourseEntry implements Serializable {
     }
 
     public StartType getStartType() {
-        if(start_type == null) start_type = StartType.NONE_START;
+        if(start_type == null) start_type = StartType.EMPTY;
         return start_type;
     }
 
@@ -256,22 +261,58 @@ public class CourseEntry implements Serializable {
 
     }
 
-    public String getDescription(Context context){
-        StringBuilder detailBuilder = new StringBuilder();
-        if ( getOrg() != null){
-            detailBuilder.append( getOrg());
-        }
-        if ( getNumber() != null) {
-            if (detailBuilder.length() > 0){
-                detailBuilder.append(" | ");
-            }
-            detailBuilder.append( getNumber());
+    public String getDescription(Context context, boolean withStartDate) {
 
-        }
-        //https://openedx.atlassian.net/browse/MA-858
-        //we remove the ending data for now
+        List<CharSequence> sections = new ArrayList<>();
 
-        return detailBuilder.toString();
+        if (!TextUtils.isEmpty(org)) {
+            sections.add(org);
+        }
+
+        if (!TextUtils.isEmpty(number)) {
+            sections.add(number);
+        }
+
+        if (withStartDate) {
+            CharSequence formattedDate = getFormattedStartDate(context);
+            if (formattedDate != null) sections.add(formattedDate.toString().toUpperCase());
+        }
+
+        return TextUtils.join(" | ", sections);
     }
 
+    public CharSequence getFormattedStartDate(Context context) {
+        if (isStarted()) {
+            Date endDate = DateUtil.convertToDate(end);
+            if (endDate == null) {
+                return null;
+            } else if (isEnded()) {
+                return ResourceUtil.getFormattedString(context.getResources(), R.string.label_ended,
+                        "date", DateUtils.formatDateTime(context, endDate.getTime(), DateUtils
+                                .FORMAT_NO_YEAR));
+            } else {
+                return ResourceUtil.getFormattedString(context.getResources(), R.string
+                                .label_ending,
+                        "date", DateUtils.formatDateTime(context, endDate.getTime(), DateUtils
+                                .FORMAT_NO_YEAR));
+            }
+        } else {
+            if (start_type == StartType.TIMESTAMP && !TextUtils.isEmpty(start)) {
+                Date startDate = DateUtil.convertToDate(start);
+                return ResourceUtil.getFormattedString(context.getResources(), R.string
+                                .label_starting,
+                        "date", DateUtils.formatDateTime(context, startDate.getTime(), DateUtils
+                                .FORMAT_NO_YEAR));
+            } else if (start_type == StartType.STRING && !TextUtils.isEmpty(start_display)) {
+                return ResourceUtil.getFormattedString(context.getResources(), R.string
+                                .label_starting,
+                        "date", start_display);
+
+            } else {
+                return ResourceUtil.getFormattedString(context.getResources(), R.string
+                                .label_starting,
+                        "date", context.getString(R.string.assessment_soon));
+            }
+        }
+    }
 }

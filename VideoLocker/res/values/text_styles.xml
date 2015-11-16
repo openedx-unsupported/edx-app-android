@@ -248,12 +248,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">3dp</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">@dimen/edx_x_large</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="course_card_course_run" parent="@style/regular_edx_gray_xdark_text">
         <item name="android:singleLine">true</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/edx_xxx_small</item>
     </style>
 
 </resources>

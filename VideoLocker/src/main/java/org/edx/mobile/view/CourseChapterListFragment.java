@@ -103,7 +103,7 @@ public class CourseChapterListFragment extends CourseDetailBaseFragment
         if (!enrollment.getCourse().isStarted()) {
             CoursewareAccess error = enrollment.getCourse().getCoursewareAccess();
             StartType type = enrollment.getCourse().getStartType();
-            if (error.getError_code() == AccessError.START_DATE_ERROR && !(type == StartType.NONE_START)) {
+            if (error.getError_code() == AccessError.START_DATE_ERROR && !(type == StartType.EMPTY)) {
                 startDate = "<font color='" + getString(R.color.grey_text_course_not_started) + "'>" + enrollment.getCourse().getStartDisplay() + "</font>";
                 String courseScheduledText  =  ResourceUtil.getFormattedString(getResources(), R.string.course_content_available_text,
                         "start_time", startDate).toString();

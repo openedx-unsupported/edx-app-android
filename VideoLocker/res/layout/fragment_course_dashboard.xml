@@ -32,10 +32,9 @@
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/course_detail_extras"
-                style="@style/regular_edx_gray_xdark_text"
+                style="@style/course_card_course_run"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/edx_xxx_small"
                 tools:text="XX | xx | xxxxx" />
 
         </LinearLayout>
