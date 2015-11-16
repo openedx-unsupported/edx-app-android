@@ -309,6 +309,8 @@
     <string name="discussion_responses_answer">Answer</string>
     <!--Label for indicating who endorsed the comment as an answer-->
     <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
+    <!-- Label for time span when its less than a second after posting a response/comment -->
+    <string name="just_now">Just now</string>
 
     <!--Discussion Responses Action Bar-->
     <!--Label to indicate number of votes-->
