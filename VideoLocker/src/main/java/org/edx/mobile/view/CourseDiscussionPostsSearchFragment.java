@@ -12,6 +12,7 @@ import org.edx.mobile.discussion.TopicThreads;
 
 import org.edx.mobile.R;
 import org.edx.mobile.task.SearchThreadListTask;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -50,8 +51,12 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                     Activity activity = getActivity();
                     if ( activity instanceof  TaskProcessCallback ){
                         String escapedTitle = TextUtils.htmlEncode(searchQuery);
-                        String resultsTextFormat = getContext().getResources().getString(R.string.forum_query_no_result);
-                        String resultsText = String.format(resultsTextFormat, escapedTitle);
+                        String resultsText = ResourceUtil.getFormattedString(
+                                getContext().getResources(),
+                                R.string.forum_no_results_for_search_query,
+                                "search_query",
+                                escapedTitle
+                        ).toString();
                        // CharSequence styledResults = Html.fromHtml(resultsText);
                         ((TaskProcessCallback)activity).onMessage(MessageType.ERROR, resultsText);
                     }
