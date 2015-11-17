@@ -232,7 +232,7 @@ public interface ISegment {
         String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
 
         String NAVIGATION = "navigation";
-        String PROFILE = "profile";
+        String PROFILE = "profiles";
         String CAMERA = "camera";
         String LIBRARY = "library";
         String SWITCH_OUTLINE_MODE = "edx.bi.app.navigation.switched-mode.clicked";
