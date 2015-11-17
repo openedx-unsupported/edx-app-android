@@ -55,6 +55,7 @@
             android:layout_height="wrap_content"
             style="@style/regular_text"
             android:layout_gravity="center_vertical|center_horizontal"
+            android:gravity="center"
             android:textColor="@color/cyan_4"
             android:textSize="16sp"
             android:padding="10dp"

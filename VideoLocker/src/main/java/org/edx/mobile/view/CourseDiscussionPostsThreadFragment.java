@@ -66,6 +66,12 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private GetThreadListTask getThreadListTask;
     private GetFollowingThreadListTask getFollowingThreadListTask;
 
+    private enum EmptyQueryResultsFor {
+        FOLLOWING,
+        CATEGORY,
+        COURSE
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -245,7 +251,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
                 discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
                 discussionPostsAdapter.notifyDataSetChanged();
-                checkNoResultView();
+                checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
             }
 
             @Override
@@ -281,7 +287,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
                 discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
                 discussionPostsAdapter.notifyDataSetChanged();
-                checkNoResultView();
+                if (isAllTopics() == true) {
+                    checkNoResultView(EmptyQueryResultsFor.COURSE);
+                } else {
+                    checkNoResultView(EmptyQueryResultsFor.CATEGORY);
+                }
             }
 
             @Override
@@ -293,11 +303,25 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         getThreadListTask.execute();
     }
 
-    private void checkNoResultView() {
+    private void checkNoResultView(EmptyQueryResultsFor query) {
         Activity activity = getActivity();
         if (activity instanceof TaskProcessCallback) {
             if (discussionPostsAdapter.getCount() == 0) {
-                String resultsText = getActivity().getResources().getString(R.string.forum_empty);
+                String resultsText = "";
+                switch (query) {
+                    case FOLLOWING:
+                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_following);
+                        break;
+                    case CATEGORY:
+                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_in_category);
+                        break;
+                    case COURSE:
+                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_all_posts);
+                        break;
+                }
+                if (postsFilter != DiscussionPostsFilter.ALL) {
+                    resultsText += "\n" + getActivity().getResources().getString(R.string.forum_no_results_with_filter);
+                }
                 ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
             } else {
                 ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
