@@ -74,7 +74,7 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
             holder.newCourseContent.setVisibility(View.GONE);
             holder.startingFrom.setVisibility(View.VISIBLE);
             holder.courseRun.setText(courseData.getDescription(getContext(), false));
-            holder.startingFrom.setText(courseData.getFormattedStartDate(getContext()));
+            holder.startingFrom.setText(courseData.getFormattedDate(getContext()));
         }
 
         if(enrollment.isCertificateEarned()){

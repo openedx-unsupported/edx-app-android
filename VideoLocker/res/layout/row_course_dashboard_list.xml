@@ -1,36 +1,36 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/chapter_row_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dashboard_navigation_element_height"
+    android:layout_height="@dimen/dashboard_nav_element_height"
     android:background="@drawable/rectangle_with_bottom_border_selector"
     android:gravity="center_vertical"
-    android:layout_marginStart="16dp"
-    android:layout_marginLeft="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
     android:orientation="horizontal"
-    tools:targetApi="17" >
+    android:paddingLeft="@dimen/dashboard_nav_element_left_margin"
+    android:paddingStart="@dimen/dashboard_nav_element_left_margin"
+    android:paddingRight="@dimen/dashboard_nav_element_right_margin"
+    android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
+    tools:targetApi="17">
 
     <org.edx.mobile.third_party.iconify.IconView
         android:id="@+id/row_type"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        app:iconColor="@color/edx_grayscale_neutral_light"
+        android:layout_width="@dimen/fa_xx_large"
+        android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
-        android:gravity="center_vertical"  />
+        android:gravity="center_vertical"
+        app:iconColor="@color/edx_grayscale_neutral_light"/>
 
     <LinearLayout
         style="@style/regular_grey_text"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dashboard_nav_element_text_left_margin"
+        android:layout_marginStart="@dimen/dashboard_nav_element_text_left_margin"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
         tools:targetApi="17">
 
         <org.edx.mobile.view.custom.ETextView
@@ -40,9 +40,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="Course Title"
             android:textDirection="locale"
-            android:textSize="@dimen/edx_base" />
+            android:textSize="@dimen/edx_base"
+            tools:text="Course Title"/>
 
 
         <org.edx.mobile.view.custom.ETextView
@@ -52,17 +52,17 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            tools:text="Course Subtitle"
             android:textDirection="locale"
-            android:textSize="@dimen/edx_x_small" />
+            android:textSize="@dimen/edx_x_small"
+            tools:text="Course Subtitle"/>
     </LinearLayout>
 
     <org.edx.mobile.third_party.iconify.IconView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        app:iconColor="@color/edx_grayscale_neutral_light"
-        app:iconName="fa_angle_right"
+        android:layout_width="@dimen/fa_xxx_small"
+        android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
-        android:gravity="center_vertical"  />
+        android:gravity="center_vertical"
+        app:iconColor="@color/edx_grayscale_neutral_light"
+        app:iconName="fa_angle_right"/>
 
 </LinearLayout>
