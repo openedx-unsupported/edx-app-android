@@ -94,15 +94,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         shareButton = (SocialShareView) view.findViewById(R.id.combined_course_social_share);
         shareButton.setOnClickListener(this);
 
-        TextView handoutText = (TextView) view.findViewById(R.id.combined_course_handout_text);
-        View handoutArrow =  view.findViewById(R.id.next_arrow);
-        if (environment.getConfig().isNewCourseNavigationEnabled() ) {
-            handoutText.setVisibility(View.GONE);
-            handoutArrow.setVisibility(View.GONE);
-        } else {
-            handoutText.setOnClickListener(this);
-        }
-
         TextView certificateButton = (TextView) view.findViewById(R.id.view_cert_button);
         certificateButton.setOnClickListener(this);
 
@@ -390,14 +381,6 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
     public void onClick(View view) {
 
         switch (view.getId()){
-
-            case R.id.combined_course_handout_text:
-
-                if (courseData != null) {
-                    environment.getRouter().showHandouts(getActivity(), courseData);
-                }
-
-                break;
             case R.id.view_cert_button:
                 if (courseData != null) {
                     Intent certificateIntent = new Intent(getActivity(),
