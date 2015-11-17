@@ -20,7 +20,6 @@ import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -46,9 +45,9 @@ import java.util.Map;
 /**
  * This class is introduced to respect normal java application's layer architecture.
  * controller -> service -> dao -> data source
- *
+ * <p/>
  * also, api is designed in a way to make future migration to RetroFit easy
- *
+ * <p/>
  * UI layer should call ServiceManager, not IApi directly.
  */
 @Singleton
@@ -65,12 +64,12 @@ public class ServiceManager {
     @Inject
     IApi api;
 
-    public ServiceManager(){
+    public ServiceManager() {
         cacheManager = new CacheManager(MainApplication.instance());
     }
 
 
-    public HttpRequestEndPoint getEndPointCourseStructure(final String courseId){
+    public HttpRequestEndPoint getEndPointCourseStructure(final String courseId) {
         return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
@@ -82,7 +81,7 @@ public class ServiceManager {
                     String cId = URLEncoder.encode(courseId, "UTF-8");
 
                     String url = config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + cId + "&username="
-                        + username + "&depth=all&requested_fields=" + requested_fields + "&student_view_data=" + student_view_data + "&block_counts=" + block_counts+ "&nav_depth=3";
+                            + username + "&depth=all&requested_fields=" + requested_fields + "&student_view_data=" + student_view_data + "&block_counts=" + block_counts + "&nav_depth=3";
 
                     logger.debug("GET url for enrolling in a Course: " + url);
                     return url;
@@ -91,9 +90,11 @@ public class ServiceManager {
                 }
                 return "";
             }
+
             public String getCacheKey() {
                 return config.getApiHostURL() + "/api/courses/v1/blocks/?course_id=" + courseId;
             }
+
             public Map<String, String> getParameters() {
                 return null;
             }
@@ -101,20 +102,21 @@ public class ServiceManager {
     }
 
     public CourseComponent getCourseStructureFromCache(final String courseId) throws Exception {
-         return getCourseStructure(courseId, OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE);
+        return getCourseStructure(courseId, OkHttpUtil.REQUEST_CACHE_TYPE.ONLY_CACHE);
     }
 
     public CourseComponent getCourseStructure(final String courseId,
                                               OkHttpUtil.REQUEST_CACHE_TYPE requestCacheType) throws Exception {
         HttpRequestDelegate<CourseComponent> delegate = new HttpRequestDelegate<CourseComponent>(
-            api, cacheManager, getEndPointCourseStructure(courseId)){
+                api, cacheManager, getEndPointCourseStructure(courseId)) {
             @Override
-            public CourseComponent fromJson(String json) throws Exception{
+            public CourseComponent fromJson(String json) throws Exception {
                 CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(json);
-                return (CourseComponent)CourseManager.normalizeCourseStructure(model, courseId);
+                return (CourseComponent) CourseManager.normalizeCourseStructure(model, courseId);
             }
+
             @Override
-            public HttpManager.HttpResult invokeHttpCall() throws Exception{
+            public HttpManager.HttpResult invokeHttpCall() throws Exception {
                 return api.getCourseStructure(this);
             }
 
@@ -124,22 +126,17 @@ public class ServiceManager {
     }
 
 
-    public List<SectionItemInterface> getLiveOrganizedVideosByChapter
-        (String courseId, final String chapter) throws Exception{
-        if (config.isNewCourseNavigationEnabled()){
-             CourseComponent course = this.getCourseStructureFromCache(courseId);
-             if ( course == null ) {  //it means we cache the old data model in the file system
-                 return api.getLiveOrganizedVideosByChapter(courseId, chapter);
-             } else {
-                return CourseManager.mappingAllVideoResponseModelFrom(course, new Filter<VideoResponseModel>() {
-                    @Override
-                    public boolean apply(VideoResponseModel videoResponseModel) {
-                        return videoResponseModel != null && videoResponseModel.getChapterName().equals(chapter);
-                    }
-                });
-             }
-        } else {
+    public List<SectionItemInterface> getLiveOrganizedVideosByChapter(String courseId, final String chapter) throws Exception {
+        CourseComponent course = this.getCourseStructureFromCache(courseId);
+        if (course == null) {  //it means we cache the old data model in the file system
             return api.getLiveOrganizedVideosByChapter(courseId, chapter);
+        } else {
+            return CourseManager.mappingAllVideoResponseModelFrom(course, new Filter<VideoResponseModel>() {
+                @Override
+                public boolean apply(VideoResponseModel videoResponseModel) {
+                    return videoResponseModel != null && videoResponseModel.getChapterName().equals(chapter);
+                }
+            });
         }
     }
 
@@ -147,98 +144,57 @@ public class ServiceManager {
         return null;
     }
 
-    public Map<String, SectionEntry> getCourseHierarchy(String courseId)  throws Exception{
+    public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
         return getCourseHierarchy(courseId, true);
     }
 
-    public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean prefCache)  throws Exception{
-        if ( config.isNewCourseNavigationEnabled() ){
-            CourseComponent course = this.getCourseStructureFromCache(courseId);
-            if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getCourseHierarchy(courseId, prefCache);
-            } else {
-               return CourseManager.mappingCourseHierarchyFrom(course);
-            }
-        } else {
+    public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean prefCache) throws Exception {
+        CourseComponent course = this.getCourseStructureFromCache(courseId);
+        if (course == null) {  //it means we cache the old data model in the file system
             return api.getCourseHierarchy(courseId, prefCache);
-        }
-    }
-
-    public LectureModel getLecture(String courseId, String chapterName, String chapterId, String lectureName, String lectureId)
-        throws Exception {
-        if ( config.isNewCourseNavigationEnabled() ){
-            CourseComponent course = this.getCourseStructureFromCache(courseId);
-            if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getLecture(courseId, chapterName, lectureName);
-            } else {
-                return CourseManager.getLecture(course, chapterName, chapterId, lectureName, lectureId);
-            }
         } else {
-            return api.getLecture(courseId, chapterName, lectureName);
+            return CourseManager.mappingCourseHierarchyFrom(course);
         }
     }
 
     public VideoResponseModel getVideoById(String courseId, String videoId)
-        throws Exception {
-        if ( config.isNewCourseNavigationEnabled() ){
-            CourseComponent course = this.getCourseStructureFromCache(courseId);
-            if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getVideoById(courseId, videoId);
-            } else {
-                return CourseManager.getVideoById(course, videoId);
-            }
-        } else {
+            throws Exception {
+        CourseComponent course = this.getCourseStructureFromCache(courseId);
+        if (course == null) {  //it means we cache the old data model in the file system
             return api.getVideoById(courseId, videoId);
+        } else {
+            return CourseManager.getVideoById(course, videoId);
         }
     }
 
 
     public String getUnitUrlByVideoById(String courseId, String videoId)
-        throws Exception {
-        if ( config.isNewCourseNavigationEnabled() ){
-            CourseComponent course = this.getCourseStructureFromCache(courseId);
-            if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getUnitUrlByVideoById(courseId, videoId);
-            } else {
-                VideoResponseModel vrm = getVideoById(courseId, videoId);
-                if(vrm!=null){
-                    return vrm.getUnitUrl();
-                } else {
-                    return "";
-                }
-            }
-        } else {
+            throws Exception {
+        CourseComponent course = this.getCourseStructureFromCache(courseId);
+        if (course == null) {  //it means we cache the old data model in the file system
             return api.getUnitUrlByVideoById(courseId, videoId);
-        }
-    }
-
-    public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
-        throws Exception {
-        if ( config.isNewCourseNavigationEnabled()){
-            CourseComponent course = this.getCourseStructureFromCache(courseId);
-            if ( course == null ) {  //it means we cache the old data model in the file system
-                return api.getSubsectionById(courseId, subsectionId);
-            } else {
-                return CourseManager.getSubsectionById(course,subsectionId);
-            }
         } else {
-            return api.getSubsectionById(courseId, subsectionId);
+            VideoResponseModel vrm = getVideoById(courseId, videoId);
+            if (vrm != null) {
+                return vrm.getUnitUrl();
+            } else {
+                return "";
+            }
         }
     }
-
 
     public TranscriptModel getTranscriptsOfVideo(String enrollmentId,
                                                  String videoId) throws Exception {
-        try{
+        try {
             TranscriptModel transcript;
-            VideoResponseModel vidModel =  getVideoById(enrollmentId, videoId);
-            if(vidModel!=null){
-                if(vidModel.getSummary()!=null){
+            VideoResponseModel vidModel = getVideoById(enrollmentId, videoId);
+            if (vidModel != null) {
+                if (vidModel.getSummary() != null) {
                     transcript = vidModel.getSummary().getTranscripts();
                     return transcript;
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
         return null;
@@ -339,7 +295,7 @@ public class ServiceManager {
 
 
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
-        return api.loginByFacebook(accessToken) ;
+        return api.loginByFacebook(accessToken);
     }
 
 
