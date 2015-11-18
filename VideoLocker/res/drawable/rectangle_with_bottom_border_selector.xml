@@ -15,7 +15,7 @@
             </item>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/white" />
+                    <solid android:color="@color/edx_grayscale_neutral_white_t" />
                 </shape>
             </item>
         </selector>

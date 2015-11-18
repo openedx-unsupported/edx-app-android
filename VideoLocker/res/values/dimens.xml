@@ -37,9 +37,19 @@
     <dimen name="default_row_text">12sp</dimen>
     <dimen name="course_card_height">190dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
-    <dimen name="dashboard_navigation_element_height">85dp</dimen>
     <dimen name="large_indicator_icon_width">100dp</dimen>
     <dimen name="large_indicator_icon_height">100dp</dimen>
+
+    <dimen name="dashboard_nav_element_height">85dp</dimen>
+    <dimen name="dashboard_nav_element_left_margin">30dp</dimen>
+    <dimen name="dashboard_nav_element_right_margin">30dp</dimen>
+    <!--NOTE: This margin needs to be 75dp as per design doc
+        But, since we are using a LinearLayout in the base layout {@link layout/row_course_dashboard_list}
+        so we deduct the element's left margin i.e. {@link dashboard_nav_element_left_margin} and icon
+        width i.e. {@link #fa_xx_large} from 75dp.
+        in short: 75 - 30 - 24 = 21dp
+    -->
+    <dimen name="dashboard_nav_element_text_left_margin">21dp</dimen>
 
     <dimen name="width_video_text">200dp</dimen>
     <dimen name="checkbox_margin">10dp</dimen>
@@ -143,4 +153,17 @@
     <dimen name="user_profile_image_diameter">166dp</dimen>
     <dimen name="user_profile_image_border_width">3dp</dimen>
     <dimen name="crop_image_guideline_width">3dp</dimen>
+
+    <!-- font awesome sizes -->
+    <dimen name="fa_xxxx_large">38dp</dimen>
+    <dimen name="fa_xxx_large">28dp</dimen>
+    <dimen name="fa_xx_large">24dp</dimen>
+    <dimen name="fa_x_large">21dp</dimen>
+    <dimen name="fa_large">18dp</dimen>
+    <dimen name="fa_base">16dp</dimen>
+    <dimen name="fa_small">14dp</dimen>
+    <dimen name="fa_x_small">12dp</dimen>
+    <dimen name="fa_xx_small">11dp</dimen>
+    <dimen name="fa_xxx_small">10dp</dimen>
+
 </resources>

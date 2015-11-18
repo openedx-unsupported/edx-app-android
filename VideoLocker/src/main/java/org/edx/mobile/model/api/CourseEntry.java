@@ -150,22 +150,22 @@ public class CourseEntry implements Serializable {
         // check if "start" date has passed
         if (start == null)
             return false;
-        
+
         Date startDate = DateUtil.convertToDate(start);
         Date today = new Date();
-        return today.after(startDate); 
+        return today.after(startDate);
     }
-    
+
     public boolean isEnded() {
         // check if "end" date has passed
         if (end == null)
             return false;
-        
+
         Date endDate = DateUtil.convertToDate(end);
         Date today = new Date();
         return today.after(endDate);
     }
-    
+
     public boolean hasUpdates() {
         // check if latest updates available, return true if available
         if (latest_updates == null)
@@ -274,45 +274,44 @@ public class CourseEntry implements Serializable {
         }
 
         if (withStartDate) {
-            CharSequence formattedDate = getFormattedStartDate(context);
-            if (formattedDate != null) sections.add(formattedDate.toString().toUpperCase());
+            CharSequence formattedDate = getFormattedDate(context);
+            if (formattedDate != null) sections.add(formattedDate);
         }
 
         return TextUtils.join(" | ", sections);
     }
 
-    public CharSequence getFormattedStartDate(Context context) {
+    public String getFormattedDate(Context context) {
+        CharSequence formattedDate;
         if (isStarted()) {
             Date endDate = DateUtil.convertToDate(end);
             if (endDate == null) {
                 return null;
             } else if (isEnded()) {
-                return ResourceUtil.getFormattedString(context.getResources(), R.string.label_ended,
-                        "date", DateUtils.formatDateTime(context, endDate.getTime(), DateUtils
-                                .FORMAT_NO_YEAR));
+                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
+                        .label_ended, "date", DateUtils.formatDateTime(context, endDate.getTime()
+                        , DateUtils.FORMAT_NO_YEAR));
             } else {
-                return ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_ending,
-                        "date", DateUtils.formatDateTime(context, endDate.getTime(), DateUtils
-                                .FORMAT_NO_YEAR));
+                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
+                        .label_ending, "date", DateUtils.formatDateTime(context, endDate.getTime
+                        (), DateUtils.FORMAT_NO_YEAR));
             }
         } else {
             if (start_type == StartType.TIMESTAMP && !TextUtils.isEmpty(start)) {
                 Date startDate = DateUtil.convertToDate(start);
-                return ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_starting,
-                        "date", DateUtils.formatDateTime(context, startDate.getTime(), DateUtils
-                                .FORMAT_NO_YEAR));
+                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
+                        .label_starting, "date", DateUtils.formatDateTime(context, startDate
+                        .getTime(), DateUtils.FORMAT_NO_YEAR));
             } else if (start_type == StartType.STRING && !TextUtils.isEmpty(start_display)) {
-                return ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_starting,
-                        "date", start_display);
+                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
+                        .label_starting, "date", start_display);
 
             } else {
-                return ResourceUtil.getFormattedString(context.getResources(), R.string
-                                .label_starting,
-                        "date", context.getString(R.string.assessment_soon));
+                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
+                        .label_starting, "date", context.getString(R.string.assessment_soon));
             }
         }
+
+        return formattedDate.toString().toUpperCase();
     }
 }
