@@ -309,6 +309,8 @@
     <string name="discussion_responses_answer">Answer</string>
     <!--Label for indicating who endorsed the comment as an answer-->
     <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
+    <!-- Label for time span when its less than a second after posting a response/comment -->
+    <string name="just_now">Just now</string>
 
     <!--Discussion Responses Action Bar-->
     <!--Label to indicate number of votes-->
@@ -678,8 +680,11 @@
 
 
     <!-- Discussion/Forum -->
-    <string name="forum_query_no_result">Query <i> \"%1$s\" </i> returns no result.</string>
-    <string name="forum_empty">No result found.</string>
+    <string name="forum_no_results_for_search_query">No results found for “{search_query}”. Try another search term or select a discussion category to browse.</string>
+    <string name="forum_no_results_for_all_posts">There are no posts in this course discussion.</string>
+    <string name="forum_no_results_for_following">You are not following any posts.</string>
+    <string name="forum_no_results_in_category">There are no posts in this discussion category.</string>
+    <string name="forum_no_results_with_filter">Try removing your post filter.</string>
     <string name="forum_post_i_am_following">Posts I’m Following</string>
     <string name="show_more_records">More...</string>
     <string name="forum_follow">Follow</string>
@@ -693,13 +698,11 @@
     <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
     <string name="profile_sharing_limited_by_other_user">This person is currently sharing a limited profile</string>
     <!-- Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old) -->
-    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile. If you are over 13, make sure that you have specified a birth year when editing your profile.</string>
+    <string name="profile_consent_needed_explanation">You must be over 13 to share a full profile.</string>
     <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
     <string name="profile_consent_needed_edit_button">Account Settings</string>
     <!-- Shown when viewing your own incomplete profile -->
-    <string name="profile_incomplete_greeting">Hi {username}!</string>
-    <!-- Shown when viewing your own incomplete profile, directly after the greeting -->
-    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet, let’s get you started.</string>
+    <string name="profile_incomplete_explanation">Your profile isn’t complete yet.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
     <string name="profile_incomplete_edit_button">Get Started</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
@@ -716,8 +719,16 @@
     <string name="edit_user_profile_current_language">Current language: {current_language}</string>
     <!-- An option that will set the user profile's location to the country of their device's configured locale -->
     <string name="edit_user_profile_current_location">Current location: {current_location}</string>
+    <!-- An option that will assign an empty value to a profile field -->
+    <string name="edit_user_profile_option_none">No {label}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
     <string name="edit_user_profile_change_photo">Change</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_take_photo">Take photo</string>
+    <!-- Button that will open photo gallery for choosing a new profile photo -->
+    <string name="edit_user_profile_choose_photo">Choose a photo</string>
+    <!-- Button that will open a camera for taking a new profile photo -->
+    <string name="edit_user_profile_remove_photo">Remove photo</string>
     <!-- Title when cropping newly selected profile photo -->
     <string name="edit_user_profile_photo_crop_title">Crop and Resize</string>
     <!-- Button that will exit the crop tool without saving the image -->

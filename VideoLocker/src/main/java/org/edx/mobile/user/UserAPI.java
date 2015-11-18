@@ -2,6 +2,7 @@ package org.edx.mobile.user;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.FieldNamingPolicy;
@@ -26,7 +27,6 @@ import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Path;
 import retrofit.mime.TypedFile;
 
 @Singleton
@@ -41,6 +41,7 @@ public class UserAPI {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
+                .serializeNulls()
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -57,11 +58,11 @@ public class UserAPI {
         return userService.getAccount(username);
     }
 
-    public Account updateAccount(@NonNull String username, @NonNull String field, @NonNull Object value) throws RetroHttpException {
+    public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws RetroHttpException {
         return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 
-    public void setProfileImage(@Path("username") String username, @NonNull final File file) throws RetroHttpException, IOException {
+    public void setProfileImage(@NonNull String username, @NonNull final File file) throws RetroHttpException, IOException {
         final String mimeType = "image/jpeg";
         logger.debug("Uploading file of type " + mimeType + " from " + file.toString());
         userService.setProfileImage(
@@ -69,5 +70,10 @@ public class UserAPI {
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 new TypedFile(mimeType, file));
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, Uri.fromFile(file)));
+    }
+
+    public void deleteProfileImage(@NonNull String username) throws RetroHttpException {
+        userService.deleteProfileImage(username);
+        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
     }
 }

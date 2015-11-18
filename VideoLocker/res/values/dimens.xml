@@ -110,6 +110,9 @@
     <dimen name="discussion_responses_comments_button_height">25dp</dimen>
     <dimen name="discussion_responses_action_bar_icon_margin">7dp</dimen>
 
+    <dimen name="crop_circle_padding">12dp</dimen>
+    <dimen name="crop_circle_border_width">3dp</dimen>
+
     <dimen name="icon_view_standard_width_height">15dp</dimen>
 
     <!-- row height for CC language options, NONE option and the header of popup -->
@@ -122,6 +125,7 @@
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
     <dimen name="edx_margin">15dp</dimen>
+    <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="widget_margin">10dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>

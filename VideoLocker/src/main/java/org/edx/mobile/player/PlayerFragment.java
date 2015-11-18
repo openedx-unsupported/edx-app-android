@@ -165,18 +165,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         } else {
             new InstallFacebookDialog().show(getFragmentManager(), null);
         }
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // save this fragment across activity re-creations
-        //TODO - or FIXME  after playerFragment become a nested fragement,
-        //we need to find a way to save status
-        if (!environment.getConfig().isNewCourseNavigationEnabled())
-            setRetainInstance(true);
     }
 
     @Override

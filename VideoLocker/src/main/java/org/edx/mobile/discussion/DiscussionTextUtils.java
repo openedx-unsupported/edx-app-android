@@ -23,20 +23,31 @@ import org.edx.mobile.util.ResourceUtil;
 import java.util.HashMap;
 
 public abstract class DiscussionTextUtils {
-    private DiscussionTextUtils() {
-    }
-
     @Inject
     private static Config config;
 
-    public static void setAuthorAttributionText(@NonNull TextView textView, @NonNull final IAuthorData authorData, @NonNull final Runnable onAuthorClickListener) {
+    private DiscussionTextUtils() {
+    }
+
+    public static void setAuthorAttributionText(@NonNull TextView textView,
+                                                @NonNull final IAuthorData authorData,
+                                                @NonNull final Runnable onAuthorClickListener) {
         final CharSequence text;
         {
-            final CharSequence formattedTime = DateUtils.getRelativeTimeSpanString(
-                    authorData.getCreatedAt().getTime(),
-                    System.currentTimeMillis(),
-                    DateUtils.MINUTE_IN_MILLIS,
-                    DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+            final Context context = textView.getContext();
+            final CharSequence formattedTime;
+            {
+                if (System.currentTimeMillis() - authorData.getCreatedAt().getTime()
+                        < DateUtils.SECOND_IN_MILLIS) {
+                    formattedTime = context.getString(R.string.just_now);
+                } else {
+                    formattedTime = DateUtils.getRelativeTimeSpanString(
+                            authorData.getCreatedAt().getTime(),
+                            System.currentTimeMillis(),
+                            DateUtils.SECOND_IN_MILLIS,
+                            DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+                }
+            }
 
             final String authorLabel = authorData.getAuthorLabel();
 
@@ -54,19 +65,22 @@ public abstract class DiscussionTextUtils {
                         ds.setUnderlineText(false);
                     }
                 }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
-            final Context context = textView.getContext();
-            text = trim(ResourceUtil.getFormattedString(context.getResources(), R.string.post_attribution, new HashMap<String, CharSequence>() {{
-                put("time", formattedTime);
-                put("author", authorSpan);
-                put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(context.getResources().getConfiguration().locale));
-            }}));
+            text = trim(ResourceUtil.getFormattedString(context.getResources(),
+                    R.string.post_attribution, new HashMap<String, CharSequence>() {{
+                        put("time", formattedTime);
+                        put("author", authorSpan);
+                        put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(
+                                context.getResources().getConfiguration().locale));
+                    }}));
         }
 
         textView.setText(text);
-        textView.setMovementMethod(new LinkMovementMethod()); // Allows ClickableSpan to trigger clicks
+        // Allow ClickableSpan to trigger clicks
+        textView.setMovementMethod(new LinkMovementMethod());
     }
 
     public static CharSequence parseHtml(@NonNull String html) {

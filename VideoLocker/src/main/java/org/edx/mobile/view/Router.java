@@ -124,19 +124,7 @@ public class Router {
     public void showCourseDetailTabs(Activity activity, Config config, EnrolledCoursesResponse model,
                                      boolean announcements) {
 
-        if ( config.isNewCourseNavigationEnabled() ){
-            showCourseDashboard(activity, model, announcements);
-            return;
-        }
-
-        Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
-        courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
-
-        Intent courseDetail = new Intent(activity, CourseDetailTabActivity.class);
-        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
-        courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        activity.startActivity(courseDetail);
+        showCourseDashboard(activity, model, announcements);
     }
 
     /**
@@ -145,16 +133,10 @@ public class Router {
      * @param model
      */
     public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model ) {
-        Bundle courseBundle = new Bundle();
+        final Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
-
-
-        Intent courseDetail;
-        if ( config.isNewCourseNavigationEnabled() )
-            courseDetail = new Intent(activity, CourseDetailInfoActivity.class);
-        else
-            courseDetail = new Intent(activity, CourseDetailTabActivity.class);
+        final Intent courseDetail = new Intent(activity, CourseDetailInfoActivity.class);
         courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
@@ -164,14 +146,7 @@ public class Router {
         final Bundle courseBundle = new Bundle();
         courseBundle.putBoolean(Router.EXTRA_ANNOUNCEMENTS, true);
         courseBundle.putString(Router.EXTRA_COURSE_ID, courseId);
-
-        Intent courseDetail;
-        if ( config.isNewCourseNavigationEnabled() ) {
-            courseDetail = new Intent(context, CourseDetailInfoActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
-        }
-        else {
-            courseDetail = new Intent(context, CourseDetailTabActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
-        }
+        final Intent courseDetail = new Intent(context, CourseDetailInfoActivity.class).putExtra(EXTRA_BUNDLE, courseBundle);
         // TODO: It's not essential, but we may want additional activities on the back-stack (e.g. CourseDashboardActivity)
         TaskStackBuilder.create(context)
                 .addNextIntent(courseDetail)

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/take_photo"
+        android:title="@string/edit_user_profile_take_photo" />
+    <item
+        android:id="@+id/choose_photo"
+        android:title="@string/edit_user_profile_choose_photo" />
+    <item
+        android:id="@+id/remove_photo"
+        android:title="@string/edit_user_profile_remove_photo" />
+</menu>
