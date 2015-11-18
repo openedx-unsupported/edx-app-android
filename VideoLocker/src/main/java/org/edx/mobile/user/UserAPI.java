@@ -27,7 +27,6 @@ import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
-import retrofit.http.Path;
 import retrofit.mime.TypedFile;
 
 @Singleton
@@ -63,7 +62,7 @@ public class UserAPI {
         return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 
-    public void setProfileImage(@Path("username") String username, @NonNull final File file) throws RetroHttpException, IOException {
+    public void setProfileImage(@NonNull String username, @NonNull final File file) throws RetroHttpException, IOException {
         final String mimeType = "image/jpeg";
         logger.debug("Uploading file of type " + mimeType + " from " + file.toString());
         userService.setProfileImage(
@@ -71,5 +70,10 @@ public class UserAPI {
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
                 new TypedFile(mimeType, file));
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, Uri.fromFile(file)));
+    }
+
+    public void deleteProfileImage(@NonNull String username) throws RetroHttpException {
+        userService.deleteProfileImage(username);
+        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
     }
 }

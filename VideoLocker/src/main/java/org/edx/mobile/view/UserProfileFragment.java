@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.inject.Inject;
 
@@ -171,11 +170,15 @@ public class UserProfileFragment extends RoboFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(username)) {
-            Glide.with(viewHolder.profileImage.getContext())
-                    .load(event.getUri())
-                    .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .into(viewHolder.profileImage);
+            if (null == event.getUri()) {
+                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+            } else {
+                Glide.with(viewHolder.profileImage.getContext())
+                        .load(event.getUri())
+                        .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(viewHolder.profileImage);
+            }
         }
     }
 
@@ -199,10 +202,13 @@ public class UserProfileFragment extends RoboFragment {
         } else {
             viewHolder.profileHeaderContent.setVisibility(View.VISIBLE);
 
-            final RequestManager requestManager = Glide.with(viewHolder.profileImage.getContext());
-            requestManager
-                    .load(account.getProfileImage().getImageUrlFull())
-                    .into(viewHolder.profileImage);
+            if (account.getProfileImage().hasImage()) {
+                Glide.with(viewHolder.profileImage.getContext())
+                        .load(account.getProfileImage().getImageUrlFull())
+                        .into(viewHolder.profileImage);
+            } else {
+                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+            }
 
             if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {
                 viewHolder.limitedView.setVisibility(View.VISIBLE);

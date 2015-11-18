@@ -280,6 +280,7 @@
         <item name="android:src">@color/edx_grayscale_neutral_base</item>
         <item name="civ_border_color">@color/white</item>
         <item name="android:scaleType">centerCrop</item>
+        <item name="android:background">@drawable/white_circle</item>
     </style>
 
     <style name="empty_content_text" parent="bold_text">
