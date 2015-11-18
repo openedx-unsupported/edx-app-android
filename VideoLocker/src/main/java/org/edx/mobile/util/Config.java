@@ -16,6 +16,7 @@ import org.edx.mobile.logger.Logger;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,6 +51,7 @@ public class Config {
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String PARSE = "PARSE";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
+    private static final String LOCALIZATION = "LOCALIZATION";
 
     private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
     private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
@@ -184,6 +186,22 @@ public class Config {
 
         public String getHashTag() {
             return mHashTag;
+        }
+    }
+
+    /**
+     * Localization configuration
+     */
+    public class LocalizationConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("PREFERRED_LOCALE") String mPreferredLocale;
+        private @SerializedName("SUPPORTED_LOCALES") HashSet<String> mSupportedLocales;
+        public boolean isEnabled()  { return mEnabled; }
+        public Locale getDefaultLocale()    {
+            return mPreferredLocale != null ? new Locale(mPreferredLocale) : null;
+        }
+        public HashSet<String> getSupportedLocales() {
+            return mSupportedLocales != null ? mSupportedLocales : new HashSet<String>();
         }
     }
 
@@ -500,6 +518,18 @@ public class Config {
         }
         else {
             return new NewRelicConfig();
+        }
+    }
+
+    public LocalizationConfig getLocalizationConfig() {
+        JsonElement element = getObject(LOCALIZATION);
+        if(element != null) {
+            Gson gson = new Gson();
+            LocalizationConfig config = gson.fromJson(element, LocalizationConfig.class);
+            return config;
+        }
+        else {
+            return new LocalizationConfig();
         }
     }
 

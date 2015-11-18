@@ -28,12 +28,15 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
+import org.edx.mobile.view.dialog.ChangeLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import roboguice.fragment.RoboFragment;
 
@@ -50,7 +53,10 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
     private Switch visibilitySwitch;
     @Inject
     protected IEdxEnvironment environment;
+    @Inject
+    private Config config;
     boolean showSocialFeatures;
+    boolean supportMultipleLanguages;
 
     private TextView socialConnectedText;
 
@@ -62,6 +68,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
 
         PrefManager featurePrefManager = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
         showSocialFeatures = featurePrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
+        supportMultipleLanguages = config.getLocalizationConfig().isEnabled();
 
         uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
             @Override
@@ -86,6 +93,25 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
 
         updateWifiSwitch();
         updateVisibilitySwitch();
+
+
+        LinearLayout languageView = (LinearLayout) layout.findViewById(R.id.language_settings_layout);
+
+        if(supportMultipleLanguages && !config.getLocalizationConfig().getSupportedLocales().isEmpty())    {
+            languageView.setVisibility(View.VISIBLE);
+        }
+
+        TextView language_tv = (TextView) layout.findViewById(R.id.current_language_tv);
+        Locale currentLocale = getResources().getConfiguration().locale;
+        language_tv.setText(currentLocale.getDisplayName(currentLocale));
+
+        languageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ChangeLanguageDialogFragment()
+                        .show(getActivity().getSupportFragmentManager(), TAG);
+            }
+        });
 
         LinearLayout socialView = (LinearLayout) layout.findViewById(R.id.settings_social_layout);
 

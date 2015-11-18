@@ -53,6 +53,8 @@
     <string name="share_course_popup_header">Share this course via&#8230;</string>
     <!-- Share course -->
     <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
+    <!-- Label for language change -->
+    <string name="settings_language_top">Language</string>
 
     <!-- Settings Page -->
     <!-- Label for wifi only switch -->
