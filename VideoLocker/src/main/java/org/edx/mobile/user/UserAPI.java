@@ -2,6 +2,7 @@ package org.edx.mobile.user;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.webkit.MimeTypeMap;
 
 import com.google.gson.FieldNamingPolicy;
@@ -41,6 +42,7 @@ public class UserAPI {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
+                .serializeNulls()
                 .create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -57,7 +59,7 @@ public class UserAPI {
         return userService.getAccount(username);
     }
 
-    public Account updateAccount(@NonNull String username, @NonNull String field, @NonNull Object value) throws RetroHttpException {
+    public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws RetroHttpException {
         return userService.updateAccount(username, Collections.singletonMap(field, value));
     }
 

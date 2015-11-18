@@ -111,6 +111,12 @@ public class FormFieldSelectFragment extends RoboFragment {
                 }
             }
         }
+        if (formField.getOptions().isAllowsNone()) {
+            final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
+            final String label = ResourceUtil.getFormattedString(listView.getContext().getResources(), R.string.edit_user_profile_option_none, "label", formField.getLabel()).toString();
+            textView.setText(label);
+            listView.addHeaderView(textView, new FormOption(label, null), true);
+        }
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -146,7 +152,7 @@ public class FormFieldSelectFragment extends RoboFragment {
         if (null != currentValue) {
             for (int i = 0; i < listView.getCount(); i++) {
                 final FormOption option = (FormOption) listView.getItemAtPosition(i);
-                if (null != option && option.getValue().equals(currentValue)) {
+                if (null != option && TextUtils.equals(option.getValue(), currentValue)) {
                     listView.setSelection(i);
                     listView.setItemChecked(i, true);
                     break;
