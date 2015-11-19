@@ -5,11 +5,10 @@ import android.content.Context;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.view.adapters.IPagination;
 
-public abstract class GetFollowingThreadListTask extends
-        Task<TopicThreads> {
-
+public abstract class GetFollowingThreadListTask extends Task<TopicThreads> {
     String courseId;
     DiscussionPostsSort orderBy;
     DiscussionPostsFilter filter;
@@ -35,7 +34,7 @@ public abstract class GetFollowingThreadListTask extends
                 return environment.getDiscussionAPI().getFollowingThreadList(courseId,
                         filter.getQueryParamValue(), orderBy.getQueryParamValue(), pageSize, page);
             }
-        } catch (Exception ex) {
+        } catch (RetroHttpException ex) {
             handle(ex);
             logger.error(ex, true);
         }
