@@ -312,7 +312,7 @@ public interface ISegment {
         String OPEN_IN_BROWSER = "Browser Launched";
         String PUSH_NOTIFICATION_RECEIVED = "notification-received";
         String PUSH_NOTIFICATION_TAPPED = "notification-tapped";
-        String PROFILE_VIEWED = "view profile";
-        String PROFILE_PHOTO_SET = "set profile photo";
+        String PROFILE_VIEWED = "Viewed a profile";
+        String PROFILE_PHOTO_SET = "Set a profile picture";
     }
 }
