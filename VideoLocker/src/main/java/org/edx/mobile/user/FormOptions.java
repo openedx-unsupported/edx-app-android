@@ -2,8 +2,6 @@ package org.edx.mobile.user;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.edx.mobile.module.registration.model.RegistrationOption;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,6 +22,9 @@ public class FormOptions implements Serializable {
     @SerializedName("allows_none")
     private boolean allowsNone = true;
 
+    @SerializedName("none_label")
+    private String noneLabel;
+
     public String getReference() {
         return reference;
     }
@@ -42,5 +43,9 @@ public class FormOptions implements Serializable {
 
     public boolean isAllowsNone() {
         return allowsNone;
+    }
+
+    public String getNoneLabel() {
+        return noneLabel;
     }
 }

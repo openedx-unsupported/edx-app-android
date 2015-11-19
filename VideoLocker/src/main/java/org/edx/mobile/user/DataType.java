@@ -7,5 +7,8 @@ public enum DataType {
     COUNTRY,
 
     @SerializedName("language")
-    LANGUAGE;
+    LANGUAGE,
+
+    @SerializedName("boolean")
+    BOOLEAN
 }
