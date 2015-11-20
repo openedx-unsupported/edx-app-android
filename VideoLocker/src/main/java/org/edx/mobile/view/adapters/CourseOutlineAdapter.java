@@ -327,19 +327,20 @@ public class CourseOutlineAdapter extends BaseAdapter{
 
     }
 
-    private  View getRowViewForContainer(int position, View convertView, ViewGroup parent, final SectionRow row) {
+    private View getRowViewForContainer(int position, View convertView, ViewGroup parent,
+                                        final SectionRow row) {
         final CourseComponent component = row.component;
         String courseId = component.getCourseId();
         BlockPath path = component.getPath();
         //FIXME - we should add a new column in database - pathinfo.
         //then do the string match to get the record
         String chapterId = path.get(1) == null ? "" : path.get(1).getDisplayName();
-        String sequentialId =  path.get(2) == null ? "" : path.get(2).getDisplayName();
+        String sequentialId = path.get(2) == null ? "" : path.get(2).getDisplayName();
 
-        ViewHolder holder = (ViewHolder)convertView.getTag();
+        ViewHolder holder = (ViewHolder) convertView.getTag();
         holder.rowTitle.setText(component.getDisplayName());
         holder.numOfVideoAndDownloadArea.setVisibility(View.VISIBLE);
-        if ( component.isGraded() ){
+        if (component.isGraded()) {
             holder.bulkDownload.setVisibility(View.INVISIBLE);
             holder.rowSubtitlePanel.setVisibility(View.VISIBLE);
             holder.rowSubtitleIcon.setVisibility(View.VISIBLE);
@@ -347,26 +348,26 @@ public class CourseOutlineAdapter extends BaseAdapter{
             holder.rowSubtitle.setText(component.getFormat());
         }
 
+        final int totalDownloadableVideos = component.getDownloadableVideosCount(storage);
         // support video download for video type excluding the ones only viewable on web
-        int webOnlyCount = dbStore.getWebOnlyVideosCountBySection(courseId, chapterId, sequentialId, null);
-        final int totalDownloadableVideos = component.getBlockCount().videoCount - webOnlyCount;
-        if (totalDownloadableVideos == 0 ){
+        if (totalDownloadableVideos == 0) {
             holder.numOfVideoAndDownloadArea.setVisibility(View.GONE);
         } else {
             holder.bulkDownload.setVisibility(View.VISIBLE);
             holder.noOfVideos.setVisibility(View.VISIBLE);
             holder.noOfVideos.setText("" + totalDownloadableVideos);
 
-            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId, chapterId, sequentialId, null);
+            Integer downloadedCount = dbStore.getDownloadedVideosCountForSection(courseId,
+                    chapterId, sequentialId, null);
 
             if (downloadedCount == totalDownloadableVideos) {
                 holder.noOfVideos.setVisibility(View.VISIBLE);
                 setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADED, null);
-            } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId, sequentialId, null)
-                    + downloadedCount == totalDownloadableVideos) {
+            } else if (dbStore.getDownloadingVideosCountForSection(courseId, chapterId,
+                    sequentialId, null) + downloadedCount == totalDownloadableVideos) {
                 holder.noOfVideos.setVisibility(View.GONE);
-                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADING
-                    , new View.OnClickListener() {
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.DOWNLOADING,
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
                                 mDownloadListener.viewDownloadsStatus();
@@ -374,8 +375,8 @@ public class CourseOutlineAdapter extends BaseAdapter{
                         });
             } else {
                 holder.noOfVideos.setVisibility(View.VISIBLE);
-                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.ONLINE
-                    , new View.OnClickListener() {
+                setRowStateOnDownload(holder, DownloadEntry.DownloadedState.ONLINE,
+                        new View.OnClickListener() {
                             @Override
                             public void onClick(View downloadView) {
                                 mDownloadListener.download(component.getVideos());

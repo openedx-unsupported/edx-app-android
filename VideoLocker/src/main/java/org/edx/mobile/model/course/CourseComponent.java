@@ -7,6 +7,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.IPathNode;
+import org.edx.mobile.module.storage.IStorage;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -209,6 +210,7 @@ public class CourseComponent implements IBlock, IPathNode {
         }
         return null;
     }
+
     /**
      * return all videos blocks under this node
      */
@@ -228,6 +230,24 @@ public class CourseComponent implements IBlock, IPathNode {
             }
         }
         return (List)videos;
+    }
+
+    /**
+     * Returns the count of videos that have the boolean
+     * {@link org.edx.mobile.model.db.DownloadEntry#isVideoForWebOnly} set to <code>false</code>
+     *
+     * @param storage The local storage object to look into
+     * @return The count of videos that are downloadable
+     */
+    public int getDownloadableVideosCount(IStorage storage) {
+        int downloadableCount = 0;
+        List<HasDownloadEntry> videos = getVideos();
+        for (int i = 0, size = videos.size(); i < size; i++) {
+            if (!videos.get(i).getDownloadEntry(storage).isVideoForWebOnly()) {
+                downloadableCount++;
+            }
+        }
+        return downloadableCount;
     }
 
     /**
