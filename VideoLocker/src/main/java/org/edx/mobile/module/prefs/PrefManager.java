@@ -330,9 +330,6 @@ public class PrefManager {
     public static final class Key {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
-        public static final String SESSION_ID = "sessionid";
-        public static final String AUTH_ASSESSMENT_SESSION_ID = "assessment_session_id";
-        public static final String AUTH_ASSESSMENT_SESSION_EXPIRATION = "assessment_session_expiration";
         //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";

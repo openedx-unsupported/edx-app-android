@@ -2,13 +2,12 @@ package org.edx.mobile.services;
 
 import android.content.Context;
 import android.os.Build;
+import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.ValueCallback;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetSessesionExchangeCookieTask;
 
 import java.io.File;
@@ -28,6 +27,8 @@ public class EdxCookieManager {
     // provides an error callback with the HTTP error code) prior to usage.
     private static final long FRESHNESS_INTERVAL = TimeUnit.HOURS.toMillis(1);
 
+    private long authSessionCookieExpiration = -1;
+
     protected final Logger logger = new Logger(getClass().getName());
 
     private static EdxCookieManager instance;
@@ -42,12 +43,7 @@ public class EdxCookieManager {
 
     public void clearWebWiewCookie(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            android.webkit.CookieManager.getInstance().removeAllCookies(new ValueCallback() {
-                @Override
-                public void onReceiveValue(Object value) {
-                    //do nothing?
-                }
-            });
+            android.webkit.CookieManager.getInstance().removeAllCookie();
         } else {
             try {
                 CookieSyncManager.createInstance(context);
@@ -56,9 +52,7 @@ public class EdxCookieManager {
                 logger.debug(ex.getMessage());
             }
         }
-        PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, "");
-        pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, -1);
+        authSessionCookieExpiration = -1;
 
     }
 
@@ -96,18 +90,14 @@ public class EdxCookieManager {
                         EventBus.getDefault().post(new SessionIdRefreshEvent(false));
                         return;
                     }
-                    
-                    long currentTime = System.currentTimeMillis();
+
+                    final CookieManager cookieManager = CookieManager.getInstance();
+                    clearWebWiewCookie(context);
                     for (HttpCookie cookie : result) {
-                        if (cookie.getName().equals(PrefManager.Key.SESSION_ID)) {
-                            clearWebWiewCookie(context);
-                            PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
-                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID, cookie.getValue());
-                            pref.put(PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION, currentTime + FRESHNESS_INTERVAL);
-                            EventBus.getDefault().post(new SessionIdRefreshEvent(true));
-                            break;
-                        }
+                        cookieManager.setCookie(environment.getConfig().getApiHostURL(), cookie.toString());
                     }
+                    authSessionCookieExpiration = System.currentTimeMillis() + FRESHNESS_INTERVAL;
+                    EventBus.getDefault().post(new SessionIdRefreshEvent(true));
                     task = null;
                 }
 
@@ -120,5 +110,9 @@ public class EdxCookieManager {
             };
             task.execute();
         }
+    }
+
+    public boolean isSessionCookieMissingOrExpired() {
+        return authSessionCookieExpiration < System.currentTimeMillis();
     }
 }
