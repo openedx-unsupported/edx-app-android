@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -182,18 +181,13 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 map.put("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
             }
 
-            String sessionId = pref.getString(PrefManager.Key.AUTH_ASSESSMENT_SESSION_ID);
-            long sessionIdExpirationDate = pref.getLong(
-                    PrefManager.Key.AUTH_ASSESSMENT_SESSION_EXPIRATION);
             // Requery the session cookie if unavailable or expired if we are on
             // an API level lesser than Marshmallow (which provides HTTP error
             // codes in the error callback for WebViewClient).
             if (Build.VERSION.SDK_INT < 23 /*Build.VERSION_CODES.M*/ &&
-                    (TextUtils.isEmpty(sessionId) ||
-                            sessionIdExpirationDate < System.currentTimeMillis())) {
+                    EdxCookieManager.getSharedInstance().isSessionCookieMissingOrExpired()) {
                 EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
             } else {
-                map.put("Cookie", PrefManager.Key.SESSION_ID + "=" + sessionId );
                 webView.loadUrl(unit.getBlockUrl(), map);
             }
         }
