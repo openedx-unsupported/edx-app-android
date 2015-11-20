@@ -316,7 +316,7 @@ public class NavigationFragment extends RoboFragment {
             boolean allowSocialFeatures = socialPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
             groupsItemView.setVisibility(allowSocialFeatures ? View.VISIBLE : View.GONE);
 
-            View findCoursesItemView = getView().findViewById(R.id.panel_option_find_courses);
+            View findCoursesItemView = getView().findViewById(R.id.drawer_option_find_courses);
             boolean findCoursesEnabled = environment.getConfig().getEnrollmentConfig().isEnabled();
             findCoursesItemView.setVisibility(findCoursesEnabled ? View.VISIBLE : View.GONE);
         }
