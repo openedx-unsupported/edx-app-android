@@ -185,7 +185,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 71
-        versionName "1.0.09"
+        versionName "0.5.09"
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
@@ -267,7 +267,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
-    testOptions { 
+    testOptions {
          unitTests.all {
              maxHeapSize '1024m'
              jvmArgs '-XX:MaxPermSize=512m'
