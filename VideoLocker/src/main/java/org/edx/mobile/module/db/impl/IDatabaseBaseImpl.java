@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 class IDatabaseBaseImpl implements Runnable {
-
     protected static final Logger logger = new Logger(IDatabaseBaseImpl.class.getName());
     protected Context context;
     private DbHelper helper;
@@ -31,14 +30,11 @@ class IDatabaseBaseImpl implements Runnable {
         do {
             // mark queue being processed
             isQueueProcessing = true;
-
             IDbOperation<?> op = getNextQueuedOperation();
-
             if (op == null) {
                 break;
             }
-
-            // perform the datbase operation
+            // perform the database operation
             execute(op);
         } while (true);
 
@@ -66,8 +62,9 @@ class IDatabaseBaseImpl implements Runnable {
     /**
      * Enqueues given database operation to the operation queue and starts processing the queue,
      * if not already started.
-     * Operation is executed in a queue in background thread if callback is provided for the operation and this method returns null.
-     * Otherwise this is a blocking call and returns result object.
+     * Operation is executed in a queue in background thread if callback is provided for the
+     * operation and this method returns null. Otherwise this is a blocking call and returns
+     * result object.
      *
      * @param operation
      */

@@ -15,7 +15,6 @@ import java.util.List;
  * @author rohan
  */
 public interface IDatabase {
-
     /**
      * Releases this database object and all its handles.
      */
@@ -27,7 +26,7 @@ public interface IDatabase {
      *
      * @return boolean flag if download is in progress
      */
-    public Boolean isAnyVideoDownloading(DataCallback<Boolean> callback);
+    Boolean isAnyVideoDownloading(DataCallback<Boolean> callback);
 
 
     /**
@@ -36,13 +35,13 @@ public interface IDatabase {
      *
      * @return
      */
-    public List<Long> getAllDownloadingVideosDmidList(DataCallback<List<Long>> callback);
+    List<Long> getAllDownloadingVideosDmidList(DataCallback<List<Long>> callback);
 
 
     /**
      * Mark all videos as course deactivated for logged in user
      */
-    public Integer updateAllVideosAsDeactivated(DataCallback<Integer> callback);
+    Integer updateAllVideosAsDeactivated(DataCallback<Integer> callback);
 
     /**
      * Mark all videos with enrollment id as course activated for logged in user
@@ -50,15 +49,14 @@ public interface IDatabase {
      * @param enrollmentId
      * @return The number of rows affected
      */
-    public Integer updateVideosActivatedForCourse(String enrollmentId, DataCallback<Integer>
-            callback);
+    Integer updateVideosActivatedForCourse(String enrollmentId, DataCallback<Integer> callback);
 
     /**
      * Returns all Deactivated videos for logged in user
      *
      * @param callback
      */
-    public List<VideoModel> getAllDeactivatedVideos(DataCallback<List<VideoModel>> callback);
+    List<VideoModel> getAllDeactivatedVideos(DataCallback<List<VideoModel>> callback);
 
 
     /**
@@ -66,7 +64,7 @@ public interface IDatabase {
      *
      * @param videoId - IVideoModel object
      */
-    public Integer updateVideoAsOnlineByVideoId(String videoId, DataCallback<Integer> callback);
+    Integer updateVideoAsOnlineByVideoId(String videoId, DataCallback<Integer> callback);
 
 
     /**
@@ -74,7 +72,7 @@ public interface IDatabase {
      *
      * @param callback
      */
-    public Integer getVideoCountBydmId(long dmId, DataCallback<Integer> callback);
+    Integer getVideoCountBydmId(long dmId, DataCallback<Integer> callback);
 
 
     /**
@@ -83,8 +81,8 @@ public interface IDatabase {
      * @param enrollmentId - course which has the chapter
      * @param chapter
      */
-    public Boolean isVideoDownloadedInChapter(String enrollmentId,
-                                              String chapter, DataCallback<Boolean> callback);
+    Boolean isVideoDownloadedInChapter(String enrollmentId, String chapter,
+                                       DataCallback<Boolean> callback);
 
     /**
      * Returns number of videos marked as downloading/downloaded in Chapter for logged in user
@@ -93,8 +91,8 @@ public interface IDatabase {
      * @param chapter
      * @return - Number of videos not online
      */
-    public Integer getVideosCountByChapter(String enrollmentId,
-                                           String chapter, DataCallback<Integer> callback);
+    Integer getVideosCountByChapter(String enrollmentId, String chapter,
+                                    DataCallback<Integer> callback);
 
     /**
      * Return number of videos marked as web_view_only inChapter for logged in user
@@ -104,8 +102,8 @@ public interface IDatabase {
      * @param callback
      * @return
      */
-    public Integer getWebOnlyVideosCountByChapter(String enrollmentId, String chapter,
-                                                  final DataCallback<Integer> callback);
+    Integer getWebOnlyVideosCountByChapter(String enrollmentId, String chapter,
+                                           final DataCallback<Integer> callback);
 
     /**
      * Returns true if any video downloading is in progress for chapter
@@ -114,8 +112,8 @@ public interface IDatabase {
      * @param chapter
      * @return - Number of Downloaded videos
      */
-    public Boolean isVideoDownloadingInChapter(String enrollmentId,
-                                               String chapter, DataCallback<Boolean> callback);
+    Boolean isVideoDownloadingInChapter(String enrollmentId, String chapter,
+                                        DataCallback<Boolean> callback);
 
 
     /**
@@ -124,8 +122,8 @@ public interface IDatabase {
      * @param enrollmentId - course which has the chapter
      * @param chapter
      */
-    public List<Long> getDownloadingVideoDmIdsForChapter(String enrollmentId, String chapter,
-                                                         DataCallback<List<Long>> callback);
+    List<Long> getDownloadingVideoDmIdsForChapter(String enrollmentId, String chapter,
+                                                  DataCallback<List<Long>> callback);
 
 
     /**
@@ -135,8 +133,8 @@ public interface IDatabase {
      * @param chapter
      * @param section
      */
-    public Boolean isVideoDownloadingInSection(String enrollmentId, String chapter,
-                                               String section, DataCallback<Boolean> callback);
+    Boolean isVideoDownloadingInSection(String enrollmentId, String chapter,
+                                        String section, DataCallback<Boolean> callback);
 
     /**
      * Returns {@link android.app.DownloadManager} IDs of all downloading videos in a given section.
@@ -149,9 +147,8 @@ public interface IDatabase {
      * videos, or an empty array if there are no videos downloading in the section. Otherwise,
      * returns null.
      */
-    public long[] getDownloadingVideoDmIdsForSection(String enrollmentId, String chapter,
-                                                     String section, final
-                                                     DataCallback<List<Long>> callback);
+    long[] getDownloadingVideoDmIdsForSection(String enrollmentId, String chapter, String section,
+                                              final DataCallback<List<Long>> callback);
 
     /**
      * Returns the count of downloading videos for given section
@@ -162,9 +159,8 @@ public interface IDatabase {
      * @param callback     callback to return results to
      * @return Count of downloading videos for a given section
      */
-    public int getDownloadingVideosCountForSection(String enrollmentId, String chapter,
-                                                   String section, final DataCallback<Integer>
-                                                           callback);
+    int getDownloadingVideosCountForSection(String enrollmentId, String chapter, String section,
+                                            final DataCallback<Integer> callback);
 
     /**
      * Returns number of videos marked as downloading/downloaded in Section for logged in user
@@ -173,15 +169,14 @@ public interface IDatabase {
      * @param chapter
      * @param section
      */
-    public Integer getVideosCountBySection(String enrollmentId, String chapter,
-                                           String section, DataCallback<Integer> callback);
+    Integer getVideosCountBySection(String enrollmentId, String chapter,
+                                    String section, DataCallback<Integer> callback);
 
     /**
      * Returns true if Video is downloaded in Section for logged in user
      */
-    public Boolean isVideoDownloadedInSection(String enrollmentId,
-                                              String chapter, String section,
-                                              DataCallback<Boolean> callback);
+    Boolean isVideoDownloadedInSection(String enrollmentId, String chapter,
+                                       String section, DataCallback<Boolean> callback);
 
     /**
      * Returns dmId's of all downloaded videos for given section of logged in user
@@ -194,9 +189,8 @@ public interface IDatabase {
      * videos, or an empty array if there are no videos downloaded in the section. Otherwise,
      * returns null.
      */
-    public long[] getDownloadedVideoDmIdsForSection(String enrollmentId, String chapter,
-                                                    String section, final
-                                                    DataCallback<List<Long>> callback);
+    long[] getDownloadedVideoDmIdsForSection(String enrollmentId, String chapter, String section,
+                                             final DataCallback<List<Long>> callback);
 
     /**
      * Returns the count of downloaded videos for given section
@@ -207,9 +201,8 @@ public interface IDatabase {
      * @param callback     callback to return results to
      * @return Count of downloaded videos for a given section
      */
-    public int getDownloadedVideosCountForSection(String enrollmentId, String chapter,
-                                                  String section, final DataCallback<Integer>
-                                                          callback);
+    int getDownloadedVideosCountForSection(String enrollmentId, String chapter, String section,
+                                           final DataCallback<Integer> callback);
 
     /**
      * get number of videos marked as webOnly
@@ -220,9 +213,8 @@ public interface IDatabase {
      * @param callback
      * @return
      */
-    public Integer getWebOnlyVideosCountBySection(String enrollmentId, String chapter, String
-            section,
-                                                  final DataCallback<Integer> callback);
+    Integer getWebOnlyVideosCountBySection(String enrollmentId, String chapter, String section,
+                                           final DataCallback<Integer> callback);
 
     /**
      * Update a Video's watched state
@@ -230,8 +222,8 @@ public interface IDatabase {
      * @param videoId - Id of video for which status needs to change
      * @param state   - Status flag to be set for changing Video watched state
      */
-    public Integer updateVideoWatchedState(String videoId, WatchedState state,
-                                           DataCallback<Integer> callback);
+    Integer updateVideoWatchedState(String videoId, WatchedState state,
+                                    DataCallback<Integer> callback);
 
 
     /**
@@ -240,8 +232,7 @@ public interface IDatabase {
      * @param videoId - Id of video for which status needs to change
      * @param offset  - Last Played offset
      */
-    public Integer updateVideoLastPlayedOffset(String videoId, int offset,
-                                               DataCallback<Integer> callback);
+    Integer updateVideoLastPlayedOffset(String videoId, int offset, DataCallback<Integer> callback);
 
 
     /**
@@ -251,7 +242,7 @@ public interface IDatabase {
      * @param callback
      * @return - the row ID of the newly inserted row, or -1 if an error occurred
      */
-    public Long addVideoData(VideoModel de, DataCallback<Long> callback);
+    Long addVideoData(VideoModel de, DataCallback<Long> callback);
 
     /**
      * Returns VideoEntry for the passed VideoId
@@ -259,7 +250,7 @@ public interface IDatabase {
      * @param videoId
      * @param callback
      */
-    public VideoModel getVideoEntryByVideoId(String videoId, DataCallback<VideoModel> callback);
+    VideoModel getVideoEntryByVideoId(String videoId, DataCallback<VideoModel> callback);
 
     /**
      * Returns {@link org.edx.mobile.model.VideoModel} which is downloaded or download is in
@@ -274,8 +265,8 @@ public interface IDatabase {
 
     /**
      * Marks given Video as online and sets dmid to -1 so that this video is identified as
-     * NOT_DOWNLAODED.
-     * File path for this video is made empty so as to avoid access to non-existing file.
+     * NOT_DOWNLOADED. File path for this video is made empty so as to avoid access to non-existing
+     * file.
      * NOTE: If there are multiple videos with same URL that are marked as Downloaded,
      * Only the reference should be removed and not the downloaded file
      *
@@ -292,7 +283,7 @@ public interface IDatabase {
      *
      * @param url
      */
-    public Boolean isVideoFilePresentByUrl(String url, DataCallback<Boolean> callback);
+    Boolean isVideoFilePresentByUrl(String url, DataCallback<Boolean> callback);
 
 
     /**
@@ -301,8 +292,7 @@ public interface IDatabase {
      * @param model
      * @param callback
      */
-    public Integer updateDownloadingVideoInfoByVideoId(VideoModel model,
-                                                       DataCallback<Integer> callback);
+    Integer updateDownloadingVideoInfoByVideoId(VideoModel model, DataCallback<Integer> callback);
 
     /**
      * This method marks the Video as Downloading when enqueued for Download
@@ -310,15 +300,14 @@ public interface IDatabase {
      * @param model
      * @param callback
      */
-    public Integer updateAsDownloadingByVideoId(VideoModel model,
-                                                DataCallback<Integer> callback);
+    Integer updateAsDownloadingByVideoId(VideoModel model, DataCallback<Integer> callback);
 
     /**
      * Returns list of All VideoEntries which are currently being downloaded
      *
      * @return
      */
-    public List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
+    List<VideoModel> getListOfOngoingDownloads(DataCallback<List<VideoModel>> callback);
 
 
     /**
@@ -327,7 +316,7 @@ public interface IDatabase {
      *
      * @return - count of Videos downloaded
      */
-    public Integer getVideosDownloadedCount(DataCallback<Integer> callback);
+    Integer getVideosDownloadedCount(DataCallback<Integer> callback);
 
     /**
      * Returns Count of number of Downloaded Videos in the Course by Course ID
@@ -335,7 +324,7 @@ public interface IDatabase {
      * @param courseId
      * @param callback
      */
-    public Integer getDownloadedVideoCountByCourse(String courseId, DataCallback<Integer> callback);
+    Integer getDownloadedVideoCountByCourse(String courseId, DataCallback<Integer> callback);
 
 
     /**
@@ -344,9 +333,8 @@ public interface IDatabase {
      * @param courseId
      * @param callback
      */
-    public List<VideoModel> getDownloadedVideoListForCourse(String courseId,
-                                                            DataCallback<List<VideoModel>>
-                                                                    callback);
+    List<VideoModel> getDownloadedVideoListForCourse(String courseId,
+                                                     DataCallback<List<VideoModel>> callback);
 
 
     /**
@@ -355,14 +343,14 @@ public interface IDatabase {
      * @param courseId
      * @param callback
      */
-    public Long getDownloadedVideosSizeByCourse(String courseId, DataCallback<Long> callback);
+    Long getDownloadedVideosSizeByCourse(String courseId, DataCallback<Long> callback);
 
     /**
      * Returns IVideoModel object if entry exists with Video status set as
      * downloaded with the given URL
      */
-    public VideoModel getIVideoModelByVideoUrl(String videoUrl,
-                                               DataCallback<VideoModel> callback);
+    VideoModel getIVideoModelByVideoUrl(String videoUrl,
+                                        DataCallback<VideoModel> callback);
 
 
     /**
@@ -372,7 +360,7 @@ public interface IDatabase {
      * @param dmId
      * @return
      */
-    public Boolean isDmIdExists(long dmId, DataCallback<Boolean> callback);
+    Boolean isDmIdExists(long dmId, DataCallback<Boolean> callback);
 
     /**
      * Marks the download as complete for the given dmid.
@@ -382,8 +370,8 @@ public interface IDatabase {
      * @param dmId
      * @return
      */
-    public Integer updateDownloadCompleteInfoByDmId(long dmId,
-                                                    VideoModel de, DataCallback<Integer> callback);
+    Integer updateDownloadCompleteInfoByDmId(long dmId, VideoModel de,
+                                             DataCallback<Integer> callback);
 
     /**
      * Returns list of all videos from the database.
@@ -393,7 +381,7 @@ public interface IDatabase {
     List<VideoModel> getAllVideos(String username, DataCallback<List<VideoModel>> DataCallback);
 
     /**
-     * Removes all records of given username from the datbase.
+     * Removes all records of given username from the database.
      *
      * @param username
      */
@@ -429,8 +417,8 @@ public interface IDatabase {
     /**
      * This function is used to getting all sorted Downloads based on Download date
      */
-    public List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-                                                                          DataCallback<List<VideoModel>> callback);
+    List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
+        DataCallback<List<VideoModel>> callback);
 
     /**
      * This method gives the WatchedState stored in the DB for VideoID
@@ -448,7 +436,7 @@ public interface IDatabase {
      *
      * @return boolean flag if download is in progress
      */
-    public Boolean isAnyVideoDownloadingInCourse(DataCallback<Boolean> callback, String courseId);
+    Boolean isAnyVideoDownloadingInCourse(DataCallback<Boolean> callback, String courseId);
 
     /**
      * Return true if any Video is marked as Downloading for a section in the database for logged
@@ -457,8 +445,8 @@ public interface IDatabase {
      *
      * @return boolean flag if download is in progress
      */
-    public Boolean isAnyVideoDownloadingInSection(DataCallback<Boolean> callback, String
-            courseId, String section);
+    Boolean isAnyVideoDownloadingInSection(DataCallback<Boolean> callback, String courseId,
+                                           String section);
 
     /**
      * Return true if any Video is marked as Downloading for a subsection in the database for
@@ -467,24 +455,23 @@ public interface IDatabase {
      *
      * @return boolean flag if download is in progress
      */
-    public Boolean isAnyVideoDownloadingInSubSection(DataCallback<Boolean> callback, String
-            courseId,
-                                                     String section, String subSection);
+    Boolean isAnyVideoDownloadingInSubSection(DataCallback<Boolean> callback, String courseId,
+                                              String section, String subSection);
 
     /**
      * @param userName
      */
-    public void setUserName(String userName);
+    void setUserName(String userName);
 
     /**
      * update assessment unit access record
      */
-    public Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited);
+    Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited);
 
     /**
      * get assessment unit access status
      */
-    public boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
+    boolean isUnitAccessed(DataCallback<Boolean> callback, String unitId);
 
 
 }
