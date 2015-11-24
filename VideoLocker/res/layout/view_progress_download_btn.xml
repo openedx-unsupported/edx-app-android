@@ -4,27 +4,19 @@
     android:id="@+id/course_row_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="5dp"
-    android:layout_marginRight="5dp"
-    android:layout_marginEnd="5dp"
+    android:padding="@dimen/x_small_icon_margin"
+    android:layout_marginRight="@dimen/x_small_icon_margin"
+    android:layout_marginEnd="@dimen/x_small_icon_margin"
     tools:targetApi="17" >
 
     <ImageView
         android:id="@+id/down_arrow"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/fa_xx_large"
+        android:layout_height="@dimen/fa_xx_large"
         android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_downarrow" />
+        android:src="@drawable/ic_downarrow"
+        tools:ignore="ContentDescription" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" >
-
-        <include layout="@layout/view_progress_wheel" />
-    </LinearLayout>
+    <include layout="@layout/view_progress_wheel" />
 
 </FrameLayout>

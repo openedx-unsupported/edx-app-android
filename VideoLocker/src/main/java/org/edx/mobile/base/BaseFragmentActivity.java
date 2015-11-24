@@ -8,13 +8,14 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.format.DateUtils;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -97,6 +98,8 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         }
     }
 
+    // This flag is to enable the login and sign-up Activities to be
+    // excluded from the download progress update callback.
     protected boolean runOnTick = true;
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -115,8 +118,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         super.onStart();
         isActivityStarted = true;
 
-        handler.sendEmptyMessage(MSG_TYPE_TICK);
-
         PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
 
         boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this, environment.getConfig());
@@ -124,10 +125,9 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
 
-        //Check if the the onTick method needs to be run
-        //This has been done to handle unwanted call to onTick() from login screen
-        if(runOnTick)
+        if (runOnTick) {
             handler.sendEmptyMessage(MSG_TYPE_TICK);
+        }
 
         // enabling action bar app icon.
         ActionBar bar = getActionBar();
@@ -197,12 +197,15 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
+
+        if (runOnTick) {
+            handler.removeMessages(MSG_TYPE_TICK);
+        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        isActivityStarted = true;
         logger.debug("activity restarted");
 
         if (applyPrevTransitionOnRestart) {
@@ -285,79 +288,90 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        createOptionMenu(menu);
-        return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu) | createOptionMenu(menu);
     }
 
     /**
-     * TODO - we will refactor the base class, so we can use onCreateOptionsMenu()
-     * directly
-     * @param menu
-     * @return
+     * Initialize the options menu. This is called from
+     * {@link #onCreateOptionsMenu(Menu)}, so that subclasses can override
+     * the base menu implementation while still calling back to the system
+     * implementation. The selection handling for menu items defined here
+     * should be performed in {@link #handleOptionsItemSelected(MenuItem)},
+     * and any these methods should both be overriden together.
+     *
+     * @param menu The options menu.
+     *
+     * @return Return true if the menu should be displayed.
      */
-    protected boolean createOptionMenu(Menu menu){
-        // inflate menu from xml
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        if(checkBox_menuItem!=null){
-            checkBox_menuItem.setVisible(false);
+    protected boolean createOptionMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.delete_checkbox).setVisible(false);
+        menu.findItem(R.id.offline).setVisible(AppConstants.offline_flag);
+        boolean isInitializing = progressMenuItem == null;
+        MenuItem newProgressMenuItem = menu.findItem(R.id.progress_download);
+        View progressView = newProgressMenuItem.getActionView();
+        ProgressWheel newTotalProgress = (ProgressWheel)
+                progressView.findViewById(R.id.progress_wheel);
+        if (progressMenuItem != null) {
+            newProgressMenuItem.setVisible(progressMenuItem.isVisible());
+            newTotalProgress.setProgress(totalProgress.getProgress());
         }
-
-        MenuItem offline_tvItem = menu.findItem(R.id.offline);
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        if(AppConstants.offline_flag){
-            offline_tvItem.setVisible(true);
-            menuItem.setVisible(false);
-        }else{
-            offline_tvItem.setVisible(false);
-            menuItem.setVisible(true);
-            View view = menuItem.getActionView();
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    environment.getRouter().showDownloads(BaseFragmentActivity.this);
-                }
-            });
+        progressMenuItem = newProgressMenuItem;
+        totalProgress = newTotalProgress;
+        progressView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                environment.getRouter().showDownloads(BaseFragmentActivity.this);
+            }
+        });
+        if (runOnTick && isInitializing) {
+            updateDownloadingProgress();
         }
         return true;
-    }
-
-    /**
-     * Called when invalidateOptionsMenu() is triggered
-     * This method is used to initialize the ActionBar progress
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (menu != null) {
-            progressMenuItem = menu.findItem(R.id.progress_download);
-            //Check if the the onTick method needs to be run
-            //This has been done to handle unwanted call to onTick() from login screen
-            if(runOnTick)
-                onTick();
-        }
-        return super.onPrepareOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
+        // Toggle navigation drawer when the app icon or title on the action bar
+        // is clicked
         if (mDrawerToggle != null && mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
-        // Handle action bar actions click
+        if (handleOptionsItemSelected(item)) {
+            return true;
+        }
+
+        // Handle action bar buttons click
         switch (item.getItemId()) {
             case android.R.id.home:
-                //Called when user has pressed back on top of the Action Bar
                 finish();
                 return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Handle options menu item selection. This is called from
+     * {@link #onOptionsItemSelected(MenuItem)} to provide a menu
+     * selection handler that can be overriden by subclass that override
+     * {@link #createOptionMenu(Menu)}, and should only be used to handle
+     * selections of the menu items that are initialized from that method.
+     *
+     * @param item The menu item that was selected.
+     *
+     * @return boolean Return false to allow normal menu processing to
+     *         proceed, true to consume it here.
+     */
+    protected boolean handleOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.progress_download:
+                environment.getRouter().showDownloads(this);
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -467,49 +481,23 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
     /**
-     * Sub-classes might override this method to execute the code each second.
+     * Callback method to be invoked on regular close intervals. Subclasses
+     * can override it to add their own constant refreshing logic.
      */
     protected void onTick() {
-        // this is a per second callback
-        try {
-            if (progressMenuItem != null) {
-                if(AppConstants.offline_flag){
-                    progressMenuItem.setVisible(false);
-                }else{
-                    if(environment.getDatabase()!=null){
-                        boolean downloading = environment.getDatabase().isAnyVideoDownloading(null);
-                        if(!downloading){
-                            progressMenuItem.setVisible(false);
-                        }else{
-                            updateDownloadingProgress();
-                        }
-                    }   //store not null check
-                }
-            }                               //progress menu item not null check
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
+        updateDownloadingProgress();
     }
 
-    //Update the Progress if Videos are downloading 
+    // Initialize or update the downloading progress wheel action view based
+    // on the current state, or hide it if there are no videos downloading.
     private void updateDownloadingProgress() {
-        if(environment.getStorage()!=null){
-            try {
-                View view = progressMenuItem.getActionView();
-                if (view != null) {
-                    view.setBackgroundResource(R.color.edx_brand_primary_base);
-                    totalProgress = (ProgressWheel) view
-                            .findViewById(R.id.progress_wheel);
-                    if (totalProgress != null) {
-                        progressMenuItem.setVisible(true);
-                    }else{
-                        progressMenuItem.setVisible(false);
-                    }
-                    environment.getStorage().getAverageDownloadProgress(averageProgressCallback);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-            }
+        if (progressMenuItem == null) return;
+        if (AppConstants.offline_flag ||
+                !environment.getDatabase().isAnyVideoDownloading(null)) {
+            progressMenuItem.setVisible(false);
+        } else {
+            progressMenuItem.setVisible(true);
+            environment.getStorage().getAverageDownloadProgress(averageProgressCallback);
         }
     }
 
@@ -621,14 +609,14 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == MSG_TYPE_TICK) {
-                // This block will be executed per second,
-                // so OnTick() is a per-second callback
-                if (isActivityStarted) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_TYPE_TICK:
+                    // Invoke the onTick() callback continuously
+                    // on intervals of one second.
                     onTick();
-                    sendEmptyMessageDelayed(MSG_TYPE_TICK, 1000);
-                }
+                    sendEmptyMessageDelayed(MSG_TYPE_TICK, DateUtils.SECOND_IN_MILLIS);
+                    break;
             }
         }
     };
@@ -648,9 +636,13 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     };
 
 
-    protected void updateDownloadProgress(int progressPercent){
-        if ( totalProgress != null)
-            totalProgress.setProgressPercent(progressPercent);
+    /**
+     * Update the downloading progress wheel action view.
+     *
+     * @param progressPercent The completed percentage of the total downloads.
+     */
+    protected void updateDownloadProgress(int progressPercent) {
+        totalProgress.setProgressPercent(progressPercent);
     }
 
     /**

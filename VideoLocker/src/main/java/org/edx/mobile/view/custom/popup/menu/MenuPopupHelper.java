@@ -483,9 +483,16 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             for (MenuItem item : getMenuItems()) {
                 if (item != expandedItem) {
                     count++;
-                    Menu subMenu = item.getSubMenu();
+                    MenuBuilder subMenu = (MenuBuilder) item.getSubMenu();
                     if (subMenu != null) {
                         count += subMenu.size();
+                        // Since the menu structure can be set up at any point,
+                        // this is the only place where the presenter can be set
+                        // up for the submenus. There is no method to query
+                        // whether the presenter has already been set up, so it
+                        // will be removed and added each time.
+                        subMenu.removeMenuPresenter(MenuPopupHelper.this);
+                        subMenu.addMenuPresenter(MenuPopupHelper.this, mContext);
                     }
                 }
             }
