@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.player.IPlayerEventCallback;
@@ -27,9 +27,8 @@ import org.edx.mobile.util.NetworkUtil;
 
 import java.io.File;
 
-@SuppressWarnings("serial")
-public class VideoListActivity extends BaseFragmentActivity implements
-VideoListCallback, IPlayerEventCallback {
+public class VideoListActivity extends BaseVideosDownloadStateActivity
+        implements VideoListCallback, IPlayerEventCallback {
 
     private boolean myVideosFlag;
     private CheckBox checkBox;
@@ -251,23 +250,14 @@ VideoListCallback, IPlayerEventCallback {
     }
 
     public void showCheckBox() {
-        if (myVideosFlag) {
-            AppConstants.myVideosDeleteMode = true;
-        } else {
-            AppConstants.videoListDeleteMode = true;
-        }
+        AppConstants.myVideosDeleteMode = true;
         invalidateOptionsMenu();
     }
 
     public void hideCheckBox() {
-        if (myVideosFlag) {
-            AppConstants.myVideosDeleteMode = false;
-            if (checkBox != null)
-                checkBox.setChecked(false);
-        } else {
-            AppConstants.videoListDeleteMode = false;
-            if (checkBox != null)
-                checkBox.setChecked(false);
+        AppConstants.myVideosDeleteMode = false;
+        if (checkBox != null) {
+            checkBox.setChecked(false);
         }
         invalidateOptionsMenu();
     }
@@ -359,49 +349,36 @@ VideoListCallback, IPlayerEventCallback {
             }
             lastIsChecked = isChecked;
 
-            if(isChecked){
+            if (isChecked) {
                 listFragment.setAllVideosChecked();
                 checkBox.setButtonDrawable(R.drawable.ic_checkbox_active);
             } else {
                 listFragment.unsetAllVideosChecked();
                 checkBox.setButtonDrawable(R.drawable.ic_checkbox_default);
-                //checkBox.setBackgroundResource(R.drawable.ic_checkbox_default);
             }
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.video_list, menu);
         MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
         View checkBoxView = checkBox_menuItem.getActionView();
         checkBox = (CheckBox) checkBoxView.findViewById(R.id.select_checkbox);
 
-        if(checklistener==null) {
+        if (checklistener == null) {
             checklistener = new CourseVideoCheckBoxListener();
         }
 
-        if(myVideosFlag){
-            if(AppConstants.myVideosDeleteMode) {
-                checkBox_menuItem.setVisible(true);
-                checkBox.setVisibility(View.VISIBLE);
-                checkBox.setOnCheckedChangeListener(checklistener);
-            }else{
-                checkBox_menuItem.setVisible(false);
-                checkBox.setVisibility(View.GONE);
-                checkBox.setOnCheckedChangeListener(null);
-            }
-        }else{
-            if(AppConstants.videoListDeleteMode){
-                checkBox_menuItem.setVisible(true);
-                checkBox.setVisibility(View.VISIBLE);
-                checkBox.setOnCheckedChangeListener(checklistener);
-            }else{
-                checkBox_menuItem.setVisible(false);
-                checkBox.setVisibility(View.GONE);
-                checkBox.setOnCheckedChangeListener(null);
-            }
+        if (AppConstants.myVideosDeleteMode) {
+            checkBox_menuItem.setVisible(true);
+            checkBox.setVisibility(View.VISIBLE);
+            checkBox.setOnCheckedChangeListener(checklistener);
+        } else {
+            checkBox_menuItem.setVisible(false);
+            checkBox.setVisibility(View.GONE);
+            checkBox.setOnCheckedChangeListener(null);
         }
         return true;
     }

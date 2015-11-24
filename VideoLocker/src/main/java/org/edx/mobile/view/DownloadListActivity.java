@@ -3,9 +3,6 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -142,36 +139,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
         AppConstants.offline_flag = false;
         offlineBar.setVisibility(View.GONE);
         invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // inflate menu from xml
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        MenuItem offline_tvItem = menu.findItem(R.id.offline);
-        if (AppConstants.offline_flag) {
-            offline_tvItem.setVisible(true);
-        } else {
-            offline_tvItem.setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
     }
 
 }

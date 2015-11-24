@@ -3,17 +3,12 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 
-
-/**
- * TODO - it is just a place holder for now. as we need to use it
- * to navigation to new views.
- */
-public class CourseDashboardActivity extends BaseFragmentActivity {
+public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
     protected Logger logger = new Logger(getClass().getSimpleName());
 

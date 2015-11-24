@@ -176,7 +176,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
     @Override
-    protected boolean createOptionMenu(Menu menu) {
+    protected boolean createOptionsMenu(Menu menu) {
         if (courseComponentId != null) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.course_detail, menu);

@@ -119,9 +119,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     }
 
     @Override
-    protected void updateDownloadProgress(final int progressPercent) {}
-
-    @Override
     public void showProgressDialog(int numDownloads) {}
 
     @Override

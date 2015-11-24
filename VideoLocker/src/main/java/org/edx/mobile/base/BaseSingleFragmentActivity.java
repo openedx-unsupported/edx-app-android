@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -74,16 +72,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         fragmentTransaction.add(R.id.my_groups_list_container, singleFragment, FIRST_FRAG_TAG);
         fragmentTransaction.disallowAddToBackStack();
         fragmentTransaction.commit();
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
-
     }
 
     public abstract Fragment getFirstFragment();

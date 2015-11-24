@@ -20,7 +20,7 @@ import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
-public class CourseDashboardActivityTest extends BaseFragmentActivityTest {
+public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivityTest {
     /**
      * Method for defining the subclass of {@link CourseDashboardActivity} that
      * is being tested. Should be overridden by subclasses.

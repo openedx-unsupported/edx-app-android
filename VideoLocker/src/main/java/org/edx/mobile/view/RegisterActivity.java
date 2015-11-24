@@ -69,9 +69,6 @@ public class RegisterActivity extends BaseFragmentActivity
         setContentView(R.layout.activity_register);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
-        //The onTick method need not be run in the RegisterActivity
-        runOnTick = false;
-
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
@@ -417,8 +414,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Launch screen doesn't have any menu
+    public boolean createOptionsMenu(Menu menu) {
+        // Register screen doesn't have any menu
         return true;
     }
 

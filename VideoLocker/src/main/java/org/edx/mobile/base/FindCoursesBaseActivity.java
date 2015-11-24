@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -29,8 +27,9 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class FindCoursesBaseActivity extends BaseFragmentActivity
-        implements URLInterceptorWebViewClient.IActionListener, URLInterceptorWebViewClient.IPageStatusListener {
+public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
+        URLInterceptorWebViewClient.IActionListener,
+        URLInterceptorWebViewClient.IPageStatusListener {
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
@@ -106,26 +105,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         }
         hideLoadingProgress();
         invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        //Hide the download progress from Action bar
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        //Hide the download progress from Action bar.
-        //This has to be called in onCreateOptions as well
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-        return true;
     }
 
     /**

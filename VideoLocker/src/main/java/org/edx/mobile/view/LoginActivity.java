@@ -69,8 +69,6 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         hideSoftKeypad();
 
-        runOnTick = false;
-
         // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
@@ -425,7 +423,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean createOptionsMenu(Menu menu) {
         // Login screen doesn't have any menu
         return true;
     }
