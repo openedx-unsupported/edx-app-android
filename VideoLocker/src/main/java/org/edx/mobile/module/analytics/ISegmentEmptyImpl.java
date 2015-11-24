@@ -187,6 +187,11 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
+    public Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ComponentName componentName) {
+        return null;
+    }
+
+    @Override
     public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
         return null;
     }

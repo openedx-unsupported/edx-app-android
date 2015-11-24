@@ -28,8 +28,16 @@
     <string name="share_application_picture_url">https://www.edx.org/sites/default/files/theme/edx-logo-header.png</string>
     <string name="share_application_description">Free online courses</string>
 
-    <!-- Settings Page -->
+    <!-- Course Sharing -->
 
+    <!-- Description of button that will open the share course menu -->
+    <string name="share_course_button">Share your course</string>
+    <!-- Share menu title -->
+    <string name="share_course_popup_header">Share this course via&#8230;</string>
+    <!-- Share course -->
+    <string name="share_course_message">I’m taking a course on {platform_name}! Check it out:</string>
+
+    <!-- Settings Page -->
     <!-- Label for wifi only switch -->
     <string name="settings_wifi_top">Wi-Fi only download</string>
     <!-- Label explaining what wifi only means in detail -->
@@ -54,7 +62,6 @@
     <string name="settings_facebook_logout_btn">Log out</string>
 
     <!-- Certificate Page -->
-
     <!-- Description of button that will open the certificate sharing menu -->
     <string name="share_certificate_button">Share your certificate</string>
     <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
@@ -65,7 +72,6 @@
     <string name="share_certificate_popup_header">Share your certificate via…</string>
 
     <!-- Groups Page -->
-
     <!-- Label on cell in list of groups. Argument is number of members -->
     <string name="group_list_members">Members {members}</string>
 
@@ -83,7 +89,6 @@
     <!-- Button text allowing user to reset their password -->
     <string name="forgot_password">Forgot your password?</string>
     <!-- Button initiating login process after user enters credentials like username and password -->
-
     <string name="login">Sign In</string>
     <!-- Accessible content description of sign in button on Log in screen -->
     <string name="login_btn">Sign in button</string>
@@ -163,7 +168,6 @@
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
     <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
-
     <!-- Reset Dialog Fragment Place Holder messages -->
     <string name="reset_dialog_title">Reset Title</string>
     <!-- Title of agreement users must accept to use the app -->
@@ -190,7 +194,6 @@
     <!-- Row of announcement on dashboard screen -->
     <!-- NOTE: TODO - not final one -->
     <string name="announcement_subtitle">Keep up with the latest news</string>
-
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
     <!-- Accessible content description of course code label for a course -->
@@ -209,17 +212,14 @@
     <string name="label_my_friends_courses">My Friends’ Courses</string>
     <!-- Header ror list of users' friends enrolled in a course -->
     <string name="course_friends_also_enrolled">Friends also enrolled in this course</string>
-
     <!-- Title for the course filter menu popup -->
     <string name="course_view_modes">Course View Modes</string>
     <!-- Label for the course filter menu popup option for filtering by videos only -->
     <string name="course_view_mode_videos_only">Videos Only</string>
     <!-- Label for the course filter menu popup option for displaying the full course -->
     <string name="course_view_mode_full_course">Full Course</string>
-
     <!-- Label for the menu popup for viewing the course on the web -->
     <string name="course_view_on_web">View on Web</string>
-
     <!-- Label for the menu popup for changing mode to Videos Only/Full Course -->
     <string name="course_change_mode">Mode picker</string>
 
@@ -379,12 +379,10 @@
     <string name="assessment_previous_unit">Previous Unit</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
     <string name="assessment_previous">Previous</string>
-
     <!-- Label for mode switch menu item-->
     <string name="assessment_video_only">Video Only</string>
     <!-- Label for mode switch menu item-->
     <string name="assessment_full_course">Full Course</string>
-
     <!-- Label for empty video in video only mode-->
     <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select the Video icon above and switch to full course mode.</string>
    <!-- Label showing assessment only available on website-->
@@ -399,7 +397,6 @@
     <string name="assessment_empty">There are no learning material in this section.</string>
     <!-- Label to show a course will be starting soon -->
     <string name="assessment_soon">Soon</string>
-
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
 
@@ -437,15 +434,12 @@
     </plurals>
     <!-- Alert dialog title to confirm download of a large quantity of data -->
     <string name="download_exceed_title">Large Download</string>
-
     <!-- Alert dialog text at end of video -->
     <string name="title_lecture_complete">You’ve reached the end of this video.</string>
     <!-- Alert dialog prompt at end of video. -->
     <string name="msg_lecture_complete">Would you like to watch the next video?</string>
-
     <!-- Message shown video download in process -->
     <string name="video_download_in_progress">Video Downloads in Progress</string>
-
     <!-- Message shown a single video download begins -->
     <string name="msg_started_one_video_download">"Downloading 1 Video"</string>
     <!-- Error shown when video download fails -->

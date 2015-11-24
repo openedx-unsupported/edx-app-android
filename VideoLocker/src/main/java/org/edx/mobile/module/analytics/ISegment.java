@@ -114,6 +114,8 @@ public interface ISegment {
 
     Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName);
 
+    Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ComponentName componentName);
+
     Properties socialConnectionEvent(boolean connected, String socialNetwork);
 
     Properties coursesVisibleToFriendsChange(boolean visible);
@@ -146,8 +148,8 @@ public interface ISegment {
         String NO_OF_VIDEOS = "number_of_videos";
         String FULLSCREEN = "settings.video.fullscreen";
         String LANGUAGE = "language";
-        String URL = "url";
         String TARGET_URL = "target_url";
+        String URL = "url";
         String CONTEXT = "context";
         String DATA = "data";
         String METHOD = "method";
@@ -231,6 +233,7 @@ public interface ISegment {
         String INVITE_GAME_GROUP = "edx.bi.app.groups.game_invite";
         String SOCIAL_COURSE_SHARED = "edx.bi.app.social.course_share";
         String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.certificate.shared";
+        String SOCIAL_COURSE_DETAIL_SHARED = "edx.bi.app.course.shared";
         String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
         String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
 
@@ -309,6 +312,7 @@ public interface ISegment {
         String GAME_GROUP_INVITE = "Game Group Invited";
         String SOCIAL_COURSE_SHARED = "Social Course Shared";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
+        String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";
         String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
         String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
         String SWITCH_OUTLINE_MODE = "Switch outline mode";
