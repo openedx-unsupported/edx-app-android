@@ -58,14 +58,14 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
      */
     @Test
     public void downloadProgressViewTest() {
-        AppConstants.offline_flag = false;
+        connectToNetwork();
         assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
                 .withIntent(getIntent()).setup().get())
                 .getOptionsMenu()
                 .findItem(R.id.download_progress)
                 .isVisible());
 
-        AppConstants.offline_flag = true;
+        disconnectFromNetwork();
         assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
                 .withIntent(getIntent()).setup().get())
                 .getOptionsMenu()
@@ -97,7 +97,7 @@ public abstract class BaseVideosDownloadStateActivityTest extends BaseFragmentAc
                 .findItem(R.id.download_progress)
                 .isVisible());
 
-        AppConstants.offline_flag = false;
+        connectToNetwork();
         BaseVideosDownloadStateActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();

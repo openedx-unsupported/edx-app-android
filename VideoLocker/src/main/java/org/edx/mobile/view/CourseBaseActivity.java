@@ -22,7 +22,6 @@ import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.task.GetCourseStructureTask;
 import org.edx.mobile.third_party.iconify.IconDrawable;
 import org.edx.mobile.third_party.iconify.Iconify;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
@@ -75,18 +74,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         }
         restore(bundle);
 
-        initialize(arg0);
-        blockDrawerFromOpening();
-    }
-
-    protected void initialize(Bundle arg){
         setApplyPrevTransitionOnRestart(true);
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            showOfflineMessage();
-
-        }
+        blockDrawerFromOpening();
     }
 
     @Override
@@ -164,9 +153,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onOffline() {
         offlineBar.setVisibility(View.VISIBLE);
-
         hideLoadingProgress();
-        invalidateOptionsMenu();
     }
 
     @Override

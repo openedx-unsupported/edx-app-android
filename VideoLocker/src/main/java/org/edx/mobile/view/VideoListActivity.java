@@ -33,6 +33,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     private boolean myVideosFlag;
     private CheckBox checkBox;
     private CourseVideoCheckBoxListener checklistener;
+    private View offlineBar;
     private PlayerFragment playerFragment;
     private VideoListFragment listFragment;
     private final Handler playHandler = new Handler();
@@ -66,16 +67,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             logger.error(ex);
         }
 
-        if(!(NetworkUtil.isConnected(this))){
-            View offlineBar = (View) findViewById(R.id.offline_bar);
-            if (offlineBar != null) 
-                offlineBar.setVisibility(View.VISIBLE);
-
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-        }else{
-            AppConstants.offline_flag = false;
-        }
+        offlineBar = findViewById(R.id.offline_bar);
 
         listFragment = (VideoListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.list_fragment);
@@ -285,7 +277,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
 
     @Override
     protected void onOffline() {
-        View offlineBar = findViewById(R.id.offline_bar);
+        super.onOffline();
         if (offlineBar != null) {
             offlineBar.setVisibility(View.VISIBLE);
         }
@@ -301,8 +293,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             playerFragment.setPrevNxtListners(listFragment.getNextListener(), 
                     listFragment.getPreviousListener());
         }
-
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -321,7 +311,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
 
     @Override
     protected void onOnline() {
-        View offlineBar = findViewById(R.id.offline_bar);
+        super.onOnline();
         if (offlineBar != null) {
             offlineBar.setVisibility(View.GONE);
         }
@@ -336,7 +326,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             playerFragment.setPrevNxtListners(listFragment.getNextListener(), 
                     listFragment.getPreviousListener());
         }
-        invalidateOptionsMenu();
     }
 
     private class CourseVideoCheckBoxListener implements OnCheckedChangeListener {
@@ -389,7 +378,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         switch (item.getItemId()) {
         case android.R.id.home:
             hideCheckBox();
-            if(AppConstants.offline_flag){
+            if(!NetworkUtil.isConnected(this)){
                 Intent intent = new Intent();
                 intent.setAction(AppConstants.VIDEOLIST_BACK_PRESSED);
                 sendBroadcast(intent); 
@@ -414,7 +403,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         if(myVideosFlag){
             listFragment.handleDeleteView();
         } else {
-            if(AppConstants.offline_flag){
+            if(!NetworkUtil.isConnected(this)){
                 listFragment.handleDeleteView();
             }
         }
@@ -446,7 +435,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     }
 
     public void onBackPressed() {
-        if(AppConstants.offline_flag){
+        if(!NetworkUtil.isConnected(this)){
             Intent intent = new Intent();
             intent.setAction(AppConstants.VIDEOLIST_BACK_PRESSED);
             sendBroadcast(intent);

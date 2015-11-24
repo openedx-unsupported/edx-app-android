@@ -23,7 +23,6 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.player.PlayerActivity;
 import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
 
 public class MyVideosTabActivity extends PlayerActivity implements VideoListCallback {
 
@@ -47,12 +46,6 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         configureDrawer();
 
         offlineBar = findViewById(R.id.offline_bar);
-
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            offlineBar.setVisibility(View.VISIBLE);
-        }
 
         environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS);
 
@@ -372,7 +365,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
 
     @Override
     protected void onOffline() {
-        AppConstants.offline_flag = true;
+        super.onOffline();
         if (mCurrentTab.equalsIgnoreCase(getString(R.string.tab_my_recent_videos))) {
             recentVideosFragment.onOffline();
         }
@@ -380,12 +373,11 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             playerFragment.onOffline();
         }
         offlineBar.setVisibility(View.VISIBLE);
-        invalidateOptionsMenu();
     }
 
     @Override
     protected void onOnline() {
-        AppConstants.offline_flag = false;
+        super.onOnline();
         if (mCurrentTab.equalsIgnoreCase(getString(R.string.tab_my_recent_videos))) {
             recentVideosFragment.onOnline();
         }
@@ -393,7 +385,6 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             playerFragment.onOnline();
         }
         offlineBar.setVisibility(View.GONE);
-        invalidateOptionsMenu();
     }
 
     public void showCheckBox() {

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.ETextView;
@@ -41,11 +40,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         setContentView(R.layout.activity_single_fragment_base);
 
 
-        if(NetworkUtil.isConnected(this)){
-            hideOfflineBar();
-        }else{
-            showOfflineBar();
-        }
     }
 
     @Override
@@ -80,14 +74,12 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     protected void onOnline() {
         super.onOnline();
         hideOfflineBar();
-        invalidateOptionsMenu();
     }
 
     @Override
     protected void onOffline() {
         super.onOffline();
         showOfflineBar();
-        invalidateOptionsMenu();
     }
 
     private void showOfflineBar(){

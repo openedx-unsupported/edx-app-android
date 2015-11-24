@@ -59,14 +59,6 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-
-            if (offlineBar != null) 
-                offlineBar.setVisibility(View.VISIBLE);
-        }
-
 
         enrollment = (EnrolledCoursesResponse) getIntent().getSerializableExtra(Router.EXTRA_ENROLLMENT);
 
@@ -84,7 +76,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(AppConstants.offline_flag){
+        if(!NetworkUtil.isConnected(this)){
             finish();
         }
     }
@@ -242,23 +234,21 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
     @Override
     protected void onOffline() {
-        AppConstants.offline_flag = true;
-        if(offlineBar!=null){
+        super.onOffline();
+        if (offlineBar != null) {
             offlineBar.setVisibility(View.VISIBLE);
         }
-        invalidateOptionsMenu();
-        if(isActivityVisible){
+        if (isActivityVisible) {
             finish();
         }
     }
 
     @Override
     protected void onOnline() {
-        AppConstants.offline_flag = false;
-        if(offlineBar!=null){
+        super.onOnline();
+        if (offlineBar != null) {
             offlineBar.setVisibility(View.GONE);
         }
-        invalidateOptionsMenu();
     }
 
     private void showOpenInBrowserPanel() {
@@ -359,7 +349,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
                 if (isActivityStarted()){
-                    if(!AppConstants.offline_flag) {
+                    if(NetworkUtil.isConnected(CourseLectureListActivity.this)) {
                         if (adapter != null && chapter != null && enrollment != null) {
                             if (environment.getDatabase().isAnyVideoDownloadingInSection(null, enrollment.getCourse().getId(), chapter.chapter)){
                                 adapter.notifyDataSetChanged();

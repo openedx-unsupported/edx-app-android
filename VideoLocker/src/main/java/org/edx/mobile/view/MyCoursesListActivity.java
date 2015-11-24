@@ -10,19 +10,17 @@ import com.facebook.SessionState;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
-import org.edx.mobile.util.AppConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyCoursesListActivity extends BaseTabActivity implements NetworkObserver{
+public class MyCoursesListActivity extends BaseTabActivity {
 
     private IUiLifecycleHelper uiLifecycleHelper;
     private PrefManager featuresPref;
@@ -104,21 +102,8 @@ public class MyCoursesListActivity extends BaseTabActivity implements NetworkObs
     }
 
     @Override
-    public void onOffline() {
-        AppConstants.offline_flag = true;
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public void onOnline() {
-        AppConstants.offline_flag = false;
-        invalidateOptionsMenu();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        invalidateOptionsMenu();
         uiLifecycleHelper.onResume();
         changeSocialMode(new FacebookProvider().isLoggedIn());
         notificationDelegate.checkAppUpgrade();

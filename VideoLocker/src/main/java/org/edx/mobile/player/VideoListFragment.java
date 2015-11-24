@@ -136,12 +136,10 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 if (offlineBar != null)
                     offlineBar.setVisibility(View.VISIBLE);
                 showDeletePanel(getView());
-                AppConstants.offline_flag = true;
             } else {
                 if (offlineBar != null) {
                     offlineBar.setVisibility(View.GONE);
                 }
-                AppConstants.offline_flag = false;
             }
 
             setAdaptertoVideoList();
@@ -158,7 +156,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void setAdaptertoVideoList(){
         if (!myVideosFlag) {
-            if (AppConstants.offline_flag) {
+            if (!NetworkUtil.isConnected(getActivity())) {
                 addDataToOfflineAdapter();
             } else {
                 addDataToOnlineAdapter();
@@ -537,7 +535,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     private void showOpenInBrowserPanel() {
         try {
-            if (!AppConstants.offline_flag) {
+            if (NetworkUtil.isConnected(getActivity())) {
                 if (isPlayerVisible()) {
                     hideOpenInBrowserPanel();
                 } else {
@@ -571,7 +569,6 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void onOffline() {
         if (!isLandscape) {
-            AppConstants.offline_flag = true;
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.VISIBLE);
             }
@@ -596,7 +593,6 @@ public class VideoListFragment extends MyVideosBaseFragment {
     }
 
     public void onOnline() {
-        AppConstants.offline_flag = false;
         if (!isLandscape) {
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.GONE);
@@ -802,7 +798,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
                 if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
+                    if (NetworkUtil.isConnected(getActivity())) {
                         if (adapter != null && enrollment!=null && chapterName!=null && lecture!=null) {
                             if(environment.getDatabase().isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
                                 adapter.setSelectedPosition(playingVideoIndex);
@@ -1121,7 +1117,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 while (videoPos < adapter.getCount()) {
                     SectionItemInterface i = adapter.getItem(videoPos);
                     if (i!=null && i instanceof DownloadEntry) {
-                        if(AppConstants.offline_flag){
+                        if(!NetworkUtil.isConnected(getActivity())){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
                                 if (callback != null) {
@@ -1163,7 +1159,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                         SectionItemInterface d = adapter.getItem(i);
                         if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
-                            if(AppConstants.offline_flag){
+                            if(!NetworkUtil.isConnected(getActivity())){
                                 if(de.isDownloaded()){
                                     return true;
                                 }
@@ -1190,7 +1186,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                 while (videoPos >= 0) {
                     SectionItemInterface i = adapter.getItem(videoPos);
                     if (i!=null && i instanceof DownloadEntry) {
-                        if(AppConstants.offline_flag){
+                        if(!NetworkUtil.isConnected(getActivity())){
                             DownloadEntry de = (DownloadEntry) i;
                             if(de.isDownloaded()){
                                 if (callback != null) {
@@ -1230,7 +1226,7 @@ public class VideoListFragment extends MyVideosBaseFragment {
                         SectionItemInterface d = adapter.getItem(i);
                         if (d!=null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
-                            if(AppConstants.offline_flag){
+                            if(!NetworkUtil.isConnected(getActivity())){
                                 if(de.isDownloaded()){
                                     return true;
                                 }

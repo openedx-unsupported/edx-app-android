@@ -7,7 +7,7 @@ import android.view.View;
 
 import org.edx.mobile.R;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 public abstract class BaseVideosDownloadStateActivity extends BaseFragmentActivity {
@@ -39,7 +39,7 @@ public abstract class BaseVideosDownloadStateActivity extends BaseFragmentActivi
             updateDownloadProgressRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    if (AppConstants.offline_flag ||
+                    if (!NetworkUtil.isConnected(BaseVideosDownloadStateActivity.this) ||
                             !environment.getDatabase().isAnyVideoDownloading(null)) {
                         progressMenuItem.setVisible(false);
                     } else {

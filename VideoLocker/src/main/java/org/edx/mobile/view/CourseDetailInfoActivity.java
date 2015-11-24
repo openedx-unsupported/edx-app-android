@@ -13,8 +13,6 @@ import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
 
 
 public class CourseDetailInfoActivity extends BaseFragmentActivity {
@@ -42,13 +40,6 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
         bundle = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            if(offlineBar!=null){
-                offlineBar.setVisibility(View.VISIBLE);
-            }
-        }
 
         courseData = (EnrolledCoursesResponse) bundle
                 .getSerializable(Router.EXTRA_ENROLLMENT);
@@ -105,8 +96,8 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
 
     @Override
     protected void onOffline() {
-        AppConstants.offline_flag = true;
-        if(offlineBar!=null){
+        super.onOffline();
+        if (offlineBar != null) {
             offlineBar.setVisibility(View.VISIBLE);
         }
 
@@ -115,7 +106,6 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
                 ((NetworkObserver) fragment).onOffline();
             }
         }
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -126,8 +116,8 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
 
     @Override
     protected void onOnline() {
-        AppConstants.offline_flag = false;
-        if(offlineBar!=null){
+        super.onOnline();
+        if (offlineBar != null) {
             offlineBar.setVisibility(View.GONE);
         }
 
@@ -136,7 +126,6 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
                 ((NetworkObserver) fragment).onOnline();
             }
         }
-        invalidateOptionsMenu();
     }
 
 

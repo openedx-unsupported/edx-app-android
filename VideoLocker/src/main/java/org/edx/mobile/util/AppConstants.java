@@ -3,7 +3,6 @@ package org.edx.mobile.util;
 
 public class AppConstants {
     
-    public static boolean offline_flag  = false;
     public static boolean myVideosDeleteMode  = false;
     public static boolean videoListDeleteMode  = false;
 

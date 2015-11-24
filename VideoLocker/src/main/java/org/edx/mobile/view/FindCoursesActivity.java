@@ -12,6 +12,8 @@ import roboguice.inject.ContentView;
 @ContentView(R.layout.activity_find_courses)
 public class FindCoursesActivity extends FindCoursesBaseActivity {
 
+    private WebView webView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,18 +24,15 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
 
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
 
-        loadCourseSearchUrl();
+        webView = (WebView) findViewById(R.id.webview);
+        webView.loadUrl(environment.getConfig().getEnrollmentConfig().getCourseSearchUrl());
     }
 
     @Override
     protected void onOnline() {
         super.onOnline();
-        loadCourseSearchUrl();
-    }
-
-    private void loadCourseSearchUrl() {
-        String url = environment.getConfig().getEnrollmentConfig().getCourseSearchUrl();
-        WebView webview = (WebView) findViewById(R.id.webview);
-        webview.loadUrl(url);
+        if (!isWebViewLoaded()) {
+            webView.reload();
+        }
     }
 }

@@ -15,8 +15,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
@@ -46,14 +44,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            showOfflineMessage();
-            if(offlineBar!=null){
-                offlineBar.setVisibility(View.VISIBLE);
-            }
-        }
 
         setupWebView();
         enableEnrollCallback();
@@ -71,40 +61,38 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         disableEnrollCallback();
     }
 
+    protected boolean isWebViewLoaded() {
+        return isWebViewLoaded;
+    }
+
     private void setupWebView() {
-        if(webview!=null){
-            isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
 
-            // if all the links are to be treated as external
-            client.setAllLinksAsExternal(isAllLinksExternal());
+        // if all the links are to be treated as external
+        client.setAllLinksAsExternal(isAllLinksExternal());
 
-            client.setActionListener(this);
-            client.setPageStatusListener(this);
-        }
+        client.setActionListener(this);
+        client.setPageStatusListener(this);
     }
 
     @Override
     protected void onOnline() {
-        offlineBar.setVisibility(View.GONE);
-        if(isWebViewLoaded){
-            hideOfflineMessage();
-            invalidateOptionsMenu();
-        }else{
-            setupWebView();
+        if (!isWebViewLoaded) {
+            super.onOnline();
+            offlineBar.setVisibility(View.GONE);
             hideOfflineMessage();
         }
     }
 
     @Override
     protected void onOffline() {
-        offlineBar.setVisibility(View.VISIBLE);
-        //If webview is not loaded, then show the offline mode message
-        if(!isWebViewLoaded) {
+        // If the WebView is not loaded, then show the offline mode message
+        if (!isWebViewLoaded) {
+            super.onOffline();
+            offlineBar.setVisibility(View.VISIBLE);
             showOfflineMessage();
+            hideLoadingProgress();
         }
-        hideLoadingProgress();
-        invalidateOptionsMenu();
     }
 
     /**

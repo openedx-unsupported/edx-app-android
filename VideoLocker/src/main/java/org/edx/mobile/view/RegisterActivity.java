@@ -38,7 +38,6 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -156,8 +155,6 @@ public class RegisterActivity extends BaseFragmentActivity
             customTitle.setText(title);
         }
 
-        AppConstants.offline_flag = !NetworkUtil.isConnected(this);
-
         setupRegistrationForm();
         hideSoftKeypad();
         tryToSetUIInteraction(true);
@@ -254,7 +251,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void createAccount() {
-        if(!AppConstants.offline_flag){
+        if(NetworkUtil.isConnected(this)){
             ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
             boolean hasError = false;

@@ -18,8 +18,8 @@ import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.ICommonUI;
 
@@ -268,7 +268,7 @@ public class SocialLoginDelegate {
         }
         @Override
         public void onClick(View v) {
-            if (AppConstants.offline_flag) {
+            if (!NetworkUtil.isConnected(activity)) {
                 callback.showErrorMessage(activity.getString(R.string.no_connectivity),
                         activity.getString(R.string.network_not_connected));
             } else {

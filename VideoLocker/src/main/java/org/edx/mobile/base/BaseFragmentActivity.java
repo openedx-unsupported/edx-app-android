@@ -31,7 +31,6 @@ import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
@@ -50,6 +49,7 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
 
+    private MenuItem offlineMenuItem;
     private ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
@@ -285,7 +285,8 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
      */
     protected boolean createOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.offline).setVisible(AppConstants.offline_flag);
+        offlineMenuItem = menu.findItem(R.id.offline);
+        offlineMenuItem.setVisible(!NetworkUtil.isConnected(this));
         return true;
     }
 
@@ -468,7 +469,6 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
                 isUiOnline = true;
                 handler.post(new Runnable() {
                     public void run() {
-                        AppConstants.offline_flag = false;
                         onOnline();
                         notifyNetworkConnect();
                     }
@@ -501,7 +501,6 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
                 isUiOnline = false;
                 handler.post(new Runnable() {
                     public void run() {
-                        AppConstants.offline_flag = true;
                         onOffline();
                         notifyNetworkDisconnect();
                     }
@@ -514,7 +513,9 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
      * Sub-classes may override this method to handle connected state.
      */
     protected void onOnline() {
-        AppConstants.offline_flag = false;
+        if (offlineMenuItem != null) {
+            offlineMenuItem.setVisible(false);
+        }
         logger.debug("You are now online");
     }
 
@@ -522,7 +523,9 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
      * Sub-classes may override this method to handle disconnected state.
      */
     protected void onOffline() {
-        AppConstants.offline_flag = true;
+        if (offlineMenuItem != null) {
+            offlineMenuItem.setVisible(true);
+        }
         logger.debug ("You are now offline");
     }
 
@@ -594,31 +597,34 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
     }
 
     public boolean showErrorMessage(String header, String message, boolean isPersistent) {
-        try {
-            LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-            if(error_layout!=null){
-                TextView errorHeader = (TextView) findViewById(R.id.error_header);
-                TextView errorMessageView = (TextView) findViewById(R.id.error_message);
-                if(header==null || header.isEmpty()){
-                    errorHeader.setVisibility(View.GONE);
-                }else{
-                    errorHeader.setVisibility(View.VISIBLE);
-                    errorHeader.setText(header);
-                }
-                if (message != null) {
-                    errorMessageView.setText(message);
-                }
-                ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
-                return true;
-            }else{
-                logger.warn("Error Layout not available, so couldn't show flying message");
-                return false;
-            }
-        }catch(Exception e){
-            logger.error(e);
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        if (error_layout == null) {
+            logger.warn("Error Layout not available, so couldn't show flying message");
+            return false;
         }
-        logger.warn("Error Layout not available, so couldn't show flying message");
-        return false;
+        TextView errorHeader = (TextView) findViewById(R.id.error_header);
+        TextView errorMessageView = (TextView) findViewById(R.id.error_message);
+        if (header == null || header.isEmpty()) {
+            errorHeader.setVisibility(View.GONE);
+        } else {
+            errorHeader.setVisibility(View.VISIBLE);
+            errorHeader.setText(header);
+        }
+        if (message != null) {
+            errorMessageView.setText(message);
+        }
+        ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
+        return true;
+    }
+
+    public boolean hideErrorMessage() {
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        if (error_layout == null) {
+            logger.warn("Error Layout not available, so couldn't show flying message");
+            return false;
+        }
+        ViewAnimationUtil.hideMessageBar(error_layout);
+        return true;
     }
 
     /**
