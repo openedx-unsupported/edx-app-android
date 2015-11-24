@@ -69,10 +69,22 @@ public class CourseDashboardFragment extends RoboFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (isCoursewareAccessible) {
+            final LayoutInflater inflater = LayoutInflater.from(getActivity());
+
+            if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
+                final View child = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
+                child.findViewById(R.id.get_certificate).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: Open certificate view
+                    }
+                });
+                parent.addView(child);
+            }
+
             //Implementation Note: - we can create a list view and populate the list.
             //but as number of rows are fixed and each row is different. the only common
             //thing is UI layout. so we reuse the same UI layout programmatically here.
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
             ViewHolder holder = createViewHolder(inflater, parent);
 
             holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);

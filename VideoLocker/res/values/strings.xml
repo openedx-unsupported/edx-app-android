@@ -11,9 +11,11 @@
     <!-- Button for sharing a link to the course -->
     <string name="course_details_share">Share</string>
     <!-- Label congratulation user on finishing course -->
-    <string name="course_details_congratulations">Congratulations!</string>
+    <string name="course_details_congratulations">CONGRATULATIONS!</string>
     <!-- Message for user who has successfully completed a certificate course -->
-    <string name="course_details_earned_cert">You’ve earned a certificate</string>
+    <string name="course_details_earned_cert">You’ve passed the course.</string>
+    <!-- Button that opens a full view of an earned certificate -->
+    <string name="course_details_view_cert_button">Get certificate</string>
     <!-- Header for list of friends in a given course. Argument is a course name -->
     <string name="friends_in_course">Friends in {courseName}</string>
     <!-- Link to web course page -->
