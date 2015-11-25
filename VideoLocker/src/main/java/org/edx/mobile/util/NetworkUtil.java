@@ -188,7 +188,7 @@ public class NetworkUtil {
                 return false;
             }
         } else {
-            if (AppConstants.offline_flag) {
+            if (!isConnected(activity)) {
                 activity.showInfoMessage(activity.getString(R.string.network_not_connected));
                 return false;
             }

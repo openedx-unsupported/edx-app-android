@@ -14,7 +14,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ProgressWheel;
 
 public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
@@ -78,7 +78,8 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             }
         }
 
-        if (AppConstants.offline_flag) {
+        final Context context = getContext();
+        if (!NetworkUtil.isConnected(context)) {
             holder.progresslayout.setVisibility(View.INVISIBLE);
             holder.no_of_videos.setVisibility(View.GONE);
             holder.bulk_download_videos.setVisibility(View.GONE);
@@ -90,21 +91,21 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             {
                 holder.next_arrow.setBackgroundResource(R.drawable.ic_next_default_mirrored);
                 holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
-                holder.chapterName.setTextColor(getContext().getResources()
+                holder.chapterName.setTextColor(context.getResources()
                         .getColor(R.color.grey_text_mycourse));
             }else{
                 holder.next_arrow
                 .setBackgroundResource(R.drawable.ic_next_deactive_mirrored);
                 holder.chapterLayout
                         .setBackgroundResource(R.color.disabled_chapter_list);
-                holder.chapterName.setTextColor(getContext().getResources()
+                holder.chapterName.setTextColor(context.getResources()
                         .getColor(R.color.light_gray));
             }
 
         } else {
             holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
             holder.next_arrow.setVisibility(View.GONE);
-            holder.chapterName.setTextColor(getContext().getResources().getColor(
+            holder.chapterName.setTextColor(context.getResources().getColor(
                     R.color.grey_text_mycourse));
         }
     }

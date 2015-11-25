@@ -29,7 +29,6 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.LoginTask;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
@@ -69,8 +68,6 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         hideSoftKeypad();
 
-        runOnTick = false;
-
         // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
@@ -85,10 +82,6 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         password_et = (EditText) findViewById(R.id.password_et);
         progressbar = (ProgressBar) findViewById(R.id.login_spinner);
         login_tv = (TextView) findViewById(R.id.login_btn_tv);
-
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-        }
 
         loginButtonLayout = (RelativeLayout) findViewById(R.id.login_button_layout);
         loginButtonLayout.setOnClickListener(new OnClickListener() {
@@ -106,7 +99,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             @Override
             public void onClick(View v) {
                 // Calling help dialog
-                if (!AppConstants.offline_flag) {
+                if (NetworkUtil.isConnected(LoginActivity.this)) {
                     showResetPasswordDialog();
                 } else {
                     showNoNetworkDialog();
@@ -249,7 +242,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     public void callServerForLogin() {
 
-        if (!AppConstants.offline_flag) {
+        if (NetworkUtil.isConnected(this)) {
             emailStr = email_et.getText().toString().trim();
             String passwordStr = password_et.getText().toString().trim();
 
@@ -399,12 +392,13 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     @Override
     protected void onOnline() {
-        AppConstants.offline_flag = false;
+        super.onOnline();
+        hideErrorMessage();
     }
 
     @Override
     protected void onOffline() {
-        AppConstants.offline_flag = true;
+        super.onOffline();
         showErrorMessage(getString(R.string.no_connectivity),
                 getString(R.string.network_not_connected), false);
     }
@@ -425,7 +419,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean createOptionsMenu(Menu menu) {
         // Login screen doesn't have any menu
         return true;
     }

@@ -13,7 +13,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
-import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.NetworkUtil;
 
 /**
  * Created by hanning on 5/15/15.
@@ -48,7 +48,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     @Override
     public void showLastAccessedView(final String lastAccessedSubSectionId, final String courseId, final View view) {
         if (  isActivityStarted() ) {
-            if (!AppConstants.offline_flag) {
+            if (NetworkUtil.isConnected(this)) {
                 if(courseId!=null && lastAccessedSubSectionId!=null){
                     CourseComponent lastAccessComponent = courseManager.getComponentById(courseId, lastAccessedSubSectionId);
                     if (lastAccessComponent != null) {
@@ -117,9 +117,6 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
         updateListUI();
     }
-
-    @Override
-    protected void updateDownloadProgress(final int progressPercent) {}
 
     @Override
     public void showProgressDialog(int numDownloads) {}

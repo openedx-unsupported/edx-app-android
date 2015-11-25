@@ -3,9 +3,6 @@ package org.edx.mobile.view;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -15,8 +12,6 @@ import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.DownloadEntryAdapter;
 
 import java.util.ArrayList;
@@ -50,13 +45,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
 
         environment.getSegment().trackScreenView(ISegment.Screens.DOWNLOADS);
 
-        offlineBar = (View) findViewById(R.id.offline_bar);
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            if (offlineBar != null) 
-                offlineBar.setVisibility(View.VISIBLE);
-        }
+        offlineBar = findViewById(R.id.offline_bar);
 
         ListView downloadListView = (ListView) findViewById(R.id.my_downloads_list);
         adapter = new DownloadEntryAdapter(this, environment) {
@@ -126,52 +115,19 @@ public class DownloadListActivity extends BaseFragmentActivity {
     protected void onRestart() {
         super.onRestart();
         handler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 0);
-        invalidateOptionsMenu();
-    };
+    }
 
 
     @Override
     protected void onOffline() {
-        AppConstants.offline_flag = true;
+        super.onOffline();
         offlineBar.setVisibility(View.VISIBLE);
-        invalidateOptionsMenu();
     }
 
     @Override
     protected void onOnline() {
-        AppConstants.offline_flag = false;
+        super.onOnline();
         offlineBar.setVisibility(View.GONE);
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // inflate menu from xml
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        MenuItem offline_tvItem = menu.findItem(R.id.offline);
-        if (AppConstants.offline_flag) {
-            offline_tvItem.setVisible(true);
-        } else {
-            offline_tvItem.setVisible(false);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
     }
 
 }

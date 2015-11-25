@@ -6,13 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import org.edx.mobile.R;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.ETextView;
@@ -43,11 +40,6 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         setContentView(R.layout.activity_single_fragment_base);
 
 
-        if(NetworkUtil.isConnected(this)){
-            hideOfflineBar();
-        }else{
-            showOfflineBar();
-        }
     }
 
     @Override
@@ -76,30 +68,18 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         fragmentTransaction.commit();
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuItem checkBox_menuItem = menu.findItem(R.id.delete_checkbox);
-        checkBox_menuItem.setVisible(false);
-
-        return true;
-
-    }
-
     public abstract Fragment getFirstFragment();
 
     @Override
     protected void onOnline() {
         super.onOnline();
         hideOfflineBar();
-        invalidateOptionsMenu();
     }
 
     @Override
     protected void onOffline() {
         super.onOffline();
         showOfflineBar();
-        invalidateOptionsMenu();
     }
 
     private void showOfflineBar(){

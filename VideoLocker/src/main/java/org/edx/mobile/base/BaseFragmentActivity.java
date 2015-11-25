@@ -1,24 +1,19 @@
 package org.edx.mobile.base;
 
-
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.text.format.DateUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -35,14 +30,11 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
-import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 
 import java.util.ArrayList;
@@ -51,15 +43,13 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboFragmentActivity;
 
-public class BaseFragmentActivity extends RoboFragmentActivity implements NetworkSubject, ICommonUI {
+public abstract class BaseFragmentActivity extends RoboFragmentActivity
+        implements NetworkSubject, ICommonUI {
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
-    // per second callback
-    private static final int MSG_TYPE_TICK = 9302;
 
-    private ProgressWheel totalProgress;
-    private MenuItem progressMenuItem;
+    private MenuItem offlineMenuItem;
     private ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
@@ -98,9 +88,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
         }
     }
 
-    // This flag is to enable the login and sign-up Activities to be
-    // excluded from the download progress update callback.
-    protected boolean runOnTick = true;
+    private final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
 
     @Override
@@ -124,10 +112,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
         pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
 
-
-        if (runOnTick) {
-            handler.sendEmptyMessage(MSG_TYPE_TICK);
-        }
 
         // enabling action bar app icon.
         ActionBar bar = getActionBar();
@@ -197,10 +181,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
-
-        if (runOnTick) {
-            handler.removeMessages(MSG_TYPE_TICK);
-        }
     }
 
     @Override
@@ -288,7 +268,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu) | createOptionMenu(menu);
+        return super.onCreateOptionsMenu(menu) | createOptionsMenu(menu);
     }
 
     /**
@@ -303,30 +283,10 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      *
      * @return Return true if the menu should be displayed.
      */
-    protected boolean createOptionMenu(Menu menu) {
+    protected boolean createOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.delete_checkbox).setVisible(false);
-        menu.findItem(R.id.offline).setVisible(AppConstants.offline_flag);
-        boolean isInitializing = progressMenuItem == null;
-        MenuItem newProgressMenuItem = menu.findItem(R.id.progress_download);
-        View progressView = newProgressMenuItem.getActionView();
-        ProgressWheel newTotalProgress = (ProgressWheel)
-                progressView.findViewById(R.id.progress_wheel);
-        if (progressMenuItem != null) {
-            newProgressMenuItem.setVisible(progressMenuItem.isVisible());
-            newTotalProgress.setProgress(totalProgress.getProgress());
-        }
-        progressMenuItem = newProgressMenuItem;
-        totalProgress = newTotalProgress;
-        progressView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                environment.getRouter().showDownloads(BaseFragmentActivity.this);
-            }
-        });
-        if (runOnTick && isInitializing) {
-            updateDownloadingProgress();
-        }
+        offlineMenuItem = menu.findItem(R.id.offline);
+        offlineMenuItem.setVisible(!NetworkUtil.isConnected(this));
         return true;
     }
 
@@ -357,7 +317,7 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      * Handle options menu item selection. This is called from
      * {@link #onOptionsItemSelected(MenuItem)} to provide a menu
      * selection handler that can be overriden by subclass that override
-     * {@link #createOptionMenu(Menu)}, and should only be used to handle
+     * {@link #createOptionsMenu(Menu)}, and should only be used to handle
      * selections of the menu items that are initialized from that method.
      *
      * @param item The menu item that was selected.
@@ -366,11 +326,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      *         proceed, true to consume it here.
      */
     protected boolean handleOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.progress_download:
-                environment.getRouter().showDownloads(this);
-                return true;
-        }
         return false;
     }
 
@@ -481,27 +436,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
     /**
-     * Callback method to be invoked on regular close intervals. Subclasses
-     * can override it to add their own constant refreshing logic.
-     */
-    protected void onTick() {
-        updateDownloadingProgress();
-    }
-
-    // Initialize or update the downloading progress wheel action view based
-    // on the current state, or hide it if there are no videos downloading.
-    private void updateDownloadingProgress() {
-        if (progressMenuItem == null) return;
-        if (AppConstants.offline_flag ||
-                !environment.getDatabase().isAnyVideoDownloading(null)) {
-            progressMenuItem.setVisible(false);
-        } else {
-            progressMenuItem.setVisible(true);
-            environment.getStorage().getAverageDownloadProgress(averageProgressCallback);
-        }
-    }
-
-    /**
      * Returns true if current orientation is LANDSCAPE, false otherwise.
      */
     protected boolean isLandscape() {
@@ -535,7 +469,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 isUiOnline = true;
                 handler.post(new Runnable() {
                     public void run() {
-                        AppConstants.offline_flag = false;
                         onOnline();
                         notifyNetworkConnect();
                     }
@@ -568,7 +501,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
                 isUiOnline = false;
                 handler.post(new Runnable() {
                     public void run() {
-                        AppConstants.offline_flag = true;
                         onOffline();
                         notifyNetworkDisconnect();
                     }
@@ -581,7 +513,9 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      * Sub-classes may override this method to handle connected state.
      */
     protected void onOnline() {
-        AppConstants.offline_flag = false;
+        if (offlineMenuItem != null) {
+            offlineMenuItem.setVisible(false);
+        }
         logger.debug("You are now online");
     }
 
@@ -589,7 +523,9 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      * Sub-classes may override this method to handle disconnected state.
      */
     protected void onOffline() {
-        AppConstants.offline_flag = true;
+        if (offlineMenuItem != null) {
+            offlineMenuItem.setVisible(true);
+        }
         logger.debug ("You are now offline");
     }
 
@@ -606,44 +542,6 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
      * This method is called after {@link #onOnline()} method.
      */
     protected void onConnectedToWifi() {}
-
-    @SuppressLint("HandlerLeak")
-    private final Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_TYPE_TICK:
-                    // Invoke the onTick() callback continuously
-                    // on intervals of one second.
-                    onTick();
-                    sendEmptyMessageDelayed(MSG_TYPE_TICK, DateUtils.SECOND_IN_MILLIS);
-                    break;
-            }
-        }
-    };
-
-    protected DataCallback<Integer> averageProgressCallback = new DataCallback<Integer>() {
-        @Override
-        public void onResult(Integer result) {
-            int progressPercent = result;
-            if(progressPercent >= 0 && progressPercent <= 100){
-                updateDownloadProgress(progressPercent);
-            }
-        }
-        @Override
-        public void onFail(Exception ex) {
-            logger.error(ex);
-        }
-    };
-
-
-    /**
-     * Update the downloading progress wheel action view.
-     *
-     * @param progressPercent The completed percentage of the total downloads.
-     */
-    protected void updateDownloadProgress(int progressPercent) {
-        totalProgress.setProgressPercent(progressPercent);
-    }
 
     /**
      * Returns user's profile.
@@ -699,31 +597,34 @@ public class BaseFragmentActivity extends RoboFragmentActivity implements Networ
     }
 
     public boolean showErrorMessage(String header, String message, boolean isPersistent) {
-        try {
-            LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-            if(error_layout!=null){
-                TextView errorHeader = (TextView) findViewById(R.id.error_header);
-                TextView errorMessageView = (TextView) findViewById(R.id.error_message);
-                if(header==null || header.isEmpty()){
-                    errorHeader.setVisibility(View.GONE);
-                }else{
-                    errorHeader.setVisibility(View.VISIBLE);
-                    errorHeader.setText(header);
-                }
-                if (message != null) {
-                    errorMessageView.setText(message);
-                }
-                ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
-                return true;
-            }else{
-                logger.warn("Error Layout not available, so couldn't show flying message");
-                return false;
-            }
-        }catch(Exception e){
-            logger.error(e);
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        if (error_layout == null) {
+            logger.warn("Error Layout not available, so couldn't show flying message");
+            return false;
         }
-        logger.warn("Error Layout not available, so couldn't show flying message");
-        return false;
+        TextView errorHeader = (TextView) findViewById(R.id.error_header);
+        TextView errorMessageView = (TextView) findViewById(R.id.error_message);
+        if (header == null || header.isEmpty()) {
+            errorHeader.setVisibility(View.GONE);
+        } else {
+            errorHeader.setVisibility(View.VISIBLE);
+            errorHeader.setText(header);
+        }
+        if (message != null) {
+            errorMessageView.setText(message);
+        }
+        ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
+        return true;
+    }
+
+    public boolean hideErrorMessage() {
+        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        if (error_layout == null) {
+            logger.warn("Error Layout not available, so couldn't show flying message");
+            return false;
+        }
+        ViewAnimationUtil.hideMessageBar(error_layout);
+        return true;
     }
 
     /**

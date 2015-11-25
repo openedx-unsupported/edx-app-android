@@ -21,7 +21,7 @@ public class NetworkSubjectTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { new BaseFragmentActivity() }
+                { new BaseFragmentActivity() {} }
         });
     }
 

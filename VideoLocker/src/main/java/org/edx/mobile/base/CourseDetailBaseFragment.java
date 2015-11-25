@@ -19,7 +19,7 @@ import org.edx.mobile.util.BrowserUtil;
 
 import roboguice.fragment.RoboFragment;
 
-public class CourseDetailBaseFragment extends RoboFragment {
+public abstract class CourseDetailBaseFragment extends RoboFragment {
 
    @Inject
     protected IEdxEnvironment environment;

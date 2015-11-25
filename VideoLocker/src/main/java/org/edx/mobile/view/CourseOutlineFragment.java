@@ -23,7 +23,6 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -168,8 +167,6 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 }
             });
         }
-
-        AppConstants.offline_flag = !NetworkUtil.isConnected(getActivity());
     }
 
 

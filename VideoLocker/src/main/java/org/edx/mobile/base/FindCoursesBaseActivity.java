@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
@@ -17,8 +15,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
-import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
@@ -29,8 +25,9 @@ import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-public class FindCoursesBaseActivity extends BaseFragmentActivity
-        implements URLInterceptorWebViewClient.IActionListener, URLInterceptorWebViewClient.IPageStatusListener {
+public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
+        URLInterceptorWebViewClient.IActionListener,
+        URLInterceptorWebViewClient.IPageStatusListener {
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
@@ -47,14 +44,6 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
-        if (!(NetworkUtil.isConnected(this))) {
-            AppConstants.offline_flag = true;
-            invalidateOptionsMenu();
-            showOfflineMessage();
-            if(offlineBar!=null){
-                offlineBar.setVisibility(View.VISIBLE);
-            }
-        }
 
         setupWebView();
         enableEnrollCallback();
@@ -72,60 +61,38 @@ public class FindCoursesBaseActivity extends BaseFragmentActivity
         disableEnrollCallback();
     }
 
+    protected boolean isWebViewLoaded() {
+        return isWebViewLoaded;
+    }
+
     private void setupWebView() {
-        if(webview!=null){
-            isWebViewLoaded = false;
-            URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
+        URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(this, webview);
 
-            // if all the links are to be treated as external
-            client.setAllLinksAsExternal(isAllLinksExternal());
+        // if all the links are to be treated as external
+        client.setAllLinksAsExternal(isAllLinksExternal());
 
-            client.setActionListener(this);
-            client.setPageStatusListener(this);
-        }
+        client.setActionListener(this);
+        client.setPageStatusListener(this);
     }
 
     @Override
     protected void onOnline() {
-        offlineBar.setVisibility(View.GONE);
-        if(isWebViewLoaded){
-            hideOfflineMessage();
-            invalidateOptionsMenu();
-        }else{
-            setupWebView();
+        if (!isWebViewLoaded) {
+            super.onOnline();
+            offlineBar.setVisibility(View.GONE);
             hideOfflineMessage();
         }
     }
 
     @Override
     protected void onOffline() {
-        offlineBar.setVisibility(View.VISIBLE);
-        //If webview is not loaded, then show the offline mode message
-        if(!isWebViewLoaded) {
+        // If the WebView is not loaded, then show the offline mode message
+        if (!isWebViewLoaded) {
+            super.onOffline();
+            offlineBar.setVisibility(View.VISIBLE);
             showOfflineMessage();
+            hideLoadingProgress();
         }
-        hideLoadingProgress();
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        //Hide the download progress from Action bar
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        //Hide the download progress from Action bar.
-        //This has to be called in onCreateOptions as well
-        MenuItem menuItem = menu.findItem(R.id.progress_download);
-        menuItem.setVisible(false);
-        return true;
     }
 
     /**

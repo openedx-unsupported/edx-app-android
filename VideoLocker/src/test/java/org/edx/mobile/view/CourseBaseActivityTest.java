@@ -15,7 +15,6 @@ import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 import org.robolectric.Robolectric;
@@ -161,17 +160,4 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
             assertThat(shareOnWebIcon).isInstanceOf(IconDrawable.class);
         }
     }
-
-    /**
-     * Ignoring download progress menu visibility states testing defined in
-     * {@link BaseFragmentActivityTest}, as since {@link CourseBaseActivity}
-     * overrides the {@link android.app.Activity#onPrepareOptionsMenu(Menu)}
-     * implementation, there is no longer any testable point where onTick() is
-     * called. The correct implementation for it is only provided in the
-     * @{link CourseVideoListActivity} subclass anyway.
-     */
-    @Override
-    @Ignore
-    @Test
-    public void downloadProgressViewTest() {}
 }

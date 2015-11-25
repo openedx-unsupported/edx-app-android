@@ -159,17 +159,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             isLandscape = false;
-
-
-            if (!(NetworkUtil.isConnected(getActivity()))) {
-
-                AppConstants.offline_flag = true;
-            } else {
-
-                AppConstants.offline_flag = false;
-            }
-
-
         } else {
             isLandscape = true;
             // probably the landscape player view, so hide action bar
@@ -290,7 +279,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                     };
                     MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
                 }else{
-                    if (  AppConstants.offline_flag ){
+                    if (  !NetworkUtil.isConnected(getActivity()) ){
                         //TODO - should use interface to decouple
                         ((CourseBaseActivity) getActivity())
                             .showOfflineAccessMessage();
@@ -484,7 +473,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private void showOpenInBrowserPanel() {
         try {
-            if (!AppConstants.offline_flag) {
+            if (NetworkUtil.isConnected(getActivity())) {
                 if (isPlayerVisible()) {
                     hideOpenInBrowserPanel();
                 } else {
@@ -518,8 +507,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     public void onOffline() {
         if (!isLandscape) {
-            AppConstants.offline_flag = true;
-
             hideOpenInBrowserPanel();
             if (!myVideosFlag) {
 
@@ -529,7 +516,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
 
     public void onOnline() {
-        AppConstants.offline_flag = false;
         if (!isLandscape) {
 
             if (!myVideosFlag) {
@@ -582,7 +568,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         public void handleMessage(android.os.Message msg) {
             if (msg.what == MSG_UPDATE_PROGRESS) {
                 if (isActivityStarted()) {
-                    if (!AppConstants.offline_flag) {
+                    if (NetworkUtil.isConnected(getActivity())) {
 
                         sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
                     }

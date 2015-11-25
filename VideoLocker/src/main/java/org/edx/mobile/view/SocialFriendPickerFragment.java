@@ -98,10 +98,9 @@ public class SocialFriendPickerFragment extends RoboFragment implements SocialPr
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.social_friend_picker, menu);
 
         doneMenuItem = menu.findItem(R.id.done_btn);
-        doneMenuItem.setVisible(true);
-
         doneMenuItem.getActionView().setOnClickListener(new View.OnClickListener() {
 
             @Override

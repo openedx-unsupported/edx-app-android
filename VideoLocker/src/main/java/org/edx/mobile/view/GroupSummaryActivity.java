@@ -51,7 +51,9 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        boolean create = super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.group_summary, menu);
 
         MenuItem unreadMenuItem = menu.findItem(R.id.unread_display);
 
@@ -68,7 +70,7 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
 
         }
 
-        return create;
+        return true;
 
     }
 }

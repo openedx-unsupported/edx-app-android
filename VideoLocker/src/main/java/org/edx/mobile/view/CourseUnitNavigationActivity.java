@@ -217,10 +217,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         }
     }
 
-    protected void initialize(Bundle arg){
-        super.initialize(arg);
-    }
-
     private void updateDataModel(){
         unitList.clear();
         if( selectedUnit == null || selectedUnit.getRoot() == null ) {

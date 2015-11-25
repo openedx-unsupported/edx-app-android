@@ -66,7 +66,7 @@ public class NetworkConnectivityReceiver extends RoboBroadcastReceiver {
             segIO.trackUserCellConnection(carrierName, NetworkUtil.isOnZeroRatedNetwork(context, environment.getConfig()));
         }
         NetworkConnectivityChangeEvent event = new NetworkConnectivityChangeEvent();
-        EventBus.getDefault().post(event);
+        EventBus.getDefault().postSticky(event);
 
     }
 }

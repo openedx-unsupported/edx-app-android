@@ -38,7 +38,6 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.ResourceUtil;
@@ -68,9 +67,6 @@ public class RegisterActivity extends BaseFragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
-
-        //The onTick method need not be run in the RegisterActivity
-        runOnTick = false;
 
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
@@ -158,8 +154,6 @@ public class RegisterActivity extends BaseFragmentActivity
             CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
             customTitle.setText(title);
         }
-
-        AppConstants.offline_flag = !NetworkUtil.isConnected(this);
 
         setupRegistrationForm();
         hideSoftKeypad();
@@ -257,7 +251,7 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void createAccount() {
-        if(!AppConstants.offline_flag){
+        if(NetworkUtil.isConnected(this)){
             ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
             boolean hasError = false;
@@ -417,8 +411,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Launch screen doesn't have any menu
+    public boolean createOptionsMenu(Menu menu) {
+        // Register screen doesn't have any menu
         return true;
     }
 

@@ -31,10 +31,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.FlyingMessageEvent;
-import org.edx.mobile.model.db.DownloadEntry;
-import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.dialog.WebViewDialogFragment;
 import org.junit.Test;
@@ -44,7 +41,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.ShadowView;
 import org.robolectric.shadows.ShadowWebView;
 import org.robolectric.util.ActivityController;
 import org.robolectric.util.Scheduler;
@@ -58,7 +54,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.*;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
-public class BaseFragmentActivityTest extends UiTest {
+public abstract class BaseFragmentActivityTest extends UiTest {
     /**
      * Method for defining the subclass of {@link BaseFragmentActivity} that
      * is being tested. Should be overridden by subclasses.
@@ -87,15 +83,6 @@ public class BaseFragmentActivityTest extends UiTest {
      */
     protected boolean hasDrawer() {
         return false;
-    }
-
-    /**
-     * Method for defining whether the onTick() method is called periodically
-     *
-     * @return true if onTick() is called
-     */
-    protected boolean runsOnTick() {
-        return true;
     }
 
     /**
@@ -281,16 +268,8 @@ public class BaseFragmentActivityTest extends UiTest {
         Menu menu = Shadows.shadowOf(activity).getOptionsMenu();
         assertNotNull(menu);
         MenuItem offlineItem = menu.findItem(R.id.offline);
+        assertNotNull(offlineItem);
         assertThat(offlineItem).hasTitle(activity.getText(R.string.offline_text));
-        // Can't see any method to confirm action layout source as well
-        MenuItem progressItem = menu.findItem(R.id.progress_download);
-        assertThat(progressItem).hasTitle(activity.getText(R.string.action_settings));
-        MenuItem deleteItem = menu.findItem(R.id.delete_checkbox);
-        assertThat(deleteItem).hasTitle(activity.getText(R.string.label_delete));
-        MenuItem doneItem = menu.findItem(R.id.done_btn);
-        assertThat(doneItem).hasTitle(activity.getText(R.string.done_text));
-        MenuItem unreadDisplayItem = menu.findItem(R.id.unread_display);
-        assertThat(unreadDisplayItem).hasTitle(activity.getText(R.string.unread_text));
     }
 
     /**
@@ -497,68 +476,6 @@ public class BaseFragmentActivityTest extends UiTest {
                 currentActivity, nextActivityClass);
         assertEquals(requestCode, intentForResult.requestCode);
         return intentForResult.intent;
-    }
-
-    /**
-     * Testing download progress menu visibility states and click behaviour
-     * (starting DownloadActivity). Only when both AppConstants.offline_flag
-     * is true and there is a downloading entry in the database, should the
-     * progress bar be visible.
-     */
-    @Test
-    public void downloadProgressViewTest() {
-        assumeTrue(runsOnTick());
-
-        AppConstants.offline_flag = false;
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get())
-                .getOptionsMenu()
-                .findItem(R.id.progress_download)
-                .isVisible());
-
-        AppConstants.offline_flag = true;
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get())
-                .getOptionsMenu()
-                .findItem(R.id.progress_download)
-                .isVisible());
-
-        IDatabase db = environment.getDatabase();
-        DownloadEntry de = new DownloadEntry();
-        de.username = "unittest";
-        de.title = "title";
-        de.videoId = "videoId-" + System.currentTimeMillis();
-        de.size = 1024;
-        de.duration = 3600;
-        de.filepath = "/fakepath";
-        de.url = "http://fake/url";
-        de.eid = "fake_eid";
-        de.chapter = "fake_chapter";
-        de.section = "fake_section";
-        de.lastPlayedOffset = 0;
-        de.lmsUrl = "http://fake/lms/url";
-        de.isCourseActive = 1;
-        de.downloaded = DownloadEntry.DownloadedState.DOWNLOADING;
-        Long rowId = db.addVideoData(de, null);
-        assertNotNull(rowId);
-        assertThat(rowId).isGreaterThan(0);
-        assertFalse(Shadows.shadowOf(Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get())
-                .getOptionsMenu()
-                .findItem(R.id.progress_download)
-                .isVisible());
-
-        AppConstants.offline_flag = false;
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
-        assertTrue(shadowActivity
-                .getOptionsMenu()
-                .findItem(R.id.progress_download)
-                .isVisible());
-        assertTrue(shadowActivity.clickMenuItem(R.id.progress_download));
-        assertNextStartedActivity(activity, DownloadListActivity.class);
     }
 
     /**
