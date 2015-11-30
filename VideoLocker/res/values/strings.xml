@@ -55,12 +55,14 @@
 
     <!-- Certificate Page -->
 
-    <!-- Button sharing a certificate for finishing a course -->
-    <string name="share_certificate_super">Share your certificate</string>
-    <!-- Label providing details for share certificate action -->
-    <string name="share_certificate_sub">tell your friends about your accomplishment</string>
+    <!-- Description of button that will open the certificate sharing menu -->
+    <string name="share_certificate_button">Share your certificate</string>
+    <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
+    <string name="share_certificate_message">I just earned a Certificate on {platform_name}! Check it out: {certificate_url}</string>
     <!-- Tab of tab for certicate for finished course -->
     <string name="tab_label_certificate">Certificate</string>
+    <!-- Header for popup list of share targets -->
+    <string name="share_certificate_popup_header">Share your certificate via…</string>
 
     <!-- Groups Page -->
 

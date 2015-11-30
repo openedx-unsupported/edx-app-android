@@ -1,5 +1,6 @@
 package org.edx.mobile.module.analytics;
 
+import android.content.ComponentName;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,7 +33,7 @@ public class ISegmentImpl implements ISegment {
         public SegmentAnalyticsEvent() {
             this.properties = new Properties();
             this.data = new Properties();
-            if(this.data!=null){
+            if (this.data != null) {
                 this.properties.putValue(Keys.DATA, this.data);
             }
 
@@ -73,10 +74,10 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is set to identify the user for subsequent calls
-     * @param userID - User Id from the server
-     * @param email  -  email of the user
-     * @param username  -  Username/email that the user uses for signing in
      *
+     * @param userID   - User Id from the server
+     * @param email    -  email of the user
+     * @param username -  Username/email that the user uses for signing in
      * @return A {@link Traits} object populated with provided user info
      */
     @Override
@@ -91,13 +92,14 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Video Loading
+     *
      * @param videoId
      * @param courseId
      * @param unitUrl
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public Properties trackVideoLoading(String videoId, String courseId, String unitUrl){
+    public Properties trackVideoLoading(String videoId, String courseId, String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_LOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         tracker.track(Events.LOADED_VIDEO, aEvent.properties);
@@ -106,15 +108,16 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Video Playing
-     * @param videoId   -   Video Id that is being Played
-     * @param currentTime  -  Video Playing started at
+     *
+     * @param videoId     -   Video Id that is being Played
+     * @param currentTime -  Video Playing started at
      * @param unitUrl     -   Page Url for that Video
-     * @param courseId  -     CourseId under which the video is present
+     * @param courseId    -     CourseId under which the video is present
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
     public Properties trackVideoPlaying(String videoId, Double currentTime,
-        String courseId, String unitUrl){
+                                        String courseId, String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PLAYED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -124,16 +127,17 @@ public class ISegmentImpl implements ISegment {
     }
 
     /**
-     * This function is used to track Video Pause 
-     * @param videoId   -   Video Id that is being Played
-     * @param currentTime  -  Video Playing started at
-     * @param courseId  -  CourseId under which the video is present
+     * This function is used to track Video Pause
+     *
+     * @param videoId     -   Video Id that is being Played
+     * @param currentTime -  Video Playing started at
+     * @param courseId    -  CourseId under which the video is present
      * @param unitUrl     -   Page Url for that Video
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public Properties trackVideoPause(String videoId, 
-        Double currentTime, String courseId, String unitUrl){
+    public Properties trackVideoPause(String videoId,
+                                      Double currentTime, String courseId, String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_PAUSED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -143,6 +147,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Video Stop
+     *
      * @param videoId
      * @param currentTime
      * @param courseId
@@ -151,7 +156,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackVideoStop(String videoId, Double currentTime, String courseId,
-            String unitUrl){
+                                     String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.VIDEO_STOPPED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -162,7 +167,8 @@ public class ISegmentImpl implements ISegment {
 
 
     /**
-     * This function is used to track 30 second rewind on Video 
+     * This function is used to track 30 second rewind on Video
+     *
      * @param videoId
      * @param oldTime
      * @param newTime
@@ -173,7 +179,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackVideoSeek(String videoId,
-        Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek){
+                                     Double oldTime, Double newTime, String courseId, String unitUrl, Boolean skipSeek) {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_SEEKED);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
         //Call the format Double value so that we can have upto 3 decimal places after
@@ -183,8 +189,11 @@ public class ISegmentImpl implements ISegment {
         skipInterval = formatDoubleValue(skipInterval, 3);
         aEvent.data.putValue(Keys.OLD_TIME, oldTime);
         aEvent.data.putValue(Keys.NEW_TIME, newTime);
-        if (skipSeek){ aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);}
-        else {aEvent.data.putValue(Keys.SEEK_TYPE, Values.SLIDE);}
+        if (skipSeek) {
+            aEvent.data.putValue(Keys.SEEK_TYPE, Values.SKIP);
+        } else {
+            aEvent.data.putValue(Keys.SEEK_TYPE, Values.SLIDE);
+        }
         aEvent.data.putValue(Keys.REQUESTED_SKIP_INTERVAL, skipInterval);
 
         tracker.track(Events.SEEK_VIDEO, aEvent.properties);
@@ -192,7 +201,8 @@ public class ISegmentImpl implements ISegment {
     }
 
     /**
-     * This function is used to Show Transcript 
+     * This function is used to Show Transcript
+     *
      * @param videoId
      * @param currentTime
      * @param courseId
@@ -201,7 +211,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackShowTranscript(String videoId, Double currentTime, String courseId,
-            String unitUrl){
+                                          String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_SHOWN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -213,6 +223,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to Hide Transcript
+     *
      * @param videoId
      * @param currentTime
      * @param courseId
@@ -220,8 +231,8 @@ public class ISegmentImpl implements ISegment {
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
-    public Properties trackHideTranscript(String videoId, Double currentTime ,String courseId,
-            String unitUrl){
+    public Properties trackHideTranscript(String videoId, Double currentTime, String courseId,
+                                          String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_HIDDEN);
         aEvent.setCourseContext(courseId, unitUrl, Values.VIDEOPLAYER);
@@ -241,14 +252,15 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used for getting common properties object having Module and Code
+     *
      * @param videoId
      * @param eventName
      * @return The {@link SegmentAnalyticsEvent} updated with provided with arguments
      */
-    private SegmentAnalyticsEvent getCommonProperties(String videoId, String eventName){
+    private SegmentAnalyticsEvent getCommonProperties(String videoId, String eventName) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, eventName);
-        if(videoId!=null){
+        if (videoId != null) {
             aEvent.data.putValue(Keys.MODULE_ID, videoId);
         }
         aEvent.data.putValue(Keys.CODE, Values.MOBILE);
@@ -257,15 +269,16 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used for getting common properties object having Module and Code and Current Time
+     *
      * @param currentTime
      * @param videoId
      * @return The {@link SegmentAnalyticsEvent} updated with provided with arguments
      */
-    private SegmentAnalyticsEvent getCommonPropertiesWithCurrentTime(Double currentTime, 
-            String videoId, String eventName){
+    private SegmentAnalyticsEvent getCommonPropertiesWithCurrentTime(Double currentTime,
+                                                                     String videoId, String eventName) {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, eventName);
-        if(currentTime!=null){
-            currentTime = formatDoubleValue(currentTime,3);
+        if (currentTime != null) {
+            currentTime = formatDoubleValue(currentTime, 3);
             aEvent.data.putValue(Keys.CURRENT_TIME, currentTime);
         }
         return aEvent;
@@ -273,11 +286,12 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function returns decimals value for a Double
+     *
      * @param value
      * @param places
      * @return The formatted {@link Double}
      */
-    private Double formatDoubleValue(Double value, int places){
+    private Double formatDoubleValue(Double value, int places) {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
@@ -285,21 +299,21 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function sets the Context values of values passed
+     *
      * @param courseId
      * @param unitUrl
      * @param component
-     *
      * @return A {@link Properties} object populated with analytics-event info
      */
-    private Properties getEventContext(String courseId, String unitUrl, String component){
+    private Properties getEventContext(String courseId, String unitUrl, String component) {
         Properties cxtProps = new Properties();
-        if(courseId!=null){
+        if (courseId != null) {
             cxtProps.putValue(Keys.COURSE_ID, courseId);
         }
-        if(unitUrl!=null){
+        if (unitUrl != null) {
             cxtProps.putValue(Keys.OPEN_BROWSER, unitUrl);
         }
-        if(component!=null){
+        if (component != null) {
             cxtProps.putValue(Keys.COMPONENT, component);
         }
         cxtProps.putValue(Keys.APP, Values.APP_NAME);
@@ -312,14 +326,15 @@ public class ISegmentImpl implements ISegment {
      *
      * @return A {@link Properties} object populated with app's name
      */
-    private static Properties getAppNameContext(){
-            Properties cxtProps = new Properties();
-            cxtProps.putValue(Keys.APP, Values.APP_NAME);
-            return cxtProps;
+    private static Properties getAppNameContext() {
+        Properties cxtProps = new Properties();
+        cxtProps.putValue(Keys.APP, Values.APP_NAME);
+        return cxtProps;
     }
 
     /**
-     * This function is used to track Video Download completed 
+     * This function is used to track Video Download completed
+     *
      * @param videoId  -  Video id for which download has started
      * @param courseId
      * @param unitUrl
@@ -327,7 +342,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackDownloadComplete(String videoId, String courseId,
-            String unitUrl) {
+                                            String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId, Values.VIDEO_DOWNLOADED);
         aEvent.setCourseContext(courseId, unitUrl, Values.DOWNLOAD_MODULE);
 
@@ -338,16 +353,17 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Bulk Download from Sections
-     * @param section  -   Section in which the subsection is present 
-     * @param enrollmentId  -  Course under which the subsection is present
-     * @param videoCount  -  no of videos started downloading
+     *
+     * @param section      -   Section in which the subsection is present
+     * @param enrollmentId -  Course under which the subsection is present
+     * @param videoCount   -  no of videos started downloading
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
     public Properties trackSectionBulkVideoDownload(String enrollmentId,
-        String section, long videoCount) {
+                                                    String section, long videoCount) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        if(section!=null){
+        if (section != null) {
             aEvent.data.putValue(Keys.COURSE_SECTION, section);
         }
         aEvent.data.putValue(Keys.NO_OF_VIDEOS, videoCount);
@@ -362,17 +378,18 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Bulk Download from Subsection
-     * @param section  -   Section in which the subsection is present 
-     * @param subSection -  Subsection from which the download started 
-     * @param enrollmentId  -  Course under which the subsection is present
-     * @param videoCount  -  no of videos started downloading
+     *
+     * @param section      -   Section in which the subsection is present
+     * @param subSection   -  Subsection from which the download started
+     * @param enrollmentId -  Course under which the subsection is present
+     * @param videoCount   -  no of videos started downloading
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
     public Properties trackSubSectionBulkVideoDownload(String section,
-            String subSection, String enrollmentId, long videoCount) {
+                                                       String subSection, String enrollmentId, long videoCount) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        if(section!=null && subSection!=null){
+        if (section != null && subSection != null) {
             aEvent.data.putValue(Keys.COURSE_SECTION, section);
             aEvent.data.putValue(Keys.COURSE_SUBSECTION, subSection);
         }
@@ -386,7 +403,8 @@ public class ISegmentImpl implements ISegment {
     }
 
     /**
-     * This function is used to track Video Download started from Video List 
+     * This function is used to track Video Download started from Video List
+     *
      * @param videoId  -  Video id for which download has started
      * @param courseId
      * @param unitUrl
@@ -394,7 +412,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackSingleVideoDownload(String videoId, String courseId,
-            String unitUrl) {
+                                               String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonProperties(videoId,
                 Values.SINGLE_VIDEO_DOWNLOAD);
         aEvent.setCourseContext(courseId,
@@ -405,6 +423,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Video Orientation
+     *
      * @param videoId
      * @param currentTime
      * @param isLandscape -  true / false based on orientation
@@ -414,7 +433,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackVideoOrientation(String videoId, Double currentTime,
-            boolean isLandscape, String courseId, String unitUrl) {
+                                            boolean isLandscape, String courseId, String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.FULLSREEN_TOGGLED);
         aEvent.data.putValue(Keys.FULLSCREEN, isLandscape);
@@ -433,7 +452,7 @@ public class ISegmentImpl implements ISegment {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGIN);
         //More information regarding a track event should be under 'data'
-        if(method!=null){
+        if (method != null) {
             aEvent.data.putValue(Keys.METHOD, method);
         }
 
@@ -446,6 +465,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track user logout
+     *
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
@@ -498,6 +518,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track Open in Browser
+     *
      * @param url
      * @return A {@link Properties} object populated with analytics-event info
      */
@@ -505,7 +526,7 @@ public class ISegmentImpl implements ISegment {
     public Properties trackOpenInBrowser(String url) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.BROWSER_LAUNCHED);
-        if(url!=null){
+        if (url != null) {
             aEvent.data.putValue(Keys.TARGET_URL, url);
         }
         aEvent.setAppNameContext();
@@ -519,7 +540,7 @@ public class ISegmentImpl implements ISegment {
      */
     @Override
     public Properties trackTranscriptLanguage(String videoId,
-            Double currentTime, String lang, String courseId, String unitUrl) {
+                                              Double currentTime, String lang, String courseId, String unitUrl) {
         SegmentAnalyticsEvent aEvent = getCommonPropertiesWithCurrentTime(currentTime,
                 videoId, Values.TRANSCRIPT_LANGUAGE);
         aEvent.properties.putValue(Keys.LANGUAGE, lang);
@@ -546,6 +567,7 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track if user clicks on Find Courses
+     *
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
@@ -563,14 +585,15 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This function is used to track if user clicks on Create Account on registration screen
+     *
      * @return A {@link Properties} object populated with analytics-event info
      */
     @Override
     public Properties trackCreateAccountClicked(String appVersion, String source) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.CREATE_ACCOUNT_CLICK);
-        if ( !TextUtils.isEmpty( source ) )
-            aEvent.properties.putValue( Keys.PROVIDER, source );
+        if (!TextUtils.isEmpty(source))
+            aEvent.properties.putValue(Keys.PROVIDER, source);
         aEvent.setAppNameContext();
 
         //Add category for Google Analytics
@@ -583,7 +606,7 @@ public class ISegmentImpl implements ISegment {
     /**
      * This function is used to track if user clicks on Enroll in the FindCourses Activity
      *
-     * @param courseId - Course Id for which user selected enroll
+     * @param courseId     - Course Id for which user selected enroll
      * @param email_opt_in - Flag to show user wants to opt in for email notification
      * @return A {@link Properties} object populated with analytics-event info
      */
@@ -630,7 +653,7 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties trackNotificationReceived(@Nullable String courseId){
+    public Properties trackNotificationReceived(@Nullable String courseId) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_RECEIVED);
         aEvent.setAppNameContext();
@@ -642,7 +665,7 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties trackNotificationTapped(@Nullable String courseId){
+    public Properties trackNotificationTapped(@Nullable String courseId) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.NOTIFICATION_TAPPED);
         aEvent.setAppNameContext();
@@ -695,7 +718,7 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties groupInvited(long groupID, int invitedUserCount){
+    public Properties groupInvited(long groupID, int invitedUserCount) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.INVITE_GAME_GROUP);
 
@@ -721,13 +744,13 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties certificateShared(String courseName, String socialNetwork) {
+    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);
-
-        aEvent.data.putValue(Keys.COURSE_ID, courseName);
-        aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
-
+        aEvent.data.putValue(Keys.COURSE_ID, courseId);
+        aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
+        aEvent.data.putValue(Keys.URL, certificateUrl);
+        aEvent.data.putValue(Keys.TYPE, getShareTypeFromComponentName(componentName));
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
         return aEvent.properties;
@@ -828,15 +851,26 @@ public class ISegmentImpl implements ISegment {
 
     /**
      * This method sets category and labels to BI events
+     *
      * @param props
      * @param category
      * @param label
      * @return An updated {@link Properties} object with CATEGORY and LABEL
      */
-    private Properties addCategoryToBiEvents(Properties props, String category, String label){
+    private Properties addCategoryToBiEvents(Properties props, String category, String label) {
         props.put(Keys.CATEGORY, category);
         props.put(Keys.LABEL, label);
         return props;
     }
 
+    public static String getShareTypeFromComponentName(@NonNull ComponentName componentName) {
+        switch (componentName.getPackageName()) {
+            case "com.facebook.katana":
+                return "facebook";
+            case "com.twitter.android":
+                return "twitter";
+            default:
+                return "other";
+        }
+    }
 }
