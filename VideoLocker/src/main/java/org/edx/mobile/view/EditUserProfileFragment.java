@@ -140,6 +140,11 @@ public class EditUserProfileFragment extends RoboFragment {
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto,
+                new IconDrawable(getActivity(), Iconify.IconValue.fa_camera)
+                        .colorRes(getActivity(), R.color.disableable_button_text)
+                        .sizeRes(getActivity(), R.dimen.fa_x_small)
+                , null, null, null);
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +248,7 @@ public class EditUserProfileFragment extends RoboFragment {
         public final ImageView profileImage;
         public final TextView username;
         public final ViewGroup fields;
-        public final View changePhoto;
+        public final TextView changePhoto;
         public final IconView profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
@@ -252,7 +257,7 @@ public class EditUserProfileFragment extends RoboFragment {
             this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
-            this.changePhoto = parent.findViewById(R.id.change_photo);
+            this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
             this.profileImageProgress = (IconView) parent.findViewById(R.id.profile_image_progress);
         }
     }
@@ -264,12 +269,11 @@ public class EditUserProfileFragment extends RoboFragment {
         if (null == account || null == formDescription) {
             viewHolder.content.setVisibility(View.GONE);
             viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
-            viewHolder.changePhoto.setVisibility(View.GONE);
 
         } else {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
-            viewHolder.changePhoto.setVisibility(account.requiresParentalConsent() ? View.GONE : View.VISIBLE);
+            viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
 
             if (account.getProfileImage().hasImage()) {
                 Glide.with(viewHolder.profileImage.getContext())
