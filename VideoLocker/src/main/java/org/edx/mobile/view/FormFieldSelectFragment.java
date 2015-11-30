@@ -69,7 +69,7 @@ public class FormFieldSelectFragment extends RoboFragment {
             }.execute();
 
         } else if (formOptions.getRangeMin() != null && formOptions.getRangeMax() != null) {
-            for (int i = formOptions.getRangeMax(); i > formOptions.getRangeMin(); --i) {
+            for (int i = formOptions.getRangeMax(); i >= formOptions.getRangeMin(); --i) {
                 options.add(new FormOption(String.valueOf(i), String.valueOf(i)));
             }
         } else if (formOptions.getValues() != null && formOptions.getValues().size() > 0) {
