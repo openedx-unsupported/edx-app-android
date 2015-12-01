@@ -180,10 +180,12 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 logger.error(ex);
             }
         }
-        checkVideoStatus(unit);
-        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+        if (getUserVisibleHint()) {
+            checkVideoStatus(unit);
+        }
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
             ViewPagerDownloadManager.instance.addTask(this);
-
+        }
     }
 
     public void onResume() {
@@ -216,6 +218,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
             return;
         if (isVisibleToUser) {
+            checkVideoStatus(unit);
             try {
                 if (playerFragment != null) {
                     playerFragment.setCallback(this);
@@ -226,6 +229,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }else{
             // fragment is no longer visible
+            if (getActivity() != null) {
+                ((BaseFragmentActivity) getActivity()).hideInfoMessage();
+            }
             try {
                 if (playerFragment != null) {
                     playerFragment.setCallback(null);
@@ -255,42 +261,36 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
 
     private void checkVideoStatus(VideoBlockModel unit) {
-        try {
-            final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
-            if ( entry == null )
-                return;
+        final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
+        if (entry == null)
+            return;
 
-            if ( entry.isDownload() ){
-                if ( entry.isVideoForWebOnly ){
-                    Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(!entry.isDownloaded()){
-                    IDialogCallback dialogCallback = new IDialogCallback() {
-                        @Override
-                        public void onPositiveClicked() {
-                            startOnlinePlay(entry);
-                        }
-                        @Override
-                        public void onNegativeClicked() {
-                            ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
-                            notifyAdapter();
-                        }
-                    };
-                    MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback, environment.getConfig());
-                }else{
-                    if (  !NetworkUtil.isConnected(getActivity()) ){
-                        //TODO - should use interface to decouple
-                        ((CourseBaseActivity) getActivity())
-                            .showOfflineAccessMessage();
-                    } else {
-                        //Video is downloaded. Hence play
+        if (entry.isDownload()) {
+            if (entry.isVideoForWebOnly) {
+                Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short),
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!entry.isDownloaded()) {
+                IDialogCallback dialogCallback = new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
                         startOnlinePlay(entry);
                     }
-                }
+
+                    @Override
+                    public void onNegativeClicked() {
+                        ((BaseFragmentActivity) getActivity()).
+                                showInfoMessage(getString(R.string.wifi_off_message));
+                        notifyAdapter();
+                    }
+                };
+                MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback,
+                        environment.getConfig());
+            } else {
+                //Video is downloaded. Hence play
+                startOnlinePlay(entry);
             }
-        } catch (Exception e) {
-            logger.error(e);
         }
     }
 
