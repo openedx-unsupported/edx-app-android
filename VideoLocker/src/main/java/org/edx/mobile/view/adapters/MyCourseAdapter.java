@@ -77,12 +77,6 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
             holder.startingFrom.setText(courseData.getFormattedDate(getContext()));
         }
 
-        if(enrollment.isCertificateEarned()){
-            holder.certificateBanner.setVisibility(View.VISIBLE);
-        } else {
-            holder.certificateBanner.setVisibility(View.GONE);
-        }
-
         Glide.with(getContext())
                 .load(courseData.getCourse_image(environment.getConfig()))
                 .placeholder(R.drawable.edx_map)
@@ -121,8 +115,6 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
                 .findViewById(R.id.course_image);
         holder.newCourseContent = convertView
                 .findViewById(R.id.new_course_content_layout);
-        holder.certificateBanner = convertView
-                .findViewById(R.id.course_certified_banner);
         holder.facePileView = (SocialFacePileView) convertView
                 .findViewById(R.id.course_item_facepileview);
         holder.facePileContainer = (ViewGroup) convertView
@@ -135,7 +127,6 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         TextView courseTitle;
         TextView courseRun;
         TextView startingFrom;
-        View certificateBanner;
         View newCourseContent;
         ViewGroup facePileContainer;
         SocialFacePileView facePileView;

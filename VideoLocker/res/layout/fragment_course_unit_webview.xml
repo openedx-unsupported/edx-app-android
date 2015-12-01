@@ -1,65 +1,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <!--<ScrollView-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:background="@color/white"-->
-    <!-->-->
-
-    <LinearLayout
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-    >
-        <TextView
-            android:id="@+id/webview_header_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_margin="5dp"
-            android:visibility="gone"
-            android:maxLines="4"
-            android:lines="3"
-            android:textSize="15sp"
-            android:singleLine="false"
-            android:textColor="@color/grey_4"
-            android:background="@drawable/rectangle_with_bottom_border_light_gray"
-            android:text="@string/assessment_graded_warning"
-            />
-        <org.edx.mobile.view.custom.EdxAssessmentWebView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/course_unit_webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-          />
-        <TextView
-            android:id="@+id/webview_footer_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:visibility="gone"
-            android:maxLines="4"
-            android:lines="3"
-            android:textSize="16sp"
-            android:singleLine="false"
-            android:textColor="@color/grey_medium"
-            android:background="@color/white"
-            android:text="@string/assessment_graded_warning"
-            />
-    </LinearLayout>
-
-    <!--</ScrollView>-->
+    <org.edx.mobile.view.custom.EdxAssessmentWebView
+        android:id="@+id/course_unit_webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
 
     <ProgressBar
-    android:id="@+id/progress_spinner"
-    style="@style/api_progress_style"
-    android:layout_gravity="center_vertical|center_horizontal"
-    android:visibility="gone" />
+        android:id="@+id/progress_spinner"
+        style="@style/api_progress_style"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:visibility="gone" />
 
 </FrameLayout>
