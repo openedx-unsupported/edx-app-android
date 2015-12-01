@@ -690,7 +690,7 @@
 
     <!-- User Profiles -->
     <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
-    <string name="profile_toolbar_edit_button">Edit Profile</string>
+    <string name="profile_toolbar_edit_button">Edit</string>
     <!-- Shown when viewing your own profile and you are not sharing a full profile -->
     <string name="profile_sharing_limited_by_you">You are currently sharing a limited profile</string>
     <!-- Shown when viewing another user's profile and that user is not sharing a full profile -->
@@ -700,11 +700,11 @@
     <!-- Shown as button below the explanation for age of consent; it launches the edit profile screen -->
     <string name="profile_consent_needed_edit_button">Account Settings</string>
     <!-- Shown when viewing your own incomplete profile -->
-    <string name="profile_incomplete_explanation">Your profile isn’t complete yet.</string>
+    <string name="profile_incomplete_explanation">It looks like your profile isn’t complete yet. Let’s get you started.</string>
     <!-- Shown as button below the explanation for incomplete profile; it launches the edit profile screen -->
     <string name="profile_incomplete_edit_button">Get Started</string>
     <!-- This text is shown in place of the "About Me" text if the user has not filled in their "About Me" -->
-    <string name="profile_incomplete_about_me">No about me info provided.</string>
+    <string name="profile_incomplete_about_me">No “About me” info provided.</string>
     <!-- Window title for edit profile screen -->
     <string name="edit_user_profile_title">Edit profile</string>
     <!-- How most profile fields are formatted when viewing the edit screen -->
@@ -717,8 +717,6 @@
     <string name="edit_user_profile_current_language">Current language: {current_language}</string>
     <!-- An option that will set the user profile's location to the country of their device's configured locale -->
     <string name="edit_user_profile_current_location">Current location: {current_location}</string>
-    <!-- An option that will assign an empty value to a profile field -->
-    <string name="edit_user_profile_option_none">No {label}</string>
     <!-- Button label that will open gallery or camera for choosing new profile photo -->
     <string name="edit_user_profile_change_photo">Change</string>
     <!-- Button that will open a camera for taking a new profile photo -->

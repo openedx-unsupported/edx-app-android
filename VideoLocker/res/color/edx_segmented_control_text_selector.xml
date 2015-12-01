@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:state_enabled="false" android:color="@color/edx_grayscale_neutral_black_t" />
+    <item android:state_checked="true" android:color="@color/edx_grayscale_neutral_white_t" />
+    <item android:state_enabled="false" android:color="@color/edx_grayscale_neutral_base" />
+    <item android:color="@color/edx_grayscale_neutral_dark" />
+</selector>

@@ -69,7 +69,7 @@ public class FormFieldSelectFragment extends RoboFragment {
             }.execute();
 
         } else if (formOptions.getRangeMin() != null && formOptions.getRangeMax() != null) {
-            for (int i = formOptions.getRangeMax(); i > formOptions.getRangeMin(); --i) {
+            for (int i = formOptions.getRangeMax(); i >= formOptions.getRangeMin(); --i) {
                 options.add(new FormOption(String.valueOf(i), String.valueOf(i)));
             }
         } else if (formOptions.getValues() != null && formOptions.getValues().size() > 0) {
@@ -113,7 +113,7 @@ public class FormFieldSelectFragment extends RoboFragment {
         }
         if (formField.getOptions().isAllowsNone()) {
             final TextView textView = (TextView) LayoutInflater.from(listView.getContext()).inflate(R.layout.edx_selectable_list_item, listView, false);
-            final String label = ResourceUtil.getFormattedString(listView.getContext().getResources(), R.string.edit_user_profile_option_none, "label", formField.getLabel()).toString();
+            final String label = formField.getOptions().getNoneLabel();
             textView.setText(label);
             listView.addHeaderView(textView, new FormOption(label, null), true);
         }
