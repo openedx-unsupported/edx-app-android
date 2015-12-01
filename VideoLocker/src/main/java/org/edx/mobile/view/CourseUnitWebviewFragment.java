@@ -162,12 +162,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         showLoadingProgress();
 
         if ( unit != null) {
-            if ( unit.isGraded() ){
-                getView().findViewById(R.id.webview_header_text).setVisibility(View.VISIBLE);
-            } else {
-                getView().findViewById(R.id.webview_header_text).setVisibility(View.GONE);
-            }
-
             PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
             AuthResponse auth = pref.getCurrentAuth();
             Map<String, String> map = new HashMap<String, String>();

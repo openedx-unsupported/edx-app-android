@@ -403,10 +403,6 @@
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
 
-
-    <!-- Label for warning message of graded assessment -->
-    <string name="assessment_graded_warning">We recommend that you complete graded sections like this one in your web browser until they are fully supported on mobile.</string>
-
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->
     <string name="started_downloading">Downloading</string>
