@@ -79,7 +79,8 @@ public class CertificateFragment extends RoboFragment {
                                 intent.setComponent(componentName);
                                 startActivity(intent);
                             }
-                        });
+                        },
+                R.string.share_certificate_popup_header);
                 return true;
             }
             default: {

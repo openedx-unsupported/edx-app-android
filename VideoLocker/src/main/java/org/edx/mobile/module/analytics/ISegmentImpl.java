@@ -744,6 +744,20 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
+    public Properties courseDetailShared(String courseId, String aboutUrl, ComponentName componentName){
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
+
+        aEvent.data.putValue(Keys.NAME, courseId);
+        aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
+        aEvent.data.putValue(Keys.URL, aboutUrl);
+        aEvent.data.putValue(Keys.TYPE, getShareTypeFromComponentName(componentName));
+        aEvent.setAppNameContext();
+        tracker.track(Events.SOCIAL_COURSE_DETAIL_SHARED, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
     public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);

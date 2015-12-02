@@ -60,6 +60,9 @@ public class Config {
     public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
 
     public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
+
+    public static final String SHARE_COURSE_ENABLED = "SHARE_COURSE_ENABLED";
+
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     /**
      * Social Sharing configuration.
@@ -363,10 +366,9 @@ public class Config {
         return getBoolean(DISCUSSIONS_ENABLED, false);
     }
 
+    public boolean areCertificateLinksEnabled() { return getBoolean(CERTIFICATES_ENABLED, false); }
 
-    public boolean areCertificateLinksEnabled() {
-        return getBoolean(CERTIFICATES_ENABLED, false);
-    }
+    public boolean isShareCourseEnabled() { return getBoolean(SHARE_COURSE_ENABLED, false); }
 
     /**
      * Returns Course Enrollment configuration.
