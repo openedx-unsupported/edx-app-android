@@ -1,70 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/course_card_height">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/header_image_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            tools:src="@drawable/edx_map_login" />
+            android:layout_height="@dimen/course_card_height">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_gravity="bottom"
-            android:background="@color/transparent_white_85"
-            android:orientation="horizontal"
-            >
+            <ImageView
+                android:id="@+id/header_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                tools:src="@drawable/edx_map_login" />
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
                 android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:background="@color/transparent_white_85"
+                android:orientation="horizontal">
 
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/course_detail_name"
-                    style="@style/course_card_title"
-                    tools:text="Course Name" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="10dp">
 
-                <org.edx.mobile.view.custom.ETextView
-                    android:id="@+id/course_detail_extras"
-                    style="@style/course_card_course_run"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="XX | xx | xxxxx" />
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/course_detail_name"
+                        style="@style/course_card_title"
+                        tools:text="Course Name" />
+
+                    <org.edx.mobile.view.custom.ETextView
+                        android:id="@+id/course_detail_extras"
+                        style="@style/course_card_course_run"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="XX | xx | xxxxx" />
+                </LinearLayout>
+
+                <org.edx.mobile.third_party.iconify.IconButton
+                    android:id="@+id/course_detail_share"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom|right"
+                    android:contentDescription="@string/share_course_button"
+                    android:padding="10dp"
+                    android:visibility="invisible"
+                    app:iconName="fa_share_alt" />
             </LinearLayout>
 
-            <org.edx.mobile.third_party.iconify.IconButton
-                android:id="@+id/course_detail_share"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|right"
-                android:contentDescription="@string/share_course_button"
-                app:iconName="fa_share_alt"
-                android:visibility="invisible"
-                android:padding="10dp"/>
-        </LinearLayout>
+        </FrameLayout>
 
-    </FrameLayout>
+        <View style="@style/gray_hairline_separator" />
 
-    <View style="@style/gray_hairline_separator" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/dashboard_detail"
@@ -74,8 +75,8 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>
 
 
