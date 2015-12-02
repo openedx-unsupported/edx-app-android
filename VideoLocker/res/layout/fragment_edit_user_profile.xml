@@ -44,12 +44,12 @@
                         tools:src="@drawable/app_icon" />
 
                     <org.edx.mobile.third_party.iconify.IconView
-                        app:iconName="fa_spinner"
-                        app:iconColor="@color/edx_brand_primary_light"
+                        android:id="@+id/profile_image_progress"
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"
-                        android:id="@+id/profile_image_progress"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        app:iconColor="@color/edx_brand_primary_light"
+                        app:iconName="fa_spinner" />
                 </FrameLayout>
 
                 <TextView
@@ -63,29 +63,19 @@
                     android:textSize="@dimen/edx_base"
                     tools:text="username" />
 
-                <LinearLayout
+
+                <TextView
                     android:id="@+id/change_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:background="?android:attr/selectableItemBackground"
                     android:paddingLeft="@dimen/edx_margin"
-                    android:paddingRight="@dimen/edx_margin">
-
-                    <org.edx.mobile.third_party.iconify.IconView
-                        android:layout_width="@dimen/edx_base"
-                        android:layout_height="@dimen/edx_base"
-                        android:layout_marginRight="@dimen/base_icon_margin"
-                        app:iconColor="@color/edx_brand_primary_base"
-                        app:iconName="fa_camera" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edit_user_profile_change_photo"
-                        android:textColor="@color/edx_brand_primary_base" />
-                </LinearLayout>
+                    android:paddingRight="@dimen/edx_margin"
+                    android:drawablePadding="@dimen/x_small_icon_margin"
+                    android:text="@string/edit_user_profile_change_photo"
+                    android:textColor="@color/disableable_button_text"
+                    android:textSize="@dimen/edx_x_small" />
             </LinearLayout>
 
             <android.support.v7.widget.LinearLayoutCompat
