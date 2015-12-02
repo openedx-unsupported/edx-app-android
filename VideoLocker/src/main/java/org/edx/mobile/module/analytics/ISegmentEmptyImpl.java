@@ -1,5 +1,6 @@
 package org.edx.mobile.module.analytics;
 
+import android.content.ComponentName;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -186,7 +187,7 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties certificateShared(String courseId, String socialNetwork) {
+    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package org.edx.mobile.module.analytics;
 
+import android.content.ComponentName;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -111,7 +112,7 @@ public interface ISegment {
 
     Properties courseShared(String courseId, String socialNetwork);
 
-    Properties certificateShared(String courseId, String socialNetwork);
+    Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName);
 
     Properties socialConnectionEvent(boolean connected, String socialNetwork);
 
@@ -145,6 +146,7 @@ public interface ISegment {
         String NO_OF_VIDEOS = "number_of_videos";
         String FULLSCREEN = "settings.video.fullscreen";
         String LANGUAGE = "language";
+        String URL = "url";
         String TARGET_URL = "target_url";
         String CONTEXT = "context";
         String DATA = "data";
@@ -168,6 +170,7 @@ public interface ISegment {
         String GROUP_USER_COUNT = "group_user_count";
         String GROUP_INVITED_USER_COUNT = "group_invited_count";
         String SOCIAL_NETWORK = "social_network";
+        String TYPE = "type";
         String SOCIAL_CONNECTION_STATE = "social_connection_state";
         String SETTING_COURSES_VISIBLE_STATE = "settings_courses_visible_state";
         String CATEGORY = "category";
@@ -227,11 +230,12 @@ public interface ISegment {
         String CREATE_GAME_GROUP = "edx.bi.app.groups.game_create";
         String INVITE_GAME_GROUP = "edx.bi.app.groups.game_invite";
         String SOCIAL_COURSE_SHARED = "edx.bi.app.social.course_share";
-        String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.social.certificate_share";
+        String SOCIAL_CERTIFICATE_SHARED = "edx.bi.app.certificate.shared";
         String SOCIAL_CONNECTION_CHANGE = "edx.bi.app.social.connection";
         String SETTING_COURSES_VISIBLE_CHANGE = "edx.bi.app.user.share_courses";
 
         String NAVIGATION = "navigation";
+        String SOCIAL_SHARING = "social-sharing";
         String PROFILE = "profiles";
         String CAMERA = "camera";
         String LIBRARY = "library";
@@ -304,7 +308,7 @@ public interface ISegment {
         String GAME_GROUP_CREATE = "Game Group Created";
         String GAME_GROUP_INVITE = "Game Group Invited";
         String SOCIAL_COURSE_SHARED = "Social Course Shared";
-        String SOCIAL_CERTIFICATE_SHARED = "Social Certificate Shared";
+        String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_CONNECTION_CHANGE = "Social Connection Change";
         String SETTING_COURSES_VISIBLE_CHANGE = "Settings Courses Visibility Change";
         String SWITCH_OUTLINE_MODE = "Switch outline mode";
