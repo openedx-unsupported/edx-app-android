@@ -1,5 +1,7 @@
 package org.edx.mobile.model.api;
 
+import android.text.TextUtils;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 
 @SuppressWarnings("serial")
@@ -82,15 +84,12 @@ public class EnrolledCoursesResponse implements SectionItemInterface {
         return String.format("%d %s", videoCount, (videoCount==1 ? "Video" : "Videos"));
     }
 
-    public String getCertificateURL(){
-
+    public String getCertificateURL() {
         return this.certificate == null ? null : this.certificate.certificateURL;
-
     }
 
-    public boolean isCertificateEarned(){
-
-        return (this.certificate != null && this.certificate.certificateURL != null);
+    public boolean isCertificateEarned() {
+        return this.certificate != null && !TextUtils.isEmpty(this.certificate.certificateURL);
 
     }
 }

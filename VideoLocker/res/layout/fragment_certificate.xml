@@ -1,73 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_act_background">
+
+    <org.edx.mobile.view.custom.EdxWebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_act_background"
-        android:orientation="vertical">
+        android:background="@color/grey_act_background" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_weight="2">
-
-            <org.edx.mobile.view.custom.EdxWebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/grey_act_background" />
-
-            <ProgressBar
-                android:id="@+id/api_spinner"
-                style="@style/api_progress_style"
-                android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/share_certificate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/share_certificate_selector"
-            android:padding="15dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_facebookwhite"
-                android:layout_gravity="center" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
-
-                <TextView
-                    style="@style/regular_text"
-                    android:textColor="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAllCaps="true"
-                    android:textSize="16sp"
-                    android:text="@string/share_certificate_super"
-                    android:gravity="center" />
-
-                <TextView
-                    style="@style/regular_text"
-                    android:textColor="@color/white"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:text="@string/share_certificate_sub"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+    <ProgressBar
+        android:id="@+id/api_spinner"
+        style="@style/api_progress_style"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</FrameLayout>
