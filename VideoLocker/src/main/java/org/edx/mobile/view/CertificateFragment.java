@@ -54,10 +54,6 @@ public class CertificateFragment extends RoboFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.share_certificate, menu);
-        final MenuItem menuItem = menu.findItem(R.id.menu_item_share);
-        menuItem.setIcon(new IconDrawable(getActivity(), Iconify.IconValue.fa_share_alt)
-                .colorRes(getActivity(), R.color.edx_grayscale_neutral_white_t)
-                .actionBarSize(getActivity()));
     }
 
     @Override

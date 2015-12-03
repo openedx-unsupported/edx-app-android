@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class CourseDashboardFragment extends RoboFragment {
     private ImageView headerImageView;
     private LinearLayout parent;
     private TextView errorText;
-    private IconButton shareButton;
+    private ImageButton shareButton;
 
     @Inject
     private ISegment segIO;
@@ -68,7 +69,7 @@ public class CourseDashboardFragment extends RoboFragment {
             courseTextDetails = (TextView) view.findViewById(R.id.course_detail_extras);
             headerImageView = (ImageView) view.findViewById(R.id.header_image_view);
             parent = (LinearLayout) view.findViewById(R.id.dashboard_detail);
-            shareButton = (IconButton) view.findViewById(R.id.course_detail_share); //invisible by default
+            shareButton = (ImageButton) view.findViewById(R.id.course_detail_share); //invisible by default
 
         } else {
             view = inflater.inflate(R.layout.fragment_course_dashboard_disabled, container, false);
