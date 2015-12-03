@@ -24,14 +24,16 @@
             android:layout_height="wrap_content"
             android:text="@string/course_details_congratulations"
             android:textColor="@color/edx_brand_primary_dark"
-            android:textSize="@dimen/edx_small" />
+            android:textSize="@dimen/edx_small"
+            android:gravity="center" />
 
         <org.edx.mobile.view.custom.ETextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/course_details_earned_cert"
             android:textColor="@color/edx_grayscale_neutral_x_dark"
-            android:textSize="@dimen/edx_xx_small" />
+            android:textSize="@dimen/edx_xx_small"
+            android:gravity="center" />
 
         <android.support.v4.widget.Space
             android:layout_width="0dp"
