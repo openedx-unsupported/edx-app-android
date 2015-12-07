@@ -17,9 +17,7 @@ import java.util.Map;
 
 import roboguice.service.RoboIntentService;
 
-/**
- * Created by yervant on 1/22/15.
- */
+@Deprecated // Not used. TODO: delete, along with dependencies
 public class FetchCourseFriendsService extends RoboIntentService {
 
     public static final String TAG = FetchCourseFriendsService.class.getSimpleName();

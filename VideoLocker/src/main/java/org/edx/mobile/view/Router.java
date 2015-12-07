@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
@@ -53,7 +52,12 @@ public class Router {
     }
 
     public void showFindCourses(Activity sourceActivity) {
-        Intent findCoursesIntent = new Intent(sourceActivity, FindCoursesActivity.class);
+        final Intent findCoursesIntent;
+        if (config.getEnrollmentConfig().isEnabled()) {
+            findCoursesIntent = new Intent(sourceActivity, WebViewFindCoursesActivity.class);
+        } else {
+            findCoursesIntent = NativeFindCoursesActivity.newIntent(sourceActivity);
+        }
         //Add this flag as multiple activities need to be created
         findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(findCoursesIntent);

@@ -14,49 +14,6 @@
         android:scaleType="fitXY"
         tools:src="@drawable/sample_course_image" />
 
-    <LinearLayout
-        android:id="@+id/course_item_facepile_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/course_item_detail"
-        android:background="@drawable/course_facepile_backing"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:paddingBottom="8dp"
-        android:paddingEnd="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingStart="8dp"
-        android:paddingTop="22dp"
-        tools:targetApi="17">
-
-        <org.edx.mobile.view.custom.ETextView
-            style="@style/semibold_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:shadowColor="@color/black"
-            android:shadowDx="0"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:text="@string/course_friends_also_enrolled"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <org.edx.mobile.view.custom.SocialFacePileView
-            android:id="@+id/course_item_facepileview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|left|start"
-            app:avatarCount="6"
-            app:avatarGap="8dp"
-            app:avatarMaxSize="50dp"
-            app:borderRadius="@dimen/avatar_image_radius"
-            app:overflowTextSize="20dp"
-            tools:targetApi="17" />
-
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/course_item_detail"
         android:layout_width="match_parent"

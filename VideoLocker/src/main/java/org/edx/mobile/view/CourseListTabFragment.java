@@ -1,14 +1,8 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.facebook.Session;
-import com.facebook.SessionState;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
@@ -30,24 +22,17 @@ import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
-import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.FetchCourseFriendsService;
-import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.social.SocialProvider;
-import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 import org.edx.mobile.view.custom.ETextView;
-import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 
 import java.util.List;
 
 import roboguice.fragment.RoboFragment;
 
-public abstract class CourseListTabFragment extends RoboFragment implements NetworkObserver, MyCourseAdapter.CourseFriendsListener, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
+public abstract class CourseListTabFragment extends RoboFragment implements NetworkObserver, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
 
     protected MyCourseAdapter adapter;
 
@@ -61,11 +46,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
     @Inject
     protected IEdxEnvironment environment;
 
-
-    protected IUiLifecycleHelper uiHelper;
     protected ListView myCourseList;
-
-    FetchFriendsReceiver fetchFriendsObserver;
 
     protected Logger logger = new Logger(getClass().getSimpleName());
 
@@ -74,7 +55,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
         super.onAttach(activity);
 
         if (activity instanceof NetworkSubject) {
-            ((NetworkSubject)activity).registerNetworkObserver(this);
+            ((NetworkSubject) activity).registerNetworkObserver(this);
         }
     }
 
@@ -83,7 +64,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
         super.onDetach();
 
         if (getActivity() instanceof NetworkSubject) {
-            ((NetworkSubject)getActivity()).unregisterNetworkObserver(this);
+            ((NetworkSubject) getActivity()).unregisterNetworkObserver(this);
         }
     }
 
@@ -91,12 +72,8 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        fetchFriendsObserver = new FetchFriendsReceiver();
-
-        SocialProvider fbProvider = new FacebookProvider();
         pmFeatures = new PrefManager(getActivity(), PrefManager.Pref.FEATURES);
-        boolean showSocialFeatures = fbProvider.isLoggedIn() && pmFeatures.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-        adapter = new MyCourseAdapter(getActivity(), showSocialFeatures, this, environment) {
+        adapter = new MyCourseAdapter(getActivity(), environment) {
 
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
@@ -109,46 +86,10 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
             }
         };
 
-        uiHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), new Session.StatusCallback() {
-            @Override
-            public void call(Session session, SessionState state, Exception exception) {
-
-                if (state.isOpened()) {
-                    adapter.notifyDataSetChanged();
-                }
-
-
-            }
-        });
-        uiHelper.onCreate(savedInstanceState);
-        loadData(false,false);
+        loadData(false, false);
     }
 
-    public abstract void handleCourseClick( EnrolledCoursesResponse model);
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        uiHelper.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        uiHelper.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        uiHelper.onDestroy();
-    }
-
-    @Override
-    public void onPause() {
-        uiHelper.onPause();
-        super.onPause();
-    }
+    public abstract void handleCourseClick(EnrolledCoursesResponse model);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,15 +104,15 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
             @Override
             public void onRefresh() {
                 //Hide the progress bar as swipe functionality has its own Progress indicator
-                if(progressBar!=null){
+                if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
-                loadData(true,false);
+                loadData(true, false);
             }
         });
 
         swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                R.color.grey_act_background , R.color.grey_act_background ,
+                R.color.grey_act_background, R.color.grey_act_background,
                 R.color.grey_act_background);
 
         myCourseList = (ListView) view.findViewById(R.id.my_course_list);
@@ -193,7 +134,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
 
     protected abstract void loadData(boolean forceRefresh, boolean showProgress);
 
-    protected void invalidateSwipeFunctionality(){
+    protected void invalidateSwipeFunctionality() {
         swipeLayout.setRefreshing(false);
     }
 
@@ -208,7 +149,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
 
     public void hideOfflinePanel() {
         ViewAnimationUtil.stopAnimation(offlinePanel);
-        if(offlinePanel.getVisibility()==View.VISIBLE){
+        if (offlinePanel.getVisibility() == View.VISIBLE) {
             offlinePanel.setVisibility(View.GONE);
         }
     }
@@ -230,30 +171,11 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
     public void onStop() {
         super.onStop();
         hideOfflinePanel();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(fetchFriendsObserver);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        IntentFilter fetchFriendsFilter = new IntentFilter(FetchCourseFriendsService.NOTIFY_FILTER);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(fetchFriendsObserver, fetchFriendsFilter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        uiHelper.onResume();
-
-        //Let the adapter know if it's connection status to facebook has changed.
-        boolean socialConnected = new FacebookProvider().isLoggedIn() && pmFeatures.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-        adapter.setShowSocial(socialConnected);
-
     }
 
     /**
      * Adds a footer view to the list, which has "FIND A COURSE" button.
+     *
      * @param myCourseList - ListView
      */
     private void setupFooter(ListView myCourseList) {
@@ -270,24 +192,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
                         logger.error(e);
                     }
 
-                    try {
-                        if (environment.getConfig().getEnrollmentConfig().isEnabled()) {
-                            //Call the Find courses activity
-                            environment.getRouter().showFindCourses(getActivity());
-                        } else {
-                            //Show the dialog only if the activity is started. This is to avoid Illegal state
-                            //exceptions if the dialog fragment tries to show even if the application is not in foreground
-                            if (isAdded() && isVisible()) {
-                                FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
-                                findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                                        android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                                findCoursesFragment.setCancelable(false);
-                                findCoursesFragment.show(getFragmentManager(), "dialog-find-courses");
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.error(e);
-                    }
+                    environment.getRouter().showFindCourses(getActivity());
                 }
             });
 
@@ -298,51 +203,13 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
                     showCourseNotListedDialog();
                 }
             });
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     public void showCourseNotListedDialog() {
-        ((BaseFragmentActivity)getActivity()).showWebDialog(getString(R.string.course_not_listed_file_name), false,
+        ((BaseFragmentActivity) getActivity()).showWebDialog(getString(R.string.course_not_listed_file_name), false,
                 null);
     }
-
-    private class FetchFriendsReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String courseId = intent.getStringExtra(FetchCourseFriendsService.EXTRA_BROADCAST_COURSE_ID);
-
-            AsyncTaskResult<List<SocialMember>> result = FetchCourseFriendsService.fetchResult(courseId);
-
-            if (result !=null && result.getResult() != null) {
-                int listPos = adapter.getPositionForCourseId(courseId);
-                if(listPos < 0)
-                    return;
-                adapter.getItem(listPos).getCourse().setMembers_list(result.getResult());
-                adapter.notifyDataSetChanged();
-
-            }
-
-        }
-    }
-
-    @Override
-    public void fetchCourseFriends(EnrolledCoursesResponse course) {
-
-        boolean loggedInSocial = new FacebookProvider().isLoggedIn();
-
-        if (!loggedInSocial){
-            return;
-        }
-
-        Intent fetchFriends = new Intent(getActivity(), FetchCourseFriendsService.class);
-
-        fetchFriends.putExtra(FetchCourseFriendsService.TAG_COURSE_ID, course.getCourse().getId());
-        fetchFriends.putExtra(FetchCourseFriendsService.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
-
-        getActivity().startService(fetchFriends);
-    }
-
 }

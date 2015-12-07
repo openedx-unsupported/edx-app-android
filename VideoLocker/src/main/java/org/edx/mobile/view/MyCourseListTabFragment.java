@@ -24,8 +24,6 @@ import java.util.List;
 
 public class MyCourseListTabFragment extends CourseListTabFragment {
 
-    private static final String TAG = MyCourseListTabFragment.class.getSimpleName();
-
     private final int MY_COURSE_LOADER_ID = 0x905000;
     protected TextView noCourseText;
 

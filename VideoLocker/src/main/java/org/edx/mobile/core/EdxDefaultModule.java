@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.base.MainApplication;
@@ -30,6 +29,8 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 
+import retrofit.RestAdapter;
+
 public class EdxDefaultModule extends AbstractModule {
     //if your module requires a context, add a constructor that will be passed a context.
     private Context context;
@@ -48,8 +49,7 @@ public class EdxDefaultModule extends AbstractModule {
         bind(ISegmentTracker.class).to(ISegmentTrackerImpl.class);
         if (config.getSegmentConfig().isEnabled()) {
             bind(ISegment.class).to(ISegmentImpl.class);
-        }
-        else {
+        } else {
             bind(ISegment.class).to(ISegmentEmptyImpl.class);
         }
 
@@ -57,23 +57,21 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(OkHttpClient.class).toInstance(OkHttpUtil.getOAuthBasedClient(context));
 
-        if (MainApplication.RETROFIT_ENABLED ){
+        if (MainApplication.RETROFIT_ENABLED) {
             bind(IApi.class).to(RestApiManager.class);
         } else {
             bind(IApi.class).to(Api.class);
         }
 
-        if ( config.isNotificationEnabled() ) {
+        if (config.isNotificationEnabled()) {
             Config.ParseNotificationConfig parseNotificationConfig =
-                config.getParseNotificationConfig();
+                    config.getParseNotificationConfig();
             if (parseNotificationConfig.isEnabled()) {
                 bind(NotificationDelegate.class).to(ParseNotificationDelegate.class);
-            }
-            else {
+            } else {
                 bind(NotificationDelegate.class).to(DummyNotificationDelegate.class);
             }
-        }
-        else {
+        } else {
             bind(NotificationDelegate.class).to(DummyNotificationDelegate.class);
         }
 
@@ -85,5 +83,6 @@ public class EdxDefaultModule extends AbstractModule {
 
         requestStaticInjection(DiscussionTextUtils.class);
 
+        bind(RestAdapter.class).toProvider(RestAdapterProvider.class);
     }
 }

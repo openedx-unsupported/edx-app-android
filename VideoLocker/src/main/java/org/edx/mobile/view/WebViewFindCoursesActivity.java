@@ -10,7 +10,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_find_courses)
-public class FindCoursesActivity extends FindCoursesBaseActivity {
+public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
     private WebView webView;
 

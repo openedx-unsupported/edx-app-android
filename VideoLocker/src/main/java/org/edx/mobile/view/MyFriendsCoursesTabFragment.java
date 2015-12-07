@@ -29,6 +29,7 @@ import org.edx.mobile.view.dialog.InstallFacebookDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated // Not used right now, should be deleted
 public class MyFriendsCoursesTabFragment extends CourseListTabFragment implements View.OnClickListener  {
 
     private static final String TAG = MyCourseListTabFragment.class.getSimpleName();
@@ -171,11 +172,7 @@ public class MyFriendsCoursesTabFragment extends CourseListTabFragment implement
             case R.id.friends_course_no_btn_share_app:
                 FacebookProvider fbProvider = new FacebookProvider();
                 FacebookDialog dialog = (FacebookDialog) fbProvider.shareApplication(getActivity());
-                if (dialog != null) {
-                    uiHelper.trackPendingDialogCall(dialog.present());
-                } else {
-                    new InstallFacebookDialog().show(getFragmentManager(), null);
-                }
+                new InstallFacebookDialog().show(getFragmentManager(), null);
         }
 
     }
