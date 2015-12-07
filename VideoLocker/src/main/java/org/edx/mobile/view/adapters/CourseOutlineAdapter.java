@@ -402,7 +402,7 @@ public class CourseOutlineAdapter extends BaseAdapter{
         switch (state) {
             case DOWNLOADING:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_spinner);
-                row.bulkDownload.setIconAnimation(Animation.SPIN);
+                row.bulkDownload.setIconAnimation(Animation.PULSE);
                 row.bulkDownload.setIconColorResource(R.color.edx_brand_primary_base);
                 break;
             case DOWNLOADED:

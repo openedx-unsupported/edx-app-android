@@ -201,7 +201,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        viewHolder.profileImageProgress.setIconAnimation(Animation.SPIN);
+        viewHolder.profileImageProgress.setIconAnimation(Animation.PULSE);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
