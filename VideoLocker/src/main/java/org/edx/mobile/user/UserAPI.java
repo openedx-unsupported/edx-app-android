@@ -37,20 +37,7 @@ public class UserAPI {
     private Logger logger = new Logger(UserAPI.class.getName());
 
     @Inject
-    public UserAPI(@NonNull Config config, @NonNull OkHttpClient client) {
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
-                .serializeNulls()
-                .create();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(client))
-                .setEndpoint(config.getApiHostURL())
-                .setConverter(new GsonConverter(gson))
-                .setErrorHandler(new RetroHttpExceptionHandler())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
+    public UserAPI(@NonNull RestAdapter restAdapter) {
         userService = restAdapter.create(UserService.class);
     }
 

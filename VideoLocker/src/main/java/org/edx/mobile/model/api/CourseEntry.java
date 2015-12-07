@@ -1,21 +1,15 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.DateUtil;
-import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
+import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -147,23 +141,11 @@ public class CourseEntry implements Serializable {
     public void setCoursewareAccess(CoursewareAccess access) { this.courseware_access = access; }
 
     public boolean isStarted() {
-        // check if "start" date has passed
-        if (start == null)
-            return false;
-
-        Date startDate = DateUtil.convertToDate(start);
-        Date today = new Date();
-        return today.after(startDate);
+        return CourseCardUtils.isStarted(start);
     }
 
     public boolean isEnded() {
-        // check if "end" date has passed
-        if (end == null)
-            return false;
-
-        Date endDate = DateUtil.convertToDate(end);
-        Date today = new Date();
-        return today.after(endDate);
+        return CourseCardUtils.isEnded(end);
     }
 
     public boolean hasUpdates() {
@@ -261,57 +243,12 @@ public class CourseEntry implements Serializable {
 
     }
 
-    public String getDescription(Context context, boolean withStartDate) {
-
-        List<CharSequence> sections = new ArrayList<>();
-
-        if (!TextUtils.isEmpty(org)) {
-            sections.add(org);
-        }
-
-        if (!TextUtils.isEmpty(number)) {
-            sections.add(number);
-        }
-
-        if (withStartDate) {
-            CharSequence formattedDate = getFormattedDate(context);
-            if (formattedDate != null) sections.add(formattedDate);
-        }
-
-        return TextUtils.join(" | ", sections);
+    public String getDescription() {
+        return CourseCardUtils.getDescription(org, number, null);
     }
 
-    public String getFormattedDate(Context context) {
-        CharSequence formattedDate;
-        if (isStarted()) {
-            Date endDate = DateUtil.convertToDate(end);
-            if (endDate == null) {
-                return null;
-            } else if (isEnded()) {
-                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_ended, "date", DateUtils.formatDateTime(context, endDate.getTime()
-                        , DateUtils.FORMAT_NO_YEAR));
-            } else {
-                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_ending, "date", DateUtils.formatDateTime(context, endDate.getTime
-                        (), DateUtils.FORMAT_NO_YEAR));
-            }
-        } else {
-            if (start_type == StartType.TIMESTAMP && !TextUtils.isEmpty(start)) {
-                Date startDate = DateUtil.convertToDate(start);
-                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", DateUtils.formatDateTime(context, startDate
-                        .getTime(), DateUtils.FORMAT_NO_YEAR));
-            } else if (start_type == StartType.STRING && !TextUtils.isEmpty(start_display)) {
-                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", start_display);
-
-            } else {
-                formattedDate = ResourceUtil.getFormattedString(context.getResources(), R.string
-                        .label_starting, "date", context.getString(R.string.assessment_soon));
-            }
-        }
-
-        return formattedDate.toString().toUpperCase();
+    public String getDescriptionWithStartDate(Context context) {
+        return CourseCardUtils.getDescription(org, number, CourseCardUtils.getFormattedDate(context, this));
     }
+
 }

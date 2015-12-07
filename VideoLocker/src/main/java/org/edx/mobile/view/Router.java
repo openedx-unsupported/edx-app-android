@@ -24,6 +24,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.view.dialog.CourseDiscoveryNotEnabledDialogFragment;
 
 import de.greenrobot.event.EventBus;
 
@@ -52,11 +53,20 @@ public class Router {
         sourceActivity.startActivity(downloadIntent);
     }
 
-    public void showFindCourses(Activity sourceActivity) {
-        Intent findCoursesIntent = new Intent(sourceActivity, FindCoursesActivity.class);
-        //Add this flag as multiple activities need to be created
-        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(findCoursesIntent);
+    public void showFindCourses(FragmentActivity sourceActivity) {
+        if (config.getCourseDiscoveryConfig().isEnabled()) {
+            final Intent findCoursesIntent;
+            if (config.getCourseDiscoveryConfig().isNativeCourseDiscoveryEnabled()) {
+                findCoursesIntent = NativeFindCoursesActivity.newIntent(sourceActivity);
+            } else {
+                findCoursesIntent = new Intent(sourceActivity, WebViewFindCoursesActivity.class);
+            }
+            //Add this flag as multiple activities need to be created
+            findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            sourceActivity.startActivity(findCoursesIntent);
+        } else {
+            CourseDiscoveryNotEnabledDialogFragment.show(sourceActivity);
+        }
     }
 
     public void showCourseInfo(Activity sourceActivity, String pathId) {

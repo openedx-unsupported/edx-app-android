@@ -106,12 +106,17 @@ public class Config {
      */
     public class EnrollmentConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
+        private @SerializedName("NATIVE_COURSE_DISCOVERY_ENABLED") boolean mNativeCourseDiscoveryEnabled;
         private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
         private @SerializedName("EXTERNAL_COURSE_SEARCH_URL") String mExternalSearchUrl;
         private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
         public boolean isEnabled() {
             return mEnabled;
+        }
+
+        public boolean isNativeCourseDiscoveryEnabled() {
+            return mNativeCourseDiscoveryEnabled;
         }
 
         public String getCourseSearchUrl() {
@@ -370,16 +375,10 @@ public class Config {
 
     public boolean isShareCourseEnabled() { return getBoolean(SHARE_COURSE_ENABLED, false); }
 
-    /**
-     * Returns Course Enrollment configuration.
-     * @return
-     */
-    public EnrollmentConfig getEnrollmentConfig() {
+    public EnrollmentConfig getCourseDiscoveryConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
         if(element != null) {
-            Gson gson = new Gson();
-            EnrollmentConfig config = gson.fromJson(element, EnrollmentConfig.class);
-            return config;
+            return new Gson().fromJson(element, EnrollmentConfig.class);
         }
         else {
             return new EnrollmentConfig();

@@ -24,8 +24,6 @@ import java.util.List;
 
 public class MyCourseListTabFragment extends CourseListTabFragment {
 
-    private static final String TAG = MyCourseListTabFragment.class.getSimpleName();
-
     private final int MY_COURSE_LOADER_ID = 0x905000;
     protected TextView noCourseText;
 
@@ -89,12 +87,14 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     @Override
     public void onLoadFinished(Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> asyncTaskResultLoader, AsyncTaskResult<List<EnrolledCoursesResponse>> result) {
 
-        if (progressBar != null) progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
 
         if (result == null) {
             logger.warn("result is found null, was expecting non-null");
             return;
         }
+
+        myCourseList.setVisibility(View.VISIBLE);
 
         if(result.getEx() != null)
         {
@@ -128,6 +128,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     public void onLoaderReset(Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> asyncTaskResultLoader) {
         adapter.clear();
         adapter.notifyDataSetChanged();
-        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        myCourseList.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 }

@@ -17,23 +17,16 @@
 package org.edx.mobile.discussion;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.http.RetroHttpException;
-import org.edx.mobile.util.Config;
-import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.util.List;
 
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
-import retrofit.converter.GsonConverter;
 
 /*
 // TODO: fix the issue - try to simplify the callback implementation
@@ -59,29 +52,13 @@ class RetrofitAdaptor<T> extends Callback {
 
 public class DiscussionAPI {
 
-
-    Config config;
-
     Context context;
 
     final DiscussionService discussionService;
 
     @Inject
-    public DiscussionAPI(Context context, Config config, OkHttpClient client) {
+    public DiscussionAPI(@NonNull Context context, @NonNull RestAdapter restAdapter) {
         this.context = context;
-        this.config = config;
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
-                .create();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(client))
-                .setEndpoint(config.getApiHostURL())
-                .setConverter(new GsonConverter(gson))
-                .setErrorHandler(new RetroHttpExceptionHandler())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .build();
         discussionService = restAdapter.create(DiscussionService.class);
     }
 
@@ -89,6 +66,7 @@ public class DiscussionAPI {
     /**
      * as this is the meta data for course discussion info, it wont change frequently.
      * we should cache it in most cases?
+     *
      * @param courseId
      * @return
      * @throws RetroHttpException
