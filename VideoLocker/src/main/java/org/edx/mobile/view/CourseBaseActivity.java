@@ -12,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
@@ -20,8 +23,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.task.GetCourseStructureTask;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
@@ -168,11 +169,11 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.course_detail, menu);
             menu.findItem(R.id.action_share_on_web).setIcon(
-                    new IconDrawable(this, Iconify.IconValue.fa_share_square_o)
+                    new IconDrawable(this, FontAwesomeIcons.fa_share_square_o)
                             .actionBarSize(this).colorRes(this, R.color.edx_white));
-            Iconify.IconValue changeModeIcon = new PrefManager.UserPrefManager(this)
-                    .isUserPrefVideoModel() ? Iconify.IconValue.fa_list :
-                    Iconify.IconValue.fa_film;
+            Icon changeModeIcon = new PrefManager.UserPrefManager(this)
+                    .isUserPrefVideoModel() ? FontAwesomeIcons.fa_list :
+                    FontAwesomeIcons.fa_film;
             menu.findItem(R.id.action_change_mode).setIcon(
                     new IconDrawable(this, changeModeIcon)
                             .actionBarSize(this).colorRes(this, R.color.edx_white));
@@ -206,9 +207,9 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
                 final PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(this);
                 final MenuItem videoOnlyItem = popup.getMenu().findItem(R.id.change_mode_video_only);
                 MenuItem fullCourseItem = popup.getMenu().findItem(R.id.change_mode_full_mode);
-                videoOnlyItem.setIcon(new IconDrawable(this, Iconify.IconValue.fa_film)
+                videoOnlyItem.setIcon(new IconDrawable(this, FontAwesomeIcons.fa_film)
                         .colorRes(this, R.color.course_mode));
-                fullCourseItem.setIcon(new IconDrawable(this, Iconify.IconValue.fa_list)
+                fullCourseItem.setIcon(new IconDrawable(this, FontAwesomeIcons.fa_list)
                         .colorRes(this, R.color.course_mode));
                 // Setting checked states
                 // Only calling setChecked(true) in the selected menu item, to avoid a bug
@@ -229,8 +230,8 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
                         if (currentVideoMode != selectedVideoMode) {
                             userPrefManager.setUserPrefVideoModel(selectedVideoMode);
                             item.setChecked(true);
-                            Iconify.IconValue filterIcon = selectedVideoMode ?
-                                    Iconify.IconValue.fa_list : Iconify.IconValue.fa_film;
+                            Icon filterIcon = selectedVideoMode ?
+                                    FontAwesomeIcons.fa_list : FontAwesomeIcons.fa_film;
                             item.setIcon(
                                     new IconDrawable(CourseBaseActivity.this, filterIcon)
                                             .actionBarSize(CourseBaseActivity.this)

@@ -37,12 +37,13 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.widget.IconImageButton;
+import com.joanzapata.iconify.IconDrawable;
+
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.third_party.iconify.IconButton;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -96,12 +97,12 @@ public class PlayerController extends FrameLayout {
     private View.OnClickListener mNextListener, mPrevListener;
     StringBuilder               mFormatBuilder;
     Formatter                   mFormatter;
-    private IconButton          mPauseButton;
+    private IconImageButton     mPauseButton;
     private ImageButton         mRewButton;
     private ImageButton         mNextButton;
     private ImageButton         mPrevButton;
-    private IconButton          mFullscreenButton;
-    private IconButton          mSettingsButton;
+    private IconImageButton     mFullscreenButton;
+    private IconImageButton     mSettingsButton;
     private ImageButton         mLmsButton;
     private ImageButton         shareButton;
     private Handler             mHandler = new MessageHandler(this);
@@ -191,13 +192,13 @@ public class PlayerController extends FrameLayout {
         PrefManager featuresPrefManager = new PrefManager(getContext(), PrefManager.Pref.FEATURES);
         boolean enableSocialFeatures = featuresPrefManager.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
 
-        mPauseButton = (IconButton) v.findViewById(R.id.pause);
+        mPauseButton = (IconImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
         }
 
-        mFullscreenButton = (IconButton) v.findViewById(R.id.fullscreen);
+        mFullscreenButton = (IconImageButton) v.findViewById(R.id.fullscreen);
         if (mFullscreenButton != null) {
             mFullscreenButton.requestFocus();
             mFullscreenButton.setOnClickListener(mFullscreenListener);
@@ -236,7 +237,7 @@ public class PlayerController extends FrameLayout {
             mLmsButton.setOnClickListener(mLmsClickListener);
         }
 
-        mSettingsButton = (IconButton) v.findViewById(R.id.settings);
+        mSettingsButton = (IconImageButton) v.findViewById(R.id.settings);
         if (mSettingsButton != null) {
             mSettingsButton.requestFocus();
             mSettingsButton.setOnClickListener(mSettingsListener);
@@ -533,12 +534,12 @@ public class PlayerController extends FrameLayout {
             return;
         }
         if (mPlayer.isPlaying()) {
-            mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_pause)
+            mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_pause)
                     .colorRes(getContext(), R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
-            mPauseButton.setImageDrawable(new IconDrawable(getContext(), Iconify.IconValue.fa_play)
+            mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_play)
                     .colorRes(getContext(),R.color.edx_grayscale_neutral_white_t));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
@@ -552,11 +553,11 @@ public class PlayerController extends FrameLayout {
 
         mFullscreenButton.setBackgroundColor(Color.TRANSPARENT);
         if (mPlayer.isFullScreen()) {
-            mFullscreenButton.setIcon(Iconify.IconValue.fa_compress);
+            mFullscreenButton.setIcon(FontAwesomeIcons.fa_compress);
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_exit_fullscreen));
         } else {
-            mFullscreenButton.setIcon(Iconify.IconValue.fa_expand);
+            mFullscreenButton.setIcon(FontAwesomeIcons.fa_expand);
             mFullscreenButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_enter_fullscreen));
         }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IconImageView">
+        <attr name="iconName" format="string" />
+        <attr name="iconColor" format="color" />
+        <attr name="iconAnimation" format="enum">
+            <enum name="spin" value="0" />
+            <enum name="pulse" value="1" />
+            <enum name="none" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

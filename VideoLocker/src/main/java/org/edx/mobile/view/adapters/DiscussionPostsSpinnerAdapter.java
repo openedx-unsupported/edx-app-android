@@ -13,10 +13,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+
 import org.edx.mobile.R;
 import org.edx.mobile.interfaces.TextResourceProvider;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.CourseDiscussionPostsThreadFragment;
 
 /**
@@ -35,17 +36,17 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
         @NonNull
         private final Context context;
         @NonNull
-        private final Iconify.IconValue iconValue;
+        private final Icon icon;
 
-        IconDrawableFactoryImpl(@NonNull Context context, @NonNull Iconify.IconValue iconValue) {
+        IconDrawableFactoryImpl(@NonNull Context context, @NonNull Icon icon) {
             this.context = context;
-            this.iconValue = iconValue;
+            this.icon = icon;
         }
 
         @Override
         @NonNull
         public IconDrawable createIcon() {
-            return new IconDrawable(context, iconValue)
+            return new IconDrawable(context, icon)
                     .sizeRes(context, R.dimen.icon_view_standard_width_height)
                     .colorRes(context, R.color.edx_brand_primary_base);
         }
@@ -70,9 +71,9 @@ public class DiscussionPostsSpinnerAdapter extends ArrayAdapter<TextResourceProv
 
     public DiscussionPostsSpinnerAdapter(@NonNull Spinner spinner,
             @NonNull TextResourceProvider[] textResourceProviders,
-            @NonNull Iconify.IconValue iconValue) {
+            @NonNull Icon icon) {
         this(spinner, textResourceProviders,
-                new IconDrawableFactoryImpl(spinner.getContext(), iconValue));
+                new IconDrawableFactoryImpl(spinner.getContext(), icon));
     }
 
     public DiscussionPostsSpinnerAdapter(@NonNull Spinner spinner,

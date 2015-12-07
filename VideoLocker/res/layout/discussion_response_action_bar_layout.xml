@@ -15,14 +15,14 @@
             android:layout_alignParentLeft="true"
             android:gravity="center">
 
-            <org.edx.mobile.third_party.iconify.IconView
+            <com.joanzapata.iconify.widget.IconImageView
                 android:id="@+id/discussion_responses_action_bar_vote_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
                 android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
                 android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
                 app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa_plus" />
+                app:iconName="fa-plus" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/discussion_responses_action_bar_vote_count_text_view"
@@ -41,7 +41,7 @@
             android:layout_centerInParent="true"
             android:visibility="gone">
 
-            <org.edx.mobile.third_party.iconify.IconView
+            <com.joanzapata.iconify.widget.IconImageView
                 android:id="@+id/discussion_responses_action_bar_follow_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -49,7 +49,7 @@
                 android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
                 android:layout_centerVertical="true"
                 app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa_star" />
+                app:iconName="fa-star" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/discussion_responses_action_bar_follow_text_view"
@@ -69,7 +69,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true">
 
-            <org.edx.mobile.third_party.iconify.IconView
+            <com.joanzapata.iconify.widget.IconImageView
                 android:id="@+id/discussion_responses_action_bar_report_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -77,7 +77,7 @@
                 android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
                 android:layout_centerVertical="true"
                 app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa_flag" />
+                app:iconName="fa-flag" />
 
             <org.edx.mobile.view.custom.ETextView
                 android:id="@+id/discussion_responses_action_bar_report_text_view"

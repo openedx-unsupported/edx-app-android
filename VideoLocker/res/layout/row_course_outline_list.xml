@@ -22,7 +22,7 @@
         android:paddingTop="8dp"
         tools:targetApi="17">
 
-        <org.edx.mobile.third_party.iconify.IconView
+        <com.joanzapata.iconify.widget.IconImageView
             android:id="@+id/row_type"
             android:layout_width="40dp"
             android:layout_height="18dp"
@@ -77,7 +77,7 @@
                     android:visibility="gone"
                     tools:text="@string/chapter_name" />
 
-                <org.edx.mobile.third_party.iconify.IconView
+                <com.joanzapata.iconify.widget.IconImageView
                     android:id="@+id/row_subtitle_icon"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -86,7 +86,7 @@
                     android:paddingLeft="2dp"
                     android:paddingStart="2dp"
                     android:visibility="gone"
-                    app:iconName="fa_check" />
+                    app:iconName="fa-check" />
             </LinearLayout>
 
         </LinearLayout>
@@ -118,7 +118,7 @@
                 tools:targetApi="17"
                 tools:text="0" />
 
-            <org.edx.mobile.third_party.iconify.IconView
+            <com.joanzapata.iconify.widget.IconImageView
                 android:id="@+id/bulk_download"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
@@ -128,7 +128,7 @@
                 android:paddingRight="1dp"
                 android:paddingStart="0dp"
                 android:paddingTop="3dp"
-                app:iconName="fa_arrow_down" />
+                app:iconName="fa-arrow-down" />
         </LinearLayout>
 
     </LinearLayout>

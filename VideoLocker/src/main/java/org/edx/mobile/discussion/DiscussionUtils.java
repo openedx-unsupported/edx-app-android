@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+
 import org.edx.mobile.R;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 
 public abstract class DiscussionUtils {
     /**
@@ -31,7 +32,7 @@ public abstract class DiscussionUtils {
         if (isTopicClosed) {
             textView.setText(negativeTextResId);
             TextViewCompat.setCompoundDrawablesRelative(textView,
-                    new IconDrawable(context, Iconify.IconValue.fa_lock)
+                    new IconDrawable(context, FontAwesomeIcons.fa_lock)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
                             .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                     null, null, null
@@ -40,7 +41,7 @@ public abstract class DiscussionUtils {
         } else {
             textView.setText(positiveTextResId);
             TextViewCompat.setCompoundDrawablesRelative(textView,
-                    new IconDrawable(textView.getContext(), Iconify.IconValue.fa_plus_circle)
+                    new IconDrawable(textView.getContext(), FontAwesomeIcons.fa_plus_circle)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
                             .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                     null, null, null

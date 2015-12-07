@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.widget.IconImageView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
@@ -94,18 +95,18 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
 
         int rowNum = 0;
         View coursewareRowView = rowsContainerGroup.getChildAt(rowNum++);
-        assertRow(coursewareRowView, Iconify.IconValue.fa_list_alt,
+        assertRow(coursewareRowView, FontAwesomeIcons.fa_list_alt,
                 R.string.courseware_title, R.string.courseware_subtitle);
         if (config.isDiscussionsEnabled()) {
             View discussionRowView = rowsContainerGroup.getChildAt(rowNum++);
-            assertRow(discussionRowView, Iconify.IconValue.fa_comments_o,
+            assertRow(discussionRowView, FontAwesomeIcons.fa_comments_o,
                     R.string.discussion_title, R.string.discussion_subtitle);
         }
         View handoutsRowView = rowsContainerGroup.getChildAt(rowNum++);
-        assertRow(handoutsRowView, Iconify.IconValue.fa_file_text_o,
+        assertRow(handoutsRowView, FontAwesomeIcons.fa_file_text_o,
                 R.string.handouts_title, R.string.handouts_subtitle);
         View announcementRowView = rowsContainerGroup.getChildAt(rowNum++);
-        assertRow(announcementRowView, Iconify.IconValue.fa_bullhorn,
+        assertRow(announcementRowView, FontAwesomeIcons.fa_bullhorn,
                 R.string.announcement_title, R.string.announcement_subtitle);
 
         assertTrue(coursewareRowView.performClick());
@@ -127,15 +128,15 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
      * @param titleRes The string resource id for the row title
      * @param subtitleRes The string resource id for the row subtitle
      */
-    private void assertRow(View rowView, Iconify.IconValue icon,
+    private void assertRow(View rowView, FontAwesomeIcons icon,
             int titleRes, int subtitleRes) {
         assertNotNull(rowView);
         assertThat(rowView).isInstanceOf(ViewGroup.class);
 
         View iconView = rowView.findViewById(R.id.row_type);
         assertNotNull(iconView);
-        assertThat(iconView).isInstanceOf(IconView.class);
-        assertEquals(icon, ((IconView) iconView).getIcon());
+        assertThat(iconView).isInstanceOf(IconImageView.class);
+        assertEquals(icon, ((IconImageView) iconView).getIcon());
 
         Resources res = rowView.getContext().getResources();
 

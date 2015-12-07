@@ -43,13 +43,13 @@
                         app:civ_border_width="1dp"
                         tools:src="@drawable/app_icon" />
 
-                    <org.edx.mobile.third_party.iconify.IconView
+                    <com.joanzapata.iconify.widget.IconImageView
                         android:id="@+id/profile_image_progress"
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"
                         android:layout_gravity="center"
                         app:iconColor="@color/edx_brand_primary_light"
-                        app:iconName="fa_spinner" />
+                        app:iconName="fa-spinner" />
                 </FrameLayout>
 
                 <TextView

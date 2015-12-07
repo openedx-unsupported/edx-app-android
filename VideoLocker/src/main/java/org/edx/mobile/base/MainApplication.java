@@ -10,6 +10,8 @@ import android.support.multidex.MultiDexApplication;
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
@@ -116,6 +118,9 @@ public class MainApplication extends MultiDexApplication {
             //https://openedx.atlassian.net/browse/MA-794
             EdxCookieManager.getSharedInstance().clearWebViewCache(this);
         }
+
+        // Register Font Awesome module in android-iconify library
+        Iconify.with(new FontAwesomeModule());
     }
 
     /**

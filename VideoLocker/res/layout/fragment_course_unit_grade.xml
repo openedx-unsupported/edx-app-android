@@ -8,11 +8,11 @@
               android:gravity="center"
     >
 
-    <org.edx.mobile.third_party.iconify.IconView
+    <com.joanzapata.iconify.widget.IconImageView
         android:layout_width="90dp"
         android:layout_height="90dp"
         app:iconColor="@color/grey_3"
-        app:iconName="fa_laptop"
+        app:iconName="fa-laptop"
         android:layout_margin="20dp"/>
 
     <TextView

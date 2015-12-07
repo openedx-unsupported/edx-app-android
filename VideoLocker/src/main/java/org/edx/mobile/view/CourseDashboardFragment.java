@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.inject.Inject;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.widget.IconImageButton;
+import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -22,9 +25,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.third_party.iconify.IconButton;
-import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -101,7 +101,7 @@ public class CourseDashboardFragment extends RoboFragment {
             //thing is UI layout. so we reuse the same UI layout programmatically here.
             ViewHolder holder = createViewHolder(inflater, parent);
 
-            holder.typeView.setIcon(Iconify.IconValue.fa_list_alt);
+            holder.typeView.setIcon(FontAwesomeIcons.fa_list_alt);
             holder.titleView.setText(R.string.courseware_title);
             holder.subtitleView.setText(R.string.courseware_subtitle);
             holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +117,7 @@ public class CourseDashboardFragment extends RoboFragment {
                     && environment.getConfig().isDiscussionsEnabled()) {
                 holder = createViewHolder(inflater, parent);
 
-                holder.typeView.setIcon(Iconify.IconValue.fa_comments_o);
+                holder.typeView.setIcon(FontAwesomeIcons.fa_comments_o);
                 holder.titleView.setText(R.string.discussion_title);
                 holder.subtitleView.setText(R.string.discussion_subtitle);
                 holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +130,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
             holder = createViewHolder(inflater, parent);
 
-            holder.typeView.setIcon(Iconify.IconValue.fa_file_text_o);
+            holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
             holder.titleView.setText(R.string.handouts_title);
             holder.subtitleView.setText(R.string.handouts_subtitle);
             holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +143,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
             holder = createViewHolder(inflater, parent);
 
-            holder.typeView.setIcon(Iconify.IconValue.fa_bullhorn);
+            holder.typeView.setIcon(FontAwesomeIcons.fa_bullhorn);
             holder.titleView.setText(R.string.announcement_title);
             holder.subtitleView.setText(R.string.announcement_subtitle);
             holder.rowView.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ public class CourseDashboardFragment extends RoboFragment {
     private ViewHolder createViewHolder(LayoutInflater inflater, LinearLayout parent) {
         ViewHolder holder = new ViewHolder();
         holder.rowView = inflater.inflate(R.layout.row_course_dashboard_list, parent, false);
-        holder.typeView = (IconView) holder.rowView.findViewById(R.id.row_type);
+        holder.typeView = (IconImageView) holder.rowView.findViewById(R.id.row_type);
         holder.titleView = (TextView) holder.rowView.findViewById(R.id.row_title);
         holder.subtitleView = (TextView) holder.rowView.findViewById(R.id.row_subtitle);
         parent.addView(holder.rowView);
@@ -221,7 +221,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
     private class ViewHolder {
         View rowView;
-        IconView typeView;
+        IconImageView typeView;
         TextView titleView;
         TextView subtitleView;
     }

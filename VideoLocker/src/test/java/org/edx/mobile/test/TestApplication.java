@@ -1,5 +1,8 @@
 package org.edx.mobile.test;
 
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 
@@ -31,6 +34,8 @@ public class TestApplication extends MainApplication {
     public void onCreate() {
         // initialize logger
         Logger.init(this.getApplicationContext());
+        // Register Font Awesome module in android-iconify library
+        Iconify.with(new FontAwesomeModule());
         application = this;
     }
 }

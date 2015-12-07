@@ -31,13 +31,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.internal.Animation;
+import com.joanzapata.iconify.widget.IconImageView;
+
 import org.edx.mobile.R;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.DeleteAccountImageTask;
@@ -141,7 +143,7 @@ public class EditUserProfileFragment extends RoboFragment {
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto,
-                new IconDrawable(getActivity(), Iconify.IconValue.fa_camera)
+                new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
                         .colorRes(getActivity(), R.color.disableable_button_text)
                         .sizeRes(getActivity(), R.dimen.fa_x_small)
                 , null, null, null);
@@ -199,7 +201,7 @@ public class EditUserProfileFragment extends RoboFragment {
 
     private void executePhotoTask(Task task) {
         viewHolder.profileImageProgress.setVisibility(View.VISIBLE);
-        viewHolder.profileImageProgress.setRotating(true);
+        viewHolder.profileImageProgress.setIconAnimation(Animation.SPIN);
         // TODO: Test this with "Don't keep activities"
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
@@ -249,7 +251,7 @@ public class EditUserProfileFragment extends RoboFragment {
         public final TextView username;
         public final ViewGroup fields;
         public final TextView changePhoto;
-        public final IconView profileImageProgress;
+        public final IconImageView profileImageProgress;
 
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
@@ -258,7 +260,7 @@ public class EditUserProfileFragment extends RoboFragment {
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
             this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
-            this.profileImageProgress = (IconView) parent.findViewById(R.id.profile_image_progress);
+            this.profileImageProgress = (IconImageView) parent.findViewById(R.id.profile_image_progress);
         }
     }
 
@@ -514,7 +516,7 @@ public class EditUserProfileFragment extends RoboFragment {
         }}));
         Context context = parent.getContext();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                textView, null, null, new IconDrawable(context, Iconify.IconValue.fa_angle_right)
+                textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
                         .colorRes(context, R.color.edx_grayscale_neutral_light)
                         .sizeDp(context, 24), null);
         if (readOnly) {

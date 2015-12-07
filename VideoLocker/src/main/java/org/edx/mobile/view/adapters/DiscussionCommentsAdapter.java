@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 
 public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
@@ -57,7 +58,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
             final int childrenSize = discussionComment.getChildren().size();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childrenSize, childrenSize));
-            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_comment)
+            iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_comment)
                     .sizeRes(context, R.dimen.edx_xxx_small)
                     .colorRes(context, R.color.edx_grayscale_neutral_base);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
@@ -75,7 +76,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
                 backgroundRes = R.drawable.row_discussion_comment_background;
             }
 
-            iconDrawable = new IconDrawable(context, Iconify.IconValue.fa_flag)
+            iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_flag)
                     .sizeRes(context, R.dimen.edx_xxx_small)
                     .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
             holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));

@@ -26,13 +26,13 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <org.edx.mobile.third_party.iconify.IconView
+        <com.joanzapata.iconify.widget.IconImageView
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:background="@color/white"
             android:rotation="90"
             app:iconColor="@color/edx_grayscale_neutral_light"
-            app:iconName="fa_mobile_phone" />
+            app:iconName="fa-mobile-phone" />
 
         <TextView
             android:layout_width="match_parent"

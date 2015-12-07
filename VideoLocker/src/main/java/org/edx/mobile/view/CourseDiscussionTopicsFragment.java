@@ -13,6 +13,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.CourseTopics;
@@ -21,8 +23,6 @@ import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class CourseDiscussionTopicsFragment extends RoboFragment {
             header.setText(R.string.forum_post_i_am_following);
             Context context = getActivity();
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
-                    new IconDrawable(context, Iconify.IconValue.fa_star)
+                    new IconDrawable(context, FontAwesomeIcons.fa_star)
                             .colorRes(context, R.color.edx_grayscale_neutral_dark)
                             .sizeRes(context, R.dimen.edx_base),
                     null, null, null);

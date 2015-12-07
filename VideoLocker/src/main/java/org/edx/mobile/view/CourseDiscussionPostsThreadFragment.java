@@ -17,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
@@ -29,8 +32,6 @@ import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -91,7 +92,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
         TextViewCompat.setCompoundDrawablesRelative(createNewPostTextView,
-                new IconDrawable(context, Iconify.IconValue.fa_plus_circle)
+                new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
                         .sizeRes(context, R.dimen.icon_view_standard_width_height)
                         .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                 null, null, null
@@ -105,7 +106,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         discussionPostsFilterSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
                 discussionPostsFilterSpinner, DiscussionPostsFilter.values(),
-                Iconify.IconValue.fa_filter));
+                FontAwesomeIcons.fa_filter));
         discussionPostsSortSpinner.setAdapter(new DiscussionPostsSpinnerAdapter(
                 discussionPostsSortSpinner, DiscussionPostsSort.values(),
                 // Since we can't define IconDrawable in XML resources, we'll have to define
@@ -117,9 +118,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     public Drawable createIcon() {
                         Context context = getActivity();
                         LayerDrawable layeredIcon = new LayerDrawable(new Drawable[]{
-                                new IconDrawable(context, Iconify.IconValue.fa_long_arrow_up)
+                                new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_up)
                                         .colorRes(context, R.color.edx_brand_primary_base),
-                                new IconDrawable(context, Iconify.IconValue.fa_long_arrow_down)
+                                new IconDrawable(context, FontAwesomeIcons.fa_long_arrow_down)
                                         .colorRes(context, R.color.edx_brand_primary_base)
                         });
                         Resources resources = context.getResources();
