@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 
-import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.util.images.CourseCardUtils;
 
 
 public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
@@ -27,6 +27,7 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
 
         final CourseEntry courseData = enrollment.getCourse();
+        holder.setPadding(tag.position == 0);
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig()));
 
@@ -39,8 +40,8 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
             });
         } else {
             holder.setDescription(
-                    courseData.getDescription(getContext(), false),
-                    courseData.getFormattedDate(getContext())
+                    courseData.getDescription(),
+                    CourseCardUtils.getFormattedDate(getContext(), courseData)
             );
         }
     }

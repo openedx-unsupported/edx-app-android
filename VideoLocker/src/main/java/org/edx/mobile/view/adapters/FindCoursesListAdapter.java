@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
+import org.edx.mobile.util.images.CourseCardUtils;
 
 
 public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetail> {
@@ -20,11 +21,13 @@ public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetai
 
     @SuppressLint("SimpleDateFormat")
     @Override
-    public void render(BaseViewHolder tag, final CourseDetail courseData) {
+    public void render(BaseViewHolder tag, final CourseDetail courseDetail) {
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
-        holder.setCourseTitle(courseData.name);
-        holder.setCourseImage(environment.getConfig().getApiHostURL() + courseData.media.course_image.uri);
-        holder.setDescription(courseData.description, courseData.start_display);
+        holder.setPadding(tag.position == 0);
+        holder.setCourseTitle(courseDetail.name);
+        holder.setCourseImage(environment.getConfig().getApiHostURL() + courseDetail.media.course_image.uri);
+        holder.setDescription(CourseCardUtils.getDescription(courseDetail.org, courseDetail.number, null),
+                CourseCardUtils.getFormattedDate(getContext(), courseDetail));
     }
 
     @Override

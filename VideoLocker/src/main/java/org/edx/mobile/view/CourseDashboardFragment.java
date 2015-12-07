@@ -22,7 +22,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.CourseEntry;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.third_party.iconify.IconButton;
 import org.edx.mobile.third_party.iconify.IconView;
 import org.edx.mobile.third_party.iconify.Iconify;
 import org.edx.mobile.util.ResourceUtil;
@@ -172,7 +171,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
         courseTextName.setText(courseData.getCourse().getName());
         CourseEntry course = courseData.getCourse();
-        courseTextDetails.setText(course.getDescription(getActivity(), true));
+        courseTextDetails.setText(course.getDescriptionWithStartDate(getActivity()));
 
         if (environment.getConfig().isShareCourseEnabled()) {
             shareButton.setVisibility(headerImageView.VISIBLE);

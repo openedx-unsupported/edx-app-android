@@ -2,6 +2,7 @@ package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.Space;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,27 +49,17 @@ public class NativeFindCoursesFragment extends RoboFragment {
             protected void onSuccess(CourseList courseList) throws Exception {
                 super.onSuccess(courseList);
                 adapter.setItems(courseList.results);
+                if (null != viewHolder) viewHolder.loadingIndicator.setVisibility(View.GONE);
             }
 
             @Override
             protected void onException(Exception e) throws RuntimeException {
                 super.onException(e);
                 showErrorMessage(e);
+                if (null != viewHolder) viewHolder.loadingIndicator.setVisibility(View.GONE);
             }
         };
-        task.setProgressCallback(new TaskProgressCallback() {
-            @Override
-            public void startProcess() {
-                if (null == viewHolder) return;
-                viewHolder.loadingIndicator.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void finishProcess() {
-                if (null == viewHolder) return;
-                viewHolder.loadingIndicator.setVisibility(View.GONE);
-            }
-        });
+        task.setProgressCallback(null);
         task.execute();
     }
 

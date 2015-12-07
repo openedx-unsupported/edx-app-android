@@ -118,6 +118,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
         myCourseList = (ListView) view.findViewById(R.id.my_course_list);
         //As per docs, the footer needs to be added before adapter is set to the ListView
         setupFooter(myCourseList);
+
         myCourseList.setAdapter(adapter);
         myCourseList.setOnItemClickListener(adapter);
 

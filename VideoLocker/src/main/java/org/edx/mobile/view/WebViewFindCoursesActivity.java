@@ -25,7 +25,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
 
         webView = (WebView) findViewById(R.id.webview);
-        webView.loadUrl(environment.getConfig().getEnrollmentConfig().getCourseSearchUrl());
+        webView.loadUrl(environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl());
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
@@ -23,6 +24,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.view.dialog.CourseDiscoveryNotEnabledDialogFragment;
 
 import de.greenrobot.event.EventBus;
 
@@ -51,16 +53,20 @@ public class Router {
         sourceActivity.startActivity(downloadIntent);
     }
 
-    public void showFindCourses(Activity sourceActivity) {
-        final Intent findCoursesIntent;
-        if (config.getEnrollmentConfig().isEnabled()) {
-            findCoursesIntent = new Intent(sourceActivity, WebViewFindCoursesActivity.class);
+    public void showFindCourses(FragmentActivity sourceActivity) {
+        if (config.getCourseDiscoveryConfig().isEnabled()) {
+            final Intent findCoursesIntent;
+            if (config.getCourseDiscoveryConfig().isNative()) {
+                findCoursesIntent = NativeFindCoursesActivity.newIntent(sourceActivity);
+            } else {
+                findCoursesIntent = new Intent(sourceActivity, WebViewFindCoursesActivity.class);
+            }
+            //Add this flag as multiple activities need to be created
+            findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            sourceActivity.startActivity(findCoursesIntent);
         } else {
-            findCoursesIntent = NativeFindCoursesActivity.newIntent(sourceActivity);
+            CourseDiscoveryNotEnabledDialogFragment.show(sourceActivity);
         }
-        //Add this flag as multiple activities need to be created
-        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(findCoursesIntent);
     }
 
     public void showCourseInfo(Activity sourceActivity, String pathId) {
