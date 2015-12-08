@@ -35,7 +35,7 @@ import static android.view.View.TEXT_DIRECTION_LTR;
 import static android.view.View.TEXT_DIRECTION_RTL;
 
 public class CustomTypefaceSpan extends ReplacementSpan {
-    private static final int ROTATION_DURATION = 2000;
+    private static final int ROTATION_DURATION = 600;
     // Font Awesome uses 8-step rotation for pulse, and
     // it seems to have the only pulsing spinner. If
     // spinners with different pulses are introduced at
