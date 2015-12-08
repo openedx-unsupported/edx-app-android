@@ -404,12 +404,13 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
 
     /**
      * Animate / show the download started message
+     *
      * @param message - Message to display on the Download Panel
      * @return boolean - Returns true if message shown, false otherwise.
      */
-    public boolean showInfoMessage(String message){
+    public boolean showInfoMessage(String message) {
         TextView infoMessageTv = (TextView) findViewById(R.id.downloadMessage);
-        if(infoMessageTv!=null) {
+        if (infoMessageTv != null) {
             infoMessageTv.setText(message);
             animateLayouts(infoMessageTv);
             return true;
@@ -418,6 +419,21 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
         }
 
         return false;
+    }
+
+    /**
+     * Hides the info message view if its visible with animation
+     *
+     * @return <code>true<code/> if the view was hidden successfully otherwise <code>false</code>
+     */
+    public boolean hideInfoMessage() {
+        View messageView = findViewById(R.id.downloadMessage);
+        if (messageView == null) {
+            logger.warn("Message view not available, so couldn't hide flying message");
+            return false;
+        }
+        ViewAnimationUtil.hideMessageBar(messageView);
+        return true;
     }
 
     /**

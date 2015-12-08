@@ -338,4 +338,9 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
     protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {}
 
+    @Override
+    protected void onOnline() {}
+
+    @Override
+    protected void onOffline() {}
 }

@@ -15,12 +15,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <org.edx.mobile.view.custom.ETextView
-                android:id="@+id/downloadMessage"
-                style="@style/downloading_message"
-                android:text="@string/started_downloading"
-                android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/offline_bar"
                 android:orientation="vertical"
@@ -101,7 +95,7 @@
                 android:layout_height="0px"
                 android:layout_weight="1"
                 android:id="@+id/fragment_container"
-                android:layout_below="@id/offline_bar" />
+                android:layout_below="@+id/offline_bar" />
 
             <LinearLayout
                 android:id="@+id/course_unit_nav_bar"
@@ -172,6 +166,12 @@
 
 
         </LinearLayout>
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/downloadMessage"
+            style="@style/downloading_message"
+            android:text="@string/started_downloading"
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/progress_spinner"
