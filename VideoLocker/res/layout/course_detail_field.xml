@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_detail_field"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp">
+
+        <org.edx.mobile.third_party.iconify.IconView
+            android:id="@+id/course_detail_field_icon"
+            android:layout_width="@dimen/fa_xxx_large"
+            android:layout_height="@dimen/fa_xxx_large"
+            android:baselineAlignBottom="true"
+            android:gravity="left"
+            app:iconColor="@color/edx_grayscale_neutral_black" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_field_name"
+            style="@style/regular_edx_black_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:hint="Field:"
+            android:paddingLeft="10dp"
+            android:textDirection="locale"
+            android:textSize="@dimen/edx_base"/>
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_field_text"
+            style="@style/regular_edx_gray_xdark_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:hint="Course detail field description. This part is too long hahahah"
+            android:textDirection="locale"
+            android:textSize="@dimen/edx_base" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/edx_grayscale_neutral_light" />
+
+</LinearLayout>

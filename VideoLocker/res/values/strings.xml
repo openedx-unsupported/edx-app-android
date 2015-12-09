@@ -28,6 +28,16 @@
     <string name="share_application_picture_url">https://www.edx.org/sites/default/files/theme/edx-logo-header.png</string>
     <string name="share_application_description">Free online courses</string>
 
+    <!-- Course Discovery -->
+
+    <!-- Title of the course detail page-->
+    <string name="course_detail_title">Course Detail</string>
+    <!-- Enroll Now button text -->
+    <string name="course_detail_enroll_now_button">Enroll Now</string>
+    <!-- About This Course title -->
+    <string name="course_detail_about_this_course">About this Course</string>
+
+
     <!-- Course Sharing -->
 
     <!-- Description of button that will open the share course menu -->

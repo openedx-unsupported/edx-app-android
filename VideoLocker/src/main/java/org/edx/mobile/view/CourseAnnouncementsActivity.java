@@ -15,7 +15,7 @@ import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 
-public class CourseDetailInfoActivity extends BaseFragmentActivity {
+public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
     @Inject
     IApi api;
@@ -24,7 +24,7 @@ public class CourseDetailInfoActivity extends BaseFragmentActivity {
     private EnrolledCoursesResponse courseData;
 
 
-    public static String TAG = CourseDetailInfoActivity.class.getCanonicalName();
+    public static String TAG = CourseAnnouncementsActivity.class.getCanonicalName();
 
     private View offlineBar;
 

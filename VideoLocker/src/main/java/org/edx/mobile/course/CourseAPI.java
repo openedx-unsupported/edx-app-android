@@ -22,4 +22,8 @@ public class CourseAPI {
     public CourseList getCourseList() throws RetroHttpException {
         return courseService.getCourseList();
     }
+
+    public CourseDetail getCourseDetail(String courseId) throws RetroHttpException {
+        return courseService.getCourseDetail(courseId);
+    }
 }

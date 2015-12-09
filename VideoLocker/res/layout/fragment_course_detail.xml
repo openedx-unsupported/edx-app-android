@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:background="@color/edx_grayscale_neutral_white"
+
+    >
+
+    <org.edx.mobile.view.custom.ETextView
+        android:id="@+id/course_detail_short_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:gravity="left"
+        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textSize="@dimen/edx_base"
+        android:textStyle="bold"
+        />
+
+    <org.edx.mobile.view.custom.EButton
+        android:id="@+id/button_enroll_now"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:onClick="enroll"
+        android:layout_marginTop="15dp"
+        style="@style/edX.Widget.EnrollButton"
+        />
+
+    <LinearLayout
+        android:id="@+id/course_field_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/course_detail_about_this_course"
+        android:textSize="@dimen/edx_large"
+        android:textStyle="bold"
+        android:paddingTop="20dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_act_background"
+        android:orientation="vertical" >
+
+        <org.edx.mobile.view.custom.EdxWebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_act_background" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/downloadMessage"
+            style="@style/downloading_message"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"/>
+
+        <ProgressBar
+            android:id="@+id/api_spinner"
+            style="@style/api_progress_style"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
