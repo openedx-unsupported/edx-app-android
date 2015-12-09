@@ -136,13 +136,7 @@
 
                 <org.edx.mobile.view.custom.ETextView
                     style="@style/empty_content_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/edx_margin"
-                    android:layout_marginLeft="@dimen/edx_margin"
-                    android:layout_marginRight="@dimen/edx_margin"
-                    android:gravity="center"
+                    android:visibility="visible"
                     android:text="@string/profile_consent_needed_explanation" />
 
                 <Button

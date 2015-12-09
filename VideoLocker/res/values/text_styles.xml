@@ -111,6 +111,20 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
+
+    <style name="empty_content_text" parent="bold_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/edx_margin</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:maxWidth">@dimen/empty_list_text_max_width</item>
+        <item name="android:drawablePadding">@dimen/edx_margin</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:visibility">gone</item>
+    </style>
     
     <style name="bold_grey_text" parent="@style/bold_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
@@ -210,7 +224,7 @@
         <item name="android:text">@string/find_courses_offline_text</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:textColor">@color/empty_list_text</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
         <item name="android:visibility">gone</item>
     </style>
 
