@@ -1,25 +1,4 @@
-package org.edx.mobile.third_party.iconify;
-
-/**
- * Copyright 2013 Joan Zapata
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * It uses FontAwesome font, licensed under OFL 1.1, which is compatible
- * with this library's license.
- *
- *     http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=OFL_plaintext&filename=OFL.txt
- */
+package com.joanzapata.iconify;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -37,22 +16,26 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.SystemClock;
+import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
+import android.util.LayoutDirection;
 import android.util.StateSet;
+import android.util.TypedValue;
 import android.view.View;
-
-import org.edx.mobile.third_party.iconify.Iconify.IconValue;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+import static android.os.Build.VERSION_CODES.M;
+import static android.util.TypedValue.COMPLEX_UNIT_DIP;
+import static android.view.View.LAYOUT_DIRECTION_RTL;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static org.edx.mobile.third_party.iconify.Utils.convertDpToPx;
 
 /**
  * Embed an icon into a Drawable that can be used as TextView icons, or ActionBar icons.
@@ -66,36 +49,81 @@ import static org.edx.mobile.third_party.iconify.Utils.convertDpToPx;
  * set the size explicitly it uses 0, so please use actionBarSize().
  */
 public final class IconDrawable extends Drawable implements Animatable {
-    static final int DEFAULT_COLOR = Color.BLACK;
+    private static final int DEFAULT_COLOR = Color.BLACK;
     // Set the default tint to make it half translucent on disabled state.
     private static final PorterDuff.Mode DEFAULT_TINT_MODE = PorterDuff.Mode.MULTIPLY;
     private static final ColorStateList DEFAULT_TINT = new ColorStateList(
             new int[][] { { -android.R.attr.state_enabled }, StateSet.WILD_CARD },
             new int[] { 0x80FFFFFF, 0xFFFFFFFF }
     );
-    private static final int ROTATION_DURATION = 2000;
+    private static final int ROTATION_DURATION = 600;
+    // Font Awesome uses 8-step rotation for pulse, and
+    // it seems to have the only pulsing spinner. If
+    // spinners with different pulses are introduced at
+    // some point, then a pulse property can be
+    // implemented for the icons.
+    private static final int ROTATION_PULSES = 8;
+    private static final int ROTATION_PULSE_DURATION = ROTATION_DURATION / ROTATION_PULSES;
     private static final int ANDROID_ACTIONBAR_ICON_SIZE_DP = 24;
     private static final Rect TEMP_DRAW_BOUNDS = new Rect();
 
     @NonNull
     private IconState iconState;
     private final TextPaint paint;
+    @ColorInt
     private int color;
+    @Nullable
     private ColorFilter tintFilter;
+    @ColorInt
     private int tintColor;
-    private long rotationStartTime = -1;
+    @IntRange(from = -1)
+    private long spinStartTime = -1;
     private boolean mMutated;
+    @NonNull
     private final String text;
+    @NonNull
     private final Rect drawBounds = new Rect();
     private float centerX, centerY;
+    @Nullable
+    private Runnable invalidateRunnable;
+
+    @CheckResult
+    @NonNull
+    private static Icon findValidIconForKey(@NonNull String iconKey) {
+        Icon icon = Iconify.findIconForKey(iconKey);
+        if (icon == null) {
+            throw new IllegalArgumentException("No icon found with key \"" + iconKey + "\".");
+        }
+        return icon;
+    }
+
+    @NonNull
+    private static Icon validateIcon(@NonNull Icon icon) {
+        if (Iconify.findTypefaceOf(icon) == null) {
+            throw new IllegalStateException("Unable to find the module associated " +
+                    "with icon " + icon.key() + ", have you registered the module " +
+                    "you are trying to use with Iconify.with(...) in your Application?");
+        }
+        return icon;
+    }
+
+    /**
+     * Create an IconDrawable.
+     * @param context Your activity or application context.
+     * @param iconKey The icon key you want this drawable to display.
+     * @throws IllegalArgumentException if the key doesn't match any icon.
+     */
+    public IconDrawable(@NonNull Context context, @NonNull String iconKey) {
+        this(context, new IconState(findValidIconForKey(iconKey)));
+    }
 
     /**
      * Create an IconDrawable.
      * @param context Your activity or application context.
      * @param icon    The icon you want this drawable to display.
      */
-    public IconDrawable(@NonNull Context context, @NonNull IconValue icon) {
-        this(context, new IconState(icon));
+    public IconDrawable(@NonNull Context context, @NonNull Icon icon) {
+        this(context, new IconState(validateIcon(icon)));
     }
 
     private IconDrawable(@NonNull IconState state) {
@@ -105,7 +133,10 @@ public final class IconDrawable extends Drawable implements Animatable {
     private IconDrawable(Context context, @NonNull IconState state) {
         iconState = state;
         paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        paint.setTypeface(Iconify.getTypeface(context));
+        // We have already confirmed that a typeface exists for this icon during
+        // validation, so we can ignore the null pointer warning.
+        //noinspection ConstantConditions
+        paint.setTypeface(Iconify.findTypefaceOf(state.icon).getTypeface(context));
         paint.setStyle(state.style);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setUnderlineText(false);
@@ -145,8 +176,10 @@ public final class IconDrawable extends Drawable implements Animatable {
      * @return The current IconDrawable for chaining.
      */
     @NonNull
-    public IconDrawable sizeDp(@NonNull Context context, int size) {
-        return sizePx(convertDpToPx(context, size));
+    public IconDrawable sizeDp(@NonNull Context context, @IntRange(from = 0) int size) {
+        return sizePx((int) TypedValue.applyDimension(
+                COMPLEX_UNIT_DIP, size,
+                context.getResources().getDisplayMetrics()));
     }
 
     /**
@@ -155,11 +188,15 @@ public final class IconDrawable extends Drawable implements Animatable {
      * @return The current IconDrawable for chaining.
      */
     @NonNull
-    public IconDrawable sizePx(int size) {
+    public IconDrawable sizePx(@IntRange(from = -1) int size) {
         iconState.height = size;
-        paint.setTextSize(size);
-        paint.getTextBounds(text, 0, 1, TEMP_DRAW_BOUNDS);
-        iconState.width = TEMP_DRAW_BOUNDS.width();
+        if (size == -1) {
+            iconState.width = -1;
+        } else {
+            paint.setTextSize(size);
+            paint.getTextBounds(text, 0, 1, TEMP_DRAW_BOUNDS);
+            iconState.width = TEMP_DRAW_BOUNDS.width();
+        }
         return this;
     }
 
@@ -208,7 +245,7 @@ public final class IconDrawable extends Drawable implements Animatable {
      * @return The current IconDrawable for chaining.
      */
     @NonNull
-    public IconDrawable alpha(int alpha) {
+    public IconDrawable alpha(@ColorInt int alpha) {
         setAlpha(alpha);
         return this;
     }
@@ -219,7 +256,19 @@ public final class IconDrawable extends Drawable implements Animatable {
      * @return The current IconDrawable for chaining.
      */
     @NonNull
-    public IconDrawable rotate() {
+    public IconDrawable spin() {
+        start();
+        return this;
+    }
+
+    /**
+     * Start a pulse animation on this drawable. Call {@link #stop()}
+     * to stop it.
+     * @return The current IconDrawable for chaining.
+     */
+    @NonNull
+    public IconDrawable pulse() {
+        iconState.pulse = true;
         start();
         return this;
     }
@@ -228,16 +277,22 @@ public final class IconDrawable extends Drawable implements Animatable {
      * Returns the icon to be displayed
      * @return The icon
      */
-    public final IconValue getIcon() {
+    @CheckResult
+    @NonNull
+    public final Icon getIcon() {
         return iconState.icon;
     }
 
     @Override
+    @CheckResult
+    @IntRange(from = -1)
     public int getIntrinsicHeight() {
         return iconState.height;
     }
 
     @Override
+    @CheckResult
+    @IntRange(from = -1)
     public int getIntrinsicWidth() {
         return iconState.width;
     }
@@ -258,6 +313,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @CheckResult
     @NonNull
     public Rect getDirtyBounds() {
         return drawBounds;
@@ -277,13 +333,34 @@ public final class IconDrawable extends Drawable implements Animatable {
             canvas.translate(getBounds().width(), 0);
             canvas.scale(-1.0f, 1.0f);
         }
-        if (iconState.rotating) {
+        if (iconState.spinning) {
             long currentTime = SystemClock.uptimeMillis();
-            if (rotationStartTime < 0) {
-                rotationStartTime = currentTime;
+            if (spinStartTime < 0) {
+                spinStartTime = currentTime;
+                if (isVisible()) {
+                    if (iconState.pulse) {
+                        scheduleSelf(invalidateRunnable, currentTime + ROTATION_PULSE_DURATION);
+                    } else {
+                        invalidateSelf();
+                    }
+                }
             } else {
-                float rotation = (currentTime - rotationStartTime) /
-                        (float) ROTATION_DURATION * 360f;
+                boolean isVisible = isVisible();
+                long timeElapsed = currentTime - spinStartTime;
+                float rotation;
+                if (iconState.pulse) {
+                    rotation = timeElapsed / (float) ROTATION_PULSE_DURATION;
+                    if (isVisible) {
+                        scheduleSelf(invalidateRunnable, currentTime +
+                                (timeElapsed * (int) (rotation + 1)));
+                    }
+                    rotation = ((int) Math.floor(rotation)) * 360f / ROTATION_PULSES;
+                } else {
+                    rotation = timeElapsed / (float) ROTATION_DURATION * 360f;
+                    if (isVisible) {
+                        invalidateSelf();
+                    }
+                }
                 canvas.rotate(rotation, centerX, centerY);
             }
             if (isVisible()) {
@@ -295,6 +372,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @CheckResult
     public boolean isStateful() {
         return iconState.colorStateList.isStateful() ||
                 (iconState.tint != null && iconState.tint.isStateful());
@@ -332,7 +410,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
-    public void setAlpha(int alpha) {
+    public void setAlpha(@ColorInt int alpha) {
         if (alpha != iconState.alpha) {
             iconState.alpha = alpha;
             setModulatedAlpha();
@@ -345,11 +423,14 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @CheckResult
+    @ColorInt
     public int getAlpha() {
         return iconState.alpha;
     }
 
     @Override
+    @CheckResult
     public int getOpacity() {
         int baseAlpha = color >> 24;
         if (baseAlpha == 255 && iconState.alpha == 255) return PixelFormat.OPAQUE;
@@ -376,6 +457,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @CheckResult
     @Nullable
     public ColorFilter getColorFilter() {
         return iconState.colorFilter;
@@ -430,7 +512,7 @@ public final class IconDrawable extends Drawable implements Animatable {
 
     @Override
     public void setAutoMirrored(boolean mirrored) {
-        if (SDK_INT >= JELLY_BEAN_MR1 && iconState.icon.supportsRtl &&
+        if (SDK_INT >= JELLY_BEAN_MR1 && iconState.icon.supportsRtl() &&
                 iconState.autoMirrored != mirrored) {
             iconState.autoMirrored = mirrored;
             invalidateSelf();
@@ -438,28 +520,30 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @CheckResult
     public final boolean isAutoMirrored() {
         return iconState.autoMirrored;
     }
 
-    // Since the auto-mirrored state is only set to true the SDK version
-    // supports it, we don't need an explicit check for it before calling
-    // the getLayoutDirection() methods.
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    // Since the auto-mirrored state is only set to true if the SDK
+    // version supports it, we don't need an explicit check for that
+    // before calling getLayoutDirection().
+    @TargetApi(JELLY_BEAN_MR1)
+    @CheckResult
     private boolean needMirroring() {
         if (isAutoMirrored()) {
-            // TODO: Uncomment this one we start compiling against Marshmallow
-            /*if (SDK_INT >= M) {
+            if (SDK_INT >= M) {
                 return getLayoutDirection() == LayoutDirection.RTL;
-            }*/
-            // Since getLayoutDirection() is hidden prior to Marshmallow, we will
-            // try to get the layout direction from the View, which we will assume
-            // is set as the callback. As the setLayoutDirection() method is also
-            // hidden, we can safely rely on the behaviour of the platform Views to
-            // provide a correct replacement for the hidden method.
+            }
+            // Since getLayoutDirection() is hidden prior to Marshmallow, we
+            // will try to get the layout direction from the View, which we will
+            // assume is set as the callback. As the setLayoutDirection() method
+            // is also hidden, we can safely rely on the behaviour of the
+            // platform Views to provide a correct replacement for the hidden
+            // method.
             Callback callback = getCallback();
             if (callback instanceof View) {
-                return ((View) callback).getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+                return ((View) callback).getLayoutDirection() == LAYOUT_DIRECTION_RTL;
             }
         }
         return false;
@@ -467,42 +551,61 @@ public final class IconDrawable extends Drawable implements Animatable {
 
     @Override
     public void start() {
-        if (!iconState.rotating) {
-            iconState.rotating = true;
+        if (!iconState.spinning) {
+            iconState.spinning = true;
+            if (iconState.pulse && invalidateRunnable == null) {
+                invalidateRunnable = new InvalidateRunnable();
+            }
             invalidateSelf();
         }
     }
 
     @Override
     public void stop() {
-        if (iconState.rotating) {
-            iconState.rotating = false;
+        if (iconState.spinning) {
+            iconState.spinning = false;
+            if (invalidateRunnable != null) {
+                unscheduleSelf(invalidateRunnable);
+                invalidateRunnable = null;
+            }
         }
     }
 
     @Override
+    @CheckResult
     public boolean isRunning() {
-        return iconState.rotating;
+        return iconState.spinning;
     }
 
     @Override
+    @CheckResult
     public boolean setVisible(boolean visible, boolean restart) {
         final boolean changed = super.setVisible(visible, restart);
-        if (iconState.rotating) {
+        if (iconState.spinning) {
             if (changed) {
                 if (visible) {
                     invalidateSelf();
+                } else if (invalidateRunnable != null) {
+                    unscheduleSelf(invalidateRunnable);
                 }
             } else {
                 if (restart && visible) {
-                    rotationStartTime = -1;
+                    spinStartTime = -1;
                 }
             }
         }
         return changed;
     }
 
+    private class InvalidateRunnable implements Runnable {
+        @Override
+        public void run() {
+            invalidateSelf();
+        }
+    }
+
     @Override
+    @CheckResult
     public int getChangingConfigurations() {
         return iconState.changingConfigurations;
     }
@@ -517,6 +620,8 @@ public final class IconDrawable extends Drawable implements Animatable {
     // http://b.android.com/191754
     // https://github.com/JoanZapata/android-iconify/issues/93
     @Override
+    @CheckResult
+    @Nullable
     public ConstantState getConstantState() {
         // The bounds level need to be copied here to work around a bug in
         // LayerDrawable where it doesn't copy the bounds and level in it's
@@ -530,6 +635,7 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
+    @NonNull
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {
             iconState = new IconState(iconState);
@@ -540,10 +646,14 @@ public final class IconDrawable extends Drawable implements Animatable {
 
     private static class IconState extends ConstantState {
         @NonNull
-        final IconValue icon;
-        int height = -1, width = -1;
+        final Icon icon;
+        @IntRange(from = -1)
+        int height = -1;
+        @IntRange(from = -1)
+        int width = -1;
         @NonNull
         ColorStateList colorStateList = ColorStateList.valueOf(DEFAULT_COLOR);
+        @ColorInt
         int alpha = 255;
         boolean dither;
         @Nullable
@@ -554,18 +664,19 @@ public final class IconDrawable extends Drawable implements Animatable {
         PorterDuff.Mode tintMode = DEFAULT_TINT_MODE;
         @NonNull
         Paint.Style style = Paint.Style.FILL;
-        boolean rotating;
+        boolean spinning;
+        boolean pulse;
         boolean autoMirrored;
         int changingConfigurations;
         @Nullable
         Rect bounds;
 
-        IconState(@NonNull IconValue icon) {
+        IconState(@NonNull Icon icon) {
             this.icon = icon;
-            autoMirrored = SDK_INT >= JELLY_BEAN_MR1 && icon.supportsRtl;
+            autoMirrored = SDK_INT >= JELLY_BEAN_MR1 && icon.supportsRtl();
         }
 
-        IconState(IconState state) {
+        IconState(@NonNull IconState state) {
             icon = state.icon;
             height = state.height;
             width = state.width;
@@ -576,17 +687,21 @@ public final class IconDrawable extends Drawable implements Animatable {
             tint = state.tint;
             tintMode = state.tintMode;
             style = state.style;
-            rotating = state.rotating;
+            spinning = state.spinning;
+            pulse = state.pulse;
             autoMirrored = state.autoMirrored;
             changingConfigurations = state.changingConfigurations;
         }
 
         @Override
+        @CheckResult
+        @NonNull
         public Drawable newDrawable() {
             return new IconDrawable(this);
         }
 
         @Override
+        @CheckResult
         public int getChangingConfigurations() {
             return changingConfigurations;
         }

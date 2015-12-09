@@ -7,11 +7,11 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <org.edx.mobile.third_party.iconify.IconView
+    <com.joanzapata.iconify.widget.IconImageView
         android:layout_width="@dimen/large_indicator_icon_width"
         android:layout_height="@dimen/large_indicator_icon_height"
         app:iconColor="@color/edx_grayscale_neutral_light"
-        app:iconName="fa_exclamation_circle" />
+        app:iconName="fa-exclamation-circle" />
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/error_msg"

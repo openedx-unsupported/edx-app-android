@@ -15,7 +15,7 @@
     android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
     tools:targetApi="17">
 
-    <org.edx.mobile.third_party.iconify.IconView
+    <com.joanzapata.iconify.widget.IconImageView
         android:id="@+id/row_type"
         android:layout_width="@dimen/fa_xx_large"
         android:layout_height="@dimen/fa_xx_large"
@@ -57,12 +57,12 @@
             tools:text="Course Subtitle"/>
     </LinearLayout>
 
-    <org.edx.mobile.third_party.iconify.IconView
+    <com.joanzapata.iconify.widget.IconImageView
         android:layout_width="@dimen/fa_xxx_small"
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
         app:iconColor="@color/edx_grayscale_neutral_light"
-        app:iconName="fa_angle_right"/>
+        app:iconName="fa-angle-right"/>
 
 </LinearLayout>

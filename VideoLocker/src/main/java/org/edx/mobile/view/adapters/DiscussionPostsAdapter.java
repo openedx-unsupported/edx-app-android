@@ -8,13 +8,14 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.third_party.iconify.IconDrawable;
-import org.edx.mobile.third_party.iconify.IconView;
-import org.edx.mobile.third_party.iconify.Iconify;
 
 public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
@@ -42,15 +43,19 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     public void render(BaseViewHolder tag, DiscussionThread discussionThread) {
         ViewHolder holder = (ViewHolder) tag;
 
-        Iconify.IconValue iconValue = Iconify.IconValue.fa_comments;
-        if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
-            iconValue = discussionThread.isHasEndorsed() ?
-                    Iconify.IconValue.fa_check_square_o : Iconify.IconValue.fa_question;
+        {
+            Icon icon = FontAwesomeIcons.fa_comments;
+            if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
+                icon = discussionThread.isHasEndorsed() ?
+                        FontAwesomeIcons.fa_check_square_o : FontAwesomeIcons.fa_question;
+            }
+            holder.discussionPostTypeIcon.setIcon(icon);
         }
-        holder.discussionPostTypeIcon.setIcon(iconValue);
 
-        String threadTitle = discussionThread.getTitle();
-        holder.discussionPostTitle.setText(threadTitle);
+        {
+            String threadTitle = discussionThread.getTitle();
+            holder.discussionPostTitle.setText(threadTitle);
+        }
 
         holder.discussionPostClosedIcon.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);
         holder.discussionPostPinIcon.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
@@ -69,16 +74,16 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
         {
             final String text;
-            final Iconify.IconValue icon;
+            final Icon icon;
             @ColorInt
             final int indicatorColor;
             if (voteCountsEnabled) {
                 text = Integer.toString(discussionThread.getVoteCount());
-                icon = Iconify.IconValue.fa_plus;
+                icon = FontAwesomeIcons.fa_plus;
                 indicatorColor = discussionThread.isVoted() ? edx_brand_primary_base : edx_grayscale_neutral_light;
             } else {
                 text = Integer.toString(discussionThread.getCommentCount());
-                icon = Iconify.IconValue.fa_comment;
+                icon = FontAwesomeIcons.fa_comment;
                 indicatorColor = discussionThread.getUnreadCommentCount() == 0 ? edx_grayscale_neutral_light : edx_brand_primary_base;
             }
             holder.discussionPostIndicatorTextView.setText(text);
@@ -112,21 +117,21 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
 
     private static class ViewHolder extends BaseViewHolder {
         final View discussionPostRow;
-        final IconView discussionPostTypeIcon;
+        final IconImageView discussionPostTypeIcon;
         final TextView discussionPostTitle;
-        final IconView discussionPostClosedIcon;
-        final IconView discussionPostPinIcon;
-        final IconView discussionPostFollowIcon;
+        final IconImageView discussionPostClosedIcon;
+        final IconImageView discussionPostPinIcon;
+        final IconImageView discussionPostFollowIcon;
         final TextView discussionPostAuthor;
         final TextView discussionPostIndicatorTextView;
 
         public ViewHolder(View convertView) {
             discussionPostRow = convertView;
-            discussionPostTypeIcon = (IconView) convertView.findViewById(R.id.discussion_post_type_icon);
+            discussionPostTypeIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_type_icon);
             discussionPostTitle = (TextView) convertView.findViewById(R.id.discussion_post_title);
-            discussionPostClosedIcon = (IconView) convertView.findViewById(R.id.discussion_post_closed_icon);
-            discussionPostPinIcon = (IconView) convertView.findViewById(R.id.discussion_post_pin_icon);
-            discussionPostFollowIcon = (IconView) convertView.findViewById(R.id.discussion_post_following_icon);
+            discussionPostClosedIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_closed_icon);
+            discussionPostPinIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_pin_icon);
+            discussionPostFollowIcon = (IconImageView) convertView.findViewById(R.id.discussion_post_following_icon);
             discussionPostAuthor = (TextView) convertView.findViewById(R.id.discussion_post_author);
             discussionPostIndicatorTextView = (TextView) convertView.findViewById(R.id.discussion_post_indicator_text);
         }

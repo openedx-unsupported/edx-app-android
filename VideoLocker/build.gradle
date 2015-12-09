@@ -79,6 +79,8 @@ apiKey=$fabric_key
 }
 
 dependencies {
+    compile project (':android-iconify')
+    compile project (':android-iconify-fontawesome')
     compile ('com.getbase:floatingactionbutton:1.3.0') {
         exclude module: 'support-annotations'
     }

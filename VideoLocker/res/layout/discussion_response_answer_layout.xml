@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <org.edx.mobile.third_party.iconify.IconView
+        <com.joanzapata.iconify.widget.IconImageView
             android:id="@+id/discussion_responses_answer_icon_view"
             android:layout_width="@dimen/edx_xxx_small"
             android:layout_height="@dimen/edx_xxx_small"
@@ -16,7 +16,7 @@
             android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
             android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
             app:iconColor="@color/edx_utility_success"
-            app:iconName="fa_check_square_o" />
+            app:iconName="fa-check-square-o" />
 
         <org.edx.mobile.view.custom.ETextView
             android:layout_width="wrap_content"
