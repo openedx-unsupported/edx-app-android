@@ -23,6 +23,7 @@ package org.edx.mobile.view.custom.popup.menu;
  * limitations under the License.
  */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -72,6 +73,8 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private final boolean mOverflowOnly;
     private final int mPopupMinWidth;
     private final int mPopupMaxWidth;
+    private final int mPopupPaddingLeft;
+    private final int mPopupPaddingRight;
     private final int mPopupPaddingStart;
     private final int mPopupPaddingEnd;
     private final int mPopupPaddingTop;
@@ -143,19 +146,40 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         int popupPadding = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_android_padding, -1);
         if (popupPadding >= 0) {
+            mPopupPaddingLeft = popupPadding;
+            mPopupPaddingRight = popupPadding;
             mPopupPaddingStart = popupPadding;
             mPopupPaddingEnd = popupPadding;
             mPopupPaddingTop = popupPadding;
             mPopupPaddingBottom = popupPadding;
         } else {
-            mPopupPaddingStart = a.getDimensionPixelSize(
-                    R.styleable.PopupMenu_android_paddingStart,
-                    a.getDimensionPixelOffset(
-                            R.styleable.PopupMenu_android_paddingLeft, 0));
-            mPopupPaddingEnd = a.getDimensionPixelSize(
-                    R.styleable.PopupMenu_android_paddingEnd,
-                    a.getDimensionPixelOffset(
-                            R.styleable.PopupMenu_android_paddingRight, 0));
+            int paddingStart = Integer.MIN_VALUE;
+            int paddingEnd = Integer.MIN_VALUE;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                paddingStart = a.getDimensionPixelSize(
+                        R.styleable.PopupMenu_android_paddingStart, Integer.MIN_VALUE);
+                paddingEnd = a.getDimensionPixelSize(
+                        R.styleable.PopupMenu_android_paddingEnd, Integer.MIN_VALUE);
+            }
+            int paddingLeft = 0;
+            int paddingRight = 0;
+            if (paddingStart == Integer.MIN_VALUE && paddingEnd == Integer.MIN_VALUE) {
+                paddingLeft = a.getDimensionPixelSize(
+                        R.styleable.PopupMenu_android_paddingLeft, 0);
+                paddingRight = a.getDimensionPixelSize(
+                        R.styleable.PopupMenu_android_paddingRight, 0);
+            } else {
+                if (paddingStart == Integer.MIN_VALUE) {
+                    paddingStart = 0;
+                }
+                if (paddingEnd == Integer.MIN_VALUE) {
+                    paddingEnd = 0;
+                }
+            }
+            mPopupPaddingLeft = paddingLeft;
+            mPopupPaddingRight = paddingRight;
+            mPopupPaddingStart = paddingStart;
+            mPopupPaddingEnd = paddingEnd;
             mPopupPaddingTop = a.getDimensionPixelSize(
                     R.styleable.PopupMenu_android_paddingTop, 0);
             mPopupPaddingBottom = a.getDimensionPixelSize(
@@ -577,6 +601,7 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         }
 
         @Override
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView;
             ItemType itemType = getItemType(position);
@@ -611,9 +636,15 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
                 icon.setBounds(0, 0, iconWidth, iconHeight);
                 TextViewCompat.setCompoundDrawablesRelative(textView, icon, null, null, null);
             }
-            ViewCompat.setPaddingRelative(textView,
-                    mPopupPaddingStart, mPopupItemVerticalPadding,
-                    mPopupPaddingEnd, mPopupItemVerticalPadding);
+            if (mPopupPaddingStart == Integer.MIN_VALUE && mPopupPaddingEnd == Integer.MIN_VALUE) {
+                textView.setPadding(
+                        mPopupPaddingLeft, mPopupItemVerticalPadding,
+                        mPopupPaddingRight, mPopupItemVerticalPadding);
+            } else {
+                textView.setPaddingRelative(
+                        mPopupPaddingStart, mPopupItemVerticalPadding,
+                        mPopupPaddingEnd, mPopupItemVerticalPadding);
+            }
             return textView;
         }
     }
