@@ -327,6 +327,16 @@
         <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
+    <style name="edX.Widget.EnrollButton">
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:textColor">@color/edx_white</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/edx_enroll_button</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:text">@string/enroll_now</item>
+    </style>
+
     <style name="edX.Widget.BorderedButton">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_brand_primary_base</item>

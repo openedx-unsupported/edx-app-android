@@ -35,7 +35,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public void handleCourseClick(EnrolledCoursesResponse model) {
-       environment.getRouter().showCourseDetailTabs(getActivity(), environment.getConfig(), model, false);
+       environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), model, false);
     }
 
     @Override
