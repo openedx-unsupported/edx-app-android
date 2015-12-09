@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ import org.edx.mobile.discussion.ThreadComments;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetCommentListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
-import org.edx.mobile.view.adapters.IPagination;
+import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboFragment;
@@ -29,9 +28,6 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionResponsesFragment extends RoboFragment implements CourseDiscussionResponsesAdapter.Listener {
-
-    @Inject
-    private LinearLayoutManager linearLayoutManager;
 
     @InjectView(R.id.discussion_responses_recycler_view)
     private RecyclerView discussionResponsesRecyclerView;
@@ -55,8 +51,9 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
 
     private GetCommentListTask getCommentListTask;
 
-    public static class ViewHolder {
-    }
+    private int nextPage = 1;
+
+    private InfiniteScrollUtils.InfiniteListController controller;
 
     @Nullable
     @Override
@@ -68,14 +65,16 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionResponsesRecyclerView.setLayoutManager(linearLayoutManager);
-
         // Using application context to prevent activity leak since adapter is retained across config changes
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
                 getActivity().getApplicationContext(), this, discussionThread);
+        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
+            @Override
+            public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+                getCommentList(callback);
+            }
+        });
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
-
-        getCommentList(true);
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
                 addResponseTextView, R.string.discussion_responses_add_response_button,
@@ -88,25 +87,18 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
                 });
     }
 
-    protected void getCommentList(final boolean refresh) {
+    protected void getCommentList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
         if (getCommentListTask != null) {
             getCommentListTask.cancel(true);
         }
         getCommentListTask = new GetCommentListTask(getActivity(),
                 discussionThread.getIdentifier(),
-                courseDiscussionResponsesAdapter.getPagination()) {
+                nextPage) {
             @Override
             public void onSuccess(ThreadComments threadComments) {
-                if (threadComments == null) {
-                    logger.debug("GetCommentListTask returns null onSuccess");
-                    return;// should not happen?
-                }
-                if (refresh) {
-                    //it clear up details and reset pagination
-                    courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
-                }
-                boolean hasMore = threadComments.next != null && threadComments.next.length() > 0;
-                courseDiscussionResponsesAdapter.addPage(threadComments.getResults(), hasMore);
+                ++nextPage;
+                final boolean hasMore = threadComments.next != null && threadComments.next.length() > 0;
+                callback.onPageLoaded(threadComments.getResults(), hasMore);
                 courseDiscussionResponsesAdapter.notifyDataSetChanged();
             }
 
@@ -116,8 +108,8 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
                 //  hideProgress();
             }
         };
+        getCommentListTask.setProgressCallback(null);
         getCommentListTask.execute();
-
     }
 
     @Override
@@ -136,17 +128,10 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (discussionThread.containsComment(event.getComment())) {
             discussionThread.incrementCommentCount();
-            courseDiscussionResponsesAdapter.notifyDataSetChanged();
-            getCommentList(true);
+            courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
+            nextPage = 1;
+            controller.reset();
         }
-    }
-
-    /**
-     * callback from CourseDiscussionResponsesAdapter
-     */
-    @Override
-    public void loadMoreRecord(@NonNull IPagination pagination) {
-        getCommentList(false);
     }
 
     @Override

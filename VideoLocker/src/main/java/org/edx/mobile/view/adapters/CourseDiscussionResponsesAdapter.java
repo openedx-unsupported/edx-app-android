@@ -32,11 +32,9 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
+public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter implements InfiniteScrollUtils.ListContentController<DiscussionComment> {
 
     public interface Listener {
-        void loadMoreRecord(@NonNull IPagination pagination);
-
         void onClickAuthor(@NonNull String username);
 
         void onClickAddComment(@NonNull DiscussionComment comment);
@@ -55,8 +53,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
     private List<DiscussionComment> discussionResponses = new ArrayList<>();
 
-    @NonNull
-    private BasePagination pagination = new BasePagination(IPagination.DEFAULT_PAGE_SIZE);
+    private boolean progressVisible = false;
 
     static class RowType {
         static final int THREAD = 0;
@@ -70,9 +67,10 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         this.listener = listener;
     }
 
-    @NonNull
-    public BasePagination getPagination() {
-        return pagination;
+    @Override
+    public void setProgressVisible(boolean visible) {
+        progressVisible = visible;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -87,7 +85,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         if (viewType == RowType.MORE_BUTTON) {
             View discussionThreadRow = LayoutInflater.
                     from(parent.getContext()).
-                    inflate(R.layout.show_more_button_row, parent, false);
+                    inflate(R.layout.list_view_footer_progress, parent, false);
 
             return new ShowMoreViewHolder(discussionThreadRow);
         }
@@ -216,13 +214,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
     }
 
     private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder) {
-        holder.showMoreView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.loadMoreRecord(pagination);
-            }
-        });
-
     }
 
 
@@ -233,8 +224,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
 
         if (discussionThread.isClosed() && comment.getChildren().isEmpty()) {
             holder.addCommentLayout.setEnabled(false);
-        }
-        else {
+        } else {
             holder.addCommentLayout.setEnabled(true);
             holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -319,8 +309,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
                 holder.numberResponsesOrCommentsLabel.setText(context.getString(
                         R.string.discussion_add_comment_disabled_title));
                 holder.numberResponsesIconImageView.setIcon(FontAwesomeIcons.fa_lock);
-            }
-            else {
+            } else {
                 holder.numberResponsesOrCommentsLabel.setText(context.getString(
                         R.string.number_responses_or_comments_add_comment_label));
                 holder.numberResponsesIconImageView.setIcon(FontAwesomeIcons.fa_comment);
@@ -337,7 +326,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
         if (discussionThread == null)
             return 0;
         int total = 1 + discussionResponses.size();
-        if (pagination.mayHasMorePages())
+        if (progressVisible)
             total++;
         return total;
     }
@@ -348,35 +337,34 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter {
             return RowType.THREAD;
         }
 
-        if (pagination.mayHasMorePages() && position == getItemCount() - 1) {
+        if (progressVisible && position == getItemCount() - 1) {
             return RowType.MORE_BUTTON;
         }
 
         return RowType.RESPONSE;
     }
 
-
-    public void setDiscussionThread(DiscussionThread discussionThread) {
-        this.discussionThread = discussionThread;
-        this.discussionResponses.clear();
-        pagination.clear();
+    @Override
+    public void clear() {
+        discussionResponses.clear();
         notifyDataSetChanged();
     }
 
-    public void addPage(List<DiscussionComment> discussionResponses, boolean hasMore) {
-        this.discussionResponses.addAll(discussionResponses);
-        pagination.setHasMorePages(hasMore);
+    @Override
+    public void addAll(List<DiscussionComment> items) {
+        discussionResponses.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void setDiscussionThread(@NonNull DiscussionThread discussionThread) {
+        this.discussionThread = discussionThread;
+        this.discussionResponses.clear();
         notifyDataSetChanged();
     }
 
     public static class ShowMoreViewHolder extends RecyclerView.ViewHolder {
-        ETextView showMoreView;
-
         public ShowMoreViewHolder(View itemView) {
             super(itemView);
-
-            showMoreView = (ETextView) itemView.
-                    findViewById(R.id.show_more_button);
         }
     }
 

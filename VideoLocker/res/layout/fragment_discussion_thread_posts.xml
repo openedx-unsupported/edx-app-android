@@ -51,7 +51,9 @@
         android:id="@+id/discussion_posts_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/edx_grayscale_neutral_x_light"
+        tools:listitem="@layout/row_discussion_thread"/>
 
     <include layout="@layout/create_new_item_layout" />
 
