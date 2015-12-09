@@ -71,18 +71,32 @@ import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
-public class PlayerFragment extends RoboFragment implements IPlayerListener, Serializable, AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
+public class PlayerFragment extends RoboFragment implements IPlayerListener, Serializable,
+        AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
 
-    private enum VideoNotPlayMessageType {IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB, IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE}
+    private enum VideoNotPlayMessageType {
+        IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
+        IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
+    }
+
+    private static final boolean IS_AUTOPLAY_ENABLED = true;
+
+    private static final String KEY_PLAYER = "player";
+    private static final String KEY_PREPARED = "isPrepared";
+    private static final String KEY_AUTOPLAY_DONE = "isAutoPlayDone";
+    private static final String KEY_MESSAGE_DISPLAYED = "isMessageDisplayed";
+    private static final String KEY_TRANSCRIPT = "transcript";
 
     private static final int MSG_TYPE_TICK = 2014;
-    private static final int DELAY_TIME = 1000;
+    private static final int DELAY_TIME_MS = 1000;
+    private static final int UNFREEZE_DELAY_MS = 300;
 
     @Inject
     IEdxEnvironment environment;
 
     protected IPlayer player;
     private boolean isPrepared = false;
+    private boolean isAutoPlayDone = false;
     private boolean stateSaved = false;
     private boolean orientationLocked = false;
     private transient OrientationDetector orientationDetector;
@@ -139,7 +153,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 }
 
                 // repeat this message after every second
-                sendEmptyMessageDelayed(MSG_TYPE_TICK, DELAY_TIME);
+                sendEmptyMessageDelayed(MSG_TYPE_TICK, DELAY_TIME_MS);
             }
         }
     };
@@ -199,28 +213,20 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
     /**
      * Restores the saved instance of the player.
-     * 
+     *
      * @param savedInstanceState
      */
     private void restore(Bundle savedInstanceState) {
-        try{
-            if (player == null) {
-                if (savedInstanceState != null
-                        && savedInstanceState.containsKey("player")) {
-                    player = (IPlayer) savedInstanceState.get("player");
-                } else {
-                    player = new Player();
-                }
+        if (savedInstanceState != null) {
+            player = (IPlayer) savedInstanceState.get(KEY_PLAYER);
+            isPrepared = savedInstanceState.getBoolean(KEY_PREPARED);
+            isAutoPlayDone = savedInstanceState.getBoolean(KEY_AUTOPLAY_DONE);
+            transcript = (TranscriptModel) savedInstanceState.get(KEY_TRANSCRIPT);
+            if (savedInstanceState.getBoolean(KEY_MESSAGE_DISPLAYED)) {
+                showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
             }
-            if (savedInstanceState != null
-                    && savedInstanceState.containsKey("isMessageDisplayed")){
-                if(savedInstanceState.getBoolean("isMessageDisplayed")){
-                    showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
-                }
-            }
-            reAttachPlayEventListener();
-        }catch(Exception e){
-            logger.error(e);
+        } else {
+            player = new Player();
         }
     }
 
@@ -318,7 +324,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public void onStart() {
         super.onStart();
         logger.debug("Player fragment start");
-        
+
         stateSaved = false;
         try{
             Preview preview = (Preview) getView().findViewById(R.id.preview);
@@ -350,19 +356,18 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         }
     }
 
-    public void handleOnResume(){
+    public void handleOnResume() {
         uiHelper.onResume();
-
         setupController();
 
-        if(curMessageTypes.isEmpty()){
+        if (curMessageTypes.isEmpty()) {
             // display progress until playback actually starts
             showProgress();
         }
 
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
-        handler.postDelayed(unfreezeCallback, 300);
+        if (isPrepared) handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
     }
 
     @Override
@@ -441,23 +446,17 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public void onSaveInstanceState(Bundle outState) {
         logger.debug("Saving state ...");
         stateSaved = true;
-        if(player!=null){
-            // hold on until activity is being destroyed, otherwise we assume next call would be restart()
-            boolean changingConfig = getActivity().isChangingConfigurations();
-            logger.debug("Player fragment changing config?  =" + changingConfig);
-            if ( !changingConfig) {
-                // you MUST PAUSE the video  
-                // only if screen is stopping due to any reason other than CONFIGURATION CHANGE
-                player.setPausedOnUnfreeze();
-            }
-            
+        if (player != null) {
             freezePlayer();
-            outState.putSerializable("player", player);
+            outState.putSerializable(KEY_PLAYER, player);
         }
+        outState.putBoolean(KEY_PREPARED, isPrepared);
+        outState.putBoolean(KEY_AUTOPLAY_DONE, isAutoPlayDone);
+        //FIXME: ensure that prepare is called on all activity restarts and then this can be removed
+        outState.putSerializable(KEY_TRANSCRIPT, transcript);
         super.onSaveInstanceState(outState);
 
         uiHelper.onSaveInstanceState(outState);
-
     }
 
     public synchronized void prepare(String path, int seekTo, String title,
@@ -485,9 +484,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         if ( !isScreenLandscape()) {
             exitFullScreen();
         }
-
-        // clear all errors
-        clearAllErrors();
 
         // reset the player, so that pending play requests will be cancelled
         try {
@@ -750,26 +746,25 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
     @Override
     public void onPrepared() {
-        if ( !isResumed() 
-                || !isVisible()) {
+        // mark prepared and allow orientation
+        isPrepared = true;
+        allowSensorOrientation();
+
+        if (!isResumed() ||
+                (getParentFragment() != null && !getParentFragment().getUserVisibleHint())) {
             freezePlayer();
             return;
         }
 
         // clear errors
         clearAllErrors();
-
-        try{
-            environment.getSegment().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
-                    videoEntry.lmsUrl);
-        }catch(Exception e){
-            logger.error(e);
+        initializeClosedCaptioning();
+        if (IS_AUTOPLAY_ENABLED) {
+            handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
         }
 
-        // mark prepared and allow orientation
-        isPrepared = true;
-        initializeClosedCaptioning();
-        allowSensorOrientation();
+        environment.getSegment().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
+                videoEntry.lmsUrl);
     }
 
     @Override
@@ -975,15 +970,19 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         @Override
         public void run() {
             if (isResumed() && !isRemoving()) {
-                hideProgress();
-                if(player!=null) {
+                if (player != null) {
                     player.unfreeze();
+                    hideProgress();
                     if (player.isPlaying()) {
-                        hideProgress();
                         updateController("player unfreezed");
                     }
 
-                    if (pauseDueToDialog){
+                    if (IS_AUTOPLAY_ENABLED && isPrepared && !isAutoPlayDone) {
+                        isAutoPlayDone = true;
+                        player.start();
+                    }
+
+                    if (pauseDueToDialog) {
                         pauseDueToDialog = false;
                         player.pause();
                     }
@@ -1158,7 +1157,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             {
                 LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                         .fetchTranscriptsForVideo(transcript,getActivity());
-                
+
                 if (localHashMap != null){
                     Object[] keyList = localHashMap.keySet().toArray();
                     for(int i=0; i<keyList.length; i++){
@@ -1180,8 +1179,8 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                         displaySrtData();
                     }
                 }else{
-                    subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, DELAY_TIME);
-                }  
+                    subtitleFetchHandler.postDelayed(subtitleFetchProcessesor, DELAY_TIME_MS);
+                }
             }catch (Exception localException) {
                 logger.error(localException);
             }
@@ -1755,33 +1754,17 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     /**
-     * Displays controller is in PORTRAIT MODE, otherwise hides controller.
+     * Displays controller
+     *
+     * @param source The source which called this function
      */
     private void updateController(String source) {
         logger.debug("Updating controller from : " + source);
-        
+
         if (player != null) {
             // controller should also refresh, so hide and show it
             player.hideController();
-            
-            // if this is LANDSCAPE mode, then let controller be HIDDEN by default
-            if (player.isFullScreen()) {
-                logger.debug("Player controller hidden because in LANDSCAPE mode");
-                
-                // by some reason, player is still showing controller may be from some other thread ?
-                // so hide controller after a delay
-                // FIXME: this should be permanently resolved
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        if (player != null) {
-                            player.hideController();
-                        }
-                    }
-                }, 50 * DELAY_TIME);
-            } else {
-                player.showController();
-                logger.debug("Player controller shown because in PORTRAIT mode");
-            }
+            player.showController();
         }
     }
 
@@ -1799,6 +1782,15 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
      */
     public boolean isPlaying() {
         return (player != null && player.isPlaying());
+    }
+
+    /**
+     * Returns true if video player is in frozen state
+     *
+     * @return <code>true</code> if the video player is frozen
+     */
+    public boolean isFrozen() {
+        return (player != null && player.isFrozen());
     }
     
     public void freezePlayer() {
@@ -1871,5 +1863,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         super.onConfigurationChanged(newConfig);
         boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
         player.setFullScreen(isLandscape);
+        updateController("orientation change");
     }
 }

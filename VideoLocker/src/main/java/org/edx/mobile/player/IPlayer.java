@@ -17,6 +17,8 @@ public interface IPlayer extends Serializable {
     public boolean isPlayingLocally();
     public void start();
     public boolean isPlaying();
+    public boolean isPaused();
+    public boolean isFrozen();
     public void pause();
     public int getCurrentPosition();
     public void setFullScreen(boolean isFullScreen);
@@ -37,13 +39,10 @@ public interface IPlayer extends Serializable {
     public void callSettings(Point p);
     public void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked);
     public PlayerController getController();
-    boolean isPaused();
     public boolean isReset();
 
     public void setShareEnabled(Boolean shareEnabled);
     public void setShareVideoListener(PlayerController.ShareVideoListener shareVideoListener);
-
-    void setPausedOnUnfreeze();
 
     // methods from PlayerController.MediaPlayerControl interface
     int     getDuration();

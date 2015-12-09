@@ -193,16 +193,14 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if ( hasComponentCallback != null ){
             CourseComponent component = hasComponentCallback.getComponent();
             if (component != null && component.equals(unit)){
-                try {
-                    if (playerFragment != null) {
-                        playerFragment.setCallback(this);
-                        playerFragment.handleOnResume();
-                    }
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
+                setVideoPlayerState(true);
             }
         }
+    }
+
+    public void onPause(){
+        super.onPause();
+        setVideoPlayerState(false);
     }
 
     //we use user visible hint, not onResume() for video
@@ -215,46 +213,44 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
             return;
         if (isVisibleToUser) {
             checkVideoStatus(unit);
-            try {
-                if (playerFragment != null) {
-                    playerFragment.setCallback(this);
-                    playerFragment.handleOnResume();
-                }
-            } catch (Exception ex) {
-                logger.error(ex);
-            }
-        }else{
+            setVideoPlayerState(true);
+        } else {
             // fragment is no longer visible
             if (getActivity() != null) {
                 ((BaseFragmentActivity) getActivity()).hideInfoMessage();
             }
-            try {
-                if (playerFragment != null) {
-                    playerFragment.setCallback(null);
-                    playerFragment.handleOnPause();
-                }
-            } catch (Exception ex) {
-                logger.error(ex);
-            }
+            setVideoPlayerState(false);
         }
     }
+
     @Override
     public void run() {
-        if ( this.isRemoving() || this.isDetached()){
+        if (this.isRemoving() || this.isDetached()) {
             ViewPagerDownloadManager.instance.done(this, false);
         } else {
-            try {
-                if (playerFragment != null) {
-                    playerFragment.setCallback(this);
-                    playerFragment.handleOnResume();
-                }
-                ViewPagerDownloadManager.instance.done(this, true);
-            } catch (Exception ex) {
-                logger.error(ex);
+            setVideoPlayerState(true);
+            ViewPagerDownloadManager.instance.done(this, true);
+        }
+    }
+
+    /**
+     * Sets the playing/paused state of the video player in {@link PlayerFragment}
+     *
+     * @param playing <code>true</code> for playing the video player, <code>false</code> for
+     *                pausing it.
+     */
+    private void setVideoPlayerState(boolean playing) {
+        if (playerFragment != null) {
+            if (playing) {
+                playerFragment.handleOnResume();
+                playerFragment.setCallback(this);
+            } else {
+                playerFragment.handleOnPause();
+                playerFragment.setCallback(null);
             }
         }
     }
@@ -287,7 +283,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 };
                 MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback,
                         environment.getConfig());
-            } else {
+            } else if (playerFragment != null && !playerFragment.isFrozen()) {
                 //Video is downloaded. Hence play
                 startOnlinePlay(entry);
             }
