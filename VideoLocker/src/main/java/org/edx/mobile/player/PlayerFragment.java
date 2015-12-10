@@ -226,7 +226,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 showVideoNotAvailable(VideoNotPlayMessageType.IS_VIDEO_MESSAGE_DISPLAYED);
             }
         } else {
-            player = new Player();
+            if (player == null) player = new Player();
         }
     }
 
