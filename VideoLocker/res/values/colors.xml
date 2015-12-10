@@ -91,7 +91,6 @@
     <color name="red_download_failed_text">#fd7575</color>
     <color name="tab_bg">#3E4247</color>
     <color name="delete_panel_bg">#3E4247</color>
-    <color name="empty_list_text">#c8c8c8</color>
     <color name="switch_default_button_color">#C3C3C3</color>
     <color name="switch_default_bg_color">#3C4045</color>
     <color name="switch_disabled_bg_color_off">@color/grey_4</color>

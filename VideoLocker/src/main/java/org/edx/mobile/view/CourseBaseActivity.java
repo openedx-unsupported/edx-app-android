@@ -224,12 +224,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
                     fullCourseItem.setChecked(true);
                 }
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
+                    public boolean onMenuItemClick(MenuItem popupMenuItem) {
                         boolean currentVideoMode = userPrefManager.isUserPrefVideoModel();
-                        boolean selectedVideoMode = videoOnlyItem == item;
+                        boolean selectedVideoMode = videoOnlyItem == popupMenuItem;
                         if (currentVideoMode != selectedVideoMode) {
                             userPrefManager.setUserPrefVideoModel(selectedVideoMode);
-                            item.setChecked(true);
+                            popupMenuItem.setChecked(true);
                             Icon filterIcon = selectedVideoMode ?
                                     FontAwesomeIcons.fa_list : FontAwesomeIcons.fa_film;
                             item.setIcon(

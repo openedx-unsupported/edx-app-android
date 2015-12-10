@@ -1,7 +1,10 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
@@ -24,9 +30,9 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
-import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,13 +132,28 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             view = getView();
         if ( view == null )
             return;
-        ETextView messageView = (ETextView) view.findViewById(R.id.no_chapter_tv);
+        TextView messageView = (TextView) view.findViewById(R.id.no_chapter_tv);
         if(adapter.getCount()==0){
             messageView.setVisibility(View.VISIBLE);
             if ( adapter.hasFilteredUnits() ){
-                messageView.setText(R.string.assessment_empty_video_info);
+                Context context = getActivity();
+                Drawable modeSwitcherDrawable =
+                        new IconDrawable(context, FontAwesomeIcons.fa_list)
+                        .colorRes(context, R.color.edx_grayscale_neutral_light)
+                        .sizeRes(context, R.dimen.empty_list_icon_size);
+                messageView.setCompoundDrawablesWithIntrinsicBounds(
+                        null, modeSwitcherDrawable, null, null);
+                Resources resources = getResources();
+                messageView.setText(ResourceUtil.getFormattedString(resources,
+                        R.string.assessment_empty_video_info, "mode_switcher",
+                        '{' + FontAwesomeIcons.fa_list.key() + " baseline}"));
+                messageView.setContentDescription(ResourceUtil.getFormattedString(resources,
+                        R.string.assessment_empty_video_info, "mode_switcher",
+                        getText(R.string.course_change_mode)));
             } else {
+                messageView.setCompoundDrawables(null, null, null, null);
                 messageView.setText(R.string.no_chapter_text);
+                messageView.setContentDescription(null);
             }
         }else{
             messageView.setVisibility(View.GONE);

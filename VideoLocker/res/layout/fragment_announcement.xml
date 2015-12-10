@@ -19,15 +19,7 @@
      
      <org.edx.mobile.view.custom.ETextView
         android:id="@+id/no_announcement_tv"
-        style="@style/bold_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/no_announcements_to_display"
-        android:padding="20dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:textColor="@color/empty_list_text"
-        android:textSize="20sp" />
+        style="@style/empty_content_text"
+        android:text="@string/no_announcements_to_display" />
     
 </RelativeLayout>

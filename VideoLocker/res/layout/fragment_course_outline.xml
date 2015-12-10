@@ -15,16 +15,8 @@
         android:dividerHeight="0dp"
         android:listSelector="@drawable/course_list_item_selector" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <org.edx.mobile.view.custom.EIconTextView
         android:id="@+id/no_chapter_tv"
-        style="@style/bold_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/no_chapter_text"
-        android:textColor="@color/empty_list_text"
-        android:textSize="20sp"
-        android:visibility="gone" />
+        style="@style/empty_content_text"
+        android:text="@string/no_chapter_text" />
 </RelativeLayout>

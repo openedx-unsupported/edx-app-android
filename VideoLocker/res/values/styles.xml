@@ -290,11 +290,6 @@
         <item name="android:background">@drawable/white_circle</item>
     </style>
 
-    <style name="empty_content_text" parent="bold_text">
-        <item name="android:textColor">@color/empty_list_text</item>
-        <item name="android:textSize">@dimen/edx_x_large</item>
-    </style>
-
     <!-- Styles from the edX style guide will be nested under "edX" -->
     <style name="edX" />
 

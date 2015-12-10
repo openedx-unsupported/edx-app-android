@@ -8,13 +8,7 @@
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/empty_list_view"
         style="@style/empty_content_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/no_videos_to_display"
-        android:visibility="gone"
-        android:padding="15dp" />
+        android:text="@string/no_videos_to_display" />
 
     <LinearLayout
         android:id="@+id/top_panel"
