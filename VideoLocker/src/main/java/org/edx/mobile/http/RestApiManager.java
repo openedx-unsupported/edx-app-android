@@ -98,8 +98,7 @@ public class RestApiManager implements IApi{
             .build();
         oauthRestApi = restAdapter.create(OauthRestApi.class);
 
-        client = new OkHttpClient();
-        client.interceptors().add(new LoggingInterceptor());
+        client = OkHttpUtil.getClient(context);
         restAdapter = new RestAdapter.Builder()
             .setClient(new OkClient(client))
             .setEndpoint(getBaseUrl())
@@ -112,8 +111,7 @@ public class RestApiManager implements IApi{
     }
 
     public final OkHttpClient createSpeedTestClient(){
-        OkHttpClient client = new OkHttpClient();
-        client.interceptors().add(new LoggingInterceptor());
+        OkHttpClient client = OkHttpUtil.getClient(context);
         int timeoutMillis = context.getResources().getInteger(R.integer.speed_test_timeout_in_milliseconds);
         client.setConnectTimeout(timeoutMillis, TimeUnit.MILLISECONDS);
         return client;
@@ -126,8 +124,7 @@ public class RestApiManager implements IApi{
 
     @Override
     public ResetPasswordResponse resetPassword(String emailId) throws Exception {
-        OkHttpClient client = new OkHttpClient();
-        client.interceptors().add(new LoggingInterceptor());
+        OkHttpClient client = OkHttpUtil.getClient(context);
         String url = getBaseUrl() + "/login";
         Request request = new Request.Builder()
             .url(url)

@@ -36,7 +36,6 @@ public class RestAdapterProvider implements Provider<RestAdapter> {
                 .setEndpoint(config.getApiHostURL())
                 .setConverter(new GsonConverter(gson))
                 .setErrorHandler(new RetroHttpExceptionHandler())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
     }
 }

@@ -9,7 +9,6 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Header;
-import retrofit.http.Headers;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -20,7 +19,6 @@ public interface UserService {
     Account getAccount(@Path("username") String username) throws RetroHttpException;
 
     @PATCH("/api/user/v1/accounts/{username}")
-    @Headers("Content-Type: application/merge-patch+json")
     Account updateAccount(@Path("username") String username, @Body Map<String, Object> fields) throws RetroHttpException;
 
     @POST("/api/user/v1/accounts/{username}/image")
