@@ -15,7 +15,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center">
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_responses_action_bar_vote_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -41,7 +41,7 @@
             android:layout_centerInParent="true"
             android:visibility="gone">
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_responses_action_bar_follow_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -69,7 +69,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true">
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_responses_action_bar_report_icon_view"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"

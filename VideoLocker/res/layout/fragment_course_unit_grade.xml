@@ -8,7 +8,7 @@
               android:gravity="center"
     >
 
-    <com.joanzapata.iconify.widget.IconImageView
+    <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="90dp"
         android:layout_height="90dp"
         app:iconColor="@color/grey_3"
