@@ -12,7 +12,6 @@ buildscript {
     dependencies {
         classpath 'org.yaml:snakeyaml:1.14'
 
-        classpath 'com.android.tools.build:gradle:1.3.0'
         // The Fabric Gradle plugin uses an open ended version to react
         // quickly to Android tooling updates
         classpath 'io.fabric.tools:gradle:1.+'
@@ -85,23 +84,23 @@ dependencies {
         exclude module: 'support-annotations'
     }
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.facebook.android:facebook-android-sdk:3.22.+'
+    compile 'com.facebook.android:facebook-android-sdk:3.22.0'
     compile 'com.google.android.gms:play-services-base:7.8.0'
     compile 'com.google.android.gms:play-services-plus:7.8.0'
     compile 'com.google.android.gms:play-services-identity:7.8.0'
     compile 'com.google.android.gms:play-services-analytics:7.8.0'
     compile 'com.google.android.gms:play-services-gcm:7.8.0'
     compile 'com.google.android.gms:play-services-location:7.8.0'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.3'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.squareup.phrase:phrase:1.0.3'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:cardview-v7:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
@@ -130,12 +129,12 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.2.1'
 
     //Include DI framework
-    compile 'org.roboguice:roboguice:3.+'
-    provided 'org.roboguice:roboblender:3.+'
+    compile 'org.roboguice:roboguice:3.0.1'
+    provided 'org.roboguice:roboblender:3.0.1'
     provided 'org.roboguice:roboblender:3.0.1'
 
     // For the optional Nullable annotation
-    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.android.support:support-annotations:23.1.1'
 
     // test project configuration
      testCompile 'junit:junit:4.12'
@@ -178,8 +177,14 @@ android {
         }
     }
 
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion BUILD_TOOLS_VERSION
+
+    useLibrary 'org.apache.http.legacy'
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
 
     defaultConfig {
         applicationId "org.edx.mobile"

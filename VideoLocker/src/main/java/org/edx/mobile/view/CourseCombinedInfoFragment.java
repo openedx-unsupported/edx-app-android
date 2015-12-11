@@ -18,7 +18,6 @@ import com.facebook.Settings;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LikeView;
 
-import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.base.CourseDetailBaseFragment;
 import org.edx.mobile.loader.AsyncTaskResult;
@@ -32,6 +31,7 @@ import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
 import org.edx.mobile.util.FileUtil;
+import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.SocialAffirmView;
@@ -329,7 +329,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
             }
             buff.append("</body>");
             announcementWebView.clearCache(true);
-            announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
+            announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
         } else {
             showEmptyAnnouncementMessage();
         }

@@ -22,9 +22,9 @@ package org.edx.mobile.view.custom.popup.menu;
  */
 
 import android.content.Context;
-import android.support.v7.internal.view.SupportMenuInflater;
-import android.support.v7.internal.view.menu.MenuBuilder;
-import android.support.v7.internal.view.menu.MenuPresenter;
+import android.support.v7.view.SupportMenuInflater;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPresenter;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.ListPopupWindow.ForwardingListener;
 import android.view.Gravity;

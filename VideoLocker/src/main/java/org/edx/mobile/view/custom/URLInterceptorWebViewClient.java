@@ -14,9 +14,9 @@ import android.webkit.WebViewClient;
 
 import com.google.inject.Inject;
 
-import org.apache.http.protocol.HTTP;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.BrowserUtil;
+import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ConfigUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -169,7 +169,7 @@ public class URLInterceptorWebViewClient extends WebViewClient {
                 && !ConfigUtil.isWhiteListedURL(url, config)
                 && NetworkUtil.isOnZeroRatedNetwork(context, config)
                 && NetworkUtil.isConnectedMobile(context)) {
-            return new WebResourceResponse("text/html", HTTP.UTF_8, null);
+            return new WebResourceResponse("text/html", StandardCharsets.UTF_8.name(), null);
         }
         return super.shouldInterceptRequest(view, url);
     }
