@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +31,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
-
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.internal.Animation;
@@ -142,11 +142,11 @@ public class EditUserProfileFragment extends RoboFragment {
         viewHolder = new ViewHolder(view);
         viewHolder.profileImageProgress.setVisibility(View.GONE);
         viewHolder.username.setText(username);
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto,
-                new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
-                        .colorRes(getActivity(), R.color.disableable_button_text)
-                        .sizeRes(getActivity(), R.dimen.fa_x_small)
-                , null, null, null);
+        final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
+                .colorRes(getActivity(), R.color.disableable_button_text)
+                .sizeRes(getActivity(), R.dimen.fa_x_small);
+        icon.setTint(Color.WHITE);
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto, icon, null, null, null);
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
