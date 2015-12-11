@@ -4,32 +4,26 @@ import android.content.Context;
 
 import org.edx.mobile.discussion.TopicThreads;
 
-import org.edx.mobile.view.adapters.IPagination;
-
 public abstract class SearchThreadListTask extends
-Task<TopicThreads> {
+        Task<TopicThreads> {
 
-    String courseId;
-    String text;
-    IPagination pagination;
+    private static final int PAGE_SIZE = 20;
 
-    public SearchThreadListTask(Context context, String courseId, String text, IPagination pagination) {
+    final String courseId;
+    final String text;
+    final int page;
+
+    public SearchThreadListTask(Context context, String courseId, String text, int page) {
         super(context);
         this.courseId = courseId;
         this.text = text;
-        this.pagination = pagination;
+        this.page = page;
     }
 
-
-
-    public TopicThreads call( ) throws Exception{
+    public TopicThreads call() throws Exception {
         try {
-
-            if(courseId!=null){
-                int pageSize = pagination.pageSize();
-                int page = pagination.numOfPagesLoaded() + 1;
-
-                return environment.getDiscussionAPI().searchThreadList(courseId, text, pageSize, page);
+            if (courseId != null) {
+                return environment.getDiscussionAPI().searchThreadList(courseId, text, PAGE_SIZE, page);
             }
         } catch (Exception ex) {
             handle(ex);

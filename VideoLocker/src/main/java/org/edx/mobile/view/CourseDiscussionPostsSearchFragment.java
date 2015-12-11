@@ -2,17 +2,19 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.edx.mobile.discussion.TopicThreads;
-
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -22,7 +24,10 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
 
     @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
+
     private SearchThreadListTask searchThreadListTask;
+
+    private int nextPage = 1;
 
     @Nullable
     @Override
@@ -32,24 +37,20 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
 
 
     @Override
-    protected void populateThreadList(final boolean refreshView) {
-
-        if ( searchThreadListTask != null ){
+    public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
+        ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
+        if (searchThreadListTask != null) {
             searchThreadListTask.cancel(true);
         }
-        searchThreadListTask = new SearchThreadListTask(getActivity(), courseData.getCourse().getId(), searchQuery, discussionPostsAdapter.getPagination()) {
+        searchThreadListTask = new SearchThreadListTask(getActivity(), courseData.getCourse().getId(), searchQuery, nextPage) {
             @Override
             public void onSuccess(TopicThreads topicThreads) {
-                if ( refreshView ){
-                    discussionPostsAdapter.setItems(null);
-                }
+                ++nextPage;
                 boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
-                discussionPostsAdapter.addPage(topicThreads.getResults(), hasMore);
-                refreshListViewOnDataChange();
-               // discussionPostsAdapter.notifyDataSetChanged();
-                if ( discussionPostsAdapter.getCount() == 0 ){
+                callback.onPageLoaded(topicThreads.getResults(), hasMore);
+                if (discussionPostsAdapter.getCount() == 0) {
                     Activity activity = getActivity();
-                    if ( activity instanceof  TaskProcessCallback ){
+                    if (activity instanceof TaskProcessCallback) {
                         String escapedTitle = TextUtils.htmlEncode(searchQuery);
                         String resultsText = ResourceUtil.getFormattedString(
                                 getContext().getResources(),
@@ -57,8 +58,8 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                                 "search_query",
                                 escapedTitle
                         ).toString();
-                       // CharSequence styledResults = Html.fromHtml(resultsText);
-                        ((TaskProcessCallback)activity).onMessage(MessageType.ERROR, resultsText);
+                        // CharSequence styledResults = Html.fromHtml(resultsText);
+                        ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
                     }
                 }
             }
@@ -70,7 +71,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
 
             }
         };
-
+        searchThreadListTask.setProgressCallback(null);
         searchThreadListTask.execute();
 
     }

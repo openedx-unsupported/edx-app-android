@@ -6,33 +6,31 @@ import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.TopicThreads;
 import org.edx.mobile.http.RetroHttpException;
-import org.edx.mobile.view.adapters.IPagination;
 
 public abstract class GetFollowingThreadListTask extends Task<TopicThreads> {
-    String courseId;
-    DiscussionPostsSort orderBy;
-    DiscussionPostsFilter filter;
-    IPagination pagination;
+    private static final int PAGE_SIZE = 20;
+    final String courseId;
+    final DiscussionPostsSort orderBy;
+    final DiscussionPostsFilter filter;
+    final int page;
 
     public GetFollowingThreadListTask(Context context, String courseId,
                                       DiscussionPostsFilter filter,
                                       DiscussionPostsSort orderBy,
-                                      IPagination pagination) {
+                                      int page) {
         super(context);
         this.courseId = courseId;
         this.orderBy = orderBy;
         this.filter = filter;
-        this.pagination = pagination;
+        this.page = page;
     }
 
 
     public TopicThreads call() throws Exception {
         try {
             if (courseId != null) {
-                int pageSize = pagination.pageSize();
-                int page = pagination.numOfPagesLoaded() + 1;
                 return environment.getDiscussionAPI().getFollowingThreadList(courseId,
-                        filter.getQueryParamValue(), orderBy.getQueryParamValue(), pageSize, page);
+                        filter.getQueryParamValue(), orderBy.getQueryParamValue(), PAGE_SIZE, page);
             }
         } catch (RetroHttpException ex) {
             handle(ex);

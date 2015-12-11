@@ -4,29 +4,24 @@ import android.content.Context;
 
 import org.edx.mobile.discussion.ThreadComments;
 
-import org.edx.mobile.view.adapters.IPagination;
+public abstract class GetCommentListTask extends Task<ThreadComments> {
 
-public abstract class GetCommentListTask extends
-Task<ThreadComments> {
+    private static final int PAGE_SIZE = 20;
 
     String threadId;
-    IPagination pagination;
+    int page = 1;
 
-    public GetCommentListTask(Context context, String threadId, IPagination pagination) {
+    public GetCommentListTask(Context context, String threadId, int page) {
         super(context);
         this.threadId = threadId;
-        this.pagination = pagination;
+        this.page = page;
     }
 
-
-
-    public ThreadComments call( ) throws Exception{
+    public ThreadComments call() throws Exception {
         try {
 
-            if(threadId!=null){
-                int pageSize = pagination.pageSize();
-                int page = pagination.numOfPagesLoaded() + 1;
-                return environment.getDiscussionAPI().getCommentList(threadId, pageSize, page);
+            if (threadId != null) {
+                return environment.getDiscussionAPI().getCommentList(threadId, PAGE_SIZE, page);
             }
         } catch (Exception ex) {
             handle(ex);
