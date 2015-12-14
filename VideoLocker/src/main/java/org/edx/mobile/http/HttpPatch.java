@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
  * @author rohan
  *
  */
+@Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
 public class HttpPatch extends HttpPost {
     
     public static final String METHOD_PATCH = "PATCH";

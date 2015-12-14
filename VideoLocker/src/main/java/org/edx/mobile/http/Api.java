@@ -61,6 +61,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @Singleton
+@Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
 public class Api implements IApi {
 
     @Inject
@@ -985,6 +986,7 @@ public class Api implements IApi {
      * @return
      * @throws Exception
      */
+    @Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
     public Header getLoginResponseHeaders()
             throws Exception {
         String url = getBaseUrl() + "/login";

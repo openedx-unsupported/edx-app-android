@@ -5,17 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.http.HttpStatus;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 
-/**
- * Created by hanning on 5/26/15.
- */
 public abstract class HttpRequestDelegate<T> {
     protected final Logger logger = new Logger(getClass().getName());
     protected  IApi api;
@@ -69,7 +66,7 @@ public abstract class HttpRequestDelegate<T> {
 
         // get data from server
         HttpManager.HttpResult result = invokeHttpCall();
-        if ( result.statusCode == HttpStatus.SC_OK ) {
+        if ( result.statusCode == HttpURLConnection.HTTP_OK ) {
             try {
                 cacheManager.put(cacheKey, result.body);
             } catch ( Exception e) {

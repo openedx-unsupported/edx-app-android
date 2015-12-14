@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
 public class HttpManager {
     protected final Logger logger = new Logger(getClass().getName());
 

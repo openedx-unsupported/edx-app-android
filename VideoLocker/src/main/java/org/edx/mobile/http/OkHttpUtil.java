@@ -132,6 +132,7 @@ public class OkHttpUtil {
     }
 
     //http://sangupta.com/tech/convert-between-java-servlet-and-apache.html
+    @Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
     public static HttpCookie servletCookieFromApacheCookie(Cookie apacheCookie) {
         if(apacheCookie == null) {
             return null;

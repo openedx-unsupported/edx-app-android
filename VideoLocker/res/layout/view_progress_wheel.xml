@@ -8,7 +8,7 @@
         android:layout_height="37dp"
         android:layout_gravity="center"
         ProgressWheel:barColor="@color/progress_wheel_color"
-        ProgressWheel:barLength="70dp"
+        ProgressWheel:progressBarLength="70dp"
         ProgressWheel:barWidth="5dp"
         ProgressWheel:contourColor="@android:color/transparent"
         ProgressWheel:rimColor="@color/progress_wheel_bg_color"
