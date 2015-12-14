@@ -115,7 +115,7 @@ public class CourseDetailFragment extends RoboFragment {
         final LayoutInflater inflater = LayoutInflater.from(getActivity());
         final View child = inflater.inflate(R.layout.fragment_course_detail, parent, false);
         shortDescription = (TextView) child.findViewById(R.id.course_detail_short_description);
-        if (courseDetail.short_description.isEmpty()) {
+        if (courseDetail.short_description == null || courseDetail.short_description.isEmpty()) {
             ((ViewGroup) shortDescription.getParent()).removeView(shortDescription);
         }
         parent.addView(child);

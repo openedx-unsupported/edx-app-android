@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
@@ -29,7 +31,7 @@ public class CourseDetailActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(R.string.course_detail_title);
-//        environment.getSegment().trackScreenView(); TODO COURSE DETAILLLLLLL SCREEENNNNN
+        //environment.getSegment().trackScreenView(ISegment.Screens.???? + CourseDetail.course_id); //TODO Course Detail Screen, figure out what information to send.
     }
 
     @Override
@@ -39,5 +41,10 @@ public class CourseDetailActivity extends BaseSingleFragmentActivity {
         bundle.putParcelable(Router.EXTRA_COURSE_DETAIL, courseDetail);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public void enrollButtonClicked (View view) {
+        // TODO Enroll Button
+        Toast.makeText(getApplicationContext(), "Enroll Button Clicked", Toast.LENGTH_SHORT).show();
     }
 }
