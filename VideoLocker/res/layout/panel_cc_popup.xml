@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/white_roundedbg">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_header_cc"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:divider="@color/grey_act_background"
         android:dividerHeight="1.0sp" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_cc_cancel"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"

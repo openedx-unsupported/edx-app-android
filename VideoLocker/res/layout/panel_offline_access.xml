@@ -8,12 +8,12 @@
     android:paddingTop="7dp"
     >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/offline_access_header"
         style="@style/offline_access_header"
         android:text="@string/section_offline_header" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/offline_access_message"
         style="@style/offline_access_message"
         android:text="@string/section_offline_message" />

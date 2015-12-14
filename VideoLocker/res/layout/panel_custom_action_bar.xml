@@ -5,7 +5,7 @@
     android:layout_height="50dp"
     android:background="@color/edx_brand_primary_base">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/activity_title"
         style="@style/custom_activity_title"
         tools:text="Sign in to edX" />

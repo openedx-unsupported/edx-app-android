@@ -1,18 +1,18 @@
 package org.edx.mobile.view.view_holders;
 
 import android.view.View;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.IAuthorData;
-import org.edx.mobile.view.custom.ETextView;
 
 public class AuthorLayoutViewHolder {
 
-    public final ETextView discussionAuthorTextView;
+    public final TextView discussionAuthorTextView;
 
     public AuthorLayoutViewHolder(View itemView) {
-        discussionAuthorTextView = (ETextView) itemView.
+        discussionAuthorTextView = (TextView) itemView.
                 findViewById(R.id.discussion_author_layout_author_text_view);
     }
 }

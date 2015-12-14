@@ -45,7 +45,7 @@
             android:orientation="vertical"
             tools:targetApi="17">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/row_title"
                 style="@style/regular_grey_text"
                 android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/row_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
             android:gravity="center"
             tools:targetApi="17">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/no_of_videos"
                 style="@style/semibold_text"
                 android:layout_width="wrap_content"

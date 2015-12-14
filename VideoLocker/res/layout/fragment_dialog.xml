@@ -8,7 +8,7 @@
     android:minWidth="250dp"
     android:orientation="vertical" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_dialog_title"
         style="@style/bold_grey_text"
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
         android:layout_margin="5dp"
         android:orientation="horizontal" >
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/tv_dialog_message1"
             style="@style/regular_grey_text"
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <org.edx.mobile.view.custom.EEditText
+    <EditText
         android:id="@+id/email_edit"
         style="@style/edit_text_style"
         android:layout_marginBottom="10dp"
@@ -58,7 +58,7 @@
         android:inputType="textEmailAddress"
         android:maxLength="100"/>
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/dialog_error_message"
         style="@style/regular_text"
         android:layout_width="match_parent"
@@ -86,7 +86,7 @@
             android:layout_height="20dp"
             android:indeterminateDrawable="@drawable/login_progress" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             style="@style/regular_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
         android:orientation="horizontal"
         android:paddingTop="0.5dp" >
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/negativeButton"
             style="@style/bold_text"
             android:layout_width="0dp"
@@ -124,7 +124,7 @@
             android:textSize="15sp"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

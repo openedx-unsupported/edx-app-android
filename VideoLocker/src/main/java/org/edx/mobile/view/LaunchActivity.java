@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.view.custom.EButton;
 
 public class LaunchActivity extends BaseFragmentActivity {
 
@@ -41,7 +41,7 @@ public class LaunchActivity extends BaseFragmentActivity {
             overridePendingTransition(R.anim.no_transition,R.anim.slide_out_to_bottom);
         }
 
-        EButton sign_in_tv = (EButton) findViewById(R.id.sign_in_tv);
+        Button sign_in_tv = (Button) findViewById(R.id.sign_in_tv);
         sign_in_tv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +49,7 @@ public class LaunchActivity extends BaseFragmentActivity {
             }
         });
 
-        EButton sign_up_button = (EButton) findViewById(R.id.sign_up_btn);
+        Button sign_up_button = (Button) findViewById(R.id.sign_up_btn);
         sign_up_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/friend_picker_dark_gray">
 
-        <org.edx.mobile.view.custom.EEditText
+        <EditText
             android:id="@+id/search_friends_edit_text"
             android:drawableLeft="@drawable/ic_search"
             android:drawableStart="@drawable/ic_search"
@@ -47,7 +47,7 @@
 
         </LinearLayout>
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/search_list_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             tools:visibility="visible"
             tools:listitem="@layout/friend_list_item"/>
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/social_friend_picker_message"
             android:layout_margin="40dp"
             android:layout_width="match_parent"

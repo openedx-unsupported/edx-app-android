@@ -2,6 +2,7 @@ package org.edx.mobile.view.view_holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconImageView;
 
@@ -9,15 +10,14 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.custom.ETextView;
 
 public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
 
     public final IconImageView threadVoteIconImageView;
-    public final ETextView threadVoteTextView;
+    public final TextView threadVoteTextView;
     public final View voteViewContainer;
     public final IconImageView threadFollowIconImageView;
-    public final ETextView threadFollowTextView;
+    public final TextView threadFollowTextView;
     public final View threadFollowContainer;
 
     public DiscussionSocialLayoutViewHolder(View itemView) {
@@ -26,12 +26,12 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         voteViewContainer = itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_container);
 
-        threadVoteTextView = (ETextView) itemView.
+        threadVoteTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_count_text_view);
         threadVoteIconImageView = (IconImageView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_vote_icon_view);
 
-        threadFollowTextView = (ETextView) itemView.
+        threadFollowTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_text_view);
 
         threadFollowIconImageView = (IconImageView) itemView.

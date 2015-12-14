@@ -41,7 +41,6 @@ import org.edx.mobile.task.Task;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class RegisterActivity extends BaseFragmentActivity
     private LinearLayout optionalFieldsLayout;
     private LinearLayout agreementLayout;
     private LinearLayout registrationLayout;
-    private ETextView createAccountTv;
+    private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
 
@@ -113,11 +112,11 @@ public class RegisterActivity extends BaseFragmentActivity
             }
         });
 
-        createAccountTv = (ETextView) findViewById(R.id.create_account_tv);
+        createAccountTv = (TextView) findViewById(R.id.create_account_tv);
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
         agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
-        final ETextView optional_text=(ETextView)findViewById(R.id.optional_field_tv);
+        final TextView optional_text=(TextView)findViewById(R.id.optional_field_tv);
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +147,7 @@ public class RegisterActivity extends BaseFragmentActivity
         }
         registrationLayout = (LinearLayout)findViewById(R.id.registrationLayout);
 
-        ETextView customTitle = (ETextView) findViewById(R.id.activity_title);
+        TextView customTitle = (TextView) findViewById(R.id.activity_title);
         if(customTitle!=null){
             CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
             customTitle.setText(title);
@@ -421,7 +420,7 @@ public class RegisterActivity extends BaseFragmentActivity
      */
     private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
         LinearLayout messageLayout = (LinearLayout) findViewById(R.id.message_layout);
-        ETextView messageView = (ETextView) findViewById(R.id.message_body);
+        TextView messageView = (TextView) findViewById(R.id.message_body);
         //we replace facebook and google programmatically here
         //in order to make localization work
         String socialTypeString = "";
@@ -450,7 +449,7 @@ public class RegisterActivity extends BaseFragmentActivity
         signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
         socialPanel.setVisibility(View.GONE);
-        ETextView signupWithEmailTitle = (ETextView)findViewById(R.id.or_signup_with_email_title);
+        TextView signupWithEmailTitle = (TextView)findViewById(R.id.or_signup_with_email_title);
         signupWithEmailTitle.setText( getString(R.string.complete_registration) );
         //help method
         showRegularMessage(socialType);

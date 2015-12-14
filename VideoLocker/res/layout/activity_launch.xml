@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="35dp">
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/sign_up_btn"
             style="@style/bold_white_text"
             android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/sign_in_tv"
             style="@style/bold_text"
             android:layout_width="match_parent"

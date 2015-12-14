@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -32,7 +32,7 @@
                 android:textColor="@color/edx_brand_primary_dark"
                 android:textSize="@dimen/edx_small" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -45,7 +45,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <org.edx.mobile.view.custom.EButton
+            <Button
                 style="@style/edX.Widget.CreationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

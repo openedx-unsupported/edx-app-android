@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/txtSubtitles_tv"
         style="@style/semibold_white_text"
         android:layout_width="wrap_content"

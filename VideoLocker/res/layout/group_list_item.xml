@@ -41,7 +41,7 @@
             android:minHeight="30dp"
             android:orientation="vertical">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/group_name"
                 style="@style/bold_grey_text"
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:maxLines="2"
                 android:textSize="16sp" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/group_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 
         </LinearLayout>
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/group_unread"
             android:layout_width="wrap_content"
             android:layout_height="25dp"

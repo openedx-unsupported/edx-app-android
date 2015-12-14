@@ -17,7 +17,7 @@
               style="@style/api_progress_style"
               android:visibility="gone" />
      
-     <org.edx.mobile.view.custom.ETextView
+     <TextView
         android:id="@+id/no_announcement_tv"
         style="@style/empty_content_text"
         android:text="@string/no_announcements_to_display" />

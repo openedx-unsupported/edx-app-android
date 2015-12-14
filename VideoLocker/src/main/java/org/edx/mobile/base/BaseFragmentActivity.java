@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +41,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public abstract class BaseFragmentActivity extends RoboAppCompatActivity
+public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI {
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
@@ -324,25 +322,6 @@ public abstract class BaseFragmentActivity extends RoboAppCompatActivity
      */
     protected boolean handleOptionsItemSelected(MenuItem item) {
         return false;
-    }
-
-    /**
-     * This function is overidden to set the font for Action bar title
-     * @param title
-     */
-    @Override
-    public void setTitle(CharSequence title) {
-        try {
-            final ActionBar bar = getSupportActionBar();
-            if (bar != null && title!=null) {
-                SpannableString s = new SpannableString(title);
-                s.setSpan(new CustomTypefaceSpan(this, "OpenSans-Semibold.ttf"), 0, s.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                bar.setTitle(s);
-            }
-        } catch(Exception ex) {
-            logger.error(ex);
-        }
     }
 
     public void setActionBarVisible(boolean visible){

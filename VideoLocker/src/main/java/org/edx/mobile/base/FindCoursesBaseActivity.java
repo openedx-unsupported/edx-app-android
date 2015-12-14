@@ -10,12 +10,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
-import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -102,7 +102,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         if(webview!=null){
             webview.setVisibility(View.GONE);
         }
-        ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
+        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
         if(offlineModeTv!=null){
             offlineModeTv.setVisibility(View.VISIBLE);
         }
@@ -115,7 +115,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         if(webview!=null) {
             webview.setVisibility(View.VISIBLE);
         }
-        ETextView offlineModeTv = (ETextView) findViewById(R.id.offline_mode_message);
+        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
         if(offlineModeTv!=null) {
             offlineModeTv.setVisibility(View.GONE);
         }

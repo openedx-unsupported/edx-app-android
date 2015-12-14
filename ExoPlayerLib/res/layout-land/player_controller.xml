@@ -26,7 +26,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/video_details_background_transparent" >
 
-        <ETextView
+        <TextView
             android:id="@+id/video_title"
             style="@style/video_title"
             android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                 android:thumb="@drawable/player_seekbar_thumb"
                 android:thumbOffset="0dp" />
 
-            <ETextView
+            <TextView
                 android:id="@+id/time_current"
                 style="@style/semibold_white_text"
                 android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
                 android:paddingTop="4dip"
                 android:textSize="12sp" />
 
-            <ETextView
+            <TextView
                 android:id="@+id/time_slash"
                 style="@style/bold_white_text"
                 android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
                 android:text="@string/lbl_slash"
                 android:textSize="12sp" />
 
-            <ETextView
+            <TextView
                 android:id="@+id/time"
                 style="@style/semibold_white_text"
                 android:layout_width="wrap_content"

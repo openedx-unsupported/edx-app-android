@@ -23,7 +23,7 @@
         style="@style/api_progress_style"
         android:visibility="gone" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/offline_mode_message"
         style="@style/offline_mode_message"/>
 </RelativeLayout>

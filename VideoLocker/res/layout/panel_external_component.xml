@@ -10,7 +10,7 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/semibold_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:textColor="@android:color/white"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/open_in_browser_btn"
         style="@style/semibold_text"
         android:layout_width="wrap_content"

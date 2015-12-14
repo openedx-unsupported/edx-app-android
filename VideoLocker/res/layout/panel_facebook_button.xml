@@ -36,7 +36,7 @@
             android:layout_height="40dp"
             android:background="@color/transparent_white_20" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/fb_tv"
             style="@style/regular_white_text"
             android:layout_width="match_parent"

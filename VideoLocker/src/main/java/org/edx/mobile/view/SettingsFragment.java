@@ -30,7 +30,6 @@ import org.edx.mobile.social.SocialProvider;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SocialUtils;
-import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
@@ -53,7 +52,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
     protected IEdxEnvironment environment;
     boolean showSocialFeatures;
 
-    private ETextView socialConnectedText;
+    private TextView socialConnectedText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +95,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
             loginButton.setReadPermissions(Arrays.asList("user_likes", "user_status", "user_friends"));
             loginButton.setFragment(this);
 
-            socialConnectedText = (ETextView) layout.findViewById(R.id.settings_fb_login_body);
+            socialConnectedText = (TextView) layout.findViewById(R.id.settings_fb_login_body);
 
             SocialProvider socialProvider = new FacebookProvider();
             if (socialProvider.isLoggedIn()) {
