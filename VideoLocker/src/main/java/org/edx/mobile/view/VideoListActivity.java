@@ -1,12 +1,12 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,7 +95,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     @Override
     protected void onStart() {
         super.onStart();
-        ActionBar bar = getActionBar();
+        ActionBar bar = getSupportActionBar();
         if (bar != null && !isLandscape()) {
             bar.show();
         }

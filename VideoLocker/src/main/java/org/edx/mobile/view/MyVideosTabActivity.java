@@ -1,11 +1,11 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,7 +63,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
     protected void onStart() {
         super.onStart();
 
-        ActionBar bar = getActionBar();
+        ActionBar bar = getSupportActionBar();
         if (bar != null && !isLandscape()) {
             bar.show();
             setTitle(getString(R.string.label_my_videos));

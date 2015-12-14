@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="org.edx.mobile.view.VideoListActivity">
 
     <item
         android:id="@+id/unread_display"
         android:actionLayout="@layout/view_unread_text"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/unread_text"
         android:visible="false" />
 </menu>

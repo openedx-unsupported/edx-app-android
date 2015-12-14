@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -8,6 +7,8 @@ import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -162,7 +163,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         } else {
             isLandscape = true;
             // probably the landscape player view, so hide action bar
-            ActionBar bar = getActivity().getActionBar();
+            ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
             if(bar!=null){
                 bar.hide();
             }

@@ -124,8 +124,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
         environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
 
-        Button closeButton = (Button)
-                findViewById(R.id.actionbar_close_btn);
+        View closeButton = findViewById(R.id.actionbar_close_btn);
         if (closeButton != null) {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override

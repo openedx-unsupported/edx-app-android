@@ -12,13 +12,12 @@ import android.view.View;
 import android.view.Window;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.RoboAppCompatActivity;
 import org.edx.mobile.third_party.subscaleview.ImageSource;
 import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.view.custom.CropImageView;
 
-import roboguice.activity.RoboActivity;
-
-public class CropImageActivity extends RoboActivity {
+public class CropImageActivity extends RoboAppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "imageUri";
     public static final String EXTRA_CROP_RECT = "cropRect";
     public static final String EXTRA_FROM_CAMERA = "fromCamera";
@@ -48,7 +47,6 @@ public class CropImageActivity extends RoboActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_crop_image);
 
         task = new SaveUriToFileTask(this, (Uri) getIntent().getParcelableExtra(EXTRA_IMAGE_URI)) {

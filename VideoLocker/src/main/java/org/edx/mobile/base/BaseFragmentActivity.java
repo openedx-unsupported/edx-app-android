@@ -1,15 +1,16 @@
 package org.edx.mobile.base;
 
-import android.app.ActionBar;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,9 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import roboguice.activity.RoboFragmentActivity;
 
-public abstract class BaseFragmentActivity extends RoboFragmentActivity
+public abstract class BaseFragmentActivity extends RoboAppCompatActivity
         implements NetworkSubject, ICommonUI {
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
@@ -95,7 +95,6 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
-
         updateActionBarShadow();
 
         logger.debug( "created");
@@ -114,10 +113,10 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
 
 
         // enabling action bar app icon.
-        ActionBar bar = getActionBar();
+        ActionBar bar = getSupportActionBar();
         if (bar != null) {
+            bar.setDisplayShowHomeEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
-            bar.setHomeButtonEnabled(true);
             bar.setIcon(android.R.color.transparent);
             //If activity is in landscape, hide the Action bar
             if (isLandscape()) {
@@ -225,10 +224,6 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
 
-            /*
-             * we want to disable the animation for ActionBarDrawerToggle V7
-             *  http://stackoverflow.com/questions/27117243/disable-hamburger-to-back-arrow-animation-on-toolbar
-             */
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     R.string.label_close,  R.string.label_close ) {
                 public void onDrawerClosed(View view) {
@@ -249,7 +244,9 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
                 }
 
                 public void onDrawerSlide(View drawerView, float slideOffset) {
-                    super.onDrawerSlide(drawerView, 0); // this disables the animation
+                    // Disable the menu icon back arrow animation
+                    // http://stackoverflow.com/questions/27117243/disable-hamburger-to-back-arrow-animation-on-toolbar
+                    super.onDrawerSlide(drawerView, 0);
                 }
             };
             mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -336,25 +333,21 @@ public abstract class BaseFragmentActivity extends RoboFragmentActivity
     @Override
     public void setTitle(CharSequence title) {
         try {
-            ActionBar bar = getActionBar();
+            final ActionBar bar = getSupportActionBar();
             if (bar != null && title!=null) {
-                Typeface type = Typeface.createFromAsset(getAssets(),"fonts/OpenSans-Semibold.ttf");
-                int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-                TextView titleTextView = (TextView) findViewById(titleId);
-                if(titleTextView!=null){
-                    titleTextView.setTextColor(getResources().getColor(R.color.edx_white));
-                    titleTextView.setTypeface(type);
-                    bar.setTitle("  " + title);
-                }
+                SpannableString s = new SpannableString(title);
+                s.setSpan(new CustomTypefaceSpan(this, "OpenSans-Semibold.ttf"), 0, s.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                bar.setTitle(s);
             }
-        }catch(Exception ex){
+        } catch(Exception ex) {
             logger.error(ex);
         }
     }
 
     public void setActionBarVisible(boolean visible){
         try {
-            ActionBar bar = getActionBar();
+            ActionBar bar = getSupportActionBar();
             if (bar != null ) {
                 if ( visible )
                     bar.show();
