@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.joanzapata.iconify.widget.IconImageView
+        <org.edx.mobile.view.custom.IconImageViewXml
             android:id="@+id/discussion_responses_answer_icon_view"
             android:layout_width="@dimen/edx_xxx_small"
             android:layout_height="@dimen/edx_xxx_small"

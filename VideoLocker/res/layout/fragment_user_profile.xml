@@ -52,7 +52,7 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.joanzapata.iconify.widget.IconImageView
+                    <org.edx.mobile.view.custom.IconImageViewXml
                         android:layout_width="@dimen/edx_x_small"
                         android:layout_height="@dimen/edx_x_small"
                         android:layout_marginEnd="@dimen/x_small_icon_margin"
@@ -78,7 +78,7 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.joanzapata.iconify.widget.IconImageView
+                    <org.edx.mobile.view.custom.IconImageViewXml
                         android:layout_width="@dimen/edx_x_small"
                         android:layout_height="@dimen/edx_x_small"
                         android:layout_marginEnd="@dimen/x_small_icon_margin"

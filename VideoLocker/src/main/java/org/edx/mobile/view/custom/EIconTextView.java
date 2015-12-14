@@ -5,11 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
-import com.joanzapata.iconify.widget.IconTextView;
-
 import org.edx.mobile.R;
 
-public class EIconTextView extends IconTextView {
+public class EIconTextView extends IconTextViewXml {
     public EIconTextView(Context context) {
         super(context);
     }

@@ -43,7 +43,7 @@
                         app:civ_border_width="1dp"
                         tools:src="@drawable/app_icon" />
 
-                    <com.joanzapata.iconify.widget.IconImageView
+                    <org.edx.mobile.view.custom.IconImageViewXml
                         android:id="@+id/profile_image_progress"
                         android:layout_width="@dimen/edx_base"
                         android:layout_height="@dimen/edx_base"

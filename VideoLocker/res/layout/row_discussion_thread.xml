@@ -9,7 +9,7 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <com.joanzapata.iconify.widget.IconImageView
+    <org.edx.mobile.view.custom.IconImageViewXml
         android:id="@+id/discussion_post_type_icon"
         style="@style/icon_view_standard_size"
         android:layout_margin="@dimen/edx_margin"
@@ -38,7 +38,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_closed_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -47,7 +47,7 @@
                 app:iconColor="@color/edx_grayscale_neutral_base"
                 app:iconName="fa-lock" />
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_pin_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"
@@ -56,7 +56,7 @@
                 app:iconColor="@color/edx_grayscale_neutral_base"
                 app:iconName="fa-thumb-tack" />
 
-            <com.joanzapata.iconify.widget.IconImageView
+            <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_following_icon"
                 android:layout_width="@dimen/edx_x_small"
                 android:layout_height="@dimen/edx_x_small"

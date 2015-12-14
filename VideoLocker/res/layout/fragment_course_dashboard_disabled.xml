@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.joanzapata.iconify.widget.IconImageView
+    <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="@dimen/large_indicator_icon_width"
         android:layout_height="@dimen/large_indicator_icon_height"
         app:iconColor="@color/edx_grayscale_neutral_light"

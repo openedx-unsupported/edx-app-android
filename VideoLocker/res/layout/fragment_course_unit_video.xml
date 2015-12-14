@@ -26,7 +26,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.joanzapata.iconify.widget.IconImageView
+        <org.edx.mobile.view.custom.IconImageViewXml
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:background="@color/white"
