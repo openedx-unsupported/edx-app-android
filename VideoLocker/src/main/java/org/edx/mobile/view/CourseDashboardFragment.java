@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.inject.Inject;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconImageButton;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
@@ -172,7 +171,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
         courseTextName.setText(courseData.getCourse().getName());
         CourseEntry course = courseData.getCourse();
-        courseTextDetails.setText(course.getDescription(getActivity(), true));
+        courseTextDetails.setText(course.getDescriptionWithStartDate(getActivity()));
 
         if (environment.getConfig().isShareCourseEnabled()) {
             shareButton.setVisibility(headerImageView.VISIBLE);

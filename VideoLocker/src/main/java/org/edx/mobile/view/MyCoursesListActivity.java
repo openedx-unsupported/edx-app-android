@@ -1,29 +1,19 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TabWidget;
+import android.support.v4.app.Fragment;
 
-import com.facebook.Session;
-import com.facebook.SessionState;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.social.facebook.FacebookProvider;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyCoursesListActivity extends BaseTabActivity {
-
-    private IUiLifecycleHelper uiLifecycleHelper;
-    private PrefManager featuresPref;
+public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @Inject
     NotificationDelegate notificationDelegate;
@@ -32,80 +22,20 @@ public class MyCoursesListActivity extends BaseTabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course_list);
-
-        featuresPref = new PrefManager(this, PrefManager.Pref.FEATURES);
-
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-
         configureDrawer();
-
         setTitle(getString(R.string.label_my_courses));
-
         environment.getSegment().trackScreenView(getString(R.string.label_my_courses));
-
-        Session.StatusCallback statusCallback = new Session.StatusCallback() {
-            @Override
-            public void call(Session session, SessionState state, Exception exception) {
-
-                changeSocialMode(state.isOpened());
-            }
-
-        };
-        uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(this, statusCallback);
-        uiLifecycleHelper.onCreate(savedInstanceState);
-    }
-
-    private void changeSocialMode(boolean socialEnabled) {
-
-        //Social enabled is always false if social features are disabled
-        boolean allowSocialPref = featuresPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-        if (!allowSocialPref) {
-            socialEnabled = false;
-        }
-
-        if (tabHost != null) {
-            TabWidget widget = tabHost.getTabWidget();
-            widget.setVisibility(socialEnabled ? View.VISIBLE : View.GONE);
-
-            if (!socialEnabled) {
-                widget.setCurrentTab(0);
-            }
-        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+    public Fragment getFirstFragment() {
+        return new MyCourseListTabFragment();
     }
 
-    @Override
-    public List<TabModel> tabsToAdd() {
-        List<TabModel> tabs = new ArrayList<TabModel>();
-        tabs.add(new TabModel(getString(R.string.label_my_courses),
-                MyCourseListTabFragment.class,
-                null, "my_course_tab_fragment"));
-        tabs.add(new TabModel(getString(R.string.label_my_friends_courses),
-                MyFriendsCoursesTabFragment.class,
-                null, "my_friends_course_fragment"));
-
-        return tabs;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // GetEnrolledCoursesTask();
-        setTitle(getString(R.string.label_my_courses));
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        uiLifecycleHelper.onResume();
-        changeSocialMode(new FacebookProvider().isLoggedIn());
         notificationDelegate.checkAppUpgrade();
     }
 
@@ -113,29 +43,6 @@ public class MyCoursesListActivity extends BaseTabActivity {
     protected void onRestart() {
         super.onRestart();
         overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        uiLifecycleHelper.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        uiLifecycleHelper.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        uiLifecycleHelper.onDestroy();
-    }
-
-    @Override
-    protected int getDefaultTab() {
-        return 0;
     }
 
     public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
@@ -164,6 +71,7 @@ public class MyCoursesListActivity extends BaseTabActivity {
         @Override
         public void onResult(Integer result) {
         }
+
         @Override
         public void onFail(Exception ex) {
             logger.error(ex);
@@ -172,7 +80,7 @@ public class MyCoursesListActivity extends BaseTabActivity {
 
     @Override
     protected void reloadMyCoursesData() {
-        CourseListTabFragment fragment = (CourseListTabFragment) getFragmentByTag("my_course_tab_fragment");
+        CourseListTabFragment fragment = (CourseListTabFragment) getSupportFragmentManager().findFragmentByTag(FIRST_FRAG_TAG);
         if (fragment != null) {
             fragment.loadData(false, true);
         }

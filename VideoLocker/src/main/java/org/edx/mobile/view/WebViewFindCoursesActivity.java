@@ -10,7 +10,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import roboguice.inject.ContentView;
 
 @ContentView(R.layout.activity_find_courses)
-public class FindCoursesActivity extends FindCoursesBaseActivity {
+public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
     private WebView webView;
 
@@ -25,7 +25,7 @@ public class FindCoursesActivity extends FindCoursesBaseActivity {
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
 
         webView = (WebView) findViewById(R.id.webview);
-        webView.loadUrl(environment.getConfig().getEnrollmentConfig().getCourseSearchUrl());
+        webView.loadUrl(environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl());
     }
 
     @Override

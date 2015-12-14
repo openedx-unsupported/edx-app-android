@@ -1,6 +1,8 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,23 +20,26 @@ import org.edx.mobile.view.custom.ETextView;
 
 import roboguice.fragment.RoboDialogFragment;
 
-public class FindCoursesDialogFragment extends RoboDialogFragment {
+public class CourseDiscoveryNotEnabledDialogFragment extends RoboDialogFragment {
 
     @Inject
     IEdxEnvironment environment;
 
-    public FindCoursesDialogFragment() {
-    }   
-    
+    public static void show(FragmentActivity activity) {
+        final CourseDiscoveryNotEnabledDialogFragment findCoursesFragment = new CourseDiscoveryNotEnabledDialogFragment();
+        findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        findCoursesFragment.show(activity.getSupportFragmentManager(), "dialog-find-courses");
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_find_courses_dialog,
+        View v = inflater.inflate(R.layout.course_discovery_not_enabled_dialog,
                 container, false);
-            String find_courses_text = getString(R.string.find_courses_dialog_text_2);
-            ETextView tv_find_courses_2 = (ETextView)v.findViewById(R.id.find_courses_dialog_tv2);
-            tv_find_courses_2.setText(Html.fromHtml(find_courses_text));
+        String find_courses_text = getString(R.string.find_courses_dialog_text_2);
+        ETextView tv_find_courses_2 = (ETextView) v.findViewById(R.id.find_courses_dialog_tv2);
+        tv_find_courses_2.setText(Html.fromHtml(find_courses_text));
 
         // Watch for button clicks.
         Button close_button = (Button) v.findViewById(R.id.positiveButton);
@@ -42,7 +47,7 @@ public class FindCoursesDialogFragment extends RoboDialogFragment {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
-                if(!isRemoving() && isVisible())
+                if (!isRemoving() && isVisible())
                     dismiss();
             }
         });
@@ -55,8 +60,8 @@ public class FindCoursesDialogFragment extends RoboDialogFragment {
             public void onClick(View v) {
                 //Check if the dialog is not removing(dismissing)
                 // or is visible before dismissing the dialog
-                if(!isRemoving() && isVisible()){
-                    String url = environment.getConfig().getEnrollmentConfig().getExternalCourseSearchUrl();
+                if (!isRemoving() && isVisible()) {
+                    String url = environment.getConfig().getCourseDiscoveryConfig().getExternalCourseSearchUrl();
                     BrowserUtil.open(getActivity(), url);
                 }
             }

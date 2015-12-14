@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +20,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -40,7 +40,6 @@ import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.PropertyUtil;
-import org.edx.mobile.view.dialog.FindCoursesDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
@@ -190,34 +189,21 @@ public class NavigationFragment extends RoboFragment {
 
 
         TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
-        tvFindCourses.setVisibility(View.GONE);
         tvFindCourses.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 ISegment segIO = environment.getSegment();
                 segIO.trackUserFindsCourses();
-                Activity act = getActivity();
+                FragmentActivity act = getActivity();
                 ((BaseFragmentActivity) act).closeDrawer();
-                if (environment.getConfig().getEnrollmentConfig().isEnabled()) {
-                    if (!(act instanceof FindCoursesActivity)) {
-                        environment.getRouter().showFindCourses(act);
+                if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
+                    environment.getRouter().showFindCourses(act);
 
-                        //Finish need not be called if the current activity is MyCourseListing
-                        // as on returning back from FindCourses,
-                        // the student should be returned to the MyCourses screen
-                        if (!(act instanceof MyCoursesListActivity)) {
-                            act.finish();
-                        }
-                    }
-                } else {
-                    //Show the dialog only if the activity is started. This is to avoid Illegal state
-                    //exceptions if the dialog fragment tries to show even if the application is not in foreground
-                    if (isAdded() && isVisible()) {
-                        FindCoursesDialogFragment findCoursesFragment = new FindCoursesDialogFragment();
-                        findCoursesFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                                android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                        findCoursesFragment.setCancelable(false);
-                        findCoursesFragment.show(getFragmentManager(), "dialog-find-courses");
+                    //Finish need not be called if the current activity is MyCourseListing
+                    // as on returning back from FindCourses,
+                    // the student should be returned to the MyCourses screen
+                    if (!(act instanceof MyCoursesListActivity)) {
+                        act.finish();
                     }
                 }
             }
@@ -315,12 +301,7 @@ public class NavigationFragment extends RoboFragment {
             View groupsItemView = getView().findViewById(R.id.drawer_option_my_groups);
             boolean allowSocialFeatures = socialPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
             groupsItemView.setVisibility(allowSocialFeatures ? View.VISIBLE : View.GONE);
-
-            View findCoursesItemView = getView().findViewById(R.id.drawer_option_find_courses);
-            boolean findCoursesEnabled = environment.getConfig().getEnrollmentConfig().isEnabled();
-            findCoursesItemView.setVisibility(findCoursesEnabled ? View.VISIBLE : View.GONE);
         }
-
     }
 
     @Override
