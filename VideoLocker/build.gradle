@@ -79,6 +79,12 @@ apiKey=$fabric_key
 
 dependencies {
     compile project (':android-iconify')
+    // Note that we have the Font Awesome TTF file
+    // in the local assets as well, to enable the
+    // graphical layout editor to render it. Since
+    // that is what will be compiled in the APK now,
+    // we need to ensure that it's updated along
+    // with module updates.
     compile project (':android-iconify-fontawesome')
     compile ('com.getbase:floatingactionbutton:1.3.0') {
         exclude module: 'support-annotations'
