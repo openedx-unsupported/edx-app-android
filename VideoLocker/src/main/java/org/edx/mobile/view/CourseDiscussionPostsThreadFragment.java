@@ -90,7 +90,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
         createNewPostTextView.setText(R.string.discussion_post_create_new_post);
         Context context = getActivity();
-        TextViewCompat.setCompoundDrawablesRelative(createNewPostTextView,
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(createNewPostTextView,
                 new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
                         .sizeRes(context, R.dimen.icon_view_standard_width_height)
                         .colorRes(context, R.color.edx_grayscale_neutral_white_t),
