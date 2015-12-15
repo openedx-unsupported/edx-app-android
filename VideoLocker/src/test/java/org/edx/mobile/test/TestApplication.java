@@ -4,7 +4,6 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.logger.Logger;
 
 /**
  * The {@link MainApplication} class is overridden for testing in
@@ -32,8 +31,6 @@ import org.edx.mobile.logger.Logger;
 public class TestApplication extends MainApplication {
     @Override
     public void onCreate() {
-        // initialize logger
-        Logger.init(this.getApplicationContext());
         // Register Font Awesome module in android-iconify library
         Iconify.with(new FontAwesomeModule());
         application = this;

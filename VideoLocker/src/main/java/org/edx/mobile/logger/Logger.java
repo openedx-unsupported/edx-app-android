@@ -1,10 +1,9 @@
 package org.edx.mobile.logger;
 
-import android.content.Context;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.util.Config;
 
 import java.io.Serializable;
@@ -18,15 +17,6 @@ public class Logger implements Serializable {
 
     @Inject
     Config config;
-
-    /**
-     * Initializes logger. Logs are disabled for release builds
-     * during initialization.
-     * @param context
-     */
-    public static void init(Context context) {
-        LogUtil.init(context);
-    }
 
     private Logger() {}
 
@@ -56,7 +46,7 @@ public class Logger implements Serializable {
         LogUtil.error(this.tag, "", ex);
 
         if (submitCrashReport
-                && !LogUtil.ISDEBUG
+                && !BuildConfig.DEBUG
                 &&  config.getFabricConfig().isEnabled()) {
             Crashlytics.logException(ex);
         }
