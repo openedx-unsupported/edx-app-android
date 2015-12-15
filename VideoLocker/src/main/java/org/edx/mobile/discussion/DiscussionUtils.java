@@ -31,7 +31,7 @@ public abstract class DiscussionUtils {
         Context context = textView.getContext();
         if (isTopicClosed) {
             textView.setText(negativeTextResId);
-            TextViewCompat.setCompoundDrawablesRelative(textView,
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
                     new IconDrawable(context, FontAwesomeIcons.fa_lock)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
                             .colorRes(context, R.color.edx_grayscale_neutral_white_t),
@@ -40,8 +40,8 @@ public abstract class DiscussionUtils {
             creationLayout.setOnClickListener(null);
         } else {
             textView.setText(positiveTextResId);
-            TextViewCompat.setCompoundDrawablesRelative(textView,
-                    new IconDrawable(textView.getContext(), FontAwesomeIcons.fa_plus_circle)
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
+                    new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
                             .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                     null, null, null
