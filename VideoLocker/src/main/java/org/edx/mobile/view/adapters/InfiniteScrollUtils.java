@@ -67,6 +67,7 @@ public class InfiniteScrollUtils {
     }
 
     public interface PageLoadCallback<T> {
+        void onPartialPageLoaded(List<T> newItems);
         void onPageLoaded(List<T> newItems, boolean hasMore);
     }
 
@@ -100,9 +101,17 @@ public class InfiniteScrollUtils {
             adapter.setProgressVisible(true);
             pageLoader.loadNextPage(new PageLoadCallback<T>() {
                 @Override
+                public void onPartialPageLoaded(List<T> newItems) {
+                    if (isAbandoned()) {
+                        return;
+                    }
+                    adapter.addAll(newItems);
+                }
+
+                @Override
                 public void onPageLoaded(List<T> newItems, boolean hasMore) {
-                    if (instanceLoadId != activeLoadId.get()) {
-                        return; // Disregard result, since reset() was called
+                    if (isAbandoned()) {
+                        return;
                     }
                     adapter.addAll(newItems);
                     if (!hasMore) {
@@ -110,6 +119,16 @@ public class InfiniteScrollUtils {
                     }
                     hasMoreItems = hasMore;
                     loading = false;
+                }
+
+                /**
+                 * Return whether this callback has been abandoned because of the controller being reset.
+                 *
+                 * @return <code>true</code> if the callback has been abandoned otherwise <code>false</code>
+                 */
+                private boolean isAbandoned() {
+                    // Disregard result, since reset() was called
+                    return instanceLoadId != activeLoadId.get();
                 }
             });
         }
