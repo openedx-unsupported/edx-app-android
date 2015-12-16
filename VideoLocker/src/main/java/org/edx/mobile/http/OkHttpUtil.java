@@ -12,8 +12,10 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import org.apache.http.cookie.Cookie;
+import org.edx.mobile.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +33,15 @@ public class OkHttpUtil {
 
     private static final int cacheSize = 10 * 1024 * 1024; // 10 MiB
 
+    public static OkHttpClient getClient(@NonNull Context context) {
+        return getClient(context, false);
+    }
+
     public static OkHttpClient getOAuthBasedClient(@NonNull Context context) {
+        return getClient(context, true);
+    }
+
+    private static OkHttpClient getClient(@NonNull Context context, boolean isOAuthBased) {
         final OkHttpClient client = new OkHttpClient();
         final File cacheDirectory = new File(context.getFilesDir(), "http-cache");
         if (!cacheDirectory.exists()) {
@@ -39,8 +49,16 @@ public class OkHttpUtil {
         }
         final Cache cache = new Cache(cacheDirectory, cacheSize);
         client.setCache(cache);
-        client.interceptors().add(new OauthHeaderRequestInterceptor(context));
-        client.interceptors().add(new LoggingInterceptor());
+        List<Interceptor> interceptors = client.interceptors();
+        interceptors.add(new JsonMergePatchInterceptor());
+        if (isOAuthBased) {
+            interceptors.add(new OauthHeaderRequestInterceptor(context));
+        }
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            interceptors.add(loggingInterceptor);
+        }
         return client;
     }
 
@@ -93,9 +111,7 @@ public class OkHttpUtil {
     public static List<HttpCookie>  getCookies(Context context, String url, boolean isGet)
         throws  Exception {
 
-        OkHttpClient oauthBasedClient = new OkHttpClient();
-        oauthBasedClient.interceptors().add(new OauthHeaderRequestInterceptor(context));
-        oauthBasedClient.interceptors().add(new LoggingInterceptor());
+        OkHttpClient oauthBasedClient = getOAuthBasedClient(context);
         CookieManager cookieManager = new CookieManager();
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         oauthBasedClient.setCookieHandler(cookieManager);

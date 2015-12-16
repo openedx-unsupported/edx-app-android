@@ -63,9 +63,6 @@ public class MainApplication extends MultiDexApplication {
      * all third party integrations and shared components.
      */
     private void init() {
-        // initialize logger
-        Logger.init(this.getApplicationContext());
-
         application = this;
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
 

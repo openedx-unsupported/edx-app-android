@@ -3,14 +3,15 @@ package org.edx.mobile.test.http;
 import android.content.Context;
 
 import com.squareup.okhttp.Cache;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.http.GzipRequestInterceptor;
-import org.edx.mobile.http.LoggingInterceptor;
 import org.edx.mobile.http.OauthHeaderRequestInterceptor;
 import org.edx.mobile.http.OfflineRequestInterceptor;
 import org.edx.mobile.test.BaseTestCase;
@@ -18,6 +19,7 @@ import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -64,9 +66,12 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         Cache cache = new Cache(cacheDirectory, cacheSize);
         oauthBasedClient.setCache(cache);
-        oauthBasedClient.interceptors().add(new GzipRequestInterceptor());
-        oauthBasedClient.interceptors().add(new OauthHeaderRequestInterceptor(context));
-        oauthBasedClient.interceptors().add(new LoggingInterceptor());
+        List<Interceptor> interceptors = oauthBasedClient.interceptors();
+        interceptors.add(new GzipRequestInterceptor());
+        interceptors.add(new OauthHeaderRequestInterceptor(context));
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptors.add(loggingInterceptor);
 
         Executor executor = Executors.newCachedThreadPool();
         RestAdapter restAdapter = new RestAdapter.Builder()
