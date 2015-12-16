@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/edx_grayscale_neutral_white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,9 +60,21 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
                     android:tint="@color/edx_grayscale_neutral_black_t"
-                    android:visibility="invisible"
-                    tools:visibility="visible" />
+                    android:visibility="invisible" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/header_play_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_media_play_inactive"
+                android:tint="@color/edx_grayscale_neutral_black_t"
+                android:visibility="invisible" />
 
         </FrameLayout>
 
@@ -74,7 +86,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
         </LinearLayout>
 
     </LinearLayout>

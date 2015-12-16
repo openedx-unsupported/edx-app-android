@@ -154,6 +154,11 @@
         <item name="android:textColor">@color/edx_brand_primary_base</item>
     </style>
 
+    <style name="bold_regular_edx_black_text" parent="@style/regular_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_black</item>
+    </style>
+
     <style name="regular_edx_black_text" parent="@style/regular_text">
         <item name="android:textColor">@color/edx_grayscale_neutral_black</item>
     </style>

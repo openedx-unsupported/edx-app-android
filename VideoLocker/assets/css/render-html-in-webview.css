@@ -1,0 +1,105 @@
+body {
+  font: 16px/1.5 'Open Sans','Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding: 0px 0px 0px;
+  margin: 0px;
+  background: #FCFCFC
+}
+
+a, a:link {
+  color: #1D9DD9;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: bold;
+  line-height: 1.4em;
+  margin-bottom: .5em;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.4em;
+  margin-bottom: .5em;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.3em;
+  margin-bottom: .5em;
+}
+
+h4 {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.3em;
+  margin-bottom: .5em;
+}
+
+h5 {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.3em;
+  margin-bottom: .5em;
+}
+
+
+
+p {
+  font-size: 16px;
+  line-height: 1.5em;
+  margin: 0 0 15px 0;
+  padding: 0px;
+  border: 0px;
+}
+
+
+ol {
+  list-style: number inside none;
+  margin: 5px 10px;
+  padding: 0;
+}
+
+ul {
+  list-style: disc inside none;
+  margin: 5px 10px;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+em, i {
+  font-style: italic;
+}
+
+strong, b {
+  font-weight: bold;
+}
+
+.header {
+  color: rgb(70, 74, 80);
+  font-size:16px;
+  width : 100%;
+  margin : 0px;
+  padding : 20px 0px 0px 0px;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: rgb(181, 181, 181);
+  margin: 10px 0px 10px 0px;
+  padding: 0px;
+}
+
+.separator {
+  border: none;
+  height: 2px;
+  background: rgb(226, 227, 229);
+  margin: 10px 0px 10px 0px;
+  padding: 0px;
+}

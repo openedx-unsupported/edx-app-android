@@ -123,6 +123,7 @@
     <dimen name="signup_social_title_margin_bottom">1dp</dimen>
 
     <dimen name="edx_hairline">1px</dimen>
+    <dimen name="edx_line">3px</dimen>
     <dimen name="edx_box_radius">5dp</dimen>
     <dimen name="edx_margin">15dp</dimen>
     <dimen name="edx_double_margin">30dp</dimen>
