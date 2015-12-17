@@ -86,7 +86,7 @@ public class CourseDashboardFragment extends RoboFragment {
 
             if (courseData.isCertificateEarned() && environment.getConfig().areCertificateLinksEnabled()) {
                 final View child = inflater.inflate(R.layout.row_course_dashboard_cert, parent, false);
-                child.findViewById(R.id.get_certificate).setOnClickListener(new View.OnClickListener() {
+                child.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         environment.getRouter().showCertificate(getActivity(), courseData);

@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/edx_grayscale_neutral_x_light"
-    android:orientation="horizontal"
+    android:foreground="@drawable/selectable_box_overlay"
     android:padding="@dimen/edx_margin">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_new_cert" />
-
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/edx_margin"
-        android:layout_marginStart="@dimen/edx_margin"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <org.edx.mobile.view.custom.ETextView
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/course_details_congratulations"
-            android:textColor="@color/edx_brand_primary_dark"
-            android:textSize="@dimen/edx_small"
-            android:gravity="center" />
+            android:src="@drawable/ic_new_cert" />
 
-        <org.edx.mobile.view.custom.ETextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/course_details_earned_cert"
-            android:textColor="@color/edx_grayscale_neutral_x_dark"
-            android:textSize="@dimen/edx_xx_small"
-            android:gravity="center" />
-
-        <android.support.v4.widget.Space
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/edx_margin"
+            android:layout_marginStart="@dimen/edx_margin"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.EButton
-            android:id="@+id/get_certificate"
-            style="@style/edX.Widget.CreationButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="30dp"
-            android:text="@string/course_details_view_cert_button" />
+            <org.edx.mobile.view.custom.ETextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/course_details_congratulations"
+                android:textColor="@color/edx_brand_primary_dark"
+                android:textSize="@dimen/edx_small" />
+
+            <org.edx.mobile.view.custom.ETextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/course_details_earned_cert"
+                android:textColor="@color/edx_grayscale_neutral_x_dark"
+                android:textSize="@dimen/edx_xx_small" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <org.edx.mobile.view.custom.EButton
+                style="@style/edX.Widget.CreationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="30dp"
+                android:text="@string/course_details_view_cert_button" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>
