@@ -301,9 +301,9 @@
 
     <!--Discussion Responses-->
     <!--Label for question type discussions that are answered-->
-    <string name="course_discussion_answered_title">Answered</string>
+    <string name="course_discussion_answered_title">Answered Question</string>
     <!--Label for question type discussions that are unanswered-->
-    <string name="course_discussion_unanswered_title">Unanswered</string>
+    <string name="course_discussion_unanswered_title">Unanswered Question</string>
     <!--Label for adding a discussion response-->
     <string name="discussion_responses_add_response_button">@string/discussion_add_response_title</string>
     <!--Label for number of discussion responses-->
