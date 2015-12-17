@@ -4,10 +4,11 @@ import org.edx.mobile.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
-public class EEditText extends EditText {
+public class EEditText extends AppCompatEditText {
     public EEditText(Context context) {
         super(context);
     }

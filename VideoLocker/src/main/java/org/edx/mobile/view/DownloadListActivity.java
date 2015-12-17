@@ -1,8 +1,8 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.ListView;
 
@@ -101,7 +101,7 @@ public class DownloadListActivity extends BaseFragmentActivity {
     protected void onStart() {
         super.onStart();
         try {
-            ActionBar bar = getActionBar();
+            ActionBar bar = getSupportActionBar();
             if (bar != null) {
                 bar.show();
             }

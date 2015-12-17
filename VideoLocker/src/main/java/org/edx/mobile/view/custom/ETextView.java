@@ -1,14 +1,14 @@
 package org.edx.mobile.view.custom;
 
-import org.edx.mobile.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
-public class ETextView extends TextView {
+import org.edx.mobile.R;
+
+public class ETextView extends AppCompatTextView {
     public ETextView(Context context) {
         super(context);
     }

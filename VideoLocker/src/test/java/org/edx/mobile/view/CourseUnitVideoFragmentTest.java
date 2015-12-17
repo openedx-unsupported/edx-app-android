@@ -1,10 +1,11 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
     @Test
     public void initializeTest() {
         CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
-        SupportFragmentTestUtil.startVisibleFragment(fragment);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
         View view = fragment.getView();
@@ -81,13 +82,13 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      * @param expected The expected visibility state
      */
     private void assertActionBarShowing(int orientation, boolean expected) {
-        FragmentActivity activity = Robolectric.setupActivity(FragmentUtilActivity.class);
+        AppCompatActivity activity = Robolectric.setupActivity(FragmentUtilActivity.class);
         activity.getResources().getConfiguration().orientation = orientation;
         CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
         activity.getSupportFragmentManager()
                 .beginTransaction().add(1, fragment, null).commit();
         assertTrue(fragment.getRetainInstance());
-        ActionBar bar = activity.getActionBar();
+        ActionBar bar = activity.getSupportActionBar();
         assumeNotNull(bar);
         assertEquals(expected, bar.isShowing());
     }
@@ -158,7 +159,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
     @Test
     public void orientationChangeTest() {
         CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
-        SupportFragmentTestUtil.startVisibleFragment(fragment);
+        SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
 
@@ -166,7 +167,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
 
-    private static class FragmentUtilActivity extends FragmentActivity {
+    private static class FragmentUtilActivity extends AppCompatActivity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

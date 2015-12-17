@@ -1,12 +1,12 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -293,7 +293,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     private void assertOrientationSetup(CourseUnitNavigationActivity activity) {
         boolean isLandscape = activity.getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE;
-        ActionBar bar = activity.getActionBar();
+        ActionBar bar = activity.getSupportActionBar();
         if (bar != null) {
             assertEquals(!isLandscape, bar.isShowing());
         }

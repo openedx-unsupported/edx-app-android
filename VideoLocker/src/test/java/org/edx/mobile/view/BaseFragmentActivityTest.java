@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,10 +12,11 @@ import android.os.Build;
 import android.support.annotation.AnimRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -136,7 +136,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         BaseFragmentActivity activity = controller.get();
         activity.getResources().getConfiguration().orientation = orientation;
         controller.create().start();
-        ActionBar bar = activity.getActionBar();
+        ActionBar bar = activity.getSupportActionBar();
         assumeNotNull(bar);
         assertEquals(expected, bar.isShowing());
     }
@@ -200,15 +200,12 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         assertEquals(NetworkUtil.isSocialFeatureFlagEnabled(activity, config),
                 pmFeatures.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, false));
         // Action bar state initialization
-        ActionBar bar = activity.getActionBar();
+        ActionBar bar = activity.getSupportActionBar();
         if (bar != null) {
             int displayOptions = bar.getDisplayOptions();
             assertTrue((displayOptions & ActionBar.DISPLAY_HOME_AS_UP) > 0);
             assertTrue((displayOptions & ActionBar.DISPLAY_SHOW_HOME) > 0);
-            Drawable homeIcon = ((ImageView) activity.findViewById(
-                    android.R.id.home)).getDrawable();
-            assertTrue(homeIcon == null || (homeIcon instanceof ColorDrawable
-                    && ((ColorDrawable) homeIcon).getColor() == Color.TRANSPARENT));
+            assertTrue(null == activity.findViewById(android.R.id.home));
         }
 
         controller.postCreate(null).resume().postResume().visible();
@@ -224,23 +221,23 @@ public abstract class BaseFragmentActivityTest extends UiTest {
             if (hasDrawer) {
                 CharSequence contentDescription = activity.findViewById(
                         android.R.id.home).getContentDescription();
-                assertFalse(mDrawerLayout.isDrawerOpen(Gravity.START));
+                assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
                 assertEquals(activity.getText(R.string.label_close), contentDescription);
-                mDrawerLayout.openDrawer(Gravity.START);
-                assertTrue(mDrawerLayout.isDrawerOpen(Gravity.START));
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
                 assertEquals(activity.getText(R.string.label_close), contentDescription);
                 activity.closeDrawer();
-                assertFalse(mDrawerLayout.isDrawerOpen(Gravity.START));
+                assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
                 assertEquals(activity.getText(R.string.label_close), contentDescription);
 
-                mDrawerLayout.openDrawer(Gravity.START);
-                assertTrue(mDrawerLayout.isDrawerOpen(Gravity.START));
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
                 assertEquals(activity.getText(R.string.label_close), contentDescription);
                 Configuration config = activity.getResources().getConfiguration();
                 assertNotEquals(Configuration.ORIENTATION_LANDSCAPE, config.orientation);
                 config.orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                 activity.onConfigurationChanged(config);
-                assertTrue(mDrawerLayout.isDrawerOpen(Gravity.START));
+                assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
                 assertEquals(activity.getText(R.string.label_close), contentDescription);
             }
         }
@@ -249,9 +246,9 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
         if (hasDrawer) {
             assertNotNull(mDrawerLayout);
-            assertTrue(mDrawerLayout.isDrawerOpen(Gravity.START));
+            assertTrue(mDrawerLayout.isDrawerOpen(GravityCompat.START));
             assertTrue(shadowActivity.clickMenuItem(android.R.id.home));
-            assertFalse(mDrawerLayout.isDrawerOpen(Gravity.START));
+            assertFalse(mDrawerLayout.isDrawerOpen(GravityCompat.START));
             activity.finish();
         }
         assertThat(activity).isFinishing();
@@ -279,7 +276,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * @param title The expected title
      */
     protected void assertTitle(BaseFragmentActivity activity, CharSequence title) {
-        ActionBar bar = activity.getActionBar();
+        ActionBar bar = activity.getSupportActionBar();
         assumeNotNull(bar);
         assumeNotNull(title);
         Typeface type = Typeface.createFromAsset(
@@ -291,7 +288,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         assertThat(titleTextView).hasCurrentTextColor(
                 activity.getResources().getColor(R.color.edx_white));
         assertEquals(type, titleTextView.getTypeface());
-        assertThat(bar).hasTitle("  " + title);
+        assertEquals(bar.getTitle(), title);
     }
 
     /**

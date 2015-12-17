@@ -7,20 +7,18 @@
 
     <org.edx.mobile.view.custom.ETextView
         android:id="@+id/activity_title"
-        style="@style/custom_activity_title" />
+        style="@style/custom_activity_title"
+        tools:text="Sign in to edX" />
 
-    <org.edx.mobile.view.custom.EButton
+    <ImageButton
         android:id="@+id/actionbar_close_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/Widget.AppCompat.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="11dp"
-        android:layout_marginStart="11dp"
-        android:background="@drawable/ic_action_close"
         android:contentDescription="@string/close"
-        android:visibility="visible"
-        tools:targetApi="17" />
+        android:src="@drawable/ic_close_white_24dp" />
 
 </RelativeLayout>
