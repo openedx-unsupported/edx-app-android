@@ -25,6 +25,7 @@
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
         <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
+        <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:textColorLink">@color/edx_brand_primary_base</item>
     </style>
@@ -308,21 +309,22 @@
 
     <style name="edX.Widget.Button" parent="@android:style/Widget.TextView">
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
         <item name="android:textColor">?attr/disableableButtonTextColor</item>
     </style>
 
-    <style name="edX.Widget.CreationButton">
+    <style name="edX.Widget.CreationButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_white</item>
         <item name="android:background">@drawable/edx_creation_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
-    <style name="edX.Widget.EnrollButton">
+    <style name="edX.Widget.EnrollButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_white</item>
         <item name="android:layout_gravity">center</item>
@@ -332,7 +334,7 @@
         <item name="android:text">@string/enroll_now</item>
     </style>
 
-    <style name="edX.Widget.BorderedButton">
+    <style name="edX.Widget.BorderedButton" parent="edX.Widget.Button">
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:textColor">@color/edx_brand_primary_base</item>
         <item name="android:background">@drawable/edx_bordered_button</item>
