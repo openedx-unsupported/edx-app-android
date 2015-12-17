@@ -1,8 +1,10 @@
 package org.edx.mobile.http;
 
+import android.content.Context;
 import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
@@ -34,6 +36,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.edx.mobile.BuildConfig;
+import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +53,9 @@ import java.util.List;
 public class HttpManager {
     protected final Logger logger = new Logger(getClass().getName());
 
+    @Inject
+    Context context;
+
     /**
      * Executes a GET request to given URL with given parameters.
      * 
@@ -61,9 +68,7 @@ public class HttpManager {
      */
     public HttpResult get(String urlWithAppendedParams, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
-        DefaultHttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                HttpVersion.HTTP_1_1);
+        final DefaultHttpClient client = newClient();
         
         HttpGet get = new HttpGet(urlWithAppendedParams);
         AndroidHttpClient.modifyRequestToAcceptGzipResponse(get);
@@ -111,9 +116,7 @@ public class HttpManager {
      */
     public String post(String url, Bundle params, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
-        HttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                HttpVersion.HTTP_1_1);
+        final DefaultHttpClient client = newClient();
 
         HttpPost post = new HttpPost(url);
         AndroidHttpClient.modifyRequestToAcceptGzipResponse(post);
@@ -209,9 +212,7 @@ public class HttpManager {
      */
     public String post(String url, String postBody, Bundle headers, boolean isPatchRequest)
             throws ParseException, ClientProtocolException, IOException {
-        HttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                HttpVersion.HTTP_1_1);
+        final DefaultHttpClient client = newClient();
 
         HttpPost post = null;
         if (isPatchRequest) {
@@ -307,9 +308,7 @@ public class HttpManager {
      */
     public org.apache.http.Header getResponseHeader(String url, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
-        HttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                HttpVersion.HTTP_1_1);
+        final DefaultHttpClient client = newClient();
 
         HttpGet get = new HttpGet(url);
 
@@ -337,9 +336,7 @@ public class HttpManager {
 
     public List<HttpCookie> getCookies(String url, Bundle headers, boolean isGet)
         throws ParseException, ClientProtocolException, IOException {
-        HttpClient client = new DefaultHttpClient();
-        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-            HttpVersion.HTTP_1_1);
+        final DefaultHttpClient client = newClient();
 
         CookieStore cookieStore = new BasicCookieStore();
         HttpContext localContext = new BasicHttpContext();
@@ -374,5 +371,17 @@ public class HttpManager {
     public static class HttpResult {
         public String body;
         public int statusCode;
+    }
+
+    private DefaultHttpClient newClient() {
+        DefaultHttpClient client = new DefaultHttpClient();
+        client.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+                HttpVersion.HTTP_1_1);
+        client.getParams().setParameter(CoreProtocolPNames.USER_AGENT,
+                System.getProperty("http.agent") + " " +
+                        context.getString(R.string.app_name) + "/" +
+                        BuildConfig.APPLICATION_ID + "/" +
+                        BuildConfig.VERSION_NAME);
+        return client;
     }
 }
