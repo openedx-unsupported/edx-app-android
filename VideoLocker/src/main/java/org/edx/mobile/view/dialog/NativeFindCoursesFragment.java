@@ -50,8 +50,7 @@ public class NativeFindCoursesFragment extends RoboFragment {
         final FindCoursesListAdapter adapter = new FindCoursesListAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(CourseDetail model) {
-                // TODO: Load course detail
-                Toast.makeText(getActivity(), "Clicked " + model.name, Toast.LENGTH_SHORT).show();
+                environment.getRouter().showCourseDetail(getActivity(), model);
             }
         };
         InfiniteScrollUtils.configureListViewWithInfiniteList(viewHolder.listView, adapter, new InfiniteScrollUtils.PageLoader<CourseDetail>() {

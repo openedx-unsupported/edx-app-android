@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_detail_field"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconImageView
+            android:id="@+id/course_detail_field_icon"
+            android:layout_width="@dimen/fa_xxx_large"
+            android:layout_height="@dimen/fa_xxx_large"
+            android:baselineAlignBottom="true"
+            android:gravity="left"
+            app:iconColor="@color/edx_grayscale_neutral_black"
+            tools:src="@drawable/app_icon" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_field_name"
+            style="@style/regular_edx_black_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:textDirection="locale"
+            android:textSize="@dimen/edx_base"
+            tools:text="Field:" />
+
+        <org.edx.mobile.view.custom.ETextView
+            android:id="@+id/course_detail_field_text"
+            style="@style/regular_edx_gray_xdark_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textDirection="locale"
+            android:textSize="@dimen/edx_base"
+            tools:text="Course detail field description. This should be cut off" />
+    </LinearLayout>
+
+</LinearLayout>

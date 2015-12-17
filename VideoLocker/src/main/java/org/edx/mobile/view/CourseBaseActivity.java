@@ -24,7 +24,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.task.GetCourseStructureTask;
 import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;

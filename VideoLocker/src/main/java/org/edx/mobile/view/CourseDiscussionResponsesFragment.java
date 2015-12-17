@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +19,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.discussion.ThreadComments;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.GetCommentListTask;
+import org.edx.mobile.task.GetResponsesListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -49,11 +50,9 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     @Inject
     private Router router;
 
-    private GetCommentListTask getCommentListTask;
-
-    private int nextPage = 1;
-
     private InfiniteScrollUtils.InfiniteListController controller;
+
+    private ResponsesLoader responsesLoader;
 
     @Nullable
     @Override
@@ -65,15 +64,15 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        responsesLoader = new ResponsesLoader(getActivity(),
+                discussionThread.getIdentifier(),
+                discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
+
         // Using application context to prevent activity leak since adapter is retained across config changes
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
                 getActivity().getApplicationContext(), this, discussionThread);
-        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
-            @Override
-            public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-                getCommentList(callback);
-            }
-        });
+        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
+                discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
@@ -85,31 +84,6 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
                         router.showCourseDiscussionAddResponse(getActivity(), discussionThread);
                     }
                 });
-    }
-
-    protected void getCommentList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-        if (getCommentListTask != null) {
-            getCommentListTask.cancel(true);
-        }
-        getCommentListTask = new GetCommentListTask(getActivity(),
-                discussionThread.getIdentifier(),
-                nextPage) {
-            @Override
-            public void onSuccess(ThreadComments threadComments) {
-                ++nextPage;
-                final boolean hasMore = threadComments.next != null && threadComments.next.length() > 0;
-                callback.onPageLoaded(threadComments.getResults(), hasMore);
-                courseDiscussionResponsesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-            }
-        };
-        getCommentListTask.setProgressCallback(null);
-        getCommentListTask.execute();
     }
 
     @Override
@@ -129,7 +103,7 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
         if (discussionThread.containsComment(event.getComment())) {
             discussionThread.incrementCommentCount();
             courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
-            nextPage = 1;
+            responsesLoader.reset();
             controller.reset();
         }
     }
@@ -140,12 +114,128 @@ public class CourseDiscussionResponsesFragment extends RoboFragment implements C
     }
 
     @Override
-    public void onClickAddComment(@NonNull DiscussionComment comment) {
-        router.showCourseDiscussionAddComment(getActivity(), comment);
+    public void onClickAddComment(@NonNull DiscussionComment response) {
+        router.showCourseDiscussionAddComment(getActivity(), response);
     }
 
     @Override
-    public void onClickViewComments(@NonNull DiscussionComment comment) {
-        router.showCourseDiscussionComments(getActivity(), comment, discussionThread.isClosed());
+    public void onClickViewComments(@NonNull DiscussionComment response) {
+        router.showCourseDiscussionComments(getActivity(), response, discussionThread.isClosed());
     }
+
+    private static class ResponsesLoader implements
+            InfiniteScrollUtils.PageLoader<DiscussionComment> {
+        private InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback;
+
+        @NonNull
+        private final Context context;
+        @NonNull
+        private final String threadId;
+        private final boolean isQuestionTypeThread;
+
+        @Nullable
+        private GetResponsesListTask getResponsesListTask;
+        @Nullable
+        private GetResponsesListTask getEndorsedListTask;
+
+        private int nextPage = 1;
+
+        @Nullable
+        private ThreadComments unendorsedResponses;
+        private boolean isEndorsedFetched = false;
+
+        public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
+                               boolean isQuestionTypeThread) {
+            this.context = context;
+            this.threadId = threadId;
+            this.isQuestionTypeThread = isQuestionTypeThread;
+        }
+
+        @Override
+        public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+            this.callback = callback;
+            if (isQuestionTypeThread && !isEndorsedFetched) {
+                getEndorsedList();
+            }
+            getResponsesList();
+
+        }
+
+        /**
+         * Gets the list of endorsed answers for a {@link DiscussionThread.ThreadType#QUESTION}
+         * type discussion thread
+         */
+        protected void getEndorsedList() {
+            if (getEndorsedListTask != null) {
+                getEndorsedListTask.cancel(true);
+            }
+            getEndorsedListTask = new GetResponsesListTask(context, threadId, 1, isQuestionTypeThread,
+                    true) {
+                @Override
+                public void onSuccess(ThreadComments threadResponses) {
+                    if (callback != null) {
+                        isEndorsedFetched = true;
+                        callback.onPartialPageLoaded(threadResponses.getResults());
+                        // If the unendorsed call returned earlier than this one
+                        if (unendorsedResponses != null) deliverResult();
+                    }
+                }
+
+                @Override
+                public void onException(Exception ex) {
+                    logger.error(ex);
+                }
+            };
+            getEndorsedListTask.setProgressCallback(null);
+            getEndorsedListTask.execute();
+        }
+
+        protected void getResponsesList() {
+            if (getResponsesListTask != null) {
+                getResponsesListTask.cancel(true);
+            }
+            getResponsesListTask = new GetResponsesListTask(context, threadId, nextPage,
+                    isQuestionTypeThread, false) {
+                @Override
+                public void onSuccess(final ThreadComments threadResponses) {
+                    if (callback != null) {
+                        unendorsedResponses = threadResponses;
+                        if (!isQuestionTypeThread || isEndorsedFetched) {
+                            deliverResult();
+                        }
+                    }
+                }
+
+                @Override
+                public void onException(Exception ex) {
+                    logger.error(ex);
+                }
+            };
+            getResponsesListTask.setProgressCallback(null);
+            getResponsesListTask.execute();
+        }
+
+        private void deliverResult() {
+            ++nextPage;
+            boolean hasMore = unendorsedResponses.next != null &&
+                    unendorsedResponses.next.length() > 0;
+            callback.onPageLoaded(unendorsedResponses.getResults(), hasMore);
+        }
+
+        public void reset() {
+            if (getResponsesListTask != null) {
+                getResponsesListTask.cancel(true);
+                getResponsesListTask = null;
+            }
+            if (getEndorsedListTask != null) {
+                getEndorsedListTask.cancel(true);
+                getEndorsedListTask = null;
+            }
+            unendorsedResponses = null;
+            isEndorsedFetched = false;
+            callback = null;
+            nextPage = 1;
+        }
+    }
+
 }
