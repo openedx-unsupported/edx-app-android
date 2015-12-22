@@ -6,5 +6,5 @@
             <corners android:radius="@dimen/edx_box_radius" />
         </shape>
     </item>
-    <item android:drawable="@drawable/selectable_box_overlay" />
+    <item android:drawable="@drawable/selectable_rounded_box_overlay" />
 </layer-list>
