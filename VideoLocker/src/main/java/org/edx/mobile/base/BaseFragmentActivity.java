@@ -220,12 +220,12 @@ public abstract class BaseFragmentActivity extends RoboAppCompatActivity
     protected void configureDrawer() {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (mDrawerLayout != null) {
-
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
+                    .replace(R.id.slider_menu, new NavigationFragment(),
+                            "NavigationFragment").commit();
 
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.string.label_close,  R.string.label_close ) {
+                    R.string.label_close, R.string.label_close) {
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     invalidateOptionsMenu();
@@ -233,20 +233,14 @@ public abstract class BaseFragmentActivity extends RoboAppCompatActivity
 
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    super.onDrawerSlide(drawerView,0);
-                    Fragment frag = getSupportFragmentManager().findFragmentByTag("NavigationFragment");
-                    if(frag==null){
+                    Fragment frag = getSupportFragmentManager().
+                            findFragmentByTag("NavigationFragment");
+                    if (frag == null) {
                         getSupportFragmentManager().beginTransaction()
-
-                                .replace(R.id.slider_menu, new NavigationFragment(),"NavigationFragment").commit();
+                                .replace(R.id.slider_menu, new NavigationFragment(),
+                                        "NavigationFragment").commit();
                     }
                     invalidateOptionsMenu();
-                }
-
-                public void onDrawerSlide(View drawerView, float slideOffset) {
-                    // Disable the menu icon back arrow animation
-                    // http://stackoverflow.com/questions/27117243/disable-hamburger-to-back-arrow-animation-on-toolbar
-                    super.onDrawerSlide(drawerView, 0);
                 }
             };
             mDrawerLayout.setDrawerListener(mDrawerToggle);
