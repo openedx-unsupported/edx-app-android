@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="@drawable/light_selectable_box_overlay">
 
         <LinearLayout
             android:layout_width="match_parent"
