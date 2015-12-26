@@ -145,7 +145,7 @@ public class EditUserProfileFragment extends RoboFragment {
         final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
                 .colorRes(getActivity(), R.color.disableable_button_text)
                 .sizeRes(getActivity(), R.dimen.fa_x_small);
-        icon.setTint(Color.WHITE);
+        icon.setTintList(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto, icon, null, null, null);
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
