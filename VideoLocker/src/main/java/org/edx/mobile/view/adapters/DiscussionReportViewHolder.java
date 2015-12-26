@@ -2,24 +2,24 @@ package org.edx.mobile.view.adapters;
 
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.view.custom.ETextView;
 
 public class DiscussionReportViewHolder {
 
     RelativeLayout reportLayout;
     private IconImageView reportIconImageView;
-    private ETextView reportTextView;
+    private TextView reportTextView;
 
     public DiscussionReportViewHolder(View itemView) {
         reportLayout = (RelativeLayout) itemView.
                 findViewById(R.id.discussion_responses_action_bar_report_layout);
         reportIconImageView = (IconImageView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_report_icon_view);
-        reportTextView = (ETextView) itemView.
+        reportTextView = (TextView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_report_text_view);
 
     }

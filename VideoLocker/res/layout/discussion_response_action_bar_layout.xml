@@ -24,7 +24,7 @@
                 app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-plus" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/discussion_responses_action_bar_vote_count_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-star" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/discussion_responses_action_bar_follow_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-flag" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/discussion_responses_action_bar_report_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

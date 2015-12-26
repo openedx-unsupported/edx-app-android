@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:splitMotionEvents="false">
     
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/edit_btn"
         style="@style/semibold_white_text"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:background="@drawable/delete_btn_selector"
          />
 
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/cancel_btn"
         style="@style/semibold_white_text"
         android:layout_width="0dp"
@@ -35,7 +35,7 @@
         android:visibility="gone"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/delete_btn"
         style="@style/semibold_white_text"
         android:layout_width="0dp"

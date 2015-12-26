@@ -5,12 +5,12 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.social.SocialGroup;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.custom.ETextView;
 
 /**
  * Created by marcashman on 2014-12-17.
@@ -63,7 +63,7 @@ public class GroupSummaryActivity extends BaseSingleFragmentActivity {
 
             unreadMenuItem.setVisible(true);
             View unreadTextView = unreadMenuItem.getActionView();
-            ETextView unreadTV = (ETextView) unreadTextView.findViewById(R.id.unread_tv);
+            TextView unreadTV = (TextView) unreadTextView.findViewById(R.id.unread_tv);
             CharSequence formatted =  ResourceUtil.getFormattedString(getResources(), R.string.unread_text,
                     "unread_count", String.valueOf(group.getUnread()));
             unreadTV.setText( formatted );

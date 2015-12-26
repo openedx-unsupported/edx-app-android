@@ -27,7 +27,7 @@
 		android:listSelector="@color/grey_act_background"
         />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/empty_list_view"
         android:text="@string/no_videos_to_display"
         style="@style/empty_content_text" />

@@ -22,7 +22,7 @@
         android:layout_marginRight="5dp"
          />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/message_body"
         style="@style/regular_text"
         android:layout_width="match_parent"

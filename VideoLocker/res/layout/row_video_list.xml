@@ -6,7 +6,7 @@
     android:background="@drawable/list_selector"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/txt_course_title"
         style="@style/course_section_title"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:visibility="gone"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/txt_chapter_title"
         style="@style/video_section_title"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:visibility="visible"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/txt_lecture_title"
         style="@style/video_section_title"
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:src="@drawable/cyan_circle"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/video_title"
             style="@style/semibold_text"
             android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
             tools:targetApi="17"
             />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/video_playing_time"
             style="@style/regular_text"
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
             android:textSize="13sp"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/video_size"
             style="@style/regular_text"
             android:layout_width="wrap_content"

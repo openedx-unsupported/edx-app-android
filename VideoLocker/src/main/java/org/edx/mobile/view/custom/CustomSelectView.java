@@ -3,6 +3,7 @@ package org.edx.mobile.view.custom;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -13,10 +14,7 @@ import org.edx.mobile.util.UiUtil;
 
 import java.util.List;
 
-/**
- * Created by rohan on 2/16/15.
- */
-public class CustomSelectView<T> extends ETextView implements View.OnClickListener,
+public class CustomSelectView<T> extends AppCompatTextView implements View.OnClickListener,
         DialogInterface.OnClickListener {
 
     protected List<T> items;

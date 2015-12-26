@@ -11,7 +11,7 @@
 
     >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/course_detail_short_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textSize="@dimen/edx_base"
         tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback." />
 
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/button_enroll_now"
         style="@style/edX.Widget.EnrollButton"
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/about_course_text"
                 style="@style/bold_regular_edx_black_text"
                 android:layout_width="match_parent"
@@ -66,7 +66,7 @@
                     android:layout_height="match_parent"
                     android:background="@color/grey_act_background" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/downloadMessage"
                     style="@style/downloading_message"
                     android:layout_alignParentTop="true"

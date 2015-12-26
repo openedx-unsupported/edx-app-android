@@ -6,7 +6,7 @@
     android:background="@drawable/bg_rounded_white"
     android:orientation="vertical" >
 
-    <ETextView
+    <TextView
         android:id="@+id/tv_header_speed"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"

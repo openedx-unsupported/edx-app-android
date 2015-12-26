@@ -15,7 +15,7 @@
         android:dividerHeight="0dp"
         android:listSelector="@drawable/course_list_item_selector" />
 
-    <org.edx.mobile.view.custom.EIconTextView
+    <org.edx.mobile.view.custom.IconTextViewXml
         android:id="@+id/no_chapter_tv"
         style="@style/empty_content_text"
         android:text="@string/no_chapter_text" />

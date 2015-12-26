@@ -6,7 +6,7 @@
         android:background="@drawable/bg_rounded_white"
         android:orientation="vertical" >
 
-        <ETextView
+        <TextView
             android:id="@+id/tv_header_cc"
             style="@style/regular_grey_text"
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:divider="@color/grey_act_background"
             android:dividerHeight="1.0sp" />
 
-        <ETextView
+        <TextView
             android:id="@+id/tv_cc_none"
             style="@style/regular_grey_text"
             android:layout_width="match_parent"

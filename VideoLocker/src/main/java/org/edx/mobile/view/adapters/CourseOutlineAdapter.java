@@ -27,7 +27,6 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
-import org.edx.mobile.view.custom.ETextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -458,9 +457,9 @@ public class CourseOutlineAdapter extends BaseAdapter{
         ViewHolder holder = new ViewHolder();
         holder.rowType = (IconImageView) convertView
                 .findViewById(R.id.row_type);
-        holder.rowTitle = (ETextView) convertView
+        holder.rowTitle = (TextView) convertView
                 .findViewById(R.id.row_title);
-        holder.rowSubtitle = (ETextView) convertView
+        holder.rowSubtitle = (TextView) convertView
                 .findViewById(R.id.row_subtitle);
         holder.rowSubtitleIcon = (IconImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
@@ -482,10 +481,10 @@ public class CourseOutlineAdapter extends BaseAdapter{
         return holder;
     }
 
-    public static class ViewHolder{
+    public static class ViewHolder {
         IconImageView rowType;
-        ETextView rowTitle;
-        ETextView rowSubtitle;
+        TextView rowTitle;
+        TextView rowSubtitle;
         IconImageView rowSubtitleIcon;
         IconImageView bulkDownload;
         TextView noOfVideos;

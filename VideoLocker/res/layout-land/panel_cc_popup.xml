@@ -7,7 +7,7 @@
     android:background="@drawable/white_roundedbg"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_header_cc"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         android:text="@string/lbl_closed_caption"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_cc_cancel"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"

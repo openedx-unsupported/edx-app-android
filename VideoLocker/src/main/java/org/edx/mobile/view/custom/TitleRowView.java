@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 
@@ -26,7 +27,7 @@ public class TitleRowView extends LinearLayout {
 
     public static enum DecorationStyle {CENTER, LEFT, RIGHT}
 
-    private ETextView titleView;
+    private TextView titleView;
 
     public TitleRowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -60,7 +61,7 @@ public class TitleRowView extends LinearLayout {
             addView(leftDashView, params);
         }
 
-        titleView = new ETextView(context);
+        titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(fontSize);
         titleView.setTextColor(textColor);

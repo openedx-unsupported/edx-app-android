@@ -36,12 +36,12 @@
                     android:orientation="vertical"
                     android:padding="10dp">
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/course_detail_name"
                         style="@style/course_card_title"
                         tools:text="Course Name" />
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/course_detail_extras"
                         style="@style/course_card_course_run"
                         android:layout_width="wrap_content"

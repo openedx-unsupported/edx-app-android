@@ -49,7 +49,7 @@
             android:gravity="center"
             android:visibility="gone">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 style="@style/bold_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:textStyle="bold"
                 android:text="@string/empty_groups_header"/>
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 style="@style/regular_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:layout_margin="8dp"
             android:layout_alignParentBottom="true">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 style="@style/bold_text"
                 android:id="@+id/label_connect_facebook"
                 android:layout_width="match_parent"
