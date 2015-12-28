@@ -504,14 +504,12 @@ public class EditUserProfileFragment extends RoboFragment {
         return view;
     }
 
-    private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull FormField field, @NonNull final String value, boolean readOnly, @NonNull View.OnClickListener onClickListener) {
+    private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull final FormField field, @NonNull final String value, boolean readOnly, @NonNull View.OnClickListener onClickListener) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
-        final SpannableString formattedLabel = new SpannableString(field.getLabel());
-        formattedLabel.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_x_dark)), 0, formattedLabel.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         final SpannableString formattedValue = new SpannableString(value);
         formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(ResourceUtil.getFormattedString(parent.getResources(), R.string.edit_user_profile_field, new HashMap<String, CharSequence>() {{
-            put("label", formattedLabel);
+            put("label", field.getLabel());
             put("value", formattedValue);
         }}));
         Context context = parent.getContext();

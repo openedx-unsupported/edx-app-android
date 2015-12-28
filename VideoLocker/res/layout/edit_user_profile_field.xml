@@ -9,4 +9,5 @@
     android:gravity="center_vertical"
     android:background="?android:attr/selectableItemBackground"
     android:textSize="@dimen/edx_base"
+    android:textColor="@color/edx_grayscale_neutral_x_dark"
     tools:text="Birth year: 2008" />
