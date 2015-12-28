@@ -747,6 +747,11 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public void onPrepared() {
         // mark prepared and allow orientation
         isPrepared = true;
+
+        if (getActivity() == null) {
+            return;
+        }
+
         allowSensorOrientation();
 
         if (!isResumed() ||
