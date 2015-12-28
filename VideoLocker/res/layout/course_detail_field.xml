@@ -23,7 +23,7 @@
             app:iconColor="@color/edx_grayscale_neutral_black"
             tools:src="@drawable/app_icon" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/course_detail_field_name"
             style="@style/regular_edx_black_text"
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:textSize="@dimen/edx_base"
             tools:text="Field:" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/course_detail_field_text"
             style="@style/regular_edx_gray_xdark_text"
             android:layout_width="match_parent"

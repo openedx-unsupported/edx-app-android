@@ -47,7 +47,7 @@
                         android:layout_weight="1" />
                 </LinearLayout>
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/downloadMessage"
                     style="@style/downloading_message"
                     android:text="@string/started_downloading"

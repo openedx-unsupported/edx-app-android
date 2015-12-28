@@ -9,7 +9,7 @@
         android:layout_alignParentTop="true"
         android:visibility="visible" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/no_course_tv"
         style="@style/empty_content_text"
         android:text="@string/no_courses_to_display" />

@@ -42,7 +42,7 @@
                 android:gravity="left|start"
                 tools:targetApi="17" >
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/signup_with_title"
                     style="@style/semibold_text"
                     android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
                 android:gravity="left|start"
                 tools:targetApi="17" >
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/or_signup_with_email_title"
                     style="@style/semibold_text"
                     android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                     android:layout_height="1dp"
                     android:background="@color/grey_act_background" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/optional_field_tv"
                     style="@style/semibold_text"
                     android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
                 android:contentDescription="@string/create_account_btn"
                 android:background="@drawable/bt_signin_active">
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/create_account_tv"
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
                     tools:targetApi="17" />
             </RelativeLayout>
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/by_creating_account_tv"
                 style="@style/regular_text"
                 android:layout_width="match_parent"
@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/end_user_agreement_tv"
                 style="@style/regular_text"
                 android:layout_width="match_parent"
@@ -196,7 +196,7 @@
     </LinearLayout>
 
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
         android:text="@string/started_downloading"

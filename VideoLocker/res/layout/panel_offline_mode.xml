@@ -11,14 +11,14 @@
     android:paddingRight="35dp"
     android:paddingTop="15dp" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/semibold_white_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lbl_offline_mode"
         android:textSize="15sp" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/semibold_white_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

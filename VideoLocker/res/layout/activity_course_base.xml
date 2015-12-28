@@ -21,7 +21,7 @@
                 style="@style/offline_msg_bar"
                 android:gravity="center_vertical"
                 android:visibility="gone">
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:text="@string/offline_text"
                     android:textColor="@color/edx_brand_secondary_base"
                     android:layout_height="0dp"
@@ -58,7 +58,7 @@
                         android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <org.edx.mobile.view.custom.ETextView
+                        <TextView
                             style="@style/bold_edx_brand_primary_base_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                             android:textSize="14sp"
                             tools:targetApi="17" />
 
-                        <org.edx.mobile.view.custom.ETextView
+                        <TextView
                             android:id="@+id/last_access_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                             tools:targetApi="17" />
                     </LinearLayout>
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/last_access_button"
                         style="@style/bold_text"
                         android:layout_width="wrap_content"
@@ -120,7 +120,7 @@
                     android:orientation="vertical"
                     tools:targetApi="17">
 
-                    <org.edx.mobile.view.custom.EButton
+                    <Button
                         android:id="@+id/goto_prev"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/course_unit_nav_bar_btn_height"
@@ -128,7 +128,7 @@
                         style="@style/edX.Widget.DisableableButton"
                         tools:targetApi="17" />
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/prev_unit_title"
                         style="@style/section_lbl"
                         android:visibility="gone" />
@@ -148,7 +148,7 @@
                     android:gravity="end"
                     tools:targetApi="17" >
 
-                    <org.edx.mobile.view.custom.EButton
+                    <Button
                         android:id="@+id/goto_next"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/course_unit_nav_bar_btn_height"
@@ -156,7 +156,7 @@
                         style="@style/edX.Widget.DisableableButton"
                         tools:targetApi="17" />
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/next_unit_title"
                         style="@style/section_lbl"
                         android:visibility="gone" />
@@ -167,7 +167,7 @@
 
         </LinearLayout>
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/downloadMessage"
             style="@style/downloading_message"
             android:text="@string/started_downloading"

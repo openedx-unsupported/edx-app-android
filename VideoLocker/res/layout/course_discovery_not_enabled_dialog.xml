@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:orientation="vertical" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/find_courses_dialog_tv1"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
         android:textSize="15sp"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/find_courses_dialog_tv2"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
         android:paddingTop="0.5dp"
         android:layout_alignParentBottom="true" >
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

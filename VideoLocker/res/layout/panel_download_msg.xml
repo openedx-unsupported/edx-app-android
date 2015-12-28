@@ -6,7 +6,7 @@
     android:layout_height="70dp"
     android:background="@color/include_msg_color">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/text_download_msg_cnt"
         style="@style/bold_white_text"
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:textSize="18sp"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/text_download_msg"
         style="@style/semibold_white_text"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         android:textSize="16sp"
         tools:targetApi="17" />
 
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/button_view"
         style="@style/regular_white_text"
         android:layout_width="65dp"

@@ -33,7 +33,7 @@
         android:orientation="vertical"
         tools:targetApi="17">
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/row_title"
             style="@style/regular_edx_gray_xdark_text"
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             tools:text="Course Title"/>
 
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/row_subtitle"
             style="@style/regular_edx_gray_base_text"
             android:layout_width="match_parent"

@@ -7,7 +7,7 @@
     android:background="@drawable/white_roundedbg"
     android:orientation="vertical">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_closedcaption"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"

@@ -28,7 +28,7 @@
        android:layout_weight="1"
        android:orientation="vertical">
 
-       <org.edx.mobile.view.custom.ETextView
+       <TextView
            android:id="@+id/message_title"
            style="@style/regular_text"
            android:layout_width="match_parent"
@@ -42,7 +42,7 @@
            android:textSize="18sp"
            tools:targetApi="17" />
 
-       <org.edx.mobile.view.custom.ETextView
+       <TextView
            android:id="@+id/message_body"
            style="@style/regular_text"
            android:layout_width="match_parent"

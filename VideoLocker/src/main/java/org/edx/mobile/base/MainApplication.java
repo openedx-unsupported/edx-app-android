@@ -16,6 +16,7 @@ import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
+import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
@@ -33,6 +34,7 @@ import java.util.Locale;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * This class initializes the modules of the app based on the configuration.
@@ -118,6 +120,12 @@ public class MainApplication extends MultiDexApplication {
 
         // Register Font Awesome module in android-iconify library
         Iconify.with(new FontAwesomeModule());
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
     }
 
     /**

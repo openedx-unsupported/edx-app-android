@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="@drawable/light_selectable_box_overlay">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/name_tv"
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
                     tools:targetApi="17"
                     tools:text="username" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/email_tv"
                     style="@style/regular_white_text"
                     android:layout_width="wrap_content"
@@ -69,39 +69,39 @@
         android:showDividers="middle|end"
         android:splitMotionEvents="false">
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_my_courses"
             style="@style/drawer_option"
             android:text="@string/label_my_courses" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_my_videos"
             style="@style/drawer_option"
             android:text="@string/label_my_videos" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_find_courses"
             style="@style/drawer_option"
             android:text="@string/label_find_courses" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_my_groups"
             style="@style/drawer_option"
             android:text="@string/label_my_groups" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_my_settings"
             style="@style/drawer_option"
             android:text="@string/label_settings" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/drawer_option_submit_feedback"
             style="@style/drawer_option"
             android:text="@string/label_submit_feedback" />
 
     </LinearLayout>
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_version_no"
         style="@style/regular_text"
         android:layout_width="match_parent"
@@ -113,7 +113,7 @@
         android:textColor="@color/transparent_white_90"
         android:textSize="10sp" />
 
-    <org.edx.mobile.view.custom.EButton
+    <Button
         android:id="@+id/logout_button"
         style="@style/regular_white_text"
         android:layout_width="170dp"

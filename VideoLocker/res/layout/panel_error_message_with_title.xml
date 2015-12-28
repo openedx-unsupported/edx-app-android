@@ -9,7 +9,7 @@
     android:paddingRight="20dp"
     android:paddingTop="10dp">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/error_header"
         style="@style/semibold_text"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
         android:textColor="@color/grey_text_mycourse"
         android:textSize="14sp" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/error_message"
         style="@style/regular_text"
         android:layout_width="match_parent"

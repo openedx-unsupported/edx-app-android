@@ -6,7 +6,7 @@
     android:background="@drawable/bg_rounded_white"
     android:orientation="vertical" >
 
-    <ETextView
+    <TextView
         android:id="@+id/tv_closedcaption"
         style="@style/regular_grey_text"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         android:layout_height="1dp"
         android:background="@color/grey_act_background" />
 
-    <ETextView
+    <TextView
         android:id="@+id/tv_speedcontrol"
         style="@style/regular_text"
         android:layout_width="match_parent"

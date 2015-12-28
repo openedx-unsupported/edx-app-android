@@ -18,7 +18,7 @@
             app:iconColor="@color/edx_utility_success"
             app:iconName="fa-check-square-o" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/discussion_responses_answer_icon_view"

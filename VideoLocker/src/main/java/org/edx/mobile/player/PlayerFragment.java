@@ -52,7 +52,6 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.OrientationDetector;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
-import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
@@ -748,6 +747,11 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public void onPrepared() {
         // mark prepared and allow orientation
         isPrepared = true;
+
+        if (getActivity() == null) {
+            return;
+        }
+
         allowSensorOrientation();
 
         if (!isResumed() ||
@@ -1833,7 +1837,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                         clearAllErrors();
                         View errorView = getView().findViewById(R.id.panel_network_error);
                         errorView.setVisibility(View.VISIBLE);
-                        ETextView errorHeaderTextView = (ETextView) errorView.findViewById(R.id.error_header);
+                        TextView errorHeaderTextView = (TextView) errorView.findViewById(R.id.error_header);
                         errorHeaderTextView.setText(getString(R.string.wifi_off_message));
                         errorView.findViewById(R.id.error_message).setVisibility(View.GONE);
                         curMessageTypes.add(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);

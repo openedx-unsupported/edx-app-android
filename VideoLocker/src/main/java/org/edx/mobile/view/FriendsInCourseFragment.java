@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,7 +29,6 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.FriendsInCourseAdapter;
 import org.edx.mobile.view.adapters.SimpleAdapter;
-import org.edx.mobile.view.custom.EButton;
 
 import java.util.List;
 
@@ -99,7 +99,7 @@ public class FriendsInCourseFragment extends RoboFragment implements LoaderManag
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
         errorLabel = (TextView) rootView.findViewById(R.id.label_error);
 
-        EButton courseBtn = (EButton) rootView.findViewById(R.id.btn_open_public_course);
+        Button courseBtn = (Button) rootView.findViewById(R.id.btn_open_public_course);
 
         if (showCourseLink) {
 

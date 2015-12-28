@@ -8,7 +8,7 @@
     android:minWidth="250dp"
     android:orientation="vertical" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_dialog_title"
         tools:text="Course Visibility"
         style="@style/bold_grey_text"
@@ -36,7 +36,7 @@
         android:layout_margin="5dp"
         android:orientation="horizontal" >
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/tv_dialog_message1"
             tools:text="Make course visible?"
             style="@style/regular_grey_text"
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

@@ -27,7 +27,7 @@
         android:paddingTop="10dp"
         tools:targetApi="17">
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/course_name"
             style="@style/course_card_title"
             android:text="@string/course_name"
@@ -39,7 +39,7 @@
             android:orientation="horizontal"
             tools:targetApi="17">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/school_code"
                 style="@style/course_card_course_run"
                 android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:text="@string/school_code"
                 android:textDirection="locale" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/no_of_videos"
                 style="@style/regular_grey_text"
                 android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                 tools:targetApi="17"
                 tools:text="2 Videos," />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/size_of_videos"
                 style="@style/regular_grey_text"
                 android:layout_width="wrap_content"

@@ -38,7 +38,7 @@
             android:layout_below="@id/container_player"
             tools:layout="@layout/fragment_video_list" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/downloadMessage"
             style="@style/downloading_message"
             android:text="@string/started_downloading"

@@ -110,6 +110,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 
     // Segment Library
     compile('com.segment.analytics.android:analytics-core:3.2.0@aar') {

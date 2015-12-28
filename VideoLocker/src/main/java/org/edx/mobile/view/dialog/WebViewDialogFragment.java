@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 public class WebViewDialogFragment extends DialogFragment {
@@ -74,7 +74,7 @@ public class WebViewDialogFragment extends DialogFragment {
             if(fileName!=null){
                 webView.loadUrl(fileName);
             }
-            ETextView tv_dialog_title = (ETextView)v.findViewById(R.id.tv_dialog_title);
+            TextView tv_dialog_title = (TextView)v.findViewById(R.id.tv_dialog_title);
             View viewSeperator = v.findViewById(R.id.view_seperator);
             if(showTitle){
                 tv_dialog_title.setVisibility(View.VISIBLE);

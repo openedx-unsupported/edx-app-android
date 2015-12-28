@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/grey_act_background" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
         android:visibility="gone"
@@ -22,7 +22,7 @@
         style="@style/api_progress_style"
         android:visibility="gone" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/no_coursehandout_tv"
         style="@style/empty_content_text"
         android:text="@string/no_handouts_to_display" />
