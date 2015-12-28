@@ -727,7 +727,7 @@
     <!-- Button that will open a camera for taking a new profile photo -->
     <string name="edit_user_profile_remove_photo">Remove photo</string>
     <!-- Title when cropping newly selected profile photo -->
-    <string name="edit_user_profile_photo_crop_title">Crop and Resize</string>
+    <string name="edit_user_profile_photo_crop_title">Crop and resize</string>
     <!-- Button that will exit the crop tool without saving the image -->
     <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
     <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
