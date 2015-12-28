@@ -68,7 +68,7 @@
                     android:paddingRight="@dimen/course_detail_margin_left"
                     android:gravity="center">
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/course_detail_margin"
@@ -110,7 +110,7 @@
                 android:background="@color/grey_act_background"
                 android:gravity="center" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/combined_course_social_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
                     android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <org.edx.mobile.view.custom.ETextView
+                    <TextView
                         android:id="@+id/settingsText"
                         style="@style/regular_grey_text"
                         android:layout_gravity="center_vertical"
@@ -202,7 +202,7 @@
                 style="@style/api_progress_style"
                 android:visibility="gone" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/no_announcement_tv"
                 style="@style/empty_content_text"
                 android:text="@string/no_announcements_to_display" />

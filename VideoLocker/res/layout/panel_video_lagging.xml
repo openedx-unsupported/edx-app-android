@@ -8,12 +8,12 @@
     android:orientation="vertical"
     android:padding="10dp" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/text_network_error"
         android:text="@string/network_error_header"
         android:textSize="15sp" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/text_network_error"
         android:layout_marginTop="5dp"
         android:text="@string/network_error_message" />

@@ -33,7 +33,7 @@
             android:paddingTop="10dp"
             tools:targetApi="17">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/course_name"
                 style="@style/course_card_title"
                 tools:text="@string/course_name" />
@@ -54,7 +54,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/cyan_circle" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/new_course_content"
                     style="@style/bold_cyan_text"
                     android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                     tools:targetApi="17" />
             </LinearLayout>
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/starting_from"
                 style="@style/course_card_course_run"
                 android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
                 tools:targetApi="17"
                 tools:text="Coming Soon" />
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/course_run"
                 style="@style/course_card_course_run"
                 android:layout_width="wrap_content"

@@ -8,7 +8,7 @@
     android:padding="10dp"
     android:clickable="true">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         style="@style/text_network_error"
         android:text="@string/msg_video_not_available"
         android:textSize="15sp" />

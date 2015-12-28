@@ -8,11 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
-import org.edx.mobile.view.custom.ETextView;
 
 import roboguice.inject.InjectView;
 
@@ -30,7 +30,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
 
     @InjectView(R.id.center_message_box)
     @Nullable
-    ETextView centerMessageBox;
+    TextView centerMessageBox;
 
 
     @Override

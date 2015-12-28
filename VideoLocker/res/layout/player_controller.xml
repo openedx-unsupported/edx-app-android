@@ -25,7 +25,7 @@
         style="@style/video_player_panel"
         android:layout_gravity="top">
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/video_title"
             style="@style/video_player_title"
             tools:targetApi="17"
@@ -68,7 +68,7 @@
             tools:secondaryProgress="70"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/time_current"
             style="@style/video_duration_text"
             android:paddingEnd="0dp"
@@ -78,14 +78,14 @@
             tools:targetApi="17"
             tools:text="00:00" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/time_slash"
             style="@style/video_duration_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lbl_slash" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/time"
             style="@style/video_duration_text"
             android:paddingEnd="@dimen/video_player_duration_padding"

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -26,7 +27,6 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
-import org.edx.mobile.view.custom.ETextView;
 
 import java.util.List;
 
@@ -197,7 +197,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
                 }
             });
 
-            ETextView courseNotListedTv = (ETextView) footer.findViewById(R.id.course_not_listed_tv);
+            TextView courseNotListedTv = (TextView) footer.findViewById(R.id.course_not_listed_tv);
             courseNotListedTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

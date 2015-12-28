@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:splitMotionEvents="false" >
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/tv_dialog_title"
         style="@style/bold_grey_text"
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
         android:layout_margin="5dp"
         android:orientation="horizontal" >
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/tv_dialog_message1"
             style="@style/regular_grey_text"
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
         android:orientation="horizontal"
         android:paddingTop="0.5dp" >
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/negativeButton"
             style="@style/bold_text"
             android:layout_width="0dp"
@@ -73,7 +73,7 @@
             android:textSize="15sp"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/positiveButton"
             style="@style/bold_text"
             android:layout_width="0dp"

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -16,7 +17,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.custom.ETextView;
 
 import roboguice.fragment.RoboDialogFragment;
 
@@ -38,7 +38,7 @@ public class CourseDiscoveryNotEnabledDialogFragment extends RoboDialogFragment 
         View v = inflater.inflate(R.layout.course_discovery_not_enabled_dialog,
                 container, false);
         String find_courses_text = getString(R.string.find_courses_dialog_text_2);
-        ETextView tv_find_courses_2 = (ETextView) v.findViewById(R.id.find_courses_dialog_tv2);
+        TextView tv_find_courses_2 = (TextView) v.findViewById(R.id.find_courses_dialog_tv2);
         tv_find_courses_2.setText(Html.fromHtml(find_courses_text));
 
         // Watch for button clicks.

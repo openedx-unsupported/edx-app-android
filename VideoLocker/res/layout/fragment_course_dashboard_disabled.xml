@@ -13,7 +13,7 @@
         app:iconColor="@color/edx_grayscale_neutral_light"
         app:iconName="fa-exclamation-circle" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/error_msg"
         style="@style/regular_edx_gray_dark_text"
         android:layout_width="wrap_content"

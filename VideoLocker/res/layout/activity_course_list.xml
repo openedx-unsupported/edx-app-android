@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <org.edx.mobile.view.custom.ETextView
+            <TextView
                 android:id="@+id/no_course_tv"
                 style="@style/empty_content_text"
                 android:text="@string/no_courses_to_display" />
@@ -55,7 +55,7 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
         android:text="@string/started_downloading"

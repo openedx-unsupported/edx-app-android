@@ -18,7 +18,7 @@
         android:layout_below="@id/ab_separator"
         android:orientation="vertical">
 
-        <org.edx.mobile.view.custom.EButton
+        <Button
             android:id="@+id/btn_open_public_course"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             tools:visibility="visible"
             tools:targetApi="17" />
 
-        <org.edx.mobile.view.custom.ETextView
+        <TextView
             android:id="@+id/course_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

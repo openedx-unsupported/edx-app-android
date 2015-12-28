@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:background="@color/grey_act_background" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/findcourse_tv"
         style="@style/semibold_text"
         android:layout_width="wrap_content"

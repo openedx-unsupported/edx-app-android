@@ -9,15 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.Window;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.RoboAppCompatActivity;
+import org.edx.mobile.base.BaseAppActivity;
 import org.edx.mobile.third_party.subscaleview.ImageSource;
 import org.edx.mobile.user.SaveUriToFileTask;
 import org.edx.mobile.view.custom.CropImageView;
 
-public class CropImageActivity extends RoboAppCompatActivity {
+public class CropImageActivity extends BaseAppActivity {
     public static final String EXTRA_IMAGE_URI = "imageUri";
     public static final String EXTRA_CROP_RECT = "cropRect";
     public static final String EXTRA_FROM_CAMERA = "fromCamera";

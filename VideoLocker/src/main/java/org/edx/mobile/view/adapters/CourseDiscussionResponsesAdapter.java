@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
@@ -22,7 +23,6 @@ import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
 import org.edx.mobile.util.UiUtil;
-import org.edx.mobile.view.custom.ETextView;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
 import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
@@ -369,8 +369,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
-        ETextView threadTitleTextView;
-        ETextView threadBodyTextView;
+        TextView threadTitleTextView;
+        TextView threadBodyTextView;
         IconImageView threadClosedIconImageView;
         IconImageView threadPinnedIconImageView;
 
@@ -382,9 +382,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         public DiscussionThreadViewHolder(View itemView) {
             super(itemView);
 
-            threadTitleTextView = (ETextView) itemView.
+            threadTitleTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_title_text_view);
-            threadBodyTextView = (ETextView) itemView.
+            threadBodyTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_body_text_view);
             threadClosedIconImageView = (IconImageView) itemView.
                     findViewById(R.id.discussion_responses_thread_closed_icon_view);
@@ -400,7 +400,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout addCommentLayout;
-        ETextView responseCommentBodyTextView;
+        TextView responseCommentBodyTextView;
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
@@ -410,7 +410,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             super(itemView);
 
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
-            responseCommentBodyTextView = (ETextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
+            responseCommentBodyTextView = (TextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);

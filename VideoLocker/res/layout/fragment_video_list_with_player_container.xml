@@ -5,7 +5,7 @@
     android:background="@color/grey_act_background"
     android:orientation="vertical" >
     
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/empty_list_view"
         style="@style/empty_content_text"
         android:text="@string/no_videos_to_display" />
@@ -68,7 +68,7 @@
         style="@style/default_list"
         android:transcriptMode="disabled"/>
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/downloadMessage"
         style="@style/downloading_message"
         android:text="@string/started_downloading"

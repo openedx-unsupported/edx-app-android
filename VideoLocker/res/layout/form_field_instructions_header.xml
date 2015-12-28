@@ -6,14 +6,14 @@
     android:orientation="vertical"
     android:padding="@dimen/edx_margin">
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/instructions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/edx_grayscale_neutral_x_dark"
         android:textSize="@dimen/edx_base" />
 
-    <org.edx.mobile.view.custom.ETextView
+    <TextView
         android:id="@+id/sub_instructions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

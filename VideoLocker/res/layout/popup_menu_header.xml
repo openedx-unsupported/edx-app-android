@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.edx.mobile.view.custom.ETextView
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/bold_text"
     android:layout_width="match_parent"

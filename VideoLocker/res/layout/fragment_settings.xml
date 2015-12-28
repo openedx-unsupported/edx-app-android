@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1">
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/settingsText"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     android:textSize="13sp"
                     tools:targetApi="17" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/download_only_tv"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                 android:layout_gravity="center"
                 android:padding="15dp"
                 >
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/settings_fb_login"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                     android:textSize="13sp"
                     tools:targetApi="17" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/settings_fb_login_body"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_weight="1">
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/visibilitytext"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
@@ -158,7 +158,7 @@
                     android:textSize="13sp"
                     tools:targetApi="17" />
 
-                <org.edx.mobile.view.custom.ETextView
+                <TextView
                     android:id="@+id/make_course_visible_text"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
