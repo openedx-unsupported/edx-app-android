@@ -3,6 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <stroke android:color="@color/edx_brand_primary_base" android:width="1dp" />
+            <solid android:color="@android:color/transparent" />
             <corners android:radius="@dimen/edx_box_radius" />
         </shape>
     </item>
