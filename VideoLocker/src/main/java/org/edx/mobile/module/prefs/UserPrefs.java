@@ -3,6 +3,7 @@ package org.edx.mobile.module.prefs;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,6 +62,7 @@ public class UserPrefs {
         return edxDir;
     }
 
+    @Nullable
     public ProfileModel getProfile() {
         PrefManager pm = new PrefManager(context, PrefManager.Pref.LOGIN);
         return pm.getCurrentUserProfile();
