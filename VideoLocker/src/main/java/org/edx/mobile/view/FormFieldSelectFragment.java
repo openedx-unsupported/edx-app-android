@@ -155,8 +155,8 @@ public class FormFieldSelectFragment extends RoboFragment {
             for (int i = 0; i < listView.getCount(); i++) {
                 final FormOption option = (FormOption) listView.getItemAtPosition(i);
                 if (null != option && TextUtils.equals(option.getValue(), currentValue)) {
-                    listView.setSelection(i);
                     listView.setItemChecked(i, true);
+                    listView.setSelection(i);
                     break;
                 }
             }
