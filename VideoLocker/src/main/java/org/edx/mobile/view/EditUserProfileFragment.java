@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -61,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import de.hdodenhof.circleimageview.CircleImageView;
 import roboguice.fragment.RoboFragment;
 import roboguice.inject.InjectExtra;
 
@@ -247,7 +246,7 @@ public class EditUserProfileFragment extends RoboFragment {
     public class ViewHolder {
         public final View content;
         public final View loadingIndicator;
-        public final ImageView profileImage;
+        public final CircleImageView profileImage;
         public final TextView username;
         public final ViewGroup fields;
         public final TextView changePhoto;
@@ -256,7 +255,7 @@ public class EditUserProfileFragment extends RoboFragment {
         public ViewHolder(@NonNull View parent) {
             this.content = parent.findViewById(R.id.content);
             this.loadingIndicator = parent.findViewById(R.id.loading_indicator);
-            this.profileImage = (ImageView) parent.findViewById(R.id.profile_image);
+            this.profileImage = (CircleImageView) parent.findViewById(R.id.profile_image);
             this.username = (TextView) parent.findViewById(R.id.username);
             this.fields = (ViewGroup) parent.findViewById(R.id.fields);
             this.changePhoto = (TextView) parent.findViewById(R.id.change_photo);
@@ -276,6 +275,7 @@ public class EditUserProfileFragment extends RoboFragment {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
             viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
+            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
 
             if (account.getProfileImage().hasImage()) {
                 Glide.with(viewHolder.profileImage.getContext())
