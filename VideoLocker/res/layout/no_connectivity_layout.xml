@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/no_connectivity_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/edx_grayscale_neutral_white_t"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <org.edx.mobile.view.custom.IconImageViewXml
+        android:layout_width="@dimen/large_indicator_icon_width"
+        android:layout_height="@dimen/large_indicator_icon_height"
+        app:iconColor="@color/edx_grayscale_neutral_light"
+        app:iconName="fa-wifi" />
+
+    <TextView
+        style="@style/empty_content_text"
+        android:text="@string/reset_no_network_message"
+        android:visibility="visible" />
+
+
+</LinearLayout>
+
