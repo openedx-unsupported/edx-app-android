@@ -345,7 +345,7 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
-    <style name="edX.Widget.Spinner" parent="@style/Widget.AppCompat.Spinner">
+    <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
         <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
         <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
         <item name="android:layout_marginRight">3dp</item>
@@ -356,7 +356,7 @@
         <item name="android:background">@drawable/edx_input_background</item>
     </style>
 
-    <style name="edX.Widget.Spinner.Popup" parent="@style/Widget.AppCompat.Spinner.DropDown">
+    <style name="edX.Widget.Spinner.Popup" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:minHeight">@dimen/popupSpinnerMinHeight</item>
         <item name="android:popupBackground">@drawable/spinner_popup_background</item>
@@ -375,13 +375,13 @@
     <style name="edX.Widget.DropDownListView" parent="Widget.AppCompat.ListView.DropDown" />
 
     <!-- Spinner with the popup style -->
-    <style name="edX.Widget.ListPopupWindow" android:parent="Widget.AppCompat.ListPopupWindow">
+    <style name="edX.Widget.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
-    <style name="edX.Widget.PopupMenu" android:parent="Widget.AppCompat.Light.PopupMenu">
+    <style name="edX.Widget.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
@@ -399,7 +399,7 @@
     </style>
 
     <!-- Menu popup that is aligned to the vertical edge of the screen -->
-    <style name="edX.Widget.EdgePopupMenu" parent="@style/edX.Widget.PopupMenu">
+    <style name="edX.Widget.EdgePopupMenu" parent="edX.Widget.PopupMenu">
         <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
     </style>
 
