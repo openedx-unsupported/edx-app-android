@@ -207,27 +207,29 @@ public class CourseOutlineAdapter extends BaseAdapter{
         }
     }
 
-    private  View getRowViewForLeaf(int position, View convertView, ViewGroup parent, final SectionRow row) {
-        final ViewHolder viewHolder = (ViewHolder)convertView.getTag();
+    private  View getRowViewForLeaf(int position, View convertView, ViewGroup parent,
+                                    final SectionRow row) {
+        final ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
-        CourseComponent unit =  row.component;
+        CourseComponent unit = row.component;
         viewHolder.rowType.setVisibility(View.VISIBLE);
         viewHolder.rowSubtitleIcon.setVisibility(View.GONE);
         viewHolder.rowSubtitle.setVisibility(View.GONE);
         viewHolder.rowSubtitlePanel.setVisibility(View.GONE);
         viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
 
-        if ( !unit.isMultiDevice() && unit.getType() != BlockType.VIDEO){
+        if (row.component instanceof VideoBlockModel) {
+            updateUIForVideo(position, convertView, viewHolder, row);
+        } else if (!unit.isMultiDevice()) {
+            // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
             viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
-        } else if (row.component instanceof VideoBlockModel){
-            updateUIForVideo(position, convertView, viewHolder, row);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
-            if( unit.getType() == BlockType.PROBLEM ) {
+            if (unit.getType() == BlockType.PROBLEM) {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_list);
-            } else if( unit.getType() == BlockType.DISCUSSION ) {
+            } else if (unit.getType() == BlockType.DISCUSSION) {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
             } else {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_file_o);
