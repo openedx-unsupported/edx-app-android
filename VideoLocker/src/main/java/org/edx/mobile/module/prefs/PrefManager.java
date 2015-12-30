@@ -2,6 +2,7 @@ package org.edx.mobile.module.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -144,6 +145,7 @@ public class PrefManager {
      * Returns current user's profile from the preferences.
      * @return
      */
+    @Nullable
     public ProfileModel getCurrentUserProfile() {
         String json = getString(PrefManager.Key.PROFILE_JSON);
         if (json == null) {
