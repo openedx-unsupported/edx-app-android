@@ -12,11 +12,6 @@ public interface CourseService {
      *                 The username of the specified user whose visible courses we
      *                 want to see. The username is not required only if the API is
      *                 requested by an Anonymous user.
-     * @param org      (optional):
-     *                 If specified, visible `CourseOverview` objects are filtered
-     *                 such that only those belonging to the organization with the
-     *                 provided org code (e.g., "HarvardX") are returned.
-     *                 Case-insensitive.
      * @param mobile   (optional):
      *                 If specified, only visible `CourseOverview` objects that are
      *                 designated as mobile_available are returned.
@@ -25,7 +20,6 @@ public interface CourseService {
      */
     @GET("/api/courses/v1/courses/")
     CourseList getCourseList(@Query("username") String username,
-                             @Query("org") String org,
                              @Query("mobile") boolean mobile,
                              @Query("page") int page) throws RetroHttpException;
 

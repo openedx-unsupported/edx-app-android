@@ -10,7 +10,8 @@ import org.edx.mobile.task.Task;
 public abstract class GetCourseDetailTask extends
         Task<CourseDetail> {
 
-    @NonNull final String courseId;
+    @NonNull
+    final String courseId;
 
     @Inject
     private CourseAPI courseAPI;
@@ -21,7 +22,7 @@ public abstract class GetCourseDetailTask extends
     }
 
     public CourseDetail call() throws Exception {
-        if(courseId!=null){
+        if (courseId != null) {
             return courseAPI.getCourseDetail(courseId);
         }
         return null;

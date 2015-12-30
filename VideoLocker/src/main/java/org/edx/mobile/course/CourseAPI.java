@@ -31,7 +31,7 @@ public class CourseAPI {
     public
     @NonNull
     CourseList getCourseList(int page) throws RetroHttpException {
-        return courseService.getCourseList(getUsername(), null, true, page);
+        return courseService.getCourseList(getUsername(), true, page);
     }
 
     public

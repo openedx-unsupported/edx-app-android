@@ -2,7 +2,6 @@ package org.edx.mobile.course;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 
