@@ -103,10 +103,10 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                             holder.videolayout.setBackgroundResource(R.color.cyan_text_navigation_20);
                         } else {
                             // mark this cell as non-selected
-                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                            holder.videolayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                         }
                     } else {
-                        holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                        holder.videolayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                     }
 
                     if (AppConstants.myVideosDeleteMode) {
@@ -116,7 +116,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                         holder.delete_checkbox.setVisibility(View.GONE);
                     }
                 }else{
-                    holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                    holder.videolayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                     holder.delete_checkbox.setVisibility(View.GONE);
                 }
 

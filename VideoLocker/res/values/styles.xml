@@ -23,6 +23,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="actionBarTabStyle">@style/TabsStyle</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>

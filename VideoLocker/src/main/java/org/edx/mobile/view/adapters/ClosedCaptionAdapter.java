@@ -30,10 +30,10 @@ public abstract class ClosedCaptionAdapter extends BaseListAdapter<HashMap<Strin
             if(selectedLanguage.equalsIgnoreCase(language.keySet().toArray()[0].toString())){
                 holder.tv_ccLang.setBackgroundResource(R.color.cyan_text_navigation_20);
             }else{
-                holder.tv_ccLang.setBackgroundResource(R.drawable.list_selector);
+                holder.tv_ccLang.setBackgroundResource(R.drawable.list_item_overlay_selector);
             }
         }else{
-            holder.tv_ccLang.setBackgroundResource(R.drawable.list_selector);
+            holder.tv_ccLang.setBackgroundResource(R.drawable.list_item_overlay_selector);
         }
     }
     

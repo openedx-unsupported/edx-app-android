@@ -102,11 +102,11 @@ public abstract class OfflineVideoAdapter extends VideoBaseAdapter<SectionItemIn
                         } else {
                             // mark this cell as non-selected
                             holder.videolayout.setBackgroundResource
-                            (R.drawable.list_selector);
+                            (R.drawable.list_item_overlay_selector);
                         }
                     }else{
                         holder.videolayout.setBackgroundResource
-                        (R.drawable.list_selector);
+                        (R.drawable.list_item_overlay_selector);
                     }
 
                     if(AppConstants.videoListDeleteMode){

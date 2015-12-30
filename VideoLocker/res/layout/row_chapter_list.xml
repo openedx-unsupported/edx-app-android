@@ -3,7 +3,7 @@
     android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
+    android:background="@drawable/list_item_overlay_selector"
     android:paddingLeft="12dp"
     android:paddingStart="12dp"
     android:paddingRight="5dp"

@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:divider="@null"
-        android:dividerHeight="0dp"
-        android:listSelector="@drawable/course_list_item_selector" />
+        android:dividerHeight="0dp" />
 
     <org.edx.mobile.view.custom.IconTextViewXml
         android:id="@+id/no_chapter_tv"

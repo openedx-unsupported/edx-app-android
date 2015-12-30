@@ -90,7 +90,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             if(isVideoDownloaded)
             {
                 holder.next_arrow.setBackgroundResource(R.drawable.ic_next_default_mirrored);
-                holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
+                holder.chapterLayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                 holder.chapterName.setTextColor(context.getResources()
                         .getColor(R.color.grey_text_mycourse));
             }else{
@@ -103,7 +103,7 @@ public abstract class ChapterAdapter extends BaseListAdapter<SectionEntry> {
             }
 
         } else {
-            holder.chapterLayout.setBackgroundResource(R.drawable.list_selector);
+            holder.chapterLayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
             holder.next_arrow.setVisibility(View.GONE);
             holder.chapterName.setTextColor(context.getResources().getColor(
                     R.color.grey_text_mycourse));
