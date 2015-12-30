@@ -374,14 +374,11 @@
         <item name="android:layout_marginTop">@dimen/spinnerPopupBorder</item>
         <item name="android:paddingBottom">@dimen/spinnerPopupBorder</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
-        <!-- TODO: Since AppCompatSpinner doesn't support backporting the
-             anchor overlapping feature currently in appcompat v22, we're
-             implementing our own custom solution of applying custom
-             vertical offsets in the relevant Spinners. Once we upgrade to
-             appcompat v23+, we can remove those workarounds and uncomment
-             this attribute so that it can be automatically handled by
-             AppCompatSpinner.
-        <item name="overlapAnchor">true</item>-->
+        <item name="overlapAnchor">true</item>
+    </style>
+
+    <style name="edX.Widget.DropDownListView" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@null</item>
     </style>
 
     <!-- Spinner with the popup style -->
