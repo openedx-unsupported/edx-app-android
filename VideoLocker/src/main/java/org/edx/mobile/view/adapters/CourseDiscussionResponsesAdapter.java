@@ -22,6 +22,7 @@ import org.edx.mobile.task.FlagThreadTask;
 import org.edx.mobile.task.FollowThreadTask;
 import org.edx.mobile.task.VoteCommentTask;
 import org.edx.mobile.task.VoteThreadTask;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 import org.edx.mobile.view.view_holders.DiscussionSocialLayoutViewHolder;
@@ -123,6 +124,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
         holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
+
+        holder.threadVisibilityTextView.setText(discussionThread.getGroupName() == null ?
+                context.getString(R.string.discussion_post_visibility_everyone) :
+                ResourceUtil.getFormattedString(
+                        context.getResources(), R.string.discussion_post_visibility_cohort,
+                        "cohort", discussionThread.getGroupName()));
 
         holder.threadClosedIconImageView.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);
         holder.threadPinnedIconImageView.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
@@ -371,6 +378,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     public static class DiscussionThreadViewHolder extends RecyclerView.ViewHolder {
         TextView threadTitleTextView;
         TextView threadBodyTextView;
+        TextView threadVisibilityTextView;
         IconImageView threadClosedIconImageView;
         IconImageView threadPinnedIconImageView;
 
@@ -386,6 +394,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     findViewById(R.id.discussion_responses_thread_row_title_text_view);
             threadBodyTextView = (TextView) itemView.
                     findViewById(R.id.discussion_responses_thread_row_body_text_view);
+            threadVisibilityTextView = (TextView) itemView.
+                    findViewById(R.id.discussion_responses_thread_row_visibility_text_view);
             threadClosedIconImageView = (IconImageView) itemView.
                     findViewById(R.id.discussion_responses_thread_closed_icon_view);
             threadPinnedIconImageView = (IconImageView) itemView.

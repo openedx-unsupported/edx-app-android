@@ -37,6 +37,15 @@
             android:textSize="@dimen/edx_small"
             tools:text="Thread body" />
 
+        <TextView
+            android:id="@+id/discussion_responses_thread_row_visibility_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/discussion_responses_standard_margin"
+            android:textColor="@color/edx_grayscale_neutral_base"
+            android:textSize="@dimen/edx_xxx_small"
+            tools:text="This post is visible to everyone/cohort." />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
