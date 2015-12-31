@@ -1,36 +1,33 @@
 package org.edx.mobile.task;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
-import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.event.EnrolledInCourseEvent;
 
-public abstract class EnrollForCourseTask extends Task<Boolean> {
+import de.greenrobot.event.EventBus;
 
-    String courseId;
-    boolean emailOptIn ;
-    public EnrollForCourseTask(Context context, String courseId, boolean emailOptIn) {
+public abstract class EnrollForCourseTask extends Task<Void> {
+
+    @NonNull
+    private final String courseId;
+    private final boolean emailOptIn;
+
+    public EnrollForCourseTask(@NonNull Context context, @NonNull String courseId, boolean emailOptIn) {
         super(context);
+        if (TextUtils.isEmpty(courseId)) throw new IllegalArgumentException();
         this.courseId = courseId;
         this.emailOptIn = emailOptIn;
     }
 
     @Override
-    public Boolean call( ) throws Exception{
-        try {
-
-            if(courseId!=null){
-                ServiceManager api = environment.getServiceManager();
-                try {
-                    return api.enrollInACourse(courseId,emailOptIn);
-                } catch(Exception ex) {
-                    logger.error(ex, true);
-                }
-            }
-            return false;
-        } catch(Exception ex) {
-            handle(ex);
-            logger.error(ex);
+    public Void call() throws Exception {
+        final Boolean result = environment.getServiceManager().enrollInACourse(courseId, emailOptIn);
+        if (null == result || !result) {
+            throw new RuntimeException("Enrollment failure, course: " + courseId);
         }
-        return false;
+        EventBus.getDefault().post(new EnrolledInCourseEvent());
+        return null;
     }
 }

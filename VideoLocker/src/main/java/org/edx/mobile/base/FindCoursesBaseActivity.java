@@ -171,32 +171,28 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this,
             courseId, emailOptIn) {
             @Override
-            public void onSuccess(Boolean result) {
+            public void onSuccess(Void result) {
                 isTaskInProgress = false;
-                if(result!=null && result) {
-                    logger.debug("Enrollment successful");
-                    //If the course is successfully enrolled, send a broadcast
-                    // to close the FindCoursesActivity
-                    Intent intent = new Intent();
-                    intent.putExtra("course_id", courseId);
-                    intent.setAction(ACTION_ENROLLED);
-                    sendBroadcast(intent);
+                logger.debug("Enrollment successful");
+                //If the course is successfully enrolled, send a broadcast
+                // to close the FindCoursesActivity
+                Intent intent = new Intent();
+                intent.putExtra("course_id", courseId);
+                intent.setAction(ACTION_ENROLLED);
+                sendBroadcast(intent);
 
-                    // show flying message about the success of Enroll
+                // show flying message about the success of Enroll
 
-                    EnrolledCoursesResponse course = environment.getServiceManager().getCourseById(courseId);
-                    String msg;
-                    if (course == null || course.getCourse() == null ) {
-                        // this means, you were not already enrolled to this course
-                        msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                    }else{
-                        // this means, you were already enrolled to this course
-                        msg = String.format("%s", context.getString(R.string.already_enrolled));
-                    }
-                    EventBus.getDefault().postSticky(new FlyingMessageEvent(msg));
+                EnrolledCoursesResponse course = environment.getServiceManager().getCourseById(courseId);
+                String msg;
+                if (course == null || course.getCourse() == null ) {
+                    // this means, you were not already enrolled to this course
+                    msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
                 }else{
-                    showEnrollErrorMessage(courseId, emailOptIn);
+                    // this means, you were already enrolled to this course
+                    msg = String.format("%s", context.getString(R.string.already_enrolled));
                 }
+                EventBus.getDefault().postSticky(new FlyingMessageEvent(msg));
             }
 
             @Override

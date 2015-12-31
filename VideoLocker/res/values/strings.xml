@@ -33,11 +33,20 @@
     <!-- Title of the course detail page-->
     <string name="course_detail_title">Course Detail</string>
     <!-- Enroll Now button text -->
-    <string name="course_detail_enroll_now_button">Enroll Now</string>
+    <string name="course_detail_enroll_now_button">Enroll now</string>
     <!-- About This Course title -->
-    <string name="about_this_course">About this Course</string>
-    <!-- Enroll Now text-->
-    <string name="enroll_now">Enroll Now</string>
+    <string name="about_this_course">About This Course</string>
+    <!-- Enroll Now button text-->
+    <string name="enroll_now_button_text">Enroll now</string>
+    <!-- View Course button text text-->
+    <string name="view_course_button_text">View course</string>
+    <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
+    <string name="you_are_now_enrolled">You are now enrolled in this course.</string>
+    <!-- Error shown user attempts to enroll in a course they are already enrolled in -->
+    <string name="already_enrolled">You are already enrolled in this course.</string>
+    <!-- Error message shown when dashboard cannot be shown from course detail view -->
+    <string name="cannot_show_dashboard">Unable to show dashboard.</string>
+
 
 
     <!-- Course Sharing -->
@@ -641,11 +650,7 @@
     <!-- Message shown when enrolling in a course fails-->
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
-    <string name="try_again">Try Again</string>
-    <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
-    <string name="you_are_now_enrolled">You have enrolled in this course</string>
-    <!-- Error shown user attempts to enroll in a course they are already enrolled in -->
-    <string name="already_enrolled">You are already enrolled in this course</string>
+    <string name="try_again">Try again</string>
     <!-- Error shown when registering an account fails -->
     <string name="sign_up_error">Your account could not be created. Try again later.</string>
 

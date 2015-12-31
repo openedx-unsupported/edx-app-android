@@ -333,7 +333,7 @@
         <item name="android:background">@drawable/edx_enroll_button</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:text">@string/enroll_now</item>
+        <item name="android:text">@string/enroll_now_button_text</item>
     </style>
 
     <style name="edX.Widget.BorderedButton" parent="edX.Widget.Button">
