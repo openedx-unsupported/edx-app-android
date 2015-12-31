@@ -23,7 +23,5 @@
         <attr name="itemVerticalPadding" format="dimension" />
         <attr name="iconPadding" format="dimension" />
         <attr name="iconDefaultSize" format="dimension" />
-        <attr name="headerTextAppearance" format="reference" />
-        <attr name="rowTextAppearance" format="reference" />
     </declare-styleable>
 </resources>

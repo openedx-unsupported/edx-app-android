@@ -82,8 +82,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     private final int mPopupItemVerticalPadding;
     private final int mPopupIconPadding;
     private final int mPopupIconDefaultSize;
-    private final int mPopupHeaderTextAppearance;
-    private final int mPopupRowTextAppearance;
     private final int mPopupStyleAttr;
     private final int mPopupStyleRes;
 
@@ -191,10 +189,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
                 R.styleable.PopupMenu_iconPadding, 0);
         mPopupIconDefaultSize = a.getDimensionPixelSize(
                 R.styleable.PopupMenu_iconDefaultSize, 0);
-        mPopupHeaderTextAppearance = a.getResourceId(
-                R.styleable.PopupMenu_headerTextAppearance, -1);
-        mPopupRowTextAppearance = a.getResourceId(
-                R.styleable.PopupMenu_rowTextAppearance, -1);
         a.recycle();
 
         mAnchorView = anchorView;
@@ -612,16 +606,6 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
             }
             MenuItem item = getItem(position);
             textView.setText(item.getTitle());
-            switch (itemType) {
-                case HEADER:
-                    textView.setTextAppearance(mContext, mPopupHeaderTextAppearance);
-                    break;
-                case ITEM:
-                    textView.setTextAppearance(mContext, mPopupRowTextAppearance);
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
             if (textView instanceof Checkable) {
                 ((Checkable) textView).setChecked(item.isChecked());
             }
