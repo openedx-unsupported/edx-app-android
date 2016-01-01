@@ -140,7 +140,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                 Drawable modeSwitcherDrawable =
                         new IconDrawable(context, FontAwesomeIcons.fa_list)
                         .colorRes(context, R.color.edx_grayscale_neutral_light)
-                        .sizeRes(context, R.dimen.empty_list_icon_size);
+                        .sizeRes(context, R.dimen.content_unavailable_error_icon_size);
                 messageView.setCompoundDrawablesWithIntrinsicBounds(
                         null, modeSwitcherDrawable, null, null);
                 Resources resources = getResources();

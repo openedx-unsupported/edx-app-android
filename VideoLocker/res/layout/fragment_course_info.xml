@@ -19,7 +19,7 @@
       
       <TextView
         android:id="@+id/no_courseinfo_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_information_to_display" />
     
 

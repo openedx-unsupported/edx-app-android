@@ -19,7 +19,7 @@
      
      <TextView
         android:id="@+id/no_announcement_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_announcements_to_display" />
     
 </RelativeLayout>

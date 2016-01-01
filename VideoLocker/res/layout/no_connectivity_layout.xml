@@ -8,16 +8,15 @@
     android:orientation="vertical">
 
     <org.edx.mobile.view.custom.IconImageViewXml
-        android:layout_width="@dimen/large_indicator_icon_width"
-        android:layout_height="@dimen/large_indicator_icon_height"
+        android:layout_width="@dimen/content_unavailable_error_icon_size"
+        android:layout_height="@dimen/content_unavailable_error_icon_size"
         app:iconColor="@color/edx_grayscale_neutral_light"
         app:iconName="fa-wifi" />
 
     <TextView
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/reset_no_network_message"
         android:visibility="visible" />
-
 
 </LinearLayout>
 
