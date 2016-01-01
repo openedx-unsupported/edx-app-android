@@ -125,11 +125,14 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
 
-        holder.threadVisibilityTextView.setText(discussionThread.getGroupName() == null ?
-                context.getString(R.string.discussion_post_visibility_everyone) :
-                ResourceUtil.getFormattedString(
-                        context.getResources(), R.string.discussion_post_visibility_cohort,
-                        "cohort", discussionThread.getGroupName()));
+        String groupName = discussionThread.getGroupName();
+        if (groupName == null) {
+            holder.threadVisibilityTextView.setText(R.string.discussion_post_visibility_everyone);
+        } else {
+            holder.threadVisibilityTextView.setText(ResourceUtil.getFormattedString(
+                    context.getResources(), R.string.discussion_post_visibility_cohort,
+                    "cohort", groupName));
+        }
 
         holder.threadClosedIconImageView.setVisibility(discussionThread.isClosed() ? View.VISIBLE : View.GONE);
         holder.threadPinnedIconImageView.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
