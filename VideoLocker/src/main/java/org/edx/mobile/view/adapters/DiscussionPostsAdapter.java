@@ -25,18 +25,12 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     private final int edx_brand_primary_base;
     @ColorInt
     private final int edx_grayscale_neutral_light;
-    @ColorInt
-    private final int edx_grayscale_neutral_xx_light;
-    @ColorInt
-    private final int edx_grayscale_neutral_white;
 
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
         edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
         edx_grayscale_neutral_light = context.getResources().getColor(R.color.edx_grayscale_neutral_light);
-        edx_grayscale_neutral_xx_light = context.getResources().getColor(R.color.edx_grayscale_neutral_xx_light);
-        edx_grayscale_neutral_white = context.getResources().getColor(R.color.edx_grayscale_neutral_white);
     }
 
     @Override
@@ -99,7 +93,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
             }
 
         }
-        holder.discussionPostRow.setBackgroundColor(discussionThread.isRead() ? edx_grayscale_neutral_xx_light : edx_grayscale_neutral_white);
+        holder.discussionPostRow.setBackgroundResource(discussionThread.isRead() ? R.drawable.bg_discussion_thread_read : R.drawable.bg_discussion_thread_unread);
     }
 
     @Override

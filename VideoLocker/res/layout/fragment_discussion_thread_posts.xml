@@ -29,7 +29,6 @@
             android:layout_marginStart="@dimen/edx_margin"
             android:layout_marginLeft="@dimen/edx_margin"
             android:minWidth="@dimen/discussion_posts_filter_popup_width"
-            android:dropDownVerticalOffset="@dimen/discussion_posts_filter_popup_vertical_offset"
             tools:listitem="@layout/row_discussion_thread_dropdown"
             tools:targetApi="17" />
 
@@ -39,7 +38,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:minWidth="@dimen/discussion_posts_filter_popup_width"
-            android:dropDownVerticalOffset="@dimen/discussion_posts_filter_popup_vertical_offset"
             tools:listitem="@layout/row_discussion_thread_dropdown"
             tools:targetApi="17" />
 

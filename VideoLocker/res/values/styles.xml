@@ -23,9 +23,11 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="actionBarTabStyle">@style/TabsStyle</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
-        <item name="android:dropDownListViewStyle">@style/edX.Widget.SpinnerDropDownListView</item>
+        <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:textColorLink">@color/edx_brand_primary_base</item>
@@ -345,7 +347,7 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
-    <style name="edX.Widget.Spinner" parent="@style/Widget.AppCompat.Spinner">
+    <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
         <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
         <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
         <item name="android:layout_marginRight">3dp</item>
@@ -356,12 +358,7 @@
         <item name="android:background">@drawable/edx_input_background</item>
     </style>
 
-    <!-- TODO: Change parent to "Widget.AppCompat.ListView.DropDown" once we switch to an AppCompat theme -->
-    <style name="edX.Widget.SpinnerDropDownListView" parent="android:Widget.ListView">
-        <item name="android:divider">@null</item>
-    </style>
-
-    <style name="edX.Widget.Spinner.Popup" parent="@style/Widget.AppCompat.Spinner.DropDown">
+    <style name="edX.Widget.Spinner.Popup" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:minHeight">@dimen/popupSpinnerMinHeight</item>
         <item name="android:popupBackground">@drawable/spinner_popup_background</item>
@@ -374,24 +371,19 @@
         <item name="android:layout_marginTop">@dimen/spinnerPopupBorder</item>
         <item name="android:paddingBottom">@dimen/spinnerPopupBorder</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
-        <!-- TODO: Since AppCompatSpinner doesn't support backporting the
-             anchor overlapping feature currently in appcompat v22, we're
-             implementing our own custom solution of applying custom
-             vertical offsets in the relevant Spinners. Once we upgrade to
-             appcompat v23+, we can remove those workarounds and uncomment
-             this attribute so that it can be automatically handled by
-             AppCompatSpinner.
-        <item name="overlapAnchor">true</item>-->
+        <item name="overlapAnchor">true</item>
     </style>
 
+    <style name="edX.Widget.DropDownListView" parent="Widget.AppCompat.ListView.DropDown" />
+
     <!-- Spinner with the popup style -->
-    <style name="edX.Widget.ListPopupWindow" android:parent="Widget.AppCompat.ListPopupWindow">
+    <style name="edX.Widget.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
-    <style name="edX.Widget.PopupMenu" android:parent="Widget.AppCompat.Light.PopupMenu">
+    <style name="edX.Widget.PopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
@@ -409,7 +401,7 @@
     </style>
 
     <!-- Menu popup that is aligned to the vertical edge of the screen -->
-    <style name="edX.Widget.EdgePopupMenu" parent="@style/edX.Widget.PopupMenu">
+    <style name="edX.Widget.EdgePopupMenu" parent="edX.Widget.PopupMenu">
         <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
     </style>
 

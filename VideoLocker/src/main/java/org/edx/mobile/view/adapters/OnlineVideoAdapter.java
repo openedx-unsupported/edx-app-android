@@ -154,10 +154,10 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                                 }
                             } else {
                                 // mark this cell as non-selected
-                                holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                                holder.videolayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                             }
                         }else{
-                            holder.videolayout.setBackgroundResource(R.drawable.list_selector);
+                            holder.videolayout.setBackgroundResource(R.drawable.list_item_overlay_selector);
                         }
                     }
                     @Override
