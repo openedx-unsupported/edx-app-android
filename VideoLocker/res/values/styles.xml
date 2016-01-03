@@ -222,9 +222,19 @@
         <item name="android:maxHeight">3dip</item>
     </style>
 
-    <style name="default_switch" parent="@style/semibold_text">
-        <item name="android:textColor">@color/switch_text_color</item>
-        <item name="android:textSize">14sp</item>
+    <style name="edX.Widget.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:switchTextAppearance">@style/edX.TextAppearance.Switch</item>
+        <item name="android:showText" tools:targetApi="21">true</item>
+        <item name="android:textOff">@string/toggle_turn_off</item>
+        <item name="android:textOn">@string/toggle_turn_on</item>
+        <item name="android:thumb">@drawable/switch_inner</item>
+        <item name="android:thumbTextPadding">8dp</item>
+        <item name="android:track">@drawable/switch_track</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:switchMinWidth">90dp</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="add_fab">

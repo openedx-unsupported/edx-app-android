@@ -2,68 +2,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.edx.mobile.view.SettingsFragment"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    tools:context="org.edx.mobile.view.SettingsFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey_3" />
 
+    <LinearLayout
+        android:id="@+id/settings_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
         <LinearLayout
-            android:id="@+id/settings_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/white"
-            android:padding="15dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/settingsText"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/settingsText"
-                    style="@style/regular_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_wifi_top"
-                    android:textColor="@color/grey_6"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:textSize="13sp"
-                    tools:targetApi="17" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/settings_wifi_top"
+                android:textColor="@color/grey_6"
+                android:textSize="13sp"
+                tools:targetApi="17" />
 
-                <TextView
-                    android:id="@+id/download_only_tv"
-                    style="@style/regular_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_wifi_bottom"
-                    android:textColor="@color/grey_4"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:textSize="11sp"
-                    tools:targetApi="17" />
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/wifi_setting"
-                android:layout_width="90dp"
+            <TextView
+                android:id="@+id/download_only_tv"
+                style="@style/regular_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:checked="true"
-                android:textAllCaps="true"
-                android:switchMinWidth="80dp"
-                android:switchTextAppearance="@style/default_switch"
-                android:textOff="@string/toggle_turn_off"
-                android:textOn="@string/toggle_turn_on"
-                android:thumb="@drawable/switch_inner"
-                android:thumbTextPadding="8dp"
-                android:track="@drawable/switch_track" />
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="@string/settings_wifi_bottom"
+                android:textColor="@color/grey_4"
+                android:textSize="11sp"
+                tools:targetApi="17" />
         </LinearLayout>
+
+        <Switch
+            android:id="@+id/wifi_setting"
+            style="@style/edX.Widget.Switch"
+            android:checked="true" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/settings_social_layout"
@@ -71,34 +62,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey_3"/>
+            android:background="@color/grey_3" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                android:padding="15dp"
-                >
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
                 <TextView
                     android:id="@+id/settings_fb_login"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/settings_facebook_login"
                     android:textColor="@color/grey_6"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"
                     android:textSize="13sp"
                     tools:targetApi="17" />
 
@@ -107,24 +99,23 @@
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="@string/settings_facebook_login_body_logged_out"
-                    android:textColor="@color/grey_4"
-                    android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textColor="@color/grey_4"
                     android:textSize="11sp"
-                    tools:targetApi="17" />
+                    tools:targetApi="17"
+                    tools:text="@string/settings_facebook_login_body_logged_out" />
             </LinearLayout>
 
-            <com.facebook.widget.LoginButton
-                xmlns:fb="http://schemas.android.com/apk/res-auto"
+            <com.facebook.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/authButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
                 android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:textSize="12sp"
                 fb:login_text="@string/settings_facebook_login_btn"
-                fb:logout_text="@string/settings_facebook_logout_btn"
-                android:textSize="12sp" />
+                fb:logout_text="@string/settings_facebook_logout_btn" />
 
         </LinearLayout>
 
@@ -137,22 +128,23 @@
             android:id="@+id/course_visibility_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="horizontal"
-            android:padding="15dp"
-            android:background="@color/white">
+            android:padding="15dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/visibilitytext"
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/settings_make_courses_visible_top"
                     android:textColor="@color/grey_4"
                     android:textSize="13sp"
@@ -163,8 +155,8 @@
                     style="@style/regular_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:text="@string/settings_make_courses_visible_bottom"
                     android:textColor="@color/grey_2"
                     android:textSize="11sp"
@@ -173,18 +165,9 @@
 
             <Switch
                 android:id="@+id/course_visibility_setting"
-                android:layout_width="90dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                style="@style/edX.Widget.Switch"
                 android:checked="false"
-                android:enabled="false"
-                android:switchMinWidth="80dp"
-                android:switchTextAppearance="@style/default_switch"
-                android:textOff="@string/toggle_turn_off"
-                android:textOn="@string/toggle_turn_on"
-                android:thumb="@drawable/switch_inner"
-                android:thumbTextPadding="8dp"
-                android:track="@drawable/switch_track" />
+                android:enabled="false" />
 
         </LinearLayout>
 
