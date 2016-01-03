@@ -396,8 +396,6 @@
         <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
         <item name="iconPadding">@dimen/popupMenuIconPadding</item>
         <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
-        <item name="headerTextAppearance">@style/edX.Widget.PopupMenu.HeaderTextAppearance</item>
-        <item name="rowTextAppearance">@style/edX.Widget.PopupMenu.RowTextAppearance</item>
     </style>
 
     <!-- Menu popup that is aligned to the vertical edge of the screen -->
