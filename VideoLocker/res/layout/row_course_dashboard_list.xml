@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/chapter_row_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chapter_row_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dashboard_nav_element_height"
-    android:background="@drawable/rectangle_with_bottom_border_selector"
+    android:background="@drawable/list_item_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/dashboard_nav_element_left_margin"
-    android:paddingStart="@dimen/dashboard_nav_element_left_margin"
-    android:paddingRight="@dimen/dashboard_nav_element_right_margin"
     android:paddingEnd="@dimen/dashboard_nav_element_right_margin"
+    android:paddingLeft="@dimen/dashboard_nav_element_left_margin"
+    android:paddingRight="@dimen/dashboard_nav_element_right_margin"
+    android:paddingStart="@dimen/dashboard_nav_element_left_margin"
     tools:targetApi="17">
 
     <org.edx.mobile.view.custom.IconImageViewXml
@@ -21,7 +20,7 @@
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
-        app:iconColor="@color/edx_grayscale_neutral_light"/>
+        app:iconColor="@color/edx_grayscale_neutral_light" />
 
     <LinearLayout
         style="@style/regular_grey_text"
@@ -42,7 +41,7 @@
             android:singleLine="true"
             android:textDirection="locale"
             android:textSize="@dimen/edx_base"
-            tools:text="Course Title"/>
+            tools:text="Course Title" />
 
 
         <TextView
@@ -54,7 +53,7 @@
             android:singleLine="true"
             android:textDirection="locale"
             android:textSize="@dimen/edx_x_small"
-            tools:text="Course Subtitle"/>
+            tools:text="Course Subtitle" />
     </LinearLayout>
 
     <org.edx.mobile.view.custom.IconImageViewXml
@@ -63,6 +62,6 @@
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
         app:iconColor="@color/edx_grayscale_neutral_light"
-        app:iconName="fa-angle-right"/>
+        app:iconName="fa-angle-right" />
 
 </LinearLayout>
