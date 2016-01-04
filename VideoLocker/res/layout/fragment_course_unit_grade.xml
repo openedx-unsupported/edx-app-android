@@ -1,62 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:background="@color/white"
-              android:gravity="center"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="90dp"
         android:layout_height="90dp"
-        app:iconColor="@color/grey_3"
-        app:iconName="fa-laptop"
-        android:layout_margin="20dp"/>
+        android:layout_margin="20dp"
+        app:iconColor="@color/edx_grayscale_neutral_light"
+        app:iconName="fa-laptop" />
 
     <TextView
-        android:text="@string/assessment_not_available"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:singleLine="false"
-        android:textColor="@color/grey_medium"
-        android:textAlignment="center"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        tools:targetApi="17"
-        />
-
-    <TextView
-        android:text="@string/assessment_explore_on_web"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:singleLine="false"
-        android:textColor="@color/grey_medium"
-        android:textAlignment="center"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        tools:targetApi="17"
-        />
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/assessment_not_available"
+        android:textAlignment="center"
+        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textSize="@dimen/edx_base"
+        tools:targetApi="17" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/assessment_explore_on_web"
+        android:textAlignment="center"
+        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textSize="@dimen/edx_base"
+        tools:targetApi="17" />
 
     <Button
         android:id="@+id/view_on_web_button"
-        android:layout_width="120dp"
-        android:layout_height="45dp"
-        android:textSize="18sp"
-        android:textColor="@color/grey_text"
-        android:background="@drawable/rectangle_border_light_gray_background"
-        android:text="@string/assessment_view_on_web"/>
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/edx_button_height"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/gray_bordered_button_background"
+        android:paddingLeft="@dimen/button_horizontal_padding"
+        android:paddingRight="@dimen/button_horizontal_padding"
+        android:text="@string/assessment_view_on_web"
+        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textSize="@dimen/edx_base" />
 
 </LinearLayout>
 
