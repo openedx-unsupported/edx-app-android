@@ -282,4 +282,11 @@
         <item name="android:textSize">@dimen/edx_xxx_small</item>
     </style>
 
+
+    <style name="edX.TextAppearance.Switch" parent="@style/semibold_text">
+        <item name="android:textColor">@color/switch_text_color</item>
+        <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>
