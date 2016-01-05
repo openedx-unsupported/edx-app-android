@@ -738,4 +738,8 @@
     <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
     <string name="edit_user_profile_photo_crop_save">Choose</string>
 
+    <!-- Product tour page -->
+    <string name="skip_button">SKIP</string>
+    <string name="done_button">DONE</string>
+
 </resources>

@@ -89,6 +89,16 @@ public class Router {
         sourceActivity.startActivity(myGroupsIntent);
     }
 
+    public void showProductTourScreen(Context context, boolean overrideAnimation) {
+        Intent tourIntent = new Intent(context, ProductTourActivity.class);
+        tourIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
+        if ( context instanceof  Activity)
+            tourIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        else
+            tourIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(tourIntent);
+    }
+
     public void showSettings(Activity sourceActivity) {
         Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

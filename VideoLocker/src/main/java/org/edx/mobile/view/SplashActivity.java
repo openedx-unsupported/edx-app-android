@@ -39,7 +39,12 @@ public class SplashActivity extends BaseFragmentActivity {
                         intent = new Intent(SplashActivity.this, MyCoursesListActivity.class);
                         startActivity(intent);
                     } else {
-                        environment.getRouter().showLaunchScreen(SplashActivity.this, false);
+                        if (pm.getBoolean("firstrun", true))    {
+                            pm.put("firstrun", false);
+                            environment.getRouter().showProductTourScreen(SplashActivity.this, false);
+                        }   else {
+                            environment.getRouter().showLaunchScreen(SplashActivity.this, false);
+                        }
                     }
                     finish();
                 }
