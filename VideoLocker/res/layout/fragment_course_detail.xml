@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_white"
-    android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/edx_grayscale_neutral_white"
+              android:orientation="vertical"
+              android:paddingLeft="20dp"
+              android:paddingRight="20dp"
 
     >
 
@@ -19,7 +19,7 @@
         android:paddingTop="15dp"
         android:textColor="@color/edx_grayscale_neutral_x_dark"
         android:textSize="@dimen/edx_base"
-        tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback." />
+        tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback."/>
 
     <Button
         android:id="@+id/button_enroll_now"
@@ -28,57 +28,46 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:onClick="enrollButtonClicked"
-        android:padding="10dp" />
+        android:padding="10dp"/>
 
     <LinearLayout
         android:id="@+id/course_detail_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:divider="@drawable/edx_x_divider"
+        android:orientation="vertical"
         android:showDividers="middle">
 
-        <LinearLayout
+
+        <FrameLayout
             android:id="@+id/course_detail_course_about"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/grey_act_background"
+
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
-                android:id="@+id/about_course_text"
-                style="@style/bold_regular_edx_black_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/about_this_course"
-                android:textSize="@dimen/edx_x_large" />
-
-            <FrameLayout
+            <org.edx.mobile.view.custom.EdxWebView
+                android:id="@+id/course_detail_course_about_webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/grey_act_background"
-                android:orientation="vertical">
+                android:background="@color/grey_act_background"/>
 
-                <org.edx.mobile.view.custom.EdxWebView
-                    android:id="@+id/course_detail_course_about_webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_act_background" />
+            <TextView
+                android:id="@+id/downloadMessage"
+                style="@style/downloading_message"
+                android:layout_alignParentTop="true"
+                android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/downloadMessage"
-                    style="@style/downloading_message"
-                    android:layout_alignParentTop="true"
-                    android:visibility="gone" />
+            <ProgressBar
+                android:id="@+id/api_spinner"
+                style="@style/api_progress_style"
+                android:visibility="gone"/>
 
-                <ProgressBar
-                    android:id="@+id/api_spinner"
-                    style="@style/api_progress_style"
-                    android:visibility="gone" />
-
-            </FrameLayout>
-        </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
 

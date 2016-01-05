@@ -34,8 +34,6 @@
     <string name="course_detail_title">Course Detail</string>
     <!-- Enroll Now button text -->
     <string name="course_detail_enroll_now_button">Enroll now</string>
-    <!-- About This Course title -->
-    <string name="about_this_course">About This Course</string>
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- View Course button text text-->

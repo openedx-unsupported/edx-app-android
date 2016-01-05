@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,7 +65,7 @@ public class CourseDetailFragment extends RoboFragment {
     private TextView mShortDescription;
 
     private LinearLayout courseDetailFieldLayout;
-    private LinearLayout courseAbout;
+    private FrameLayout courseAbout;
     private EdxWebView courseAboutWebView;
 
     private Button mEnrollButton;
@@ -154,7 +155,7 @@ public class CourseDetailFragment extends RoboFragment {
         }
 
         //  About this Course
-        courseAbout = (LinearLayout) view.findViewById(R.id.course_detail_course_about);
+        courseAbout = (FrameLayout) view.findViewById(R.id.course_detail_course_about);
         courseAboutWebView = (EdxWebView) courseAbout.findViewById(R.id.course_detail_course_about_webview);
     }
 
