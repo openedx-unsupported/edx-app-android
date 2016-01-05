@@ -179,5 +179,43 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_3" />
+
+    <LinearLayout
+        android:id="@+id/product_tour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:padding="20dp" >
+
+            <TextView
+                style="@style/regular_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/product_tour"
+                android:textColor="@color/grey_6"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:textSize="13sp"
+                tools:targetApi="17" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_3" />
 
 </LinearLayout>

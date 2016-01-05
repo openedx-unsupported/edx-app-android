@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 
 import org.edx.mobile.R;
+import org.edx.mobile.module.prefs.PrefManager;
 
 public class ProductTourActivity extends ProductTour {
 
@@ -20,12 +21,18 @@ public class ProductTourActivity extends ProductTour {
 
     @Override
     public void onSkipPressed() {
-        environment.getRouter().showLaunchScreen(ProductTourActivity.this, false);
+        this.onDonePressed();
     }
 
     @Override
     public void onDonePressed() {
-        environment.getRouter().showLaunchScreen(ProductTourActivity.this, false);
+        PrefManager pm =new PrefManager(this, PrefManager.Pref.LOGIN);
+        if(pm.getCurrentUserProfile() != null) {
+            environment.getRouter().showSettings(ProductTourActivity.this);
+        }
+        else {
+            environment.getRouter().showLaunchScreen(ProductTourActivity.this, false);
+        }
     }
 
     @Override
