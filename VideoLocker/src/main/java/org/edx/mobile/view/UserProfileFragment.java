@@ -165,9 +165,11 @@ public class UserProfileFragment extends RoboFragment {
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(username)) {
             if (null == event.getUri()) {
-                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+                Glide.with(UserProfileFragment.this)
+                        .load(R.drawable.xsie)
+                        .into(viewHolder.profileImage);
             } else {
-                Glide.with(viewHolder.profileImage.getContext())
+                Glide.with(UserProfileFragment.this)
                         .load(event.getUri())
                         .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -197,11 +199,13 @@ public class UserProfileFragment extends RoboFragment {
             viewHolder.profileHeaderContent.setVisibility(View.VISIBLE);
 
             if (account.getProfileImage().hasImage()) {
-                Glide.with(viewHolder.profileImage.getContext())
+                Glide.with(UserProfileFragment.this)
                         .load(account.getProfileImage().getImageUrlFull())
                         .into(viewHolder.profileImage);
             } else {
-                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+                Glide.with(UserProfileFragment.this)
+                        .load(R.drawable.xsie)
+                        .into(viewHolder.profileImage);
             }
 
             if (account.requiresParentalConsent() || account.getAccountPrivacy() == Account.Privacy.PRIVATE) {

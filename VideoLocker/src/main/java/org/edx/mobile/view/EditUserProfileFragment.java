@@ -232,7 +232,9 @@ public class EditUserProfileFragment extends RoboFragment {
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (null == event.getUri()) {
-            viewHolder.profileImage.setImageResource(R.drawable.xsie);
+            Glide.with(this)
+                    .load(R.drawable.xsie)
+                    .into(viewHolder.profileImage);
         } else {
             Glide.with(this)
                     .load(event.getUri())
@@ -240,7 +242,6 @@ public class EditUserProfileFragment extends RoboFragment {
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(viewHolder.profileImage);
         }
-
     }
 
     public class ViewHolder {
@@ -282,7 +283,9 @@ public class EditUserProfileFragment extends RoboFragment {
                         .load(account.getProfileImage().getImageUrlLarge())
                         .into(viewHolder.profileImage);
             } else {
-                viewHolder.profileImage.setImageResource(R.drawable.xsie);
+                Glide.with(EditUserProfileFragment.this)
+                        .load(R.drawable.xsie)
+                        .into(viewHolder.profileImage);
             }
 
             final Gson gson = new GsonBuilder().serializeNulls().create();

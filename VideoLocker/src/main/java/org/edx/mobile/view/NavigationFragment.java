@@ -111,7 +111,9 @@ public class NavigationFragment extends RoboFragment {
                     .load(profileImage.getImageUrlLarge())
                     .into(imageView);
         } else {
-            imageView.setImageResource(R.drawable.xsie);
+            Glide.with(NavigationFragment.this)
+                    .load(R.drawable.xsie)
+                    .into(imageView);
         }
     }
 
@@ -376,7 +378,9 @@ public class NavigationFragment extends RoboFragment {
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
             if (null == event.getUri()) {
-                imageView.setImageResource(R.drawable.xsie);
+                Glide.with(NavigationFragment.this)
+                        .load(R.drawable.xsie)
+                        .into(imageView);
             } else {
                 Glide.with(NavigationFragment.this)
                         .load(event.getUri())
