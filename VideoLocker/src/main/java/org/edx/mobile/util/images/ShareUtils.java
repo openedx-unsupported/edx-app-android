@@ -40,7 +40,8 @@ public enum ShareUtils {
             shareItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    listener.onMenuItemClick(new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name));
+                    final ComponentName componentName = new ComponentName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
+                    listener.onMenuItemClick(componentName, getShareTypeFromComponentName(componentName));
                     return false;
                 }
             });
@@ -49,6 +50,24 @@ public enum ShareUtils {
     }
 
     public interface ShareMenuItemListener {
-        void onMenuItemClick(@NonNull ComponentName componentName);
+        void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareType shareType);
+    }
+
+    public enum ShareType {
+        TWITTER,
+        FACEBOOK,
+        UNKNOWN
+    }
+
+    @NonNull
+    private static ShareType getShareTypeFromComponentName(@NonNull ComponentName componentName) {
+        switch (componentName.getPackageName()) {
+            case "com.facebook.katana":
+                return ShareType.FACEBOOK;
+            case "com.twitter.android":
+                return ShareType.TWITTER;
+            default:
+                return ShareType.UNKNOWN;
+        }
     }
 }
