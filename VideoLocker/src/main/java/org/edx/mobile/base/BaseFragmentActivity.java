@@ -4,6 +4,9 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -43,6 +46,10 @@ import de.greenrobot.event.EventBus;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI {
+
+
+    @VisibleForTesting
+    public static final String WEB_VIEW_DIALOG_TAG = "web-view-dialog";
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
@@ -552,20 +559,13 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     /**
      * Displays a dialog which has a WebView container to display contents of given URL.
-     * @param url String
-     * @param showTitle
-     * @param dialogTitle
      */
-    public void showWebDialog(String url, boolean showTitle, String dialogTitle) {
+    public void showWebDialog(@NonNull String url, @Nullable String dialogTitle) {
         //Show the dialog only if the activity is started. This is to avoid Illegal state
         //exceptions if the dialog fragment tries to show even if the application is not in foreground
         if(isActivityStarted()){
-            WebViewDialogFragment webViewFragment = new WebViewDialogFragment();
-            webViewFragment.setDialogContents(url, showTitle, dialogTitle);
-            webViewFragment.setStyle(DialogFragment.STYLE_NORMAL,
-                    android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-            webViewFragment.setCancelable(false);
-            webViewFragment.show(getSupportFragmentManager(), "web-view-dialog");
+            WebViewDialogFragment.newInstance(url, dialogTitle)
+                    .show(getSupportFragmentManager(), WEB_VIEW_DIALOG_TAG);
         }
     }
 
