@@ -416,6 +416,22 @@
         <item name="android:textColor">@color/course_mode</item>
     </style>
 
+    <!-- Progress theme. -->
+    <style name="api_progress_style">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:indeterminateDrawable">@drawable/api_progress</item>
+    </style>
+
+    <!-- Progress theme. -->
+    <style name="player_progress_style">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:indeterminateDrawable">@drawable/api_progress</item>
+    </style>
+
     <style name="edX.Widget.SegmentedControlSegment">
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>
         <item name="android:textSize">@dimen/edx_x_small</item>
