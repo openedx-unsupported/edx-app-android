@@ -39,7 +39,9 @@
             <LinearLayout
                 android:id="@+id/last_access_bar"
                 android:orientation="vertical"
-                style="@style/last_access_bar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/edx_brand_primary_x_light"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -70,6 +72,8 @@
                             android:id="@+id/last_access_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:textSize="16sp"
                             tools:text="Course Name"
                             tools:targetApi="17" />
