@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin"
-                tools:text="@string/discussion_add_post" />
+                tools:text="@string/discussion_add_post_button" />
 
         </LinearLayout>
     </LinearLayout>

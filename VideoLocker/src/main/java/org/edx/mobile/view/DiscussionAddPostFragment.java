@@ -101,10 +101,10 @@ public class DiscussionAddPostFragment extends RoboFragment {
                 @StringRes final int submitLabel;
                 if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
                     bodyHint = R.string.discussion_body_hint_discussion;
-                    submitLabel = R.string.discussion_add_post;
+                    submitLabel = R.string.discussion_add_post_button;
                 } else {
                     bodyHint = R.string.discussion_body_hint_question;
-                    submitLabel = R.string.discussion_add_question;
+                    submitLabel = R.string.discussion_add_question_button;
                 }
                 bodyEditText.setHint(bodyHint);
                 addPostButton.setText(submitLabel);
