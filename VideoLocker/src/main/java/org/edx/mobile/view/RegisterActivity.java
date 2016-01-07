@@ -11,9 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -49,7 +49,7 @@ import de.greenrobot.event.EventBus;
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
 
-    private RelativeLayout createAccountBtn;
+    private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
     private LinearLayout agreementLayout;
@@ -103,7 +103,7 @@ public class RegisterActivity extends BaseFragmentActivity
         CharSequence agreementMessage = ResourceUtil.getFormattedString(getResources(), R.string.by_creating_account, "platform_name", environment.getConfig().getPlatformName());
         agreementMessageView.setText(agreementMessage);
 
-        createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
+        createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -334,10 +334,35 @@
         <item name="android:textColor">?attr/disableableButtonTextColor</item>
     </style>
 
-    <style name="edX.Widget.CreationButton" parent="edX.Widget.Button">
+    <style name="edX.Widget.SignInButtonLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/edx_button_height</item>
+        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:background">@drawable/bt_signin_active</item>
+    </style>
+
+    <style name="edX.Widget.SignInButton" parent="regular_white_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/edx_base</item>
+    </style>
+
+    <style name="edX.Widget.CreationButtonLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin</item>
+        <item name="android:paddingLeft">@dimen/widget_margin</item>
+        <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:textColor">@color/edx_white</item>
         <item name="android:background">@drawable/edx_creation_button</item>
+    </style>
+
+    <style name="edX.Widget.CreationButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/edx_white</item>
         <item name="android:textSize">@dimen/edx_small</item>
     </style>
 
