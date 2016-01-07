@@ -43,11 +43,7 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progress_spinner"
-            style="@style/api_progress_style"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:visibility="gone" />
+        <include layout="@layout/loading_indicator" />
 
         <TextView
             android:id="@+id/center_message_box"

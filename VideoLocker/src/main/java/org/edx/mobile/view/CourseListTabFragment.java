@@ -98,7 +98,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
 
         offlineBar = view.findViewById(R.id.offline_bar);
         offlinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        progressBar = (ProgressBar) view.findViewById(R.id.loading_indicator);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

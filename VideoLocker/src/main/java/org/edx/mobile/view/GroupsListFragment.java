@@ -151,7 +151,7 @@ public class GroupsListFragment extends RoboFragment implements SocialProvider.C
             }
         });
 
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        progressBar = (ProgressBar) view.findViewById(R.id.loading_indicator);
         errorLayout = view.findViewById(R.id.error_layout);
         facebookConnectLayout = view.findViewById(R.id.layout_connect_facebook);
 

@@ -119,7 +119,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
                         .create().start().postCreate(null).resume();
         CourseBaseActivity activity = controller.get();
         ProgressBar progressWheel = (ProgressBar)
-                activity.findViewById(R.id.progress_spinner);
+                activity.findViewById(R.id.loading_indicator);
         controller.visible();
         if (progressWheel == null) {
             activity.startProcess();

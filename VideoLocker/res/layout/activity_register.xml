@@ -140,16 +140,7 @@
                     android:textAllCaps="false"
                     android:textSize="16sp" />
 
-                <ProgressBar
-                    android:id="@+id/progress"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:indeterminateDrawable="@drawable/login_progress"
-                    android:visibility="gone"
-                    tools:targetApi="17" />
+                <include layout="@layout/button_progress_indicator" />
             </RelativeLayout>
 
             <TextView

@@ -24,7 +24,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Nullable
     View offlineBar;
 
-    @InjectView(R.id.progress_spinner)
+    @InjectView(R.id.loading_indicator)
     @Nullable
     ProgressBar progressSpinner;
 

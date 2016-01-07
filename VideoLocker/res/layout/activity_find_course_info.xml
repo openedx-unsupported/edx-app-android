@@ -18,10 +18,7 @@
         android:background="@color/grey_act_background"
         android:layout_below="@id/offline_bar"/>
 
-    <ProgressBar
-        android:id="@+id/progress_spinner"
-        style="@style/api_progress_style"
-        android:visibility="gone" />
+    <include layout="@layout/loading_indicator" />
 
     <TextView
         android:id="@+id/offline_mode_message"

@@ -21,10 +21,7 @@
                 style="@style/content_unavailable_error_text"
                 android:text="@string/no_courses_to_display" />
 
-            <ProgressBar
-                android:id="@+id/api_spinner"
-                style="@style/api_progress_style"
-                android:visibility="gone" />
+            <include layout="@layout/loading_indicator" />
 
             <LinearLayout
                 android:layout_width="match_parent"

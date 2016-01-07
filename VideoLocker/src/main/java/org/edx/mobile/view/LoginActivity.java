@@ -79,7 +79,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         email_et = (EditText) findViewById(R.id.email_et);
 
         password_et = (EditText) findViewById(R.id.password_et);
-        progressbar = (ProgressBar) findViewById(R.id.login_spinner);
+        progressbar = (ProgressBar) findViewById(R.id.progress_indicator);
         login_tv = (TextView) findViewById(R.id.login_btn_tv);
 
         loginButtonLayout = (RelativeLayout) findViewById(R.id.login_button_layout);

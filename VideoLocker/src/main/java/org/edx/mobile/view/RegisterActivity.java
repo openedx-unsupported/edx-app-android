@@ -600,14 +600,14 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void showProgress() {
         tryToSetUIInteraction(false);
-        View progress = findViewById(R.id.progress);
+        View progress = findViewById(R.id.progress_indicator);
         progress.setVisibility(View.VISIBLE);
         createAccountTv.setText(getString(R.string.creating_account_text));
     }
 
     private void hideProgress() {
         tryToSetUIInteraction(true);
-        View progress = findViewById(R.id.progress);
+        View progress = findViewById(R.id.progress_indicator);
         progress.setVisibility(View.GONE);
         createAccountTv.setText(getString(R.string.create_account_text));
     }

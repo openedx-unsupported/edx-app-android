@@ -25,6 +25,12 @@
         <attr name="iconDefaultSize" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="IconProgressBar">
+        <attr name="indeterminateIconName" format="string" />
+        <attr name="indeterminateIconColor" format="color" />
+        <attr name="indeterminateIconPulse" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="ProgressWheel">
         <attr name="text" format="string" />
         <attr name="textColor" format="color" />

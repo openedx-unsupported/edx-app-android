@@ -80,10 +80,10 @@
         android:padding="5dp"
         android:visibility="gone" >
 
-        <ProgressBar
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:indeterminateDrawable="@drawable/login_progress" />
+        <org.edx.mobile.view.custom.IconProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             style="@style/regular_text"

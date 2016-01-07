@@ -5,9 +5,9 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@style/api_progress_style"
+    <include layout="@layout/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/widget_margin" />
 

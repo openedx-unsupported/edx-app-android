@@ -158,7 +158,7 @@ public class SocialFriendPickerFragment extends RoboFragment implements SocialPr
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_social_friend_list, container, false);
 
-        progressBar = (ProgressBar) view.findViewById(R.id.api_spinner);
+        progressBar = (ProgressBar) view.findViewById(R.id.loading_indicator);
         errorMessage = (TextView) view.findViewById(R.id.social_friend_picker_message);
 
         listView = (ListView) view.findViewById(R.id.social_friend_picker_list_view);
