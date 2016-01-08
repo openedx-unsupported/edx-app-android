@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -346,7 +345,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     public void showEulaDialog() {
         clearDialogs();
-        showWebDialog(getString(R.string.eula_file_link), true,
+        showWebDialog(getString(R.string.eula_file_link),
                 getString(R.string.end_user_title));
     }
 

@@ -210,7 +210,7 @@ public abstract class CourseListTabFragment extends RoboFragment implements Netw
     }
 
     public void showCourseNotListedDialog() {
-        ((BaseFragmentActivity) getActivity()).showWebDialog(getString(R.string.course_not_listed_file_name), false,
+        ((BaseFragmentActivity) getActivity()).showWebDialog(getString(R.string.course_not_listed_file_name),
                 null);
     }
 }

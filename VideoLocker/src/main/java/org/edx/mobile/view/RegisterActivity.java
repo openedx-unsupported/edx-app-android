@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -174,13 +173,11 @@ public class RegisterActivity extends BaseFragmentActivity
         if (isInAppEULALink) {
             // show EULA license that is shipped with app
             showWebDialog(getString(R.string.eula_file_link),
-                    true,
                     getString(R.string.end_user_title));
         }
         else {
             // for any other link, open agreement link in a webview container
             showWebDialog(agreement.getLink(),
-                    true,
                     agreement.getText());
         }
     }
