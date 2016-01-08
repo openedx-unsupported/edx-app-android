@@ -252,7 +252,7 @@ android {
                 ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
             }
         }
-        dev {
+        minSdk21 {
             minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
         }
     }
