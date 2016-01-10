@@ -6,9 +6,8 @@
               android:layout_height="match_parent"
               android:background="@color/edx_grayscale_neutral_white"
               android:orientation="vertical"
-              android:paddingLeft="20dp"
-              android:paddingRight="20dp"
-
+              android:paddingLeft="@dimen/common_course_display_margin_side"
+              android:paddingRight="@dimen/common_course_display_margin_side"
     >
 
     <TextView
@@ -16,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:paddingTop="15dp"
+        android:paddingTop="@dimen/common_course_display_margin_top"
         android:textColor="@color/edx_grayscale_neutral_x_dark"
         android:textSize="@dimen/edx_base"
         tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback."/>
@@ -26,7 +25,7 @@
         style="@style/edX.Widget.EnrollButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="@dimen/common_course_display_margin_top"
         android:onClick="enrollButtonClicked"
         android:padding="10dp"/>
 
@@ -43,8 +42,9 @@
             android:id="@+id/course_detail_course_about"
 
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/common_course_display_margin_top"
+            android:layout_marginTop="@dimen/common_course_display_margin_top"
             android:background="@color/grey_act_background"
 
             android:orientation="vertical"
@@ -54,6 +54,7 @@
                 android:id="@+id/course_detail_course_about_webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scrollbars="none"
                 android:background="@color/grey_act_background"/>
 
             <TextView
@@ -65,7 +66,7 @@
             <include layout="@layout/loading_indicator" />
 
         </FrameLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
 </LinearLayout>

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +37,12 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
-import org.edx.mobile.util.FileUtil;
+import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-import java.io.IOException;
 import java.util.List;
 
 import roboguice.fragment.RoboFragment;
@@ -167,7 +166,7 @@ public class CourseDetailFragment extends RoboFragment {
         setCourseVideoButton();
         setCourseCardText();
         mShortDescription.setText(courseDetail.short_description);
-        setAboutThisCourse();
+        populateAboutThisCourse();
     }
 
     private void setCourseCardText() {
@@ -205,13 +204,13 @@ public class CourseDetailFragment extends RoboFragment {
      * Makes a call the the course details api and sets the overview if given. If there is no
      * overview, remove the courseAbout view.
      */
-    private void setAboutThisCourse() {
+    private void populateAboutThisCourse() {
         getCourseDetailTask = new GetCourseDetailTask(getActivity(), courseDetail.course_id) {
             @Override
             protected void onSuccess(CourseDetail courseDetail) throws Exception {
                 super.onSuccess(courseDetail);
                 if (courseDetail.overview != null && !courseDetail.overview.isEmpty()) {
-                    setAboutThisCourse(courseDetail.overview);
+                    populateAboutThisCourse(courseDetail.overview);
                 } else {
                     courseAbout.setVisibility(View.GONE);
                 }
@@ -223,8 +222,6 @@ public class CourseDetailFragment extends RoboFragment {
                 showErrorMessage(e);
             }
         };
-
-        getCourseDetailTask.setProgressCallback(null);
         getCourseDetailTask.execute();
     }
 
@@ -233,29 +230,20 @@ public class CourseDetailFragment extends RoboFragment {
      *
      * @param overview A string that can contain html tags
      */
-    private void setAboutThisCourse(String overview) {
+    private void populateAboutThisCourse(String overview) {
         courseAbout.setVisibility(View.VISIBLE);
         URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(
                 getActivity(), courseAboutWebView);
         client.setAllLinksAsExternal(true);
 
-        StringBuffer buff = new StringBuffer();
-        buff.append("<head>");
-        buff.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-        try {
-            String cssFileContent = FileUtil.loadTextFileFromAssets(getActivity(), "css/render-html-in-webview.css");
-            buff.append("<style>");
-            buff.append(cssFileContent);
-            buff.append("</style>");
-        } catch (IOException e) {
-            logger.error(e);
-        }
-        buff.append("</head>");
+        StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);
+
         buff.append("<body>");
         buff.append("<div class=\"header\">");
         buff.append(overview);
         buff.append("</div>");
         buff.append("</body>");
+
         courseAboutWebView.clearCache(true);
         courseAboutWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", HTTP.UTF_8, null);
     }
