@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_white_t"
+    android:background="@color/edx_grayscale_neutral_white"
     tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
 
     <LinearLayout
@@ -184,6 +184,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
 
+                <TextView
+                    android:id="@+id/no_announcement_tv"
+                    style="@style/empty_content_text"
+                    android:text="@string/no_announcements_to_display"/>
+
             </LinearLayout>
 
             <ProgressBar
@@ -191,11 +196,6 @@
                 style="@style/api_progress_style"
                 android:layout_marginTop="80dp"
                 android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/no_announcement_tv"
-                style="@style/empty_content_text"
-                android:text="@string/no_announcements_to_display" />
 
         </RelativeLayout>
 

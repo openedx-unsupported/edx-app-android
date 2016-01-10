@@ -1268,7 +1268,7 @@ public class Api implements IApi {
     }
 
     /**
-     *  used for assessment webview, refresh session id
+     *  used for assessment handoutsWebView, refresh session id
      */
     @Override
     public List<HttpCookie> getSessionExchangeCookie() throws Exception{

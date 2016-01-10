@@ -41,7 +41,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
-        webview = (WebView) findViewById(R.id.webview);
+        webview = (WebView) findViewById(R.id.handout_webview);
         offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.progress_spinner);
 
