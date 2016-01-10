@@ -29,7 +29,7 @@ public class CourseInfoActivity extends FindCoursesBaseActivity {
         String url = environment.getConfig().getCourseDiscoveryConfig()
                 .getCourseInfoUrlTemplate()
                 .replace("{" + EXTRA_PATH_ID + "}", pathId);
-        WebView webview = (WebView) findViewById(R.id.webview);
+        WebView webview = (WebView) findViewById(R.id.handout_webview);
         webview.loadUrl(url);
     }
 

@@ -132,8 +132,8 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                 }
 
                 //TODO -disable it for now. as it causes some issues for assessment
-                //webview to fit in the screen. But we still need it to show additional
-                //compenent below the webview in the future?
+                //handoutsWebView to fit in the screen. But we still need it to show additional
+                //compenent below the handoutsWebView in the future?
                 // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
                 ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
                 hideLoadingProgress();

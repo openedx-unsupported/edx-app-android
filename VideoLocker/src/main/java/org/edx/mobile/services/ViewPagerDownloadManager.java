@@ -23,7 +23,7 @@ public class ViewPagerDownloadManager implements TaskCallback {
     //TODO - current we just disable the pre-loading behavior
     //for potential memory usage issue for certain type devices
     //we will enable it when we can reduce javascript file size
-    //in assesssment webview
+    //in assesssment handoutsWebView
     public static boolean USING_UI_PRELOADING = false;
 
     protected final Logger logger = new Logger(getClass().getName());

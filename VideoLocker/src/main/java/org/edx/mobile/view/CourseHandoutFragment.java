@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
@@ -20,13 +21,14 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetHandoutTask;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.WebviewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import roboguice.fragment.RoboFragment;
 
 public class CourseHandoutFragment extends RoboFragment {
 
-    public WebView webview;
+    public WebView handoutsWebView;
 
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String ENROLLMENT = TAG + ".enrollment";
@@ -34,6 +36,9 @@ public class CourseHandoutFragment extends RoboFragment {
 
     @Inject
     ISegment segIO;
+
+    @Inject
+    IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,8 @@ public class CourseHandoutFragment extends RoboFragment {
         View view = inflater.inflate(R.layout.fragment_handout, container,
                 false);
 
-        webview = (WebView) view.findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(getActivity(), webview);
+        handoutsWebView = (WebView) view.findViewById(R.id.handout_webview);
+        new URLInterceptorWebViewClient(getActivity(), handoutsWebView);
 
         return view;
     }
@@ -85,9 +90,7 @@ public class CourseHandoutFragment extends RoboFragment {
             public void onSuccess(HandoutModel result) {
                 try {
                     if(result!=null&&(!TextUtils.isEmpty(result.handouts_html))){
-                        hideEmptyHandoutMessage();
-                        webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), result.handouts_html,
-                                "text/html",Encoding.UTF_8.toString(),null);
+                        populateHandouts(result);
                     }else{
                         showEmptyHandoutMessage();
                     }
@@ -109,10 +112,27 @@ public class CourseHandoutFragment extends RoboFragment {
 
     }
 
+    private void populateHandouts(HandoutModel handout) {
+        hideEmptyHandoutMessage();
+
+        StringBuffer buff = WebviewUtil.getIntialWebviewBuffer(getActivity(), logger);
+
+        buff.append("<body>");
+        buff.append("<div class=\"header\">");
+        buff.append(handout.handouts_html);
+        buff.append("</div>");
+        buff.append("</body>");
+
+        handoutsWebView.clearCache(true);
+        handoutsWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
+                "text/html",Encoding.UTF_8.toString(),null);
+
+    }
+
     private void showEmptyHandoutMessage(){
         try{
-            if(webview!=null){
-                webview.setVisibility(View.GONE);
+            if(handoutsWebView !=null){
+                handoutsWebView.setVisibility(View.GONE);
             }
             if(getView()!=null){
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.VISIBLE);
@@ -125,8 +145,8 @@ public class CourseHandoutFragment extends RoboFragment {
 
     private void hideEmptyHandoutMessage(){
         try{
-            if(webview!=null){
-                webview.setVisibility(View.VISIBLE);
+            if(handoutsWebView !=null){
+                handoutsWebView.setVisibility(View.VISIBLE);
             }
             if(getView()!=null){
                 getView().findViewById(R.id.no_coursehandout_tv).setVisibility(View.GONE);

@@ -176,7 +176,7 @@ public class RegisterActivity extends BaseFragmentActivity
                     getString(R.string.end_user_title));
         }
         else {
-            // for any other link, open agreement link in a webview container
+            // for any other link, open agreement link in a handoutsWebView container
             showWebDialog(agreement.getLink(),
                     agreement.getText());
         }

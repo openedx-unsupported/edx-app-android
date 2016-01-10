@@ -60,8 +60,8 @@ public class EdxCookieManager {
         try {
             clearWebWiewCookie(context);
 
-            boolean success = context.deleteDatabase("webview.db");
-            logger.debug("delete webview.db result = " + success);
+            boolean success = context.deleteDatabase("handoutsWebView.db");
+            logger.debug("delete handoutsWebView.db result = " + success);
             success =  context.deleteDatabase("webviewCache.db");
             logger.debug("delete webviewCache.db result = " + success);
         } catch (Exception e) {

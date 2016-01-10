@@ -184,7 +184,7 @@ public class PrefManager {
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
         put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
         put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
-        //assessment webview related session_id
+        //assessment handoutsWebView related session_id
         EdxCookieManager.getSharedInstance().clearWebWiewCookie(MainApplication.instance());
     }
 
