@@ -1,12 +1,15 @@
 package org.edx.mobile.view;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -56,6 +59,16 @@ public class CourseHandoutFragment extends RoboFragment {
 
         webview = (WebView) view.findViewById(R.id.webview);
         new URLInterceptorWebViewClient(getActivity(), webview);
+
+        webview.setDownloadListener(new DownloadListener() {
+            public void onDownloadStart(String url, String userAgent,
+                                        String contentDisposition, String mimetype,
+                                        long contentLength) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         return view;
     }
