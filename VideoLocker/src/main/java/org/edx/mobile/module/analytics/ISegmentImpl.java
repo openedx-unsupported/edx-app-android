@@ -1,6 +1,5 @@
 package org.edx.mobile.module.analytics;
 
-import android.content.ComponentName;
 import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +13,7 @@ import com.segment.analytics.Traits;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.util.images.ShareUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -744,27 +744,27 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties courseDetailShared(String courseId, String aboutUrl, ComponentName componentName){
+    public Properties courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType shareType) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
 
         aEvent.data.putValue(Keys.NAME, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, aboutUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeFromComponentName(componentName));
+        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_COURSE_DETAIL_SHARED, aEvent.properties);
         return aEvent.properties;
     }
 
     @Override
-    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
+    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CERTIFICATE_SHARED);
         aEvent.data.putValue(Keys.COURSE_ID, courseId);
         aEvent.data.putValue(Keys.CATEGORY, Values.SOCIAL_SHARING);
         aEvent.data.putValue(Keys.URL, certificateUrl);
-        aEvent.data.putValue(Keys.TYPE, getShareTypeFromComponentName(componentName));
+        aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
         return aEvent.properties;
@@ -877,11 +877,11 @@ public class ISegmentImpl implements ISegment {
         return props;
     }
 
-    public static String getShareTypeFromComponentName(@NonNull ComponentName componentName) {
-        switch (componentName.getPackageName()) {
-            case "com.facebook.katana":
+    public static String getShareTypeValue(@NonNull ShareUtils.ShareType shareType) {
+        switch (shareType) {
+            case FACEBOOK:
                 return "facebook";
-            case "com.twitter.android":
+            case TWITTER:
                 return "twitter";
             default:
                 return "other";

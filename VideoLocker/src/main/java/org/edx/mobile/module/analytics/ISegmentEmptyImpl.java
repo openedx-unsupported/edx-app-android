@@ -1,11 +1,12 @@
 package org.edx.mobile.module.analytics;
 
-import android.content.ComponentName;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+
+import org.edx.mobile.util.images.ShareUtils;
 
 /**
  * Created by rohan on 2/8/15.
@@ -187,12 +188,12 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ComponentName componentName) {
+    public Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ShareUtils.ShareType shareType) {
         return null;
     }
 
     @Override
-    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName) {
+    public Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType) {
         return null;
     }
 
