@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * directly map raw json data from server.
  */
-public class CourseStructureV1Model implements Serializable{
+public class CourseStructureV1Model implements Serializable {
 
     @SerializedName("blocks")
     public BlockList blockData;
@@ -17,21 +17,20 @@ public class CourseStructureV1Model implements Serializable{
     @SerializedName("root")
     public String root;
 
-    public  BlockModel getBlockById(String id){
+    public BlockModel getBlockById(String id) {
         return blockData.get(id);
     }
 
     /**
      * if parent is null, returns empty list.
      */
-    public List<BlockModel> getDescendants(BlockModel parent){
+    public List<BlockModel> getDescendants(BlockModel parent) {
         List<BlockModel> descendants = new ArrayList<>();
-        if (parent == null || !parent.isContainer() )
+        if (parent == null || !parent.isContainer() || null == parent.descendants)
             return descendants;
-        List<String> descendantIDs = parent.descendants;
-        for(String id : descendantIDs){
+        for (String id : parent.descendants) {
             BlockModel model = getBlockById(id);
-            if ( model != null ) {
+            if (model != null) {
                 descendants.add(model);
             }
         }
