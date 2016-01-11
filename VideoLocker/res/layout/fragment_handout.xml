@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/no_coursehandout_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_handouts_to_display" />
 
 </RelativeLayout>

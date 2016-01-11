@@ -30,6 +30,6 @@
     <TextView
         android:id="@+id/empty_list_view"
         android:text="@string/no_videos_to_display"
-        style="@style/empty_content_text" />
+        style="@style/content_unavailable_error_text" />
 
 </RelativeLayout>

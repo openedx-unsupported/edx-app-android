@@ -123,7 +123,7 @@
     <dimen name="x_small_icon_margin">5dp</dimen>
     <dimen name="base_icon_margin">7dp</dimen>
     <dimen name="empty_list_text_max_width">240dp</dimen>
-    <dimen name="empty_list_icon_size">80dp</dimen>
+    <dimen name="content_unavailable_error_icon_size">80dp</dimen>
 
     <!--edX typography-->
     <dimen name="edx_xxxx_large">38sp</dimen>
