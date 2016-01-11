@@ -55,7 +55,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 false);
 
         webview = (WebView) view.findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(getActivity(), webview);
+        new URLInterceptorWebViewClient(getActivity(), webview).setAllLinksAsExternal(true);
 
         return view;
     }
