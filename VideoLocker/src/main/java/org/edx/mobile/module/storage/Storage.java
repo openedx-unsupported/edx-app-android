@@ -122,6 +122,7 @@ public class Storage implements IStorage {
             // if only one video exists, then mark it as DELETED
             // Also, remove its downloaded file
             dm.removeDownload(model.getDmId());
+            deleteFile(model.getFilePath());
         } else {
             // there are other videos who have same video URL,
             // So, we can't delete the downloaded file
