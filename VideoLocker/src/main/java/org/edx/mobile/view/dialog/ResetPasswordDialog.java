@@ -8,8 +8,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -25,8 +23,7 @@ public class ResetPasswordDialog extends DialogFragment {
 
     private EditText email_et;
     private TextView error;
-    private ProgressBar progressbar;
-    private RelativeLayout resetLayout;
+    private ViewGroup resetLayout;
     private ResetPasswordTask resetPasswordTask;
     private boolean isResetSuccessful = false;
 
@@ -47,8 +44,7 @@ public class ResetPasswordDialog extends DialogFragment {
         // Watch for button clicks.
         email_et = (EditText) v.findViewById(R.id.email_edit);
         error = (TextView) v.findViewById(R.id.dialog_error_message);
-        progressbar = (ProgressBar) v.findViewById(R.id.login_spinner);
-        resetLayout = (RelativeLayout) v.findViewById(R.id.reset_layout);
+        resetLayout = (ViewGroup) v.findViewById(R.id.reset_layout);
 
         Button positiveBtn = (Button) v.findViewById(R.id.positiveButton);
         positiveBtn.setOnClickListener(new OnClickListener() {
@@ -132,7 +128,6 @@ public class ResetPasswordDialog extends DialogFragment {
                 isResetSuccessful = false;
             }
         };
-        resetPasswordTask.setProgressDialog(progressbar);
         isResetSuccessful = false;
         resetPasswordTask.execute( );
     }

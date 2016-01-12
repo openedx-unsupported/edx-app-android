@@ -88,7 +88,7 @@ public class CertificateFragment extends RoboFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_certificate, container, false);
         webview = (WebView) view.findViewById(R.id.webview);
-        final View loadingIndicator = view.findViewById(R.id.api_spinner);
+        final View loadingIndicator = view.findViewById(R.id.loading_indicator);
         final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(), webview);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override

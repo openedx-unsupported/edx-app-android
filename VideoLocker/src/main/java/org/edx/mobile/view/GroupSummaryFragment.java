@@ -95,7 +95,7 @@ public class GroupSummaryFragment extends RoboFragment implements View.OnClickLi
         });
 
         memberCountLabel = (TextView) rootView.findViewById(R.id.member_count);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
         errorLabel = (TextView) rootView.findViewById(R.id.label_error);
         addButton = (AddFloatingActionButton) rootView.findViewById(R.id.btn_add_to_group);
         addButton.setOnClickListener(this);

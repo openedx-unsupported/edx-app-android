@@ -71,20 +71,19 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/reset_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:padding="5dp"
         android:visibility="gone" >
 
-        <ProgressBar
-            android:id="@+id/progressbar"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:indeterminateDrawable="@drawable/login_progress" />
+        <org.edx.mobile.view.custom.IconProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             style="@style/regular_text"
@@ -92,13 +91,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="13dp"
             android:layout_marginStart="13dp"
-            android:layout_toRightOf="@+id/progressbar"
-            android:layout_toEndOf="@+id/progressbar"
             android:text="@string/progressText"
             android:textColor="@color/grey_light"
             android:textSize="10sp"
             tools:targetApi="17" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/button_layout"

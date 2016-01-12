@@ -62,13 +62,18 @@
                 android:hint="@string/discussion_add_comment_hint"
                 android:inputType="text|textMultiLine" />
 
-            <Button
+            <FrameLayout
+                style="@style/edX.Widget.CreationButtonLayout"
                 android:id="@+id/btnAddComment"
-                style="@style/edX.Widget.CreationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin"
-                android:text="@string/discussion_add_comment_button" />
+                android:contentDescription="@string/discussion_add_comment_button_description">
+
+                <TextView
+                    style="@style/edX.Widget.CreationButton"
+                    android:id="@+id/btnAddCommentText"
+                    android:text="@string/discussion_add_comment_button_label" />
+
+                <include layout="@layout/button_progress_indicator" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

@@ -45,7 +45,7 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
         final View view = inflater.inflate(R.layout.fragment_web_dialog,
                 container, false);
 
-        final ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+        final ProgressBar progress = (ProgressBar) view.findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);
 
         final WebView webView = (WebView) view.findViewById(R.id.eula_webView);

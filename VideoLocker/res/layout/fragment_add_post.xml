@@ -93,13 +93,17 @@
                 android:inputType="text|textMultiLine"
                 tools:hint="@string/discussion_body_hint_discussion" />
 
-            <Button
-                android:id="@+id/add_post_button"
-                style="@style/edX.Widget.CreationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin"
-                tools:text="@string/discussion_add_post" />
+            <FrameLayout
+                style="@style/edX.Widget.CreationButtonLayout"
+                android:id="@+id/add_post_button">
+
+                <TextView
+                    style="@style/edX.Widget.CreationButton"
+                    android:id="@+id/add_post_button_text"
+                    tools:text="@string/discussion_add_post_button_label" />
+
+                <include layout="@layout/button_progress_indicator" />
+            </FrameLayout>
 
         </LinearLayout>
     </LinearLayout>

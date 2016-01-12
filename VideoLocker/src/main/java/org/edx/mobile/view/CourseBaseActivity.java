@@ -47,7 +47,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @InjectView(R.id.last_access_bar)
     View lastAccessBar;
 
-    @InjectView(R.id.progress_spinner)
+    @InjectView(R.id.loading_indicator)
     ProgressBar progressWheel;
 
     @Inject

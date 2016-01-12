@@ -84,35 +84,18 @@
                         android:textColor="@color/cyan_text_navigation"
                         android:textSize="12sp" />
 
-                    <RelativeLayout
+                    <FrameLayout
+                        style="@style/edX.Widget.SignInButtonLayout"
                         android:id="@+id/login_button_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/bt_signin_active"
                         android:contentDescription="@string/login_btn">
 
                         <TextView
+                            style="@style/edX.Widget.SignInButton"
                             android:id="@+id/login_btn_tv"
-                            style="@style/regular_white_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="@string/login"
-                            android:textAllCaps="true"
-                            android:textSize="16sp" />
+                            android:text="@string/login" />
 
-                        <ProgressBar
-                            android:id="@+id/login_spinner"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:indeterminateDrawable="@drawable/login_progress"
-                            android:visibility="gone"
-                            tools:targetApi="17" />
-                    </RelativeLayout>
+                        <include layout="@layout/button_progress_indicator" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:id="@+id/panel_login_social"

@@ -6,8 +6,6 @@
     android:orientation="vertical"
     android:background="@color/transparent_black" >
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@style/api_progress_style" />
+    <include layout="@layout/loading_indicator" />
 
 </LinearLayout>

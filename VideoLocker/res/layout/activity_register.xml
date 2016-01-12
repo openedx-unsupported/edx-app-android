@@ -122,35 +122,18 @@
                 android:orientation="vertical"
                 android:visibility="gone" />
 
-            <RelativeLayout
+            <FrameLayout
+                style="@style/edX.Widget.SignInButtonLayout"
                 android:id="@+id/createAccount_button_layout"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="15dp"
-                android:contentDescription="@string/create_account_btn"
-                android:background="@drawable/bt_signin_active">
+                android:contentDescription="@string/create_account_btn">
 
                 <TextView
+                    style="@style/edX.Widget.SignInButton"
                     android:id="@+id/create_account_tv"
-                    style="@style/regular_white_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/create_account_text"
-                    android:textAllCaps="false"
-                    android:textSize="16sp" />
+                    android:text="@string/create_account_text" />
 
-                <ProgressBar
-                    android:id="@+id/progress"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:indeterminateDrawable="@drawable/login_progress"
-                    android:visibility="gone"
-                    tools:targetApi="17" />
-            </RelativeLayout>
+                <include layout="@layout/button_progress_indicator" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/by_creating_account_tv"

@@ -98,7 +98,6 @@
     <color name="switch_disabled_bg_color_off">@color/grey_4</color>
     <color name="switch_disabled_bg_color_on">@color/cyan_2</color>
     <color name="delete_btn_disabled">#565A5F</color>
-    <color name="cyan_loader">#99299ED7</color>
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
     <!-- TODO : we should change color name to be more meaningful, and to match  http://ux.edx.org/elements/colors/  -->

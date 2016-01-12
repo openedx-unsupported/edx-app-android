@@ -173,11 +173,7 @@
             android:text="@string/started_downloading"
             android:visibility="gone" />
 
-        <ProgressBar
-            android:id="@+id/progress_spinner"
-            style="@style/api_progress_style"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:visibility="gone" />
+        <include layout="@layout/loading_indicator" />
 
     </FrameLayout>
 

@@ -182,13 +182,7 @@
                 android:gravity="center"
                 android:text="@string/profile_incomplete_about_me" />
 
-            <ProgressBar
-                android:id="@+id/loading_indicator"
-                style="@style/api_progress_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/edx_margin" />
+            <include layout="@layout/loading_indicator" />
         </FrameLayout>
     </LinearLayout>
 </ScrollView>

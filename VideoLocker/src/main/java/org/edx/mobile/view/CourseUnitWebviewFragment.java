@@ -52,7 +52,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
     private boolean pageIsLoaded;
 
-    @InjectView(R.id.progress_spinner)
+    @InjectView(R.id.loading_indicator)
     private ProgressBar progressWheel;
 
     @InjectView(R.id.course_unit_webView)

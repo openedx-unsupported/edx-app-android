@@ -6,12 +6,7 @@
     android:layout_height="match_parent"
     tools:context="org.edx.mobile.view.GroupsListFragment">
 
-    <ProgressBar
-        android:id="@+id/api_spinner"
-        style="@style/api_progress_style"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+    <include layout="@layout/loading_indicator" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
