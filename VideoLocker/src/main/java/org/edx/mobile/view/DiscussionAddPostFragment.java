@@ -200,7 +200,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
-                //  hideProgress();
                 addPostButton.setEnabled(true);
             }
         };
@@ -234,7 +233,6 @@ public class DiscussionAddPostFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
-                //  hideProgress();
             }
         };
         getTopicListTask.execute();

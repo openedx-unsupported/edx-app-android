@@ -95,6 +95,8 @@ public class DiscussionAddResponseFragment extends RoboFragment {
     }
 
     private void createComment() {
+        buttonAddComment.setEnabled(false);
+
         if (createCommentTask != null) {
             createCommentTask.cancel(true);
         }
@@ -115,6 +117,7 @@ public class DiscussionAddResponseFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
+                buttonAddComment.setEnabled(true);
             }
         };
         createCommentTask.execute();
