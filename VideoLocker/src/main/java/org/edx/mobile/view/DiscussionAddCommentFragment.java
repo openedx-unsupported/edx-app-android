@@ -8,8 +8,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -40,7 +40,10 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     private EditText editTextNewComment;
 
     @InjectView(R.id.btnAddComment)
-    private Button buttonAddComment;
+    private ViewGroup buttonAddComment;
+
+    @InjectView(R.id.progress_indicator)
+    private ProgressBar createCommentProgressBar;
 
     @InjectView(R.id.tvResponse)
     private TextView textViewResponse;
@@ -91,6 +94,8 @@ public class DiscussionAddCommentFragment extends RoboFragment {
     }
 
     private void createComment() {
+        buttonAddComment.setEnabled(false);
+
         if (createCommentTask != null) {
             createCommentTask.cancel(true);
         }
@@ -111,8 +116,11 @@ public class DiscussionAddCommentFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
+                buttonAddComment.setEnabled(true);
             }
         };
+        createCommentTask.setTaskProcessCallback(null);
+        createCommentTask.setProgressDialog(createCommentProgressBar);
         createCommentTask.execute();
     }
 }

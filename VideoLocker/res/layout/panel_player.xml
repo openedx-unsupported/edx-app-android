@@ -39,11 +39,7 @@
 
     </FrameLayout>
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/player_progress_style"
-        android:layout_centerInParent="true"
-        android:visibility="invisible" />
+    <include layout="@layout/loading_indicator" />
 
     <ImageView
         android:id="@+id/iv_transparent_bg"

@@ -7,13 +7,12 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -51,7 +50,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     private ResetPasswordDialog resetDialog;
     private SuccessDialogFragment successFragment;
     private ProgressBar progressbar;
-    private RelativeLayout loginButtonLayout;
+    private ViewGroup loginButtonLayout;
     public String emailStr;
     private TextView forgotPassword_tv;
     private TextView eulaTv;
@@ -80,10 +79,10 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
         email_et = (EditText) findViewById(R.id.email_et);
 
         password_et = (EditText) findViewById(R.id.password_et);
-        progressbar = (ProgressBar) findViewById(R.id.login_spinner);
+        progressbar = (ProgressBar) findViewById(R.id.progress_indicator);
         login_tv = (TextView) findViewById(R.id.login_btn_tv);
 
-        loginButtonLayout = (RelativeLayout) findViewById(R.id.login_button_layout);
+        loginButtonLayout = (ViewGroup) findViewById(R.id.login_button_layout);
         loginButtonLayout.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -346,7 +345,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     public void showEulaDialog() {
         clearDialogs();
-        showWebDialog(getString(R.string.eula_file_link), true,
+        showWebDialog(getString(R.string.eula_file_link),
                 getString(R.string.end_user_title));
     }
 

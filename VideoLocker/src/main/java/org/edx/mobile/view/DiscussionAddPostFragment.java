@@ -9,10 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -64,7 +65,13 @@ public class DiscussionAddPostFragment extends RoboFragment {
     private EditText bodyEditText;
 
     @InjectView(R.id.add_post_button)
-    private Button addPostButton;
+    private ViewGroup addPostButton;
+
+    @InjectView(R.id.add_post_button_text)
+    private TextView addPostButtonText;
+
+    @InjectView(R.id.progress_indicator)
+    private ProgressBar addPostProgressBar;
 
     @Inject
     ISegment segIO;
@@ -99,15 +106,19 @@ public class DiscussionAddPostFragment extends RoboFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 @StringRes final int bodyHint;
                 @StringRes final int submitLabel;
+                @StringRes final int submitDescription;
                 if (discussionQuestionSegmentedGroup.getCheckedRadioButtonId() == R.id.discussion_radio_button) {
                     bodyHint = R.string.discussion_body_hint_discussion;
-                    submitLabel = R.string.discussion_add_post;
+                    submitLabel = R.string.discussion_add_post_button_label;
+                    submitDescription = R.string.discussion_add_post_button_description;
                 } else {
                     bodyHint = R.string.discussion_body_hint_question;
-                    submitLabel = R.string.discussion_add_question;
+                    submitLabel = R.string.discussion_add_question_button_label;
+                    submitDescription = R.string.discussion_add_question_button_description;
                 }
                 bodyEditText.setHint(bodyHint);
-                addPostButton.setText(submitLabel);
+                addPostButtonText.setText(submitLabel);
+                addPostButton.setContentDescription(getText(submitDescription));
             }
         });
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
@@ -200,10 +211,11 @@ public class DiscussionAddPostFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
-                //  hideProgress();
                 addPostButton.setEnabled(true);
             }
         };
+        createThreadTask.setTaskProcessCallback(null);
+        createThreadTask.setProgressDialog(addPostProgressBar);
         createThreadTask.execute();
     }
 
@@ -234,9 +246,9 @@ public class DiscussionAddPostFragment extends RoboFragment {
             @Override
             public void onException(Exception ex) {
                 logger.error(ex);
-                //  hideProgress();
             }
         };
+        getTopicListTask.setMessageCallback(null);
         getTopicListTask.execute();
     }
 

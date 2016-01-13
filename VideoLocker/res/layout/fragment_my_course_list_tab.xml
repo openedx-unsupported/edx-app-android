@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/no_course_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_courses_to_display" />
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -32,10 +32,7 @@
             android:clipToPadding="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/api_spinner"
-        style="@style/api_progress_style"
-        android:visibility="visible" />
+    <include layout="@layout/loading_indicator" />
 
     <LinearLayout
         android:id="@+id/offline_panel"

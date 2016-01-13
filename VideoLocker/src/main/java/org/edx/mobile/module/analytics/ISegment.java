@@ -1,11 +1,12 @@
 package org.edx.mobile.module.analytics;
 
-import android.content.ComponentName;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.segment.analytics.Properties;
 import com.segment.analytics.Traits;
+
+import org.edx.mobile.util.images.ShareUtils;
 
 public interface ISegment {
 
@@ -112,9 +113,9 @@ public interface ISegment {
 
     Properties courseShared(String courseId, String socialNetwork);
 
-    Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ComponentName componentName);
+    Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType);
 
-    Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ComponentName componentName);
+    Properties courseDetailShared(@NonNull String courseId, @NonNull String aboutUrl, @NonNull ShareUtils.ShareType shareType);
 
     Properties socialConnectionEvent(boolean connected, String socialNetwork);
 

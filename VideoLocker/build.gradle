@@ -246,14 +246,12 @@ android {
     }
 
     productFlavors {
-        prod {
-            def fabric = config.get('FABRIC')
-            if (fabric != null) {
-                ext.enableCrashlytics = fabric.get('FABRIC_KEY') != null
-            }
-        }
+        prod { }
+
         minSdk21 {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+            // Speeds up multidexing for faster builds during development
+            // https://developer.android.com/tools/building/multidex.html#dev-build
+            minSdkVersion 21
         }
     }
 
@@ -270,6 +268,8 @@ android {
         }
 
         release {
+            def fabric = config.get('FABRIC')
+            ext.enableCrashlytcs = fabric?.get('FABRIC_KEY') != null
             signingConfig signingConfigs.releasekey
         }
     }

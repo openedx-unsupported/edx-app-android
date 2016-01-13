@@ -358,7 +358,9 @@
     <!-- Title in showing list of comments -->
     <string name="discussion_comments">Comments</string>
     <!-- Add comment button title in adding a new comment -->
-    <string name="discussion_add_comment_button">Add comment</string>
+    <string name="discussion_add_comment_button_label">Add comment</string>
+    <!-- Add comment button description for accessibility in adding a new comment -->
+    <string name="discussion_add_comment_button_description">Add comment button</string>
     <!-- Add your comment placeholder in adding a new comment -->
     <string name="discussion_add_comment_hint">@string/discussion_add_comment_title</string>
 
@@ -369,9 +371,11 @@
     <!-- Title in showing list of responses -->
     <string name="discussion_responses">Responses</string>
     <!-- Add response button title in adding a new response -->
-    <string name="discussion_add_response_hint">Add response</string>
-    <!-- Add your respone placeholder in adding a new response -->
-    <string name="discussion_add_response_button">@string/discussion_add_response_title</string>
+    <string name="discussion_add_response_button_label">Add response</string>
+    <!-- Add response button description for accessibility in adding a new response -->
+    <string name="discussion_add_response_button_description">Add response button</string>
+    <!-- Add your response placeholder in adding a new response -->
+    <string name="discussion_add_response_hint">@string/discussion_add_response_title</string>
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
@@ -380,9 +384,13 @@
     <!-- Label for selected topic when creating a post -->
     <string name="discussion_add_post_topic_selection">Topic: {topic}</string>
     <!-- Add post button title in adding a new discussion -->
-    <string name="discussion_add_post">Post discussion</string>
+    <string name="discussion_add_post_button_label">Post discussion</string>
+    <!-- Add post button description for accessibility in adding a new discussion -->
+    <string name="discussion_add_post_button_description">Post discussion button</string>
     <!-- Add post button title in adding a new post -->
-    <string name="discussion_add_question">Post question</string>
+    <string name="discussion_add_question_button_label">Post question</string>
+    <!-- Add post button content description for accessibility in adding a new post -->
+    <string name="discussion_add_question_button_description">Post question button</string>
     <!-- Add your post placeholder in adding a new post -->
     <string name="discussion_body_hint_discussion">@string/discussion_title</string>
     <!-- Add your post placeholder in adding a new post -->

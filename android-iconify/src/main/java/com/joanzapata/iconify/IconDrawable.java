@@ -578,7 +578,6 @@ public final class IconDrawable extends Drawable implements Animatable {
     }
 
     @Override
-    @CheckResult
     public boolean setVisible(boolean visible, boolean restart) {
         final boolean changed = super.setVisible(visible, restart);
         if (iconState.spinning) {

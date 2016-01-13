@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/empty_list_view"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_videos_to_display" />
 
     <LinearLayout

@@ -62,10 +62,7 @@
                 android:layout_alignParentTop="true"
                 android:visibility="gone"/>
 
-            <ProgressBar
-                android:id="@+id/api_spinner"
-                style="@style/api_progress_style"
-                android:visibility="gone"/>
+            <include layout="@layout/loading_indicator" />
 
         </FrameLayout>
     </LinearLayout>

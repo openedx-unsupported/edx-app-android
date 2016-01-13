@@ -42,6 +42,7 @@ public class Config {
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
+    private static final String TWITTER = "TWITTER";
     private static final String FABRIC = "FABRIC";
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
@@ -61,7 +62,7 @@ public class Config {
 
     public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
 
-    public static final String SHARE_COURSE_ENABLED = "SHARE_COURSE_ENABLED";
+    public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     /**
@@ -156,6 +157,17 @@ public class Config {
 
         public boolean isEnabled() {
             return mEnabled;
+        }
+    }
+
+    /**
+     * Twitter configuration.
+     */
+    public class TwitterConfig {
+        private @SerializedName("HASHTAG") String mHashTag;
+
+        public String getHashTag() {
+            return mHashTag;
         }
     }
 
@@ -373,7 +385,7 @@ public class Config {
 
     public boolean areCertificateLinksEnabled() { return getBoolean(CERTIFICATES_ENABLED, false); }
 
-    public boolean isShareCourseEnabled() { return getBoolean(SHARE_COURSE_ENABLED, false); }
+    public boolean isCourseSharingEnabled() { return getBoolean(COURSE_SHARING_ENABLED, false); }
 
     public EnrollmentConfig getCourseDiscoveryConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
@@ -438,6 +450,18 @@ public class Config {
         }
         else {
             return new GoogleConfig();
+        }
+    }
+
+    public TwitterConfig getTwitterConfig() {
+        JsonElement element = getObject(TWITTER);
+        if(element != null) {
+            Gson gson = new Gson();
+            TwitterConfig config = gson.fromJson(element, TwitterConfig.class);
+            return config;
+        }
+        else {
+            return new TwitterConfig();
         }
     }
 

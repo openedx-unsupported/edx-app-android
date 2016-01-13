@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.AnimRes;
@@ -25,7 +23,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
@@ -484,11 +481,11 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * @param title The dialog title
      */
     protected static void showWebDialogTest(BaseFragmentActivity activity,
-            String url, boolean showTitle, String title) {
-        activity.showWebDialog(url, showTitle, title);
+            String url, String title) {
+        activity.showWebDialog(url, title);
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         fragmentManager.executePendingTransactions();
-        Fragment webViewFragment = fragmentManager.findFragmentByTag("web-view-dialog");
+        Fragment webViewFragment = fragmentManager.findFragmentByTag(BaseFragmentActivity.WEB_VIEW_DIALOG_TAG);
         assertNotNull(webViewFragment);
         assertThat(webViewFragment).isInstanceOf(WebViewDialogFragment.class);
         WebViewDialogFragment webViewDialogFragment = (WebViewDialogFragment) webViewFragment;
@@ -502,13 +499,11 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         assertEquals(shadowWebView.getLastLoadedUrl(), url);
         TextView titleView = (TextView) dialogView.findViewById(R.id.tv_dialog_title);
         assertNotNull(titleView);
-        if (showTitle) {
-            assertThat(titleView).isVisible();
-            if (title != null) {
-                assertThat(titleView).hasText(title);
-            }
-        } else {
+        if (TextUtils.isEmpty(title)) {
             assertThat(titleView).isNotVisible();
+        } else {
+            assertThat(titleView).isVisible();
+            assertThat(titleView).hasText(title);
         }
         webViewDialogFragment.dismiss();
         fragmentManager.executePendingTransactions();
@@ -524,10 +519,8 @@ public abstract class BaseFragmentActivityTest extends UiTest {
                         .withIntent(getIntent()).setup().get();
         String url = "https://www.edx.org";
         String title = "title";
-        showWebDialogTest(activity, url, true, title);
-        showWebDialogTest(activity, url, false, null);
-        showWebDialogTest(activity, url, false, title);
-        showWebDialogTest(activity, url, true, null);
+        showWebDialogTest(activity, url, title);
+        showWebDialogTest(activity, url, null);
     }
 
     /**

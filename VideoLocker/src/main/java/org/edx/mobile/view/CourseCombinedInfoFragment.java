@@ -239,7 +239,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
                 }
             }
         };
-        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.api_spinner);
+        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loading_indicator);
         task.setProgressDialog(progressBar);
         task.execute();
 

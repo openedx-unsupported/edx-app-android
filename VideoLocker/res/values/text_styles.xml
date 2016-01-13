@@ -110,7 +110,7 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
-    <style name="empty_content_text" parent="bold_text">
+    <style name="content_unavailable_error_text" parent="bold_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/edx_margin</item>

@@ -426,7 +426,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 player.hideController();
             }
             if( this.curMessageTypes.isEmpty() ){
-                getView().findViewById(R.id.progress).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.loading_indicator).setVisibility(View.VISIBLE);
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -435,7 +435,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
     private void hideProgress() {
         try {
-            getView().findViewById(R.id.progress).setVisibility(View.GONE);
+            getView().findViewById(R.id.loading_indicator).setVisibility(View.GONE);
         } catch(Exception ex) {
             logger.error(ex);
         }

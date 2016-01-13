@@ -12,14 +12,11 @@
         android:layout_height="match_parent"
         android:background="@color/grey_act_background" />
     
-      <ProgressBar
-              android:id="@+id/api_spinner"
-              style="@style/api_progress_style"
-              android:visibility="gone" />
+    <include layout="@layout/loading_indicator" />
       
       <TextView
         android:id="@+id/no_courseinfo_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_information_to_display" />
     
 

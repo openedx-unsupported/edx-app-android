@@ -25,6 +25,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
 
@@ -273,45 +274,36 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     private class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
-
         public CourseUnitPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-
-        public CourseComponent getUnit(int pos){
-            if ( pos >= unitList.size() )
-                pos = unitList.size() -1;
-            if ( pos < 0 )
+        public CourseComponent getUnit(int pos) {
+            if (pos >= unitList.size())
+                pos = unitList.size() - 1;
+            if (pos < 0)
                 pos = 0;
             return unitList.get(pos);
         }
+
         @Override
         public Fragment getItem(int pos) {
             CourseComponent unit = getUnit(pos);
-            CourseUnitFragment unitFragment = null;
+            CourseUnitFragment unitFragment;
             //FIXME - for the video, let's ignore studentViewMultiDevice for now
-            if ( unit instanceof VideoBlockModel) {
-                CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance((VideoBlockModel)unit);
-                unitFragment = fragment;
-            }
-
-            else if ( !unit.isMultiDevice() ){
+            if (unit instanceof VideoBlockModel) {
+                unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit);
+            } else if (!unit.isMultiDevice()) {
                 unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
-            }
-
-            else if ( unit.getType() != BlockType.VIDEO &&
-                unit.getType() != BlockType.HTML &&
-                unit.getType() != BlockType.OTHERS &&
-                unit.getType() != BlockType.DISCUSSION &&
-                unit.getType() != BlockType.PROBLEM ) {
+            } else if (unit.getType() != BlockType.VIDEO &&
+                    unit.getType() != BlockType.HTML &&
+                    unit.getType() != BlockType.OTHERS &&
+                    unit.getType() != BlockType.DISCUSSION &&
+                    unit.getType() != BlockType.PROBLEM) {
                 unitFragment = CourseUnitEmptyFragment.newInstance(unit);
+            } else if (unit instanceof HtmlBlockModel) {
+                unitFragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel) unit);
             }
-
-            else if ( unit instanceof HtmlBlockModel ){
-                unitFragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel)unit);
-            }
-
             //fallback
             else {
                 unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
@@ -331,8 +323,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     public CourseComponent getComponent() {
         return selectedUnit;
     }
-    /// we won't show download and last access view here
-    protected void setVisibilityForDownloadProgressView(boolean show){  }
 
     protected void hideLastAccessedView(View v) { }
 

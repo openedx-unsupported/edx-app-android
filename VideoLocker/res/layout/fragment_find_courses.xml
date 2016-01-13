@@ -16,10 +16,6 @@
         android:listSelector="@color/grey_act_background"
         tools:listitem="@layout/row_course_list" />
 
-    <ProgressBar
-        android:id="@+id/api_spinner"
-        style="@style/api_progress_style"
-        android:visibility="visible"
-        android:layout_gravity="center"/>
+    <include layout="@layout/loading_indicator" />
 
 </FrameLayout>

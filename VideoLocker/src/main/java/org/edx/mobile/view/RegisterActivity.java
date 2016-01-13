@@ -11,10 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -50,7 +49,7 @@ import de.greenrobot.event.EventBus;
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
 
-    private RelativeLayout createAccountBtn;
+    private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
     private LinearLayout agreementLayout;
@@ -104,7 +103,7 @@ public class RegisterActivity extends BaseFragmentActivity
         CharSequence agreementMessage = ResourceUtil.getFormattedString(getResources(), R.string.by_creating_account, "platform_name", environment.getConfig().getPlatformName());
         agreementMessageView.setText(agreementMessage);
 
-        createAccountBtn = (RelativeLayout) findViewById(R.id.createAccount_button_layout);
+        createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,13 +173,11 @@ public class RegisterActivity extends BaseFragmentActivity
         if (isInAppEULALink) {
             // show EULA license that is shipped with app
             showWebDialog(getString(R.string.eula_file_link),
-                    true,
                     getString(R.string.end_user_title));
         }
         else {
             // for any other link, open agreement link in a webview container
             showWebDialog(agreement.getLink(),
-                    true,
                     agreement.getText());
         }
     }
@@ -603,14 +600,14 @@ public class RegisterActivity extends BaseFragmentActivity
 
     private void showProgress() {
         tryToSetUIInteraction(false);
-        View progress = findViewById(R.id.progress);
+        View progress = findViewById(R.id.progress_indicator);
         progress.setVisibility(View.VISIBLE);
         createAccountTv.setText(getString(R.string.creating_account_text));
     }
 
     private void hideProgress() {
         tryToSetUIInteraction(true);
-        View progress = findViewById(R.id.progress);
+        View progress = findViewById(R.id.progress_indicator);
         progress.setVisibility(View.GONE);
         createAccountTv.setText(getString(R.string.create_account_text));
     }

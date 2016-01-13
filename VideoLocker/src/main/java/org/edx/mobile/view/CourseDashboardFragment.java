@@ -173,7 +173,7 @@ public class CourseDashboardFragment extends RoboFragment {
         CourseEntry course = courseData.getCourse();
         courseTextDetails.setText(course.getDescriptionWithStartDate(getActivity()));
 
-        if (environment.getConfig().isShareCourseEnabled()) {
+        if (environment.getConfig().isCourseSharingEnabled()) {
             shareButton.setVisibility(headerImageView.VISIBLE);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,18 +188,30 @@ public class CourseDashboardFragment extends RoboFragment {
      * Creates a dropdown menu with appropriate apps when the share button is clicked.
      */
     private void openShareMenu() {
-        final String shareText = ResourceUtil.getFormattedString(
+        final String shareTextWithPlatformName = ResourceUtil.getFormattedString(
                 getResources(),
                 R.string.share_course_message,
                 "platform_name",
                 getString(R.string.platform_name)).toString() + "\n" + courseData.getCourse().getCourse_about();
         ShareUtils.showShareMenu(
-                ShareUtils.newShareIntent(shareText),
+                ShareUtils.newShareIntent(shareTextWithPlatformName),
                 getActivity().findViewById(R.id.course_detail_share),
                 new ShareUtils.ShareMenuItemListener() {
                     @Override
-                    public void onMenuItemClick(@NonNull ComponentName componentName) {
-                        segIO.courseDetailShared(courseData.getCourse().getId(), shareText, componentName);
+                    public void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareUtils.ShareType shareType) {
+                        final String shareText;
+                        final String twitterTag = environment.getConfig().getTwitterConfig().getHashTag();
+                        if (shareType == ShareUtils.ShareType.TWITTER && !TextUtils.isEmpty(twitterTag)) {
+                            shareText = ResourceUtil.getFormattedString(
+                                    getResources(),
+                                    R.string.share_course_message,
+                                    "platform_name",
+                                    twitterTag).toString() + "\n" + courseData.getCourse().getCourse_about();
+
+                        } else {
+                            shareText = shareTextWithPlatformName;
+                        }
+                        segIO.courseDetailShared(courseData.getCourse().getId(), shareText, shareType);
                         final Intent intent = ShareUtils.newShareIntent(shareText);
                         intent.setComponent(componentName);
                         startActivity(intent);

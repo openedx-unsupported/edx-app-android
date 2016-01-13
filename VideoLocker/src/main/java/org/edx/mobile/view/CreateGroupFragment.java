@@ -170,7 +170,7 @@ public class CreateGroupFragment extends RoboFragment implements View.OnClickLis
         shareAppButton.setOnClickListener(this);
 
         errorLayout = rootView.findViewById(R.id.error_layout);
-        progress = rootView.findViewById(R.id.progress);
+        progress = rootView.findViewById(R.id.loading_indicator);
         formLayout = rootView.findViewById(R.id.create_group_form);
         CharSequence errorText = ResourceUtil.getFormattedString(getResources(), R.string.error_no_friends_connected, "platform_name", config.getPlatformName());
         TextView errorMessageView = (TextView)rootView.findViewById(R.id.error_message);

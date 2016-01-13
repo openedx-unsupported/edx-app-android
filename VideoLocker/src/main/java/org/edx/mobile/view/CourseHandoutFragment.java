@@ -55,7 +55,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 false);
 
         webview = (WebView) view.findViewById(R.id.webview);
-        new URLInterceptorWebViewClient(getActivity(), webview);
+        new URLInterceptorWebViewClient(getActivity(), webview).setAllLinksAsExternal(true);
 
         return view;
     }
@@ -103,7 +103,7 @@ public class CourseHandoutFragment extends RoboFragment {
                 showEmptyHandoutMessage();
             }
         };
-        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.api_spinner);
+        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loading_indicator);
         task.setProgressDialog(progressBar);
         task.execute();
 

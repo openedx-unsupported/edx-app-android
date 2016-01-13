@@ -108,15 +108,7 @@
 
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@style/api_progress_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="12dp"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+        <include layout="@layout/loading_indicator" />
 
         <LinearLayout
             android:id="@+id/error_layout"

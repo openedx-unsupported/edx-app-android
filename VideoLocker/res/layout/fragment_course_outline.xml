@@ -16,6 +16,6 @@
 
     <org.edx.mobile.view.custom.IconTextViewXml
         android:id="@+id/no_chapter_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_chapter_text" />
 </RelativeLayout>

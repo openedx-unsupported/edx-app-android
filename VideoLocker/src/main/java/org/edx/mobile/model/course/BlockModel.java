@@ -1,24 +1,19 @@
 package org.edx.mobile.model.course;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by hanning on 5/19/15.
- */
-public class BlockModel implements Serializable{
-    //TODO - we can not use enum type here as server side
-    //may return different type not included here....
-
+public class BlockModel implements Serializable {
 
     @SerializedName("id")
     public String id;
 
     @SerializedName("type")
     public BlockType type;
-
 
     @SerializedName("display_name")
     public String displayName;
@@ -42,15 +37,16 @@ public class BlockModel implements Serializable{
     public String format;
 
     // descendants: (list) A list of IDs of the children of the block if the block's depth in the
-   // course hierarchy is less than the navigation_depth.  Otherwise, a list of IDs of the aggregate descendants
-   // of the block.
+    // course hierarchy is less than the navigation_depth.  Otherwise, a list of IDs of the aggregate descendants
+    // of the block.
     @SerializedName("descendants")
+    @Nullable
     public List<String> descendants;
 
     @SerializedName("student_view_data")
     public BlockData data;
 
-    public boolean isContainer(){
+    public boolean isContainer() {
         return type != null ? type.isContainer() : (descendants != null && descendants.size() > 0);
     }
 }

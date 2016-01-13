@@ -17,14 +17,11 @@
         android:visibility="gone"
         android:layout_alignParentTop="true"/>
 
-    <ProgressBar
-        android:id="@+id/api_spinner"
-        style="@style/api_progress_style"
-        android:visibility="gone" />
+    <include layout="@layout/loading_indicator" />
 
     <TextView
         android:id="@+id/no_coursehandout_tv"
-        style="@style/empty_content_text"
+        style="@style/content_unavailable_error_text"
         android:text="@string/no_handouts_to_display" />
 
 </RelativeLayout>

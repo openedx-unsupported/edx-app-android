@@ -186,15 +186,15 @@
 
             </LinearLayout>
 
-            <ProgressBar
-                android:id="@+id/api_spinner"
-                style="@style/api_progress_style"
-                android:layout_marginTop="80dp"
-                android:visibility="gone" />
+            <include layout="@layout/loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="80dp" />
 
             <TextView
                 android:id="@+id/no_announcement_tv"
-                style="@style/empty_content_text"
+                style="@style/content_unavailable_error_text"
                 android:text="@string/no_announcements_to_display" />
 
         </RelativeLayout>

@@ -20,7 +20,7 @@ public class InfiniteScrollUtils {
     public static <T> InfiniteListController configureListViewWithInfiniteList(@NonNull final ListView list, @NonNull final ArrayAdapter<T> adapter, @NonNull final PageLoader<T> pageLoader) {
         final View footerView = LayoutInflater.from(list.getContext()).inflate(R.layout.list_view_footer_progress, list, false);
         list.addFooterView(footerView, null, false);
-        final View loadingIndicator = footerView.findViewById(R.id.progressBar);
+        final View loadingIndicator = footerView.findViewById(R.id.loading_indicator);
         final PageLoadController controller = new PageLoadController<>(
                 new ListContentController<T>() {
                     @Override

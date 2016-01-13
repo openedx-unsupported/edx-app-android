@@ -1,8 +1,11 @@
 package org.edx.mobile.view;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +15,14 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.joanzapata.iconify.Icon;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AuthResponse;
@@ -22,6 +31,7 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
+import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.net.HttpURLConnection;
@@ -29,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
 
 /**
  *
@@ -39,9 +50,16 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
 
     private final static String EMPTY_HTML = "<html><body></body></html>";
 
-    private ProgressBar progressWheel;
     private boolean pageIsLoaded;
+
+    @InjectView(R.id.loading_indicator)
+    private ProgressBar progressWheel;
+
+    @InjectView(R.id.course_unit_webView)
     private WebView webView;
+
+    @InjectView(R.id.content_unavailable_error_text)
+    private TextView errorTextView;
 
     /**
      * Create a new instance of fragment
@@ -57,22 +75,24 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         return f;
     }
 
-    /**
-     * When creating, retrieve this instance's number from its arguments.
-     */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+    public void onDestroyView() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroyView();
     }
 
-    public void onDestroy(){
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
+    public void onEvent(NetworkConnectivityChangeEvent event) {
+        if (NetworkUtil.isConnected(getContext())) {
+            hideErrorMessage();
+        } else {
+            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+        }
     }
 
-    public void onEvent(SessionIdRefreshEvent event){
-        if ( event.success ){
+    public void onEvent(SessionIdRefreshEvent event) {
+        if (event.success) {
             tryToLoadWebView(false);
         } else {
             hideLoadingProgress();
@@ -86,10 +106,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_course_unit_webview, container, false);
-        progressWheel = (ProgressBar)v.findViewById(R.id.progress_spinner);
-        webView = (WebView)v.findViewById(R.id.course_unit_webView);
-        return v;
+        return inflater.inflate(R.layout.fragment_course_unit_webview, container, false);
     }
 
     @Override
@@ -101,67 +118,115 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         webView.getSettings().setJavaScriptEnabled(true);
         URLInterceptorWebViewClient client =
                 new URLInterceptorWebViewClient(getActivity(), webView) {
-            @Override
-            public void onReceivedError(WebView view, int errorCode,
-                    String description, String failingUrl) {
-                hideLoadingProgress();
-                pageIsLoaded = false;
-                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
-            }
+                    private boolean didReceiveError = false;
 
-            // TODO: Restore these annotations when we upgrade our compile SDK version to Marshmallow
-            //@Override
-            //@TargetApi(Build.VERSION_CODES.M)
-            @TargetApi(23)
-            public void onReceivedHttpError(WebView view, WebResourceRequest request,
-                    WebResourceResponse errorResponse) {
-                switch (errorResponse.getStatusCode()) {
-                    case HttpURLConnection.HTTP_FORBIDDEN:
-                    case HttpURLConnection.HTTP_UNAUTHORIZED:
-                    case HttpURLConnection.HTTP_NOT_FOUND:
-                        EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
-                        break;
-                }
-            }
+                    @Override
+                    public void onReceivedError(WebView view, int errorCode,
+                                                String description, String failingUrl) {
+                        didReceiveError = true;
+                        hideLoadingProgress();
+                        pageIsLoaded = false;
+                        ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
+                        showErrorMessage(R.string.network_error_message,
+                                FontAwesomeIcons.fa_exclamation_circle);
+                    }
 
-            public void onPageFinished(WebView view, String url) {
-                if (url != null && url.equals("data:text/html," + EMPTY_HTML)) {
-                    //we load a local empty html page to release the memory
-                } else {
-                    pageIsLoaded = true;
-                }
+                    @Override
+                    @TargetApi(Build.VERSION_CODES.M)
+                    public void onReceivedHttpError(WebView view, WebResourceRequest request,
+                                                    WebResourceResponse errorResponse) {
+                        didReceiveError = true;
+                        switch (errorResponse.getStatusCode()) {
+                            case HttpURLConnection.HTTP_FORBIDDEN:
+                            case HttpURLConnection.HTTP_UNAUTHORIZED:
+                            case HttpURLConnection.HTTP_NOT_FOUND:
+                                EdxCookieManager.getSharedInstance().tryToRefreshSessionCookie();
+                                break;
+                        }
+                        showErrorMessage(R.string.network_error_message,
+                                FontAwesomeIcons.fa_exclamation_circle);
+                    }
 
-                //TODO -disable it for now. as it causes some issues for assessment
-                //webview to fit in the screen. But we still need it to show additional
-                //compenent below the webview in the future?
-                // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
-                ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
-                hideLoadingProgress();
-            }
-        };
+                    public void onPageFinished(WebView view, String url) {
+                        if (didReceiveError) {
+                            didReceiveError = false;
+                            return;
+                        }
+                        if (url != null && url.equals("data:text/html," + EMPTY_HTML)) {
+                            //we load a local empty html page to release the memory
+                        } else {
+                            pageIsLoaded = true;
+                        }
+
+                        //TODO -disable it for now. as it causes some issues for assessment
+                        //webview to fit in the screen. But we still need it to show additional
+                        //compenent below the webview in the future?
+                        // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
+                        ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
+                        hideLoadingProgress();
+                    }
+                };
         client.setAllLinksAsExternal(true);
         //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
         if(  ViewPagerDownloadManager.USING_UI_PRELOADING ) {
-            if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+            if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
                 ViewPagerDownloadManager.instance.addTask(this);
-            else
+            } else {
                 tryToLoadWebView(true);
+            }
         }
     }
 
+    /**
+     * Shows the error message with the given icon, if the web page failed to load
+     * @param errorMsg The error message to show
+     * @param errorIcon The error icon to show with the error message
+     */
+    private void showErrorMessage(@StringRes int errorMsg, @NonNull Icon errorIcon) {
+        if (!pageIsLoaded) {
+            tryToClearWebView();
+            Context context = getContext();
+            errorTextView.setVisibility(View.VISIBLE);
+            errorTextView.setText(errorMsg);
+            errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
+                    new IconDrawable(context, errorIcon)
+                            .sizeRes(context, R.dimen.content_unavailable_error_icon_size)
+                            .colorRes(context, R.color.edx_grayscale_neutral_light),
+                    null, null
+            );
+        }
+    }
 
+    /**
+     * Hides the error message view and reloads the web page if it wasn't already loaded
+     */
+    private void hideErrorMessage() {
+        errorTextView.setVisibility(View.GONE);
+        if (!pageIsLoaded) {
+            tryToLoadWebView(true);
+        }
+    }
 
+    private void tryToLoadWebView(boolean forceLoad) {
+        System.gc(); //there is a well known Webview Memory Issue With Galaxy S3 With 4.3 Update
 
-    private void tryToLoadWebView(boolean forceLoad){
-        System.gc(); //there is an well known Webview Memory Issues With Galaxy S3 With 4.3 Update
-
-        if ( (!forceLoad && pageIsLoaded) ||  progressWheel == null )
+        if ((!forceLoad && pageIsLoaded) || progressWheel == null) {
             return;
+        }
+
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
+        if (!NetworkUtil.isConnected(getContext())) {
+            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+            return;
+        }
 
         showLoadingProgress();
 
-        if ( unit != null) {
+        if (unit != null) {
             PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
             AuthResponse auth = pref.getCurrentAuth();
             Map<String, String> map = new HashMap<String, String>();
@@ -196,14 +261,12 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         }
     }
 
-
-    private void tryToClearWebView(){
+    private void tryToClearWebView() {
         pageIsLoaded = false;
-        if ( webView != null)
+        if (webView != null) {
             webView.loadData(EMPTY_HTML, "text/html", "UTF-8");
+        }
     }
-
-
 
     public void onResume() {
         super.onResume();
@@ -218,6 +281,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
             }
         }
     }
+
     //the problem with viewpager is that it loads this fragment
     //and calls onResume even it is not visible.
     //which breaks the normal behavior of activity/fragment

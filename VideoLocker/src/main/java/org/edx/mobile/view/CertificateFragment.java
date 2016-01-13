@@ -67,8 +67,8 @@ public class CertificateFragment extends RoboFragment {
                         getActivity().findViewById(R.id.menu_item_share),
                         new ShareUtils.ShareMenuItemListener() {
                             @Override
-                            public void onMenuItemClick(@NonNull ComponentName componentName) {
-                                segIO.certificateShared(courseData.getCourse().getId(), courseData.getCertificateURL(), componentName);
+                            public void onMenuItemClick(@NonNull ComponentName componentName, @NonNull ShareUtils.ShareType shareType) {
+                                segIO.certificateShared(courseData.getCourse().getId(), courseData.getCertificateURL(), shareType);
                                 final Intent intent = ShareUtils.newShareIntent(shareText);
                                 intent.setComponent(componentName);
                                 startActivity(intent);
@@ -88,7 +88,7 @@ public class CertificateFragment extends RoboFragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_certificate, container, false);
         webview = (WebView) view.findViewById(R.id.webview);
-        final View loadingIndicator = view.findViewById(R.id.api_spinner);
+        final View loadingIndicator = view.findViewById(R.id.loading_indicator);
         final URLInterceptorWebViewClient client = new URLInterceptorWebViewClient(getActivity(), webview);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
             @Override

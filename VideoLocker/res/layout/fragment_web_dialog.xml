@@ -45,6 +45,7 @@
             android:layout_gravity="center|center_horizontal"
             android:layout_weight="0.5"
             android:background="@android:color/white"
+            android:textColor="@color/edx_grayscale_neutral_black"
             android:text="@string/label_close"
             android:textAllCaps="true"
             android:textSize="15sp" />
@@ -60,9 +61,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/api_progress_style"
-        android:visibility="gone" />
+    <include layout="@layout/loading_indicator" />
 
 </RelativeLayout>

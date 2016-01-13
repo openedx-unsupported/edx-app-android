@@ -96,7 +96,7 @@ public class FriendsInCourseFragment extends RoboFragment implements LoaderManag
         String content = ResourceUtil.getFormattedString(getResources(), R.string.friends_in_course, "courseName", courseData.getName()).toString();
         courseLabel.setText( content );
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.loading_indicator);
         errorLabel = (TextView) rootView.findViewById(R.id.label_error);
 
         Button courseBtn = (Button) rootView.findViewById(R.id.btn_open_public_course);
