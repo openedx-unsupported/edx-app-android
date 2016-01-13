@@ -30,8 +30,6 @@
 
     <!-- Course Discovery -->
 
-    <!-- Title of the course detail page-->
-    <string name="course_detail_title">Course Detail</string>
     <!-- Enroll Now button text -->
     <string name="course_detail_enroll_now_button">Enroll now</string>
     <!-- Enroll Now button text-->
