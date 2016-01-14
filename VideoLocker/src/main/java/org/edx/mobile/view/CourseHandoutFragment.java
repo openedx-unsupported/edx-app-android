@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
@@ -20,6 +21,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetHandoutTask;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.UiUtil;
+import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import roboguice.fragment.RoboFragment;
@@ -34,6 +36,9 @@ public class CourseHandoutFragment extends RoboFragment {
 
     @Inject
     ISegment segIO;
+
+    @Inject
+    IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,9 +90,7 @@ public class CourseHandoutFragment extends RoboFragment {
             public void onSuccess(HandoutModel result) {
                 try {
                     if(result!=null&&(!TextUtils.isEmpty(result.handouts_html))){
-                        hideEmptyHandoutMessage();
-                        webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), result.handouts_html,
-                                "text/html",Encoding.UTF_8.toString(),null);
+                        populateHandouts(result);
                     }else{
                         showEmptyHandoutMessage();
                     }
@@ -103,9 +106,24 @@ public class CourseHandoutFragment extends RoboFragment {
                 showEmptyHandoutMessage();
             }
         };
-        ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.loading_indicator);
-        task.setProgressDialog(progressBar);
         task.execute();
+
+    }
+
+    private void populateHandouts(HandoutModel handout) {
+        hideEmptyHandoutMessage();
+
+        StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);
+
+        buff.append("<body>");
+        buff.append("<div class=\"header\">");
+        buff.append(handout.handouts_html);
+        buff.append("</div>");
+        buff.append("</body>");
+
+        webview.clearCache(true);
+        webview.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(),
+                "text/html",Encoding.UTF_8.toString(),null);
 
     }
 

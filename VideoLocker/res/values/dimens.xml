@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Common margin for course data such as Handouts, Announcements, Course Detail, etc... -->
+    <dimen name="common_course_display_margin_top">15dp</dimen>
+    <dimen name="common_course_display_margin_side">20dp</dimen>
+
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_diameter">85dp</dimen>
