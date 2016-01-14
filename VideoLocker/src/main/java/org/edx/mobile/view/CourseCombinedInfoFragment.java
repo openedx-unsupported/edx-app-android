@@ -30,9 +30,9 @@ import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.task.GetAnnouncementTask;
-import org.edx.mobile.util.FileUtil;
 import org.edx.mobile.util.StandardCharsets;
 import org.edx.mobile.util.SocialUtils;
+import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.EdxWebView;
 import org.edx.mobile.view.custom.SocialAffirmView;
 import org.edx.mobile.view.custom.SocialFacePileView;
@@ -40,7 +40,6 @@ import org.edx.mobile.view.custom.SocialShareView;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,31 +302,20 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment impleme
         if (announcementsList != null && announcementsList.size() > 0) {
             hideEmptyAnnouncementMessage();
 
-            StringBuffer buff = new StringBuffer();
-            buff.append("<head>");
-            // add meta viewport
-            buff.append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-            try {
-                String cssFileContent = FileUtil.loadTextFileFromAssets(getActivity(), "css/handouts-announcements.css");
-                // add css file
-                buff.append("<style>");
-                buff.append(cssFileContent);
-                buff.append("</style>");
-            } catch (IOException e) {
-                logger.error(e);
-            }
-            buff.append("</head>");
+            StringBuilder buff = WebViewUtil.getIntialWebviewBuffer(getActivity(), logger);
+
             buff.append("<body>");
-            for (AnnouncementsModel m : announcementsList) {
-                buff.append("<div class=\"announcement-header\">");
-                buff.append(m.getDate());
+            for (AnnouncementsModel model : announcementsList) {
+                buff.append("<div class=\"header\">");
+                buff.append(model.getDate());
                 buff.append("</div>");
-                buff.append("<div class=\"announcement-separator\"></div>");
-                buff.append("<div class=\"announcement\">");
-                buff.append(m.getContent());
+                buff.append("<div class=\"separator\"></div>");
+                buff.append("<div>");
+                buff.append(model.getContent());
                 buff.append("</div>");
             }
             buff.append("</body>");
+
             announcementWebView.clearCache(true);
             announcementWebView.loadDataWithBaseURL(environment.getConfig().getApiHostURL(), buff.toString(), "text/html", StandardCharsets.UTF_8.name(), null);
         } else {

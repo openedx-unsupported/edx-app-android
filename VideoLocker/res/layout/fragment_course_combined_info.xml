@@ -1,10 +1,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_white_t"
-    tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/edx_grayscale_neutral_white"
+            android:fillViewport="true"
+            tools:context="org.edx.mobile.view.CourseCombinedInfoFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/grey_act_background"
-                android:gravity="center" />
+                android:gravity="center"/>
 
             <!-- share buttons -->
             <LinearLayout
@@ -34,7 +35,7 @@
                 <org.edx.mobile.view.custom.SocialShareView
                     android:id="@+id/combined_course_social_share"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
 
                 <org.edx.mobile.view.custom.SocialAffirmView
                     android:id="@+id/course_affirm_btn"
@@ -42,7 +43,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    tools:targetApi="17" />
+                    tools:targetApi="17"/>
 
             </LinearLayout>
 
@@ -59,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/grey_act_background"
-                    android:gravity="center" />
+                    android:gravity="center"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -75,7 +76,7 @@
                         android:paddingBottom="@dimen/course_detail_margin"
                         android:paddingTop="@dimen/course_detail_margin"
                         android:text="@string/course_details_friends_in_course"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <org.edx.mobile.view.custom.SocialFacePileView
                         android:id="@+id/combined_course_facepile"
@@ -90,7 +91,7 @@
                         app:borderRadius="@dimen/avatar_image_radius_small"
                         app:overflowBorderWidth="1dp"
                         app:overflowTextSize="12sp"
-                        tools:targetApi="17" />
+                        tools:targetApi="17"/>
 
                 </LinearLayout>
 
@@ -108,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/grey_act_background"
-                android:gravity="center" />
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/combined_course_social_group"
@@ -125,7 +126,7 @@
                 android:text="@string/course_details_fb_group"
                 android:textSize="16sp"
                 android:visibility="visible"
-                tools:targetApi="17" />
+                tools:targetApi="17"/>
 
         </LinearLayout>
 
@@ -133,7 +134,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <RelativeLayout
             android:id="@+id/announcement_layout"
@@ -145,10 +146,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingEnd="@dimen/course_detail_margin_right"
-                android:paddingLeft="@dimen/course_detail_margin_left"
-                android:paddingRight="@dimen/course_detail_margin_right"
-                android:paddingStart="@dimen/course_detail_margin_left">
+                android:paddingLeft="@dimen/common_course_display_margin_side"
+                android:paddingRight="@dimen/common_course_display_margin_side">
 
                 <LinearLayout
                     android:id="@+id/notificaton_setting_row"
@@ -169,12 +168,12 @@
                         android:paddingTop="@dimen/course_detail_margin"
                         android:text="@string/notification_toggle"
                         android:textSize="16sp"
-                        tools:targetApi="17" />
+                        tools:targetApi="17"/>
 
                     <Switch
                         android:id="@+id/notification_switch"
                         style="@style/edX.Widget.Switch"
-                        android:checked="true" />
+                        android:checked="true"/>
                 </LinearLayout>
 
 
@@ -182,21 +181,22 @@
                     android:id="@+id/announcement_webview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:layout_marginTop="@dimen/common_course_display_margin_top"
+                    android:orientation="vertical"
+                    android:scrollbars="none"/>
 
+                <TextView
+                    android:id="@+id/no_announcement_tv"
+                    style="@style/content_unavailable_error_text"
+                    android:text="@string/no_announcements_to_display"/>
             </LinearLayout>
 
-            <include layout="@layout/loading_indicator"
+            <include
+                layout="@layout/loading_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="80dp" />
-
-            <TextView
-                android:id="@+id/no_announcement_tv"
-                style="@style/content_unavailable_error_text"
-                android:text="@string/no_announcements_to_display" />
-
+                android:layout_marginTop="80dp"/>
         </RelativeLayout>
 
     </LinearLayout>

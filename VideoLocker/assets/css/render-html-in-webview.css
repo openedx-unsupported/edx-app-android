@@ -45,8 +45,6 @@ h5 {
   margin-bottom: .5em;
 }
 
-
-
 p {
   font-size: 16px;
   line-height: 1.5em;
@@ -54,7 +52,6 @@ p {
   padding: 0px;
   border: 0px;
 }
-
 
 ol {
   list-style: number inside none;
@@ -86,14 +83,6 @@ strong, b {
   width : 100%;
   margin : 0px;
   padding : 0px 0px 0px 0px;
-}
-
-hr {
-  border: none;
-  height: 1px;
-  background: rgb(181, 181, 181);
-  margin: 10px 0px 10px 0px;
-  padding: 0px;
 }
 
 .separator {
