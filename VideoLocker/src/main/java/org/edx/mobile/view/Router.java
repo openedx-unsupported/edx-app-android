@@ -25,7 +25,6 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.view.dialog.CourseDiscoveryNotEnabledDialogFragment;
 
 import de.greenrobot.event.EventBus;
 
@@ -55,22 +54,6 @@ public class Router {
         sourceActivity.startActivity(downloadIntent);
     }
 
-    public void showFindCourses(FragmentActivity sourceActivity) {
-        if (config.getCourseDiscoveryConfig().isEnabled()) {
-            final Intent findCoursesIntent;
-            if (config.getCourseDiscoveryConfig().isNativeCourseDiscoveryEnabled()) {
-                findCoursesIntent = NativeFindCoursesActivity.newIntent(sourceActivity);
-            } else {
-                findCoursesIntent = new Intent(sourceActivity, WebViewFindCoursesActivity.class);
-            }
-            //Add this flag as multiple activities need to be created
-            findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            sourceActivity.startActivity(findCoursesIntent);
-        } else {
-            CourseDiscoveryNotEnabledDialogFragment.show(sourceActivity);
-        }
-    }
-
     public void showCourseInfo(Activity sourceActivity, String pathId) {
         Intent courseInfoIntent = new Intent(sourceActivity, CourseInfoActivity.class);
         courseInfoIntent.putExtra(CourseInfoActivity.EXTRA_PATH_ID, pathId);
@@ -98,7 +81,7 @@ public class Router {
     public void showLaunchScreen(Context context, boolean overrideAnimation) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
         launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
-        if ( context instanceof  Activity)
+        if (context instanceof Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         else
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -107,7 +90,7 @@ public class Router {
 
     public void showLogin(Context context) {
         Intent launchIntent = new Intent(context, LoginActivity.class);
-        if ( !(context instanceof  Activity) )
+        if (!(context instanceof Activity))
             launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(launchIntent);
     }
@@ -141,15 +124,16 @@ public class Router {
 
     /**
      * FIXME - it will bring to different view in the future
+     *
      * @param activity
      * @param model
      */
-    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model ) {
+    public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model) {
         final Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
         final Intent courseDetail = new Intent(activity, CourseAnnouncementsActivity.class);
-        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDetail);
     }
@@ -190,7 +174,7 @@ public class Router {
     }
 
     private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
-                                             String courseComponentId, String lastAccessedId){
+                                             String courseComponentId, String lastAccessedId) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
@@ -209,20 +193,20 @@ public class Router {
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
-        courseDetail.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDetail.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         fragment.startActivityForResult(courseDetail, requestCode);
     }
 
 
     public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
-                                     boolean announcements) {
+                                    boolean announcements) {
         Bundle courseBundle = new Bundle();
         courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
 
         Intent courseDashboard = new Intent(activity, CourseDashboardActivity.class);
-        courseDashboard.putExtra( EXTRA_BUNDLE, courseBundle);
+        courseDashboard.putExtra(EXTRA_BUNDLE, courseBundle);
         courseDashboard.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(courseDashboard);
 
@@ -290,10 +274,10 @@ public class Router {
     }
 
     /**
-     *  this method can be called either through UI [ user clicks LOGOUT button],
-     *  or programmatically
+     * this method can be called either through UI [ user clicks LOGOUT button],
+     * or programmatically
      */
-    public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate){
+    public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate) {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.clearAuth();
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
@@ -334,5 +318,17 @@ public class Router {
 
     public void showCourseDetail(@NonNull Context context, @NonNull CourseDetail courseDetail) {
         context.startActivity(CourseDetailActivity.newIntent(context, courseDetail));
+    }
+
+    public void showFindCourses(@NonNull Context context) {
+        final Intent findCoursesIntent;
+        if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
+            findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
+        } else {
+            findCoursesIntent =  NativeFindCoursesActivity.newIntent(context);
+        }
+        //Add this flag as multiple activities need to be created
+        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(findCoursesIntent);
     }
 }

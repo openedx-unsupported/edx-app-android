@@ -5,8 +5,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import org.edx.mobile.util.Config;
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -16,30 +21,30 @@ import static org.junit.Assert.*;
  * Created by aleffert on 2/6/15.
  */
 public class ConfigTests extends BaseTestCase {
-//TODO - should we place constant at a central place?
+    //TODO - should we place constant at a central place?
     /* Config keys */
-    private static final String COURSE_ENROLLMENT       = "COURSE_ENROLLMENT";
-    private static final String SOCIAL_SHARING          = "SOCIAL_SHARING";
-    private static final String ZERO_RATING             = "ZERO_RATING";
-    private static final String FACEBOOK                = "FACEBOOK";
-    private static final String GOOGLE                  = "GOOGLE";
-    private static final String FABRIC                  = "FABRIC";
-    private static final String NEW_RELIC               = "NEW_RELIC";
-    private static final String SEGMENT_IO              = "SEGMENT_IO";
-    private static final String WHITE_LIST_OF_DOMAINS   = "WHITE_LIST_OF_DOMAINS";
+    private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
+    private static final String ZERO_RATING = "ZERO_RATING";
+    private static final String FACEBOOK = "FACEBOOK";
+    private static final String GOOGLE = "GOOGLE";
+    private static final String FABRIC = "FABRIC";
+    private static final String NEW_RELIC = "NEW_RELIC";
+    private static final String SEGMENT_IO = "SEGMENT_IO";
+    private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
-    private static final String ENABLED                 = "ENABLED";
-    private static final String DISABLED_CARRIERS       = "DISABLED_CARRIERS";
-    private static final String CARRIERS                = "CARRIERS";
-    private static final String COURSE_SEARCH_URL       = "COURSE_SEARCH_URL";
-    private static final String EXTERNAL_COURSE_SEARCH_URL = "EXTERNAL_COURSE_SEARCH_URL";
+    private static final String ENABLED = "ENABLED";
+    private static final String DISABLED_CARRIERS = "DISABLED_CARRIERS";
+    private static final String CARRIERS = "CARRIERS";
+    private static final String COURSE_SEARCH_URL = "COURSE_SEARCH_URL";
+    private static final String TYPE = "TYPE";
     private static final String COURSE_INFO_URL_TEMPLATE = "COURSE_INFO_URL_TEMPLATE";
-    private static final String FACEBOOK_APP_ID         = "FACEBOOK_APP_ID";
-    private static final String FABRIC_KEY              = "FABRIC_KEY";
-    private static final String FABRIC_BUILD_SECRET     = "FABRIC_BUILD_SECRET";
-    private static final String NEW_RELIC_KEY           = "NEW_RELIC_KEY";
-    private static final String SEGMENT_IO_WRITE_KEY    = "SEGMENT_IO_WRITE_KEY";
-    private static final String DOMAINS                 = "DOMAINS";
+    private static final String FACEBOOK_APP_ID = "FACEBOOK_APP_ID";
+    private static final String FABRIC_KEY = "FABRIC_KEY";
+    private static final String FABRIC_BUILD_SECRET = "FABRIC_BUILD_SECRET";
+    private static final String NEW_RELIC_KEY = "NEW_RELIC_KEY";
+    private static final String SEGMENT_IO_WRITE_KEY = "SEGMENT_IO_WRITE_KEY";
+    private static final String DOMAINS = "DOMAINS";
 
     private static final String PARSE = "PARSE";
     private static final String PARSE_ENABLED = "NOTIFICATIONS_ENABLED";
@@ -77,7 +82,7 @@ public class ConfigTests extends BaseTestCase {
         carrierList.add("12345");
         carrierList.add("foo");
         JsonArray carriers = new JsonArray();
-        for(String carrier : carrierList) {
+        for (String carrier : carrierList) {
             carriers.add(new JsonPrimitive(carrier));
         }
         socialConfig.add(DISABLED_CARRIERS, carriers);
@@ -117,7 +122,7 @@ public class ConfigTests extends BaseTestCase {
         carrierList.add("12345");
         carrierList.add("foo");
         JsonArray carriers = new JsonArray();
-        for(String carrier : carrierList) {
+        for (String carrier : carrierList) {
             carriers.add(new JsonPrimitive(carrier));
         }
         zeroRatingConfig.add(CARRIERS, carriers);
@@ -126,7 +131,7 @@ public class ConfigTests extends BaseTestCase {
         domainList.add("domain1");
         domainList.add("domain2");
         JsonArray domains = new JsonArray();
-        for(String domain : domainList) {
+        for (String domain : domainList) {
             domains.add(new JsonPrimitive(domain));
         }
         zeroRatingConfig.add(WHITE_LIST_OF_DOMAINS, domains);
@@ -137,44 +142,64 @@ public class ConfigTests extends BaseTestCase {
         assertEquals(domainList, config.getZeroRatingConfig().getWhiteListedDomains());
     }
 
-    @Test
-    public void testEnrollmentNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getCourseDiscoveryConfig().isEnabled());
-        assertNull(config.getCourseDiscoveryConfig().getCourseSearchUrl());
-        assertNull(config.getCourseDiscoveryConfig().getExternalCourseSearchUrl());
-        assertNull(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate());
-    }
+    @RunWith(value = Parameterized.class)
+    public class EnrollmentConfigTests {
 
-    @Test
-    public void testEnrollmentEmptyConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject enrollmentConfig = new JsonObject();
-        configBase.add(COURSE_ENROLLMENT, enrollmentConfig);
+        private String course_enrollment_type;
+        private boolean expected;
 
-        Config config = new Config(configBase);
-        assertFalse(config.getCourseDiscoveryConfig().isEnabled());
-        assertNull(config.getCourseDiscoveryConfig().getCourseSearchUrl());
-        assertNull(config.getCourseDiscoveryConfig().getExternalCourseSearchUrl());
-        assertNull(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate());
-    }
+        public EnrollmentConfigTests(String course_enrollment_type, boolean expected) {
+            this.course_enrollment_type = course_enrollment_type;
+            this.expected = expected;
+        }
 
-    @Test
-    public void testEnrollmentConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject enrollmentConfig = new JsonObject();
-        enrollmentConfig.add(ENABLED, new JsonPrimitive(true));
-        enrollmentConfig.add(COURSE_SEARCH_URL, new JsonPrimitive("fake-url"));
-        enrollmentConfig.add(EXTERNAL_COURSE_SEARCH_URL, new JsonPrimitive("external-fake-url"));
-        enrollmentConfig.add(COURSE_INFO_URL_TEMPLATE, new JsonPrimitive("fake-url-template"));
-        configBase.add(COURSE_ENROLLMENT, enrollmentConfig);
+        @Parameters(name= "{index}: willUseWebview({0})={1}")
+        public Iterable<Object[]> data() {
+            return Arrays.asList(new Object[][]{
+                    {"webview", true},
+                    {"WEBVIEW", true},
+                    {"native", false},
+                    {"NATIVE", true},
+                    {"invalid type", false},
+            });
+        }
 
-        Config config = new Config(configBase);
-        assertTrue(config.getCourseDiscoveryConfig().isEnabled());
-        assertEquals(config.getCourseDiscoveryConfig().getCourseSearchUrl(), "fake-url");
-        assertEquals(config.getCourseDiscoveryConfig().getExternalCourseSearchUrl(), "external-fake-url");
-        assertEquals(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate(), "fake-url-template");
+        @Test
+        public void testEnrollmentNoConfig() {
+            JsonObject configBase = new JsonObject();
+            Config config = new Config(configBase);
+            assertFalse(config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled());
+            assertNull(config.getCourseDiscoveryConfig().getCourseSearchUrl());
+            assertNull(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate());
+        }
+
+        @Test
+        public void testEnrollmentEmptyConfig() {
+            JsonObject configBase = new JsonObject();
+            JsonObject enrollmentConfig = new JsonObject();
+            configBase.add(COURSE_ENROLLMENT, enrollmentConfig);
+
+            Config config = new Config(configBase);
+            assertFalse(config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled());
+            assertNull(config.getCourseDiscoveryConfig().getCourseSearchUrl());
+            assertNull(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate());
+        }
+
+        @Test
+        public void testEnrollmentConfig() {
+            JsonObject configBase = new JsonObject();
+            JsonObject enrollmentConfig = new JsonObject();
+            enrollmentConfig.add(TYPE, new JsonPrimitive(course_enrollment_type));
+            enrollmentConfig.add(COURSE_SEARCH_URL, new JsonPrimitive("fake-url"));
+            enrollmentConfig.add(COURSE_INFO_URL_TEMPLATE, new JsonPrimitive("fake-url-template"));
+            configBase.add(COURSE_ENROLLMENT, enrollmentConfig);
+
+            Config config = new Config(configBase);
+            assertEquals(config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled(), expected);
+            assertEquals(config.getCourseDiscoveryConfig().getCourseSearchUrl(), "fake-url");
+            assertEquals(config.getCourseDiscoveryConfig().getCourseInfoUrlTemplate(), "fake-url-template");
+        }
+
     }
 
     @Test

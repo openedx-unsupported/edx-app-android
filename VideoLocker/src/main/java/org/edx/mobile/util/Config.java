@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by aleffert on 1/8/15.
@@ -24,7 +25,7 @@ import java.util.List;
 @Singleton
 public class Config {
 
-    protected final Logger logger = new Logger(getClass().getName());
+    private static final Logger logger = new Logger(Config.class.getName());
     private JsonObject mProperties;
 
     /* Individual configuration keys */
@@ -65,6 +66,7 @@ public class Config {
     public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
+
     /**
      * Social Sharing configuration.
      */
@@ -104,28 +106,30 @@ public class Config {
 
     /**
      * Course Enrollment configuration.
+     *
+     * If TYPE is not "webview" in any letter case, defaults to "native"
      */
     public class EnrollmentConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("NATIVE_COURSE_DISCOVERY_ENABLED") boolean mNativeCourseDiscoveryEnabled;
+        private @SerializedName("TYPE") String mCourseEnrollmentType;
         private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
-        private @SerializedName("EXTERNAL_COURSE_SEARCH_URL") String mExternalSearchUrl;
         private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
-        public boolean isEnabled() {
-            return mEnabled;
-        }
+        public boolean isWebviewCourseDiscoveryEnabled() {
+            if (mCourseEnrollmentType == null) { return false; }
 
-        public boolean isNativeCourseDiscoveryEnabled() {
-            return mNativeCourseDiscoveryEnabled;
-        }
+            switch (mCourseEnrollmentType.toUpperCase(Locale.US)) {
+                case "WEBVIEW":
+                    return true;
+                case "NATIVE":
+                    return false;
+                default:
+                    logger.debug("No match in config for COURSE_ENROLLMENT.TYPE:" + mCourseEnrollmentType + ". Defaulting to Native");
+                    return false;
+            }
+    }
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
-        }
-
-        public String getExternalCourseSearchUrl() {
-            return mExternalSearchUrl;
         }
 
         public String getCourseInfoUrlTemplate() {
@@ -389,6 +393,7 @@ public class Config {
 
     public EnrollmentConfig getCourseDiscoveryConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
+
         if(element != null) {
             return new Gson().fromJson(element, EnrollmentConfig.class);
         }
