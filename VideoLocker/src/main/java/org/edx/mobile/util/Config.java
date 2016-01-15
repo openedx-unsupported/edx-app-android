@@ -39,6 +39,7 @@ public class Config {
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
+    private static final String WEBVIEW = "WEBVIEW";
     private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
@@ -110,9 +111,8 @@ public class Config {
      * If TYPE is not "webview" in any letter case, defaults to "native"
      */
     public class EnrollmentConfig {
+        private @SerializedName("WEBVIEW") WebViewConfig mWebViewConfig;
         private @SerializedName("TYPE") String mCourseEnrollmentType;
-        private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
-        private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
         public boolean isWebviewCourseDiscoveryEnabled() {
             if (mCourseEnrollmentType == null) { return false; }
@@ -127,6 +127,19 @@ public class Config {
                     return false;
             }
     }
+
+        public String getCourseSearchUrl() {
+            return mWebViewConfig.getCourseSearchUrl();
+        }
+
+        public String getCourseInfoUrlTemplate() {
+            return mWebViewConfig.getCourseInfoUrlTemplate();
+        }
+    }
+
+    public static class WebViewConfig {
+        private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
+        private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
@@ -367,9 +380,6 @@ public class Config {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
 
-
-
-
     /**
      * Empty or no config returns false.
      * Otherwise, returns the value from the config.
@@ -399,6 +409,17 @@ public class Config {
         }
         else {
             return new EnrollmentConfig();
+        }
+    }
+
+    public WebViewConfig getWebViewConfig() {
+        JsonElement element = getObject(COURSE_ENROLLMENT).getAsJsonObject().get(WEBVIEW);
+
+        if(element != null) {
+            return new Gson().fromJson(element, WebViewConfig.class);
+        }
+        else {
+            return new WebViewConfig();
         }
     }
 
