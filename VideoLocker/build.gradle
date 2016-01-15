@@ -34,6 +34,13 @@ apply plugin: 'newrelic'
 
 apply from: 'jacoco.gradle'
 
+apply plugin: 'checkstyle'
+
+checkstyle {
+    configFile rootProject.file('checkstyle.xml')
+    showViolations true
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }

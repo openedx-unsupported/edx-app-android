@@ -37,9 +37,21 @@ script:
   - ./gradlew copyUnitTestBuildArtifacts
 #  - ./travis-acceptance-tests.sh
 
+  - ./gradlew check -PdisablePreDex --continue --stacktrace
+  - android-wait-for-emulator
+  - adb devices
+  - adb shell input keyevent 82 &
+  - ./gradlew connectedAndroidTest -PdisablePreDex --continue --stacktrace
+  - rm /home/travis/.gradle/caches/2.8/plugin-resolution/cache.properties.lock
+
+
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
   - ~/bin/artifacts upload artifacts
+
+  # print lint results details
+  - for f in app/build/outputs/lint-results.html; do pandoc $f -t plain; done
+  - for f in data/build/outputs/lint-results.html; do pandoc $f -t plain; done
 
 branches:
   only:
