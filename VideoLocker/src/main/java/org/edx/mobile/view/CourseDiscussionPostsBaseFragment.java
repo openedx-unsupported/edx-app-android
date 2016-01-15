@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +11,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.task.ReadThreadTask;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -41,8 +43,16 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
         discussionPostsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = getContext();
                 DiscussionThread thread = discussionPostsAdapter.getItem(position);
-                router.showCourseDiscussionResponses(getActivity(), thread, courseData);
+                router.showCourseDiscussionResponses(context, thread, courseData);
+                if (!thread.isRead()) {
+                    new ReadThreadTask(context, thread, true).execute();
+                    // Refresh the row to mark it as read immediately,
+                    // pending the response from the server.
+                    thread.setRead(true);
+                    discussionPostsAdapter.getView(position, view, parent);
+                }
             }
         });
     }

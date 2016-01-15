@@ -174,6 +174,13 @@ public class DiscussionThread implements Serializable, IAuthorData {
         return read;
     }
 
+    public void setRead(boolean read) {
+        this.read = read;
+        if (read) {
+            unreadCommentCount = 0;
+        }
+    }
+
     public void incrementCommentCount() {
         ++this.commentCount;
     }

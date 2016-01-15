@@ -144,6 +144,11 @@ public class DiscussionAPI {
         return discussionService.followThread(thread.getIdentifier(), followBody);
     }
 
+    public DiscussionThread readThread(DiscussionThread thread, boolean read)
+            throws RetroHttpException {
+        ReadBody readBody = new ReadBody(read);
+        return discussionService.readThread(thread.getIdentifier(), readBody);
+    }
 
     public DiscussionThread createThread(ThreadBody threadBody) throws RetroHttpException {
         return discussionService.createThread(threadBody);

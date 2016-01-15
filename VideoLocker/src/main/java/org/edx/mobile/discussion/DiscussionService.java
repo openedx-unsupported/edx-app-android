@@ -54,6 +54,14 @@ final class FollowBody {
     }
 }
 
+final class ReadBody {
+    private boolean read;
+
+    public ReadBody(boolean read) {
+        this.read = read;
+    }
+}
+
 
 public interface DiscussionService {
     @Headers("Cache-Control: no-cache")
@@ -139,6 +147,12 @@ public interface DiscussionService {
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread followThread(@Path("thread_id") String threadId,
                                   @Body FollowBody followBody)
+            throws RetroHttpException;
+
+
+    @PATCH("/api/discussion/v1/threads/{thread_id}/")
+    DiscussionThread readThread(@Path("thread_id") String threadId,
+                                @Body ReadBody readBody)
             throws RetroHttpException;
 
 
