@@ -87,6 +87,14 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
         updateWifiSwitch();
         updateVisibilitySwitch();
 
+        LinearLayout productTourView = (LinearLayout) layout.findViewById(R.id.product_tour);
+        productTourView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                environment.getRouter().showProductTourScreen(getActivity(), false);
+            }
+        });
+
         LinearLayout socialView = (LinearLayout) layout.findViewById(R.id.settings_social_layout);
 
         if (showSocialFeatures) {
@@ -167,7 +175,7 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
 
         try{
             environment.getSegment().socialConnectionEvent(isLoggedIn, SocialUtils.Values.FACEBOOK);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
 
@@ -181,10 +189,10 @@ public class SettingsFragment extends RoboFragment implements LoaderManager.Load
 
             @Override
             public void onSuccess(SocialMember response) {
-                if(!isAdded())
+                if (!isAdded())
                     return;
-                CharSequence formatted =  ResourceUtil.getFormattedString(getResources(), R.string.settings_facebook_login_body_logged_in,
-                         "username", response.getFullName());
+                CharSequence formatted = ResourceUtil.getFormattedString(getResources(), R.string.settings_facebook_login_body_logged_in,
+                        "username", response.getFullName());
                 socialConnectedText.setText(formatted);
                 socialConnectedText.setVisibility(View.VISIBLE);
 

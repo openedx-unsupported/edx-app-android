@@ -94,6 +94,13 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name="org.edx.mobile.view.ProductTourActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:noHistory="true"
+            android:theme="@style/Theme.FullScreen" />
         
         <activity
             android:name="org.edx.mobile.view.LoginActivity"

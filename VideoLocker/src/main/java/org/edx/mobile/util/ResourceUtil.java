@@ -1,6 +1,10 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
@@ -37,5 +41,15 @@ public class ResourceUtil {
     public static CharSequence getFormattedStringForQuantity(@NonNull Resources resources, @PluralsRes int resourceId, @NonNull String key, int quantity) {
         String template = resources.getQuantityString(resourceId, quantity);
         return Phrase.from(template).put(key, quantity + "").format();
+    }
+
+    @Nullable
+    @SuppressWarnings("deprecation")
+    public static Drawable getDrawable(@NonNull Context context, @DrawableRes int drawableId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return context.getDrawable(drawableId);
+
+        //noinspection deprecation
+        return context.getResources().getDrawable(drawableId);
     }
 }

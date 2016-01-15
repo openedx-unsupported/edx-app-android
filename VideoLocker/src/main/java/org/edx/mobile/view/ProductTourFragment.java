@@ -1,0 +1,103 @@
+package org.edx.mobile.view;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import org.edx.mobile.R;
+
+/**
+ * Created by ahmedjazzar on 1/4/16.
+ */
+public class ProductTourFragment extends Fragment {
+
+    private static final String ARG_SPANNED = "spanned";
+    private static final String ARG_TITLE = "title";
+    private static final String ARG_DESC = "desc";
+    private static final String ARG_DRAWABLE = "drawable";
+    private static final String ARG_BG_COLOR = "bg_color";
+    private static final String ARG_TITLE_COLOR = "title_color";
+    private static final String ARG_DESC_COLOR = "desc_color";
+
+    private int drawable, bgColor, titleColor, descColor;
+    private String title, description;
+
+    public static ProductTourFragment newInstance(String title, String description, int imageDrawable, int bgColor) {
+        ProductTourFragment sampleSlide = new ProductTourFragment();
+
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SPANNED, false);
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_DESC, description);
+        args.putInt(ARG_DRAWABLE, imageDrawable);
+        args.putInt(ARG_BG_COLOR, bgColor);
+        sampleSlide.setArguments(args);
+
+        return sampleSlide;
+    }
+
+    public static ProductTourFragment newInstance(String title, String description, int imageDrawable, int bgColor, int titleColor, int descColor) {
+        ProductTourFragment sampleSlide = new ProductTourFragment();
+
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SPANNED, false);
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_DESC, description);
+        args.putInt(ARG_DRAWABLE, imageDrawable);
+        args.putInt(ARG_BG_COLOR, bgColor);
+        args.putInt(ARG_TITLE_COLOR, titleColor);
+        args.putInt(ARG_DESC_COLOR, descColor);
+        sampleSlide.setArguments(args);
+
+        return sampleSlide;
+    }
+
+    public ProductTourFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null && getArguments().size() != 0) {
+            drawable = getArguments().getInt(ARG_DRAWABLE);
+            title = getArguments().getString(ARG_TITLE);
+            description = getArguments().getString(ARG_DESC);
+            bgColor = getArguments().getInt(ARG_BG_COLOR);
+            titleColor = getArguments().containsKey(ARG_TITLE_COLOR) ? getArguments().getInt(ARG_TITLE_COLOR) : 0;
+            descColor = getArguments().containsKey(ARG_DESC_COLOR) ? getArguments().getInt(ARG_DESC_COLOR) : 0;
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_tour, container, false);
+        TextView t = (TextView) v.findViewById(R.id.title);
+        TextView d = (TextView) v.findViewById(R.id.description);
+        ImageView i = (ImageView) v.findViewById(R.id.image);
+        LinearLayout m = (LinearLayout) v.findViewById(R.id.main);
+
+        if (titleColor != 0) {
+            t.setTextColor(titleColor);
+        }
+
+        if (descColor != 0) {
+            d.setTextColor(descColor);
+        }
+
+        t.setText(title);
+        d.setText(description);
+        i.setImageDrawable(ContextCompat.getDrawable(getActivity(), drawable));
+        m.setBackgroundColor(bgColor);
+
+        return v;
+    }
+}
