@@ -122,12 +122,12 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
     public void showProgressDialog(int numDownloads) {}
 
     @Override
-    public void onDownloadSuccess(Long result) {
+    public void onDownloadStarted(Long result) {
         updateListUI();
     }
 
     @Override
-    public void onDownloadFailure() {
+    public void onDownloadFailedToStart() {
         updateListUI();
     }
 
