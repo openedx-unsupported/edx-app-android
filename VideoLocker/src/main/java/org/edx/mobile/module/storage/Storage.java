@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.greenrobot.event.EventBus;
+
 @Singleton
 public class Storage implements IStorage {
 
@@ -448,6 +450,7 @@ public class Storage implements IStorage {
                     }
                     rowsAffected = db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
+                    EventBus.getDefault().post(new DownloadCompletedEvent());
                 }
 
             } else {

@@ -31,9 +31,9 @@ import java.util.Map;
 @Singleton
 public class VideoDownloadHelper {
     public interface DownloadManagerCallback {
-        void onDownloadSuccess(Long result);
+        void onDownloadStarted(Long result);
 
-        void onDownloadFailure();
+        void onDownloadFailedToStart();
 
         void showProgressDialog(int numDownloads);
 
@@ -158,12 +158,12 @@ public class VideoDownloadHelper {
         EnqueueDownloadTask downloadTask = new EnqueueDownloadTask(activity, downloadList) {
             @Override
             public void onSuccess(Long result) {
-                callback.onDownloadSuccess(result);
+                callback.onDownloadStarted(result);
             }
 
             @Override
             public void onException(Exception ex) {
-                callback.onDownloadFailure();
+                callback.onDownloadFailedToStart();
             }
         };
 
