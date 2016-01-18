@@ -114,40 +114,40 @@ public class DiscussionAPI {
         return discussionService.getResponsesListForQuestion(threadId, pageSize, page, endorsed);
     }
 
-    public DiscussionThread flagThread(DiscussionThread thread, boolean flagged)
+    public DiscussionThread setThreadFlagged(DiscussionThread thread, boolean flagged)
             throws RetroHttpException {
         FlagBody flagBody = new FlagBody(flagged);
-        return discussionService.flagThread(thread.getIdentifier(), flagBody);
+        return discussionService.setThreadFlagged(thread.getIdentifier(), flagBody);
     }
 
-    public DiscussionComment flagComment(DiscussionComment comment, boolean flagged)
+    public DiscussionComment setCommentFlagged(DiscussionComment comment, boolean flagged)
             throws RetroHttpException {
         FlagBody flagBody = new FlagBody(flagged);
-        return discussionService.flagComment(comment.getIdentifier(), flagBody);
+        return discussionService.setCommentFlagged(comment.getIdentifier(), flagBody);
     }
 
-    public DiscussionThread voteThread(DiscussionThread thread, boolean voted)
+    public DiscussionThread setThreadVoted(DiscussionThread thread, boolean voted)
             throws RetroHttpException {
         VoteBody voteBody = new VoteBody(voted);
-        return discussionService.voteThread(thread.getIdentifier(), voteBody);
+        return discussionService.setThreadVoted(thread.getIdentifier(), voteBody);
     }
 
-    public DiscussionComment voteComment(DiscussionComment comment, boolean voted)
+    public DiscussionComment setCommentVoted(DiscussionComment comment, boolean voted)
             throws RetroHttpException {
         VoteBody voteBody = new VoteBody(voted);
-        return discussionService.voteComment(comment.getIdentifier(), voteBody);
+        return discussionService.setCommentVoted(comment.getIdentifier(), voteBody);
     }
 
-    public DiscussionThread followThread(DiscussionThread thread, boolean following)
+    public DiscussionThread setThreadFollowed(DiscussionThread thread, boolean following)
             throws RetroHttpException {
         FollowBody followBody = new FollowBody(following);
-        return discussionService.followThread(thread.getIdentifier(), followBody);
+        return discussionService.setThreadFollowed(thread.getIdentifier(), followBody);
     }
 
-    public DiscussionThread readThread(DiscussionThread thread, boolean read)
+    public DiscussionThread setThreadRead(DiscussionThread thread, boolean read)
             throws RetroHttpException {
         ReadBody readBody = new ReadBody(read);
-        return discussionService.readThread(thread.getIdentifier(), readBody);
+        return discussionService.setThreadRead(thread.getIdentifier(), readBody);
     }
 
     public DiscussionThread createThread(ThreadBody threadBody) throws RetroHttpException {

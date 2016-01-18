@@ -17,11 +17,11 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
-import org.edx.mobile.task.FlagCommentTask;
-import org.edx.mobile.task.FlagThreadTask;
-import org.edx.mobile.task.FollowThreadTask;
-import org.edx.mobile.task.VoteCommentTask;
-import org.edx.mobile.task.VoteThreadTask;
+import org.edx.mobile.task.SetCommentFlaggedTask;
+import org.edx.mobile.task.SetThreadFlaggedTask;
+import org.edx.mobile.task.SetThreadFollowedTask;
+import org.edx.mobile.task.SetCommentVotedTask;
+import org.edx.mobile.task.SetThreadVotedTask;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
@@ -148,7 +148,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                FlagThreadTask task = new FlagThreadTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
+                SetThreadFlaggedTask task = new SetThreadFlaggedTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
                     @Override
                     public void onSuccess(DiscussionThread topicThread) {
                         if (topicThread != null) {
@@ -175,7 +175,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VoteThreadTask task = new VoteThreadTask(context, discussionThread, !discussionThread.isVoted()) {
+                SetThreadVotedTask task = new SetThreadVotedTask(context, discussionThread, !discussionThread.isVoted()) {
                     @Override
                     public void onSuccess(DiscussionThread updatedDiscussionThread) {
                         if (updatedDiscussionThread != null) {
@@ -198,7 +198,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             @Override
             public void onClick(View view) {
 
-                FollowThreadTask task = new FollowThreadTask(context, discussionThread, !discussionThread.isFollowing()) {
+                SetThreadFollowedTask task = new SetThreadFollowedTask(context, discussionThread, !discussionThread.isFollowing()) {
                     @Override
                     public void onSuccess(DiscussionThread updatedDiscussionThread) {
                         if (updatedDiscussionThread != null) {
@@ -260,7 +260,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-                FlagCommentTask task = new FlagCommentTask(context, comment, !comment.isAbuseFlagged()) {
+                SetCommentFlaggedTask task = new SetCommentFlaggedTask(context, comment, !comment.isAbuseFlagged()) {
                     @Override
                     public void onSuccess(DiscussionComment comment) {
                         if (comment != null) {
@@ -291,7 +291,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             @Override
             public void onClick(View view) {
 
-                VoteCommentTask task = new VoteCommentTask(context, response, !response.isVoted()) {
+                SetCommentVotedTask task = new SetCommentVotedTask(context, response, !response.isVoted()) {
                     @Override
                     public void onSuccess(DiscussionComment comment) {
                         if (comment != null) {

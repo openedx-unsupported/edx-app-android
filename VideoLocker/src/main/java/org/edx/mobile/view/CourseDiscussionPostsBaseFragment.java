@@ -11,7 +11,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.ReadThreadTask;
+import org.edx.mobile.task.SetThreadReadTask;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -47,7 +47,7 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
                 DiscussionThread thread = discussionPostsAdapter.getItem(position);
                 router.showCourseDiscussionResponses(context, thread, courseData);
                 if (!thread.isRead()) {
-                    new ReadThreadTask(context, thread, true).execute();
+                    new SetThreadReadTask(context, thread, true).execute();
                     // Refresh the row to mark it as read immediately,
                     // pending the response from the server.
                     thread.setRead(true);

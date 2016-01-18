@@ -9,12 +9,12 @@ import org.edx.mobile.http.RetroHttpException;
 
 import de.greenrobot.event.EventBus;
 
-public class ReadThreadTask extends Task<DiscussionThread> {
-    private DiscussionThread thread;
-    private boolean read;
+public class SetThreadReadTask extends Task<DiscussionThread> {
+    private final DiscussionThread thread;
+    private final boolean read;
 
-    public ReadThreadTask(@NonNull Context context,
-                          @NonNull DiscussionThread thread, boolean read) {
+    public SetThreadReadTask(@NonNull Context context,
+                             @NonNull DiscussionThread thread, boolean read) {
         super(context);
         this.thread = thread;
         this.read = read;
@@ -22,7 +22,7 @@ public class ReadThreadTask extends Task<DiscussionThread> {
 
     @Override
     public DiscussionThread call() throws RetroHttpException {
-        return environment.getDiscussionAPI().readThread(thread, read);
+        return environment.getDiscussionAPI().setThreadRead(thread, read);
     }
 
     @Override
