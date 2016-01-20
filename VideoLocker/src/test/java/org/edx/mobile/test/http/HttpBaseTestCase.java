@@ -73,7 +73,6 @@ public class HttpBaseTestCase extends BaseTestCase {
 
         super.setUp();
 
-
         String oAuthClientId = config.getOAuthClientId();
         String testAccount = config.getTestAccountConfig().getName();
         shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);

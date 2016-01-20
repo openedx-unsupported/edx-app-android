@@ -32,6 +32,7 @@ import org.edx.mobile.view.Router;
 
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -71,11 +72,12 @@ public class MainApplication extends MultiDexApplication {
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
+        final Config config = injector.getInstance(Config.class);
 
-        Config config = injector.getInstance(Config.class);
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
+            EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
         }
 
         // initialize NewRelic with crash reporting disabled
@@ -190,6 +192,13 @@ public class MainApplication extends MultiDexApplication {
             }
         }
         pmanager.setNotificationEnabled(true);
+    }
+
+    public static class CrashlyticsCrashReportObserver {
+        @SuppressWarnings("unused")
+        public void onEventMainThread(Logger.CrashReportEvent e) {
+            Crashlytics.logException(e.getError());
+        }
     }
 
     public Injector getInjector() {
