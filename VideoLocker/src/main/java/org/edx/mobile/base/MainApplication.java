@@ -31,7 +31,6 @@ import org.edx.mobile.view.Router;
 
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -44,7 +43,7 @@ public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
     public static final boolean RETROFIT_ENABLED = false;
 
-    protected final Logger logger = new Logger(getClass().getName());
+    protected Logger logger;
 
     protected static MainApplication application;
 
@@ -58,6 +57,7 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
+        logger = new Logger(getClass().getName());
     }
 
     /**

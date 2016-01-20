@@ -4,24 +4,24 @@ import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.util.Config;
 
 import java.io.Serializable;
+
+import roboguice.RoboGuice;
 
 /**
  * Created by shahid on 22/1/15.
  */
 public class Logger implements Serializable {
 
-    private String tag;
+    private final String tag;
 
-    @Inject
-    Config config;
-
-    private Logger() {}
+    private final Config config = RoboGuice.getInjector(MainApplication.instance()).getInstance(Config.class);
 
     public Logger(Class<?> cls) {
-        this.tag = cls.getName();
+        this(cls.getName());
     }
 
     public Logger(String tag) {
