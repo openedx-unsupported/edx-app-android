@@ -3,6 +3,7 @@ package org.edx.mobile.discussion;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -30,25 +31,14 @@ public abstract class DiscussionTextUtils {
     }
 
     public static void setAuthorAttributionText(@NonNull TextView textView,
+                                                @StringRes final int stringRes,
                                                 @NonNull final IAuthorData authorData,
                                                 @NonNull final Runnable onAuthorClickListener) {
         final CharSequence text;
         {
             final Context context = textView.getContext();
-            final CharSequence formattedTime;
-            {
-                if (System.currentTimeMillis() - authorData.getCreatedAt().getTime()
-                        < DateUtils.SECOND_IN_MILLIS) {
-                    formattedTime = context.getString(R.string.just_now);
-                } else {
-                    formattedTime = DateUtils.getRelativeTimeSpanString(
-                            authorData.getCreatedAt().getTime(),
-                            System.currentTimeMillis(),
-                            DateUtils.SECOND_IN_MILLIS,
-                            DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
-                }
-            }
-
+            final CharSequence formattedTime = getRelativeTimeSpanString(context,
+                    authorData.getCreatedAt().getTime());
             final String authorLabel = authorData.getAuthorLabel();
 
             final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
@@ -70,7 +60,7 @@ public abstract class DiscussionTextUtils {
             }
 
             text = trim(ResourceUtil.getFormattedString(context.getResources(),
-                    R.string.post_attribution, new HashMap<String, CharSequence>() {{
+                    stringRes, new HashMap<String, CharSequence>() {{
                         put("time", formattedTime);
                         put("author", authorSpan);
                         put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(
@@ -81,6 +71,18 @@ public abstract class DiscussionTextUtils {
         textView.setText(text);
         // Allow ClickableSpan to trigger clicks
         textView.setMovementMethod(new LinkMovementMethod());
+    }
+
+    private static CharSequence getRelativeTimeSpanString(@NonNull Context context, long timeMs) {
+        if (System.currentTimeMillis() - timeMs < DateUtils.SECOND_IN_MILLIS) {
+            return context.getString(R.string.just_now);
+        } else {
+            return DateUtils.getRelativeTimeSpanString(
+                    timeMs,
+                    System.currentTimeMillis(),
+                    DateUtils.SECOND_IN_MILLIS,
+                    DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+        }
     }
 
     public static CharSequence parseHtml(@NonNull String html) {

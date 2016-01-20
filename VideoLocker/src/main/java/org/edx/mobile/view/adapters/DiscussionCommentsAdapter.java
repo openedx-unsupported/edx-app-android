@@ -95,12 +95,14 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         String commentBody = discussionComment.getRawBody();
         holder.discussionCommentBody.setText(commentBody);
 
-        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView, discussionComment, new Runnable() {
-            @Override
-            public void run() {
-                listener.onClickAuthor(discussionComment.getAuthor());
-            }
-        });
+        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView,
+                R.string.post_attribution,
+                discussionComment, new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onClickAuthor(discussionComment.getAuthor());
+                    }
+                });
     }
 
     @Override
