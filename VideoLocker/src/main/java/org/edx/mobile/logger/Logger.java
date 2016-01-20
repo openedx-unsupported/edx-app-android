@@ -46,7 +46,6 @@ public class Logger implements Serializable {
         LogUtil.error(this.tag, "", ex);
 
         if (submitCrashReport
-                && !BuildConfig.DEBUG
                 &&  config.getFabricConfig().isEnabled()) {
             Crashlytics.logException(ex);
         }

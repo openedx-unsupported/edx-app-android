@@ -16,6 +16,7 @@ import com.newrelic.agent.android.NewRelic;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.logger.Logger;
@@ -31,7 +32,6 @@ import org.edx.mobile.view.Router;
 
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -74,7 +74,7 @@ public class MainApplication extends MultiDexApplication {
 
         Config config = injector.getInstance(Config.class);
         // initialize Fabric
-        if (config.getFabricConfig().isEnabled()) {
+        if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         }
 

@@ -4,17 +4,12 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 
     }
 
     dependencies {
         classpath 'org.yaml:snakeyaml:1.14'
-
-        // The Fabric Gradle plugin uses an open ended version to react
-        // quickly to Android tooling updates
-        classpath 'io.fabric.tools:gradle:1.+'
 
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.3.1"
@@ -29,7 +24,6 @@ edx {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 
 apply from: 'jacoco.gradle'
@@ -52,29 +46,6 @@ class AndroidHelper {
             builder.writeTo(it)
         }
     }
-
-    def saveResources(project, config) {
-        // Fabric requires you to populate a key file
-        // Using 'apiKey' instead of passing it in the meta-data
-        // is undocumented, but is necessary because it tries to read
-        // the meta-data at compile time so resource references don't work
-        def fabric = config.get('FABRIC');
-        if (fabric != null) {
-            def fabric_key = fabric.get('FABRIC_KEY')
-            def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
-            if (fabric_key != null && fabric_secret != null) {
-                def crashlyticsFile = project.file('crashlytics.properties')
-                def writer = new FileWriter(crashlyticsFile)
-                writer.write(
-                        """
-apiSecret=$fabric_secret
-apiKey=$fabric_key
-""")
-                writer.close()
-            }
-        }
-    }
-
 }
 
 dependencies {
@@ -124,7 +95,7 @@ dependencies {
     }
 
     //Crashlytics Kit
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true
     }
 
@@ -217,6 +188,17 @@ android {
 
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
+
+        def fabric = config.get('FABRIC')
+        if (fabric?.get('ENABLED')) {
+            def fabric_key = fabric?.get('FABRIC_KEY')
+            if (null == fabric_key) {
+                throw new GradleException("You must set FABRIC_KEY if Fabric is enabled")
+            } else {
+                resValue "string", "io.fabric.ApiKey", fabric_key
+                resValue "bool", "com.crashlytics.RequireBuildId", "false"
+            }
+        }
     }
     sourceSets {
         main {
@@ -255,7 +237,6 @@ android {
 
     buildTypes {
         debug {
-            ext.enableCrashlytics = false
             testCoverageEnabled true
             pseudoLocalesEnabled true // Set device language to "en_XA" to test glyphs, or "ar_XB" to test RTL support
             manifestPlaceholders = [ supportsRtl:"true"]
@@ -266,8 +247,6 @@ android {
         }
 
         release {
-            def fabric = config.get('FABRIC')
-            ext.enableCrashlytcs = fabric?.get('FABRIC_KEY') != null
             signingConfig signingConfigs.releasekey
         }
     }
@@ -296,15 +275,11 @@ android.applicationVariants.all { variant ->
         def helper = new AndroidHelper()
         def config = taskHelper.loadConfig(project)
         helper.saveProcessedConfig(project, config)
-        helper.saveResources(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
     generateTask.dependsOn(configureTask)
 
     tasks.all {task ->
-        if (task.name.startsWith("fabric")) {
-            task.mustRunAfter(configureTask)
-        }
         if (task.name.startsWith("test")) {
             task.mustRunAfter(configureTask)
         }
