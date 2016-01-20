@@ -44,7 +44,7 @@ public class MainApplication extends MultiDexApplication {
     //FIXME - temporary solution
     public static final boolean RETROFIT_ENABLED = false;
 
-    protected final Logger logger = new Logger(getClass().getName());
+    protected Logger logger;
 
     protected static MainApplication application;
 
@@ -58,6 +58,7 @@ public class MainApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         init();
+        logger = new Logger(getClass().getName());
     }
 
     /**
