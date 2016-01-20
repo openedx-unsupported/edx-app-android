@@ -29,7 +29,6 @@ edx {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 
 apply from: 'jacoco.gradle'
@@ -59,20 +58,23 @@ class AndroidHelper {
         // is undocumented, but is necessary because it tries to read
         // the meta-data at compile time so resource references don't work
         def fabric = config.get('FABRIC');
-        if (fabric != null) {
-            def fabric_key = fabric.get('FABRIC_KEY')
-            def fabric_secret = fabric.get('FABRIC_BUILD_SECRET')
-            if (fabric_key != null && fabric_secret != null) {
-                def crashlyticsFile = project.file('crashlytics.properties')
-                def writer = new FileWriter(crashlyticsFile)
-                writer.write(
-                        """
+        def fabric_key = fabric?.get('FABRIC_KEY')
+        def fabric_secret = fabric?.get('FABRIC_BUILD_SECRET')
+        if (fabric_key != null && fabric_secret != null) {
+            def crashlyticsFile = project.file('crashlytics.properties')
+            def writer = new FileWriter(crashlyticsFile)
+            writer.write(
+                    """
 apiSecret=$fabric_secret
 apiKey=$fabric_key
 """)
-                writer.close()
-            }
+            writer.close()
         }
+    }
+
+    def fabricEnabled(config) {
+        def fabric = config.get('FABRIC')
+        return fabric?.get('FABRIC_KEY') != null && fabric?.get('ENABLED')
     }
 
 }
@@ -172,8 +174,12 @@ configurations {
    // all*.exclude group: 'com.android.support', module: 'support-v4'
 }
 
+
+def taskHelper = new TaskHelper()
+def androidHelper = new AndroidHelper()
+def config = taskHelper.loadConfig(project)
+
 android {
-    def config = new TaskHelper().loadConfig(project)
 
     signingConfigs {
         releasekey {
@@ -266,8 +272,7 @@ android {
         }
 
         release {
-            def fabric = config.get('FABRIC')
-            ext.enableCrashlytcs = fabric?.get('FABRIC_KEY') != null
+            ext.enableCrashlytcs = androidHelper.fabricEnabled(config)
             signingConfig signingConfigs.releasekey
         }
     }
@@ -287,16 +292,16 @@ android {
     }
 }
 
+if(androidHelper.fabricEnabled(config)) {
+    apply plugin: 'io.fabric'
+}
 
 android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()
     def taskName = "applyConfig" + variantName
     def configureTask = project.task(taskName) << {
-        def taskHelper = new TaskHelper()
-        def helper = new AndroidHelper()
-        def config = taskHelper.loadConfig(project)
-        helper.saveProcessedConfig(project, config)
-        helper.saveResources(project, config)
+        androidHelper.saveProcessedConfig(project, config)
+        androidHelper.saveResources(project, config)
     }
     def generateTask = project.tasks.getByName("generate" + variantName + "Resources")
     generateTask.dependsOn(configureTask)
