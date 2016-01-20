@@ -56,7 +56,7 @@ public class ApiTests extends HttpBaseTestCase {
         login();
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
-        Map<String, SectionEntry> map = api.getCourseHierarchy(e.getCourse().getId());
+        Map<String, SectionEntry> map = api.getCourseHierarchy(e.getCourse().getId(), false);
         Entry<String, SectionEntry> entry = map.entrySet().iterator().next();
         Entry<String, ArrayList<VideoResponseModel>> subsection = entry.getValue().sections.entrySet().iterator().next();
 
@@ -148,7 +148,7 @@ public class ApiTests extends HttpBaseTestCase {
                 courses != null && courses.size() > 0);
         String courseId = courses.get(0).getCourse().getId();
 
-        Map<String, SectionEntry> chapters = api.getCourseHierarchy(courseId);
+        Map<String, SectionEntry> chapters = api.getCourseHierarchy(courseId, false);
         for(Entry<String, SectionEntry> entry : chapters.entrySet()) {
             print("---------------" + entry.getKey() + "---------------");
             for (Entry<String, ArrayList<VideoResponseModel>> se : entry.getValue().sections.entrySet()) {

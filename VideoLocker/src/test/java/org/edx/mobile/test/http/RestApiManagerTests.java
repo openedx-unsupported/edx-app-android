@@ -2,7 +2,6 @@ package org.edx.mobile.test.http;
 
 import com.google.inject.Injector;
 
-import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -18,8 +17,6 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.Config;
 import org.junit.Ignore;
-import org.mockito.Mockito;
-import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -145,13 +145,9 @@ public class ServiceManager {
     }
 
     public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
-        return getCourseHierarchy(courseId, true);
-    }
-
-    public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean prefCache) throws Exception {
         CourseComponent course = this.getCourseStructureFromCache(courseId);
         if (course == null) {  //it means we cache the old data model in the file system
-            return api.getCourseHierarchy(courseId, prefCache);
+            return api.getCourseHierarchy(courseId, true);
         } else {
             return CourseManager.mappingCourseHierarchyFrom(course);
         }
@@ -164,22 +160,6 @@ public class ServiceManager {
             return api.getVideoById(courseId, videoId);
         } else {
             return CourseManager.getVideoById(course, videoId);
-        }
-    }
-
-
-    public String getUnitUrlByVideoById(String courseId, String videoId)
-            throws Exception {
-        CourseComponent course = this.getCourseStructureFromCache(courseId);
-        if (course == null) {  //it means we cache the old data model in the file system
-            return api.getUnitUrlByVideoById(courseId, videoId);
-        } else {
-            VideoResponseModel vrm = getVideoById(courseId, videoId);
-            if (vrm != null) {
-                return vrm.getUnitUrl();
-            } else {
-                return "";
-            }
         }
     }
 

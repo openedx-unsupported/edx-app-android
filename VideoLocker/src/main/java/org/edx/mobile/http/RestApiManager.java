@@ -552,32 +552,12 @@ public class RestApiManager implements IApi{
 
 
     @Override
-    public String getUnitUrlByVideoById(String courseId, String videoId) {
-        return null;
-    }
-
-    @Override
-    public VideoResponseModel getSubsectionById(String courseId, String subsectionId) throws Exception {
-        return null;
-    }
-
-    @Override
     public VideoResponseModel getVideoById(String courseId, String videoId) throws Exception {
         return null;
     }
 
     @Override
-    public LectureModel getLecture(String courseId, String chapterName, String lectureName) throws Exception {
-        return null;
-    }
-
-    @Override
     public Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache) throws Exception {
-        return null;
-    }
-
-    @Override
-    public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
         return null;
     }
 
