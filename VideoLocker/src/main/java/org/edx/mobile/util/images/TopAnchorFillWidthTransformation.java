@@ -3,12 +3,19 @@ package org.edx.mobile.util.images;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+/**
+ * Transformation for anchoring the image to the top of the container, and
+ * scaling it to match the container's width. The current implementation
+ * requires a scale type of fit* or centerCrop, and has a white background
+ * layer.
+ */
 public class TopAnchorFillWidthTransformation extends BitmapTransformation {
     private final Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
@@ -57,6 +64,10 @@ public class TopAnchorFillWidthTransformation extends BitmapTransformation {
             newBitmap.setPremultiplied(true);
         }
         Canvas canvas = new Canvas(newBitmap);
+        // It looks like Canvas has black color by default, and
+        // there doesn't seem to be any simple way to set it as
+        // transparent.
+        canvas.drawColor(Color.WHITE);
         if (outWidth < width) {
             canvas.scale(widthRatio, widthRatio);
         }
