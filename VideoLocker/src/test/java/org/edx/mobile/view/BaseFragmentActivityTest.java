@@ -365,7 +365,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     protected void assertShowInfoMessage(final BaseFragmentActivity activity,
             final String message, final Runnable trigger) {
         final TextView messageView = (TextView)
-                activity.findViewById(R.id.downloadMessage);
+                activity.findViewById(R.id.flying_message);
         assumeNotNull(messageView);
         assertAnimateLayouts(messageView, new Runnable() {
             @Override
@@ -385,7 +385,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();
         TextView messageView = new TextView(activity);
-        messageView.setId(R.id.downloadMessage);
+        messageView.setId(R.id.flying_message);
         messageView.setVisibility(View.GONE);
         activity.addContentView(messageView, new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -531,7 +531,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         BaseFragmentActivity activity =
                 Robolectric.buildActivity(getActivityClass())
                         .withIntent(getIntent()).setup().get();
-        assumeNotNull(activity.findViewById(R.id.downloadMessage));
+        assumeNotNull(activity.findViewById(R.id.flying_message));
         final String message = "message";
         assertShowInfoMessage(activity, message, new Runnable() {
             @Override

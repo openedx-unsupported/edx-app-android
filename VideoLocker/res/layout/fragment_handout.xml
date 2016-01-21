@@ -25,8 +25,8 @@
             android:scrollbars="none"/>
 
         <TextView
-            android:id="@+id/downloadMessage"
-            style="@style/downloading_message"
+            android:id="@+id/flying_message"
+            style="@style/flying_message"
             android:layout_alignParentTop="true"
             android:visibility="gone"/>
 

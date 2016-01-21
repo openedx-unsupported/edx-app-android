@@ -39,8 +39,8 @@
             tools:layout="@layout/fragment_video_list" />
 
         <TextView
-            android:id="@+id/downloadMessage"
-            style="@style/downloading_message"
+            android:id="@+id/flying_message"
+            style="@style/flying_message"
             android:text="@string/started_downloading"
             android:visibility="gone" />
         

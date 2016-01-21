@@ -165,7 +165,7 @@ public interface IMyCoursesLocators {
 	String lbVideoLength = "org.edx.mobile:id/video_playing_time";
 	String btnViewId = "org.edx.mobile:id/button_view";
 	String lstDownloadVideosId = "org.edx.mobile:id/downloads_row_layout";
-	String msgDownloadId = "org.edx.mobile:id/downloadMessage";
+	String msgDownloadId = "org.edx.mobile:id/flying_message";
 	String downloadProgressWheel = "org.edx.mobile:id/progress_wheel";
 
 	// Video player Id's

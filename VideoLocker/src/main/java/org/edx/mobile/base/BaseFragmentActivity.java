@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -382,7 +381,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * @return boolean - Returns true if message shown, false otherwise.
      */
     public boolean showInfoMessage(String message) {
-        TextView infoMessageTv = (TextView) findViewById(R.id.downloadMessage);
+        TextView infoMessageTv = (TextView) findViewById(R.id.flying_message);
         if (infoMessageTv != null) {
             infoMessageTv.setText(message);
             animateLayouts(infoMessageTv);
@@ -400,7 +399,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * @return <code>true<code/> if the view was hidden successfully otherwise <code>false</code>
      */
     public boolean hideInfoMessage() {
-        View messageView = findViewById(R.id.downloadMessage);
+        View messageView = findViewById(R.id.flying_message);
         if (messageView == null) {
             logger.warn("Message view not available, so couldn't hide flying message");
             return false;
