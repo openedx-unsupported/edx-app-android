@@ -250,7 +250,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public VideoModel getDownloadEntryfromVideoModel(VideoBlockModel block){
+    public VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block){
         VideoModel video = db.getVideoEntryByVideoId(block.getId(), null);
         if (video != null) {
             return video;

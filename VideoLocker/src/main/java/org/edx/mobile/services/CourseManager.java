@@ -22,6 +22,7 @@ import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
+import org.edx.mobile.model.course.VideoInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,13 +150,14 @@ public class CourseManager {
         SummaryModel model = new SummaryModel();
         model.setType(videoBlockModel.getType());
         model.setDisplayName(videoBlockModel.getDisplayName());
-        model.setVideoUrl(videoBlockModel.getData().encodedVideos.getPreferredVideoInfo().url);
         model.setDuration((int)videoBlockModel.getData().duration);
-        //FIXME - is this field missing?
-        //model.setOnlyOnWeb(videoBlockModel.);
-       // public boolean onlyOnWeb;
+        model.setOnlyOnWeb(videoBlockModel.getData().onlyOnWeb);
         model.setId(videoBlockModel.getId());
-        model.setSize(videoBlockModel.getSize());
+        final VideoInfo videoInfo = videoBlockModel.getData().encodedVideos.getPreferredVideoInfo();
+        if (null != videoInfo) {
+            model.setVideoUrl(videoInfo.url);
+            model.setSize(videoInfo.fileSize);
+        }
         model.setTranscripts(videoBlockModel.getData().transcripts);
         //FIXME = is this field missing?
        // private EncodingsModel encodings;

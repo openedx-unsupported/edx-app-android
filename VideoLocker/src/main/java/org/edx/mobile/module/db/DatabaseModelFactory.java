@@ -1,6 +1,8 @@
 package org.edx.mobile.module.db;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
+import android.webkit.URLUtil;
 
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.VideoResponseModel;
@@ -8,23 +10,25 @@ import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
+import org.edx.mobile.model.course.VideoInfo;
 import org.edx.mobile.model.db.DownloadEntry;
 
 /**
  * Model Factory class for the database models.
- * @author rohan
  *
+ * @author rohan
  */
 public class DatabaseModelFactory {
 
     /**
      * Returns new instance of {@link org.edx.mobile.model.VideoModel} initialized with given cursor.
+     *
      * @param c
      * @return
      */
     public static VideoModel getModel(Cursor c) {
         DownloadEntry de = new DownloadEntry();
-        
+
         de.dmId = c.getLong(c.getColumnIndex(DbStructure.Column.DM_ID));
         de.downloaded = DownloadEntry.DownloadedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.DOWNLOADED))];
         de.duration = c.getLong(c.getColumnIndex(DbStructure.Column.DURATION));
@@ -47,12 +51,13 @@ public class DatabaseModelFactory {
         de.isCourseActive = c.getInt(c.getColumnIndex(DbStructure.Column.IS_COURSE_ACTIVE));
         de.isVideoForWebOnly = c.getInt(c.getColumnIndex(DbStructure.Column.VIDEO_FOR_WEB_ONLY)) == 1;
         de.lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
-        
+
         return de;
     }
 
     /**
      * Returns an object of IVideoModel which has all the fields copied from given VideoResponseModel.
+     *
      * @param vrm
      * @return
      */
@@ -77,7 +82,8 @@ public class DatabaseModelFactory {
     }
 
     /**
-     *  Returns an object of IVideoModel which has all the fields copied from given VideoData.
+     * Returns an object of IVideoModel which has all the fields copied from given VideoData.
+     *
      * @param vrm
      * @return
      */
@@ -88,21 +94,26 @@ public class DatabaseModelFactory {
         //rather than individual column fields.
         BlockPath path = block.getPath();
         e.chapter = path.get(1) == null ? "" : path.get(1).getDisplayName();
-        e.section =  path.get(2) == null ? "" : path.get(2).getDisplayName();
+        e.section = path.get(2) == null ? "" : path.get(2).getDisplayName();
         IBlock root = block.getRoot();
         e.eid = root.getCourseId();
         e.duration = vrm.duration;
-        e.size =  vrm.encodedVideos.getPreferredVideoInfo().fileSize;
+        final VideoInfo preferredVideoInfo = vrm.encodedVideos.getPreferredVideoInfo();
+        e.size = preferredVideoInfo.fileSize;
         e.title = block.getDisplayName();
-        e.url = vrm.encodedVideos.getPreferredVideoInfo().url;
-        e.url_high_quality = vrm.encodedVideos.mobileHigh == null ? "" : vrm.encodedVideos.mobileHigh.url;
-        e.url_low_quality = vrm.encodedVideos.mobileLow == null ? "": vrm.encodedVideos.mobileLow.url;
-        e.url_youtube = vrm.encodedVideos.youtube == null ? "" : vrm.encodedVideos.youtube.url;
+        e.url = preferredVideoInfo.url;
+        e.url_high_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileHigh);
+        e.url_low_quality = getVideoNetworkUrlOrNull(vrm.encodedVideos.mobileLow);
+        e.url_youtube = getVideoNetworkUrlOrNull(vrm.encodedVideos.youtube);
         e.videoId = block.getId();
         e.transcript = vrm.transcripts;
         e.lmsUrl = block.getBlockUrl();
-
         e.isVideoForWebOnly = vrm.onlyOnWeb;
         return e;
+    }
+
+    @Nullable
+    private static String getVideoNetworkUrlOrNull(@Nullable VideoInfo videoInfo) {
+        return videoInfo != null && URLUtil.isNetworkUrl(videoInfo.url) ? videoInfo.url : null;
     }
 }

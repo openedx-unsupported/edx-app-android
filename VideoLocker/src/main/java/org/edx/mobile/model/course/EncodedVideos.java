@@ -1,13 +1,13 @@
 package org.edx.mobile.model.course;
 
+import android.support.annotation.Nullable;
+import android.webkit.URLUtil;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by hanning on 5/19/15.
- */
-public class EncodedVideos implements Serializable{
+public class EncodedVideos implements Serializable {
     @SerializedName("fallback")
     public VideoInfo fallback;
 
@@ -20,14 +20,14 @@ public class EncodedVideos implements Serializable{
     @SerializedName("youtube")
     public VideoInfo youtube;
 
-    public VideoInfo getPreferredVideoInfo(){
-        if ( mobileLow != null )
+    @Nullable
+    public VideoInfo getPreferredVideoInfo() {
+        if (mobileLow != null && URLUtil.isNetworkUrl(mobileLow.url))
             return mobileLow;
-        if ( mobileHigh != null )
+        if (mobileHigh != null && URLUtil.isNetworkUrl(mobileHigh.url))
             return mobileHigh;
-        if ( fallback != null)
+        if (fallback != null && URLUtil.isNetworkUrl(fallback.url))
             return fallback;
-        return new VideoInfo(); //should not be here
+        return null;
     }
-
 }
