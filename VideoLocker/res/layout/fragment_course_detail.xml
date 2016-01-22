@@ -58,8 +58,8 @@
                 android:background="@color/grey_act_background"/>
 
             <TextView
-                android:id="@+id/downloadMessage"
-                style="@style/downloading_message"
+                android:id="@+id/flying_message"
+                style="@style/flying_message"
                 android:layout_alignParentTop="true"
                 android:visibility="gone"/>
 

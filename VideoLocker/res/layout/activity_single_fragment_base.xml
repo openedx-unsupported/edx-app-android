@@ -1,15 +1,18 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,46 +24,49 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone">
 
-                <include layout="@layout/panel_error_message_with_title" />
+                <include layout="@layout/panel_error_message_with_title"/>
             </LinearLayout>
 
             <View
                 android:id="@+id/offline_bar"
                 style="@style/offline_bar"
-                android:visibility="gone"
-                android:layout_alignParentTop="true" />
+                android:layout_alignParentTop="true"
+                android:visibility="gone"/>
 
             <RelativeLayout
+                android:id="@+id/my_groups_list_container"
                 android:layout_width="match_parent"
                 android:layout_height="0px"
-                android:layout_weight="1"
-                android:id="@+id/my_groups_list_container"
-                android:layout_below="@id/offline_bar">
+                android:layout_below="@id/offline_bar"
+                android:layout_weight="1">
 
             </RelativeLayout>
 
-
-
         </LinearLayout>
 
-        <include layout="@layout/loading_indicator" />
+        <TextView
+            android:id="@+id/flying_message"
+            style="@style/flying_message"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"/>
+
+        <include layout="@layout/loading_indicator"/>
 
         <TextView
             android:id="@+id/center_message_box"
+            style="@style/regular_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/regular_text"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center"
-            android:textColor="@color/cyan_4"
-            android:textSize="16sp"
             android:padding="10dp"
             android:textAllCaps="true"
+            android:textColor="@color/cyan_4"
+            android:textSize="16sp"
             android:visibility="gone"/>
-
-
+        
     </FrameLayout>
 
-    <include layout="@layout/navigation_drawer_container" />
+    <include layout="@layout/navigation_drawer_container"/>
 
 </android.support.v4.widget.DrawerLayout>

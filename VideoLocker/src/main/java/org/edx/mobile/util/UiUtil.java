@@ -25,12 +25,12 @@ public class UiUtil {
             logger.warn("cannot show message, no views available");
             return;
         }
-        TextView downloadMessageTv = (TextView) root.findViewById(R.id.downloadMessage);
+        TextView downloadMessageTv = (TextView) root.findViewById(R.id.flying_message);
         if (downloadMessageTv != null) {
             downloadMessageTv.setText(message);
             ViewAnimationUtil.showMessageBar(downloadMessageTv);
         } else {
-            logger.warn("view downloadMessage not found");
+            logger.warn("view flying_message not found");
         }
     }
 
