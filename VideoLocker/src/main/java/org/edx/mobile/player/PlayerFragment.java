@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -71,7 +72,7 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
-        AudioManager.OnAudioFocusChangeListener {
+        AudioManager.OnAudioFocusChangeListener, NetworkObserver {
 
     private enum VideoNotPlayMessageType {
         IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
@@ -953,10 +954,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     };
 
+    @Override
     public void onOnline() {
         //Nothing to do
     }
 
+    @Override
     public void onOffline() {
         // nothing to do
         showNetworkError();
