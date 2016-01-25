@@ -51,19 +51,19 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
             playerFragment = new PlayerFragment();
-            try{
+            try {
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.container_player, playerFragment, "player");
                 ft.commit();
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
 
-        try{
+        try {
             myVideosFlag = this.getIntent().getBooleanExtra("FromMyVideos", false);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             logger.error(ex);
         }
 
@@ -72,6 +72,14 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         listFragment = (VideoListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.list_fragment);
         listFragment.setCallback(this);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Wait until PlayerFragment.onActivityCreated() is called, so that PlayerFragment.player != null
+        // Wait until VideoListFragment.onActivityCreated() is called, so that VideoListFragment.adapter has been filled
+        playerFragment.setNextPreviousListeners(listFragment.getNextListener(), listFragment.getPreviousListener());
     }
 
     @Override
@@ -177,7 +185,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
                 }
             }
 
-            playerFragment.setPrevNxtListners(listFragment.getNextListener(), 
+            playerFragment.setNextPreviousListeners(listFragment.getNextListener(),
                     listFragment.getPreviousListener());
 
             TranscriptModel transcript = null;
@@ -290,7 +298,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         }
 
         if(playerFragment!=null && listFragment!=null){
-            playerFragment.setPrevNxtListners(listFragment.getNextListener(), 
+            playerFragment.setNextPreviousListeners(listFragment.getNextListener(),
                     listFragment.getPreviousListener());
         }
     }
@@ -323,7 +331,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         }
         listFragment.onOnline();
         if(playerFragment!=null && listFragment!=null){
-            playerFragment.setPrevNxtListners(listFragment.getNextListener(), 
+            playerFragment.setNextPreviousListeners(listFragment.getNextListener(),
                     listFragment.getPreviousListener());
         }
     }

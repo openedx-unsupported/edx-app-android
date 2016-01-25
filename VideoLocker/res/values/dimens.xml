@@ -76,8 +76,9 @@
     <dimen name="video_player_top_control_height">20dp</dimen>
     <dimen name="video_player_bottom_control_width">25dp</dimen>
     <dimen name="video_player_bottom_control_height">25dp</dimen>
-    <dimen name="video_player_side_control_width">30dp</dimen>
-    <dimen name="video_player_side_control_height">30dp</dimen>
+    <dimen name="video_player_side_control_width">40dp</dimen>
+    <dimen name="video_player_side_control_height">40dp</dimen>
+    <dimen name="video_player_side_control_padding">5dp</dimen>
     <dimen name="video_player_control_left_margin">10dp</dimen>
     <dimen name="video_player_control_right_margin">10dp</dimen>
     <dimen name="video_player_bottom_control_left_margin">4dp</dimen>
