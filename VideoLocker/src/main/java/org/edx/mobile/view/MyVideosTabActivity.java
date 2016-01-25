@@ -313,6 +313,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
             FragmentTransaction ft            =   manager.beginTransaction();
             ft.replace(android.R.id.tabcontent, fragment, tag);
             ft.commit();
+            manager.executePendingTransactions();
             invalidateOptionsMenu();
         } catch(Exception ex) {
             logger.error(ex);
