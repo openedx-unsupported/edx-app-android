@@ -81,6 +81,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private static final boolean IS_AUTOPLAY_ENABLED = true;
 
     private static final String KEY_PLAYER = "player";
+    private static final String KEY_VIDEO = "video";
     private static final String KEY_PREPARED = "isPrepared";
     private static final String KEY_AUTOPLAY_DONE = "isAutoPlayDone";
     private static final String KEY_MESSAGE_DISPLAYED = "isMessageDisplayed";
@@ -202,6 +203,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             player = (IPlayer) savedInstanceState.get(KEY_PLAYER);
+            videoEntry = (DownloadEntry) savedInstanceState.get(KEY_VIDEO);
             isPrepared = savedInstanceState.getBoolean(KEY_PREPARED);
             isAutoPlayDone = savedInstanceState.getBoolean(KEY_AUTOPLAY_DONE);
             transcript = (TranscriptModel) savedInstanceState.get(KEY_TRANSCRIPT);
@@ -432,6 +434,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             freezePlayer();
             outState.putSerializable(KEY_PLAYER, player);
         }
+        outState.putSerializable(KEY_VIDEO, videoEntry);
         outState.putBoolean(KEY_PREPARED, isPrepared);
         outState.putBoolean(KEY_AUTOPLAY_DONE, isAutoPlayDone);
         //FIXME: ensure that prepare is called on all activity restarts and then this can be removed
