@@ -260,7 +260,7 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public NativeDownloadModel getNativeDownlaod(long dmId) {
+    public NativeDownloadModel getNativeDownload(long dmId) {
         return dm.getDownload(dmId);
     }
 
