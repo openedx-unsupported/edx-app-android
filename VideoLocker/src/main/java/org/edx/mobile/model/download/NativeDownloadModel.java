@@ -14,6 +14,9 @@ public class NativeDownloadModel {
     public long dmid;
 
     public int getPercent() {
+        if (0 == size) {
+            return 0; // Prevent division-by-zero
+        }
         int p = (int) (100 * downloaded / size);
         return p;
     }

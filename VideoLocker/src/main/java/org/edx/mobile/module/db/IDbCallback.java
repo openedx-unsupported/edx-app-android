@@ -7,7 +7,7 @@ package org.edx.mobile.module.db;
  *
  * @param <T> T - Result object type when database operation succeeds.
  */
-interface IDbCallback<T> {
+public interface IDbCallback<T> {
     
     /**
      * Queue processor calls this method. This method call onResult method.
@@ -22,16 +22,4 @@ interface IDbCallback<T> {
      * @param ex
      */
     void sendException(Exception ex);
-    
-    /**
-     * Callback that gets invoked when database operation returns result.
-     * @param result
-     */
-    void onResult(T result);
-    
-    /**
-     * Callback that gets invoked when database operation fails.
-     * @param ex
-     */
-    void onFail(Exception ex);
 }
