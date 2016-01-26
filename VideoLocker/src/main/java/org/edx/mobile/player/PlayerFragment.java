@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.TextUtils;
@@ -112,7 +113,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     private LinkedHashMap<String, TimedTextObject> srtList;
     private LinkedHashMap<String, String> langList;
     private TimedTextObject srt;
-    private String languageSubtitle;
     private LayoutInflater layoutInflater;
     @Inject
     private TranscriptManager transcriptManager;
@@ -254,7 +254,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                         allowSensorOrientationIfApplicable();
                     }
                 }
-                
+
                 @Override
                 protected void onUpdate() {
                     super.onUpdate();
@@ -470,7 +470,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
     /**
      * Starts playing given path. Path can be file path or http/https URL.
-     * 
+     *
      * @param path
      * @param seekTo
      * @param title
@@ -500,13 +500,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             this.transcript = trModel;
             transcriptManager.downloadTranscriptsForVideo(trModel);
             //initializeClosedCaptioning();
-        }
-
-        try{
-            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-            languageSubtitle = pm.getString(PrefManager.Key.TRANSCRIPT_LANGUAGE);
-        }catch(Exception e){
-            logger.error(e);
         }
 
         // request focus on audio channel, as we are starting playback
@@ -547,43 +540,38 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     private void setupController() {
-        try{
-            if (player != null) {
-                View f = getView();
-                if (f != null) {
-                    ViewGroup container = (ViewGroup) f
-                            .findViewById(R.id.preview_container);
-                    PlayerController controller = new PlayerController(
-                            getActivity());
-                    controller.setAnchorView(container);
-
-                    // changed to true after Lou's comments to hide the controllers
-                    controller.setAutoHide(true);
-
-                    controller.setPrevNextListeners(nextListner, prevListner);
-                    player.setController(controller);
-                    player.setShareVideoListener(this);
-                    //
-                    reAttachPlayEventListener();
-                    
-                } else {
-                    //error("failed to set controller, view is NULL")
-                }
-            } else {
-                //error("failed to set controller, player is NULL")
+        if (null == player) {
+            return;
+        }
+        try {
+            View f = getView();
+            if (f == null) {
+                return;
             }
-        }catch(Exception e){
+            final ViewGroup container = (ViewGroup) f
+                    .findViewById(R.id.preview_container);
+            final PlayerController controller = new PlayerController(
+                    getActivity());
+            controller.setAnchorView(container);
+
+            // changed to true after Lou's comments to hide the controllers
+            controller.setAutoHide(true);
+
+            controller.setNextPreviousListeners(nextListner, prevListner);
+            player.setController(controller);
+            player.setShareVideoListener(this);
+            reAttachPlayEventListener();
+        } catch(Exception e) {
             logger.error(e);
         }
     }
 
-    public void setPrevNxtListners(View.OnClickListener next, View.OnClickListener prev) {
-        if (player != null) {
+    public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev) {
+        if (player != null && isScreenLandscape()) {
             this.prevListner = prev;
             this.nextListner = next;
-            player.setNextPreviousListener(next, prev);
+            player.setNextPreviousListeners(next, prev);
         }
-
     }
 
     @Override
@@ -880,21 +868,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
         }
     }
 
-    protected void showLandscape() {
-        try{
-            if(player!=null) {
-                freezePlayer();
-
-                Intent i = new Intent(getActivity(), LandscapePlayerActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                i.putExtra("player", player);
-                startActivity(i);
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
     private void enterFullScreen() {
         try {
             if (getActivity() != null) {
@@ -1112,7 +1085,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This runnable handles the displaying of 
+     * This runnable handles the displaying of
      * Subtitles on the screen per 100 mili seconds
      */
     private Runnable subtitleProcessesor = new Runnable() {
@@ -1193,7 +1166,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     };
 
     /**
-     * Handler initialized for fetching Subtitles 
+     * Handler initialized for fetching Subtitles
      */
     private void fetchSubtitlesTask(){
         try
@@ -1251,7 +1224,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     }
                     subTitlesTv.setPadding(margin_ten_dp, (int)UiUtil.getParamsInDP(getResources(),2),
                             margin_ten_dp,(int)UiUtil.getParamsInDP(getResources(),2) );
-                    
                     subTitlesTv.setText("");
                     //This has been done because text.content contains <br />
                     //in the end of each message
@@ -1328,8 +1300,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             hideClosedCaptioning();
             srt = null;
             srtList = null;
-            //subtitleSelected = -1;
-            //languageSubtitle = getString(R.string.lbl_cc_cancel);
         }
         if (subtitleFetchHandler != null)
         {
@@ -1348,8 +1318,6 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
             subtitleDisplayHandler = null;
             hideClosedCaptioning();
-            //subtitleSelected = -1;
-            languageSubtitle = getString(R.string.lbl_cc_cancel);
         }
     }
 
@@ -1441,7 +1409,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This function is used to show popup in landscape mode and 
+     * This function is used to show popup in landscape mode and
      * the Point defines the current position of Settings button
      * @param {@link android.graphics.Point}
      */
@@ -1476,14 +1444,8 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
                     try{
-                        languageSubtitle = lang.keySet().toArray()[0].toString();
-                        try{
-                            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, languageSubtitle);
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
-                        //subtitleSelected = pos;
+                        final String languageSubtitle = lang.keySet().toArray()[0].toString();
+                        setSubtitleLanguage(languageSubtitle);
                         try{
                             if(player!=null){
                                 environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
@@ -1513,11 +1475,12 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 HashMap<String, String> lang;
                 for(int i=0; i<languageList.size();i++){
                     lang = new HashMap<String, String>();
-                    lang.put(languageList.keySet().toArray()[i].toString(), 
+                    lang.put(languageList.keySet().toArray()[i].toString(),
                             languageList.values().toArray()[i].toString());
                     ccAdaptor.add(lang);
                 }
             }
+            final String languageSubtitle = getSubtitleLanguage();
             ccAdaptor.selectedLanguage = languageSubtitle;
             ccAdaptor.notifyDataSetChanged();
 
@@ -1535,7 +1498,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             cc_popup.setBackgroundDrawable(new BitmapDrawable());
 
             // Displaying the popup at the specified location, + offsets.
-            cc_popup.showAtLocation(layout, Gravity.NO_GRAVITY, 
+            cc_popup.showAtLocation(layout, Gravity.NO_GRAVITY,
                     p.x + 10 -(int)popupWidth, p.y + 10 - (int)popupHeight);
 
             TextView tv_none = (TextView) layout.findViewById(R.id.tv_cc_cancel);
@@ -1554,13 +1517,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     try{
                         removeSubtitleDisplayCallBack();
                         hideCCPopUp();
-
-                        try{
-                            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, getString(R.string.lbl_cc_cancel));
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
+                        setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
                         try{
                             if(player!=null){
                                 environment.getSegment().trackHideTranscript(videoEntry.videoId,
@@ -1597,8 +1554,8 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     // 
 
     /**
-     *This function is used to show Dialog fragment of 
-     *language list in potrait mode   
+     *This function is used to show Dialog fragment of
+     *language list in potrait mode
      */
     protected void showCCFragmentPopup() {
         try{
@@ -1608,10 +1565,9 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                 @Override
                 public void onItemClicked(HashMap<String, String> lang) {
                     try{
-                        languageSubtitle = lang.keySet().toArray()[0].toString();
+                        final String languageSubtitle = lang.keySet().toArray()[0].toString();
                         try{
-                            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, languageSubtitle);
+                            setSubtitleLanguage(languageSubtitle);
                             if(player!=null){
                                 environment.getSegment().trackShowTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
@@ -1638,8 +1594,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     try{
                         removeSubtitleDisplayCallBack();
                         try{
-                            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, getString(R.string.lbl_cc_cancel));
+                            setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
                             if(player!=null){
                                 environment.getSegment().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
@@ -1657,7 +1612,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     }
 
                 }
-            }, languageSubtitle);
+            }, getSubtitleLanguage());
 
             ccFragment.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_Holo_Dialog);
             ccFragment.show(getFragmentManager(), "dialog");
@@ -1669,7 +1624,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
 
 
     /**
-     * This function hides the Settings popup and overlay 
+     * This function hides the Settings popup and overlay
      */
     private void hideSettingsPopUp(){
         try{
@@ -1683,7 +1638,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This function hides the CC popup and overlay 
+     * This function hides the CC popup and overlay
      */
     private void hideCCPopUp(){
         try{
@@ -1700,7 +1655,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This function is used to display CC data when a transcript is selected  
+     * This function is used to display CC data when a transcript is selected
      */
     private void displaySrtData(){
         try{
@@ -1709,6 +1664,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
             }
             resetClosedCaptioning();
             if(srtList!=null && srtList.size()>0){
+                final String languageSubtitle = getSubtitleLanguage();
                 if(languageSubtitle!=null){
                     if(!languageSubtitle.equalsIgnoreCase(getString(R.string.lbl_cc_cancel))){
                         srt = srtList.get(languageSubtitle);
@@ -1730,6 +1686,27 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
                     }
                 }
             }
+        }catch(Exception e){
+            logger.error(e);
+        }
+    }
+
+    @Nullable
+    private String getSubtitleLanguage() {
+        String language = null;
+        try{
+            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
+            language = pm.getString(PrefManager.Key.TRANSCRIPT_LANGUAGE);
+        }catch(Exception e){
+            logger.error(e);
+        }
+        return language;
+    }
+
+    private void setSubtitleLanguage(String language) {
+        try{
+            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
+            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, language);
         }catch(Exception e){
             logger.error(e);
         }
@@ -1796,7 +1773,7 @@ public class PlayerFragment extends RoboFragment implements IPlayerListener, Ser
     public boolean isFrozen() {
         return (player != null && player.isFrozen());
     }
-    
+
     public void freezePlayer() {
         setScreenOnWhilePlaying(false);
 

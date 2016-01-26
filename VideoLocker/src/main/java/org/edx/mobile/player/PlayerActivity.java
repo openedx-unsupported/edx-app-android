@@ -127,7 +127,7 @@ public abstract class PlayerActivity extends BaseVideosDownloadStateActivity
                 playerFragment.setCallback(this);
             }
 
-            playerFragment.setPrevNxtListners(next, prev);
+            playerFragment.setNextPreviousListeners(next, prev);
 
             // reload this model
             environment.getStorage().reloadDownloadEntry(video);
@@ -168,7 +168,7 @@ public abstract class PlayerActivity extends BaseVideosDownloadStateActivity
                         // play from local
                         filepath = video.filepath;
                         logger.debug("Playing from local file");
-                    } 
+                    }
                 }
             } else {
                 DownloadEntry de = (DownloadEntry) environment.getDatabase().getIVideoModelByVideoUrl(
@@ -181,11 +181,11 @@ public abstract class PlayerActivity extends BaseVideosDownloadStateActivity
                             filepath = de.filepath;
                             logger.debug("Playing from local file for " +
                                     "another Download Entry");
-                        } 
+                        }
                     }
-                }       
+                }
             }
-            
+
             if(filepath==null || filepath.length()<=0){
                 // not available on local, so play online
                 logger.warn("Local file path not available");

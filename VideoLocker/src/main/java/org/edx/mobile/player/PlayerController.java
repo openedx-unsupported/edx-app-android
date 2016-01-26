@@ -68,10 +68,10 @@ import java.util.Locale;
  * MediaController will hide and
  * show the buttons according to these rules:
  * <ul>
- * <li> The "previous" and "next" buttons are hidden until setPrevNextListeners()
+ * <li> The "previous" and "next" buttons are hidden until setNextPreviousListeners()
  *   has been called
  * <li> The "previous" and "next" buttons are visible but disabled if
- *   setPrevNextListeners() was called with null listeners
+ *   setNextPreviousListeners() was called with null listeners
  * <li> The "rewind" and "fastforward" buttons are shown unless requested
  *   otherwise by using the MediaController(Context, boolean) constructor
  *   with the boolean set to false
@@ -212,7 +212,7 @@ public class PlayerController extends FrameLayout {
             }
         }
 
-        // By default these are hidden. They will be enabled when setPrevNextListeners() is called 
+        // By default these are hidden. They will be enabled when setNextPreviousListeners() is called
         mNextButton = (ImageButton) v.findViewById(R.id.next);
         if (mNextButton != null && !mFromXml && !mListenersSet) {
             mNextButton.setVisibility(View.GONE);
@@ -775,7 +775,7 @@ public class PlayerController extends FrameLayout {
         }
     }
 
-    public void setPrevNextListeners(View.OnClickListener next, View.OnClickListener prev) {
+    public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev) {
         mNextListener = next;
         mPrevListener = prev;
 

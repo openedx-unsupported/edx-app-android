@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -71,6 +70,17 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
 
         if (recentVideosFragment != null) {
             recentVideosFragment.setCallback(this);
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        // Wait until MyRecentVideosFragment.onResume() has been called so that its adapter has been filled
+        // Wait until PlayerFragment.onActivityCreated has been called, so PlayerFragment.player != null
+        if (null != playerFragment && null != recentVideosFragment) {
+            playerFragment.setNextPreviousListeners(recentVideosFragment.getNextListener(),
+                    recentVideosFragment.getPreviousListener());
         }
     }
 
@@ -480,11 +490,4 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         super.finish();
         // super class has transition animated setup
     }
-
-    @Override
-    public void setRecentNextPrevListeners(OnClickListener next,
-            OnClickListener prev) {
-        super.setRecentNextPrevListeners(next, prev);
-    }
-
 }

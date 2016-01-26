@@ -189,6 +189,8 @@
         <item name="android:layout_height">@dimen/video_player_side_control_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
         <item name="android:layout_marginEnd">@dimen/video_player_control_right_margin</item>
+        <item name="android:padding">@dimen/video_player_side_control_padding</item>
+        <item name="android:background">@drawable/semi_transparent_gray_circle</item>
         <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
     </style>
 

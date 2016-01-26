@@ -715,10 +715,10 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
-    public void setNextPreviousListener(OnClickListener next,
-                                        OnClickListener prev) {
+    public void setNextPreviousListeners(OnClickListener next,
+                                         OnClickListener prev) {
         if (controller != null) {
-            controller.setPrevNextListeners(next, prev);
+            controller.setNextPreviousListeners(next, prev);
         }
     }
 
