@@ -56,7 +56,7 @@ public class VideoDownloadHelper {
     ISegment segment;
 
 
-    public void downloadVideos(final List<HasDownloadEntry> model, final FragmentActivity activity,
+    public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
         if (model == null || model.isEmpty()) {
             return;
@@ -81,20 +81,20 @@ public class VideoDownloadHelper {
 
     }
 
-    private void startDownloadVideos(List<HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
-
+    private void startDownloadVideos(List<? extends HasDownloadEntry> model, FragmentActivity activity, DownloadManagerCallback callback) {
         long downloadSize = 0;
         ArrayList<DownloadEntry> downloadList = new ArrayList<DownloadEntry>();
         int downloadCount = 0;
         for (HasDownloadEntry v : model) {
             DownloadEntry de = v.getDownloadEntry(storage);
-            if (de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
+            if (null == de
+                    || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
                     || de.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
                     || de.isVideoForWebOnly) {
                 continue;
             } else {
                 downloadSize = downloadSize
-                        + v.getSize();
+                        + de.getSize();
                 downloadList.add(de);
                 downloadCount++;
             }

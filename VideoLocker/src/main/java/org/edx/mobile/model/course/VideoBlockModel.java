@@ -1,5 +1,7 @@
 package org.edx.mobile.model.course;
 
+import android.support.annotation.Nullable;
+
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.storage.IStorage;
 
@@ -16,16 +18,16 @@ public class VideoBlockModel extends CourseComponent implements HasDownloadEntry
         this.data = (VideoData)blockModel.data;
     }
 
+    @Nullable
     public DownloadEntry getDownloadEntry(IStorage storage) {
+        if (data.encodedVideos.getPreferredVideoInfo() == null) {
+            return null;
+        }
         if ( storage != null ) {
             downloadEntry = (DownloadEntry) storage
-                .getDownloadEntryfromVideoModel(this);
+                .getDownloadEntryFromVideoModel(this);
         }
         return downloadEntry;
-    }
-
-    public long getSize(){
-         return data.encodedVideos.getPreferredVideoInfo().fileSize;
     }
 
     public VideoData getData() {

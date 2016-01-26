@@ -15,6 +15,7 @@
         app:iconName="fa-laptop" />
 
     <TextView
+        android:id="@+id/not_available_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -22,7 +23,7 @@
         android:layout_marginRight="60dp"
         android:gravity="center"
         android:singleLine="false"
-        android:text="@string/assessment_not_available"
+        tools:text="@string/assessment_not_available"
         android:textAlignment="center"
         android:textColor="@color/edx_grayscale_neutral_dark"
         android:textSize="@dimen/edx_base"

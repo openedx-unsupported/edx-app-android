@@ -170,7 +170,7 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
             adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(),
                     environment.getStorage(), new CourseOutlineAdapter.DownloadListener() {
                 @Override
-                public void download(List<HasDownloadEntry> models) {
+                public void download(List<? extends HasDownloadEntry> models) {
                     CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
                     if (NetworkUtil.verifyDownloadPossible(activity)) {
                         downloadManager.downloadVideos(models, getActivity(),

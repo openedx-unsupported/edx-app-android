@@ -214,7 +214,7 @@ public class CourseComponent implements IBlock, IPathNode {
     /**
      * return all videos blocks under this node
      */
-    public List<HasDownloadEntry> getVideos(){
+    public List<VideoBlockModel> getVideos(){
         List<CourseComponent> videos = new ArrayList<>();
         fetchAllLeafComponents(videos, EnumSet.of(BlockType.VIDEO));
         // Confirm that these are actually VideoBlockModel instances.
@@ -229,21 +229,18 @@ public class CourseComponent implements IBlock, IPathNode {
                 videosIterator.remove();
             }
         }
-        return (List)videos;
+        return (List<VideoBlockModel>)(List)videos;
     }
 
     /**
-     * Returns the count of videos that have the boolean
-     * {@link org.edx.mobile.model.db.DownloadEntry#isVideoForWebOnly} set to <code>false</code>
-     *
-     * @param storage The local storage object to look into
-     * @return The count of videos that are downloadable
+     * @return count of videos that have encoded files available
+     * and {@link VideoData#onlyOnWeb} set to <code>false</code>
      */
-    public int getDownloadableVideosCount(IStorage storage) {
+    public int getDownloadableVideosCount() {
         int downloadableCount = 0;
-        List<HasDownloadEntry> videos = getVideos();
-        for (int i = 0, size = videos.size(); i < size; i++) {
-            if (!videos.get(i).getDownloadEntry(storage).isVideoForWebOnly()) {
+        List<VideoBlockModel> videos = getVideos();
+        for (VideoBlockModel video : videos) {
+            if (video.getData().encodedVideos.getPreferredVideoInfo() != null && !video.getData().onlyOnWeb) {
                 downloadableCount++;
             }
         }

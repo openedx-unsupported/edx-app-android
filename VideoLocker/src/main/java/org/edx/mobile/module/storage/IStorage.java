@@ -79,7 +79,7 @@ public interface IStorage {
      * @param block - VidoeBlockModel
      * @return
      */
-    VideoModel getDownloadEntryfromVideoModel(VideoBlockModel block);
+    VideoModel getDownloadEntryFromVideoModel(VideoBlockModel block);
 
     /**
      * Returns NativeDownload Entry for the given DMID

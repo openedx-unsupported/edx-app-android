@@ -14,6 +14,7 @@ import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
+import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.junit.Test;
 
@@ -283,7 +284,7 @@ public class ApiTests extends HttpBaseTestCase {
         assertSame(courseComponent,
                 courseComponent.getAncestor(EnumSet.of(blockType)));
 
-        List<HasDownloadEntry> videos = courseComponent.getVideos();
+        List<VideoBlockModel> videos = courseComponent.getVideos();
         assertNotNull(videos);
         for (HasDownloadEntry video : videos) {
             assertNotNull(video);

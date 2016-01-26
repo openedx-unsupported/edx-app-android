@@ -475,7 +475,7 @@
     <!-- Error shown when video has flag to indicate it is not available for mobile app -->
     <string name="video_only_on_web_label">This video is currently only on web. Click to view on web.</string>
     <!-- Message to indicate the it is not available for mobile app  -->
-    <string name="video_only_on_web_short">This video can only be played in a browser</string>
+    <string name="video_only_on_web_short">This video isn’t yet available on mobile.</string>
     <!-- Alert dialog title when login fails -->
     <string name="login_error">Sign-in Error</string>
     <!-- Alert dialog title when login fails due to lack of internet -->
