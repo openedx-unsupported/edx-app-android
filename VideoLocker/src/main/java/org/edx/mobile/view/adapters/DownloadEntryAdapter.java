@@ -22,22 +22,14 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
 
     public DownloadEntryAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_download_list, environment);
-    }
-
-    public void setStore(IStorage storage) {
-        this.storage = storage;
+        this.storage = environment.getStorage();
     }   
     
     @Override
     public void render(BaseViewHolder tag, final DownloadEntry model) {
         ViewHolder holder = (ViewHolder) tag;
 
-        NativeDownloadModel nativeModel = storage.getNativeDownlaod(model.dmId);
-
-        if (nativeModel != null && nativeModel.getPercent() == 100) {
-            onDownloadComplete(model);
-            return;
-        }
+        NativeDownloadModel nativeModel = storage.getNativeDownload(model.dmId);
 
         holder.title.setText(model.getTitle());
         holder.duration.setText(model.getDurationReadable());
@@ -114,6 +106,5 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     }
 
     public abstract void onItemClicked(DownloadEntry model);
-    public abstract void onDownloadComplete(DownloadEntry model);
     public abstract void onDeleteClicked(DownloadEntry model);
 }
