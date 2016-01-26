@@ -71,4 +71,17 @@ public abstract class DataCallback<T> implements IDbCallback<T> {
             Looper.loop();
         }
     }
+
+
+    /**
+     * Callback that gets invoked when database operation returns result.
+     * @param result
+     */
+    public abstract void onResult(T result);
+
+    /**
+     * Callback that gets invoked when database operation fails.
+     * @param ex
+     */
+    public abstract void onFail(Exception ex);
 }
