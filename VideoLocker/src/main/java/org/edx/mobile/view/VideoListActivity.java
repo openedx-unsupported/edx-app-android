@@ -79,6 +79,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         super.onPostCreate(savedInstanceState);
         // Wait until PlayerFragment.onActivityCreated() is called, so that PlayerFragment.player != null
         // Wait until VideoListFragment.onActivityCreated() is called, so that VideoListFragment.adapter has been filled
+        playerFragment.setCallback(this);
         playerFragment.setNextPreviousListeners(listFragment.getNextListener(), listFragment.getPreviousListener());
     }
 
@@ -86,10 +87,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
     protected void onResume() {
         super.onResume();
         try{
-            if (playerFragment != null) {
-                playerFragment.setCallback(this);
-            }
-
             View container = findViewById(R.id.container_player);
             if (container == null || container.getVisibility() != View.VISIBLE) {
                 // this is to lock to portrait while player is invisible
