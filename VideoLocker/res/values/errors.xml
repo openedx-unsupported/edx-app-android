@@ -40,7 +40,7 @@
     
     <!-- Download error messages -->
     <!-- Label shown on video list item whose download failed -->
-    <string name="error_download_failed">Download Failed</string>
+    <string name="error_download_failed">Download failed</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">The size of the download exceeds the remaining device storage space.</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->

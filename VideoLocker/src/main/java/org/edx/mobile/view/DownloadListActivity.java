@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -152,36 +153,50 @@ public class DownloadListActivity extends BaseFragmentActivity {
         }
 
         @Override
-        public long getSize() {
-            if (model.size == 0) {
+        @Nullable
+        public Long getTotalByteCount() {
+            if (model.size <= 0) {
+                if (nativeModel.size <= 0) {
+                    return null; // Size not known
+                }
                 return nativeModel.size;
             }
             return model.size;
         }
 
         @Override
+        @NonNull
         public String getTitle() {
             return model.getTitle();
         }
 
         @Override
+        @NonNull
         public String getDuration() {
             return model.getDurationReadable();
         }
 
         @Override
-        public String getDownloaded() {
-            return nativeModel.getDownloaded();
+        public long getDownloadedByteCount() {
+            return nativeModel.downloaded;
         }
 
         @Override
-        public int getStatus() {
-            return nativeModel.status;
+        @NonNull
+        public Status getStatus() {
+            if (nativeModel.status == DownloadManager.STATUS_FAILED) {
+                return Status.FAILED;
+            }
+            if (nativeModel.status == DownloadManager.STATUS_PENDING
+                    || nativeModel.size == -1) {
+                return Status.PENDING;
+            }
+            return Status.DOWNLOADING;
         }
 
         @Override
         public int getPercent() {
-            return nativeModel.getPercent();
+            return nativeModel.getPercentDownloaded();
         }
     }
 }

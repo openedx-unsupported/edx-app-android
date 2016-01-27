@@ -1,8 +1,9 @@
 package org.edx.mobile.view.adapters;
 
-import android.app.DownloadManager;
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,32 +22,57 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     }
 
     @Override
-    public void render(BaseViewHolder tag, final DownloadEntryAdapter.Item item) {
-        ViewHolder holder = (ViewHolder) tag;
-
+    public void render(BaseViewHolder tag, final Item item) {
+        final ViewHolder holder = (ViewHolder) tag;
         holder.title.setText(item.getTitle());
         holder.duration.setText(item.getDuration());
-        holder.percent.setText(item.getDownloaded() + " / "
-                + MemoryUtil.format(getContext(), item.getSize()));
-
         holder.progress.setProgress(item.getPercent());
-        if (item.getStatus() == DownloadManager.STATUS_FAILED) {
-            holder.error.setVisibility(View.VISIBLE);
-            holder.error.setTag(item);
-            holder.error.setText(getContext()
-                    .getString(R.string.error_download_failed));
-
-            holder.progress.setProgressDrawable(getContext().getResources()
-                    .getDrawable(
-                            R.drawable.custom_progress_bar_horizontal_red));
+        @DrawableRes
+        final int progressDrawable;
+        final String progressText;
+        final String errorText;
+        switch (item.getStatus()) {
+            case PENDING: {
+                progressText = getContext().getString(R.string.download_pending);
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_green;
+                errorText = null;
+                break;
+            }
+            case DOWNLOADING: {
+                progressText = getByteCountProgressText(item);
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_green;
+                errorText = null;
+                break;
+            }
+            case FAILED: {
+                errorText = getContext().getString(R.string.error_download_failed);
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_red;
+                if (item.getDownloadedByteCount() > 0) {
+                    progressText = getByteCountProgressText(item);
+                } else {
+                    progressText = null;
+                }
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException(item.getStatus().name());
+            }
+        }
+        holder.progress
+                .setProgressDrawable(getContext()
+                        .getResources()
+                        .getDrawable(progressDrawable));
+        if (null == progressText) {
+            holder.percent.setVisibility(View.GONE);
         } else {
+            holder.percent.setText(progressText);
+            holder.percent.setVisibility(View.VISIBLE);
+        }
+        if (null == errorText) {
             holder.error.setVisibility(View.GONE);
-
-            holder.progress
-                    .setProgressDrawable(getContext()
-                            .getResources()
-                            .getDrawable(
-                                    R.drawable.custom_progress_bar_horizontal_green));
+        } else {
+            holder.error.setText(errorText);
+            holder.error.setVisibility(View.VISIBLE);
         }
 
         holder.cross_image_layout.setOnClickListener(new OnClickListener() {
@@ -55,6 +81,16 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
                 onDeleteClicked(item);
             }
         });
+    }
+
+    @NonNull
+    private String getByteCountProgressText(Item item) {
+        final Long totalByteCount = item.getTotalByteCount();
+        String downloadedText = MemoryUtil.format(getContext(), item.getDownloadedByteCount());
+        if (null != totalByteCount) {
+            downloadedText += " / " + MemoryUtil.format(getContext(), totalByteCount);
+        }
+        return downloadedText;
     }
 
     @Override
@@ -96,16 +132,29 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
     public abstract void onDeleteClicked(DownloadEntryAdapter.Item model);
 
     public interface Item {
-        long getSize();
-
+        @NonNull
         String getTitle();
 
+        @NonNull
         String getDuration();
 
-        String getDownloaded();
+        @NonNull
+        Status getStatus();
 
-        int getStatus();
+        /**
+         * @return Total download size in bytes, or null if size is not yet known
+         */
+        @Nullable
+        Long getTotalByteCount();
+
+        long getDownloadedByteCount();
 
         int getPercent();
+
+        enum Status {
+            PENDING,
+            DOWNLOADING,
+            FAILED
+        }
     }
 }
