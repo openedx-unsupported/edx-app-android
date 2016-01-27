@@ -468,6 +468,8 @@
     <string name="video_download_in_progress">Video Downloads in Progress</string>
     <!-- Message shown a single video download begins -->
     <string name="msg_started_one_video_download">"Downloading 1 Video"</string>
+    <!-- When a video download is about to start and we don't know it's file size yet -->
+    <string name="download_pending">Download pending…</string>
     <!-- Error shown when video download fails -->
     <string name="msg_video_not_downloaded">"Unable to download video"</string>
     <!-- Error shown when video download fails -->

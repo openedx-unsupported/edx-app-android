@@ -70,7 +70,7 @@ public abstract class OnlineVideoAdapter extends VideoBaseAdapter<SectionItemInt
                     NativeDownloadModel downloadModel = storage.
                             getNativeDownload(videoData.dmId);
                     if(downloadModel!=null){
-                        int percent = downloadModel.getPercent();
+                        int percent = downloadModel.getPercentDownloaded();
                         if(percent>=0 && percent < 100){
                             holder.progresslayout.setVisibility(View.VISIBLE);
                             holder.download_pw.setProgressPercent(percent);
