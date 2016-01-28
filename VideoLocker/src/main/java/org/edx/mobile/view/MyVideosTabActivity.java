@@ -79,6 +79,7 @@ public class MyVideosTabActivity extends PlayerActivity implements VideoListCall
         // Wait until MyRecentVideosFragment.onResume() has been called so that its adapter has been filled
         // Wait until PlayerFragment.onActivityCreated has been called, so PlayerFragment.player != null
         if (null != playerFragment && null != recentVideosFragment) {
+            playerFragment.setCallback(this);
             playerFragment.setNextPreviousListeners(recentVideosFragment.getNextListener(),
                     recentVideosFragment.getPreviousListener());
         }
