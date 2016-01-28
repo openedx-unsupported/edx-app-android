@@ -49,3 +49,8 @@ branches:
 cache:
   directories:
     - $HOME/.gradle
+
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov

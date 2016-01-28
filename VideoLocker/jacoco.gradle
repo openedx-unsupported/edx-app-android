@@ -4,7 +4,8 @@ apply plugin: 'jacoco'
 
 
 jacoco {
-    toolVersion = "0.7.5.201505241946"
+    toolVersion = "0.7.2.201409121644"
+    // WARNING: v0.7.3+ breaks Robolectric coverage support: https://github.com/jacoco/jacoco/issues/288
 }
 
 project.afterEvaluate {
@@ -17,26 +18,29 @@ project.afterEvaluate {
 
     productFlavors.each { productFlavorName ->
         buildTypes.each { buildTypeName ->
-            def sourceName = "${buildTypeName}"
-            if (productFlavorName) {
-                sourceName = "${productFlavorName}${sourceName.capitalize()}"
+            def sourceName, sourcePath
+            if (!productFlavorName) {
+                sourceName = sourcePath = "${buildTypeName}"
+            } else {
+                sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
+                sourcePath = "${productFlavorName}/${buildTypeName}"
             }
             def targetName = "${sourceName.capitalize()}"
             def testTaskName = "test${sourceName.capitalize()}UnitTest"
-            def coverageTaskName = "${testTaskName}Coverage"
 
             // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
-            task "$coverageTaskName" (type:JacocoReport, dependsOn: "$testTaskName") {
+            task "${testTaskName}Coverage" (type:JacocoReport, dependsOn: "$testTaskName") {
                 group = "Reporting"
-                description = "Generate Jacoco coverage reports on the ${targetName} build."
+                description = "Generate Jacoco coverage reports on the ${sourceName.capitalize()} build."
 
                 classDirectories = fileTree(
-                        dir: "${project.buildDir}/intermediates/classes/${sourceName}",
+                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
                         excludes: ['**/R.class',
                                    '**/R$*.class',
                                    '**/*$ViewInjector*.*',
                                    '**/BuildConfig.*',
-                                   '**/Manifest*.*']
+                                   '**/Manifest*.*',
+                                   'default/*.*']
                 )
 
                 def coverageSourceDirs = [
