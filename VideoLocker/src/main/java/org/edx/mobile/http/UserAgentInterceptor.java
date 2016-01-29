@@ -2,10 +2,10 @@ package org.edx.mobile.http;
 
 import android.support.annotation.NonNull;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Response;
 
 public class UserAgentInterceptor implements Interceptor {
 

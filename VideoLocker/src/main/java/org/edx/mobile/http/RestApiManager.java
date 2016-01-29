@@ -9,12 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -62,8 +57,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.CacheControl;
+import okhttp3.FormBody;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 
 /**
  * DESIGN NOTES -
@@ -92,7 +92,7 @@ public class RestApiManager implements IApi{
         this.context = context;
         this.oauthBasedClient = oauthBasedClient;
         RestAdapter restAdapter = new RestAdapter.Builder()
-            .setClient(new OkClient(oauthBasedClient))
+            .setClient(new Ok3Client(oauthBasedClient))
             .setEndpoint(getBaseUrl())
             .setRequestInterceptor(new OfflineRequestInterceptor(context))
             .build();
@@ -100,7 +100,7 @@ public class RestApiManager implements IApi{
 
         client = OkHttpUtil.getClient(context);
         restAdapter = new RestAdapter.Builder()
-            .setClient(new OkClient(client))
+            .setClient(new Ok3Client(client))
             .setEndpoint(getBaseUrl())
             .build();
         restApi = restAdapter.create(PublicRestApi.class);
@@ -111,10 +111,9 @@ public class RestApiManager implements IApi{
     }
 
     public final OkHttpClient createSpeedTestClient(){
-        OkHttpClient client = OkHttpUtil.getClient(context);
+        OkHttpClient.Builder builder = OkHttpUtil.getClient(context).newBuilder();
         int timeoutMillis = context.getResources().getInteger(R.integer.speed_test_timeout_in_milliseconds);
-        client.setConnectTimeout(timeoutMillis, TimeUnit.MILLISECONDS);
-        return client;
+        return builder.connectTimeout(timeoutMillis, TimeUnit.MILLISECONDS).build();
     }
 
     public  String getBaseUrl() {
@@ -142,7 +141,7 @@ public class RestApiManager implements IApi{
             }
         });
         RestAdapter restAdapter = new RestAdapter.Builder()
-            .setClient(new OkClient(client))
+            .setClient(new Ok3Client(client))
             .setEndpoint(getBaseUrl())
             .build();
         PublicRestApi service = restAdapter.create(PublicRestApi.class);
@@ -454,7 +453,7 @@ public class RestApiManager implements IApi{
     @Override
     public RegisterResponse register(Bundle parameters) throws Exception {
 
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         for (String key : parameters.keySet()) {
             builder.add(key, parameters.getString(key));
         }

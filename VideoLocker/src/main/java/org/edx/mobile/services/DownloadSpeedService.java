@@ -8,9 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 
 import com.google.inject.Inject;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.edx.mobile.R;
 import org.edx.mobile.http.RestApiManager;
@@ -24,6 +21,10 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import roboguice.service.RoboService;
 
 /**
@@ -112,14 +113,14 @@ public class DownloadSpeedService extends RoboService {
 
             apiManager.createSpeedTestClient().newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Request request, IOException throwable) {
+                public void onFailure(Call call, IOException throwable) {
                     logger.error(throwable);
                     //If it times out, set a low value for download speed
                     setCurrentDownloadSpeed(0.01f);
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful()) {
                         logger.debug("Download Speed Test Failed");
                     } else {

@@ -3,10 +3,6 @@ package org.edx.mobile.test.http;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
-import com.squareup.okhttp.mockwebserver.Dispatcher;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import org.edx.mobile.test.BaseTestCase;
 import org.json.JSONException;
@@ -17,6 +13,11 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
 /**
  *  use MockWebService for Api test

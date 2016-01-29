@@ -4,28 +4,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-
-import org.apache.http.cookie.Cookie;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Cache;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.Headers;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class OkHttpUtil {
     public static final MediaType JSON
@@ -43,14 +43,14 @@ public class OkHttpUtil {
     }
 
     private static OkHttpClient getClient(@NonNull Context context, boolean isOAuthBased) {
-        final OkHttpClient client = new OkHttpClient();
+        final OkHttpClient.Builder builder = new OkHttpClient.Builder();
         final File cacheDirectory = new File(context.getFilesDir(), "http-cache");
         if (!cacheDirectory.exists()) {
             cacheDirectory.mkdirs();
         }
         final Cache cache = new Cache(cacheDirectory, cacheSize);
-        client.setCache(cache);
-        List<Interceptor> interceptors = client.interceptors();
+        builder.cache(cache);
+        List<Interceptor> interceptors = builder.interceptors();
         interceptors.add(new JsonMergePatchInterceptor());
         interceptors.add(new UserAgentInterceptor(
                 System.getProperty("http.agent") + " " +
@@ -65,7 +65,7 @@ public class OkHttpUtil {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             interceptors.add(loggingInterceptor);
         }
-        return client;
+        return builder.build();
     }
 
     /**
@@ -117,11 +117,23 @@ public class OkHttpUtil {
      */
     public static List<HttpCookie> getCookies(Context context, String url, boolean isGet)
             throws Exception {
+        final List<HttpCookie> cookies = new ArrayList<>();
 
-        OkHttpClient oauthBasedClient = getOAuthBasedClient(context);
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        oauthBasedClient.setCookieHandler(cookieManager);
+        OkHttpClient.Builder oauthBasedClientBuilder = getOAuthBasedClient(context).newBuilder();
+        oauthBasedClientBuilder.cookieJar(new CookieJar() {
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> newCookies) {
+                for (Cookie cookie : newCookies) {
+                    cookies.addAll(HttpCookie.parse(cookie.toString()));
+                }
+            }
+
+            @Override
+            public List<okhttp3.Cookie> loadForRequest(HttpUrl url) {
+                return null;
+            }
+        });
+        OkHttpClient oauthBasedClient = oauthBasedClientBuilder.build();
 
         Request.Builder builder = new Request.Builder();
         if (!isGet) {
@@ -131,8 +143,7 @@ public class OkHttpUtil {
         Request request = builder.url(url).build();
         Response response = oauthBasedClient.newCall(request).execute();
 
-        CookieStore cookieStore = cookieManager.getCookieStore();
-        return cookieStore.getCookies();
+        return cookies;
     }
 
     /**
@@ -157,7 +168,8 @@ public class OkHttpUtil {
 
     //http://sangupta.com/tech/convert-between-java-servlet-and-apache.html
     @Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
-    public static HttpCookie servletCookieFromApacheCookie(Cookie apacheCookie) {
+    public static HttpCookie servletCookieFromApacheCookie(
+            org.apache.http.cookie.Cookie apacheCookie) {
         if (apacheCookie == null) {
             return null;
         }

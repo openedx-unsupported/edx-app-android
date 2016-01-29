@@ -1099,11 +1099,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     if(srt!=null){
                         Collection<Caption> subtitles = srt.captions.values();
                         for (Caption caption : subtitles) {
-                            if (currentPos >= caption.start.mseconds
-                                    && currentPos <= caption.end.mseconds) {
+                            int startMillis = caption.start.getMseconds();
+                            int endMillis = caption.end.getMseconds();
+                            if (currentPos >= startMillis && currentPos <= endMillis) {
                                 setClosedCaptionData(caption);
                                 break;
-                            } else if (currentPos > caption.end.mseconds) {
+                            } else if (currentPos > endMillis) {
                                 setClosedCaptionData(null);
                             }
                         }

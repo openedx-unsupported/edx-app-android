@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 
 import com.google.inject.AbstractModule;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.discussion.DiscussionTextUtils;
@@ -29,6 +28,7 @@ import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 
+import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
 
 public class EdxDefaultModule extends AbstractModule {
