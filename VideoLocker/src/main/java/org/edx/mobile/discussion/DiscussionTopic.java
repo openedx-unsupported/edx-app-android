@@ -17,6 +17,7 @@
 package org.edx.mobile.discussion;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
@@ -34,6 +35,14 @@ public class DiscussionTopic implements Serializable {
     String threadListUrl = "";
     List<DiscussionTopic> children = new ArrayList<>();
 
+    /**
+     * Returns the identifier for a discussion topic.
+     * <br>
+     * NOTE: The identifier for a parent topic is always null.
+     *
+     * @return The identifier for a discussion topic.
+     */
+    @Nullable
     public String getIdentifier() {
         return identifier;
     }
@@ -67,7 +76,7 @@ public class DiscussionTopic implements Serializable {
     }
 
     public boolean hasSameId(@NonNull DiscussionTopic discussionTopic) {
-        return discussionTopic.getIdentifier().equals(identifier);
+        return identifier != null && identifier.equals(discussionTopic.getIdentifier());
     }
 
     public boolean containsThread(@NonNull DiscussionThread discussionThread) {
