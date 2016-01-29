@@ -9,13 +9,13 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.SetThreadReadTask;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 

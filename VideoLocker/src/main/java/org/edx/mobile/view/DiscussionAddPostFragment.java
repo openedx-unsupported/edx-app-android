@@ -35,6 +35,8 @@ import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
@@ -78,20 +80,12 @@ public class DiscussionAddPostFragment extends BaseFragment {
     @Inject
     ISegment segIO;
 
-
     private ViewGroup container;
 
     private GetTopicListTask getTopicListTask;
     private CreateThreadTask createThreadTask;
 
     private int selectedTopicIndex;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        segIO.trackScreenView(courseData.getCourse().getName() + " - AddPost");
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -258,6 +252,12 @@ public class DiscussionAddPostFragment extends BaseFragment {
                         }
                     }
                 }
+
+                DiscussionTopic selectedTopic = ((DiscussionTopicDepth) topicsSpinner.getSelectedItem()).getDiscussionTopic();
+                Map<String, String> values = new HashMap<>();
+                values.put(ISegment.Keys.TOPIC_ID, selectedTopic.getIdentifier());
+                segIO.trackScreenView(ISegment.Screens.FORUM_CREATE_TOPIC_THREAD,
+                        courseData.getCourse().getId(), selectedTopic.getName(), values);
             }
 
             @Override

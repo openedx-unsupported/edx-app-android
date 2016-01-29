@@ -17,10 +17,10 @@ import org.edx.mobile.util.images.ShareUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Map;
 
 @Singleton
 public class ISegmentImpl implements ISegment {
-
     @Inject
     private ISegmentTracker tracker;
 
@@ -30,12 +30,13 @@ public class ISegmentImpl implements ISegment {
     }
 
     class SegmentAnalyticsEvent {
+        public Properties properties;
+        public Properties data;
+
         public SegmentAnalyticsEvent() {
             this.properties = new Properties();
             this.data = new Properties();
-            if (this.data != null) {
-                this.properties.putValue(Keys.DATA, this.data);
-            }
+            this.properties.putValue(Keys.DATA, this.data);
 
             setCustomProperties();
         }
@@ -67,9 +68,6 @@ public class ISegmentImpl implements ISegment {
             this.properties.putValue(Keys.NAVIGATION_MODE,
                     (isVideoMode ? Values.OUTLINE_MODE_VIDEO : Values.OUTLINE_MODE_FULL));
         }
-
-        public Properties properties;
-        public Properties data;
     }
 
     /**
@@ -87,6 +85,66 @@ public class ISegmentImpl implements ISegment {
         traits.putUsername(username);
         tracker.identify(userID, traits, new Options());
         return traits;
+    }
+
+    /**
+     * This function is used to send the screen tracking event.
+     *
+     * @param screenName The screen name to track
+     * @return A {@link Properties} object populated with analytics-event info
+     */
+    @Override
+    public Properties trackScreenView(@NonNull String screenName) {
+        return trackScreenView(screenName, null, null);
+    }
+
+    /**
+     * This function is used to send the screen tracking event, with an extra event for
+     * sending course id.
+     *
+     * @param screenName The screen name to track
+     * @param courseId   course id of the course we are viewing
+     * @param action     any custom action we need to send with event
+     * @return A {@link Properties} object populated with analytics-event info
+     */
+    @Override
+    public Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                                      @Nullable String action) {
+        return trackScreenView(screenName, courseId, action, null);
+    }
+
+    /**
+     * This function is used to send the screen tracking event, with an extra event for
+     * sending course id.
+     *
+     * @param screenName The screen name to track
+     * @param courseId   course id of the course we are viewing
+     * @param action     any custom action we need to send with event
+     * @param values     any custom key-value pairs we need to send with event
+     * @return A {@link Properties} object populated with analytics-event info
+     */
+    @Override
+    public Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                                      @Nullable String action,
+                                      @Nullable Map<String, String> values) {
+        // Sending screen view
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.setAppNameContext();
+        if (!TextUtils.isEmpty(action)) {
+            aEvent.properties.put(Keys.ACTION, action);
+        }
+        if (!TextUtils.isEmpty(courseId)) {
+            aEvent.properties.put(Keys.COURSE_ID, courseId);
+        }
+        if (values != null) {
+            aEvent.data.putAll(values);
+        }
+        tracker.screen("", screenName, aEvent.properties);
+
+        // Sending screen event
+        addCategoryToBiEvents(aEvent.properties, Values.SCREEN, screenName);
+        tracker.track(screenName, aEvent.properties);
+        return aEvent.properties;
     }
 
 
@@ -474,45 +532,6 @@ public class ISegmentImpl implements ISegment {
         aEvent.properties.putValue(Keys.NAME, Values.USERLOGOUT);
         aEvent.setAppNameContext();
         tracker.track(Events.USER_LOGOUT, aEvent.properties);
-        return aEvent.properties;
-    }
-
-    /**
-     * This function is used to send the screen tracking event.
-     *
-     * @param screenName The screen name to track
-     * @return A {@link Properties} object populated with analytics-event info
-     */
-    @Override
-    public Properties trackScreenView(String screenName) {
-        return trackScreenView(screenName, null, null);
-    }
-
-    /**
-     * This function is used to send the screen tracking event, with an extra event for
-     * sending course id.
-     *
-     * @param screenName The screen name to track
-     * @param courseId   course id of the course we are viewing
-     * @param action     any custom action we need to send with event
-     * @return A {@link Properties} object populated with analytics-event info
-     */
-    @Override
-    public Properties trackScreenView(String screenName, String courseId, String action) {
-        // Sending screen view
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.setAppNameContext();
-        if (!TextUtils.isEmpty(action)) {
-            aEvent.properties.put(Keys.ACTION, action);
-        }
-        if (!TextUtils.isEmpty(courseId)) {
-            aEvent.properties.put(Keys.COURSE_ID, courseId);
-        }
-        tracker.screen("", screenName, aEvent.properties);
-
-        // Sending screen event
-        addCategoryToBiEvents(aEvent.properties, Values.SCREEN, screenName);
-        tracker.track(screenName, aEvent.properties);
         return aEvent.properties;
     }
 

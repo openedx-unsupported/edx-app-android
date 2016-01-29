@@ -15,14 +15,19 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.SetCommentFlaggedTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -43,11 +48,15 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Inject
     private Context context;
 
-    @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC_CLOSED)
-    private boolean isTopicClosed;
+    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
+    private DiscussionThread discussionThread;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
-    private DiscussionComment discussionComment;
+    private DiscussionComment discussionResponse;
+
+    @Inject
+    ISegment segIO;
+
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
@@ -63,7 +72,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionComment);
+        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionResponse);
 
         discussionCommentsListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);
@@ -75,13 +84,13 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         });
         discussionCommentsListView.setAdapter(discussionCommentsAdapter);
 
-        DiscussionUtils.setStateOnTopicClosed(isTopicClosed,
+        DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
                 createNewCommentTextView, R.string.discussion_post_create_new_comment,
                 R.string.discussion_add_comment_disabled_title, createNewCommentLayout,
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        router.showCourseDiscussionAddComment(context, discussionComment);
+                        router.showCourseDiscussionAddComment(context, discussionResponse, discussionThread);
                     }
                 });
     }
@@ -90,6 +99,13 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        Map<String, String> values = new HashMap<>();
+        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
+        values.put(ISegment.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        segIO.trackScreenView(ISegment.Screens.FORUM_VIEW_RESPONSE_COMMENTS,
+                discussionThread.getCourseId(), discussionThread.getTitle(), values);
     }
 
     @Override
@@ -100,7 +116,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
-        if (null != event.getParent() && event.getParent().getIdentifier().equalsIgnoreCase(discussionComment.getIdentifier())) {
+        if (null != event.getParent() && event.getParent().getIdentifier().equals(discussionResponse.getIdentifier())) {
             discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
         }
     }

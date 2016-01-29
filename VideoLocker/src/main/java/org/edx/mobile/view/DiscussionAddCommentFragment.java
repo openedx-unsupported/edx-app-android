@@ -15,15 +15,20 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionTextUtils;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateCommentTask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -32,7 +37,10 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     static public String TAG = DiscussionAddCommentFragment.class.getCanonicalName();
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_COMMENT, optional = true)
-    DiscussionComment discussionComment;
+    DiscussionComment discussionResponse;
+
+    @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)
+    private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -54,7 +62,22 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     @Inject
     private Router router;
 
+    @Inject
+    ISegment segIO;
+
     private CreateCommentTask createCommentTask;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Map<String, String> values = new HashMap<>();
+        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
+        values.put(ISegment.Keys.RESPONSE_ID, discussionResponse.getIdentifier());
+        segIO.trackScreenView(ISegment.Screens.FORUM_ADD_RESPONSE_COMMENT,
+                discussionThread.getCourseId(), discussionThread.getTitle(), values);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,12 +87,12 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textViewResponse.setText(Html.fromHtml(discussionComment.getRenderedBody()));
+        textViewResponse.setText(Html.fromHtml(discussionResponse.getRenderedBody()));
         DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
-                R.string.post_attribution, discussionComment, new Runnable() {
+                R.string.post_attribution, discussionResponse, new Runnable() {
                     @Override
                     public void run() {
-                        router.showUserProfile(getActivity(), discussionComment.getAuthor());
+                        router.showUserProfile(getActivity(), discussionResponse.getAuthor());
                     }
                 });
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
@@ -103,14 +126,14 @@ public class DiscussionAddCommentFragment extends BaseFragment {
 
         final CommentBody commentBody = new CommentBody();
         commentBody.setRawBody(editTextNewComment.getText().toString());
-        commentBody.setThreadId(discussionComment.getThreadId());
-        commentBody.setParentId(discussionComment.getIdentifier());
+        commentBody.setThreadId(discussionResponse.getThreadId());
+        commentBody.setParentId(discussionResponse.getIdentifier());
 
         createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
             @Override
             public void onSuccess(@NonNull DiscussionComment thread) {
                 logger.debug(thread.toString());
-                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, discussionComment));
+                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, discussionResponse));
                 getActivity().finish();
             }
 
