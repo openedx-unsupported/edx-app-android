@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class FormFieldSelectFragment extends RoboFragment {
+public class FormFieldSelectFragment extends BaseFragment {
 
     @InjectExtra(FormFieldActivity.EXTRA_FIELD)
     private FormField formField;

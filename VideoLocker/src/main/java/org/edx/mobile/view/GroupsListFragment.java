@@ -35,9 +35,9 @@ import org.edx.mobile.view.adapters.GroupListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class GroupsListFragment extends RoboFragment implements SocialProvider.Callback<List<SocialGroup>>, GroupListAdapter.GroupFriendsListener {
+public class GroupsListFragment extends BaseFragment implements SocialProvider.Callback<List<SocialGroup>>, GroupListAdapter.GroupFriendsListener {
 
     private enum State {
         LOADING,

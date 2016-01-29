@@ -34,11 +34,11 @@ import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class DiscussionAddPostFragment extends RoboFragment {
+public class DiscussionAddPostFragment extends BaseFragment {
 
     static public String TAG = DiscussionAddPostFragment.class.getCanonicalName();
     static public String ENROLLMENT = TAG + ".enrollment";

@@ -33,12 +33,12 @@ import org.edx.mobile.view.adapters.SimpleAdapter;
 
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
 /**
  * Created by marcashman on 2014-12-15.
  */
-public class GroupSummaryFragment extends RoboFragment implements View.OnClickListener {
+public class GroupSummaryFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String TAG = GroupSummaryFragment.class.getCanonicalName();
     private static final int REQUEST_ADD_FRIENDS = 0x0000dead;

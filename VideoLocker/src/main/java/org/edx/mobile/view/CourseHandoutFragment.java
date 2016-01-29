@@ -24,9 +24,9 @@ import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class CourseHandoutFragment extends RoboFragment {
+public class CourseHandoutFragment extends BaseFragment {
 
     public WebView webview;
 

@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class SocialFriendPickerFragment extends RoboFragment implements SocialProvider.Callback<List<SocialMember>> {
+public class SocialFriendPickerFragment extends BaseFragment implements SocialProvider.Callback<List<SocialMember>> {
 
     private enum State {
         LOADING,

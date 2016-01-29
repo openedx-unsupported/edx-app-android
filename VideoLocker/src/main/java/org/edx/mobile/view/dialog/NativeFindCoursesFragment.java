@@ -18,9 +18,9 @@ import org.edx.mobile.course.GetCourseListTask;
 import org.edx.mobile.view.adapters.FindCoursesListAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class NativeFindCoursesFragment extends RoboFragment {
+public class NativeFindCoursesFragment extends BaseFragment {
 
     @Inject
     IEdxEnvironment environment;

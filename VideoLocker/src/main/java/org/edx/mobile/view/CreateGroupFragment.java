@@ -34,9 +34,9 @@ import org.edx.mobile.view.dialog.InstallFacebookDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class CreateGroupFragment extends RoboFragment implements View.OnClickListener {
+public class CreateGroupFragment extends BaseFragment implements View.OnClickListener {
 
     public static String TAG = CreateGroupFragment.class.getCanonicalName();
     public static String ALL_FRIENDS = TAG + ".all_friends";

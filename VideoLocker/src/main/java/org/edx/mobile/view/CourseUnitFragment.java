@@ -9,12 +9,12 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.common.RunnableCourseComponent;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
 /**
  * Created by hanning on 6/9/15.
  */
-public class CourseUnitFragment  extends RoboFragment implements PageViewStateCallback, RunnableCourseComponent {
+public class CourseUnitFragment  extends BaseFragment implements PageViewStateCallback, RunnableCourseComponent {
 
     public static interface HasComponent {
         CourseComponent getComponent();

@@ -44,10 +44,10 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
 
-public class NavigationFragment extends RoboFragment {
+public class NavigationFragment extends BaseFragment {
 
     private static final String TAG = "NavigationFragment";
 

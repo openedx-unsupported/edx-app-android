@@ -26,10 +26,10 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.util.HashMap;
 import java.util.Map;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
-public class CertificateFragment extends RoboFragment {
+public class CertificateFragment extends BaseFragment {
 
     static public final String TAG = CertificateFragment.class.getCanonicalName();
     static public final String ENROLLMENT = "enrollment";

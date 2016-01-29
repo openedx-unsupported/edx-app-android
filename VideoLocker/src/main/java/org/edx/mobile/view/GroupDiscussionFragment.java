@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 
-public class GroupDiscussionFragment extends Fragment {
+public class GroupDiscussionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
