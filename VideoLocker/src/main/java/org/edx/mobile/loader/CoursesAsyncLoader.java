@@ -26,7 +26,6 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     ServiceManager api;
 
     public CoursesAsyncLoader(Context context, Bundle args, IEdxEnvironment environment,  ServiceManager api){
-
         super(context);
         this.environment = environment;
         this.api = api;
@@ -39,7 +38,6 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
 
-
         // FIXME: (PR#120) Should this Loader class really be called when social feature is disabled?
         if (environment.getConfig().getSocialSharingConfig().isEnabled() && this.oauthToken == null) {
             return null;
@@ -47,22 +45,15 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<List<EnrolledCoursesResponse>>();
         try {
-
-            List<EnrolledCoursesResponse> list = getCourses(api);
-            result.setResult(list);
+            List<EnrolledCoursesResponse> response = api.getEnrolledCourses();
+            environment.getNotificationDelegate().syncWithServerForFailure();
+            environment.getNotificationDelegate().checkCourseEnrollment(response);
+            result.setResult(response);
 
         } catch (Exception e) {
-
             result.setEx(e);
-
         }
         return result;
-
-    }
-
-    protected List<EnrolledCoursesResponse> getCourses(ServiceManager api) throws Exception {
-       // return api.getFriendsCourses(false, this.oauthToken); ?
-        return api.getEnrolledCourses(false);
     }
 
     @Override
