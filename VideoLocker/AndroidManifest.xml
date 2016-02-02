@@ -8,31 +8,11 @@
     <!-- Required by NewRelic -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Optional but Recommended by Segment and most bundled integrations. -->
     <!-- Required by NewRelic -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Optional but Recommended by Segment and most bundled integrations. -->
-    <!-- Allow you to get LOGCAT information when a crash occurs. -->
-    <uses-permission android:name="android.permission.READ_LOGS" />
-
-    <!-- Optional but Recommended by Segment and most bundled integrations. -->
-    <!-- Allow you to see which activity was active when a crash occurs. -->
-    <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <!-- Optional but Recommended by Segment and most bundled integrations. -->
-    <!-- Allows location to be tracked -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- Optional but Recommended by Segment and most bundled integrations. -->
-    <!-- Allows location to be tracked -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <!-- Required by app for preventing screen lock while playing a video -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!-- Required by app for detection of ONLINE or OFFLINE mode -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- Required by app for performing downloads without showing download notification -->
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
@@ -40,34 +20,21 @@
     <!-- Required by app for storing downloaded videos to the external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- Required by Google -->
+    <!-- Required by legacy Google Sign In (TODO: Switch to new Google Sign In) -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
-    <!-- Required by Google -->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-
-    <!-- Required by Google -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-    <!-- Required by app to detect phone calls and manage playback accordingly -->
-    <!-- Required by telephony service to get mobile network information -->
+    <!-- Required by app for TelephonyManager to determine mobile network carrier ID -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <!-- Sticky broadcast passing a message from one screen and display on another -->
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
 
-    <!-- Permission required by Parse push notification service -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <permission android:protectionLevel="signature"
         android:name="org.edx.mobile.permission.C2D_MESSAGE" />
     <uses-permission android:name="org.edx.mobile.permission.C2D_MESSAGE" />
-
-    <!-- Permission for floating window. used for notification -->
-    <!--
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    -->
 
     <application
         android:allowBackup="true"
