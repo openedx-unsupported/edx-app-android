@@ -230,8 +230,10 @@ android {
     productFlavors {
         prod { }
 
-        dev {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+        minSdk21 {
+            // Speeds up multidexing for faster builds during development
+            // https://developer.android.com/tools/building/multidex.html#dev-build
+            minSdkVersion 21
         }
     }
 
