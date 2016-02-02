@@ -68,7 +68,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
         }
 
         if (discussionTopic != null && discussionTopic.getName() != null) {
-            if (discussionTopic.getIdentifier().equals(DiscussionTopic.FOLLOWING_TOPICS_ID)) {
+            if (DiscussionTopic.FOLLOWING_TOPICS_ID.equals(discussionTopic.getIdentifier())) {
                 SpannableString title = new SpannableString("   " + discussionTopic.getName());
                 IconDrawable starIcon = new IconDrawable(this, FontAwesomeIcons.fa_star)
                         .colorRes(this, R.color.edx_grayscale_neutral_white_t)
