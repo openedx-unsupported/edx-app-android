@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<android.support.v4.app.FragmentTabHost
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,22 +12,12 @@
             android:id="@+id/offline_bar"
             style="@style/offline_bar" />
 
-        <!-- Landscape is fullscreen, so don't show tabs. -->
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-
-        <FrameLayout
-            android:id="@android:id/tabcontent"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
-
-        <FrameLayout
-            android:id="@+id/tabcontent"
+        <!-- Don't show tabs in landscape. -->
+        <org.edx.mobile.view.custom.DisableableViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"
+            android:enabled="false" />
     </LinearLayout>
 
     <TextView
@@ -37,4 +25,4 @@
         style="@style/flying_message"
         android:text="@string/started_downloading"
         android:visibility="gone" />
-</android.support.v4.app.FragmentTabHost>
+</FrameLayout>

@@ -1,47 +1,38 @@
 package org.edx.mobile.view.custom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-/**
- * we need to disable the swipe in landscape. the idea is from
- * https://blog.svpino.com/2011/08/29/disabling-pagingswiping-on-android
- */
-public class DisableableViewPager  extends ViewPager {
+import org.edx.mobile.R;
 
-    private boolean enabled;
+/**
+ * Subclass of ViewPager that disables swipe when
+ * it's disabled.
+ */
+public class DisableableViewPager extends ViewPager {
+    public DisableableViewPager(Context context) {
+        super(context);
+    }
 
     public DisableableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.enabled = true;
+        final TypedArray a = context.obtainStyledAttributes(
+                attrs, R.styleable.DisableableViewPager, 0, 0);
+        setEnabled(a.getBoolean(
+                R.styleable.DisableableViewPager_android_enabled, true));
+        a.recycle();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (this.enabled) {
-            return super.onTouchEvent(event);
-        }
-
-        return false;
+        return isEnabled() && super.onTouchEvent(event);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (this.enabled) {
-            return super.onInterceptTouchEvent(event);
-        }
-
-        return false;
-    }
-
-    public void setPagingEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isPagingEnabled() {
-        return enabled;
+        return isEnabled() && super.onInterceptTouchEvent(event);
     }
 }
-

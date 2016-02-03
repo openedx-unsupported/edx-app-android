@@ -264,11 +264,11 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
-            pager.setPagingEnabled(false);
+            pager.setEnabled(false);
         } else {
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
-            pager.setPagingEnabled(true);
+            pager.setEnabled(true);
         }
     }
 

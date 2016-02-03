@@ -7,8 +7,7 @@
     android:background="@color/grey_act_background"
     android:splitMotionEvents="false">
 
-    <android.support.v4.app.FragmentTabHost
-        android:id="@android:id/tabhost"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,23 +20,16 @@
                 android:id="@+id/offline_bar"
                 style="@style/offline_bar" />
 
-            <TabWidget
-                android:id="@android:id/tabs"
+            <android.support.design.widget.TabLayout
+                style="@style/edX.Widget.TabLayout"
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@color/tab_bg" />
+                android:layout_height="wrap_content" />
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="0dp"
-                android:layout_height="0dp" />
-
-            <FrameLayout
-                android:id="@+id/tabcontent"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <TextView
@@ -45,7 +37,7 @@
             style="@style/flying_message"
             android:text="@string/started_downloading"
             android:visibility="gone" />
-    </android.support.v4.app.FragmentTabHost>
+    </FrameLayout>
 
     <include layout="@layout/navigation_drawer_container" />
 </android.support.v4.widget.DrawerLayout>

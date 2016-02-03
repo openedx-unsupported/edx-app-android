@@ -21,7 +21,6 @@
         <item name="edgePopupMenuStyle">@style/edX.Widget.EdgePopupMenu</item>
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <item name="actionBarTabStyle">@style/TabsStyle</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
         <item name="android:listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
@@ -100,12 +99,6 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
-    </style>
-
-    <!-- ActionBar tabs styles -->
-    <style name="TabsStyle" parent="Widget.AppCompat.Light.ActionBar.TabView">
-        <!-- tab indicator -->
-        <item name="android:background">@drawable/tab_indicator</item>
     </style>
 
     <style name="offline_bar">
@@ -495,6 +488,20 @@
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Title"/>
+
+    <!-- Unfortunately, TabLayout doesn't define a global theme
+         attribute for it's default style, so this would need to be
+         manually defined as the style for each instance of it. If this
+         gets problematic, then a subclass could be implemented that
+         addresses this deficiency. This issue has been reported at
+         http://b.android.com/200144 -->
+    <style name="edX.Widget.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/edx_brand_primary_base</item>
+        <item name="tabIndicatorHeight">@dimen/tab_indicator_selected_height</item>
+        <item name="tabBackground">@drawable/tab_bg</item>
+        <item name="tabTextColor">@color/tab_selector</item>
+        <item name="tabSelectedTextColor">@null</item>
+    </style>
 
     <style name="edX.Widget.SegmentedControlSegment">
         <item name="android:textColor">@color/edx_segmented_control_text_selector</item>

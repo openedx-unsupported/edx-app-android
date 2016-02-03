@@ -307,7 +307,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         View pagerView = activity.findViewById(R.id.pager);
         assertNotNull(pagerView);
         assertThat(pagerView).isInstanceOf(DisableableViewPager.class);
-        assertEquals(!isLandscape, ((DisableableViewPager) pagerView).isPagingEnabled());
+        assertEquals(!isLandscape, ((DisableableViewPager) pagerView).isEnabled());
     }
 
     /**

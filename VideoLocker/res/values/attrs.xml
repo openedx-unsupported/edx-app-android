@@ -47,4 +47,8 @@
         <attr name="contourColor" format="color"/>
         <attr name="contourSize" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="DisableableViewPager">
+        <attr name="android:enabled" />
+    </declare-styleable>
 </resources>

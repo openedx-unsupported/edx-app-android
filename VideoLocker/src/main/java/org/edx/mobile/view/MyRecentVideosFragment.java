@@ -161,39 +161,12 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (playerFragment != null) {
+            playerFragment.setUserVisibleHint(isVisibleToUser);
             if (isVisibleToUser) {
                 playerFragment.unlockOrientation();
             } else {
                 playerFragment.lockOrientation();
-                // Reset to initial state upon tab switch.
-                getChildFragmentManager().beginTransaction()
-                        .remove(playerFragment).commitAllowingStateLoss();
-                playerFragment = null;
-                playingVideoIndex = -1;
-                adapter.setSelectedPosition(-1);
-                videoModel = null;
-                adapter.setVideoId(null);
-                notifyAdapter();
             }
-        }
-    }
-
-    // Since FragmentTabHost just attaches and detaches the Fragment
-    // tabs without calling setUserVisibleHint(), it needs to be
-    // invoked manually in order to assure the correct setup.
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (!getUserVisibleHint()) {
-            setUserVisibleHint(true);
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (isDetached() && getUserVisibleHint()) {
-            setUserVisibleHint(false);
         }
     }
 
