@@ -52,48 +52,6 @@ public class DownloadEntry implements SectionItemInterface, VideoModel {
 
     @Inject
     IEdxEnvironment environment;
-    
-    /**
-     * Fields that are not part of database nor API
-     */
-    public boolean resumeFromLastLeftPosition = true;
-    
-    /**
-     * Initializes all fields of this download entry from the values from given cursor.
-     * @param c
-     */
-    public void initFrom(Context context, Cursor c) {
-        dmId = c.getLong(c.getColumnIndex(DbStructure.Column.DM_ID));
-        downloaded = DownloadedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.DOWNLOADED))];
-        duration = c.getLong(c.getColumnIndex(DbStructure.Column.DURATION));
-        filepath = c.getString(c.getColumnIndex(DbStructure.Column.FILEPATH));
-        id = c.getInt(c.getColumnIndex(DbStructure.Column.ID));
-        size = c.getLong(c.getColumnIndex(DbStructure.Column.SIZE));
-        username = c.getString(c.getColumnIndex(DbStructure.Column.USERNAME));
-        title = c.getString(c.getColumnIndex(DbStructure.Column.TITLE));
-        url = c.getString(c.getColumnIndex(DbStructure.Column.URL));
-        url_high_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_HIGH_QUALITY));
-        url_low_quality = c.getString(c.getColumnIndex(DbStructure.Column.URL_LOW_QUALITY));
-        url_youtube = c.getString(c.getColumnIndex(DbStructure.Column.URL_YOUTUBE));
-        videoId = c.getString(c.getColumnIndex(DbStructure.Column.VIDEO_ID));
-        watched = WatchedState.values()[c.getInt(c.getColumnIndex(DbStructure.Column.WATCHED))];
-        eid = c.getString(c.getColumnIndex(DbStructure.Column.EID));
-        chapter = c.getString(c.getColumnIndex(DbStructure.Column.CHAPTER));
-        section = c.getString(c.getColumnIndex(DbStructure.Column.SECTION));
-        downloadedOn = c.getLong(c.getColumnIndex(DbStructure.Column.DOWNLOADED_ON));
-        lastPlayedOffset = c.getInt(c.getColumnIndex(DbStructure.Column.LAST_PLAYED_OFFSET));
-        isCourseActive = c.getInt(c.getColumnIndex(DbStructure.Column.IS_COURSE_ACTIVE));
-        isVideoForWebOnly = c.getInt(c.getColumnIndex(DbStructure.Column.VIDEO_FOR_WEB_ONLY)) == 1;
-        try{
-            lmsUrl = c.getString(c.getColumnIndex(DbStructure.Column.UNIT_URL));
-            if(lmsUrl==null || lmsUrl.trim().length()==0){
-                lmsUrl = environment.getServiceManager().getUnitUrlByVideoById(eid, videoId);
-            }
-        }catch(Exception e){
-            new Logger(getClass().getName()).error(e);
-        }
-        
-    } 
 
     /**
      * Returns duration in the format hh:mm:ss

@@ -255,19 +255,6 @@ public class Api implements IApi {
      * Returns entire course hierarchy.
      * 
      * @param courseId
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public Map<String, SectionEntry> getCourseHierarchy(String courseId)
-            throws Exception {
-        return getCourseHierarchy(courseId, false);
-    }
-
-    /**
-     * Returns entire course hierarchy.
-     * 
-     * @param courseId
      * @param preferCache
      * @return
      * @throws Exception
@@ -357,39 +344,6 @@ public class Api implements IApi {
     }
 
     /**
-     * Returns lecture model for given course id, chapter name and lecture name combination.
-     * @param courseId
-     * @param chapterName
-     * @param lectureName
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public LectureModel getLecture(String courseId, String chapterName, String lectureName)
-            throws Exception {
-        Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
-
-        for (Entry<String, SectionEntry> chapterentry : map.entrySet()) {
-
-            // identify required chapter
-            if (chapterName.equals(chapterentry.getKey())) {
-                for (Entry<String, ArrayList<VideoResponseModel>> entry 
-                        : chapterentry.getValue().sections.entrySet()) {
-
-                    // identify required lecture
-                    if (entry.getKey().equals(lectureName)) {
-                        LectureModel m = new LectureModel();
-                        m.name = entry.getKey();
-                        m.videos = entry.getValue();
-                        return m;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns video model for given course id and video id.
      * @param courseId
      * @param videoId
@@ -417,60 +371,6 @@ public class Api implements IApi {
             }
         }
 
-        return null;
-    }
-
-    /**
-     * Returns any (mostly first video always) one video {@link VideoResponseModel}
-     * object from subsection identified by 
-     * given module id (subsectionId).
-     * @param courseId
-     * @param subsectionId
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public VideoResponseModel getSubsectionById(String courseId, String subsectionId)
-            throws Exception {
-        Map<String, SectionEntry> map = getCourseHierarchy(courseId, true);
-       //FIXME - we should not invoke this method for new course structure api
-       if ( map == null )
-           return null;
-        // iterate chapters
-        for (Entry<String, SectionEntry> chapterentry : map.entrySet()) {
-            // iterate lectures
-            for (Entry<String, ArrayList<VideoResponseModel>> entry : 
-                chapterentry.getValue().sections.entrySet()) {
-                // iterate videos 
-                for (VideoResponseModel v : entry.getValue()) {
-                    // identify the subsection (module) if id matches
-                    if (subsectionId.equals(v.getSection().getId())) {
-                        return v;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns UnitUrl for given course id and video id.
-     * @param courseId
-     * @param videoId
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public String getUnitUrlByVideoById(String courseId, String videoId){
-        try{
-            VideoResponseModel vrm = getVideoById(courseId, videoId);
-            if(vrm!=null){
-                return vrm.getUnitUrl();
-            }
-        }catch(Exception e){
-            logger.error(e);
-        }
         return null;
     }
 

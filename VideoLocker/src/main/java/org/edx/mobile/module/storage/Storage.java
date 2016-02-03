@@ -372,7 +372,7 @@ public class Storage implements IStorage {
 
         try {
             Map<String, SectionEntry> courseHeirarchyMap =
-                serviceManager.getCourseHierarchy(courseId, true);
+                serviceManager.getCourseHierarchy(courseId);
 
             // iterate chapters
             for (Entry<String, SectionEntry> chapterentry : courseHeirarchyMap.entrySet()) {

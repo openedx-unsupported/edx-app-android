@@ -97,25 +97,14 @@ public interface IApi {
     List<HttpCookie> getSessionExchangeCookie() throws Exception;
 
     @Deprecated
-    String getUnitUrlByVideoById(String courseId, String videoId);
-    @Deprecated
-    VideoResponseModel getSubsectionById(String courseId, String subsectionId)
-        throws Exception;
-    @Deprecated
     VideoResponseModel getVideoById(String courseId, String videoId)
-        throws Exception;
-    @Deprecated
-    LectureModel getLecture(String courseId, String chapterName, String lectureName)
         throws Exception;
     @Deprecated
     Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
         throws Exception;
     @Deprecated
-    Map<String, SectionEntry> getCourseHierarchy(String courseId)
-        throws Exception;
-    @Deprecated
     ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
         (String courseId, String chapter);
 
-    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception;
+    HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception;
 }
