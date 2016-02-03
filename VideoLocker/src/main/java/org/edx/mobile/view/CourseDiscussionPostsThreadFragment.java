@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
-import android.util.FloatMath;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +34,6 @@ import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
-
-import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
@@ -211,6 +208,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 }
             }
             discussionPostsAdapter.insert(event.getDiscussionThread(), i);
+            // In case this is the first addition, we need to hide the no-item-view
+            ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         }
     }
 
@@ -295,17 +294,17 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 String resultsText = "";
                 switch (query) {
                     case FOLLOWING:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_following);
+                        resultsText = getString(R.string.forum_no_results_for_following);
                         break;
                     case CATEGORY:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_in_category);
+                        resultsText = getString(R.string.forum_no_results_in_category);
                         break;
                     case COURSE:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_all_posts);
+                        resultsText = getString(R.string.forum_no_results_for_all_posts);
                         break;
                 }
                 if (postsFilter != DiscussionPostsFilter.ALL) {
-                    resultsText += "\n" + getActivity().getResources().getString(R.string.forum_no_results_with_filter);
+                    resultsText += "\n" + getString(R.string.forum_no_results_with_filter);
                 }
                 ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
             } else {
