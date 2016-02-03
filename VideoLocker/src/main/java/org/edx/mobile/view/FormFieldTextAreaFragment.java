@@ -12,9 +12,9 @@ import android.widget.EditText;
 import org.edx.mobile.R;
 import org.edx.mobile.user.FormField;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class FormFieldTextAreaFragment extends RoboFragment {
+public class FormFieldTextAreaFragment extends BaseFragment {
 
     @Nullable
     @Override

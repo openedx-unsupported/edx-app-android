@@ -35,9 +35,9 @@ import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
 import java.util.Arrays;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class SettingsFragment extends RoboFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<Boolean>>{
+public class SettingsFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<Boolean>>{
 
     public static final String TAG = SettingsFragment.class.getCanonicalName();
     private static final int SHARE_LOADER_ID = 0x0000f0f0;

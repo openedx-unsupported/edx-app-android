@@ -13,12 +13,12 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 
-public abstract class CourseDiscussionPostsBaseFragment extends RoboFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {
+public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {
 
     @InjectView(R.id.discussion_posts_listview)
     ListView discussionPostsListView;

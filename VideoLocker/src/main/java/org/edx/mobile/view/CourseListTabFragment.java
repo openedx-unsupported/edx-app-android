@@ -30,9 +30,9 @@ import org.edx.mobile.view.adapters.MyCourseAdapter;
 
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public abstract class CourseListTabFragment extends RoboFragment implements NetworkObserver, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
+public abstract class CourseListTabFragment extends BaseFragment implements NetworkObserver, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
 
     protected MyCourseAdapter adapter;
 

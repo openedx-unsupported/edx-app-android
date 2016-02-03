@@ -60,10 +60,10 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
-public class EditUserProfileFragment extends RoboFragment {
+public class EditUserProfileFragment extends BaseFragment {
 
     private static final int EDIT_FIELD_REQUEST = 1;
     private static final int CAPTURE_PHOTO_REQUEST = 2;

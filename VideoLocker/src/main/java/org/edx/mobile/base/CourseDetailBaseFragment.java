@@ -17,9 +17,9 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.BrowserUtil;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public abstract class CourseDetailBaseFragment extends RoboFragment {
+public abstract class CourseDetailBaseFragment extends BaseFragment {
 
    @Inject
     protected IEdxEnvironment environment;

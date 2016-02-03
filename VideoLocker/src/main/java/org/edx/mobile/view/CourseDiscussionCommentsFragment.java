@@ -22,11 +22,11 @@ import org.edx.mobile.task.FlagCommentTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionCommentsFragment extends RoboFragment implements DiscussionCommentsAdapter.Listener {
+public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
 
     @InjectView(R.id.discussion_comments_listview)
     private RecyclerView discussionCommentsListView;

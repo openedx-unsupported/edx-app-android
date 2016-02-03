@@ -28,9 +28,9 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class CourseDashboardFragment extends RoboFragment {
+public class CourseDashboardFragment extends BaseFragment {
     static public String TAG = CourseHandoutFragment.class.getCanonicalName();
     static public String CourseData = TAG + ".course_data";
     protected final Logger logger = new Logger(getClass().getName());

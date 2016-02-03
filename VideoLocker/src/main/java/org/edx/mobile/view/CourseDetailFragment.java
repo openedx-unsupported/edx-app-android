@@ -45,11 +45,11 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
 
-public class CourseDetailFragment extends RoboFragment {
+public class CourseDetailFragment extends BaseFragment {
 
     @Nullable
     private GetCourseDetailTask getCourseDetailTask;

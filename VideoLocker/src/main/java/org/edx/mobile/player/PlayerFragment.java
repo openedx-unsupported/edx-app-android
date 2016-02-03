@@ -64,14 +64,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
 
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
-public class PlayerFragment extends RoboFragment implements IPlayerListener, Serializable,
+public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
         AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
 
     private enum VideoNotPlayMessageType {

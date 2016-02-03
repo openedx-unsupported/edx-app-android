@@ -8,9 +8,9 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.view.Router;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public abstract class MyVideosBaseFragment extends RoboFragment {
+public abstract class MyVideosBaseFragment extends BaseFragment {
     @Inject
     protected IEdxEnvironment environment;
 

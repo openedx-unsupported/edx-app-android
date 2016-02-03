@@ -34,10 +34,10 @@ import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
-public class UserProfileFragment extends RoboFragment {
+public class UserProfileFragment extends BaseFragment {
 
     @InjectExtra(UserProfileActivity.EXTRA_USERNAME)
     private String username;

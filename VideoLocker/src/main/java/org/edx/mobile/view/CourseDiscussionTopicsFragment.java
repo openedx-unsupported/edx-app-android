@@ -28,11 +28,11 @@ import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class CourseDiscussionTopicsFragment extends RoboFragment {
+public class CourseDiscussionTopicsFragment extends BaseFragment {
 
     @InjectView(R.id.discussion_topics_searchview)
     SearchView discussionTopicsSearchView;

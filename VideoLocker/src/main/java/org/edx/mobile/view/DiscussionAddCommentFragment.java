@@ -23,11 +23,11 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.task.CreateCommentTask;
 
 import de.greenrobot.event.EventBus;
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
-public class DiscussionAddCommentFragment extends RoboFragment {
+public class DiscussionAddCommentFragment extends BaseFragment {
 
     static public String TAG = DiscussionAddCommentFragment.class.getCanonicalName();
 

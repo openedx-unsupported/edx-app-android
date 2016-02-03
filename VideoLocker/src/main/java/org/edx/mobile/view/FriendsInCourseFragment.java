@@ -32,9 +32,9 @@ import org.edx.mobile.view.adapters.SimpleAdapter;
 
 import java.util.List;
 
-import roboguice.fragment.RoboFragment;
+import org.edx.mobile.base.BaseFragment;
 
-public class FriendsInCourseFragment extends RoboFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
+public class FriendsInCourseFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<AsyncTaskResult<List<SocialMember>>> {
 
     private static final String TAG = FriendsInCourseFragment.class.getCanonicalName();
     public static final String ARG_COURSE = TAG + ".argCourse";
