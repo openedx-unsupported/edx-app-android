@@ -4,19 +4,12 @@ public class ApiConstants {
 
     public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
 
-    public static final String URL_USER_INFO ="/api/mobile/v0.5/users/{username}/";
-
-
     public static final String URL_COURSE_ENROLLMENTS =
         "/api/mobile/v0.5/users/{username}/course_enrollments/?format=json";
 
 
-    public static final String URL_FB_FRIENDS_COURSE = "/api/mobile/v0.5/social/facebook/courses/friends";
-
     public static final String URL_FB_FRIENDS_IN_COURSE =
         "/api/mobile/v0.5/social/facebook/friends/course/{courseId}";
-
-    public static final String URL_FB_PREFERENCES ="/api/mobile/v0.5/settings/preferences/";
 
     public static final String URL_FB_GROUP_MEMBER =
         "/api/mobile/v0.5/social/facebook/groups/{groupId}/members/?format=json";
@@ -50,11 +43,7 @@ public class ApiConstants {
 
     public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
 
-    public static final String HEADER_CACHE_CONTROL = "Cache-Control";
-
     public static final String COURSE_ID = "courseId";
     public static final String USER_NAME = "username";
     public static final String GROUP_ID = "groupId";
-    public static final String BACKEND = "backend";
-
 }

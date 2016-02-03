@@ -34,8 +34,6 @@ public interface IApi {
     AuthResponse auth(String username, String password)
                     throws Exception;
 
-    ProfileModel getProfile(String username) throws Exception;
-
     ProfileModel getProfile() throws Exception;
 
     List<EnrolledCoursesResponse> getEnrolledCourses()
@@ -47,20 +45,12 @@ public interface IApi {
 
     HandoutModel getHandout(String url, boolean fetchFromCache) throws Exception;
 
-    CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception;
-
     List<AnnouncementsModel> getAnnouncement(String url, boolean preferCache)
             throws Exception;
 
 
     String downloadTranscript(String url)
                     throws Exception;
-
-    List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception;
-
-    List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception;
-
-    List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception;
 
     List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception;
 
@@ -73,10 +63,6 @@ public interface IApi {
     boolean getUserCourseShareConsent() throws Exception;
 
     List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception;
-
-
-    AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
-                    throws Exception;
 
     AuthResponse loginByFacebook(String accessToken) throws Exception;
 
@@ -99,9 +85,11 @@ public interface IApi {
     @Deprecated
     VideoResponseModel getVideoById(String courseId, String videoId)
         throws Exception;
+
     @Deprecated
     Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
         throws Exception;
+
     @Deprecated
     ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
         (String courseId, String chapter);

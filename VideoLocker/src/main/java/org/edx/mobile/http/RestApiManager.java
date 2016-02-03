@@ -163,11 +163,6 @@ public class RestApiManager implements IApi{
     }
 
     @Override
-    public ProfileModel getProfile(String username) throws Exception {
-        return oauthRestApi.getProfile(username);
-    }
-
-    @Override
     public ProfileModel getProfile() throws Exception {
         ProfileModel res = oauthRestApi.getProfile();
         Gson gson = new GsonBuilder().create();
@@ -240,23 +235,6 @@ public class RestApiManager implements IApi{
     }
 
     @Override
-    public CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-        String urlWithAppendedParams = OkHttpUtil.toGetUrl(url, p);
-        Request.Builder builder = new Request.Builder().url(urlWithAppendedParams);
-        if (NetworkUtil.isConnected(context) && !preferCache )  {
-            builder.cacheControl(CacheControl.FORCE_NETWORK);
-        }
-        Request request =builder.build();
-
-        Response response = oauthBasedClient.newCall(request).execute();
-        if (!response.isSuccessful()) throw new Exception("Unexpected code " + response);
-
-        return gson.fromJson(response.body().charStream(), CourseInfoModel.class);
-    }
-
-    @Override
     public List<AnnouncementsModel> getAnnouncement(String url, boolean preferCache) throws Exception {
         Bundle p = new Bundle();
         p.putString("format", "json");
@@ -293,29 +271,6 @@ public class RestApiManager implements IApi{
             return response.body().string();
         }
         return null;
-    }
-
-    @Override
-    public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
-        return getFriendsCourses(false, oauthToken);
-    }
-
-    @Override
-    public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
-
-        if (!NetworkUtil.isConnected(context)){
-            return oauthRestApi.getFriendsCourses("json", oauthToken);
-        } else if (preferCache) {
-            return oauthRestApi.getFriendsCourses("json", oauthToken);
-        } else {
-            return oauthRestApi.getFriendsCoursesNoCache("json", oauthToken);
-        }
-
-    }
-
-    @Override
-    public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
-        return  getFriendsInCourse(false, courseId, oauthToken);
     }
 
     @Override
@@ -384,15 +339,6 @@ public class RestApiManager implements IApi{
             return oauthRestApi.getGroupMembersNoCache(groupId + "");
         }
 
-    }
-
-    @Override
-    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType) throws Exception {
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
-            return loginByFacebook( accessToken );
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
-            return loginByGoogle( accessToken );
-        return null;
     }
 
     @Override

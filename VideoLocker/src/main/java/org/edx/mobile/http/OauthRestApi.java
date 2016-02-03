@@ -39,9 +39,6 @@ public interface OauthRestApi {
     @GET(URL_MY_USER_INFO)
     ProfileModel getProfile();
 
-    @GET(URL_USER_INFO)
-    ProfileModel getProfile(@Path(USER_NAME) String username);
-
     @GET(URL_VIDEO_OUTLINE)
     List<VideoResponseModel> getCourseHierarchy(@Path(COURSE_ID) String courseId);
 
@@ -72,13 +69,6 @@ public interface OauthRestApi {
     @Headers("Cache-Control: no-cache")
     @GET(URL_COURSE_ENROLLMENTS)
     List<EnrolledCoursesResponse> getEnrolledCoursesNoCache(@Path(USER_NAME) String username);
-
-    @Headers("Cache-Control: no-cache")
-    @GET(URL_FB_FRIENDS_COURSE)
-    List<EnrolledCoursesResponse> getFriendsCoursesNoCache(@Query("format") String format, @Query("oauth_token") String oauthToken);
-
-    @GET(URL_FB_FRIENDS_COURSE)
-    List<EnrolledCoursesResponse> getFriendsCourses(@Query("format") String format, @Query("oauth_token") String oauthToken);
 
     @Headers("Cache-Control: no-cache")
     @GET(URL_FB_FRIENDS_IN_COURSE)
