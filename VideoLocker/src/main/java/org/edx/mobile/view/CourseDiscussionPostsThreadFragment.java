@@ -176,14 +176,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         EventBus.getDefault().unregister(this);
     }
 
-    private boolean isAllTopics() {
-        return DiscussionTopic.ALL_TOPICS_ID.equals(discussionTopic.getIdentifier());
-    }
-
-    private boolean isFollowingTopics() {
-        return DiscussionTopic.FOLLOWING_TOPICS_ID.equals(discussionTopic.getIdentifier());
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
@@ -211,7 +203,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
-        if (!isFollowingTopics() && !isAllTopics() && discussionTopic.containsThread(event.getDiscussionThread())) {
+        if (discussionTopic.containsThread(event.getDiscussionThread())) {
             int i = 0;
             for (; i < discussionPostsAdapter.getCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
@@ -224,7 +216,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (isFollowingTopics()) {
+        if (discussionTopic.isFollowingType()) {
             populateFollowingThreadList(callback);
         } else {
             populatePostList(callback);
@@ -270,7 +262,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         getThreadListTask = new GetThreadListTask(
                 getActivity(),
                 courseData.getCourse().getId(),
-                isAllTopics() ? Collections.EMPTY_LIST : discussionTopic.getAllTopicIds(),
+                discussionTopic.getAllTopicIds(),
                 postsFilter,
                 postsSort,
                 nextPage) {
@@ -279,7 +271,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
                 ++nextPage;
                 callback.onPageLoaded(topicThreads.getResults(), hasMore);
-                if (isAllTopics()) {
+                if (discussionTopic.isAllType()) {
                     checkNoResultView(EmptyQueryResultsFor.COURSE);
                 } else {
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);

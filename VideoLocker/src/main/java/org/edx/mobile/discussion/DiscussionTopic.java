@@ -24,11 +24,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DiscussionTopic implements Serializable {
     public static final String ALL_TOPICS_ID = "ALL_TOPICS";
     public static final String FOLLOWING_TOPICS_ID = "FOLLOWING_TOPICS";
+
+    @Nullable
     @SerializedName("id")
     String identifier = "";
     String name = "";
@@ -47,7 +50,7 @@ public class DiscussionTopic implements Serializable {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(@Nullable String identifier) {
         this.identifier = identifier;
     }
 
@@ -80,7 +83,9 @@ public class DiscussionTopic implements Serializable {
     }
 
     public boolean containsThread(@NonNull DiscussionThread discussionThread) {
-        if (identifier.equals(discussionThread.getTopicId())) {
+        if (isAllType() || (isFollowingType() && discussionThread.isFollowing())) {
+            return true;
+        } else if (identifier != null && identifier.equals(discussionThread.getTopicId())) {
             return true;
         }
         for (DiscussionTopic child : children) {
@@ -93,9 +98,13 @@ public class DiscussionTopic implements Serializable {
 
     @NonNull
     public List<String> getAllTopicIds() {
-        final List<String> ids = new ArrayList<>();
-        appendTopicIds(ids);
-        return ids;
+        if (isAllType()) {
+            return Collections.EMPTY_LIST;
+        } else {
+            final List<String> ids = new ArrayList<>();
+            appendTopicIds(ids);
+            return ids;
+        }
     }
 
     private void appendTopicIds(List<String> ids) {
@@ -105,5 +114,13 @@ public class DiscussionTopic implements Serializable {
         for (DiscussionTopic child : children) {
             child.appendTopicIds(ids);
         }
+    }
+
+    public boolean isAllType() {
+        return DiscussionTopic.ALL_TOPICS_ID.equals(identifier);
+    }
+
+    public boolean isFollowingType() {
+        return DiscussionTopic.FOLLOWING_TOPICS_ID.equals(identifier);
     }
 }
