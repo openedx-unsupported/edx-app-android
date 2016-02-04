@@ -176,31 +176,6 @@ public class Api implements IApi {
     }
 
     /**
-     * Returns basic profile information of the given username.
-     * @deprecated Use {@link #getProfile()} instead.
-     * @param username
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public ProfileModel getProfile(String username) throws Exception {
-        Bundle p = new Bundle();
-        p.putString("username", username);
-
-        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username;
-        String json = http.get(url, getAuthHeaders()).body;
-
-        Gson gson = new GsonBuilder().create();
-        ProfileModel res = gson.fromJson(json, ProfileModel.class);
-        // hold the json string as it is
-        res.json = json;
-
-        logger.debug("profile=" + json);
-
-        return res;
-    }
-
-    /**
      * Returns user's basic profile information for current active session.
      * @return
      * @throws Exception
@@ -532,40 +507,6 @@ public class Api implements IApi {
     }
 
     /**
-     * Returns course info object from the given URL.
-     * @param url
-     * @param preferCache
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-
-        String json = null;
-        if (NetworkUtil.isConnected(context) && !preferCache) {
-            // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            logger.debug("Url "+urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
-            // cache the response
-            cache.put(url, json);
-        } else {
-            json = cache.get(url);
-        }
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Response of course_about= " + json);
-
-        Gson gson = new GsonBuilder().create();
-        CourseInfoModel res = gson.fromJson(json, CourseInfoModel.class);
-        return res;
-    }
-
-    /**
      * Returns list of announcements for the given course id.
      * @param url
      * @param preferCache
@@ -676,61 +617,6 @@ public class Api implements IApi {
             }
         }
         return null;
-    }
-
-    @Override
-    public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
-        return getFriendsCourses(false, oauthToken);
-    }
-
-    @Override
-    public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
-        Bundle params = new Bundle();
-        params.putString("format", "json");
-        params.putString("oauth_token", oauthToken);
-
-        String json;
-        String url = getBaseUrl() + "/api/mobile/v0.5/social/facebook/courses/friends";
-        if (NetworkUtil.isConnected(context) && !preferCache) {
-            // get data from server
-            String urlWithAppendedParams = HttpManager.toGetUrl(url, params);
-           logger.debug(urlWithAppendedParams);
-            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
-            // cache the response
-            cache.put(url, json);
-        } else {
-            json = cache.get(url);
-        }
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("get_friends_courses=" + json);
-
-        Gson gson = new GsonBuilder().create();
-
-        AuthErrorResponse authError = null;
-        try {
-            // check if auth error
-            authError = gson.fromJson(json, AuthErrorResponse.class);
-        } catch(Exception ex) {
-            // nothing to do here
-        }
-        if (authError != null && authError.detail != null) {
-            throw new AuthException(authError);
-        }
-
-        EnrolledCoursesResponse[] courseItems = gson.fromJson(json, EnrolledCoursesResponse[].class);
-
-        List<EnrolledCoursesResponse> list = Arrays.asList(courseItems);
-
-        return list;
-
-    }
-
-    @Override
-    public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
-        return getFriendsInCourse(false, courseId, oauthToken);
     }
 
     @Override
@@ -963,16 +849,6 @@ public class Api implements IApi {
         }
 
         return list;
-    }
-
-    @Override
-    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType)
-            throws Exception{
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
-            return loginByFacebook( accessToken );
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
-            return loginByGoogle( accessToken );
-        return null;
     }
 
     @Override

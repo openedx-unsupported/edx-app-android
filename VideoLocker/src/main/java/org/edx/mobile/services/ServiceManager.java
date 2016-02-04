@@ -68,8 +68,7 @@ public class ServiceManager {
         cacheManager = new CacheManager(MainApplication.instance());
     }
 
-
-    public HttpRequestEndPoint getEndPointCourseStructure(final String courseId) {
+    private HttpRequestEndPoint getEndPointCourseStructure(final String courseId) {
         return new HttpRequestEndPoint() {
             public String getUrl() {
                 try {
@@ -140,10 +139,6 @@ public class ServiceManager {
         }
     }
 
-    public HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception {
-        return null;
-    }
-
     public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
         CourseComponent course = this.getCourseStructureFromCache(courseId);
         if (course == null) {  //it means we cache the old data model in the file system
@@ -189,10 +184,6 @@ public class ServiceManager {
         return api.auth(username, password);
     }
 
-    public ProfileModel getProfile(String username) throws Exception {
-        return api.getProfile(username);
-    }
-
     public ProfileModel getProfile() throws Exception {
         return api.getProfile();
     }
@@ -213,32 +204,12 @@ public class ServiceManager {
         return api.getHandout(url, fetchFromCache);
     }
 
-
-    public CourseInfoModel getCourseInfo(String url, boolean preferCache) throws Exception {
-        return api.getCourseInfo(url, preferCache);
-    }
-
-
     public List<AnnouncementsModel> getAnnouncement(String url, boolean preferCache) throws Exception {
         return api.getAnnouncement(url, preferCache);
     }
 
     public String downloadTranscript(String url) throws Exception {
         return api.downloadTranscript(url);
-    }
-
-    public List<EnrolledCoursesResponse> getFriendsCourses(String oauthToken) throws Exception {
-        return api.getFriendsCourses(oauthToken);
-    }
-
-
-    public List<EnrolledCoursesResponse> getFriendsCourses(boolean preferCache, String oauthToken) throws Exception {
-        return api.getFriendsCourses(preferCache, oauthToken);
-    }
-
-
-    public List<SocialMember> getFriendsInCourse(String courseId, String oauthToken) throws Exception {
-        return api.getFriendsInCourse(courseId, oauthToken);
     }
 
     public List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception {
@@ -268,11 +239,6 @@ public class ServiceManager {
     public List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception {
         return api.getGroupMembers(preferCache, groupId);
     }
-
-    public AuthResponse socialLogin(String accessToken, SocialFactory.SOCIAL_SOURCE_TYPE socialType) throws Exception {
-        return api.socialLogin(accessToken, socialType);
-    }
-
 
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
         return api.loginByFacebook(accessToken);
