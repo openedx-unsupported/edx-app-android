@@ -20,9 +20,9 @@ import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.task.SetCommentFlaggedTask;
+import org.edx.mobile.task.SetCommentVotedTask;
 import org.edx.mobile.task.SetThreadFlaggedTask;
 import org.edx.mobile.task.SetThreadFollowedTask;
-import org.edx.mobile.task.SetCommentVotedTask;
 import org.edx.mobile.task.SetThreadVotedTask;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -292,12 +292,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
 
         if (comment.isEndorsed()) {
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    holder.responseAnswerTextView,
-                    new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
-                            .sizeRes(context, R.dimen.edx_xxx_small)
-                            .colorRes(context, R.color.edx_utility_success),
-                    null, null, null);
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
                     R.string.answer_author_attribution, comment, new Runnable() {
                         @Override
@@ -305,7 +299,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                             listener.onClickAuthor(comment.getAuthor());
                         }
                     });
-
             holder.responseAnswerTextView.setVisibility(View.VISIBLE);
             holder.responseAnswerAuthorTextView.setVisibility(View.VISIBLE);
         } else {
@@ -462,6 +455,14 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
             discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
+
+            final Context context = responseAnswerTextView.getContext();
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    responseAnswerTextView,
+                    new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
+                            .sizeRes(context, R.dimen.edx_xxx_small)
+                            .colorRes(context, R.color.edx_utility_success),
+                    null, null, null);
         }
     }
 }

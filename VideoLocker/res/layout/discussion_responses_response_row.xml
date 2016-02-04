@@ -29,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="3dp"
+                android:drawablePadding="4dp"
                 android:text="@string/discussion_responses_answer"
                 android:textColor="@color/edx_utility_success"
                 android:textSize="@dimen/edx_x_small" />
@@ -47,7 +48,7 @@
             <TextView
                 android:id="@+id/discussion_responses_answer_author_text_view"
                 style="@style/discussion_responses_small_text"
-                android:text="Marked as answer 2 days ago by edxKhalid TA" />
+                tools:text="Marked as answer 2 days ago by edxKhalid TA" />
 
         </LinearLayout>
 
