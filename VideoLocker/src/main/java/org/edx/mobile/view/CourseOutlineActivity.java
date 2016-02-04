@@ -67,7 +67,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.fragment_container, fragment, CourseOutlineFragment.TAG);
             fragmentTransaction.disallowAddToBackStack();
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         }
 
         if (isOnCourseOutline()) {
