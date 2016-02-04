@@ -65,12 +65,13 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         textViewResponse.setText(Html.fromHtml(discussionComment.getRenderedBody()));
-        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor, discussionComment, new Runnable() {
-            @Override
-            public void run() {
-                router.showUserProfile(getActivity(), discussionComment.getAuthor());
-            }
-        });
+        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
+                R.string.post_attribution, discussionComment, new Runnable() {
+                    @Override
+                    public void run() {
+                        router.showUserProfile(getActivity(), discussionComment.getAuthor());
+                    }
+                });
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 createComment();

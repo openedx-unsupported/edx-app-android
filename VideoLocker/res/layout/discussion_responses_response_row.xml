@@ -7,9 +7,9 @@
     android:layout_marginLeft="@dimen/discussion_responses_standard_margin"
     android:layout_marginRight="@dimen/discussion_responses_standard_margin"
     android:layout_marginTop="@dimen/discussion_responses_standard_margin"
-    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="@dimen/edx_box_radius"
     app:cardPreventCornerOverlap="false"
-    app:cardCornerRadius="@dimen/edx_box_radius">
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,22 +25,34 @@
             android:paddingTop="@dimen/discussion_responses_box_padding">
 
             <TextView
+                android:id="@+id/discussion_responses_answer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="3dp"
+                android:drawablePadding="4dp"
+                android:text="@string/discussion_responses_answer"
+                android:textColor="@color/edx_utility_success"
+                android:textSize="@dimen/edx_x_small" />
+
+            <TextView
                 android:id="@+id/discussion_responses_comment_body_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:textColor="@color/edx_grayscale_neutral_dark"
                 android:textSize="@dimen/edx_x_small"
-                tools:text="This is a response"
-                android:layout_marginBottom="5dp"/>
+                tools:text="This is a response" />
 
             <include layout="@layout/discussion_author_layout" />
 
+            <TextView
+                android:id="@+id/discussion_responses_answer_author_text_view"
+                style="@style/discussion_responses_small_text"
+                tools:text="Marked as answer 2 days ago by edxKhalid TA" />
+
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/edx_grayscale_neutral_xx_light" />
+        <View style="@style/light_gray_separator" />
 
         <include layout="@layout/discussion_response_action_bar_layout" />
 

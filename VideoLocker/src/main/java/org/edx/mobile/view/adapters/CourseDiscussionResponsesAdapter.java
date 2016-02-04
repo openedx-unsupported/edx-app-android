@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
 
@@ -18,9 +20,9 @@ import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.task.SetCommentFlaggedTask;
+import org.edx.mobile.task.SetCommentVotedTask;
 import org.edx.mobile.task.SetThreadFlaggedTask;
 import org.edx.mobile.task.SetThreadFollowedTask;
-import org.edx.mobile.task.SetCommentVotedTask;
 import org.edx.mobile.task.SetThreadVotedTask;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -138,12 +140,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.threadPinnedIconImageView.setVisibility(discussionThread.isPinned() ? View.VISIBLE : View.GONE);
 
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
-        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, discussionThread, new Runnable() {
-            @Override
-            public void run() {
-                listener.onClickAuthor(discussionThread.getAuthor());
-            }
-        });
+        DiscussionTextUtils.setAuthorAttributionText(
+                holder.authorLayoutViewHolder.discussionAuthorTextView,
+                R.string.post_attribution,
+                discussionThread, new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onClickAuthor(discussionThread.getAuthor());
+                    }
+                });
         bindNumberResponsesView(holder.numberResponsesViewHolder);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -248,12 +253,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             });
         }
 
-        DiscussionTextUtils.setAuthorAttributionText(holder.authorLayoutViewHolder.discussionAuthorTextView, comment, new Runnable() {
-            @Override
-            public void run() {
-                listener.onClickAuthor(comment.getAuthor());
-            }
-        });
+        DiscussionTextUtils.setAuthorAttributionText(
+                holder.authorLayoutViewHolder.discussionAuthorTextView,
+                R.string.post_attribution,
+                comment, new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onClickAuthor(comment.getAuthor());
+                    }
+                });
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
         final int positionInResponses = position - 1;
         bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
@@ -282,6 +290,21 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.discussionReportViewHolder.setReported(comment.isAbuseFlagged());
 
         holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
+
+        if (comment.isEndorsed()) {
+            DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
+                    R.string.answer_author_attribution, comment, new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onClickAuthor(comment.getAuthor());
+                        }
+                    });
+            holder.responseAnswerTextView.setVisibility(View.VISIBLE);
+            holder.responseAnswerAuthorTextView.setVisibility(View.VISIBLE);
+        } else {
+            holder.responseAnswerTextView.setVisibility(View.GONE);
+            holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
+        }
     }
 
     private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int positionInResponses, final DiscussionComment response) {
@@ -413,7 +436,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     public static class DiscussionResponseViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout addCommentLayout;
+        TextView responseAnswerTextView;
         TextView responseCommentBodyTextView;
+        TextView responseAnswerAuthorTextView;
         AuthorLayoutViewHolder authorLayoutViewHolder;
         NumberResponsesViewHolder numberResponsesViewHolder;
         DiscussionSocialLayoutViewHolder socialLayoutViewHolder;
@@ -423,11 +448,21 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             super(itemView);
 
             addCommentLayout = (RelativeLayout) itemView.findViewById(R.id.discussion_responses_comment_relative_layout);
+            responseAnswerTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_text_view);
             responseCommentBodyTextView = (TextView) itemView.findViewById(R.id.discussion_responses_comment_body_text_view);
+            responseAnswerAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_author_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView);
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
             discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
+
+            final Context context = responseAnswerTextView.getContext();
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    responseAnswerTextView,
+                    new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
+                            .sizeRes(context, R.dimen.edx_xxx_small)
+                            .colorRes(context, R.color.edx_utility_success),
+                    null, null, null);
         }
     }
 }
