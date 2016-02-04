@@ -18,7 +18,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionUtils;
-import org.edx.mobile.task.FlagCommentTask;
+import org.edx.mobile.task.SetCommentFlaggedTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
 import de.greenrobot.event.EventBus;
@@ -51,7 +51,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
-    private FlagCommentTask flagCommentTask;
+    private SetCommentFlaggedTask setCommentFlaggedTask;
 
     @Nullable
     @Override
@@ -107,10 +107,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Override
     public void reportComment(@NonNull DiscussionComment comment) {
-        if (flagCommentTask != null) {
-            flagCommentTask.cancel(true);
+        if (setCommentFlaggedTask != null) {
+            setCommentFlaggedTask.cancel(true);
         }
-        flagCommentTask = new FlagCommentTask(context, comment, !comment.isAbuseFlagged()) {
+        setCommentFlaggedTask = new SetCommentFlaggedTask(context, comment, !comment.isAbuseFlagged()) {
             @Override
             public void onSuccess(DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);
@@ -121,7 +121,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 logger.error(ex);
             }
         };
-        flagCommentTask.execute();
+        setCommentFlaggedTask.execute();
     }
 
     @Override
