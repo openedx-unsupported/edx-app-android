@@ -5,14 +5,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.squareup.okhttp.OkHttpClient;
+import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.discussion.RetroHttpExceptionHandler;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 
+import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestAdapterProvider implements Provider<RestAdapter> {
@@ -32,7 +32,7 @@ public class RestAdapterProvider implements Provider<RestAdapter> {
                 .create();
 
         return new RestAdapter.Builder()
-                .setClient(new OkClient(client))
+                .setClient(new Ok3Client(client))
                 .setEndpoint(config.getApiHostURL())
                 .setConverter(new GsonConverter(gson))
                 .setErrorHandler(new RetroHttpExceptionHandler())

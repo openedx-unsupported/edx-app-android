@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.squareup.okhttp.OkHttpClient;
 
 import org.edx.mobile.discussion.RetroHttpExceptionHandler;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
+import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
