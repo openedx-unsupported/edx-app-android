@@ -608,9 +608,9 @@
     <!-- Google login method -->
     <string name="google_text">Google</string>
     <!-- Message on course list -->
-    <string name="course_not_listed_text">Don’t see one of your courses?</string>
+    <string name="course_not_listed_text">Can’t find one of your courses?</string>
     <!-- Accessible content description of course not listed button on Course list screen -->
-    <string name="course_not_listed_btn">Don’t see one of your courses button</string>
+    <string name="course_not_listed_btn">Can’t find one of your courses button</string>
     <!-- Message on course page for course that hasn't started -->
     <string name="course_content_available_text">This course hasn’t started yet. Come back on {start_time} to see your videos.</string>
     <!-- Button text, allowing user to open the platform's website in a web browser -->
