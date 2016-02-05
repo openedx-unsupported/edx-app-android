@@ -1,24 +1,33 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.FetchCourseFriendsService;
-import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.user.GetCourseEnrollmentsTask;
+import org.edx.mobile.user.UserAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +40,9 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     protected TextView noCourseText;
     private boolean refreshOnResume;
+
+    @Inject
+    private UserAPI userAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,15 +89,10 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity(), bundle, environment, environment.getServiceManager()) {
-            @Override
-            protected List<EnrolledCoursesResponse> getCourses(ServiceManager api) throws Exception {
-                List<EnrolledCoursesResponse> response = api.getEnrolledCourses();
-                environment.getNotificationDelegate().syncWithServerForFailure();
-                environment.getNotificationDelegate().checkCourseEnrollment(response);
-                return response;
-            }
-        };
+        Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> result =
+                new CoursesAsyncLoader(getActivity(), bundle, environment, userAPI);
+
+        return new CoursesAsyncLoader(getActivity(), bundle, environment, userAPI);
     }
 
     @Override
@@ -107,6 +114,14 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
                 logger.error(result.getEx());
                 getActivity().finish();
+            } else if (result.getEx() instanceof RetroHttpException) {
+                logger.error(result.getEx());
+                if (((RetroHttpException) result.getEx()).getStatusCode() == 401) {
+                    environment.getRouter().forceLogout(
+                            getContext(),
+                            environment.getSegment(),
+                            environment.getNotificationDelegate());
+                }
             }
         } else if (result.getResult() != null) {
             invalidateSwipeFunctionality();
