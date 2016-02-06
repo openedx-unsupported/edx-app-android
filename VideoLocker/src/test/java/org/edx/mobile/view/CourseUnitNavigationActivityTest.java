@@ -248,7 +248,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 currentUnit.getType() != BlockType.PROBLEM ) {
             fragmentClass = CourseUnitEmptyFragment.class;
         } else if (currentUnit instanceof HtmlBlockModel) {
-            fragmentClass = CourseUnitWebviewFragment.class;
+            fragmentClass = CourseUnitWebViewFragment.class;
         } else {
             fragmentClass = CourseUnitMobileNotSupportedFragment.class;
         }

@@ -123,4 +123,22 @@ public class CertificateFragment extends BaseFragment {
 
         webview.loadUrl(courseData.getCertificateURL());
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webview.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webview.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        webview.destroy();
+    }
 }

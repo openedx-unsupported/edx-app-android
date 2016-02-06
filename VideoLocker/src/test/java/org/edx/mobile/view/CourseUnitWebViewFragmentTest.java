@@ -19,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
-public class CourseUnitWebviewFragmentTest extends UiTest {
+public class CourseUnitWebViewFragmentTest extends UiTest {
     /**
      * Method for iterating through the mock course response data, and
      * returning the first video block leaf.
@@ -48,7 +48,7 @@ public class CourseUnitWebviewFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseUnitWebviewFragment fragment = CourseUnitWebviewFragment.newInstance(getHtmlUnit());
+        CourseUnitWebViewFragment fragment = CourseUnitWebViewFragment.newInstance(getHtmlUnit());
         SupportFragmentTestUtil.startVisibleFragment(fragment);
         View view = fragment.getView();
         assertNotNull(view);

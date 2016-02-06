@@ -25,7 +25,6 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
 
@@ -302,7 +301,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
                     unit.getType() != BlockType.PROBLEM) {
                 unitFragment = CourseUnitEmptyFragment.newInstance(unit);
             } else if (unit instanceof HtmlBlockModel) {
-                unitFragment = CourseUnitWebviewFragment.newInstance((HtmlBlockModel) unit);
+                unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
             }
             //fallback
             else {

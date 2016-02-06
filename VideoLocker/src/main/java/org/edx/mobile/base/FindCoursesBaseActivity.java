@@ -56,9 +56,27 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        webview.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webview.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         disableEnrollCallback();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        webview.destroy();
     }
 
     protected boolean isWebViewLoaded() {
