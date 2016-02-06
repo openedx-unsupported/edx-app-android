@@ -11,12 +11,8 @@ import org.edx.mobile.view.common.RunnableCourseComponent;
 
 import org.edx.mobile.base.BaseFragment;
 
-/**
- * Created by hanning on 6/9/15.
- */
-public class CourseUnitFragment  extends BaseFragment implements PageViewStateCallback, RunnableCourseComponent {
-
-    public static interface HasComponent {
+public abstract class CourseUnitFragment extends BaseFragment implements PageViewStateCallback, RunnableCourseComponent {
+    public interface HasComponent {
         CourseComponent getComponent();
     }
 
@@ -30,7 +26,7 @@ public class CourseUnitFragment  extends BaseFragment implements PageViewStateCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         unit = getArguments() == null ? null :
-            (CourseComponent) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+                (CourseComponent) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
     }
 
     @Override
@@ -49,11 +45,9 @@ public class CourseUnitFragment  extends BaseFragment implements PageViewStateCa
     }
 
     @Override
-    public void run() {
+    public abstract void run();
 
-    }
-
-    public void setHasComponentCallback(HasComponent callback){
+    public void setHasComponentCallback(HasComponent callback) {
         hasComponentCallback = callback;
     }
 }

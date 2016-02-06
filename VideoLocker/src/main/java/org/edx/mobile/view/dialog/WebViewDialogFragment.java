@@ -22,6 +22,8 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";
 
+    WebView webView;
+
     public static WebViewDialogFragment newInstance(@NonNull String url, @Nullable String title) {
         final Bundle args = new Bundle();
         args.putString(ARG_URL, url);
@@ -48,7 +50,7 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
         final ProgressBar progress = (ProgressBar) view.findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);
 
-        final WebView webView = (WebView) view.findViewById(R.id.eula_webView);
+        webView = (WebView) view.findViewById(R.id.eula_webView);
         final URLInterceptorWebViewClient client =
                 new URLInterceptorWebViewClient(getActivity(), webView);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
@@ -99,5 +101,24 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
         });
 
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        webView.destroy();
     }
 }

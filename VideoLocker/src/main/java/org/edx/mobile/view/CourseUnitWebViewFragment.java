@@ -9,11 +9,9 @@ import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,10 +39,7 @@ import java.util.Map;
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
-/**
- *
- */
-public class CourseUnitWebviewFragment extends CourseUnitFragment{
+public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -61,11 +56,8 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     @InjectView(R.id.content_unavailable_error_text)
     private TextView errorTextView;
 
-    /**
-     * Create a new instance of fragment
-     */
-    static CourseUnitWebviewFragment newInstance(HtmlBlockModel unit) {
-        CourseUnitWebviewFragment f = new CourseUnitWebviewFragment();
+    public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
+        CourseUnitWebViewFragment f = new CourseUnitWebViewFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
@@ -75,34 +67,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         return f;
     }
 
-    @Override
-    public void onDestroyView() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
-        super.onDestroyView();
-    }
-
-    public void onEvent(NetworkConnectivityChangeEvent event) {
-        if (NetworkUtil.isConnected(getContext())) {
-            hideErrorMessage();
-        } else {
-            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
-        }
-    }
-
-    public void onEvent(SessionIdRefreshEvent event) {
-        if (event.success) {
-            tryToLoadWebView(false);
-        } else {
-            hideLoadingProgress();
-        }
-    }
-
-    /**
-     * The Fragment's UI is just a simple text view showing its
-     * instance number.
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -126,7 +90,7 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                         didReceiveError = true;
                         hideLoadingProgress();
                         pageIsLoaded = false;
-                        ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, false);
+                        ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, false);
                         showErrorMessage(R.string.network_error_message,
                                 FontAwesomeIcons.fa_exclamation_circle);
                     }
@@ -162,14 +126,13 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
                         //webview to fit in the screen. But we still need it to show additional
                         //compenent below the webview in the future?
                         // view.loadUrl("javascript:EdxAssessmentView.resize(document.body.getBoundingClientRect().height)");
-                        ViewPagerDownloadManager.instance.done(CourseUnitWebviewFragment.this, true);
+                        ViewPagerDownloadManager.instance.done(CourseUnitWebViewFragment.this, true);
                         hideLoadingProgress();
                     }
                 };
         client.setAllLinksAsExternal(true);
-        //webView.addJavascriptInterface(this, "EdxAssessmentView");
 
-        if(  ViewPagerDownloadManager.USING_UI_PRELOADING ) {
+        if (ViewPagerDownloadManager.USING_UI_PRELOADING) {
             if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
                 ViewPagerDownloadManager.instance.addTask(this);
             } else {
@@ -178,9 +141,64 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        webView.onResume();
+        if (hasComponentCallback != null) {
+            CourseComponent component = hasComponentCallback.getComponent();
+            if (component != null && component.equals(unit)) {
+                try {
+                    tryToLoadWebView(false);
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        webView.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        webView.destroy();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NetworkConnectivityChangeEvent event) {
+        if (NetworkUtil.isConnected(getContext())) {
+            hideErrorMessage();
+        } else {
+            showErrorMessage(R.string.reset_no_network_message, FontAwesomeIcons.fa_wifi);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(SessionIdRefreshEvent event) {
+        if (event.success) {
+            tryToLoadWebView(false);
+        } else {
+            hideLoadingProgress();
+        }
+    }
+
     /**
      * Shows the error message with the given icon, if the web page failed to load
-     * @param errorMsg The error message to show
+     *
+     * @param errorMsg  The error message to show
      * @param errorIcon The error icon to show with the error message
      */
     private void showErrorMessage(@StringRes int errorMsg, @NonNull Icon errorIcon) {
@@ -253,8 +271,8 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     }
 
     @Override
-    public void run(){
-        if ( this.isRemoving() || this.isDetached()){
+    public void run() {
+        if (this.isRemoving() || this.isDetached()) {
             ViewPagerDownloadManager.instance.done(this, false);
         } else {
             tryToLoadWebView(true);
@@ -268,20 +286,6 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
         }
     }
 
-    public void onResume() {
-        super.onResume();
-        if ( hasComponentCallback != null ){
-            CourseComponent component = hasComponentCallback.getComponent();
-            if (component != null && component.equals(unit)){
-                try {
-                    tryToLoadWebView(false);
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-        }
-    }
-
     //the problem with viewpager is that it loads this fragment
     //and calls onResume even it is not visible.
     //which breaks the normal behavior of activity/fragment
@@ -289,33 +293,22 @@ public class CourseUnitWebviewFragment extends CourseUnitFragment{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if ( ViewPagerDownloadManager.USING_UI_PRELOADING )
+        if (ViewPagerDownloadManager.USING_UI_PRELOADING)
             return;
-        if ( ViewPagerDownloadManager.instance.inInitialPhase(unit) )
+        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
             return;
         if (isVisibleToUser) {
             tryToLoadWebView(false);
-        }else{
+        } else {
             tryToClearWebView();
         }
     }
 
-    @JavascriptInterface
-    public void resize(final float height) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                webView.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDisplayMetrics().widthPixels, (int) (height * getResources().getDisplayMetrics().density)));
-            }
-        });
-    }
-
-
-    private void showLoadingProgress(){
+    private void showLoadingProgress() {
         progressWheel.setVisibility(View.VISIBLE);
     }
 
-    private void hideLoadingProgress(){
+    private void hideLoadingProgress() {
         progressWheel.setVisibility(View.GONE);
     }
 }
