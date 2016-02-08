@@ -293,7 +293,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         if (comment.isEndorsed()) {
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
-                    R.string.answer_author_attribution, comment, new Runnable() {
+                    R.string.answer_author_attribution, comment.getEndorserData(),
+                    new Runnable() {
                         @Override
                         public void run() {
                             listener.onClickAuthor(comment.getAuthor());
