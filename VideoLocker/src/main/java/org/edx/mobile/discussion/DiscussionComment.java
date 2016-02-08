@@ -114,4 +114,26 @@ public class DiscussionComment implements Serializable, IAuthorData {
         return children;
     }
 
+    public IAuthorData getEndorserData() {
+        if (!endorsed) {
+            return null;
+        } else {
+            return new IAuthorData() {
+                @Override
+                public String getAuthor() {
+                    return endorsedBy;
+                }
+
+                @Override
+                public String getAuthorLabel() {
+                    return endorsedByLabel;
+                }
+
+                @Override
+                public Date getCreatedAt() {
+                    return endorsedAt;
+                }
+            };
+        }
+    }
 }

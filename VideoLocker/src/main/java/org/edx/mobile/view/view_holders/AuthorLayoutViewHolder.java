@@ -4,8 +4,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
-import org.edx.mobile.discussion.DiscussionTextUtils;
-import org.edx.mobile.discussion.IAuthorData;
 
 public class AuthorLayoutViewHolder {
 
