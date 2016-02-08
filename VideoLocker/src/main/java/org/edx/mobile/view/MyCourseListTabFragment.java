@@ -89,9 +89,6 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> result =
-                new CoursesAsyncLoader(getActivity(), bundle, environment, userAPI);
-
         return new CoursesAsyncLoader(getActivity(), bundle, environment, userAPI);
     }
 
