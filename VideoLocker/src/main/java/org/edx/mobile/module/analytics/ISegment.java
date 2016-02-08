@@ -99,8 +99,6 @@ public interface ISegment {
      */
     void setTracker(ISegmentTracker tracker);
     
-    Properties trackUserCellConnection(String carrierName, boolean isZeroRated);
-
     Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed);
 
     Properties courseGroupAccessed(String courseId);
@@ -305,7 +303,6 @@ public interface ISegment {
         String FIND_COURSES = "Find Courses Clicked";
         String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
         String ENROLL_COURSES = "Enroll Course Clicked";
-        String TRACK_CELL_CONNECTION = "Cell Connection Established";
         String SPEED = "Connected Speed Report";
         String COURSE_GROUP_ACCESSED = "Course Group Accessed";
         String GAME_GROUP_ACCESSED = "Game Group Accessed";
