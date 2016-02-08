@@ -905,61 +905,6 @@ public class Api implements IApi {
 
     }
 
-
-
-//    @Override
-//    public LastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
-//                                                                     String lastVisitedModuleId) throws Exception {
-//
-//        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-//        String username = pref.getCurrentUserProfile().username;
-//
-//        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-//        logger.debug("PATCH url for syncLastAccessed Subsection: " + url);
-//
-//        String date = DateUtil.getModificationDate();
-//
-//        JSONObject postBody = new JSONObject();
-//        postBody.put("last_visited_module_id", lastVisitedModuleId);
-//        postBody.put("modification_date", date);
-//
-//        logger.debug("PATCH body for syncLastAccessed Subsection: " + postBody.toString());
-//        String json = http.post(url, postBody.toString(), getAuthHeaders(), true);
-//
-//        if (json == null) {
-//            return null;
-//        }
-//        logger.debug("Response of sync last viewed= " + json);
-//
-//        Gson gson = new GsonBuilder().create();
-//        LastAccessedSubsectionResponse res = gson.fromJson(json, LastAccessedSubsectionResponse.class);
-//
-//        return res;
-//    }
-//
-//    @Override
-//    public LastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-//        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-//        String username = pref.getCurrentUserProfile().username;
-//
-//        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-//        logger.debug("Url of get last accessed subsection: " + url);
-//
-//        String date = DateUtil.getModificationDate();
-//
-//        String json = http.get(url, getAuthHeaders()).body;
-//
-//        if (json == null) {
-//            return null;
-//        }
-//        logger.debug("Response of get last viewed subsection.id = " + json);
-//
-//        Gson gson = new GsonBuilder().create();
-//        LastAccessedSubsectionResponse res = gson.fromJson(json, LastAccessedSubsectionResponse.class);
-//
-//        return res;
-//    }
-
     /**
      * Creates new account.
      * @param parameters

@@ -369,28 +369,6 @@ public class RestApiManager implements IApi{
         return response;
     }
 
-//    @Override
-//    public LastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
-//        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-//        String username = pref.getCurrentUserProfile().username;
-//
-//        String date = DateUtil.getModificationDate();
-//        EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
-//        body.last_visited_module_id = lastVisitedModuleId;
-//        body.modification_date = date;
-//
-//        return  oauthRestApi.syncLastAccessedSubsection(body, username, courseId);
-//
-//    }
-//
-//    @Override
-//    public LastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-//        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-//        String username = pref.getCurrentUserProfile().username;
-//
-//        return  oauthRestApi.getLastAccessedSubsection(username, courseId);
-//    }
-
     @Override
     public RegisterResponse register(Bundle parameters) throws Exception {
 
