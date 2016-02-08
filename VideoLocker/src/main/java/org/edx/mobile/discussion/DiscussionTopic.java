@@ -18,13 +18,11 @@ package org.edx.mobile.discussion;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DiscussionTopic implements Serializable {
@@ -94,26 +92,6 @@ public class DiscussionTopic implements Serializable {
             }
         }
         return false;
-    }
-
-    @NonNull
-    public List<String> getAllTopicIds() {
-        if (isAllType()) {
-            return Collections.EMPTY_LIST;
-        } else {
-            final List<String> ids = new ArrayList<>();
-            appendTopicIds(ids);
-            return ids;
-        }
-    }
-
-    private void appendTopicIds(List<String> ids) {
-        if (!TextUtils.isEmpty(identifier)) {
-            ids.add(identifier);
-        }
-        for (DiscussionTopic child : children) {
-            child.appendTopicIds(ids);
-        }
     }
 
     public boolean isAllType() {

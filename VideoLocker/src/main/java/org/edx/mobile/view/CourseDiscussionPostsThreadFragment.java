@@ -28,7 +28,6 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
-import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -60,7 +59,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
     private GetThreadListTask getThreadListTask;
-    private GetFollowingThreadListTask getFollowingThreadListTask;
     private int nextPage = 1;
 
     private enum EmptyQueryResultsFor {
@@ -215,11 +213,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (discussionTopic.isFollowingType()) {
-            populateFollowingThreadList(callback);
-        } else {
-            populatePostList(callback);
-        }
+        populatePostList(callback);
     }
 
     private void clearListAndLoadFirstPage() {
@@ -229,42 +223,13 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         controller.reset();
     }
 
-    private void populateFollowingThreadList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (getFollowingThreadListTask != null) {
-            getFollowingThreadListTask.cancel(true);
-        }
-
-        getFollowingThreadListTask = new GetFollowingThreadListTask(getActivity(), courseData.getCourse().getId(), postsFilter,
-                postsSort, nextPage) {
-            @Override
-            public void onSuccess(TopicThreads topicThreads) {
-                final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
-                callback.onPageLoaded(topicThreads.getResults(), hasMore);
-                checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-            }
-        };
-        getFollowingThreadListTask.setProgressCallback(null);
-        getFollowingThreadListTask.execute();
-    }
-
     private void populatePostList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
         if (getThreadListTask != null) {
             getThreadListTask.cancel(true);
         }
 
-        getThreadListTask = new GetThreadListTask(
-                getActivity(),
-                courseData.getCourse().getId(),
-                discussionTopic.getAllTopicIds(),
-                postsFilter,
-                postsSort,
-                nextPage) {
+        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(),
+                discussionTopic, postsFilter, postsSort, nextPage) {
             @Override
             public void onSuccess(TopicThreads topicThreads) {
                 final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
@@ -272,6 +237,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 callback.onPageLoaded(topicThreads.getResults(), hasMore);
                 if (discussionTopic.isAllType()) {
                     checkNoResultView(EmptyQueryResultsFor.COURSE);
+                } else if (discussionTopic.isFollowingType()) {
+                    checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
                 } else {
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
