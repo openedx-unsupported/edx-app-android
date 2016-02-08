@@ -2,7 +2,7 @@ package org.edx.mobile.model.api;
 
 import org.edx.mobile.logger.Logger;
 
-public class SyncLastAccessedSubsectionResponse {
+public class LastAccessedSubsectionResponse {
 
     public String last_visited_module_id;
     public String[] last_visited_module_path;

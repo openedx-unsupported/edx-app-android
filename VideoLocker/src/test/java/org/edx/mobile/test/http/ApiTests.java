@@ -7,7 +7,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
@@ -71,7 +71,7 @@ public class ApiTests extends HttpBaseTestCase {
         // TODO: lastVisitedModuleId must be section.id (id is now available)
 
 
-        SyncLastAccessedSubsectionResponse model = api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
+        LastAccessedSubsectionResponse model = api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
         assertNotNull(model);
         print("sync returned: " + model.last_visited_module_id);
     }
@@ -89,7 +89,7 @@ public class ApiTests extends HttpBaseTestCase {
 
         print(String.format("course= %s", courseId));
 
-        SyncLastAccessedSubsectionResponse model = api.getLastAccessedSubsection(courseId);
+        LastAccessedSubsectionResponse model = api.getLastAccessedSubsection(courseId);
         assertNotNull(model);
     //  print(model.json);
     }

@@ -2,6 +2,7 @@ package org.edx.mobile.user;
 
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,10 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.mime.TypedOutput;
 
+
+/*
+ * API calls for data that is specific to the user.
+ */
 public interface UserService {
     @GET("/api/user/v1/accounts/{username}")
     Account getAccount(@Path("username") String username) throws RetroHttpException;
@@ -31,4 +36,11 @@ public interface UserService {
 
     @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
     List<EnrolledCoursesResponse> getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
+
+    @GET("/api/mobile/v0.5/users/{username}/course_status_info/{courseId}")
+    LastAccessedSubsectionResponse getLastAccessedSubsection(@Path("username") String username, @Path("courseId") String courseId);
+
+    @PATCH("/api/mobile/v0.5/users/{username}/course_status_info/{courseId}")
+    LastAccessedSubsectionResponse syncLastAccessedSubsection(@Path("username") String username, @Path("courseId") String courseId, @Body Map<String, String> body);
+
 }

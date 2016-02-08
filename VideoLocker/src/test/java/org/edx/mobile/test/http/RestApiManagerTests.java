@@ -11,7 +11,7 @@ import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.ServiceManager;
@@ -68,7 +68,7 @@ public class RestApiManagerTests extends OkHttpBaseTestCase {
         // TODO: lastVisitedModuleId must be section.id (id is now available)
 
 
-        SyncLastAccessedSubsectionResponse model = apiManager.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
+        LastAccessedSubsectionResponse model = apiManager.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
         assertNotNull(model);
         print("sync returned: " + model.last_visited_module_id);
     }
@@ -84,7 +84,7 @@ public class RestApiManagerTests extends OkHttpBaseTestCase {
 
         print(String.format("course= %s", courseId));
 
-        SyncLastAccessedSubsectionResponse model = apiManager.getLastAccessedSubsection(courseId);
+        LastAccessedSubsectionResponse model = apiManager.getLastAccessedSubsection(courseId);
         assertNotNull(model);
         //  print(model.json);
     }

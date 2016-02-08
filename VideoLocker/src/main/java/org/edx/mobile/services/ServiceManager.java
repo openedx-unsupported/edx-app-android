@@ -17,14 +17,13 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
@@ -32,7 +31,6 @@ import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 
@@ -50,6 +48,7 @@ import java.util.Map;
  * <p/>
  * UI layer should call ServiceManager, not IApi directly.
  */
+@Deprecated
 @Singleton
 public class ServiceManager {
     protected final Logger logger = new Logger(getClass().getName());
@@ -188,10 +187,6 @@ public class ServiceManager {
         return api.getProfile();
     }
 
-    public List<EnrolledCoursesResponse> getEnrolledCourses() throws Exception {
-        return api.getEnrolledCourses();
-    }
-
     public EnrolledCoursesResponse getCourseById(String courseId) {
         return api.getCourseById(courseId);
     }
@@ -247,16 +242,6 @@ public class ServiceManager {
 
     public AuthResponse loginByGoogle(String accessToken) throws Exception {
         return api.loginByGoogle(accessToken);
-    }
-
-
-    public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
-        return api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
-    }
-
-
-    public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        return api.getLastAccessedSubsection(courseId);
     }
 
     public RegisterResponse register(Bundle parameters) throws Exception {
