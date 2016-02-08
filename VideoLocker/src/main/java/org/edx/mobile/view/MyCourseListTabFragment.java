@@ -77,15 +77,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity(), bundle, environment, environment.getServiceManager()) {
-            @Override
-            protected List<EnrolledCoursesResponse> getCourses(ServiceManager api) throws Exception {
-                List<EnrolledCoursesResponse> response = api.getEnrolledCourses();
-                environment.getNotificationDelegate().syncWithServerForFailure();
-                environment.getNotificationDelegate().checkCourseEnrollment(response);
-                return response;
-            }
-        };
+        return new CoursesAsyncLoader(getActivity(), bundle, environment, environment.getServiceManager());
     }
 
     @Override
