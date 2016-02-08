@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
+import com.ahmedjazzar.rosetta.LanguageSwitcher;
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -78,6 +79,12 @@ public class MainApplication extends MultiDexApplication {
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
             EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
+        }
+
+        // Initialize the application languages
+        if (config.getLocalizationConfig().isEnabled()) {
+            new LanguageSwitcher(this, config.getLocalizationConfig().getDefaultLocale())
+                    .setSupportedStringLocales(config.getLocalizationConfig().getSupportedLocales());
         }
 
         // initialize NewRelic with crash reporting disabled
