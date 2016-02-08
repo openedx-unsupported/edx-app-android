@@ -20,16 +20,14 @@ import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
@@ -41,7 +39,6 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -370,30 +367,6 @@ public class RestApiManager implements IApi{
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
 
         return response;
-    }
-
-
-
-    @Override
-    public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
-        String date = DateUtil.getModificationDate();
-        EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
-        body.last_visited_module_id = lastVisitedModuleId;
-        body.modification_date = date;
-
-        return  oauthRestApi.syncLastAccessedSubsection(body, username, courseId);
-
-    }
-
-    @Override
-    public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
-        return  oauthRestApi.getLastAccessedSubsection(username, courseId);
     }
 
     @Override

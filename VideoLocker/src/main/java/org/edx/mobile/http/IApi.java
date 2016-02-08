@@ -5,18 +5,15 @@ import android.os.Bundle;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 
 import java.net.HttpCookie;
@@ -27,17 +24,18 @@ import java.util.Map;
 /**
  * TODO - we won't need this api when we fully migrate the code to okhttp
  */
+@Deprecated
 public interface IApi {
     ResetPasswordResponse resetPassword(String emailId)
             throws Exception;
 
     AuthResponse auth(String username, String password)
-                    throws Exception;
+            throws Exception;
 
     ProfileModel getProfile() throws Exception;
 
     List<EnrolledCoursesResponse> getEnrolledCourses()
-                                                            throws Exception;
+            throws Exception;
 
     EnrolledCoursesResponse getCourseById(String courseId);
 
@@ -50,7 +48,7 @@ public interface IApi {
 
 
     String downloadTranscript(String url)
-                    throws Exception;
+            throws Exception;
 
     List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception;
 
@@ -68,13 +66,8 @@ public interface IApi {
 
     AuthResponse loginByGoogle(String accessToken) throws Exception;
 
-    SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
-                                                                  String lastVisitedModuleId) throws Exception;
-
-    SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception;
-
     RegisterResponse register(Bundle parameters)
-                                    throws Exception;
+            throws Exception;
 
     RegistrationDescription getRegistrationDescription() throws Exception;
 
@@ -87,12 +80,11 @@ public interface IApi {
         throws Exception;
 
     @Deprecated
-    Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache)
-        throws Exception;
+    Map<String, SectionEntry> getCourseHierarchy(String courseId, boolean preferCache) throws Exception;
 
     @Deprecated
     ArrayList<SectionItemInterface> getLiveOrganizedVideosByChapter
-        (String courseId, String chapter);
+            (String courseId, String chapter);
 
     HttpManager.HttpResult getCourseStructure(HttpRequestDelegate delegate) throws Exception;
 }

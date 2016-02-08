@@ -2,24 +2,30 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
+import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.user.UserAPI;
 
-public abstract class GetLastAccessedTask extends Task<SyncLastAccessedSubsectionResponse> {
+public abstract class GetLastAccessedTask extends Task<LastAccessedSubsectionResponse> {
 
     String courseId;
-    public GetLastAccessedTask(Context context,  String courseId) {
+    UserAPI userAPI;
+
+    public GetLastAccessedTask(Context context,  String courseId, UserAPI userAPI) {
         super(context);
         this.courseId = courseId;
+        this.userAPI = userAPI;
     }
 
     @Override
-    public SyncLastAccessedSubsectionResponse call() throws Exception{
-        try {
+    public LastAccessedSubsectionResponse call() throws Exception{
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        String username = pref.getCurrentUserProfile().username;
 
+        try {
             if(courseId!=null){
-                ServiceManager api = environment.getServiceManager();
-                SyncLastAccessedSubsectionResponse res = api.getLastAccessedSubsection(courseId);
+                LastAccessedSubsectionResponse res = userAPI.getLastAccessedSubsection(username, courseId);
                 return res;
             }
         } catch (Exception ex) {

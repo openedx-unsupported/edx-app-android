@@ -25,13 +25,12 @@ import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.json.CreateGroupResponse;
 import org.edx.mobile.model.json.GetFriendsListResponse;
@@ -41,7 +40,6 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
@@ -53,7 +51,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -906,61 +903,6 @@ public class Api implements IApi {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, AuthResponse.class);
 
-    }
-
-
-
-    @Override
-    public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
-                                                                         String lastVisitedModuleId) throws Exception {
-
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
-        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-        logger.debug("PATCH url for syncLastAccessed Subsection: " + url);
-
-        String date = DateUtil.getModificationDate();
-
-        JSONObject postBody = new JSONObject();
-        postBody.put("last_visited_module_id", lastVisitedModuleId);
-        postBody.put("modification_date", date);
-
-        logger.debug("PATCH body for syncLastAccessed Subsection: " + postBody.toString());
-        String json = http.post(url, postBody.toString(), getAuthHeaders(), true);
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Response of sync last viewed= " + json);
-
-        Gson gson = new GsonBuilder().create();
-        SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-        
-        return res;
-    }
-
-    @Override
-    public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
-        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
-        logger.debug("Url of get last accessed subsection: " + url);
-
-        String date = DateUtil.getModificationDate();
-
-        String json = http.get(url, getAuthHeaders()).body;
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Response of get last viewed subsection.id = " + json);
-
-        Gson gson = new GsonBuilder().create();
-        SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-
-        return res;
     }
 
     /**

@@ -2,18 +2,25 @@ package org.edx.mobile.services;
 
 import android.view.View;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.model.api.LastAccessedSubsectionResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
+import org.edx.mobile.user.UserAPI;
 
 /**
  * This can be injected in the future when we use DI
  */
 public class LastAccessManager {
+
+    @Inject
+    private UserAPI userAPI;
+
     public static interface LastAccessManagerCallback{
         boolean isFetchingLastAccessed();
         void setFetchingLastAccessed(boolean accessed);
@@ -46,9 +53,9 @@ public class LastAccessManager {
                         +prefModuleId);
 
                     callback.showLastAccessedView(prefModuleId, courseId, view);
-                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance(),courseId) {
+                    GetLastAccessedTask getLastAccessedTask = new GetLastAccessedTask(MainApplication.instance(), courseId, userAPI) {
                         @Override
-                        public void onSuccess(SyncLastAccessedSubsectionResponse result) {
+                        public void onSuccess(LastAccessedSubsectionResponse result) {
                             syncWithServerOnSuccess(result, prefModuleId, prefManager, courseId, callback, view);
                         }
                         @Override
@@ -67,7 +74,7 @@ public class LastAccessManager {
         }
     }
 
-    private void syncWithServerOnSuccess(SyncLastAccessedSubsectionResponse result,
+    private void syncWithServerOnSuccess(LastAccessedSubsectionResponse result,
                                          String prefModuleId,
                                          PrefManager prefManager,
                                          String courseId,
@@ -109,9 +116,9 @@ public class LastAccessManager {
                                             final LastAccessManagerCallback callback){
         try{
             SyncLastAccessedTask syncLastAccessTask = new SyncLastAccessedTask(
-                MainApplication.instance(),courseId, prefModuleId) {
+                MainApplication.instance(),courseId, prefModuleId, userAPI) {
                 @Override
-                public void onSuccess(SyncLastAccessedSubsectionResponse result) {
+                public void onSuccess(LastAccessedSubsectionResponse result) {
                     if(result!=null && result.getLastVisitedModuleId()!=null){
                         prefManager.putLastAccessedSubsection(result.getLastVisitedModuleId(), true);
                         logger.debug("Last Accessed Module ID from Server Sync "
