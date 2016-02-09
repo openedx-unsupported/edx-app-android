@@ -13,7 +13,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:src="@drawable/ic_new_cert" />
 
         <LinearLayout
@@ -45,12 +45,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <Button
-                style="@style/edX.Widget.CreationButton"
+            <FrameLayout
+                style="@style/edX.Widget.CreationButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="30dp"
-                android:text="@string/course_details_view_cert_button" />
+                android:contentDescription="@string/course_details_view_cert_button"
+                android:minHeight="30dp">
+
+                <Button
+                    style="@style/edX.Widget.CreationButton"
+                    android:text="@string/course_details_view_cert_button" />
+            </FrameLayout>
 
         </LinearLayout>
 
