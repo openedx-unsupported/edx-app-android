@@ -663,73 +663,6 @@ public class ISegmentImpl implements ISegment {
     }
 
     @Override
-    public Properties courseGroupAccessed(String courseName) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.ACCESS_COURSE_GROUP);
-
-        aEvent.data.putValue(Keys.COURSE_ID, courseName);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.COURSE_GROUP_ACCESSED, aEvent.properties);
-        return aEvent.properties;
-
-    }
-
-    @Override
-    public Properties gameGroupAccessed(long groupID, int groupUserCount) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.ACCESS_GAME_GROUP);
-
-        aEvent.data.putValue(Keys.GROUP_ID, groupID);
-        aEvent.data.putValue(Keys.GROUP_USER_COUNT, groupUserCount);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.GAME_GROUP_ACCESSED, aEvent.properties);
-        return aEvent.properties;
-
-    }
-
-    @Override
-    public Properties groupCreated(long groupID, int invitedUserCount) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.CREATE_GAME_GROUP);
-
-        aEvent.data.putValue(Keys.GROUP_ID, groupID);
-        aEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.GAME_GROUP_CREATE, aEvent.properties);
-        return aEvent.properties;
-
-    }
-
-    @Override
-    public Properties groupInvited(long groupID, int invitedUserCount) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.INVITE_GAME_GROUP);
-
-        aEvent.data.putValue(Keys.GROUP_ID, groupID);
-        aEvent.data.putValue(Keys.GROUP_INVITED_USER_COUNT, invitedUserCount);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.GAME_GROUP_INVITE, aEvent.properties);
-        return aEvent.properties;
-    }
-
-    @Override
-    public Properties courseShared(String courseName, String socialNetwork) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_SHARED);
-
-        aEvent.data.putValue(Keys.COURSE_ID, courseName);
-        aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.SOCIAL_COURSE_SHARED, aEvent.properties);
-        return aEvent.properties;
-    }
-
-    @Override
     public Properties courseDetailShared(String courseId, String aboutUrl, ShareUtils.ShareType shareType) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
         aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_COURSE_DETAIL_SHARED);
@@ -753,32 +686,6 @@ public class ISegmentImpl implements ISegment {
         aEvent.data.putValue(Keys.TYPE, getShareTypeValue(shareType));
         aEvent.setAppNameContext();
         tracker.track(Events.SOCIAL_CERTIFICATE_SHARED, aEvent.properties);
-        return aEvent.properties;
-    }
-
-    @Override
-    public Properties socialConnectionEvent(boolean connected, String socialNetwork) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.SOCIAL_CONNECTION_CHANGE);
-
-        aEvent.data.putValue(Keys.SOCIAL_CONNECTION_STATE, connected);
-        aEvent.data.putValue(Keys.SOCIAL_NETWORK, socialNetwork);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.SOCIAL_CONNECTION_CHANGE, aEvent.properties);
-        return aEvent.properties;
-
-    }
-
-    @Override
-    public Properties coursesVisibleToFriendsChange(boolean visible) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.SETTING_COURSES_VISIBLE_CHANGE);
-
-        aEvent.data.putValue(Keys.SETTING_COURSES_VISIBLE_STATE, visible);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.SETTING_COURSES_VISIBLE_CHANGE, aEvent.properties);
         return aEvent.properties;
     }
 

@@ -53,46 +53,6 @@ public class ConfigTests extends BaseTestCase {
 
 
     @Test
-    public void testSocialSharingNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getSocialSharingConfig().isEnabled());
-        assertEquals(config.getSocialSharingConfig().getDisabledCarriers().size(), 0);
-    }
-
-    @Test
-    public void testSocialSharingEmptyConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject socialConfig = new JsonObject();
-        configBase.add(SOCIAL_SHARING, socialConfig);
-
-        Config config = new Config(configBase);
-        assertFalse(config.getSocialSharingConfig().isEnabled());
-        assertEquals(config.getSocialSharingConfig().getDisabledCarriers().size(), 0);
-    }
-
-    @Test
-    public void testSocialSharingConfig() {
-        JsonObject configBase = new JsonObject();
-        JsonObject socialConfig = new JsonObject();
-        socialConfig.add(ENABLED, new JsonPrimitive(true));
-        configBase.add(SOCIAL_SHARING, socialConfig);
-
-        ArrayList<String> carrierList = new ArrayList<String>();
-        carrierList.add("12345");
-        carrierList.add("foo");
-        JsonArray carriers = new JsonArray();
-        for (String carrier : carrierList) {
-            carriers.add(new JsonPrimitive(carrier));
-        }
-        socialConfig.add(DISABLED_CARRIERS, carriers);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getSocialSharingConfig().isEnabled());
-        assertEquals(carrierList, config.getSocialSharingConfig().getDisabledCarriers());
-    }
-
-    @Test
     public void testZeroRatingNoConfig() {
         JsonObject configBase = new JsonObject();
         Config config = new Config(configBase);

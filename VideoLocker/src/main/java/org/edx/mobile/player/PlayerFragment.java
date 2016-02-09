@@ -55,7 +55,6 @@ import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.ClosedCaptionAdapter;
 import org.edx.mobile.view.dialog.CCLanguageDialogFragment;
 import org.edx.mobile.view.dialog.IListDialogCallback;
-import org.edx.mobile.view.dialog.InstallFacebookDialog;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -72,7 +71,7 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
-        AudioManager.OnAudioFocusChangeListener, PlayerController.ShareVideoListener {
+        AudioManager.OnAudioFocusChangeListener {
 
     private enum VideoNotPlayMessageType {
         IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
@@ -166,21 +165,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     @Override
-    public void onVideoShare() {
-
-        if (this.videoEntry == null || TextUtils.isEmpty(this.videoEntry.getYoutubeVideoUrl())) {return;}
-
-        FacebookProvider fbProvider = new FacebookProvider();
-        FacebookDialog dialog = (FacebookDialog) fbProvider.shareVideo(getActivity(), this.videoEntry.getTitle(), this.videoEntry.getYoutubeVideoUrl());
-        if (dialog != null) {
-            uiHelper.trackPendingDialogCall(dialog.present());
-            pauseDueToDialog = true;
-        } else {
-            new InstallFacebookDialog().show(getFragmentManager(), null);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
@@ -235,7 +219,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             boolean isLandscape = isScreenLandscape();
             player.setFullScreen(isLandscape);
             player.setPlayerListener(this);
-            player.setShareVideoListener(this);
         }
     }
 
@@ -527,9 +510,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
             logger.debug("playing [seek=" + seekTo + "]: " + path);
 
-            boolean enableShare = videoEntry != null && !TextUtils.isEmpty(videoEntry.getYoutubeVideoUrl()) && new FacebookProvider().isLoggedIn();
-
-            player.setShareEnabled(enableShare);
             if( prepareOnly)
                 player.setUri(path, seekTo);
             else
@@ -559,7 +539,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
             controller.setNextPreviousListeners(nextListner, prevListner);
             player.setController(controller);
-            player.setShareVideoListener(this);
             reAttachPlayEventListener();
         } catch(Exception e) {
             logger.error(e);

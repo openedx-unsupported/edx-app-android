@@ -211,24 +211,6 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        TextView tvMyGroups = (TextView) layout.findViewById(R.id.drawer_option_my_groups);
-        tvMyGroups.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Activity act = getActivity();
-                ((BaseFragmentActivity) act).closeDrawer();
-
-                if (!(act instanceof MyGroupsListActivity)) {
-                    environment.getRouter().showMyGroups(act);
-
-                    if (!(act instanceof MyCoursesListActivity)) {
-                        act.finish();
-                    }
-                }
-
-            }
-        });
-
         TextView tvSettings = (TextView) layout.findViewById(R.id.drawer_option_my_settings);
         tvSettings.setOnClickListener(new OnClickListener() {
             @Override
@@ -298,12 +280,6 @@ public class NavigationFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         uiLifecycleHelper.onResume();
-
-        if (getView() != null) {
-            View groupsItemView = getView().findViewById(R.id.drawer_option_my_groups);
-            boolean allowSocialFeatures = socialPref.getBoolean(PrefManager.Key.ALLOW_SOCIAL_FEATURES, true);
-            groupsItemView.setVisibility(allowSocialFeatures ? View.VISIBLE : View.GONE);
-        }
     }
 
     @Override

@@ -1,10 +1,6 @@
 package org.edx.mobile.view;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +17,7 @@ import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.facebook.FacebookSessionUtil;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.FetchCourseFriendsService;
 import org.edx.mobile.user.UserAPI;
 
 import java.util.ArrayList;
@@ -61,22 +55,11 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     }
 
     protected void loadData(boolean forceRefresh, boolean showProgress) {
-        if (forceRefresh) {
-            Intent clearFriends = new Intent(getActivity(), FetchCourseFriendsService.class);
-
-            clearFriends.putExtra(FetchCourseFriendsService.TAG_FORCE_REFRESH, true);
-
-            getActivity().startService(clearFriends);
-        }
-
         //This Show progress is used to display the progress when a user enrolls in a Course
         if (showProgress && progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
-
-        Bundle args = new Bundle();
-        args.putString(CoursesAsyncLoader.TAG_COURSE_OAUTH, FacebookSessionUtil.getAccessToken());
-        getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, args, this);
+        getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, null, this);
     }
 
     @Override
@@ -86,7 +69,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity(), bundle, environment, userAPI);
+        return new CoursesAsyncLoader(getActivity(), environment, userAPI);
     }
 
     @Override

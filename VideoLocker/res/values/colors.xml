@@ -121,8 +121,6 @@
     <color name="crop_circle_border_color">@color/edx_grayscale_neutral_white_t</color>
     <color name="crop_circle_overlay_color">#c8000000</color>
 
-    <color name="groups_grey">#c8c8c8</color>
-    <color name="facebook_msg_grey">#454951</color>
     <color name="hint_grey_text">#8c8e90</color>
     <color name="grey_hide_optional_text">#AFAFB5</color>
     <color name="last_accessed_row_blue">#E5F5FC</color>

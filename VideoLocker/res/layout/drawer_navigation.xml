@@ -85,11 +85,6 @@
             android:text="@string/label_find_courses" />
 
         <TextView
-            android:id="@+id/drawer_option_my_groups"
-            style="@style/drawer_option"
-            android:text="@string/label_my_groups" />
-
-        <TextView
             android:id="@+id/drawer_option_my_settings"
             style="@style/drawer_option"
             android:text="@string/label_settings" />

@@ -32,13 +32,6 @@
             tools:text="This is a very long video title meant to be truncated from end" />
 
         <com.joanzapata.iconify.widget.IconImageButton
-            android:id="@+id/share_btn"
-            style="@style/video_player_top_control"
-            android:contentDescription="@string/video_player_share"
-            app:iconName="fa-facebook-square"
-            tools:targetApi="17" />
-
-        <com.joanzapata.iconify.widget.IconImageButton
             android:id="@+id/lms_btn"
             style="@style/video_player_top_control"
             android:contentDescription="@string/video_player_view_on_web"

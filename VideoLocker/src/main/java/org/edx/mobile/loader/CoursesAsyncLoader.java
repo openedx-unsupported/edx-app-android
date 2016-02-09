@@ -1,7 +1,6 @@
 package org.edx.mobile.loader;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.edx.mobile.core.IEdxEnvironment;
@@ -16,11 +15,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
-
-    private static final String TAG = CoursesAsyncLoader.class.getCanonicalName();
-    public static final String TAG_COURSE_OAUTH = TAG + ".oauthToken";
-
-    private String oauthToken;
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
     private Context context;
 
@@ -29,20 +23,15 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     IEdxEnvironment environment;
     UserAPI api;
 
-    public CoursesAsyncLoader(Context context, Bundle args, IEdxEnvironment environment, UserAPI api) {
+    public CoursesAsyncLoader(Context context, IEdxEnvironment environment, UserAPI api) {
         super(context);
         this.context = context;
         this.environment = environment;
         this.api = api;
-        if (args.containsKey(TAG_COURSE_OAUTH)) {
-            this.oauthToken = args.getString(TAG_COURSE_OAUTH);
-        }
-
     }
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
-
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         ProfileModel profile = pref.getCurrentUserProfile();
 

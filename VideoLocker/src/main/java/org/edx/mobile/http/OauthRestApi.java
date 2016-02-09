@@ -70,52 +70,10 @@ public interface OauthRestApi {
     @GET(URL_COURSE_ENROLLMENTS)
     List<EnrolledCoursesResponse> getEnrolledCoursesNoCache(@Path(USER_NAME) String username);
 
-    @Headers("Cache-Control: no-cache")
-    @GET(URL_FB_FRIENDS_IN_COURSE)
-    List<SocialMember> getFriendsInCourseNoCache(@Path(COURSE_ID) String courseId, @Query("format") String format, @Query("oauth_token") String oauthToken);
-
-    @GET(URL_FB_FRIENDS_IN_COURSE)
-    List<SocialMember> getFriendsInCourse(@Path(COURSE_ID) String courseId, @Query("format") String format, @Query("oauth_token") String oauthToken);
-
-    @GET(URL_USER_COURSE_SHARE_CONSENT_GET)
-    SuccessResponse getUserCourseShareConsent();
-
-    @Headers("Cache-Control: no-cache")
-    @GET(URL_FB_GROUP_MEMBER)
-    List<SocialMember> getGroupMembersNoCache(@Path(GROUP_ID) String groupId);
-
-    @GET(URL_FB_GROUP_MEMBER)
-    List<SocialMember> getGroupMembers(@Path(GROUP_ID) String groupId);
-
     /* POST Calls */
 
     @POST(URL_VIDEO_OUTLINE)
     List<VideoResponseModel> getVideosByCourseId(@Path(COURSE_ID) String courseId);
-
-
-    @FormUrlEncoded
-    @POST(URL_FB_INVITE_TO_GROUP)
-    SuccessResponse doInviteFriendsToGroup(@Field("format") String format,
-                                           @Field("member_ids") String memberIds,
-                                           @Field("oauth_token") String oauthToken,
-                                           @Path(GROUP_ID) String groupId);
-
-    /**
-     *  return of -1 indicates an error
-     */
-    @FormUrlEncoded
-    @POST( URL_FB_CREATE_GROUPS)
-    CreateGroupResponse doCreateGroup(@Field("format") String format,
-                                      @Field("name") String name,
-                                      @Field("description") String description,
-                                      @Field("privacy") String privacy,
-                                      @Field("admin-id") String adminId,
-                                      @Field("oauth_token") String oauthToken);
-
-    @FormUrlEncoded
-    @POST(URL_USER_COURSE_SHARE_CONSENT)
-    ShareCourseResult setUserCourseShareConsent(@Field("format") String format,
-                                                @Field("share_with_facebook_friends") String shareWithFriends);
 
     @PUT(URL_LAST_ACCESS_FOR_COURSE)
     SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(@Body EnrollmentRequestBody.LastAccessRequestBody body,

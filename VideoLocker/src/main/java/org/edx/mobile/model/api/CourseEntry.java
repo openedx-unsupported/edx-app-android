@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.SocialUtils;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
@@ -211,36 +210,6 @@ public class CourseEntry implements Serializable {
 
     public void setCourse_url(String course_url) {
         this.course_url = course_url;
-    }
-
-    public String getCourseGroup(SocialUtils.SocialType type) {
-
-        if (this.social_urls != null) {
-
-            switch (type) {
-                case FACEBOOK:
-                    return this.social_urls.facebook;
-            }
-
-        }
-
-        return null;
-
-    }
-
-    public boolean isGroupAvailable(SocialUtils.SocialType type) {
-
-        if (this.social_urls != null) {
-
-            switch (type) {
-                case FACEBOOK:
-                    return (this.social_urls.facebook != null && this.social_urls.facebook.length() > 0);
-            }
-
-        }
-
-        return false;
-
     }
 
     public String getDescription() {

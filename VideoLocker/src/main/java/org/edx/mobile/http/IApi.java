@@ -52,18 +52,6 @@ public interface IApi {
     String downloadTranscript(String url)
             throws Exception;
 
-    List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception;
-
-    boolean inviteFriendsToGroup(long[] toInvite, long groupId, String oauthToken) throws Exception;
-
-    long createGroup(String name, String description, boolean privacy, long adminId, String socialToken) throws Exception;
-
-    boolean setUserCourseShareConsent(boolean consent) throws Exception;
-
-    boolean getUserCourseShareConsent() throws Exception;
-
-    List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception;
-
     AuthResponse loginByFacebook(String accessToken) throws Exception;
 
     AuthResponse loginByGoogle(String accessToken) throws Exception;
