@@ -27,7 +27,6 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.Router;
 
 import java.util.Locale;
@@ -140,7 +139,7 @@ public class MainApplication extends MultiDexApplication {
         boolean needVersionUpgrade = false;
         PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
         Long previousVersion = pmanager.getAppVersionCode();
-        int curVersion = PropertyUtil.getManifestVersionCode(context);
+        final int curVersion = BuildConfig.VERSION_CODE;
         if (previousVersion < curVersion) {
             needVersionUpgrade = true;
             pmanager.setAppVersionCode(curVersion);

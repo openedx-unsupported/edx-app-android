@@ -28,6 +28,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
@@ -41,12 +42,10 @@ import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
-import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 
 
 public class NavigationFragment extends BaseFragment {
@@ -237,7 +236,6 @@ public class NavigationFragment extends BaseFragment {
                 String to = environment.getConfig().getFeedbackEmailAddress();
                 String subject = getString(R.string.email_subject);
 
-                String versionName = PropertyUtil.getManifestVersionName(getActivity());
                 String osVersionText = String.format("%s %s", getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE);
                 String appVersionText = String.format("%s %s", getString(R.string.app_version), BuildConfig.VERSION_NAME);
                 String deviceModelText = String.format("%s %s", getString(R.string.android_device_model), Build.MODEL);
@@ -266,20 +264,8 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-
-        TextView version_tv = (TextView) layout.findViewById(R.id.tv_version_no);
-        try {
-            String versionName = PropertyUtil.getManifestVersionName(getActivity());
-
-            if (versionName != null) {
-                String envDisplayName = environment.getConfig().getEnvironmentDisplayName();
-                String text = String.format("%s %s %s",
-                        getString(R.string.label_version), versionName, envDisplayName);
-                version_tv.setText(text);
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        ((TextView) layout.findViewById(R.id.tv_version_no)).setText(String.format("%s %s %s",
+                getString(R.string.label_version), BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
         return layout;
     }
