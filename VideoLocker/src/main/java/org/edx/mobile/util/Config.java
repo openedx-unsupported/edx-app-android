@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by aleffert on 1/8/15.
- */
 @Singleton
 public class Config {
 
@@ -39,7 +36,6 @@ public class Config {
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
-    private static final String SOCIAL_SHARING = "SOCIAL_SHARING";
     private static final String ZERO_RATING = "ZERO_RATING";
     private static final String FACEBOOK = "FACEBOOK";
     private static final String GOOGLE = "GOOGLE";
@@ -66,22 +62,6 @@ public class Config {
     public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
-
-    /**
-     * Social Sharing configuration.
-     */
-    public class SocialSharingConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("DISABLED_CARRIERS") List<String> mDisabledCarriers;
-
-        public boolean isEnabled() {
-            return mEnabled;
-        }
-
-        public List<String> getDisabledCarriers() {
-            return mDisabledCarriers != null ? mDisabledCarriers : new ArrayList<String>();
-        }
-    }
 
     /**
      * Zero Rating configuration.
@@ -408,22 +388,6 @@ public class Config {
         }
         else {
             return new EnrollmentConfig();
-        }
-    }
-
-    /**
-     * Returns Social Sharing configuration.
-     * @return
-     */
-    public SocialSharingConfig getSocialSharingConfig() {
-        JsonElement element = getObject(SOCIAL_SHARING);
-        if(element != null) {
-            Gson gson = new Gson();
-            SocialSharingConfig config = gson.fromJson(element, SocialSharingConfig.class);
-            return config;
-        }
-        else {
-            return new SocialSharingConfig();
         }
     }
 

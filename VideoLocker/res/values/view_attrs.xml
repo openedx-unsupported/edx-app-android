@@ -5,23 +5,6 @@
         <attr name="font" format="string" />
     </declare-styleable>
     
-    
-    <declare-styleable name="SocialAffirmView">
-        <attr name="setSocialAffirmType" format="enum">
-            <enum name="none" value="0"/>
-            <enum name="facebook" value="1"/>
-        </attr>
-    </declare-styleable>
-
-    <declare-styleable name="SocialFacePileView">
-        <attr name="avatarCount" format="integer" />
-        <attr name="borderRadius" format="dimension" />
-        <attr name="avatarGap" format="dimension" />
-        <attr name="overflowBorderWidth" format="dimension" />
-        <attr name="overflowTextSize" format="dimension" />
-        <attr name="avatarMaxSize" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="TitleRowView">
         <attr name="titleFontSize" format="dimension" />
         <attr name="titleText" format="string" />

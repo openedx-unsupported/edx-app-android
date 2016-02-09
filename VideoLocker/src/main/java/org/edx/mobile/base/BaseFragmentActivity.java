@@ -111,10 +111,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
         PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
 
-        boolean enableSocialFeatures = NetworkUtil.isSocialFeatureFlagEnabled(this, environment.getConfig());
-
-        pmFeatures.put(PrefManager.Key.ALLOW_SOCIAL_FEATURES, enableSocialFeatures);
-
 
         // enabling action bar app icon.
         ActionBar bar = getSupportActionBar();

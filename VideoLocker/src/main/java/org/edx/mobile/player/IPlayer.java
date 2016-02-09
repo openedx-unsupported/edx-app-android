@@ -41,9 +41,6 @@ public interface IPlayer extends Serializable {
     public PlayerController getController();
     public boolean isReset();
 
-    public void setShareEnabled(Boolean shareEnabled);
-    public void setShareVideoListener(PlayerController.ShareVideoListener shareVideoListener);
-
     // methods from PlayerController.MediaPlayerControl interface
     int     getDuration();
     void    seekTo(int pos);

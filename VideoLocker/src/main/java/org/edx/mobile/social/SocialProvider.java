@@ -12,17 +12,15 @@ public interface SocialProvider {
     /**
      * Callback interface for all social network calls
      */
-    public interface Callback<T> {
-        public void onSuccess(T response);
-        public void onError(SocialError err);
+    interface Callback<T> {
+        void onSuccess(T response);
+        void onError(SocialError err);
     }
 
-    public class SocialError {
-        public final String error;
+    class SocialError {
         public final Exception ex;
 
-        public SocialError(String error, Exception ex) {
-            this.error = error;
+        public SocialError(Exception ex) {
             this.ex = ex;
         }
     }
@@ -30,74 +28,20 @@ public interface SocialProvider {
     /**
      * determines if the user is logged in
      */
-    public boolean isLoggedIn();
+    boolean isLoggedIn();
 
     /**
      * Begins the login flow for the user. This call is asynchronous
      */
-    public void login(Context context, Callback<Void> callback);
+    void login(Context context, Callback<Void> callback);
 
     /**
      * Gets the user object for the current logged in user
      */
-    public void getUser(Context context, Callback<SocialMember> callback);
+    void getUser(Callback<SocialMember> callback);
 
     /**
      *   Gets the user object for the current logged in user
      */
-    public void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,  SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
-    /**
-     * Gets the list of registered groups this user is a member of
-     */
-    public void getMyGroups(Context context, Callback<List<SocialGroup>> callback);
-
-    /**
-     * Creates a new group and makes the current user the admin
-     */
-    public void createNewGroup(Context context, String name, String description, String admin, final Callback<Long> callback);
-
-    /**
-     * Get a list of all members in a group
-     */
-    public void getGroupMembers(Context context, SocialGroup group, Callback<List<SocialMember>> callback);
-
-    ///////////////
-    //SHARING
-    ///////////////
-
-    /**
-     * (Semi)publicly share a course on your social profile page
-     */
-    public Object shareCourse(Activity activity, CourseEntry course);
-
-    /**
-     * (Semi)publicly share a course certificate you have achieved on your social profile page
-     */
-    public Object shareCertificate(Activity activity, CourseEntry course);
-
-    /**
-     * Share video content to the Social feed
-     */
-    public Object shareVideo(Activity activity, String shareTitle, String shareURL);
-
-    /**
-     * Gets the list of Facebook APP friends for the user
-     */
-    public void getMyFriends(Context context, Callback<List<SocialMember>> callback);
-
-    /**
-     * Invites the list of social members to a group
-     */
-    public void inviteFriendsListToGroup(Context context, long groupId, List<SocialMember> memberList, Callback<Void> callback);
-
-    /**
-     * Return a reference to the cached user profile
-     */
-    public SocialMember getUserProfile();
-
-    /**
-     * Launch an intent to view the user profile
-     */
-    public void launchUserProfile(Context context, String profileId);
-
+    void getUserInfo(Context context, SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken,  SocialLoginDelegate.SocialUserInfoCallback userInfoCallback);
 }

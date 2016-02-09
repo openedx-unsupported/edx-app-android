@@ -212,34 +212,6 @@ public class ServiceManager {
         return api.downloadTranscript(url);
     }
 
-    public List<SocialMember> getFriendsInCourse(boolean preferCache, String courseId, String oauthToken) throws Exception {
-        return api.getFriendsInCourse(preferCache, courseId, oauthToken);
-    }
-
-    public boolean inviteFriendsToGroup(long[] toInvite, long groupId, String oauthToken) throws Exception {
-        return api.inviteFriendsToGroup(toInvite, groupId, oauthToken);
-    }
-
-
-    public long createGroup(String name, String description, boolean privacy, long adminId, String socialToken) throws Exception {
-        return api.createGroup(name, description, privacy, adminId, socialToken);
-    }
-
-
-    public boolean setUserCourseShareConsent(boolean consent) throws Exception {
-        return api.setUserCourseShareConsent(consent);
-    }
-
-
-    public boolean getUserCourseShareConsent() throws Exception {
-        return api.getUserCourseShareConsent();
-    }
-
-
-    public List<SocialMember> getGroupMembers(boolean preferCache, long groupId) throws Exception {
-        return api.getGroupMembers(preferCache, groupId);
-    }
-
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
         return api.loginByFacebook(accessToken);
     }

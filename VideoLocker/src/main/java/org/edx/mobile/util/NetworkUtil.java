@@ -113,32 +113,6 @@ public class NetworkUtil {
         return false;
     }
 
-    public static boolean isOnSocialDisabledNetwork(Context context, Config config) {
-
-        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String carrierId = manager.getNetworkOperator();
-
-        List<String> socialDisabledCarriers = config.getSocialSharingConfig().getDisabledCarriers();
-
-        for (String carrier : socialDisabledCarriers) {
-            if (carrier.equalsIgnoreCase(carrierId)) {
-                logger.debug("Social services disabled on this carrier.");
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    public static boolean isSocialFeatureFlagEnabled(Context context, Config config) {
-
-        boolean isSocialEnabled = config.getSocialSharingConfig().isEnabled();
-
-        return isSocialEnabled && (NetworkUtil.isConnectedWifi(context) || !NetworkUtil.isOnSocialDisabledNetwork(context, config));
-
-    }
-
     /**
      * Verify that there is an active network connection on which downloading is allowed. If
      * there is no such connection, then an appropriate message is displayed.

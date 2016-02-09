@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">@string/platform_name</string>
-    <!-- Common values -->
-    <!-- Button to visit course group on facebook -->
-    <string name="course_details_fb_group">Official course Facebook group</string>
-    <!-- Button to view handouts for course -->
-    <string name="view_handouts">View course handouts</string>
-    <!-- Label for list of friends enrolled in a course -->
-    <string name="course_details_friends_in_course">Friends in this course</string>
-    <!-- Button for sharing a link to the course -->
-    <string name="course_details_share">Share</string>
+
+    <!-- Certificates -->
+
     <!-- Label congratulation user on finishing course -->
     <string name="course_details_congratulations">CONGRATULATIONS!</string>
     <!-- Message for user who has successfully completed a certificate course -->
     <string name="course_details_earned_cert">You’ve passed the course.</string>
     <!-- Button that opens a full view of an earned certificate -->
     <string name="course_details_view_cert_button">View Certificate</string>
-    <!-- Header for list of friends in a given course. Argument is a course name -->
-    <string name="friends_in_course">Friends in {courseName}</string>
-    <!-- Link to web course page -->
-    <string name="open_course_page">Open Course Page</string>
-    <!-- Title of friends in course screen -->
-    <string name="friends_in_this_course">Friends in This Course</string>
-
-    <string name="share_application_title">{platform_name} for Android</string>
-    <string name="share_application_link_url">http://www.edx.org</string>
-    <string name="share_application_picture_url">https://www.edx.org/sites/default/files/theme/edx-logo-header.png</string>
-    <string name="share_application_description">Free online courses</string>
 
     <!-- Course Discovery -->
 
@@ -59,24 +42,6 @@
     <string name="settings_wifi_top">Wi-Fi only download</string>
     <!-- Label explaining what wifi only means in detail -->
     <string name="settings_wifi_bottom">Only download content when Wi-Fi is turned on</string>
-    <!-- Label explaining switch allowing other users to see courses -->
-    <string name="settings_make_courses_visible_top">Make courses visible to friends</string>
-    <!-- Label explaining switch allowing other users to see courses -->
-    <string name="settings_make_courses_visible_bottom">Allow my friends to see what courses I’m taking</string>
-    <!-- Label for facebook login section -->
-    <string name="settings_facebook_login">Facebook login</string>
-    <!-- Label for facebook login section. Argument is a user name -->
-    <string name="settings_facebook_login_body_logged_in">Currently logged in as {username}</string>
-    <!-- Label for button allowing user to connect a facebook account -->
-    <string name="settings_facebook_login_body_logged_out">Log in with your Facebook account</string>
-    <!-- Error shown attempting to connect a facebook account fails -->
-    <string name="settings_facebook_login_error">Unable to contact Facebook</string>
-    <!-- Status label shown when connecting to facebook -->
-    <string name="settings_facebook_login_fetch">Contacting Facebook...</string>
-    <!-- Button for connecting a user to their facebook account -->
-    <string name="settings_facebook_login_btn">Log in</string>
-    <!-- Button for disconnecting a user from their facebook account -->
-    <string name="settings_facebook_logout_btn">Log out</string>
 
     <!-- Certificate Page -->
     <!-- Description of button that will open the certificate sharing menu -->
@@ -87,10 +52,6 @@
     <string name="tab_label_certificate">Certificate</string>
     <!-- Header for popup list of share targets -->
     <string name="share_certificate_popup_header">Share your certificate via…</string>
-
-    <!-- Groups Page -->
-    <!-- Label on cell in list of groups. Argument is number of members -->
-    <string name="group_list_members">Members {members}</string>
 
     <!-- Data Usage Dialog -->
     <!-- Alert dialog error message shown when using a feature with a required internet connection -->
@@ -140,8 +101,6 @@
     <string name="label_my_videos">My Videos</string>
     <!-- Title of Find Courses screen -->
     <string name="label_find_courses">Find Courses</string>
-    <!-- Title of Study Groups screen -->
-    <string name="label_my_groups">My Study Groups</string>
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit Feedback</string>
     <!-- Toggle switch on state label -->
@@ -225,10 +184,6 @@
     <string name="label_ended">Ended - {date}</string>
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending - {date}</string>
-    <!-- List for table listing courses friends are in -->
-    <string name="label_my_friends_courses">My Friends’ Courses</string>
-    <!-- Header ror list of users' friends enrolled in a course -->
-    <string name="course_friends_also_enrolled">Friends also enrolled in this course</string>
     <!-- Title for the course filter menu popup -->
     <string name="course_view_modes">Course View Modes</string>
     <!-- Label for the course filter menu popup option for filtering by videos only -->
@@ -520,80 +475,6 @@
     <string name="video_player_enter_fullscreen">Enter fullscreen mode</string>
     <!-- Accessibility Label for Exiting Fullscreen button on Video Player bottom bar -->
     <string name="video_player_exit_fullscreen">Exit fullscreen mode</string>
-
-    <!-- My Group Strings -->
-    <!-- Label for group name field in study group creation screen -->
-    <string name="header_group_name">Group Name</string>
-    <!-- Hint text for group name field in study group creation screen -->
-    <string name="hint_group_name">Enter Group Name</string>
-    <!-- Label for description field in study group creation screen -->
-    <string name="header_group_desc">Group Description (optional)</string>
-    <!-- Hint text for description field in study group creation screen -->
-    <string name="hint_group_desc">Enter Group Description</string>
-    <!-- Disclaimer message shown when creating a new study group -->
-    <string name="create_group_disclaimer">Creating an {platform_name} group will also create a Facebook group. The group discussion can only be seen by group members.</string>
-    <!-- Next button for creating a study group -->
-    <string name="create_group_next">Next</string>
-    <!-- Label indicating social feature provider (like facebook) username when creating a study group -->
-    <string name="connected_as">Connected as {username}</string>
-    <!-- Button allowing a user to open a study group from within facebook -->
-    <string name="open_study_group">Open study group in facebook</string>
-
-    <!-- Group creation and management -->
-    <!-- Title for create study group screen -->
-    <string name="label_new_group">Set Up Study Group</string>
-    <!-- Title for view allowing a user to add members to a new study group-->
-    <string name="label_add_group_friends">Add Members</string>
-    <!-- Title for view allowing a user to add members to an existing study group-->
-    <string name="label_add_new_group_friends">Add New Members</string>
-    <!-- Button title for action that allows users to share this app -->
-    <string name="button_share_app">Share app to friends</string>
-    <!-- Alert dialog title for unknown type of error -->
-    <string name="error_unknown_title">Unknown Error</string>
-    <!-- Alert dialog error shown when inviting a user to a study group fails -->
-    <string name="error_group_invite">Error inviting user {username} to group</string>
-    <!-- Error message shown accessing Facebook -->
-    <string name="error_contact_FB">Error contacting Facebook</string>
-    <!-- Error message shown when loading a users friends from a social provider (like facebook) failes -->
-    <string name="error_friends_list">Error receiving friends list</string>
-    <!-- Error message shown when attempting to use Facebook enabled features without connecting a facebook account -->
-    <string name="error_no_fb">Error not connected to Facebook</string>
-    <!-- Error message shown when attempting to invite friends to a study group, but user has no facebook friends -->
-    <string name="error_no_friends_connected">None of your Facebook friends are connected to {platform_name}</string>
-    <!-- Header on study groups screen encouraging users to create a group -->
-    <string name="empty_groups_header">More minds are better than one</string>
-    <!-- Message on study groups screen encouraging users to create a group -->
-    <string name="empty_groups_msg">Form a study group with your friends to stay motivated, learn more, and conquer your courses!</string>
-    <!-- Message on study groups screen indicating requirement -->
-    <string name="empty_groups_msg2">You must connect to a Facebook account to use this feature</string>
-    <!-- Message shown after creating a study group -->
-    <string name="group_created">Group Created</string>
-    <!-- Message shown after inviting friends to a study group -->
-    <string name="friends_invited">Friends Invited</string>
-    <!-- Button title for action that allows users to share this app -->
-    <string name="btn_share_app">Tell your friends about {platform_name}</string>
-    <!-- Header for social friends list -->
-    <string name="friends_with_platform_accounts">Friends with {platform_name} accounts</string>
-    <!-- Header for friends search -->
-    <string name="search_results">Search results</string>
-    <!-- Button allowing a user to search for friends -->
-    <string name="friends_search">Search</string>
-    <!-- Button text to complete an action -->
-    <string name="done_text">Done</string>
-    <!-- Label indicating unread actions. Argument is a count -->
-    <string name="unread_text">{unread_count} Unread</string>
-    <!-- Label indicating number of members in a study group Argument is a count -->
-    <string name="group_summary_count">Group Members ({members})</string>
-    <!-- Label indicating a user has no friends in a study group -->
-    <string name="group_summary_no_friends">You do not have any friends in this group</string>
-    <!-- Alert dialog title when a user without facebook performs an action that requires Facebook -->
-    <string name="dialog_fbinstall_title">Facebook Required</string>
-    <!-- Alert dialog message when a user without facebook performs an action that requires Facebook -->
-    <string name="dialog_fbinstall_msg">That feature requires the facebook app to be installed</string>
-    <!-- Alert dialog button action to open up the google play store -->
-    <string name="dialog_fbinstall_positive">Show in Google Play</string>
-
-    <!-- My Groups -->
 
     <!-- Button label to bring up course finder -->
     <string name="find_course_text">Looking for a new challenge?</string>

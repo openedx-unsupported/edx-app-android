@@ -66,12 +66,6 @@ public class Router {
         sourceActivity.startActivity(myVideosIntent);
     }
 
-    public void showMyGroups(Activity sourceActivity) {
-        Intent myGroupsIntent = new Intent(sourceActivity, MyGroupsListActivity.class);
-        myGroupsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        sourceActivity.startActivity(myGroupsIntent);
-    }
-
     public void showSettings(Activity sourceActivity) {
         Intent settingsIntent = new Intent(sourceActivity, SettingsActivity.class);
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

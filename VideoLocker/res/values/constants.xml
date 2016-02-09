@@ -1,5 +1,4 @@
 <resources>
-
     <string name="tab_chapter_list">tab_chapter_list</string>
     <string name="tab_lecture_list">tab_lecture_list</string>
     <string name="tab_video_list">tab_video_list</string>
@@ -8,9 +7,6 @@
     <string name="tab_course_info">tab_course_info</string>
     <string name="tab_my_all_videos">tab_my_all_videos</string>
     <string name="tab_my_recent_videos">tab_my_recent_videos</string>
-    <string name="tab_group_discussion">tab_group_discussion</string>
-    <string name="tab_group_details">tab_group_details</string>
-    <integer name="group_avatar_count">4</integer>
 
     <string name="eula_file_link">file:///android_asset/EULA.htm</string>
     <string name="new_user_file_name">file:///android_asset/NEW_USER.htm</string>
@@ -22,12 +18,4 @@
     <integer name="threshold_kbps_for_video">9</integer>
     <integer name="delay_speed_test_in_milliseconds">10000</integer>
     <string name="speed_test_url">http://bnotions.s3.amazonaws.com/128kb.file</string>
-
-    <!-- Facebook Social Sharing configuration.
-    Once this feature is ready, migrate this to the YAML config -->
-    <string name="facebook_app_share_root">edxbnotionsns</string>
-    <string name="facebook_app_course_id">edx_course</string>
-    <string name="facebook_app_certificate_id">edx_certificate</string>
-    <string name="facebook_app_share_type">share_info_of</string>
-
 </resources>
