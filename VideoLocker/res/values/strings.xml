@@ -111,7 +111,7 @@
     <string name="logout">Logout</string>
     <!-- Settings screen title -->
     <string name="settings_txt">Settings</string>
-    <!-- Settings screen title -->
+    <!-- Settings screen version -->
     <string name="label_version">Version</string>
     <!-- Button text to show user Settings screen -->
     <string name="label_settings">My Settings</string>
@@ -555,6 +555,14 @@
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
     <string name="email_subject">Customer Feedback</string>
+    <!--  Submit Feedback app version text -->
+    <string name="app_version">App Version: </string>
+    <!--  Submit Feedback android version text -->
+    <string name="android_os_version">Android OS: </string>
+    <!--  Submit Feedback android model text -->
+    <string name="android_device_model">Device Model: </string>
+    <!--  Submit Feedback feedback text -->
+    <string name="insert_feedback">Feedback: </string>
 
     <!-- Message indicating num of video deleted. {video_count} is a number of videos deleted, like "3".  -->
     <plurals
