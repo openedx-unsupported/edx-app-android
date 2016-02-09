@@ -1,10 +1,12 @@
 package org.edx.mobile.view;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.WindowManager;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseVideosDownloadStateActivity;
@@ -30,6 +32,13 @@ public class MyVideosTabActivity extends BaseVideosDownloadStateActivity {
 
         // now init the tabs
         initializeTabs();
+
+        // Full-screen video in landscape.
+        if (getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 
     private void initializeTabs() {
