@@ -53,12 +53,24 @@ public class MainApplication extends MultiDexApplication {
         return application;
     }
 
-    Injector injector;
+    private Injector injector;
+
+    private Config config;
+
+    private CustomApplicationExtension customApplicationExtension;
 
     @Override
     public void onCreate() {
         super.onCreate();
         init();
+        customApplicationExtension = new CustomApplicationExtension(config);
+        customApplicationExtension.onApplicationCreated();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        customApplicationExtension.onApplicationTerminated();
     }
 
     /**
@@ -72,7 +84,7 @@ public class MainApplication extends MultiDexApplication {
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
-        final Config config = injector.getInstance(Config.class);
+        config = injector.getInstance(Config.class);
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {

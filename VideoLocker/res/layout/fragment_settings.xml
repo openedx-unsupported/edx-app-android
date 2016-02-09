@@ -1,59 +1,62 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     tools:context="org.edx.mobile.view.SettingsFragment">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey_3" />
 
     <LinearLayout
         android:id="@+id/settings_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:divider="@drawable/edx_divider"
+        android:orientation="vertical"
+        android:showDividers="middle|end">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="@dimen/edx_margin">
 
-            <TextView
-                android:id="@+id/settingsText"
-                style="@style/regular_text"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/settings_wifi_top"
-                android:textColor="@color/grey_6"
-                android:textSize="13sp"
-                tools:targetApi="17" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/download_only_tv"
-                style="@style/regular_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/settings_wifi_bottom"
-                android:textColor="@color/grey_4"
-                android:textSize="11sp"
-                tools:targetApi="17" />
+                <TextView
+                    android:id="@+id/settingsText"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/settings_wifi_top"
+                    android:textColor="@color/grey_6"
+                    android:textSize="13sp"
+                    tools:targetApi="17" />
+
+                <TextView
+                    android:id="@+id/download_only_tv"
+                    style="@style/regular_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/settings_wifi_bottom"
+                    android:textColor="@color/grey_4"
+                    android:textSize="11sp"
+                    tools:targetApi="17" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/wifi_setting"
+                style="@style/edX.Widget.Switch"
+                android:checked="true" />
         </LinearLayout>
 
-        <Switch
-            android:id="@+id/wifi_setting"
-            style="@style/edX.Widget.Switch"
-            android:checked="true" />
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

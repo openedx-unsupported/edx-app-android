@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import com.google.inject.Inject;
@@ -29,10 +30,13 @@ public class SettingsFragment extends BaseFragment {
 
     private Switch wifiSwitch;
 
+    private CustomSettingsExtension customSettingsExtension;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         environment.getSegment().trackScreenView(ISegment.Screens.SETTINGS);
+        customSettingsExtension = new CustomSettingsExtension(environment.getConfig());
     }
 
     @Override
@@ -42,8 +46,15 @@ public class SettingsFragment extends BaseFragment {
         final View layout = inflater.inflate(R.layout.fragment_settings, container, false);
         wifiSwitch = (Switch) layout.findViewById(R.id.wifi_setting);
         updateWifiSwitch();
+        final LinearLayout settingsLayout = (LinearLayout)layout.findViewById(R.id.settings_layout);
+        customSettingsExtension.onCreateSettingsView(settingsLayout, getFragmentManager());
         return layout;
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        customSettingsExtension.onDestroySettingsView();
     }
 
     private void updateWifiSwitch() {
