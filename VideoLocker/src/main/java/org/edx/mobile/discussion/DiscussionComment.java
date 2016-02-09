@@ -40,6 +40,7 @@ public class DiscussionComment implements Serializable, IAuthorData {
     private Date endorsedAt;
     private boolean abuseFlagged = false;
     private List<String> editableFields;
+    private int childCount = 0;
     private List<DiscussionComment> children;
 
     public String getIdentifier() {
@@ -108,6 +109,15 @@ public class DiscussionComment implements Serializable, IAuthorData {
 
     public List<String> getEditableFields() {
         return editableFields;
+    }
+
+
+    public int getChildCount() {
+        return childCount;
+    }
+
+    public void setChildCount(int childCount) {
+        this.childCount = childCount;
     }
 
     public List<DiscussionComment> getChildren() {
