@@ -27,6 +27,7 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.MediaConsentUtils;
 
 import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
@@ -79,10 +80,9 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
 
-        requestStaticInjection(BrowserUtil.class);
-
-        requestStaticInjection(DiscussionTextUtils.class);
-
         bind(RestAdapter.class).toProvider(RestAdapterProvider.class);
+
+        requestStaticInjection(BrowserUtil.class, MediaConsentUtils.class,
+                DiscussionTextUtils.class);
     }
 }

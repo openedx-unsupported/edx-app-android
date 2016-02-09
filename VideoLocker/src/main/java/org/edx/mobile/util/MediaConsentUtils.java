@@ -1,7 +1,12 @@
 package org.edx.mobile.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
@@ -18,29 +23,38 @@ public class MediaConsentUtils {
     public static final String DIALOG_TAG_CONFIRM_MOBILE_DATA = TAG + ".confirm";
     public static final String DIALOG_TAG_CONFIRM_WIFI_OFF = TAG + ".wifioff";
     public static final String DIALOG_TAG_CONFIRM_LEAVING_APP = TAG + ".leaving";
-    private static final Logger logger = new Logger(MediaConsentUtils.class);
+
+    @Inject
+    private static Config config;
 
     /**
-     * Handles playback by checking user preferences and network connectivity.
-     * If the device is connected to the following, return positive callback
-     * 1. WIFI
-     * 2. Is connected to mobile and on zero rated network
-     * 3. Is connected to mobile network and wifi preference is off
+     * Returns true if media can be streamed on the active network
+     * without requiring user consent.
      */
-    public static void consentToMediaPlayback(FragmentActivity activity, IDialogCallback consentCallback, Config config) {
-        // init pref file
-        UserPrefs pref = new UserPrefs(activity);
-        boolean wifiPreference = pref.isDownloadOverWifiOnly();
+    public static boolean canStreamMedia(Context context) {
+        NetworkInfo info = NetworkUtil.getNetworkInfo(context);
+        if (info == null || !info.isConnected()) return false;
+        switch (info.getType()) {
+            case ConnectivityManager.TYPE_WIFI:
+            case ConnectivityManager.TYPE_BLUETOOTH:
+            case ConnectivityManager.TYPE_ETHERNET:
+                return true;
+            default:
+                return !new UserPrefs(context).isDownloadOverWifiOnly() ||
+                        NetworkUtil.isOnZeroRatedNetwork(context, config);
+        }
+    }
 
-        boolean connectedToWifi = NetworkUtil.isConnectedWifi(activity);
-        boolean connectedMobile = NetworkUtil.isConnectedMobile(activity);
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(activity, config);
-
-        if (connectedToWifi || (connectedMobile && isOnZeroRatedNetwork)
-                || (connectedMobile && !wifiPreference)) {
-            //no consent needed, continue playback
+    /**
+     * Verifies user consent to media streaming on the active network.
+     */
+    public static void requestStreamMedia(FragmentActivity activity, IDialogCallback consentCallback) {
+        if (canStreamMedia(activity)) {
+            // No consent required, initiate streaming.
             consentCallback.onPositiveClicked();
         } else {
+            // No dialog for user consent implemented at
+            // the moment, so just show the error messages.
             consentCallback.onNegativeClicked();
         }
     }

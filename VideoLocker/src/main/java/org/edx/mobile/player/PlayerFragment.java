@@ -132,9 +132,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
 
-    //we handle the lifecycle of player differently in viewPager;
-    private boolean isInViewPager;
-
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
         @Override
@@ -336,8 +333,28 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onResume() {
         super.onResume();
-        if (!isInViewPager) {
+        if (getUserVisibleHint()) {
             handleOnResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getUserVisibleHint()) {
+            handleOnPause();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isResumed()) {
+            if (isVisibleToUser) {
+                handleOnResume();
+            } else {
+                handleOnPause();
+            }
         }
     }
 
@@ -353,14 +370,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
         if (isPrepared) handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if ( !isInViewPager ) {
-            handleOnPause();
-        }
     }
 
     public void handleOnPause(){
@@ -725,8 +734,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         allowSensorOrientation();
 
-        if (!isResumed() ||
-                (getParentFragment() != null && !getParentFragment().getUserVisibleHint())) {
+        if (!isResumed() || !getUserVisibleHint()) {
             freezePlayer();
             return;
         }
@@ -836,9 +844,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onFullScreen(boolean isFullScreen) {
         if (isPrepared) {
-            if(!isInViewPager) {
-                freezePlayer();
-            }
+            freezePlayer();
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -1819,10 +1825,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     public boolean isShownWifiSettingsMessage(){
         return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
-    }
-
-    public void setInViewPager(boolean inViewPager){
-        this.isInViewPager = inViewPager;
     }
 
     @Override
