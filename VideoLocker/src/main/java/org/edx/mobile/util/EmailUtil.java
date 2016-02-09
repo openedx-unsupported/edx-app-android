@@ -11,7 +11,7 @@ public class EmailUtil {
 
     private static final Logger logger = new Logger(EmailUtil.class.getName());
 
-    public static void sendEmail(final FragmentActivity activityContext, final String to,
+    public static void openEmailClient(final FragmentActivity activityContext, final String to,
                                  final String subject, final String email, Config config) {
         // verify if the app is running on zero-rated mobile data?
         if (NetworkUtil.isConnectedMobile(activityContext) && NetworkUtil.isOnZeroRatedNetwork(activityContext, config)) {
@@ -19,7 +19,7 @@ public class EmailUtil {
             IDialogCallback callback = new IDialogCallback() {
                 @Override
                 public void onPositiveClicked() {
-                    openEmailClient(activityContext, to, subject, email);
+                    sendEmailIntent(activityContext, to, subject, email);
                 }
 
                 @Override
@@ -29,11 +29,11 @@ public class EmailUtil {
 
             MediaConsentUtils.showLeavingAppDataDialog(activityContext, callback);
         } else {
-            openEmailClient(activityContext, to, subject, email);
+            sendEmailIntent(activityContext, to, subject, email);
         }
     }
 
-    private static void openEmailClient(FragmentActivity activityContext, String to, String subject,
+    private static void sendEmailIntent(FragmentActivity activityContext, String to, String subject,
                                         String email){
         Intent email_intent = new Intent(Intent.ACTION_SEND);
         email_intent.putExtra(Intent.EXTRA_EMAIL, new String[] { to });

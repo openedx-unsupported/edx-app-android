@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.google.inject.Inject;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -234,8 +236,14 @@ public class NavigationFragment extends BaseFragment {
             public void onClick(View v) {
                 String to = environment.getConfig().getFeedbackEmailAddress();
                 String subject = getString(R.string.email_subject);
-                String email = "";
-                EmailUtil.sendEmail(getActivity(), to, subject, email, environment.getConfig());
+
+                String versionName = PropertyUtil.getManifestVersionName(getActivity());
+                String osVersionText = String.format("%s %s", getString(R.string.android_os_version), android.os.Build.VERSION.RELEASE);
+                String appVersionText = String.format("%s %s", getString(R.string.app_version), BuildConfig.VERSION_NAME);
+                String deviceModelText = String.format("%s %s", getString(R.string.android_device_model), Build.MODEL);
+                String feedbackText = getString(R.string.insert_feedback);
+                String body = osVersionText + "\n" + appVersionText + "\n" + deviceModelText + "\n\n" + feedbackText;
+                EmailUtil.openEmailClient(getActivity(), to, subject, body, environment.getConfig());
             }
         });
 
