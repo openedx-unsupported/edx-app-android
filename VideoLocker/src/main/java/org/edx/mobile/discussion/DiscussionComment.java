@@ -111,13 +111,12 @@ public class DiscussionComment implements Serializable, IAuthorData {
         return editableFields;
     }
 
-
     public int getChildCount() {
         return childCount;
     }
 
-    public void setChildCount(int childCount) {
-        this.childCount = childCount;
+    public void incrementChildCount() {
+        childCount++;
     }
 
     public List<DiscussionComment> getChildren() {

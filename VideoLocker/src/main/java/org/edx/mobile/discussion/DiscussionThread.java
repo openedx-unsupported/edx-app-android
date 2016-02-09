@@ -182,7 +182,9 @@ public class DiscussionThread implements Serializable, IAuthorData {
     }
 
     public void incrementCommentCount() {
-        ++this.commentCount;
+        ++commentCount;
+        ++unreadCommentCount;
+        read = false;
     }
 
     public boolean hasSameId(@NonNull DiscussionThread discussionThread) {

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -414,13 +413,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     public void addNewComment(@NonNull DiscussionComment parent) {
         String parentId = parent.getIdentifier();
-        if (!TextUtils.isEmpty(parentId)) {
-            for (DiscussionComment response : discussionResponses) {
-                if (parentId.equals(response.getIdentifier())) {
-                    response.setChildCount(response.getChildCount() + 1);
-                    notifyDataSetChanged();
-                    break;
-                }
+        for (DiscussionComment response : discussionResponses) {
+            if (parentId.equals(response.getIdentifier())) {
+                response.incrementChildCount();
+                notifyDataSetChanged();
+                break;
             }
         }
     }
