@@ -8,6 +8,7 @@ import retrofit.RetrofitError;
  * Should this be the base class of all http exceptions?
  */
 public class RetroHttpException extends Exception {
+
     @NonNull
     private final RetrofitError cause;
 
@@ -20,5 +21,9 @@ public class RetroHttpException extends Exception {
     @NonNull
     public RetrofitError getCause() {
         return cause;
+    }
+
+    public int getStatusCode() {
+        return cause.getResponse().getStatus();
     }
 }

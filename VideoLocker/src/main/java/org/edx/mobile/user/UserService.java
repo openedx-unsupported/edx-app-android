@@ -1,7 +1,9 @@
 package org.edx.mobile.user;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit.client.Response;
@@ -26,4 +28,7 @@ public interface UserService {
 
     @DELETE("/api/user/v1/accounts/{username}/image")
     Response deleteProfileImage(@Path("username") String username) throws RetroHttpException;
+
+    @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
 }
