@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/edx_margin"
+    android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:descendantFocusability="beforeDescendants">
+    android:orientation="vertical"
+    android:padding="@dimen/edx_margin">
 
     <EditText
         android:id="@+id/text"
@@ -19,11 +19,18 @@
         android:orientation="vertical"
         tools:hint="Hint" />
 
-    <Button
+    <FrameLayout
         android:id="@+id/submit_button"
-        style="@style/edX.Widget.CreationButton"
+        style="@style/edX.Widget.CreationButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/edx_margin"
-        android:text="@string/edit_user_profile_textarea_submit_button" />
+        android:contentDescription="@string/edit_user_profile_textarea_submit_button">
+
+        <Button
+            style="@style/edX.Widget.CreationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_user_profile_textarea_submit_button" />
+    </FrameLayout>
 </LinearLayout>
