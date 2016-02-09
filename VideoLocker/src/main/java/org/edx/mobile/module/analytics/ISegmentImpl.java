@@ -626,20 +626,6 @@ public class ISegmentImpl implements ISegment {
 
     //Tracking methods introduced by BNOTIONS
 
-    //We may want to explore the idea of adding cell carrier to the context.
-    @Override
-    public Properties trackUserCellConnection(String carrierName, boolean isZeroRated) {
-        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
-        aEvent.properties.putValue(Keys.NAME, Values.CONNECTION_CELL);
-        aEvent.data.putValue(Keys.CELL_CARRIER, carrierName);
-        aEvent.data.putValue(Keys.CELL_ZERO_RATED, isZeroRated);
-
-        aEvent.setAppNameContext();
-        tracker.track(Events.TRACK_CELL_CONNECTION, aEvent.properties);
-        return aEvent.properties;
-
-    }
-
     @Override
     public Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed) {
         SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();

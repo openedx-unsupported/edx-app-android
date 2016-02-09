@@ -153,11 +153,6 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackUserCellConnection(String carrierName, boolean isZeroRated) {
-        return null;
-    }
-
-    @Override
     public Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed) {
         return null;
     }

@@ -55,16 +55,6 @@ public class NetworkConnectivityReceiver extends RoboBroadcastReceiver {
             }
         }
 
-        //Track the connection change. Record if the user is on a cell network.
-        if (NetworkUtil.isConnectedMobile(context)){
-
-            ISegment segIO = environment.getSegment();
-
-            TelephonyManager manager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-            String carrierName = manager.getNetworkOperatorName();
-
-            segIO.trackUserCellConnection(carrierName, NetworkUtil.isOnZeroRatedNetwork(context, environment.getConfig()));
-        }
         NetworkConnectivityChangeEvent event = new NetworkConnectivityChangeEvent();
         EventBus.getDefault().postSticky(event);
 
