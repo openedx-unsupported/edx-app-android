@@ -5,10 +5,11 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.model.Page;
 import org.edx.mobile.task.Task;
 
 public abstract class GetCourseListTask extends
-        Task<CourseList> {
+        Task<Page<CourseDetail>> {
 
     @Inject
     private CourseAPI courseAPI;
@@ -21,7 +22,7 @@ public abstract class GetCourseListTask extends
     }
 
 
-    public CourseList call() throws Exception {
+    public Page<CourseDetail> call() throws Exception {
         return courseAPI.getCourseList(page);
     }
 }

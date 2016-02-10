@@ -13,8 +13,8 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
-import org.edx.mobile.course.CourseList;
 import org.edx.mobile.course.GetCourseListTask;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.FindCoursesListAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -60,9 +60,9 @@ public class NativeFindCoursesFragment extends BaseFragment {
                 }
                 task = new GetCourseListTask(getActivity(), nextPage) {
                     @Override
-                    protected void onSuccess(CourseList courseList) throws Exception {
-                        super.onSuccess(courseList);
-                        callback.onPageLoaded(courseList.results, courseList.pagination.next != null);
+                    protected void onSuccess(Page<CourseDetail> coursesPage) throws Exception {
+                        super.onSuccess(coursesPage);
+                        callback.onPageLoaded(coursesPage);
                         ++nextPage;
                         if (null != viewHolder) {
                             viewHolder.listView.setVisibility(View.VISIBLE);

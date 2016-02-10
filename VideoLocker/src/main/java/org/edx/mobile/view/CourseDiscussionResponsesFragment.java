@@ -18,7 +18,7 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
-import org.edx.mobile.discussion.ThreadComments;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetResponsesListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
@@ -145,7 +145,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         private int nextPage = 1;
 
         @Nullable
-        private ThreadComments unendorsedResponses;
+        private Page<DiscussionComment> unendorsedResponsesPage;
         private boolean isEndorsedFetched = false;
 
         public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
@@ -176,12 +176,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             getEndorsedListTask = new GetResponsesListTask(context, threadId, 1, isQuestionTypeThread,
                     true) {
                 @Override
-                public void onSuccess(ThreadComments threadResponses) {
+                public void onSuccess(Page<DiscussionComment> threadResponsesPage) {
                     if (callback != null) {
                         isEndorsedFetched = true;
-                        callback.onPartialPageLoaded(threadResponses.getResults());
+                        callback.onPartialPageLoaded(threadResponsesPage.getResults());
                         // If the unendorsed call returned earlier than this one
-                        if (unendorsedResponses != null) deliverResult();
+                        if (unendorsedResponsesPage != null) deliverResult();
                     }
                 }
 
@@ -201,9 +201,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             getResponsesListTask = new GetResponsesListTask(context, threadId, nextPage,
                     isQuestionTypeThread, false) {
                 @Override
-                public void onSuccess(final ThreadComments threadResponses) {
+                public void onSuccess(final Page<DiscussionComment> threadResponsesPage) {
                     if (callback != null) {
-                        unendorsedResponses = threadResponses;
+                        unendorsedResponsesPage = threadResponsesPage;
                         if (!isQuestionTypeThread || isEndorsedFetched) {
                             deliverResult();
                         }
@@ -221,9 +221,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
         private void deliverResult() {
             ++nextPage;
-            boolean hasMore = unendorsedResponses.next != null &&
-                    unendorsedResponses.next.length() > 0;
-            callback.onPageLoaded(unendorsedResponses.getResults(), hasMore);
+            callback.onPageLoaded(unendorsedResponsesPage);
         }
 
         public void reset() {
@@ -235,7 +233,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 getEndorsedListTask.cancel(true);
                 getEndorsedListTask = null;
             }
-            unendorsedResponses = null;
+            unendorsedResponsesPage = null;
             isEndorsedFetched = false;
             callback = null;
             nextPage = 1;

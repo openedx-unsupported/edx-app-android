@@ -27,7 +27,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -231,10 +231,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(),
                 discussionTopic, postsFilter, postsSort, nextPage) {
             @Override
-            public void onSuccess(TopicThreads topicThreads) {
-                final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
+            public void onSuccess(Page<DiscussionThread> threadsPage) {
                 ++nextPage;
-                callback.onPageLoaded(topicThreads.getResults(), hasMore);
+                callback.onPageLoaded(threadsPage);
                 if (discussionTopic.isAllType()) {
                     checkNoResultView(EmptyQueryResultsFor.COURSE);
                 } else if (discussionTopic.isFollowingType()) {

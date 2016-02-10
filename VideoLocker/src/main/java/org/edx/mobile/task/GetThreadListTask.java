@@ -7,14 +7,15 @@ import android.text.TextUtils;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class GetThreadListTask extends Task<TopicThreads> {
+public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
     static final int PAGE_SIZE = 20;
 
     final String courseId;
@@ -36,7 +37,7 @@ public abstract class GetThreadListTask extends Task<TopicThreads> {
         this.page = page;
     }
 
-    public TopicThreads call() throws Exception {
+    public Page<DiscussionThread> call() throws Exception {
         try {
             if (courseId != null) {
                 if (!topic.isFollowingType()) {

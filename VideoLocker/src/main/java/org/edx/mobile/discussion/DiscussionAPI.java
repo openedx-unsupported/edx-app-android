@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.google.inject.Inject;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.util.List;
@@ -83,33 +84,35 @@ public class DiscussionAPI {
         return discussionService.getCourseTopics(courseId);
     }
 
-    public TopicThreads getThreadList(String courseId, List<String> topicIds, String filter,
-                                      String orderBy, int pageSize, int page)
+    public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
+                                                String filter, String orderBy, int pageSize,
+                                                int page)
             throws RetroHttpException {
         return discussionService.getThreadList(courseId, topicIds, filter, orderBy, pageSize, page);
     }
 
-    public TopicThreads getFollowingThreadList(String courseId, String filter, String orderBy,
-                                               int pageSize, int page)
+    public Page<DiscussionThread> getFollowingThreadList(String courseId, String filter,
+                                                         String orderBy, int pageSize, int page)
             throws RetroHttpException {
         return discussionService.getFollowingThreadList(courseId, "True", filter, orderBy,
                 pageSize, page);
     }
 
 
-    public TopicThreads searchThreadList(String courseId, String text, int pageSize, int page)
+    public Page<DiscussionThread> searchThreadList(String courseId, String text, int pageSize,
+                                                   int page)
             throws RetroHttpException {
         return discussionService.searchThreadList(courseId, text, pageSize, page);
     }
 
     // get the responses, and all comments for each of which, of a thread
-    public ThreadComments getResponsesList(String threadId, int pageSize, int page)
+    public Page<DiscussionComment> getResponsesList(String threadId, int pageSize, int page)
             throws RetroHttpException {
         return discussionService.getResponsesList(threadId, pageSize, page);
     }
 
-    public ThreadComments getResponsesListForQuestion(String threadId, int pageSize, int page,
-                                                      boolean endorsed)
+    public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int pageSize,
+                                                               int page, boolean endorsed)
             throws RetroHttpException {
         return discussionService.getResponsesListForQuestion(threadId, pageSize, page, endorsed);
     }

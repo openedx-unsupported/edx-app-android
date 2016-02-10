@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.model.Page;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,7 +69,7 @@ public class InfiniteScrollUtils {
 
     public interface PageLoadCallback<T> {
         void onPartialPageLoaded(List<T> newItems);
-        void onPageLoaded(List<T> newItems, boolean hasMore);
+        void onPageLoaded(Page<T> newPage);
     }
 
     public interface InfiniteListController {
@@ -109,15 +110,15 @@ public class InfiniteScrollUtils {
                 }
 
                 @Override
-                public void onPageLoaded(List<T> newItems, boolean hasMore) {
+                public void onPageLoaded(Page<T> newPage) {
                     if (isAbandoned()) {
                         return;
                     }
-                    adapter.addAll(newItems);
-                    if (!hasMore) {
+                    adapter.addAll(newPage.getResults());
+                    hasMoreItems = newPage.hasNext();
+                    if (!hasMoreItems) {
                         adapter.setProgressVisible(false);
                     }
-                    hasMoreItems = hasMore;
                     loading = false;
                 }
 

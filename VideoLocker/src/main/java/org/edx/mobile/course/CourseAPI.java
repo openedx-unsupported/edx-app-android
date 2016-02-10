@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 
@@ -30,7 +31,7 @@ public class CourseAPI {
 
     public
     @NonNull
-    CourseList getCourseList(int page) throws RetroHttpException {
+    Page<CourseDetail> getCourseList(int page) throws RetroHttpException {
         return courseService.getCourseList(getUsername(), true, page);
     }
 
