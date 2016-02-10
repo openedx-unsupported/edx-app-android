@@ -57,6 +57,7 @@ public class OkHttpUtil {
                         context.getString(R.string.app_name) + "/" +
                         BuildConfig.APPLICATION_ID + "/" +
                         BuildConfig.VERSION_NAME));
+        interceptors.add(new OfflineRequestInterceptor(context));
         if (isOAuthBased) {
             interceptors.add(new OauthHeaderRequestInterceptor(context));
         }

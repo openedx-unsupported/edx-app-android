@@ -94,7 +94,6 @@ public class RestApiManager implements IApi{
         RestAdapter restAdapter = new RestAdapter.Builder()
             .setClient(new Ok3Client(oauthBasedClient))
             .setEndpoint(getBaseUrl())
-            .setRequestInterceptor(new OfflineRequestInterceptor(context))
             .build();
         oauthRestApi = restAdapter.create(OauthRestApi.class);
 

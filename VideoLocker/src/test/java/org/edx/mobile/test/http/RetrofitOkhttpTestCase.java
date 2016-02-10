@@ -72,6 +72,12 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         interceptors.add(loggingInterceptor);
+        interceptors.add(new OfflineRequestInterceptor(context) {
+            @Override
+            public boolean isNetworkConnected() {
+                return isNetworkConnected;
+            }
+        });
         OkHttpClient oauthBasedClient = oauthBasedClientBuilder.build();
 
         Executor executor = Executors.newCachedThreadPool();
@@ -79,11 +85,6 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
             .setExecutors(executor, executor)
             .setClient(new Ok3Client(oauthBasedClient))
             .setEndpoint(server.url("/").toString())
-            .setRequestInterceptor(new OfflineRequestInterceptor(context) {
-                public boolean isNetworkConnected() {
-                    return isNetworkConnected;
-                }
-            })
             .build();
 
         DummyService service = restAdapter.create(DummyService.class);
