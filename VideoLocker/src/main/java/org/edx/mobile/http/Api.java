@@ -401,7 +401,11 @@ public class Api implements IApi {
         if (NetworkUtil.isConnected(context) && !fetchFromCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
+            final HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
+            if (result.statusCode == 401) {
+                throw new HttpAuthRequiredException();
+            }
+            json = result.body;
             // cache the response
             cache.put(url, json);
         }
@@ -918,4 +922,6 @@ public class Api implements IApi {
         return null;
     }
 
+    public static class HttpAuthRequiredException extends Exception {
+    }
 }

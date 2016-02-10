@@ -21,27 +21,22 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     private Observer mObserver;
 
     IEdxEnvironment environment;
-    UserAPI api;
 
-    public CoursesAsyncLoader(Context context, IEdxEnvironment environment, UserAPI api) {
+    public CoursesAsyncLoader(Context context, IEdxEnvironment environment) {
         super(context);
         this.context = context;
         this.environment = environment;
-        this.api = api;
     }
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        ProfileModel profile = pref.getCurrentUserProfile();
-
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username);
+            List<EnrolledCoursesResponse> enrolledCoursesResponse = environment.getServiceManager().getEnrolledCourses();
             environment.getNotificationDelegate().syncWithServerForFailure();
             environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             result.setResult(enrolledCoursesResponse);
-        } catch (RetroHttpException exception) {
+        } catch (Exception exception) {
             result.setEx(exception);
         }
         return result;

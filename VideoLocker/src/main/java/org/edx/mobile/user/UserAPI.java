@@ -56,8 +56,4 @@ public class UserAPI {
         userService.deleteProfileImage(username);
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
     }
-
-    public List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username) throws RetroHttpException {
-        return userService.getUserEnrolledCourses(username);
-    }
 }
