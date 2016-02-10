@@ -279,60 +279,6 @@ public class HttpManager {
         }
         return url;
     }
-    
-    /**
-     * Return http params with timeout.
-     * @return
-     */
-    @Deprecated
-    private HttpParams getHttpParameters() {
-        HttpParams httpParameters = new BasicHttpParams();
-        // Set the timeout in milliseconds until a connection is established.
-        // The default value is zero, that means the timeout is not used. 
-        int timeoutConnection = 60 * 1000;
-        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-        // Set the default socket timeout (SO_TIMEOUT) 
-        // in milliseconds which is the timeout for waiting for data.
-        int timeoutSocket = 5000;
-        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-        return httpParameters;
-    }
-    
-    /**
-     * Returns Header for a given URL.
-     * 
-     * @param url
-     * @throws ParseException
-     * @throws ClientProtocolException
-     * @throws IOException
-     */
-    public org.apache.http.Header getResponseHeader(String url, Bundle headers)
-            throws ParseException, ClientProtocolException, IOException {
-        final DefaultHttpClient client = newClient();
-
-        HttpGet get = new HttpGet(url);
-
-        // set request headers
-        if (headers != null) {
-            for (String key : headers.keySet()) {
-                get.addHeader(key, headers.getString(key));
-            }
-        }
-
-        HttpResponse response = client.execute(get);
-        org.apache.http.Header header=null;
-        if(response.containsHeader("Set-Cookie")){
-            header = response.getFirstHeader("Set-Cookie");
-        }
-        client.getConnectionManager().shutdown();
-
-        return header;
-    }
-
-    public org.apache.http.Header getResponseHeader(String url)
-        throws ParseException, ClientProtocolException, IOException {
-        return getResponseHeader(url, null);
-    }
 
     public List<HttpCookie> getCookies(String url, Bundle headers, boolean isGet)
         throws ParseException, ClientProtocolException, IOException {

@@ -9,12 +9,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
-import org.edx.mobile.http.serialization.JsonBooleanDeserializer;
-import org.edx.mobile.http.serialization.ShareCourseResult;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -25,7 +21,6 @@ import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -33,16 +28,10 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.json.CreateGroupResponse;
-import org.edx.mobile.model.json.GetFriendsListResponse;
-import org.edx.mobile.model.json.GetGroupMembersResponse;
-import org.edx.mobile.model.json.SuccessResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -53,7 +42,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -84,6 +72,7 @@ public class Api implements IApi {
 
     /**
      * Resets password for the given email id.
+     *
      * @param emailId
      * @return
      * @throws Exception
@@ -91,15 +80,13 @@ public class Api implements IApi {
     @Override
     public ResetPasswordResponse resetPassword(String emailId)
             throws Exception {
-        Bundle headerBundle = new Bundle();
-        headerBundle = setCookieHeaders(headerBundle);
 
         Bundle params = new Bundle();
         params.putString("email", emailId);
 
         String url = getBaseUrl() + "/password_reset/";
 
-        String json = http.post(url, params, headerBundle);
+        String json = http.post(url, params, null);
 
         if (json == null) {
             return null;
@@ -117,37 +104,8 @@ public class Api implements IApi {
     }
 
     /**
-     * Sets cookie headers like "X-CSRFToken" in the given bundle.
-     * This method is helpful in making API calls the way website does.
-     * @param headerBundle
-     * @return
-     * @throws Exception
-     */
-    private Bundle setCookieHeaders(Bundle headerBundle) throws Exception {
-        Header header = getLoginResponseHeaders();
-        HeaderElement[] elements = header.getElements();
-        if(elements[0].getName().equalsIgnoreCase("csrftoken")){
-            headerBundle.putString("Cookie", elements[0].getName()
-                    +"="+elements[0].getValue());
-            headerBundle.putString("X-CSRFToken", elements[0].getValue());
-        }else{
-            for(int i=0; i<elements.length;i++){
-                HeaderElement element = elements[i];
-                if(element.getName().equalsIgnoreCase("csrftoken")){
-                    headerBundle.putString("Cookie", elements[0].getName()
-                            +"="+elements[0].getValue());
-                    headerBundle.putString("X-CSRFToken", elements[0].getValue());
-                    break;
-                }
-            }
-        }
-
-        return headerBundle;
-    }
-
-    /**
      * Executes HTTP POST for auth call, and returns response.
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -177,6 +135,7 @@ public class Api implements IApi {
 
     /**
      * Returns user's basic profile information for current active session.
+     *
      * @return
      * @throws Exception
      */
@@ -187,7 +146,7 @@ public class Api implements IApi {
 
         String url = getBaseUrl() + "/api/mobile/v0.5/my_user_info";
         String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-        
+
         logger.debug("Url for getProfile: " + urlWithAppendedParams);
 
         String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
@@ -213,14 +172,14 @@ public class Api implements IApi {
 
 
         // store profile json
-        if (json != null ) {
+        if (json != null) {
             PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
             pref.put(PrefManager.Key.PROFILE_JSON, json);
             pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
             pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
 
             //it is the routine for login
-            DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE ).setUserName( res.username );
+            DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).setUserName(res.username);
         }
 
         return res;
@@ -228,7 +187,7 @@ public class Api implements IApi {
 
     /**
      * Returns entire course hierarchy.
-     * 
+     *
      * @param courseId
      * @param preferCache
      * @return
@@ -240,7 +199,7 @@ public class Api implements IApi {
         Bundle p = new Bundle();
         p.putString("format", "json");
         String url = getBaseUrl() + "/api/mobile/v0.5/video_outlines/courses/" + courseId;
-        logger.debug("Get course heirarchy url - "+url);
+        logger.debug("Get course heirarchy url - " + url);
         String json = null;
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
@@ -257,7 +216,7 @@ public class Api implements IApi {
         }
 
         //Initializing task call
-        logger.debug("Received Data from Server at : "+ DateUtil.getCurrentTimeStamp());
+        logger.debug("Received Data from Server at : " + DateUtil.getCurrentTimeStamp());
         logger.debug("course_hierarchy= " + json);
 
         Gson gson = new GsonBuilder().create();
@@ -268,7 +227,7 @@ public class Api implements IApi {
 
         // create hierarchy with chapters, sections and subsections
         // HashMap<String, SectionEntry> chapterMap = new HashMap<String, SectionEntry>();
-        Map<String, SectionEntry> chapterMap = new LinkedHashMap<String, SectionEntry>(); 
+        Map<String, SectionEntry> chapterMap = new LinkedHashMap<String, SectionEntry>();
         for (VideoResponseModel m : list) {
             // add each video to its corresponding chapter and section
 
@@ -314,12 +273,13 @@ public class Api implements IApi {
             videos.add(m);
         }
 
-        logger.debug("Finished converting data at "+ DateUtil.getCurrentTimeStamp());
+        logger.debug("Finished converting data at " + DateUtil.getCurrentTimeStamp());
         return chapterMap;
     }
 
     /**
      * Returns video model for given course id and video id.
+     *
      * @param courseId
      * @param videoId
      * @return
@@ -333,8 +293,8 @@ public class Api implements IApi {
         // iterate chapters
         for (Entry<String, SectionEntry> chapterentry : map.entrySet()) {
             // iterate lectures
-            for (Entry<String, ArrayList<VideoResponseModel>> entry : 
-                chapterentry.getValue().sections.entrySet()) {
+            for (Entry<String, ArrayList<VideoResponseModel>> entry :
+                    chapterentry.getValue().sections.entrySet()) {
                 // iterate videos 
                 for (VideoResponseModel v : entry.getValue()) {
 
@@ -351,7 +311,7 @@ public class Api implements IApi {
 
     /**
      * Returns enrolled courses of given user.
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -363,6 +323,7 @@ public class Api implements IApi {
 
     /**
      * Returns course identified by given id from cache, null if not course is found.
+     *
      * @param courseId
      * @return
      */
@@ -374,7 +335,7 @@ public class Api implements IApi {
                     return r;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
 
@@ -383,7 +344,7 @@ public class Api implements IApi {
 
     /**
      * Returns enrolled courses of given user.
-     * 
+     *
      * @param fetchFromCache
      * @return
      * @throws Exception
@@ -410,7 +371,7 @@ public class Api implements IApi {
             cache.put(url, json);
         }
 
-        if(json == null) {
+        if (json == null) {
             json = cache.get(url);
         }
 
@@ -418,7 +379,7 @@ public class Api implements IApi {
             return null;
         }
 
-        logger.debug("Url "+"enrolled_courses=" + json);
+        logger.debug("Url " + "enrolled_courses=" + json);
 
         Gson gson = new GsonBuilder().create();
 
@@ -426,7 +387,7 @@ public class Api implements IApi {
         try {
             // check if auth error
             authError = gson.fromJson(json, AuthErrorResponse.class);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             // nothing to do here
         }
         if (authError != null && authError.detail != null) {
@@ -445,6 +406,7 @@ public class Api implements IApi {
 
     /**
      * Returns list of videos in a particular course.
+     *
      * @param courseId
      * @param preferCache
      * @return
@@ -479,6 +441,7 @@ public class Api implements IApi {
 
     /**
      * Returns handout for the given course id.
+     *
      * @param url
      * @return
      * @throws Exception
@@ -492,7 +455,7 @@ public class Api implements IApi {
         if (NetworkUtil.isConnected(context) || !prefCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            logger.debug("Url "+urlWithAppendedParams);
+            logger.debug("Url " + urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
@@ -512,6 +475,7 @@ public class Api implements IApi {
 
     /**
      * Returns list of announcements for the given course id.
+     *
      * @param url
      * @param preferCache
      * @return
@@ -526,7 +490,7 @@ public class Api implements IApi {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            logger.debug("url : "+urlWithAppendedParams);
+            logger.debug("url : " + urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             cache.put(url, json);
@@ -549,20 +513,21 @@ public class Api implements IApi {
 
     /**
      * Returns "Authorization" header with current active access token.
+     *
      * @return
      */
     private Bundle getAuthHeaders() {
         Bundle headers = new Bundle();
-        
+
         // generate auth headers
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         AuthResponse auth = pref.getCurrentAuth();
-        
+
         if (auth == null || !auth.isSuccess()) {
             // this might be a login with Facebook or Google
             String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             if (token != null) {
-                  headers.putString("Authorization", token); 
+                headers.putString("Authorization", token);
             } else {
                 logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
@@ -574,6 +539,7 @@ public class Api implements IApi {
 
     /**
      * Returns Stream object from the given URL.
+     *
      * @param url
      * @param preferCache
      * @return
@@ -587,7 +553,7 @@ public class Api implements IApi {
         if (NetworkUtil.isConnected(context) && !preferCache) {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-            logger.debug("Url "+urlWithAppendedParams);
+            logger.debug("Url " + urlWithAppendedParams);
             json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
             // cache the response
             //cache.put(url, json);
@@ -606,17 +572,16 @@ public class Api implements IApi {
     }
 
 
-
     @Override
     public String downloadTranscript(String url)
             throws Exception {
-        if (url != null){
+        if (url != null) {
             try {
                 if (NetworkUtil.isConnected(this.context)) {
                     String str = http.get(url, getAuthHeaders()).body;
                     return str;
                 }
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 logger.error(ex);
             }
         }
@@ -624,20 +589,8 @@ public class Api implements IApi {
     }
 
     /**
-     * Returns list of headers for a particular Get request.
-     * @return
-     * @throws Exception
-     */
-    @Deprecated // Deprecated because this uses org.apache.http, which is itself deprecated
-    public Header getLoginResponseHeaders()
-            throws Exception {
-        String url = getBaseUrl() + "/login";
-        Header header = http.getResponseHeader(url);
-        return header;
-    }
-
-    /**
      * Returns API base URL for the current project configuration (mobile3 or production).
+     *
      * @return
      */
     public String getBaseUrl() {
@@ -646,6 +599,7 @@ public class Api implements IApi {
 
     /**
      * Returns chapter model and the subsequent sections and videos in organized manner from cache.
+     *
      * @param courseId
      * @param chapter
      * @return
@@ -662,7 +616,7 @@ public class Api implements IApi {
         list.add(c);
 
         try {
-            HashMap<String, ArrayList<VideoResponseModel>> sections = 
+            HashMap<String, ArrayList<VideoResponseModel>> sections =
                     new LinkedHashMap<String, ArrayList<VideoResponseModel>>();
 
             ArrayList<VideoResponseModel> videos = getVideosByCourseId(courseId, true);
@@ -712,7 +666,7 @@ public class Api implements IApi {
 
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
-        
+
         return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
     }
 
@@ -720,12 +674,12 @@ public class Api implements IApi {
     public AuthResponse loginByGoogle(String accessToken) throws Exception {
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
-        
+
         return socialLogin2(accessToken, PrefManager.Value.BACKEND_GOOGLE);
     }
 
     private AuthResponse socialLogin2(String accessToken, String backend)
-                                throws Exception {
+            throws Exception {
         Bundle headers = new Bundle();
         headers.putString("Content-Type", "application/x-www-form-urlencoded");
 
@@ -742,7 +696,7 @@ public class Api implements IApi {
 
         Bundle p = new Bundle();
         p.putString("access_token", accessToken);
-        p.putString("client_id",  config.getOAuthClientId());
+        p.putString("client_id", config.getOAuthClientId());
 
         //oauth2/exchange_access_token/<backend>/
         logger.debug("access_token: " + accessToken);
@@ -763,7 +717,6 @@ public class Api implements IApi {
         return gson.fromJson(json, AuthResponse.class);
 
     }
-
 
 
     @Override
@@ -792,7 +745,7 @@ public class Api implements IApi {
 
         Gson gson = new GsonBuilder().create();
         SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-        
+
         return res;
     }
 
@@ -821,6 +774,7 @@ public class Api implements IApi {
 
     /**
      * Creates new account.
+     *
      * @param parameters
      * @return
      * @throws Exception
@@ -841,12 +795,12 @@ public class Api implements IApi {
         Gson gson = new GsonBuilder().create();
         try {
             FormFieldMessageBody body = gson.fromJson(json, FormFieldMessageBody.class);
-            if( body != null && body.size() > 0 ){
+            if (body != null && body.size() > 0) {
                 RegisterResponse res = new RegisterResponse();
                 res.setMessageBody(body);
                 return res;
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             //normal workflow , ignore it.
         }
         RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
@@ -856,6 +810,7 @@ public class Api implements IApi {
 
     /**
      * Reads registration description from assets and return Model representation of it.
+     *
      * @return
      * @throws IOException
      */
@@ -887,7 +842,7 @@ public class Api implements IApi {
             JSONObject resultJson = new JSONObject(json);
             if (resultJson.has("error")) {
                 return false;
-            }else {
+            } else {
                 return true;
             }
         }
@@ -895,15 +850,15 @@ public class Api implements IApi {
         return false;
     }
 
-    public  String getSessionTokenExchangeUrl(){
+    public String getSessionTokenExchangeUrl() {
         return getBaseUrl() + "/oauth2/login/";
     }
 
     /**
-     *  used for assessment webview, refresh session id
+     * used for assessment webview, refresh session id
      */
     @Override
-    public List<HttpCookie> getSessionExchangeCookie() throws Exception{
+    public List<HttpCookie> getSessionExchangeCookie() throws Exception {
         return http.getCookies(getSessionTokenExchangeUrl(), getAuthHeaders(), false);
     }
 

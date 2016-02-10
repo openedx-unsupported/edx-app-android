@@ -143,10 +143,7 @@ public class OkHttpBaseTestCase extends BaseTestCase {
                 response.setBody("{\"value\": \"\\n<header>\\n  <h2>Password reset successful</h2>\\n  <hr>\\n</header>\\n\\n<div class=\\\"message\\\">\\n  <p>We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly.</p>\\n</div>\\n\", \"success\": true}");
             }
         } else if ("GET".equals(method)) {
-            if (urlMatches(path, "/login")) {
-                response.setResponseCode(200);
-                response.setBody("<!DOCTYPE html>");
-            } else if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
+            if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
                 String baseMockUrl = getBaseMockUrl();
                 response.setResponseCode(200);
                 response.setBody("{\"id\": 4, \"username\": \"staff\", \"email\": \"staff@example.com\", \"name\": \"staff\", \"course_enrollments\": \"" + baseMockUrl + "/api/mobile/v0.5/users/staff/course_enrollments/\"}");
