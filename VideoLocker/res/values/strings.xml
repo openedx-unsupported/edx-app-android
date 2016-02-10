@@ -260,6 +260,8 @@
     <string name="post_attribution">{time} by {author} {author_label}</string>
     <!-- The date and author of an answer to a discussion question e.g. "Marked as answer 2 days ago by Khalid TA" -->
     <string name="answer_author_attribution">Marked as answer {time} by {author} {author_label}</string>
+    <!-- The date and author of an endorsed response to a discussion thread e.g. "Endorsed 2 days ago by Khalid TA" -->
+    <string name="endorser_attribution">Endorsed {time} by {author} {author_label}</string>
     <!-- Label for the visibility of a discussion post that is only visible to cohort -->
     <string name="discussion_post_visibility_cohort">This post is visible only to {cohort}.</string>
     <!-- Label for the visibility of a discussion post that is visible to everyone -->
@@ -286,8 +288,8 @@
     <string name="number_responses_or_comments_add_comment_label">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
-    <!--Label for indicating who endorsed the comment as an answer-->
-    <string name="discussion_responses_endorsed_author">Marked as answer {endorsed_at} by {endorsed_by_author} {endorsed_by_label}</string>
+    <!--Label for indicating that a response is endorsed-->
+    <string name="discussion_responses_endorsed">Endorsed</string>
     <!-- Label for time span when its less than a second after posting a response/comment -->
     <string name="just_now">Just now</string>
 

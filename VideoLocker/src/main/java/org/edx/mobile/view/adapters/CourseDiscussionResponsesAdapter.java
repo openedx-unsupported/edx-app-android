@@ -2,6 +2,7 @@ package org.edx.mobile.view.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -292,8 +293,23 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
 
         if (comment.isEndorsed()) {
+            DiscussionThread.ThreadType threadType = discussionThread.getType();
+            @StringRes int attributionStringRes;
+            @StringRes int endorsementTypeStringRes;
+            switch (threadType) {
+                case QUESTION:
+                    attributionStringRes = R.string.answer_author_attribution;
+                    endorsementTypeStringRes = R.string.discussion_responses_answer;
+                    break;
+                case DISCUSSION:
+                default:
+                    endorsementTypeStringRes = R.string.discussion_responses_endorsed;
+                    attributionStringRes = R.string.endorser_attribution;
+                    break;
+            }
+            holder.responseAnswerTextView.setText(endorsementTypeStringRes);
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
-                    R.string.answer_author_attribution, comment.getEndorserData(),
+                    attributionStringRes, comment.getEndorserData(),
                     new Runnable() {
                         @Override
                         public void run() {
