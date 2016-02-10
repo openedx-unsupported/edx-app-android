@@ -31,6 +31,8 @@ import org.edx.mobile.view.Router;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 import roboguice.RoboGuice;
@@ -39,7 +41,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 /**
  * This class initializes the modules of the app based on the configuration.
  */
-public class MainApplication extends MultiDexApplication {
+public abstract class MainApplication extends MultiDexApplication {
 
     //FIXME - temporary solution
     public static final boolean RETROFIT_ENABLED = false;
@@ -52,7 +54,10 @@ public class MainApplication extends MultiDexApplication {
         return application;
     }
 
-    Injector injector;
+    private Injector injector;
+
+    @Inject
+    protected Config config;
 
     @Override
     public void onCreate() {
@@ -71,7 +76,7 @@ public class MainApplication extends MultiDexApplication {
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
-        final Config config = injector.getInstance(Config.class);
+        injector.injectMembers(this);
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
