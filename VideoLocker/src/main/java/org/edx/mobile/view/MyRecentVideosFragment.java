@@ -1,34 +1,39 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
-import org.edx.mobile.player.VideoListFragment.VideoListCallback;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -36,22 +41,30 @@ import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyRecentVideosFragment extends MyVideosBaseFragment {
+public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPlayerEventCallback {
 
     private MyRecentVideoAdapter adapter;
     private ListView videoListView;
+    private PlayerFragment playerFragment;
     private DeleteVideoDialogFragment deleteDialogFragment;
     private int playingVideoIndex = -1;
-    private VideoListCallback callback;
-    private MyVideosTabActivity containerActivity;
     private DownloadEntry videoModel;
-    private Button deleteButton = null;
-    private final Handler handler = new Handler();
-    protected final Logger logger = new Logger(getClass().getName());
+    private Button deleteButton;
+    private CheckBox deleteCheckBox;
+    private MenuItem deleteCheckBoxMenuItem;
+    private CompoundButton.OnCheckedChangeListener deleteCheckBoxChangeListener;
+    private final Logger logger = new Logger(getClass().getName());
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(!isLandscape());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,342 +79,345 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        restore(savedInstanceState);
 
-        try{
-            videoListView = (ListView) getView().findViewById(R.id.list_video);
-
-            if (videoListView != null) {
-                String selectedId = null;
-                if(adapter!=null){
-                    selectedId = adapter.getVideoId();
-                }
-                adapter = new MyRecentVideoAdapter(getActivity(), environment) {
-
-                    @Override
-                    protected boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event) {
-                        logger.debug("event action: " + event.getAction());
-                        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
-                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                            activity.setTabChangeEnabled(false);
-                        } else if (event.getAction() == MotionEvent.ACTION_UP
-                                || event.getAction() == MotionEvent.ACTION_CANCEL) {
-
-                            if (model.isDownload() &&
-                                    event.getAction() == MotionEvent.ACTION_UP) {
-                                // ACTION_UP verifies a CLICK event
-
-                                if ( !isPlayerVisible()) {
-                                    // don't try to showPlayer() if already shown here
-                                    // this will cause player to freeze
-                                    showPlayer();
-                                }
-                                // initialize index for this model
-                                playingVideoIndex = position;
-                                //Set videoId to adaptor to determine the currently playing video
-                                DownloadEntry downloadEntry = (DownloadEntry) model;
-                                adapter.setVideoId(downloadEntry.videoId);
-                                play(model);
-                                notifyAdapter();
-                            }
-
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (activity != null)   activity.setTabChangeEnabled(true);
-                                }
-                            }, 500);
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public void onSelectItem() {
-                        handleCheckboxSelection();
-                    }
-                };
-                // videoAdaptor.setItems(sectionList);
-                if(selectedId!=null){
-                    adapter.setVideoId(selectedId);
-                }
-                adapter.setSelectedPosition(playingVideoIndex);
-                videoListView.setEmptyView(getView().findViewById(R.id.empty_list_view));
-                videoListView.setAdapter(adapter);
-
-                showDeletePanel(getView());
-
-                videoListView.setOnItemClickListener(adapter);
-            } else {
-                // probably the landscape player view, so hide action bar
-                ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-                if(bar!=null){
-                    bar.hide();
-                }
-            }
-        }catch(Exception e){
-            logger.error(e);
+        if (savedInstanceState != null) {
+            restore(savedInstanceState);
         }
+
+        getView().findViewById(R.id.container_player).setVisibility(
+                playerFragment == null ? View.GONE : View.VISIBLE);
+
+        videoListView = (ListView) getView().findViewById(R.id.list_video);
+
+        if (videoListView != null) {
+            adapter = new MyRecentVideoAdapter(getActivity(), environment) {
+
+                @Override
+                protected void onItemClick(SectionItemInterface model, int position) {
+                    showPlayer();
+                    // initialize index for this model
+                    playingVideoIndex = position;
+                    videoModel = (DownloadEntry) model;
+                    playVideoModel();
+                    notifyAdapter();
+                }
+
+                @Override
+                public void onSelectItem() {
+                    int selectedItemsCount = adapter.getSelectedVideoItemsCount();
+                    int totalVideos = adapter.getTotalVideoItemsCount();
+                    deleteButton.setEnabled(selectedItemsCount > 0);
+                    setCheckBoxChecked(selectedItemsCount == totalVideos);
+                }
+            };
+            if (videoModel != null) {
+                adapter.setVideoId(videoModel.videoId);
+            }
+            adapter.setSelectedPosition(playingVideoIndex);
+            videoListView.setEmptyView(getView().findViewById(R.id.empty_list_view));
+            videoListView.setAdapter(adapter);
+
+            showDeletePanel(getView());
+
+            videoListView.setOnItemClickListener(adapter);
+        } else {
+            // probably the landscape player view, so hide action bar
+            ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            if (bar != null) {
+                bar.hide();
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showDeletePanel(getView());
+        setCheckBoxVisible(false);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            addToRecentAdapter(getView());
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-
-        if (containerActivity.playerFragment != null) {
-            showPlayer();
-        }
-        notifyAdapter();
+        addToRecentAdapter(getView());
     }
 
     @Override
     public void onStop() {
         super.onStop();
         hideConfirmDeleteDialog();
-        if (getActivity() instanceof MyVideosTabActivity) {
-            ((MyVideosTabActivity) getActivity()).invalidateOptionsMenu();
-        }
+        AppConstants.myVideosDeleteMode = false;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (playerFragment != null) {
+            ((NetworkSubject) getActivity()).unregisterNetworkObserver(playerFragment);
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (playerFragment != null) {
+            playerFragment.setUserVisibleHint(isVisibleToUser);
+            if (isVisibleToUser) {
+                playerFragment.unlockOrientation();
+            } else {
+                playerFragment.lockOrientation();
+            }
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.video_list, menu);
+        deleteCheckBoxMenuItem = menu.findItem(R.id.delete_checkbox);
+        deleteCheckBoxMenuItem.setVisible(AppConstants.myVideosDeleteMode);
+        deleteCheckBox = (CheckBox) deleteCheckBoxMenuItem.getActionView()
+                .findViewById(R.id.select_checkbox);
+        deleteCheckBox.setChecked(adapter.getSelectedVideoItemsCount() ==
+                adapter.getTotalVideoItemsCount());
+        if (deleteCheckBoxChangeListener == null) {
+            deleteCheckBoxChangeListener = new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        adapter.selectAll();
+                    } else {
+                        adapter.unselectAll();
+                    }
+                    notifyAdapter();
+                    deleteButton.setEnabled(isChecked);
+                }
+            };
+        }
+        deleteCheckBox.setOnCheckedChangeListener(deleteCheckBoxChangeListener);
+    }
+
+    private void setCheckBoxChecked(boolean checked) {
+        // Temporarily remove the listener so that this isn't handled
+        // as a user action to uncheck all items.
+        deleteCheckBox.setOnCheckedChangeListener(null);
+        deleteCheckBox.setChecked(checked);
+        deleteCheckBox.setOnCheckedChangeListener(deleteCheckBoxChangeListener);
+    }
+
+    private void setCheckBoxVisible(boolean visible) {
+        AppConstants.myVideosDeleteMode = visible;
+        if (deleteCheckBoxMenuItem != null) {
+            deleteCheckBoxMenuItem.setVisible(visible);
+            setCheckBoxChecked(false);
+        }
     }
 
     private void addToRecentAdapter(View view) {
-        try {
-            logger.debug("reloading adapter...");
-            String selectedId = null;
-            if(adapter!=null){
-                selectedId = adapter.getVideoId();
+        if (adapter == null) {
+            return;
+        }
+        logger.debug("reloading adapter...");
+        String selectedId = adapter.getVideoId();
+        ArrayList<SectionItemInterface> list = environment.getStorage().getRecentDownloadedVideosList();
+        if (list != null) {
+            adapter.clear();
+            for (SectionItemInterface m : list) {
+                adapter.add(m);
             }
-
-            ArrayList<SectionItemInterface> list = environment.getStorage().getRecentDownloadedVideosList();
-            if (list != null) {
-                adapter.clear();
-                for (SectionItemInterface m : list) {
-                    adapter.add(m);
-                }
-                logger.debug("reload done");
-            }
-            if(adapter.getCount()<=0){
-                hideDeletePanel(view);
-            }
-            videoListView.setOnItemClickListener(adapter);
-            if(selectedId!=null){
-                adapter.setVideoId(selectedId);
-            }
-        } catch (Exception e) {
-            logger.error(e);
+            logger.debug("reload done");
+        }
+        if (adapter.getCount() <= 0) {
+            hideDeletePanel(view);
+        }
+        videoListView.setOnItemClickListener(adapter);
+        if (selectedId != null) {
+            adapter.setVideoId(selectedId);
+        }
+        notifyAdapter();
+        // Refresh the previous and next buttons visibility on the video
+        // player if a video is playing, based on the new data set.
+        if (playerFragment != null) {
+            playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
         }
     }
 
-    private void play(SectionItemInterface model) {
-        if (model instanceof DownloadEntry) {
-
-            DownloadEntry v = (DownloadEntry) model;
-            try {
-                String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                        .username, v.eid);
-                PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm = environment.getServiceManager().getVideoById(v.eid, v.videoId);
-                prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
-
-                if (callback != null) {
-                    videoModel = v;
-                    if (getActivity() instanceof MyVideosTabActivity) {
-                        ((MyVideosTabActivity)getActivity())
-                        .setRecentNextPrevListeners(getNextListener(), getPreviousListener());
-                    }
-                    callback.playVideoModel(v);
-                    adapter.setVideoId(videoModel.videoId);
-                }
-            } catch (Exception e) {
-                logger.error(e);
-            }
-        }
-    }
-
-    private void showPlayer() {
-        if (!isResumed() || isRemoving()) {
-            logger.warn("not showing player because fragment is being stopped");
+    private void playVideoModel() {
+        if (playerFragment == null) {
             return;
         }
 
-        final MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
-        activity.setTabChangeEnabled(false);
+        if (playerFragment.isPlaying() && videoModel.getVideoId().equals(
+                playerFragment.getPlayingVideo().getVideoId())) {
+            logger.debug("this video is already being played, skipping play event");
+            return;
+        }
+
+        Context context = getContext();
+        String prefName = PrefManager.getPrefNameForLastAccessedBy(
+                getProfile().username, videoModel.eid);
+        PrefManager prefManager = new PrefManager(context, prefName);
+        VideoResponseModel vrm;
+        try {
+            vrm = environment.getServiceManager().getVideoById(videoModel.eid, videoModel.videoId);
+        } catch (Exception e) {
+            logger.error(e);
+            return;
+        }
+        prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
+
+        // reload this model
+        environment.getStorage().reloadDownloadEntry(videoModel);
+
+        logger.debug("Resumed= " + playerFragment.isResumed());
+
+        TranscriptModel transcript = null;
+        try {
+            transcript = environment.getServiceManager().getTranscriptsOfVideo(videoModel.eid, videoModel.videoId);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        String filepath = null;
+        // check if file available on local
+        if (videoModel.filepath != null && videoModel.filepath.length()>0) {
+            if (videoModel.isDownloaded()) {
+                File f = new File(videoModel.filepath);
+                if (f.exists()) {
+                    // play from local
+                    filepath = videoModel.filepath;
+                    logger.debug("Playing from local file");
+                }
+            }
+        } else {
+            DownloadEntry de = (DownloadEntry) environment.getDatabase()
+                    .getIVideoModelByVideoUrl(videoModel.url, null);
+            if (de != null && de.filepath != null) {
+                File f = new File(de.filepath);
+                if (f.exists()) {
+                    // play from local
+                    filepath = de.filepath;
+                    logger.debug("Playing from local file for " +
+                            "another Download Entry");
+                }
+            }
+        }
+
+        if (filepath == null || filepath.length() <= 0) {
+            // not available on local, so play online
+            logger.warn("Local file path not available");
+            filepath = videoModel.getBestEncodingUrl(context);
+        }
+
+        playerFragment.play(filepath, videoModel.lastPlayedOffset,
+                videoModel.getTitle(), transcript, videoModel);
+
+        adapter.setVideoId(this.videoModel.videoId);
+    }
+
+    private void showPlayer() {
+        if (playerFragment != null) {
+            return;
+        }
 
         hideDeletePanel(getView());
-        try {
-            View container = getView().findViewById(R.id.container_player);
-            if (container.getVisibility() != View.VISIBLE) {
-                container.setVisibility(View.VISIBLE);
-            } 
-            // add and display player fragment
-            if (containerActivity.playerFragment == null) {
-                containerActivity.playerFragment = new PlayerFragment();
-            }
 
-            // this is for INLINE player only
-            if (isResumed() && !isLandscape() && !isRemoving()) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                if (containerActivity.playerFragment.isAdded()) {
-                    ft.detach(containerActivity.playerFragment);
-                    logger.debug("removing player from view ...");
-                    ft.attach(containerActivity.playerFragment);
-                    logger.debug("adding player to view ...");
-                } else {
-                    ft.replace(R.id.container_player, containerActivity.playerFragment, "player");
-                }
-                ft.commit();
-
-                logger.debug("showing player ...");
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("Error in showing player");
-        } finally {
-            /*
-            After a while, enable tabs.
-            300 milliseconds is enough time for player view to be shown.
-            Enabling the tabs immediately will allow simultaneous taps and will let the player play in background.
-            */
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (activity != null)   activity.setTabChangeEnabled(true);
-                }
-            }, 300);
+        View container = getView().findViewById(R.id.container_player);
+        if (container.getVisibility() != View.VISIBLE) {
+            container.setVisibility(View.VISIBLE);
         }
-    }
 
-    public void onOffline() {
-        try{
-            notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    protected void onOnline() {
-        try{
-            notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
-        }catch(Exception e){
-            logger.error(e);
-        }
+        // add and display player fragment
+        playerFragment = new PlayerFragment();
+        // set callback for player events
+        playerFragment.setCallback(this);
+        playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
+        FragmentManager childManager = getChildFragmentManager();
+        childManager.beginTransaction().add(R.id.container_player, playerFragment).commit();
+        // the fragment needs to be added immediately in order to be playable
+        childManager.executePendingTransactions();
+        ((NetworkSubject) getActivity()).registerNetworkObserver(playerFragment);
+        playerFragment.unlockOrientation();
     }
 
 
     private void hideDeletePanel(View view) {
-        try {
-            // hide delete button panel at bottom
-            view.findViewById(R.id.delete_button_panel).setVisibility(View.GONE);
+        // hide delete button panel at bottom
+        view.findViewById(R.id.delete_button_panel).setVisibility(View.GONE);
 
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    try {
-                        // hide checkbox in action bar
-                        MyVideosTabActivity activity = ((MyVideosTabActivity) getActivity());
-                        if (activity != null) activity.hideCheckBox();
+        // hide checkbox in action bar
+        setCheckBoxVisible(false);
 
-                        // hide checkboxes in list
-                        notifyAdapter();
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                    }
-                }
-            }, 300);
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("error in hiding delete button Panel");
-        }
+        // hide checkboxes in list
+        notifyAdapter();
     }
 
-
-    public void showDeletePanel(View view) {
-        try {
-            if (!isPlayerVisible()) {
-                LinearLayout deletePanel = (LinearLayout) view
-                        .findViewById(R.id.delete_button_panel);
-                deletePanel.setVisibility(View.VISIBLE);
-
-                deleteButton = (Button) view
-                        .findViewById(R.id.delete_btn);
-                final Button editButton = (Button) view
-                        .findViewById(R.id.edit_btn);
-                editButton.setVisibility(View.VISIBLE);
-                final Button cancelButton = (Button) view
-                        .findViewById(R.id.cancel_btn);
-
-                if(AppConstants.myVideosDeleteMode){
-                    deleteButton.setVisibility(View.VISIBLE);
-                    cancelButton.setVisibility(View.VISIBLE);
-                    editButton.setVisibility(View.GONE);
-                }else{
-                    deleteButton.setVisibility(View.GONE);
-                    cancelButton.setVisibility(View.GONE);
-                    editButton.setVisibility(View.VISIBLE);
-                }
-
-
-                deleteButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ArrayList<SectionItemInterface> list = adapter
-                                .getSelectedItems();
-                        if (list != null && list.size() > 0) 
-                            showConfirmDeleteDialog(list.size());
-                    }
-                });
-
-                cancelButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        editButton.setVisibility(View.VISIBLE);
-                        videoListView.setOnItemClickListener(adapter);
-                        AppConstants.myVideosDeleteMode = false;
-                        if (getActivity() instanceof MyVideosTabActivity) {
-                            ((MyVideosTabActivity) getActivity()).hideCheckBox();
-                        }
-                        adapter.unselectAll();
-                        AppConstants.myVideosDeleteMode = false;
-                        notifyAdapter();
-                        deleteButton.setVisibility(View.GONE);
-                        cancelButton.setVisibility(View.GONE);
-                    }
-                });
-
-                editButton.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        editButton.setVisibility(View.GONE);
-                        AppConstants.myVideosDeleteMode = true;
-                        notifyAdapter();
-                        videoListView.setOnItemClickListener(null);
-                        disableDeleteButton();
-                        deleteButton.setVisibility(View.VISIBLE);
-                        cancelButton.setVisibility(View.VISIBLE);
-                        if (getActivity() instanceof MyVideosTabActivity) {
-                            ((MyVideosTabActivity) getActivity()).showCheckBox();
-                        }
-                    }
-                });
-            }else{
-                hideDeletePanel(view);
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.debug("error in showing delete panel");
+    private void showDeletePanel(View view) {
+        if (playerFragment != null) {
+            return;
         }
 
+        LinearLayout deletePanel = (LinearLayout) view
+                .findViewById(R.id.delete_button_panel);
+        deletePanel.setVisibility(View.VISIBLE);
+
+        deleteButton = (Button) view
+                .findViewById(R.id.delete_btn);
+        final Button editButton = (Button) view
+                .findViewById(R.id.edit_btn);
+        editButton.setVisibility(View.VISIBLE);
+        final Button cancelButton = (Button) view
+                .findViewById(R.id.cancel_btn);
+
+        if (AppConstants.myVideosDeleteMode) {
+            deleteButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+            editButton.setVisibility(View.GONE);
+        } else {
+            deleteButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.VISIBLE);
+        }
+
+
+        deleteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<SectionItemInterface> list = adapter
+                        .getSelectedItems();
+                if (list != null && list.size() > 0) {
+                    showConfirmDeleteDialog(list.size());
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editButton.setVisibility(View.VISIBLE);
+                videoListView.setOnItemClickListener(adapter);
+                AppConstants.myVideosDeleteMode = false;
+                setCheckBoxVisible(false);
+                adapter.unselectAll();
+                notifyAdapter();
+                deleteButton.setVisibility(View.GONE);
+                cancelButton.setVisibility(View.GONE);
+            }
+        });
+
+        editButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                editButton.setVisibility(View.GONE);
+                AppConstants.myVideosDeleteMode = true;
+                notifyAdapter();
+                videoListView.setOnItemClickListener(null);
+                deleteButton.setEnabled(false);
+                deleteButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.VISIBLE);
+                setCheckBoxVisible(true);
+            }
+        });
     }
 
     protected void showConfirmDeleteDialog(int itemCount) {
@@ -429,166 +445,76 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     }
 
     protected void hideConfirmDeleteDialog() {
-        try{
-            if(deleteDialogFragment!=null){
-                deleteDialogFragment.dismiss();
-            }
-        }catch(Exception e){
-            logger.error(e);
+        if (deleteDialogFragment != null) {
+            deleteDialogFragment.dismissAllowingStateLoss();
         }
     }
 
     //Deleting Downloaded videos on getting confirmation
     private void onConfirmDelete() {
-        try{
-            int deletedVideoCount = 0;
-            ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
-            if (list != null) {
-                for (SectionItemInterface section : list) {
-                    if (section.isDownload()) {
-                        DownloadEntry de = (DownloadEntry) section;
-                        environment.getStorage().removeDownload(de);
-                        deletedVideoCount++;
-                    }
+        int deletedVideoCount = 0;
+        ArrayList<SectionItemInterface> list = adapter.getSelectedItems();
+        if (list != null) {
+            for (SectionItemInterface section : list) {
+                if (section.isDownload()) {
+                    DownloadEntry de = (DownloadEntry) section;
+                    environment.getStorage().removeDownload(de);
+                    deletedVideoCount++;
                 }
             }
-            addToRecentAdapter(getView());
-            notifyAdapter();
-            videoListView.setOnItemClickListener(adapter);
-            AppConstants.myVideosDeleteMode = false;
-            ((MyVideosTabActivity) getActivity()).hideCheckBox();
-            if(deletedVideoCount>0){
-                UiUtil.showMessage(MyRecentVideosFragment.this.getView(),
-                        ResourceUtil.getFormattedStringForQuantity(getResources(), R.plurals.deleted_video, "video_count", deletedVideoCount).toString());
-            }
-
-        }catch(Exception ex){
-            logger.error(ex);
-        } finally {
-            getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
-            getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
         }
-    }
-
-    //Handle check box selection in Delete mode
-    private void handleCheckboxSelection(){
-        try{
-            int selectedItemsNo = adapter.getSelectedVideoItemsCount();
-            int totalVideos = adapter.getTotalVideoItemsCount();
-
-            if(selectedItemsNo==0){
-                disableDeleteButton();
-            }else{
-                enableDeleteButton();
-            }
-
-            if(selectedItemsNo==totalVideos){
-                ((MyVideosTabActivity) getActivity()).setMyVideosCheckBoxSelected();
-            }else if(selectedItemsNo<totalVideos){
-                ((MyVideosTabActivity) getActivity()).unsetMyVideosCheckBoxSelected();
-            }
-        }catch(Exception ex){
-            logger.error(ex);
+        addToRecentAdapter(getView());
+        notifyAdapter();
+        videoListView.setOnItemClickListener(adapter);
+        setCheckBoxVisible(false);
+        if (deletedVideoCount > 0) {
+            UiUtil.showMessage(getView(), ResourceUtil.getFormattedStringForQuantity(getResources(),
+                    R.plurals.deleted_video, "video_count", deletedVideoCount).toString());
         }
-    }
-
-    //Selecting all downloaded videos in the list for Delete    
-    public void setAllVideosSectionChecked() {
-        try{
-            adapter.selectAll();
-            notifyAdapter();
-            enableDeleteButton();
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    //DeSelecting all downloaded videos in the list for Delete
-    public void unsetAllVideosSectionChecked() {
-        try{
-            adapter.unselectAll();
-            notifyAdapter();
-            disableDeleteButton();
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    //Disabling Delete button until no video is checked
-    private void disableDeleteButton(){
-        try{
-            deleteButton.setEnabled(false);
-        }catch(Exception ex){
-            logger.error(ex);
-        }
-    }
-
-    //Enabling Delete button until no video is checked
-    private void enableDeleteButton(){
-        try{
-            deleteButton.setEnabled(true);
-        }catch(Exception ex){
-            logger.error(ex);
-        }
+        getView().findViewById(R.id.delete_btn).setVisibility(View.GONE);
+        getView().findViewById(R.id.edit_btn).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
     }
 
 
-    public void markPlaying() {
+    @Override
+    public void onError() {}
+
+    @Override
+    public void onPlaybackStarted() {
         environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);
+        notifyAdapter();
     }
 
+    @Override
     public void saveCurrentPlaybackPosition(int offset) {
-        try {
-            DownloadEntry v = videoModel;
-            if (v != null) {
-                // mark this as partially watches, as playing has started
-                environment.getDatabase().updateVideoLastPlayedOffset(v.videoId, offset,
-                        setCurrentPositionCallback);
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
+        DownloadEntry v = videoModel;
+        if (v != null) {
+            // mark this as partially watches, as playing has started
+            environment.getDatabase().updateVideoLastPlayedOffset(v.videoId, offset,
+                    setCurrentPositionCallback);
         }
+        notifyAdapter();
     }
 
+    @Override
     public void onPlaybackComplete() {
-        try {
-            DownloadEntry v = videoModel;
-            if (v != null) {
-                if (v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                    videoModel.watched = DownloadEntry.WatchedState.WATCHED;
-                    // mark this as partially watches, as playing has started
-                    environment.getDatabase().updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
-                            watchedStateCallback);
-                }
+        DownloadEntry v = videoModel;
+        if (v != null) {
+            if (v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+                videoModel.watched = DownloadEntry.WatchedState.WATCHED;
+                // mark this as partially watches, as playing has started
+                environment.getDatabase().updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
+                        watchedStateCallback);
             }
-        } catch (Exception ex) {
-            logger.error(ex);
         }
+        notifyAdapter();
     }
 
-    private boolean isPlayerVisible() {
-        try{
-            if (getActivity() == null) {
-                return false;
-            }
-            View container = getActivity().findViewById(R.id.container_player);
-            return (container != null && container.getVisibility() == View.VISIBLE);
-        }catch(Exception ex){
-            logger.error(ex);
+    private void notifyAdapter() {
+        if (adapter == null) {
+            return;
         }
-        return false;
-    }
-
-    public void setCallback(VideoListCallback callback) {
-        this.callback = callback;
-    }
-
-    public void setContainerActivity(MyVideosTabActivity activity) {
-        this.containerActivity = activity;
-    }
-
-    public void notifyAdapter() {
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
     }
@@ -605,132 +531,94 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         logger.debug("In onSaveInstance State");
-        try{
-            outState.putInt("playingVideoIndex", playingVideoIndex);
-            outState.putSerializable("model", videoModel);
-            super.onSaveInstanceState(outState);
-        }catch(Exception ex){
-            logger.error(ex);
-        }
+        outState.putInt("playingVideoIndex", playingVideoIndex);
+        outState.putSerializable("model", videoModel);
+        super.onSaveInstanceState(outState);
     }
 
     /**
      * Container tab will call this method to restore the saved data
      * @param savedInstanceState
      */
-    public void restore(Bundle savedInstanceState) {
-        try{
-            if (savedInstanceState != null) {
-                playingVideoIndex = savedInstanceState.getInt("playingVideoIndex", -1);
-                videoModel = (DownloadEntry) savedInstanceState.getSerializable("model");
-            }
-        }catch(Exception ex){
-            logger.error(ex);
-        }
-    }
-
-    public void setSelectionEmpty() {
-        try{
-            playingVideoIndex = -1;
-            if (adapter != null) {
-                adapter.setSelectedPosition(playingVideoIndex);
-                notifyAdapter();
-            }
-        }catch(Exception ex){
-            logger.error(ex);
+    protected void restore(Bundle savedInstanceState) {
+        playingVideoIndex = savedInstanceState.getInt("playingVideoIndex", -1);
+        videoModel = (DownloadEntry) savedInstanceState.getSerializable("model");
+        playerFragment = (PlayerFragment) getChildFragmentManager()
+                .findFragmentById(R.id.container_player);
+        if (playerFragment != null) {
+            playerFragment.setCallback(this);
+            ((NetworkSubject) getActivity()).registerNetworkObserver(playerFragment);
         }
     }
 
     //Play the nextVideo if user selects next from Dialog
-    public void playNext() {
-        try{
-            playingVideoIndex++;
-            // check next playable video entry
-            while (playingVideoIndex < adapter.getCount()) {
-                SectionItemInterface i = adapter.getItem(playingVideoIndex);
-                if (i!=null && i instanceof DownloadEntry) {
-                    videoModel = (DownloadEntry) i;
-                    if (callback != null) {
-                        adapter.setSelectedPosition(playingVideoIndex);
-                        adapter.setVideoId(videoModel.videoId);
-                        play(videoModel);
-                        break;
-                    }
-                }
-                // try next
-                playingVideoIndex++;
+    private void playNext() {
+        playingVideoIndex++;
+        // check next playable video entry
+        while (playingVideoIndex < adapter.getCount()) {
+            SectionItemInterface i = adapter.getItem(playingVideoIndex);
+            if (i != null && i instanceof DownloadEntry) {
+                videoModel = (DownloadEntry) i;
+                adapter.setSelectedPosition(playingVideoIndex);
+                adapter.setVideoId(videoModel.videoId);
+                playVideoModel();
+                break;
             }
-        }catch(Exception ex){
-            logger.error(ex);
+            // try next
+            playingVideoIndex++;
         }
     }
 
     //Check if next video is available in the Video List
-    public boolean hasNextVideo(int index) {
-        try{
-            if(index==-1){
-                index = playingVideoIndex;
-            }
-            for (int i=(index+1) ; i<adapter.getCount(); i++) {
-                SectionItemInterface d = adapter.getItem(i);
-                if (d!=null && d instanceof DownloadEntry) {
-                    return true;
-                }
-            }
-        }catch(Exception ex){
-            logger.error(ex);
+    private boolean hasNextVideo(int index) {
+        if (index == -1) {
+            index = playingVideoIndex;
         }
-
+        for (int i = index + 1; i < adapter.getCount(); i++) {
+            SectionItemInterface d = adapter.getItem(i);
+            if (d != null && d instanceof DownloadEntry) {
+                return true;
+            }
+        }
         return false;
     }
 
-    public void playPrevious() {
-        try{
+    private void playPrevious() {
+        playingVideoIndex--;
+        // check next playable video entry
+        while (playingVideoIndex >= 0) {
+            SectionItemInterface i = adapter.getItem(playingVideoIndex);
+            if (i != null && i instanceof DownloadEntry) {
+                videoModel = (DownloadEntry) i;
+                adapter.setSelectedPosition(playingVideoIndex);
+                adapter.setVideoId(videoModel.videoId);
+                playVideoModel();
+                break;
+            }
+            // try next
             playingVideoIndex--;
-            // check next playable video entry
-            while (playingVideoIndex >= 0) {
-                SectionItemInterface i = adapter.getItem(playingVideoIndex);
-                if (i!=null && i instanceof DownloadEntry) {
-                    videoModel = (DownloadEntry) i;
-                    if (callback != null) {
-                        adapter.setSelectedPosition(playingVideoIndex);
-                        adapter.setVideoId(videoModel.videoId);
-                        play(videoModel);
-                        //callback.playVideoModel(videoModel);
-                        break;
-                    }
-                }
-                // try next
-                playingVideoIndex--;
-            }
-        }catch(Exception e){
-            logger.error(e);
         }
     }
 
-    public boolean hasPreviousVideo(int playingIndex) {
-        try{
-            for (int i=(playingIndex-1) ; i>=0; i--) {
-                SectionItemInterface d = adapter.getItem(i);
-                if (d!=null && d instanceof DownloadEntry) {
-                    return true;
-                }
+    private boolean hasPreviousVideo(int playingIndex) {
+        for (int i = playingIndex - 1; i >= 0; i--) {
+            SectionItemInterface d = adapter.getItem(i);
+            if (d != null && d instanceof DownloadEntry) {
+                return true;
             }
-        }catch(Exception e){
-            logger.error(e);
         }
         return false;
     }
 
-    public View.OnClickListener getNextListener(){
-        if(hasNextVideo(playingVideoIndex)){
+    private View.OnClickListener getNextListener(){
+        if (hasNextVideo(playingVideoIndex)) {
             return new NextClickListener();
         }
         return null;
     }
 
-    public View.OnClickListener getPreviousListener(){
-        if(hasPreviousVideo(playingVideoIndex)){
+    private View.OnClickListener getPreviousListener(){
+        if (hasPreviousVideo(playingVideoIndex)) {
             return new PreviousClickListener();
         }
         return null;
@@ -738,7 +626,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
 
     @Override
     public void reloadList() {
-        if(getView()!=null){
+        if (getView() != null) {
             addToRecentAdapter(getView());
             notifyAdapter();
         }
@@ -789,15 +677,6 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment {
     protected ProfileModel getProfile() {
         PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
         return prefManager.getCurrentUserProfile();
-    }
-
-    /**
-     * Set the current playing videoId as null in adapter
-     */
-    public void setCurrentPlayingVideoIdAsNull(){
-        if(adapter!=null){
-            adapter.setVideoId(null);
-        }
     }
 
 }

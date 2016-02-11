@@ -14,7 +14,6 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.task.EnqueueDownloadTask;
-import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
 import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.view.dialog.DownloadSizeExceedDialog;
@@ -50,9 +49,6 @@ public class VideoDownloadHelper {
     IStorage storage;
 
     @Inject
-    Config config;
-
-    @Inject
     ISegment segment;
 
 
@@ -73,7 +69,7 @@ public class VideoDownloadHelper {
                     callback.showInfoMessage(activity.getString(R.string.wifi_off_message));
                 }
             };
-            MediaConsentUtils.consentToMediaPlayback(activity, dialogCallback, config);
+            MediaConsentUtils.requestStreamMedia(activity, dialogCallback);
 
         } catch (Exception e) {
             logger.error(e);

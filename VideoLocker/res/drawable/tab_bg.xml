@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/edx_brand_primary_base" />
+    <item android:bottom="@dimen/tab_indicator_unselected_height"
+          android:drawable="@color/tab_bg" />
+</layer-list>

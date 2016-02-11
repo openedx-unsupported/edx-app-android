@@ -1,66 +1,28 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" ?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/container_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:orientation="vertical" > 
+        android:orientation="vertical" >
+
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar" />
+
+        <!-- Don't show tabs in landscape. -->
+        <org.edx.mobile.view.custom.DisableableViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:enabled="false" />
     </LinearLayout>
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/grey_act_background" >
-
-        <TabHost
-            android:id="@android:id/tabhost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
-                    <View
-                        android:id="@+id/offline_bar"
-                        style="@style/offline_bar"
-                        android:visibility="gone" />
-
-                    <TabWidget
-                        android:id="@android:id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="@color/tab_bg"
-                        android:orientation="horizontal" />
-
-                    <FrameLayout
-                        android:id="@android:id/tabcontent"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/flying_message"
-                    style="@style/flying_message"
-                    android:text="@string/started_downloading"
-                    android:visibility="gone" />
-            </RelativeLayout>
-        </TabHost>
-
-        <include layout="@layout/navigation_drawer_container" />
-
-    </android.support.v4.widget.DrawerLayout>
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/flying_message"
+        style="@style/flying_message"
+        android:text="@string/started_downloading"
+        android:visibility="gone" />
+</FrameLayout>

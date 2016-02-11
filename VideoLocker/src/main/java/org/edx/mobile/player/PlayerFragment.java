@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -71,7 +72,7 @@ import subtitleFile.TimedTextObject;
 @SuppressLint("WrongViewCast")
 @SuppressWarnings("serial")
 public class PlayerFragment extends BaseFragment implements IPlayerListener, Serializable,
-        AudioManager.OnAudioFocusChangeListener {
+        AudioManager.OnAudioFocusChangeListener, NetworkObserver {
 
     private enum VideoNotPlayMessageType {
         IS_CLEAR, IS_VIDEO_MESSAGE_DISPLAYED, IS_VIDEO_ONLY_ON_WEB,
@@ -81,6 +82,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private static final boolean IS_AUTOPLAY_ENABLED = true;
 
     private static final String KEY_PLAYER = "player";
+    private static final String KEY_VIDEO = "video";
     private static final String KEY_PREPARED = "isPrepared";
     private static final String KEY_AUTOPLAY_DONE = "isAutoPlayDone";
     private static final String KEY_MESSAGE_DISPLAYED = "isMessageDisplayed";
@@ -129,9 +131,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     private IUiLifecycleHelper uiHelper;
     private boolean pauseDueToDialog;
-
-    //we handle the lifecycle of player differently in viewPager;
-    private boolean isInViewPager;
 
     private final transient Handler handler = new Handler() {
         private int lastSavedPosition;
@@ -202,6 +201,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             player = (IPlayer) savedInstanceState.get(KEY_PLAYER);
+            videoEntry = (DownloadEntry) savedInstanceState.get(KEY_VIDEO);
             isPrepared = savedInstanceState.getBoolean(KEY_PREPARED);
             isAutoPlayDone = savedInstanceState.getBoolean(KEY_AUTOPLAY_DONE);
             transcript = (TranscriptModel) savedInstanceState.get(KEY_TRANSCRIPT);
@@ -333,8 +333,28 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onResume() {
         super.onResume();
-        if (!isInViewPager) {
+        if (getUserVisibleHint()) {
             handleOnResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getUserVisibleHint()) {
+            handleOnPause();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isResumed()) {
+            if (isVisibleToUser) {
+                handleOnResume();
+            } else {
+                handleOnPause();
+            }
         }
     }
 
@@ -350,14 +370,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
         if (isPrepared) handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if ( !isInViewPager ) {
-            handleOnPause();
-        }
     }
 
     public void handleOnPause(){
@@ -432,6 +444,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             freezePlayer();
             outState.putSerializable(KEY_PLAYER, player);
         }
+        outState.putSerializable(KEY_VIDEO, videoEntry);
         outState.putBoolean(KEY_PREPARED, isPrepared);
         outState.putBoolean(KEY_AUTOPLAY_DONE, isAutoPlayDone);
         //FIXME: ensure that prepare is called on all activity restarts and then this can be removed
@@ -721,8 +734,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
         allowSensorOrientation();
 
-        if (!isResumed() ||
-                (getParentFragment() != null && !getParentFragment().getUserVisibleHint())) {
+        if (!isResumed() || !getUserVisibleHint()) {
             freezePlayer();
             return;
         }
@@ -832,9 +844,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onFullScreen(boolean isFullScreen) {
         if (isPrepared) {
-            if(!isInViewPager) {
-                freezePlayer();
-            }
+            freezePlayer();
 
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
@@ -950,10 +960,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     };
 
+    @Override
     public void onOnline() {
         //Nothing to do
     }
 
+    @Override
     public void onOffline() {
         // nothing to do
         showNetworkError();
@@ -1813,10 +1825,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     public boolean isShownWifiSettingsMessage(){
         return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
-    }
-
-    public void setInViewPager(boolean inViewPager){
-        this.isInViewPager = inViewPager;
     }
 
     @Override

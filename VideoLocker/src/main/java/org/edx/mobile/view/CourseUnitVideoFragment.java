@@ -29,7 +29,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
-import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
@@ -171,7 +170,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         if (playerFragment == null) {
 
             playerFragment = new PlayerFragment();
-            playerFragment.setInViewPager(true);
+            playerFragment.setCallback(this);
             try{
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -182,112 +181,82 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }
         if (getUserVisibleHint()) {
-            checkVideoStatus(unit);
+            checkVideoStatusAndPlay(unit);
         }
         if (ViewPagerDownloadManager.instance.inInitialPhase(unit)) {
             ViewPagerDownloadManager.instance.addTask(this);
         }
     }
 
-    public void onResume() {
-        super.onResume();
-        if ( hasComponentCallback != null ){
-            CourseComponent component = hasComponentCallback.getComponent();
-            if (component != null && component.equals(unit)){
-                setVideoPlayerState(true);
-            }
-        }
-    }
-
-    public void onPause(){
-        super.onPause();
-        setVideoPlayerState(false);
-    }
-
-    //we use user visible hint, not onResume() for video
-    //as the original playerfragment code use onResume to
-    //control the lifecycle of the player.
-    //the problem with viewpager is that it loads this fragment
-    //and calls onResume even it is not visible.
-    //which breaks the normal behavior of activity/fragment
-    //lifecycle.
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (ViewPagerDownloadManager.instance.inInitialPhase(unit))
+
+        BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
+        if (activity == null) {
             return;
+        }
+
         if (isVisibleToUser) {
             checkVideoStatus(unit);
-            setVideoPlayerState(true);
         } else {
-            // fragment is no longer visible
-            if (getActivity() != null) {
-                ((BaseFragmentActivity) getActivity()).hideInfoMessage();
-            }
-            setVideoPlayerState(false);
+            activity.hideInfoMessage();
+        }
+
+        if (playerFragment != null) {
+            playerFragment.setUserVisibleHint(isVisibleToUser);
         }
     }
 
     @Override
     public void run() {
-        if (this.isRemoving() || this.isDetached()) {
-            ViewPagerDownloadManager.instance.done(this, false);
-        } else {
-            setVideoPlayerState(true);
-            ViewPagerDownloadManager.instance.done(this, true);
-        }
+        ViewPagerDownloadManager.instance.done(this, false);
     }
 
-    /**
-     * Sets the playing/paused state of the video player in {@link PlayerFragment}
-     *
-     * @param playing <code>true</code> for playing the video player, <code>false</code> for
-     *                pausing it.
-     */
-    private void setVideoPlayerState(boolean playing) {
-        if (playerFragment != null) {
-            if (playing) {
-                playerFragment.handleOnResume();
-                playerFragment.setCallback(this);
-            } else {
-                playerFragment.handleOnPause();
-                playerFragment.setCallback(null);
-            }
-        }
-    }
 
+    private boolean checkDownloadEntry(DownloadEntry entry) {
+        if (entry == null || !entry.isDownload()) {
+            return false;
+        }
+
+        if (entry.isVideoForWebOnly) {
+            Toast.makeText(getContext(), getString(R.string.video_only_on_web_short),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
 
     private void checkVideoStatus(VideoBlockModel unit) {
         final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
-        if (entry == null)
-            return;
-
-        if (entry.isDownload()) {
-            if (entry.isVideoForWebOnly) {
-                Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short),
-                        Toast.LENGTH_SHORT).show();
-                return;
+        if (checkDownloadEntry(entry) && !entry.isDownloaded()) {
+            if (!MediaConsentUtils.canStreamMedia(getContext())) {
+                ((BaseFragmentActivity) getActivity()).
+                        showInfoMessage(getString(R.string.wifi_off_message));
             }
-            if (!entry.isDownloaded()) {
-                IDialogCallback dialogCallback = new IDialogCallback() {
-                    @Override
-                    public void onPositiveClicked() {
-                        startOnlinePlay(entry);
-                    }
+        }
+    }
 
-                    @Override
-                    public void onNegativeClicked() {
-                        ((BaseFragmentActivity) getActivity()).
-                                showInfoMessage(getString(R.string.wifi_off_message));
-                        notifyAdapter();
-                    }
-                };
-                MediaConsentUtils.consentToMediaPlayback(getActivity(), dialogCallback,
-                        environment.getConfig());
-            } else if (playerFragment != null && !playerFragment.isFrozen()) {
-                //Video is downloaded. Hence play
-                startOnlinePlay(entry);
-            }
+    private void checkVideoStatusAndPlay(VideoBlockModel unit) {
+        final DownloadEntry entry = unit.getDownloadEntry(environment.getStorage());
+        if (!checkDownloadEntry(entry)) return;
+        if (entry.isDownloaded()) {
+            startOnlinePlay(entry);
+        } else {
+            MediaConsentUtils.requestStreamMedia(getActivity(), new IDialogCallback() {
+                @Override
+                public void onPositiveClicked() {
+                    startOnlinePlay(entry);
+                }
+
+                @Override
+                public void onNegativeClicked() {
+                    ((BaseFragmentActivity) getActivity()).
+                            showInfoMessage(getString(R.string.wifi_off_message));
+                    notifyAdapter();
+                }
+            });
         }
     }
 

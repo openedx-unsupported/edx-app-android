@@ -1,62 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:splitMotionEvents="false" >
-    
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    android:background="@color/grey_act_background"
+    android:splitMotionEvents="false">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey_act_background"
-        android:splitMotionEvents="false" >
+        android:layout_height="match_parent">
 
-        <TabHost
-            android:id="@android:id/tabhost"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <View
+                android:id="@+id/offline_bar"
+                style="@style/offline_bar" />
+
+            <android.support.design.widget.TabLayout
+                style="@style/edX.Widget.TabLayout"
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="wrap_content" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-                    <View
-                        android:id="@+id/offline_bar"
-                        style="@style/offline_bar"
-                        android:visibility="gone" />
-                    
-                    <TabWidget
-                        android:id="@android:id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="@color/tab_bg"
-                        android:orientation="horizontal" />
-                    
-                    <FrameLayout
-                        android:id="@android:id/tabcontent"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-                </LinearLayout>
+        <TextView
+            android:id="@+id/flying_message"
+            style="@style/flying_message"
+            android:text="@string/started_downloading"
+            android:visibility="gone" />
+    </FrameLayout>
 
-                <TextView
-                    android:id="@+id/flying_message"
-                    style="@style/flying_message"
-                    android:text="@string/started_downloading"
-                    android:visibility="gone" />
-            </RelativeLayout>
-        </TabHost>
-
-        <include layout="@layout/navigation_drawer_container" />
-
-    </android.support.v4.widget.DrawerLayout>
-
-</LinearLayout>
+    <include layout="@layout/navigation_drawer_container" />
+</android.support.v4.widget.DrawerLayout>

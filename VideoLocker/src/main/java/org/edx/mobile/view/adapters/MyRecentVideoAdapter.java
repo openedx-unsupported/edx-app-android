@@ -1,7 +1,6 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -46,28 +45,13 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
                 // mark as NOT selected
                 holder.videolayout.setSelected(false);
-                holder.videolayout.setOnTouchListener(new View.OnTouchListener() {
+                holder.videolayout.setOnClickListener(new View.OnClickListener() {
 
                     @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        if(AppConstants.myVideosDeleteMode){
-                            return false;
-                        }
-                        holder.videolayout.setSelected(
-                                selectedPosition != holder.position
-                                        && (event.getAction() == MotionEvent.ACTION_DOWN
-                                        || event.getAction() == MotionEvent.ACTION_MOVE
-                                        || event.getAction() == MotionEvent.ACTION_UP));
-
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-                            // select this row if it is clicked (i.e. if it got ACTION_UP)
-                            selectedPosition = holder.position;
-                        }
-
-                        if (sectionItem != null)
-                            return onTouchEvent(sectionItem, holder.position, event);
-                        else
-                            return false;
+                    public void onClick(View v) {
+                        if (AppConstants.myVideosDeleteMode) return;
+                        selectedPosition = holder.position;
+                        onItemClick(sectionItem, holder.position);
                     }
                 });
 
@@ -177,5 +161,5 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
 
 //    public abstract void onItemClicked(SectionItemInterface model, int position);
     public abstract void onSelectItem();
-    protected abstract boolean onTouchEvent(SectionItemInterface model, int position, MotionEvent event);
+    protected abstract void onItemClick(SectionItemInterface model, int position);
 }
