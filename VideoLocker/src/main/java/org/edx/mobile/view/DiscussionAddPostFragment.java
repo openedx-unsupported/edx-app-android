@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
@@ -29,12 +31,12 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateThreadTask;
 import org.edx.mobile.task.GetTopicListTask;
+import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -150,6 +152,11 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Activity activity = getActivity();
+                if (activity != null) {
+                    SoftKeyboardUtil.hide(activity);
+                }
+
                 final String title = titleEditText.getText().toString();
                 final String body = bodyEditText.getText().toString();
 

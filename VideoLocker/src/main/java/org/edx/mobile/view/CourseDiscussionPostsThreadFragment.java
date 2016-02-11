@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
-import android.util.FloatMath;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +28,11 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.TopicThreads;
-import org.edx.mobile.task.GetFollowingThreadListTask;
 import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
-
-import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
@@ -63,7 +59,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
     private GetThreadListTask getThreadListTask;
-    private GetFollowingThreadListTask getFollowingThreadListTask;
     private int nextPage = 1;
 
     private enum EmptyQueryResultsFor {
@@ -176,14 +171,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         EventBus.getDefault().unregister(this);
     }
 
-    private boolean isAllTopics() {
-        return DiscussionTopic.ALL_TOPICS_ID.equals(discussionTopic.getIdentifier());
-    }
-
-    private boolean isFollowingTopics() {
-        return DiscussionTopic.FOLLOWING_TOPICS_ID.equals(discussionTopic.getIdentifier());
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
@@ -211,7 +198,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
-        if (!isFollowingTopics() && !isAllTopics() && discussionTopic.containsThread(event.getDiscussionThread())) {
+        if (discussionTopic.containsThread(event.getDiscussionThread())) {
             int i = 0;
             for (; i < discussionPostsAdapter.getCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
@@ -219,16 +206,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 }
             }
             discussionPostsAdapter.insert(event.getDiscussionThread(), i);
+            // In case this is the first addition, we need to hide the no-item-view
+            ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         }
     }
 
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (isFollowingTopics()) {
-            populateFollowingThreadList(callback);
-        } else {
-            populatePostList(callback);
-        }
+        populatePostList(callback);
     }
 
     private void clearListAndLoadFirstPage() {
@@ -238,49 +223,22 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         controller.reset();
     }
 
-    private void populateFollowingThreadList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (getFollowingThreadListTask != null) {
-            getFollowingThreadListTask.cancel(true);
-        }
-
-        getFollowingThreadListTask = new GetFollowingThreadListTask(getActivity(), courseData.getCourse().getId(), postsFilter,
-                postsSort, nextPage) {
-            @Override
-            public void onSuccess(TopicThreads topicThreads) {
-                final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
-                callback.onPageLoaded(topicThreads.getResults(), hasMore);
-                checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-            }
-        };
-        getFollowingThreadListTask.setProgressCallback(null);
-        getFollowingThreadListTask.execute();
-    }
-
     private void populatePostList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
         if (getThreadListTask != null) {
             getThreadListTask.cancel(true);
         }
 
-        getThreadListTask = new GetThreadListTask(
-                getActivity(),
-                courseData.getCourse().getId(),
-                isAllTopics() ? Collections.EMPTY_LIST : discussionTopic.getAllTopicIds(),
-                postsFilter,
-                postsSort,
-                nextPage) {
+        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(),
+                discussionTopic, postsFilter, postsSort, nextPage) {
             @Override
             public void onSuccess(TopicThreads topicThreads) {
                 final boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
                 ++nextPage;
                 callback.onPageLoaded(topicThreads.getResults(), hasMore);
-                if (isAllTopics()) {
+                if (discussionTopic.isAllType()) {
                     checkNoResultView(EmptyQueryResultsFor.COURSE);
+                } else if (discussionTopic.isFollowingType()) {
+                    checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
                 } else {
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
@@ -303,17 +261,17 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 String resultsText = "";
                 switch (query) {
                     case FOLLOWING:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_following);
+                        resultsText = getString(R.string.forum_no_results_for_following);
                         break;
                     case CATEGORY:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_in_category);
+                        resultsText = getString(R.string.forum_no_results_in_category);
                         break;
                     case COURSE:
-                        resultsText = getActivity().getResources().getString(R.string.forum_no_results_for_all_posts);
+                        resultsText = getString(R.string.forum_no_results_for_all_posts);
                         break;
                 }
                 if (postsFilter != DiscussionPostsFilter.ALL) {
-                    resultsText += "\n" + getActivity().getResources().getString(R.string.forum_no_results_with_filter);
+                    resultsText += "\n" + getString(R.string.forum_no_results_with_filter);
                 }
                 ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
             } else {
