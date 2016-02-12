@@ -13,6 +13,7 @@ import android.support.v4.app.TaskStackBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -25,6 +26,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.view.dialog.WebViewDialogActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -324,5 +326,9 @@ public class Router {
         //Add this flag as multiple activities need to be created
         findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(findCoursesIntent);
+    }
+
+    public void showWebViewDialog(@NonNull Activity activity, @NonNull String url, @Nullable String dialogTitle) {
+        activity.startActivity(WebViewDialogActivity.newIntent(activity, url, dialogTitle));
     }
 }
