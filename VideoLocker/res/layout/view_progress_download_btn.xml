@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/course_row_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/x_small_icon_margin"
-    android:layout_marginRight="@dimen/x_small_icon_margin"
     android:layout_marginEnd="@dimen/x_small_icon_margin"
-    tools:targetApi="17" >
+    android:layout_marginRight="@dimen/x_small_icon_margin"
+    android:padding="@dimen/x_small_icon_margin"
+    tools:targetApi="17">
 
-    <ImageView
-        android:id="@+id/down_arrow"
-        android:layout_width="@dimen/fa_xx_large"
-        android:layout_height="@dimen/fa_xx_large"
+    <org.edx.mobile.view.custom.IconImageViewXml
+        android:layout_width="@dimen/fa_x_small"
+        android:layout_height="@dimen/fa_x_small"
         android:layout_gravity="center"
-        android:src="@drawable/ic_downarrow"
+        app:iconColor="@color/edx_grayscale_neutral_white_t"
+        app:iconName="fa-arrow-down"
         tools:ignore="ContentDescription" />
 
     <include layout="@layout/view_progress_wheel" />
