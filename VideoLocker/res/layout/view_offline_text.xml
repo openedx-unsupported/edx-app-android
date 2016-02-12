@@ -9,7 +9,6 @@
     android:paddingStart="5dp"
     android:paddingRight="15dp"
     android:paddingEnd="15dp"
-    android:src="@drawable/ic_downarrow"
     android:text="@string/offline_text"
     android:textAllCaps="true"
     android:textColor="@color/offline_text"

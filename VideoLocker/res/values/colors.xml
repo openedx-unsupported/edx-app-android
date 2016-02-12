@@ -79,7 +79,6 @@
     <color name="grey_text_tab">#898B8E</color>
     <color name="cyan_text_navigation">#299ED7</color>
     <color name="progress_wheel_color">#7DC88F</color>
-    <color name="progress_wheel_bg_color">#E5F4E9</color>
     <color name="include_msg_color">#65C89D</color>
     <color name="offline_text">#BA2E6E</color>
     <color name="cyan_circle">#1F9FD9</color>
