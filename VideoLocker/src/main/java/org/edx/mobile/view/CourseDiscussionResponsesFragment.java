@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -24,7 +25,6 @@ import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -102,9 +102,14 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (discussionThread.containsComment(event.getComment())) {
             discussionThread.incrementCommentCount();
-            courseDiscussionResponsesAdapter.setDiscussionThread(discussionThread);
+            if (event.getParent() == null) {
+                // We got a response
+                courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
+            } else {
+                // We got a comment to a response
+                courseDiscussionResponsesAdapter.addNewComment(event.getParent());
+            }
             responsesLoader.reset();
-            controller.reset();
         }
     }
 

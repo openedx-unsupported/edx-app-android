@@ -238,17 +238,17 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
 
-        if (discussionThread.isClosed() && comment.getChildren().isEmpty()) {
+        if (discussionThread.isClosed() && comment.getChildCount() == 0) {
             holder.addCommentLayout.setEnabled(false);
         } else {
             holder.addCommentLayout.setEnabled(true);
             holder.addCommentLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (comment.getChildren().isEmpty()) {
-                        listener.onClickAddComment(comment);
-                    } else {
+                    if (comment.getChildCount() > 0) {
                         listener.onClickViewComments(comment);
+                    } else {
+                        listener.onClickAddComment(comment);
                     }
                 }
             });
@@ -352,7 +352,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
-        int numChildren = response == null ? 0 : response.getChildren().size();
+        int numChildren = response == null ? 0 : response.getChildCount();
 
         if (numChildren == 0) {
             if (discussionThread.isClosed()) {
@@ -406,10 +406,20 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         notifyDataSetChanged();
     }
 
-    public void setDiscussionThread(@NonNull DiscussionThread discussionThread) {
-        this.discussionThread = discussionThread;
-        this.discussionResponses.clear();
+    public void addNewResponse(@NonNull DiscussionComment response) {
+        discussionResponses.add(response);
         notifyDataSetChanged();
+    }
+
+    public void addNewComment(@NonNull DiscussionComment parent) {
+        String parentId = parent.getIdentifier();
+        for (DiscussionComment response : discussionResponses) {
+            if (parentId.equals(response.getIdentifier())) {
+                response.incrementChildCount();
+                notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     public static class ShowMoreViewHolder extends RecyclerView.ViewHolder {
