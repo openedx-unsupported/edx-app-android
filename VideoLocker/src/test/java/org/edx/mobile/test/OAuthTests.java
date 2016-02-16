@@ -14,6 +14,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 
+/**
+ * Early test. Not sure where to put this at the moment. Probably in a MyCoursesListActivity when
+ * that gets made.
+ */
 public class OAuthTests extends HttpBaseTestCase {
 
     @Test
@@ -42,7 +46,5 @@ public class OAuthTests extends HttpBaseTestCase {
         expectedIntent.putExtras(bundle);
         assertTrue(Shadows.shadowOf(activity).getNextStartedActivity().filterEquals(expectedIntent));
     }
-
-
 
 }
