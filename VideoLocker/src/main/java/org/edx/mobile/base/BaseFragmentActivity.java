@@ -49,7 +49,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
     private boolean isConnectedToWifi = false;
-    private boolean applyPrevTransitionOnRestart = false;
     private boolean isActivityStarted = false;
     @Inject
     protected IEdxEnvironment environment;
@@ -171,18 +170,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onStop() {
         super.onStop();
         isActivityStarted = false;
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        logger.debug("activity restarted");
-
-        if (applyPrevTransitionOnRestart) {
-            // apply slide transition animation
-            overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-        }
-        applyPrevTransitionOnRestart = false;
     }
 
     @Override
@@ -414,12 +401,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
-
-    public void setApplyPrevTransitionOnRestart(
-            boolean applyPrevTransitionOnRestart) {
-        //Set transition when activity restarts
-        this.applyPrevTransitionOnRestart = applyPrevTransitionOnRestart;
-    }
 
     /**
      * callback from EventBus

@@ -74,7 +74,6 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
         }
         restore(bundle);
 
-        setApplyPrevTransitionOnRestart(true);
         blockDrawerFromOpening();
     }
 

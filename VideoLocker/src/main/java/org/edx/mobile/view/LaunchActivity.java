@@ -18,8 +18,6 @@ import org.edx.mobile.util.AppConstants;
 
 public class LaunchActivity extends BaseFragmentActivity {
 
-    public static final String OVERRIDE_ANIMATION_FLAG = "override_animation_flag";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +32,6 @@ public class LaunchActivity extends BaseFragmentActivity {
             return;
         }
         setContentView(R.layout.activity_launch);
-
-        //Activity override animation has to be handled if the Launch Activity
-        //is called after user logs out and closes the Sign-in screen.
-        if(getIntent().getBooleanExtra(OVERRIDE_ANIMATION_FLAG,false)){
-            overridePendingTransition(R.anim.no_transition,R.anim.slide_out_to_bottom);
-        }
 
         Button sign_in_tv = (Button) findViewById(R.id.sign_in_tv);
         sign_in_tv.setOnClickListener(new OnClickListener() {

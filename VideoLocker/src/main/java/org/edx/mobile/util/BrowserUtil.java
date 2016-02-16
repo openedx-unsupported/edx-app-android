@@ -93,15 +93,6 @@ public class BrowserUtil {
 
         ISegment segIO =  environment.getSegment();
         segIO.trackOpenInBrowser(url);
-
-        // apply transition when user gets back from browser
-        if (context instanceof BaseFragmentActivity) {
-            ((BaseFragmentActivity) context).setApplyPrevTransitionOnRestart(true);
-        }
-
-        // apply transition animation
-        context.overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
-        logger.debug("Next transition animation applied");
     }
 
     public static boolean isUrlOfHost(String url, String host) {

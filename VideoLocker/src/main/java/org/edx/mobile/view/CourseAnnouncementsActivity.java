@@ -35,8 +35,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setApplyPrevTransitionOnRestart(true);
-
         bundle = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         offlineBar = findViewById(R.id.offline_bar);

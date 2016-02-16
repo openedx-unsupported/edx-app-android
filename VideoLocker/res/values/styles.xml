@@ -25,7 +25,7 @@
         <item name="android:listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
-        <item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>
+        <!--<item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>-->
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
@@ -60,12 +60,6 @@
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/white</item>
-    </style>
-
-    <!-- Custom Preview Screen Theme -->
-    <style name="Theme.CustomPreview" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- use window background for preview to avoid showing black screen -->
-        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <!-- <item name="android:homeAsUpIndicator">@drawable/ic_back</item> -->
@@ -521,12 +515,4 @@
     <style name="edX.Widget.SegmentedControlSegment.End" parent="edX.Widget.SegmentedControlSegment">
         <item name="android:background">@drawable/edx_segmented_control_right_background</item>
     </style>
-
-    <style name="EnterExitAnimation.Activity" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_end</item>
-        <item name="android:activityOpenExitAnimation">@anim/slide_out_to_start</item>
-        <item name="android:activityCloseEnterAnimation">@anim/slide_in_from_start</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_to_end</item>
-    </style>
-
 </resources>

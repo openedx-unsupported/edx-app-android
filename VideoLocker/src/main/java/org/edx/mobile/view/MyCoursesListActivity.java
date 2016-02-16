@@ -47,12 +47,6 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
         notificationDelegate.checkAppUpgrade();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
     public void updateDatabaseAfterDownload(ArrayList<EnrolledCoursesResponse> list) {
         if (list != null && list.size() > 0) {
             //update all videos in the DB as Deactivated

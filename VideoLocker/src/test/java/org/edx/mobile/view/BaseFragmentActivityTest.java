@@ -168,16 +168,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Assert previous transition animation override with custom slide animation
-     *
-     * @param shadowActivity The shadow activity
-     */
-    public void assertAppliedTransitionPrev(ShadowActivity shadowActivity) {
-        assertOverridePendingTransition(shadowActivity,
-                R.anim.slide_in_from_start, R.anim.slide_out_to_end);
-    }
-
-    /**
      * Testing overall lifecycle and setup
      */
     @Test
@@ -412,19 +402,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
                 activity.showOfflineAccessMessage();
             }
         });
-    }
-
-    /**
-     * Testing transition animation custom override on restart
-     */
-    @Test
-    public void applyPrevTransitionOnRestartTest() {
-        assumeTrue(appliesPrevTransitionOnRestart());
-        ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().start()
-                        .stop().start().resume();
-        assertAppliedTransitionPrev(Shadows.shadowOf(controller.get()));
     }
 
     /**
