@@ -24,6 +24,7 @@ import okhttp3.mockwebserver.RecordedRequest;
  *  TODO - code refactoring need for OkHttpBaseTestCase and HttpBaseTestCase
  *  we need to depreciate OkHttpBaseTestCase soon.
  */
+@Deprecated
 @Ignore
 public class OkHttpBaseTestCase extends BaseTestCase {
     private static final int DELAY_MS = 2000; // Network calls will take 2 seconds.

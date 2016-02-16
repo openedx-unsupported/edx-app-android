@@ -12,6 +12,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.util.Config;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Ignore;
@@ -56,6 +57,8 @@ public class HttpBaseTestCase extends BaseTestCase {
     //there are third party extension to handle conditionally skip some test programmatically.
     //but i think it is not a good idea to introduce more libs only for this purpose.
     protected boolean shouldSkipTest = false;
+
+    private AuthResponse authResponse;
 
     /**
      * Returns the base url used by the mock server
@@ -109,13 +112,13 @@ public class HttpBaseTestCase extends BaseTestCase {
      * verification
      */
     protected void login() throws Exception {
-        Config.TestAccountConfig config2  = config.getTestAccountConfig();
+        Config.TestAccountConfig test_config  = config.getTestAccountConfig();
 
-        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
-        assertNotNull(res);
-        assertNotNull(res.access_token);
-        assertNotNull(res.token_type);
-        print(res.toString());
+        authResponse = api.auth(test_config.getName(), test_config.getPassword());
+        assertNotNull(authResponse);
+        assertNotNull(authResponse.access_token);
+        assertNotNull(authResponse.token_type);
+        print(authResponse.toString());
 
         ProfileModel profile = api.getProfile();
         assertNotNull(profile);
@@ -216,6 +219,7 @@ public class HttpBaseTestCase extends BaseTestCase {
         MockResponse response = new MockResponse();
         response.addHeader("Set-Cookie", "csrftoken=dummy; Max-Age=31449600; Path=/");
         response.setResponseCode(404);
+
         try {
             if ("POST".equals(method)) {
                 if (urlMatches(path, "/oauth2/access_token")) {
@@ -281,7 +285,44 @@ public class HttpBaseTestCase extends BaseTestCase {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (triggerOAuthError()) {
+            response.setResponseCode(401);
+
+        }
         return response;
+    }
+
+    protected void setOAuthTokenError(String error) {
+        authResponse.access_token = error;
+    }
+
+    /**
+     * Declare an expired/non_existent etc by setting the access_token field.
+     */
+    private Boolean triggerOAuthError() {
+        if (authResponse == null) {
+            return false;
+        }
+        switch (authResponse.access_token) {
+            case "token_error":
+                authResponse.error = "";
+                return true;
+            case "token_expired":
+                authResponse.error = "'error_code': 'token_expired'," +
+                        "'developer_message': 'The provided access token has expired and is no longer valid.'";
+                return true;
+            case "token_malformed":
+                authResponse.error = "";
+                return true;
+            case "token_nonexistent":
+                authResponse.error = "";
+                return true;
+            case "token_not_provided":
+                authResponse.error = "";
+                return true;
+        }
+        return false;
     }
 
     /**
