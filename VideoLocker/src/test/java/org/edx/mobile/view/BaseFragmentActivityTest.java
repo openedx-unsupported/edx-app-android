@@ -8,12 +8,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.AnimRes;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.event.FlyingMessageEvent;
-import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -36,17 +31,20 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.ShadowWebView;
 import org.robolectric.util.ActivityController;
 import org.robolectric.util.Scheduler;
-
-import de.greenrobot.event.EventBus;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeTrue;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
 public abstract class BaseFragmentActivityTest extends UiTest {
@@ -123,7 +121,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic method to assert action bar visibility state on a specified orientation
      *
      * @param orientation The orientation it should be tested on
-     * @param expected The expected visibility state
+     * @param expected    The expected visibility state
      */
     private void assertActionBarShowing(int orientation, boolean expected) {
         ActivityController<? extends BaseFragmentActivity> controller =
@@ -158,11 +156,11 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic method for asserting pending transition animation
      *
      * @param shadowActivity The shadow activity
-     * @param enterAnim The enter animation resource
-     * @param exitAnim The exit animation resource
+     * @param enterAnim      The enter animation resource
+     * @param exitAnim       The exit animation resource
      */
     private static void assertOverridePendingTransition(ShadowActivity shadowActivity,
-            @AnimRes int enterAnim, @AnimRes int exitAnim) {
+                                                        @AnimRes int enterAnim, @AnimRes int exitAnim) {
         assertEquals(enterAnim, shadowActivity
                 .getPendingTransitionEnterAnimationResourceId());
         assertEquals(exitAnim, shadowActivity
@@ -264,7 +262,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic method for asserting title setup
      *
      * @param activity The activity instance
-     * @param title The expected title
+     * @param title    The expected title
      */
     protected void assertTitle(BaseFragmentActivity activity, CharSequence title) {
         ActionBar bar = activity.getSupportActionBar();
@@ -298,7 +296,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     /**
      * Generic method for asserting view animation method functionality
      *
-     * @param view The animated view
+     * @param view    The animated view
      * @param trigger A {@link Runnable} that triggers the animation
      */
     protected void assertAnimateLayouts(View view, Runnable trigger) {
@@ -352,12 +350,12 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic message for asserting show info method functionality
      *
      * @param activity The activity instance
-     * @param message The message that is expected to be displayed
-     * @param trigger A {@link Runnable} that triggers the showing of the
-     *                message
+     * @param message  The message that is expected to be displayed
+     * @param trigger  A {@link Runnable} that triggers the showing of the
+     *                 message
      */
     protected void assertShowInfoMessage(final BaseFragmentActivity activity,
-            final String message, final Runnable trigger) {
+                                         final String message, final Runnable trigger) {
         final TextView messageView = (TextView)
                 activity.findViewById(R.id.flying_message);
         assumeNotNull(messageView);
@@ -433,11 +431,11 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic method for asserting next started activity along with
      * the custom transition animation override
      *
-     * @param currentActivity The current activity
+     * @param currentActivity   The current activity
      * @param nextActivityClass The class of the newly started activity
      */
     protected Intent assertNextStartedActivity(BaseFragmentActivity currentActivity,
-            Class<? extends Activity> nextActivityClass) {
+                                               Class<? extends Activity> nextActivityClass) {
         ShadowActivity shadowActivity = Shadows.shadowOf(currentActivity);
         Intent intent = shadowActivity.getNextStartedActivity();
         assertNotNull(intent);
@@ -449,9 +447,9 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      * Generic method for asserting next started activity along with
      * the custom transition animation override
      *
-     * @param currentActivity The current activity
+     * @param currentActivity   The current activity
      * @param nextActivityClass The class of the newly started activity
-     * @param requestCode The request code
+     * @param requestCode       The request code
      */
     protected Intent assertNextStartedActivityForResult(
             BaseFragmentActivity currentActivity,
@@ -464,84 +462,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
                 currentActivity, nextActivityClass);
         assertEquals(requestCode, intentForResult.requestCode);
         return intentForResult.intent;
-    }
-
-    /**
-     * Testing flying info message display
-     */
-    @Test
-    public void infoFlyingMessageDisplayTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        assumeNotNull(activity.findViewById(R.id.flying_message));
-        final String message = "message";
-        assertShowInfoMessage(activity, message, new Runnable() {
-            @Override
-            public void run() {
-                EventBus eventBus = EventBus.getDefault();
-                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-                eventBus.postSticky(new FlyingMessageEvent(message));
-                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-            }
-        });
-    }
-
-    /**
-     * Generic method for testing proper display of flying error messages
-     *
-     * @param activity The activity instance
-     * @param header The message header
-     * @param message The error message
-     */
-    protected void errorFlyingMessageDisplayTest(final BaseFragmentActivity activity,
-            final String header, final String message) {
-        View errorView = activity.findViewById(R.id.error_layout);
-        assertNotNull(errorView);
-        assertThat(errorView).isInstanceOf(ViewGroup.class);
-        assertAnimateLayouts(errorView, new Runnable() {
-            @Override
-            public void run() {
-                EventBus eventBus = EventBus.getDefault();
-                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-                eventBus.postSticky(new FlyingMessageEvent(
-                        FlyingMessageEvent.MessageType.ERROR, header, message));
-                assertNull(eventBus.getStickyEvent(FlyingMessageEvent.class));
-
-                TextView errorHeaderView = (TextView)
-                        activity.findViewById(R.id.error_header);
-                TextView errorMessageView = (TextView)
-                        activity.findViewById(R.id.error_message);
-                assertNotNull(errorHeaderView);
-                assertNotNull(errorMessageView);
-                if (TextUtils.isEmpty(header)) {
-                    assertThat(errorHeaderView).isNotVisible();
-                } else {
-                    assertThat(errorHeaderView).isVisible().hasText(header);
-                }
-                assertThat(errorMessageView).hasText(message == null ? "" : message);
-            }
-        });
-    }
-
-    /**
-     * Testing different combinations of flying error messages
-     */
-    @Test
-    public void errorFlyingMessageDisplayTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        View errorView = activity.findViewById(R.id.error_layout);
-        assumeNotNull(errorView);
-        assumeThat(errorView, instanceOf(ViewGroup.class));
-
-        String header = "header";
-        String message = "message";
-        errorFlyingMessageDisplayTest(activity, header, message);
-        errorFlyingMessageDisplayTest(activity, null, message);
-        errorFlyingMessageDisplayTest(activity, header, null);
-        errorFlyingMessageDisplayTest(activity, null, null);
     }
 
     /**

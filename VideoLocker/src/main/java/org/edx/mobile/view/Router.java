@@ -97,14 +97,7 @@ public class Router {
     }
 
     public void showMyCourses(Activity sourceActivity) {
-        Intent intent = new Intent(sourceActivity, MyCoursesListActivity.class);
-        /*
-        Using CLEAR_TOP flag, causes the activity to be re-created every time.
-        This reloads the list of courses. We don't want that.
-        Using REORDER_TO_FRONT solves this problem
-         */
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        sourceActivity.startActivity(intent);
+        sourceActivity.startActivity(MyCoursesListActivity.newIntent());
 
         // let login screens be ended
         Intent loginIntent = new Intent();

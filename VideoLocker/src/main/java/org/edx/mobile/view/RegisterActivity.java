@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
@@ -44,8 +43,6 @@ import org.edx.mobile.util.ResourceUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
 
@@ -59,7 +56,6 @@ public class RegisterActivity extends BaseFragmentActivity
     private SocialLoginDelegate socialLoginDelegate;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,35 +67,32 @@ public class RegisterActivity extends BaseFragmentActivity
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
         boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(
-            getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN, environment.getConfig());
+                getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN, environment.getConfig());
 
-        if ( !isSocialEnabled ){
+        if (!isSocialEnabled) {
             findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
             findViewById(R.id.or_signup_with_email_title).setVisibility(View.GONE);
             findViewById(R.id.signup_with_row).setVisibility(View.GONE);
-        }
-        else {
-            ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-            ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        } else {
+            ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
+            ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
 
-            if ( !environment.getConfig().getFacebookConfig().isEnabled() ){
+            if (!environment.getConfig().getFacebookConfig().isEnabled()) {
                 findViewById(R.id.img_facebook).setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 imgFacebook.setClickable(true);
-                imgFacebook.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) );
+                imgFacebook.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
             }
 
-            if ( !environment.getConfig().getGoogleConfig().isEnabled() ){
+            if (!environment.getConfig().getGoogleConfig().isEnabled()) {
                 findViewById(R.id.img_google).setVisibility(View.GONE);
-            }
-            else {
+            } else {
                 imgGoogle.setClickable(true);
-                imgGoogle.setOnClickListener( socialLoginDelegate.createSocialButtonClickHandler( SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) ) ;
-             }
+                imgGoogle.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
+            }
         }
 
-        TextView agreementMessageView = (TextView)findViewById(R.id.by_creating_account_tv);
+        TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
         CharSequence agreementMessage = ResourceUtil.getFormattedString(getResources(), R.string.by_creating_account, "platform_name", environment.getConfig().getPlatformName());
         agreementMessageView.setText(agreementMessage);
 
@@ -115,15 +108,14 @@ public class RegisterActivity extends BaseFragmentActivity
         requiredFieldsLayout = (LinearLayout) findViewById(R.id.required_fields_layout);
         optionalFieldsLayout = (LinearLayout) findViewById(R.id.optional_fields_layout);
         agreementLayout = (LinearLayout) findViewById(R.id.layout_agreement);
-        final TextView optional_text=(TextView)findViewById(R.id.optional_field_tv);
+        final TextView optional_text = (TextView) findViewById(R.id.optional_field_tv);
         optional_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(optionalFieldsLayout.getVisibility() == View.VISIBLE) {
+                if (optionalFieldsLayout.getVisibility() == View.VISIBLE) {
                     optionalFieldsLayout.setVisibility(v.GONE);
                     optional_text.setText(getString(R.string.show_optional_text));
-                }
-                else{
+                } else {
                     optionalFieldsLayout.setVisibility(v.VISIBLE);
                     optional_text.setText(getString(R.string.hide_optional_text));
                 }
@@ -131,7 +123,7 @@ public class RegisterActivity extends BaseFragmentActivity
         });
 
         View closeButton = findViewById(R.id.actionbar_close_btn);
-        if(closeButton!=null){
+        if (closeButton != null) {
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -144,10 +136,10 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             });
         }
-        registrationLayout = (LinearLayout)findViewById(R.id.registrationLayout);
+        registrationLayout = (LinearLayout) findViewById(R.id.registrationLayout);
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
-        if(customTitle!=null){
+        if (customTitle != null) {
             CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
             customTitle.setText(title);
         }
@@ -166,15 +158,14 @@ public class RegisterActivity extends BaseFragmentActivity
                     && uri.getHost().equals("show_eula")) {
                 isInAppEULALink = true;
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
 
         if (isInAppEULALink) {
             // show EULA license that is shipped with app
             environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
-        }
-        else {
+        } else {
             // for any other link, open agreement link in a webview container
             environment.getRouter().showWebViewDialog(this, agreement.getLink(), agreement.getText());
         }
@@ -202,8 +193,7 @@ public class RegisterActivity extends BaseFragmentActivity
                     // this must be added at the end of the form
                     // hold on it
                     agreements.add(field);
-                }
-                else {
+                } else {
                     IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
                     if (fieldView != null) mFieldViews.add(fieldView);
                 }
@@ -213,8 +203,7 @@ public class RegisterActivity extends BaseFragmentActivity
             for (IRegistrationFieldView v : mFieldViews) {
                 if (v.getField().isRequired()) {
                     requiredFieldsLayout.addView(v.getView());
-                }
-                else {
+                } else {
                     optionalFieldsLayout.addView(v.getView());
                 }
             }
@@ -238,13 +227,13 @@ public class RegisterActivity extends BaseFragmentActivity
 
             // enable all the views
             tryToSetUIInteraction(true);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             logger.error(ex);
         }
     }
 
     private void createAccount() {
-        if(NetworkUtil.isConnected(this)){
+        if (NetworkUtil.isConnected(this)) {
             ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
             boolean hasError = false;
@@ -256,8 +245,7 @@ public class RegisterActivity extends BaseFragmentActivity
                         // we submit the field only if it provides a value
                         parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
                     }
-                }
-                else {
+                } else {
                     if (!hasError) {
                         // this is the first input field with error, so focus on it
                         scrollToView(scrollView, v.getView());
@@ -275,7 +263,7 @@ public class RegisterActivity extends BaseFragmentActivity
             String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
             boolean fromSocialNet = !TextUtils.isEmpty(access_token);
-            if ( fromSocialNet ) {
+            if (fromSocialNet) {
                 parameters.putString("access_token", access_token);
                 parameters.putString("provider", backstore);
                 parameters.putString("client_id", environment.getConfig().getOAuthClientId());
@@ -283,7 +271,9 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
             // do NOT proceed if validations are failed
-            if (hasError) {  return;  }
+            if (hasError) {
+                return;
+            }
 
             try {
                 //Send app version in create event
@@ -291,7 +281,7 @@ public class RegisterActivity extends BaseFragmentActivity
                 String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
                 environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.error(e);
             }
 
@@ -302,11 +292,11 @@ public class RegisterActivity extends BaseFragmentActivity
 
                 @Override
                 public void onSuccess(RegisterResponse result) {
-                    if(result!=null){
+                    if (result != null) {
                         logger.debug("registration success=" + result.isSuccess());
                         hideProgress();
 
-                        if ( !result.isSuccess()) {
+                        if (!result.isSuccess()) {
                             FormFieldMessageBody messageBody = result.getMessageBody();
                             // show general failure message if there wasn't any error for any of the input fields
                             if (messageBody == null || messageBody.isEmpty()) {
@@ -314,15 +304,15 @@ public class RegisterActivity extends BaseFragmentActivity
                                 if (errorMessage == null || errorMessage.isEmpty()) {
                                     errorMessage = getString(R.string.sign_up_error);
                                 }
-                                EventBus.getDefault().postSticky(new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR, null, errorMessage));
+                                RegisterActivity.this.showErrorMessage(null, errorMessage);
                                 return;
                             }
 
-                            for(String key : messageBody.keySet()) {
-                                if ( key == null )
+                            for (String key : messageBody.keySet()) {
+                                if (key == null)
                                     continue;
                                 for (IRegistrationFieldView fieldView : mFieldViews) {
-                                    if (key.equalsIgnoreCase( fieldView.getField().getName()) ) {
+                                    if (key.equalsIgnoreCase(fieldView.getField().getName())) {
                                         List<RegisterResponseFieldError> error = messageBody.get(key);
                                         showErrorOnField(error, fieldView);
                                         break;
@@ -339,11 +329,10 @@ public class RegisterActivity extends BaseFragmentActivity
                                 environment.getRouter().showMyCourses(RegisterActivity.this);
                                 finish();
                             } else {
-                                EventBus.getDefault().postSticky(
-                                        new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR, null, getString(R.string.sign_up_error)));
+                                RegisterActivity.this.showErrorMessage(null, getString(R.string.sign_up_error));
                             }
                         }
-                    }else{
+                    } else {
                         hideProgress();
                     }
                 }
@@ -355,15 +344,14 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             };
             task.execute();
-        }else {
-            EventBus.getDefault().postSticky(
-                    new FlyingMessageEvent(FlyingMessageEvent.MessageType.ERROR,
-                            getString(R.string.no_connectivity),getString(R.string.network_not_connected)));
+        } else {
+            RegisterActivity.this.showErrorMessage(getString(R.string.no_connectivity), getString(R.string.network_not_connected));
         }
     }
 
     /**
      * Displays given errors on the given registration field.
+     *
      * @param errors
      * @param fieldView
      * @return
@@ -381,6 +369,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * Scrolls to the top of the given View in the given ScrollView.
+     *
      * @param scrollView
      * @param view
      */
@@ -411,16 +400,17 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * we can create enum for strong type, but lose the extensibility.
+     *
      * @param socialType
      */
-    private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+    private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
         LinearLayout messageLayout = (LinearLayout) findViewById(R.id.message_layout);
         TextView messageView = (TextView) findViewById(R.id.message_body);
         //we replace facebook and google programmatically here
         //in order to make localization work
         String socialTypeString = "";
         String signUpSuccessString = "";
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ){
+        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
             socialTypeString = getString(R.string.facebook_text);
             signUpSuccessString = getString(R.string.sign_up_with_facebook_ok);
         } else {  //google
@@ -429,58 +419,56 @@ public class RegisterActivity extends BaseFragmentActivity
         }
         StringBuilder sb = new StringBuilder();
         CharSequence extraInfoPrompt = ResourceUtil.getFormattedString(getResources(), R.string.sign_up_with_social_ok, "platform_name", environment.getConfig().getPlatformName());
-        sb.append( signUpSuccessString.replace(socialTypeString, "<b><strong>" + socialTypeString + "</strong></b>") )
-            .append("<br>").append(extraInfoPrompt);
+        sb.append(signUpSuccessString.replace(socialTypeString, "<b><strong>" + socialTypeString + "</strong></b>"))
+                .append("<br>").append(extraInfoPrompt);
 
         Spanned result = Html.fromHtml(sb.toString());
         messageView.setText(result);
         messageLayout.setVisibility(View.VISIBLE);
-       // UiUtil.animateLayouts(messageLayout);
+        // UiUtil.animateLayouts(messageLayout);
     }
 
-    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken){
+    private void updateUIOnSocialLoginToEdxFailure(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken) {
         //change UI.
         View signupWith = findViewById(R.id.signup_with_row);
         signupWith.setVisibility(View.GONE);
         View socialPanel = findViewById(R.id.panel_social_layout);
         socialPanel.setVisibility(View.GONE);
-        TextView signupWithEmailTitle = (TextView)findViewById(R.id.or_signup_with_email_title);
-        signupWithEmailTitle.setText( getString(R.string.complete_registration) );
+        TextView signupWithEmailTitle = (TextView) findViewById(R.id.or_signup_with_email_title);
+        signupWithEmailTitle.setText(getString(R.string.complete_registration));
         //help method
         showRegularMessage(socialType);
         //populate the field with value from social site
         populateEmailFromSocialSite(socialType, accessToken);
         //hide email and password field
-        for (IRegistrationFieldView field : this.mFieldViews ){
+        for (IRegistrationFieldView field : this.mFieldViews) {
             String fieldname = field.getField().getName();
-            if ( "password".equalsIgnoreCase(fieldname) ) {
-                 field.getView().setVisibility(View.GONE);
-                 this.mFieldViews.remove(field);
-                 break;
+            if ("password".equalsIgnoreCase(fieldname)) {
+                field.getView().setVisibility(View.GONE);
+                this.mFieldViews.remove(field);
+                break;
             }
         }
-       // registrationLayout.requestLayout();
+        // registrationLayout.requestLayout();
     }
 
-    protected void populateFormField(String fieldName, String value){
-        for (IRegistrationFieldView field : this.mFieldViews ){
-            if ( fieldName.equalsIgnoreCase(field.getField().getName()) ) {
+    protected void populateFormField(String fieldName, String value) {
+        for (IRegistrationFieldView field : this.mFieldViews) {
+            if (fieldName.equalsIgnoreCase(field.getField().getName())) {
                 boolean success = field.setRawValue(value);
-                if ( success )
+                if (success)
                     break;
             }
         }
     }
 
 
-
-
-    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken){
+    private void populateEmailFromSocialSite(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken) {
         this.socialLoginDelegate.getUserInfo(socialType, accessToken, new SocialLoginDelegate.SocialUserInfoCallback() {
             @Override
             public void setSocialUserInfo(String email, String name) {
                 populateFormField("email", email);
-                if ( name != null && name.length() > 0 ) {
+                if (name != null && name.length() > 0) {
                     populateFormField("name", name);
 
                     //Should we save the email here?
@@ -512,14 +500,14 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-       // outState.putString("username", email_et.getText().toString().trim());
-       socialLoginDelegate.onActivitySaveInstanceState(outState);
+        // outState.putString("username", email_et.getText().toString().trim());
+        socialLoginDelegate.onActivitySaveInstanceState(outState);
 
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -535,6 +523,7 @@ public class RegisterActivity extends BaseFragmentActivity
 //        }
         socialLoginDelegate.onActivityStarted();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -543,15 +532,16 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     /**
-     *   after login by Facebook or Google, the workflow is different from login page.
-     *   we need to adjust the register view
-     *   1. first we try to login,
-     *   2. if login return 200, redirect to course screen.
-     *   3. otherwise, go through the normal registration flow.
+     * after login by Facebook or Google, the workflow is different from login page.
+     * we need to adjust the register view
+     * 1. first we try to login,
+     * 2. if login return 200, redirect to course screen.
+     * 3. otherwise, go through the normal registration flow.
+     *
      * @param accessToken
      * @param backend
      */
-    public void onSocialLoginSuccess(String accessToken, String backend,  Task task) {
+    public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
         //we should handle UI update here. but right now we do nothing in UI
     }
 
@@ -561,10 +551,10 @@ public class RegisterActivity extends BaseFragmentActivity
     public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-        environment.getSegment().identifyUser(profile.id.toString(), profile.email , "");
+        environment.getSegment().identifyUser(profile.id.toString(), profile.email, "");
 
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
-        if(backendKey!=null){
+        if (backendKey != null) {
             environment.getSegment().trackUserLogin(backendKey);
         }
 
@@ -580,6 +570,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * callback if login to edx failed using social access_token
+     *
      * @param ex
      */
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
@@ -627,8 +618,8 @@ public class RegisterActivity extends BaseFragmentActivity
 
 
     @Override
-    public boolean tryToSetUIInteraction(boolean enable){
-        if ( enable ){
+    public boolean tryToSetUIInteraction(boolean enable) {
+        if (enable) {
             unblockTouch();
             createButtonEnabled();
         } else {
@@ -640,8 +631,8 @@ public class RegisterActivity extends BaseFragmentActivity
             v.setEnabled(enable);
         }
 
-        ImageView imgFacebook=(ImageView)findViewById(R.id.img_facebook);
-        ImageView imgGoogle=(ImageView)findViewById(R.id.img_google);
+        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
+        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
         imgFacebook.setClickable(enable);
         imgGoogle.setClickable(enable);
 

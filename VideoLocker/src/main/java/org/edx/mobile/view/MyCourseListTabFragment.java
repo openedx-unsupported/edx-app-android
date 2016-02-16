@@ -54,7 +54,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         return view;
     }
 
-    protected void loadData(boolean forceRefresh, boolean showProgress) {
+    protected void loadData(boolean showProgress) {
         //This Show progress is used to display the progress when a user enrolls in a Course
         if (showProgress && progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
@@ -132,7 +132,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     public void onResume() {
         super.onResume();
         if (refreshOnResume) {
-            loadData(false, true);
+            loadData(true);
             refreshOnResume = false;
         }
     }
