@@ -28,9 +28,6 @@ import java.util.Set;
 
 import roboguice.RoboGuice;
 
-/**
- * Created by rohan on 12/31/14.
- */
 @Ignore
 @RunWith(CustomRobolectricTestRunner.class)
 public class BaseTestCase {
