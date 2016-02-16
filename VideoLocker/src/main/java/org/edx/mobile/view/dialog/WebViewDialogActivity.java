@@ -1,58 +1,46 @@
 package org.edx.mobile.view.dialog;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseAppActivity;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 
-public class WebViewDialogFragment extends AppCompatDialogFragment {
+public class WebViewDialogActivity extends BaseAppActivity {
 
     private static final String ARG_URL = "url";
     private static final String ARG_TITLE = "title";
 
     WebView webView;
 
-    public static WebViewDialogFragment newInstance(@NonNull String url, @Nullable String title) {
-        final Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        args.putString(ARG_TITLE, title);
-        final WebViewDialogFragment fragment = new WebViewDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static Intent newIntent(@NonNull Context context, @NonNull String url, @Nullable String title) {
+        return new Intent(context, WebViewDialogActivity.class)
+                .putExtra(ARG_URL, url)
+                .putExtra(ARG_TITLE, title);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL,
-                R.style.AppTheme_NoActionBar);
-        setCancelable(false);
-    }
+        overridePendingTransition(0, 0);
+        setContentView(R.layout.fragment_web_dialog);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_web_dialog,
-                container, false);
-
-        final ProgressBar progress = (ProgressBar) view.findViewById(R.id.loading_indicator);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.loading_indicator);
         progress.setVisibility(View.GONE);
 
-        webView = (WebView) view.findViewById(R.id.eula_webView);
+        webView = (WebView) findViewById(R.id.eula_webView);
         final URLInterceptorWebViewClient client =
-                new URLInterceptorWebViewClient(getActivity(), webView);
+                new URLInterceptorWebViewClient(this, webView);
         client.setPageStatusListener(new URLInterceptorWebViewClient.IPageStatusListener() {
 
             @Override
@@ -77,12 +65,13 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
         });
 
 
-        webView.loadUrl(getArguments().getString(ARG_URL));
+        webView.loadUrl(getIntent().getStringExtra(ARG_URL));
 
-        final TextView tv_dialog_title = (TextView) view.findViewById(R.id.tv_dialog_title);
-        final View viewSeperator = view.findViewById(R.id.view_seperator);
-        final String title = getArguments().getString(ARG_TITLE);
+        final TextView tv_dialog_title = (TextView) findViewById(R.id.tv_dialog_title);
+        final View viewSeperator = findViewById(R.id.view_seperator);
+        final String title = getIntent().getStringExtra(ARG_TITLE);
         if (TextUtils.isEmpty(title)) {
+
             tv_dialog_title.setVisibility(View.INVISIBLE);
             viewSeperator.setVisibility(View.INVISIBLE);
         } else {
@@ -91,16 +80,11 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
             tv_dialog_title.setText(title);
         }
 
-        view.findViewById(R.id.positiveButton).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.positiveButton).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                //Check if the dialog is not removing(dismissing)
-                // or is visible before dismissing the dialog
-                if (!isRemoving() && isVisible())
-                    dismiss();
+                finish();
             }
         });
-
-        return view;
     }
 
 
@@ -117,8 +101,14 @@ public class WebViewDialogFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         webView.destroy();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
     }
 }

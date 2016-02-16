@@ -28,9 +28,7 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.event.FlyingMessageEvent;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.dialog.WebViewDialogFragment;
+import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -466,57 +464,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
                 currentActivity, nextActivityClass);
         assertEquals(requestCode, intentForResult.requestCode);
         return intentForResult.intent;
-    }
-
-    /**
-     * Generic method for testing proper display of WebViewDialogFragment
-     *
-     * @param activity The activity instance
-     * @param url The url provided
-     * @param showTitle Whether the title is displayed
-     * @param title The dialog title
-     */
-    protected static void showWebDialogTest(BaseFragmentActivity activity,
-            String url, String title) {
-        activity.showWebDialog(url, title);
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        fragmentManager.executePendingTransactions();
-        Fragment webViewFragment = fragmentManager.findFragmentByTag(BaseFragmentActivity.WEB_VIEW_DIALOG_TAG);
-        assertNotNull(webViewFragment);
-        assertThat(webViewFragment).isInstanceOf(WebViewDialogFragment.class);
-        WebViewDialogFragment webViewDialogFragment = (WebViewDialogFragment) webViewFragment;
-        assertTrue(webViewDialogFragment.getShowsDialog());
-        assertThat(webViewDialogFragment.getDialog()).isShowing();
-        View dialogView = webViewDialogFragment.getView();
-        assertNotNull(dialogView);
-        WebView webView = (WebView) dialogView.findViewById(R.id.eula_webView);
-        assertNotNull(webView);
-        ShadowWebView shadowWebView = Shadows.shadowOf(webView);
-        assertEquals(shadowWebView.getLastLoadedUrl(), url);
-        TextView titleView = (TextView) dialogView.findViewById(R.id.tv_dialog_title);
-        assertNotNull(titleView);
-        if (TextUtils.isEmpty(title)) {
-            assertThat(titleView).isNotVisible();
-        } else {
-            assertThat(titleView).isVisible();
-            assertThat(titleView).hasText(title);
-        }
-        webViewDialogFragment.dismiss();
-        fragmentManager.executePendingTransactions();
-    }
-
-    /**
-     * Testing method for displaying web view dialog fragment
-     */
-    @Test
-    public void showWebDialogTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        String url = "https://www.edx.org";
-        String title = "title";
-        showWebDialogTest(activity, url, title);
-        showWebDialogTest(activity, url, null);
     }
 
     /**

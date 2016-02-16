@@ -47,7 +47,7 @@ public class MainApplication extends MultiDexApplication {
 
     protected final Logger logger = new Logger(getClass().getName());
 
-    protected static MainApplication application;
+    public static MainApplication application;
 
     public static final MainApplication instance() {
         return application;

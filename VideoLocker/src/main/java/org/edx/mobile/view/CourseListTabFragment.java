@@ -210,7 +210,6 @@ public abstract class CourseListTabFragment extends BaseFragment implements Netw
     }
 
     public void showCourseNotListedDialog() {
-        ((BaseFragmentActivity) getActivity()).showWebDialog(getString(R.string.course_not_listed_file_name),
-                null);
+        environment.getRouter().showWebViewDialog((getActivity()), getString(R.string.course_not_listed_file_name), null);
     }
 }
