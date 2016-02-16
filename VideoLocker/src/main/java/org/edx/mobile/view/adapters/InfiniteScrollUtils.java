@@ -139,7 +139,7 @@ public class InfiniteScrollUtils {
             adapter.clear();
             hasMoreItems = true;
             loading = true;
-            loadMore();
+            onLoadMore();
         }
     }
 
