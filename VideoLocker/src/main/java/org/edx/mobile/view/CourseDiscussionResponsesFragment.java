@@ -109,7 +109,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 // We got a comment to a response
                 courseDiscussionResponsesAdapter.addNewComment(event.getParent());
             }
-            responsesLoader.reset();
         }
     }
 
