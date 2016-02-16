@@ -21,7 +21,6 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -585,54 +584,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         ViewAnimationUtil.hideMessageBar(error_layout);
         return true;
     }
-
-    /**
-     * This method should be implemented by {@link org.edx.mobile.view.MyCoursesListActivity}.
-     */
-    protected void reloadMyCoursesData() {
-        // nothing to do here
-    }
-
-    /**
-     * callback from eventbus
-     * Receives the sticky broadcast message and attempts showing flying message.
-     **/
-    public void onEvent(FlyingMessageEvent event) {
-        try {
-            if (event.type == FlyingMessageEvent.MessageType.INFO) {
-                String message = event.message;
-                if (showInfoMessage(message)) {
-                    // make this message one-shot
-                    EventBus.getDefault().removeStickyEvent(event);
-                } else {
-                    // may be some other screen will display this message
-                    // do nothing here, do NOT remove broadcast
-                }
-
-                if (message.equalsIgnoreCase(getString(R.string.you_are_now_enrolled))) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            reloadMyCoursesData();
-                        }
-                    });
-                }
-            } else if (event.type == FlyingMessageEvent.MessageType.ERROR) {
-                String header = event.title;
-                String message = event.message;
-                if (showErrorMessage(header, message)) {
-                    // make this message one-shot
-                    EventBus.getDefault().removeStickyEvent(event);
-                } else {
-                    // may be some other screen will display this message
-                    // do nothing here, do NOT remove broadcast
-                }
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-    }
-
 
     @Override
     public boolean tryToSetUIInteraction(boolean enable) {

@@ -5,25 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.edx.mobile.R;
-import org.edx.mobile.event.FlyingMessageEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
+import org.edx.mobile.task.GetEnrolledCourseTask;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
         URLInterceptorWebViewClient.IActionListener,
@@ -116,12 +116,12 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     /**
      * This function shows the offline mode message
      */
-    private void showOfflineMessage(){
-        if(webview!=null){
+    private void showOfflineMessage() {
+        if (webview != null) {
             webview.setVisibility(View.GONE);
         }
         TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if(offlineModeTv!=null){
+        if (offlineModeTv != null) {
             offlineModeTv.setVisibility(View.VISIBLE);
         }
     }
@@ -130,11 +130,11 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
      * This function hides the offline mode message
      */
     private void hideOfflineMessage() {
-        if(webview!=null) {
+        if (webview != null) {
             webview.setVisibility(View.VISIBLE);
         }
         TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if(offlineModeTv!=null) {
+        if (offlineModeTv != null) {
             offlineModeTv.setVisibility(View.GONE);
         }
     }
@@ -143,8 +143,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
      * This function shows the loading progress wheel
      * Show progress wheel while loading the web page
      */
-    private void showLoadingProgress(){
-        if(progressWheel!=null){
+    private void showLoadingProgress() {
+        if (progressWheel != null) {
             progressWheel.setVisibility(View.VISIBLE);
         }
     }
@@ -153,8 +153,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
      * This function hides the loading progress wheel
      * Hide progress wheel after the web page completes loading
      */
-    private void hideLoadingProgress(){
-        if(progressWheel!=null){
+    private void hideLoadingProgress() {
+        if (progressWheel != null) {
             progressWheel.setVisibility(View.GONE);
         }
     }
@@ -162,8 +162,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     @Override
     public void onClickCourseInfo(String pathId) {
         //If Path id is not null or empty then call CourseInfoActivity
-        if(!TextUtils.isEmpty(pathId)){
-            logger.debug("PathId" +pathId);
+        if (!TextUtils.isEmpty(pathId)) {
+            logger.debug("PathId" + pathId);
             environment.getRouter().showCourseInfo(this, pathId);
         }
     }
@@ -176,41 +176,42 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
             return;
         }
 
-        try {
-            environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
-        }catch(Exception e){
-            logger.error(e);
-        }
+        environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
 
         isTaskInProgress = true;
 
-        logger.debug("CourseId - "+courseId);
-        logger.debug("Email option - "+emailOptIn);
+        logger.debug("CourseId - " + courseId);
+        logger.debug("Email option - " + emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(FindCoursesBaseActivity.this,
-            courseId, emailOptIn) {
+                courseId, emailOptIn) {
             @Override
             public void onSuccess(Void result) {
-                isTaskInProgress = false;
-                logger.debug("Enrollment successful");
-                //If the course is successfully enrolled, send a broadcast
-                // to close the FindCoursesActivity
-                Intent intent = new Intent();
-                intent.putExtra("course_id", courseId);
-                intent.setAction(ACTION_ENROLLED);
-                sendBroadcast(intent);
+                logger.debug("Enrollment successful: " + courseId);
+                Toast.makeText(FindCoursesBaseActivity.this, context.getString(R.string.you_are_now_enrolled), Toast.LENGTH_SHORT).show();
 
-                // show flying message about the success of Enroll
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        GetEnrolledCourseTask getEnrolledCourseTask =
+                                new GetEnrolledCourseTask(FindCoursesBaseActivity.this, courseId) {
+                                    @Override
+                                    public void onSuccess(EnrolledCoursesResponse course) {
+                                        environment.getRouter().showMyCourses(FindCoursesBaseActivity.this);
+                                        environment.getRouter().showCourseDashboardTabs(FindCoursesBaseActivity.this, environment.getConfig(), course, false);
+                                    }
 
-                EnrolledCoursesResponse course = environment.getServiceManager().getCourseById(courseId);
-                String msg;
-                if (course == null || course.getCourse() == null ) {
-                    // this means, you were not already enrolled to this course
-                    msg = String.format("%s", context.getString(R.string.you_are_now_enrolled));
-                }else{
-                    // this means, you were already enrolled to this course
-                    msg = String.format("%s", context.getString(R.string.already_enrolled));
-                }
-                EventBus.getDefault().postSticky(new FlyingMessageEvent(msg));
+                                    @Override
+                                    public void onException(Exception ex) {
+                                        isTaskInProgress = false;
+                                        logger.error(ex);
+                                        Toast.makeText(getContext(), R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
+                                    }
+                                };
+                        getEnrolledCourseTask.setProgressDialog(progressWheel);
+                        getEnrolledCourseTask.execute();
+
+                    }
+                });
             }
 
             @Override
@@ -218,7 +219,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
                 isTaskInProgress = false;
                 logger.error(ex);
                 logger.debug("Error during enroll api call");
-                showEnrollErrorMessage(courseId,emailOptIn);
+                showEnrollErrorMessage(courseId, emailOptIn);
             }
         };
         enrollForCourseTask.setProgressDialog(progressWheel);
@@ -290,6 +291,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     /**
      * By default, all links will not be treated as external.
      * Depends on host, as long as the links have same host, they are treated as non-external links.
+     *
      * @return
      */
     protected boolean isAllLinksExternal() {
