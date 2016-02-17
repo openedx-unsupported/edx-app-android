@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <SearchView
@@ -14,17 +16,13 @@
         android:background="@color/white"
         android:iconifiedByDefault="false" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/edx_hairline"
-        android:background="@color/edx_grayscale_neutral_light" />
+    <View style="@style/gray_separator" />
 
     <ListView
         android:id="@+id/discussion_topics_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:listheader="@layout/header_discussion_topics_list"
-        tools:listitem="@layout/row_discussion_topic"/>
+        tools:listitem="@layout/row_discussion_topic" />
 
 </LinearLayout>
