@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,18 +18,19 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
+import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -102,8 +104,12 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 if (query == null || query.trim().length() == 0)
                     return false;
-
-                router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
+                Activity activity = getActivity();
+                if (activity != null) {
+                    SoftKeyboardUtil.hide(activity);
+                    discussionTopicsSearchView.clearFocus();
+                    router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
+                }
                 return true;
             }
 
@@ -123,12 +129,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
             }
         });
 
-        // TODO: Find a better way to hide the keyboard AND take the focus away from the SearchView
-        discussionTopicsSearchView.requestFocus();
-        discussionTopicsSearchView.clearFocus();
-
         getTopicList();
-
     }
 
     private void getTopicList() {
