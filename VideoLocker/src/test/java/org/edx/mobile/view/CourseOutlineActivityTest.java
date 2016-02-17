@@ -187,7 +187,6 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
             assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
             assertEquals(nextComp.getId(), newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
         }
-        assertAppliedTransitionPrev(shadowActivity);
     }
 
     /**

@@ -32,7 +32,6 @@ public class WebViewDialogActivity extends BaseAppActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
         setContentView(R.layout.fragment_web_dialog);
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.loading_indicator);
@@ -104,11 +103,5 @@ public class WebViewDialogActivity extends BaseAppActivity {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         webView.destroy();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
     }
 }

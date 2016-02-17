@@ -3,5 +3,5 @@
 	<integer name="message_delay">4000</integer>
 
     <!-- This is animation time for activity transition -->
-    <integer name="activity_transition_duration">300</integer>
+    <integer name="activity_transition_duration">220</integer>
 </resources>

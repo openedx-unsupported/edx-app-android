@@ -26,8 +26,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
- 
-        setApplyPrevTransitionOnRestart(true);
 
         if (isOnCourseOutline()) {
             environment.getSegment().trackScreenView(

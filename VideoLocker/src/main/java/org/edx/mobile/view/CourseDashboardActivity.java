@@ -18,8 +18,6 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setApplyPrevTransitionOnRestart(true);
-
         Bundle data = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         courseData = (EnrolledCoursesResponse) data.getSerializable(Router.EXTRA_ENROLLMENT);

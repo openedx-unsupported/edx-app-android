@@ -60,7 +60,6 @@ public class RegisterActivity extends BaseFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.no_transition);
 
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
@@ -170,13 +169,6 @@ public class RegisterActivity extends BaseFragmentActivity
             environment.getRouter().showWebViewDialog(this, agreement.getLink(), agreement.getText());
         }
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom);
-    }
-
 
     private void setupRegistrationForm() {
         try {

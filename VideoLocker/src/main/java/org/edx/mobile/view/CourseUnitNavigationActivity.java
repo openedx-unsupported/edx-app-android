@@ -126,7 +126,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         });
 
         updateUIForOrientation();
-        setApplyPrevTransitionOnRestart(true);
     }
 
     @Override

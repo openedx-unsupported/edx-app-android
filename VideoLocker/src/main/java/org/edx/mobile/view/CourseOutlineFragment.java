@@ -257,7 +257,6 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
                                     environment.getRouter().showCourseContainerOutline(CourseOutlineFragment.this,
                                             REQUEST_SHOW_COURSE_UNIT_DETAIL, courseData, nextComp.getId(), leafCompId);
                                 }
-                                getActivity().overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end);
                             }
                         }
                     }

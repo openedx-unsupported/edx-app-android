@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -74,9 +72,8 @@ public class Router {
         sourceActivity.startActivity(settingsIntent);
     }
 
-    public void showLaunchScreen(Context context, boolean overrideAnimation) {
+    public void showLaunchScreen(Context context) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.OVERRIDE_ANIMATION_FLAG, overrideAnimation);
         if (context instanceof Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         else
@@ -278,7 +275,7 @@ public class Router {
 
         delegate.unsubscribeAll();
 
-        showLaunchScreen(context, true);
+        showLaunchScreen(context);
         showLogin(context);
     }
 
