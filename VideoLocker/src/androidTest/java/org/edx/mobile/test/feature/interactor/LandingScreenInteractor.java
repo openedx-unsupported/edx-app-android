@@ -26,6 +26,10 @@ public class LandingScreenInteractor {
         return new LogInScreenInteractor();
     }
 
+    public MyCoursesScreenInteractor skipToMyCoursesScreen() {
+        return new MyCoursesScreenInteractor();
+    }
+
     private ViewInteraction onSignUpView() {
         return onView(withText(R.string.sign_up_and_learn));
     }

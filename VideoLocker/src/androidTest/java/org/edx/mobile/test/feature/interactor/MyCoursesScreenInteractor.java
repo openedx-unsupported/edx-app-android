@@ -19,4 +19,8 @@ public class MyCoursesScreenInteractor {
     public NavigationDrawerInteractor openNavigationDrawer() {
         return NavigationDrawerInteractor.open();
     }
+
+    public LogInScreenInteractor redirectToLoginScreen() {
+        return new LogInScreenInteractor();
+    }
 }
