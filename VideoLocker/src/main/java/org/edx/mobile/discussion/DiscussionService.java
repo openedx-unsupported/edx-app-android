@@ -127,6 +127,13 @@ public interface DiscussionService {
             throws RetroHttpException;
 
 
+    @GET("/api/discussion/v1/comments/{comment_id}/")
+    Page<DiscussionComment> getCommentsList(@Path("comment_id") String responseId,
+                                            @Query("page_size") int pageSize,
+                                            @Query("page") int page)
+            throws RetroHttpException;
+
+
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread setThreadFlagged(@Path("thread_id") String threadId,
                                       @Body FlagBody flagBody)

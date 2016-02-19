@@ -34,6 +34,7 @@ import org.edx.mobile.view.view_holders.NumberResponsesViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import de.greenrobot.event.EventBus;
 
@@ -56,14 +57,14 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     @NonNull
     private DiscussionThread discussionThread;
 
-    private List<DiscussionComment> discussionResponses = new ArrayList<>();
+    private final List<DiscussionComment> discussionResponses = new ArrayList<>();
 
     private boolean progressVisible = false;
 
     static class RowType {
         static final int THREAD = 0;
         static final int RESPONSE = 1;
-        static final int MORE_BUTTON = 2;
+        static final int PROGRESS = 2;
     }
 
     public CourseDiscussionResponsesAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionThread discussionThread) {
@@ -74,8 +75,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     @Override
     public void setProgressVisible(boolean visible) {
-        progressVisible = visible;
-        notifyDataSetChanged();
+        if (progressVisible != visible) {
+            progressVisible = visible;
+            int progressRowIndex = 1 + discussionResponses.size();
+            if (visible) {
+                notifyItemInserted(progressRowIndex);
+            } else {
+                notifyItemRemoved(progressRowIndex);
+            }
+        }
     }
 
     @Override
@@ -87,7 +95,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
             return new DiscussionThreadViewHolder(discussionThreadRow);
         }
-        if (viewType == RowType.MORE_BUTTON) {
+        if (viewType == RowType.PROGRESS) {
             View discussionThreadRow = LayoutInflater.
                     from(parent.getContext()).
                     inflate(R.layout.list_view_footer_progress, parent, false);
@@ -117,7 +125,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             case RowType.RESPONSE:
                 bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
                 break;
-            case RowType.MORE_BUTTON:
+            case RowType.PROGRESS:
                 bindViewHolderToShowMoreRow((ShowMoreViewHolder) holder);
                 break;
         }
@@ -160,7 +168,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     public void onSuccess(DiscussionThread topicThread) {
                         if (topicThread != null) {
                             CourseDiscussionResponsesAdapter.this.discussionThread = topicThread;
-                            notifyDataSetChanged();
+                            notifyItemChanged(0);
                         }
                     }
 
@@ -188,7 +196,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         if (updatedDiscussionThread != null) {
                             CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
                             EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
-                            notifyDataSetChanged();
+                            notifyItemChanged(0);
                         }
                     }
 
@@ -211,7 +219,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         if (updatedDiscussionThread != null) {
                             CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
                             EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
-                            notifyDataSetChanged();
+                            notifyItemChanged(0);
                         }
                     }
 
@@ -272,8 +280,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     }
                 });
         bindNumberCommentsView(holder.numberResponsesViewHolder, comment);
-        final int positionInResponses = position - 1;
-        bindSocialView(holder.socialLayoutViewHolder, positionInResponses, comment);
+        bindSocialView(holder.socialLayoutViewHolder, position, comment);
 
         holder.discussionReportViewHolder.reportLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
@@ -281,9 +288,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     @Override
                     public void onSuccess(DiscussionComment comment) {
                         if (comment != null) {
-                            discussionResponses.remove(positionInResponses);
-                            discussionResponses.add(positionInResponses, comment);
-                            notifyDataSetChanged();
+                            discussionResponses.set(position - 1, comment);
+                            notifyItemChanged(position);
                         }
                     }
 
@@ -332,7 +338,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int positionInResponses, final DiscussionComment response) {
+    private void bindSocialView(DiscussionSocialLayoutViewHolder holder, final int position, final DiscussionComment response) {
         holder.setDiscussionResponse(response);
 
         holder.voteViewContainer.setOnClickListener(new View.OnClickListener() {
@@ -343,9 +349,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     @Override
                     public void onSuccess(DiscussionComment comment) {
                         if (comment != null) {
-                            discussionResponses.remove(positionInResponses);
-                            discussionResponses.add(positionInResponses, comment);
-                            notifyDataSetChanged();
+                            discussionResponses.set(position - 1, comment);
+                            notifyItemChanged(position);
                         }
                     }
 
@@ -390,8 +395,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     @Override
     public int getItemCount() {
-        if (discussionThread == null)
-            return 0;
         int total = 1 + discussionResponses.size();
         if (progressVisible)
             total++;
@@ -405,7 +408,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
 
         if (progressVisible && position == getItemCount() - 1) {
-            return RowType.MORE_BUTTON;
+            return RowType.PROGRESS;
         }
 
         return RowType.RESPONSE;
@@ -418,32 +421,39 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     @Override
     public void clear() {
+        int responsesCount = discussionResponses.size();
         discussionResponses.clear();
-        notifyDataSetChanged();
+        notifyItemRangeRemoved(1, responsesCount);
     }
 
     @Override
     public void addAll(List<DiscussionComment> items) {
+        int offset = 1 + discussionResponses.size();
         discussionResponses.addAll(items);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(offset, items.size());
     }
 
     public void addNewResponse(@NonNull DiscussionComment response) {
+        int offset = 1 + discussionResponses.size();
         discussionResponses.add(response);
         discussionThread.incrementResponseCount();
-        notifyDataSetChanged();
+        notifyItemInserted(offset);
+        notifyItemChanged(0); // Comments count is shown in the thread details header, so it also needs to be refreshed.
     }
 
     public void addNewComment(@NonNull DiscussionComment parent) {
         discussionThread.incrementCommentCount();
         String parentId = parent.getIdentifier();
-        for (DiscussionComment response : discussionResponses) {
+        for (ListIterator<DiscussionComment> responseIterator = discussionResponses.listIterator();
+                responseIterator.hasNext();) {
+            DiscussionComment response = responseIterator.next();
             if (parentId.equals(response.getIdentifier())) {
                 response.incrementChildCount();
-                notifyDataSetChanged();
+                notifyItemChanged(1 + responseIterator.previousIndex());
                 break;
             }
         }
+        notifyItemChanged(0); // Comments count is shown in the thread details header, so it also needs to be refreshed.
     }
 
     public static class ShowMoreViewHolder extends RecyclerView.ViewHolder {

@@ -5,7 +5,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,9 @@ import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.task.GetCommentsListTask;
 import org.edx.mobile.task.SetCommentFlaggedTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 
@@ -28,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -60,6 +63,13 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
+    private GetCommentsListTask getCommentsListTask;
+
+    private int nextPage = 1;
+
+    private InfiniteScrollUtils.InfiniteListController controller;
+
+    @Nullable
     private SetCommentFlaggedTask setCommentFlaggedTask;
 
     @Nullable
@@ -73,8 +83,14 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         super.onViewCreated(view, savedInstanceState);
 
         discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionResponse);
+        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionCommentsListView,
+                discussionCommentsAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
+            @Override
+            public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+                getCommentsList(callback);
+            }
+        });
 
-        discussionCommentsListView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         final int overlap = getResources().getDimensionPixelSize(R.dimen.edx_hairline);
         discussionCommentsListView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -95,6 +111,30 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 });
     }
 
+    protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
+        if (getCommentsListTask != null) {
+            getCommentsListTask.cancel(true);
+        }
+        getCommentsListTask = new GetCommentsListTask(getActivity(),
+                discussionResponse.getIdentifier(),
+                nextPage) {
+            @Override
+            public void onSuccess(Page<DiscussionComment> threadCommentsPage) {
+                ++nextPage;
+                callback.onPageLoaded(threadCommentsPage);
+                discussionCommentsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                logger.error(ex);
+                discussionCommentsAdapter.setProgressVisible(false);
+            }
+        };
+        getCommentsListTask.setProgressCallback(null);
+        getCommentsListTask.execute();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +151,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (getCommentsListTask != null) {
+            getCommentsListTask.cancel(true);
+        }
         EventBus.getDefault().unregister(this);
     }
 
