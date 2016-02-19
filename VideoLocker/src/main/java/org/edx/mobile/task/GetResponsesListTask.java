@@ -7,8 +7,6 @@ import org.edx.mobile.model.Page;
 
 public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>> {
 
-    private static final int PAGE_SIZE = 20;
-
     String threadId;
     int page = 1;
     boolean isQuestionType;
@@ -28,9 +26,9 @@ public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>>
             if (threadId != null) {
                 if (isQuestionType) {
                     return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
-                            PAGE_SIZE, page, shouldGetEndorsed);
+                            page, shouldGetEndorsed);
                 }
-                return environment.getDiscussionAPI().getResponsesList(threadId, PAGE_SIZE, page);
+                return environment.getDiscussionAPI().getResponsesList(threadId, page);
             }
         } catch (Exception ex) {
             handle(ex);

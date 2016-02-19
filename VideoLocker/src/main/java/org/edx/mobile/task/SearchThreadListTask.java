@@ -8,8 +8,6 @@ import org.edx.mobile.model.Page;
 public abstract class SearchThreadListTask extends
         Task<Page<DiscussionThread>> {
 
-    private static final int PAGE_SIZE = 20;
-
     final String courseId;
     final String text;
     final int page;
@@ -24,7 +22,7 @@ public abstract class SearchThreadListTask extends
     public Page<DiscussionThread> call() throws Exception {
         try {
             if (courseId != null) {
-                return environment.getDiscussionAPI().searchThreadList(courseId, text, PAGE_SIZE, page);
+                return environment.getDiscussionAPI().searchThreadList(courseId, text, page);
             }
         } catch (Exception ex) {
             handle(ex);

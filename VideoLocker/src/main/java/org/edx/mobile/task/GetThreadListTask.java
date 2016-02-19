@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
-    static final int PAGE_SIZE = 20;
 
     final String courseId;
     final DiscussionTopic topic;
@@ -43,11 +42,10 @@ public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
                 if (!topic.isFollowingType()) {
                     return environment.getDiscussionAPI().getThreadList(courseId,
                             getAllTopicIds(), filter.getQueryParamValue(),
-                            orderBy.getQueryParamValue(), PAGE_SIZE, page);
+                            orderBy.getQueryParamValue(), page);
                 } else {
                     return environment.getDiscussionAPI().getFollowingThreadList(courseId,
-                            filter.getQueryParamValue(), orderBy.getQueryParamValue(),
-                            PAGE_SIZE, page);
+                            filter.getQueryParamValue(), orderBy.getQueryParamValue(), page);
                 }
             }
         } catch (RetroHttpException ex) {
