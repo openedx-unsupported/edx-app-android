@@ -8,7 +8,7 @@ import org.junit.Test;
 public class ExpiredOAuthTokenTest extends FeatureTest {
 
     @Test
-    public void withInvalidToken_afterAppLaunch_redirectToLogin() {
+    public void whenAppLaunched_withInvalidAuthToken_logInScreenIsShown() {
         final MainApplication application = MainApplication.instance();
         PrefManager pref = new PrefManager(application, PrefManager.Pref.LOGIN);
         //Skip login if any profile is set
@@ -16,8 +16,7 @@ public class ExpiredOAuthTokenTest extends FeatureTest {
         pref.put(PrefManager.Key.AUTH_JSON, "{\"access_token\": \"I am an invalid token\", \"token_type\": \"Bearer\", \"expires_in\": 2591999, \"scope\": \"\"}");
         new AppInteractor()
                 .launchApp()
-                .skipToMyCoursesScreen()
-                .redirectToLoginScreen()
-                .observeLogInScreen();
+                .observeLogInScreen()
+                .navigateBack();
     }
 }
