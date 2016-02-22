@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +24,6 @@ import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
-import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
@@ -104,12 +102,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
             public boolean onQueryTextSubmit(String query) {
                 if (query == null || query.trim().length() == 0)
                     return false;
-                Activity activity = getActivity();
-                if (activity != null) {
-                    SoftKeyboardUtil.hide(activity);
-                    discussionTopicsSearchView.clearFocus();
-                    router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
-                }
+                router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
                 return true;
             }
 
@@ -159,5 +152,16 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
             }
         };
         getTopicListTask.execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        discussionTopicsSearchView.post(new Runnable() {
+            @Override
+            public void run() {
+                discussionTopicsSearchView.clearFocus();
+            }
+        });
     }
 }
