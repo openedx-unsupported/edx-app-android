@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assume.assumeFalse;
 
 /**
  * This class contains unit tests for API calls to server.
@@ -26,7 +27,7 @@ public class SocialLoginTests extends HttpBaseTestCase  {
     
     @Test
     public void testGetProfile() throws Exception {
-        if ( shouldSkipTest ) return;
+        assumeFalse(shouldSkipTest);
 
         ProfileModel profile = api.getProfile();
         assertNotNull(profile);
