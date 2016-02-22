@@ -166,8 +166,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         }
 
         /**
-         * Gets the list of endorsed answers for a {@link DiscussionThread.ThreadType#QUESTION}
-         * type discussion thread
+         * Gets the complete list of endorsed answers for a
+         * {@link DiscussionThread.ThreadType#QUESTION} type discussion thread
          */
         protected void getEndorsedList() {
             if (getEndorsedListTask != null) {

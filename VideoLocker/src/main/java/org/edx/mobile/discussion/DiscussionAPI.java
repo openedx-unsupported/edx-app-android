@@ -106,12 +106,19 @@ public class DiscussionAPI {
         return discussionService.searchThreadList(courseId, text, PAGE_SIZE, page);
     }
 
-    // get the responses, and all comments for each of which, of a thread
+    // get the paginated responses of a discussion thread
     public Page<DiscussionComment> getResponsesList(String threadId, int page)
             throws RetroHttpException {
         return discussionService.getResponsesList(threadId, PAGE_SIZE, page);
     }
 
+    // get all the endorsed or non-endorsed responses of a question thread
+    public Page<DiscussionComment> getResponsesListForQuestion(String threadId, boolean endorsed)
+            throws RetroHttpException {
+        return discussionService.getResponsesListForQuestion(threadId, endorsed);
+    }
+
+    // get the endorsed or non-endorsed paginated responses of a question thread
     public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int page,
                                                                boolean endorsed)
             throws RetroHttpException {

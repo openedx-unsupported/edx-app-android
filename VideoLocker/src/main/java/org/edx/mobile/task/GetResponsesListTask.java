@@ -24,7 +24,14 @@ public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>>
     public Page<DiscussionComment> call() throws Exception {
         try {
             if (threadId != null) {
+                // Question threads require the 'endorsed' parameter.
                 if (isQuestionType) {
+                    if (shouldGetEndorsed) {
+                        // Get all the endorsed responses in one go without pagination,
+                        // as we don't expect to have a large number of them.
+                        return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
+                                true);
+                    }
                     return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
                             page, shouldGetEndorsed);
                 }
