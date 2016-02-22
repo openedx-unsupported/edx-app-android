@@ -4,9 +4,6 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 
-import org.edx.mobile.base.MainApplication;
-import org.edx.mobile.module.prefs.PrefManager;
-
 public class AppInteractor {
     public AppLaunchInteractor launchApp() {
         final Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
