@@ -10,6 +10,7 @@ public class LogInFeatureTest extends FeatureTest {
     public void afterEmailLogIn_withActiveAccount_myCoursesScreenIsDisplayed() {
         new AppInteractor()
                 .launchApp()
+                .observeLandingScreen()
                 .navigateToLogInScreen()
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
                 .observeMyCoursesScreen();

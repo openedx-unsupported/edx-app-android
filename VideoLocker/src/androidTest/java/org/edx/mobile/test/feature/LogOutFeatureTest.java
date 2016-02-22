@@ -10,6 +10,7 @@ public class LogOutFeatureTest extends FeatureTest {
     public void afterLogOut_withActiveAccount_logInScreenIsDisplayed() {
         new AppInteractor()
                 .launchApp()
+                .observeLandingScreen()
                 .navigateToLogInScreen()
                 .logIn(TestValues.ACTIVE_USER_CREDENTIALS)
                 .openNavigationDrawer()
