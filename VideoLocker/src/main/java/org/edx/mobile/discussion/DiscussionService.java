@@ -116,6 +116,12 @@ public interface DiscussionService {
 
     @GET("/api/discussion/v1/comments/")
     Page<DiscussionComment> getResponsesListForQuestion(@Query("thread_id") String threadId,
+                                                        @Query("endorsed") boolean endorsed)
+            throws RetroHttpException;
+
+
+    @GET("/api/discussion/v1/comments/")
+    Page<DiscussionComment> getResponsesListForQuestion(@Query("thread_id") String threadId,
                                                         @Query("page_size") int pageSize,
                                                         @Query("page") int page,
                                                         @Query("endorsed") boolean endorsed)
