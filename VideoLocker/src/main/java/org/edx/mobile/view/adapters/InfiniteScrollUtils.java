@@ -22,7 +22,7 @@ public class InfiniteScrollUtils {
         final View footerView = LayoutInflater.from(list.getContext()).inflate(R.layout.list_view_footer_progress, list, false);
         list.addFooterView(footerView, null, false);
         final View loadingIndicator = footerView.findViewById(R.id.loading_indicator);
-        final PageLoadController controller = new PageLoadController<>(
+        final InfiniteListController controller = new PageLoadController<>(
                 new ListContentController<T>() {
                     @Override
                     public void clear() {
@@ -40,7 +40,7 @@ public class InfiniteScrollUtils {
                     }
                 },
                 pageLoader);
-        controller.onLoadMore();
+        controller.loadMore();
         list.setOnScrollListener(new ListViewOnScrollListener(controller));
         list.setAdapter(adapter);
         return controller;
@@ -49,8 +49,8 @@ public class InfiniteScrollUtils {
     public static <T> InfiniteListController configureRecyclerViewWithInfiniteList(@NonNull final RecyclerView recyclerView, @NonNull final ListContentController<T> adapter, @NonNull final PageLoader<T> pageLoader) {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        final PageLoadController controller = new PageLoadController<>(adapter, pageLoader);
-        controller.onLoadMore();
+        final InfiniteListController controller = new PageLoadController<>(adapter, pageLoader);
+        controller.loadMore();
         recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(linearLayoutManager, controller));
         return controller;
     }
@@ -68,11 +68,11 @@ public class InfiniteScrollUtils {
     }
 
     public interface PageLoadCallback<T> {
-        void onPartialPageLoaded(List<T> newItems);
         void onPageLoaded(Page<T> newPage);
     }
 
     public interface InfiniteListController {
+        void loadMore();
         void reset();
     }
 
@@ -82,7 +82,7 @@ public class InfiniteScrollUtils {
         @NonNull
         final PageLoader<T> pageLoader;
         protected boolean hasMoreItems = true;
-        protected boolean loading = true;
+        protected boolean loading;
         final AtomicInteger activeLoadId = new AtomicInteger();
 
         public PageLoadController(@NonNull ListContentController<T> adapter, @NonNull PageLoader<T> pageLoader) {
@@ -90,6 +90,7 @@ public class InfiniteScrollUtils {
             this.pageLoader = pageLoader;
         }
 
+        @Override
         public void loadMore() {
             if (!loading && hasMoreItems) {
                 loading = true;
@@ -101,14 +102,6 @@ public class InfiniteScrollUtils {
             final int instanceLoadId = activeLoadId.get();
             adapter.setProgressVisible(true);
             pageLoader.loadNextPage(new PageLoadCallback<T>() {
-                @Override
-                public void onPartialPageLoaded(List<T> newItems) {
-                    if (isAbandoned()) {
-                        return;
-                    }
-                    adapter.addAll(newItems);
-                }
-
                 @Override
                 public void onPageLoaded(Page<T> newPage) {
                     if (isAbandoned()) {
@@ -145,16 +138,16 @@ public class InfiniteScrollUtils {
     }
 
     private static class ListViewOnScrollListener implements AbsListView.OnScrollListener {
-        private final PageLoadController pageLoadController;
+        private final InfiniteListController infiniteListController;
 
-        protected ListViewOnScrollListener(PageLoadController pageLoadController) {
-            this.pageLoadController = pageLoadController;
+        protected ListViewOnScrollListener(InfiniteListController infiniteListController) {
+            this.infiniteListController = infiniteListController;
         }
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             if (firstVisibleItem + visibleItemCount >= totalItemCount - VISIBILITY_THRESHOLD) {
-                pageLoadController.loadMore();
+                infiniteListController.loadMore();
             }
         }
 
@@ -166,11 +159,11 @@ public class InfiniteScrollUtils {
     public static class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
 
         private final LinearLayoutManager mLinearLayoutManager;
-        private final PageLoadController pageLoadController;
+        private final InfiniteListController infiniteListController;
 
-        public RecyclerViewOnScrollListener(LinearLayoutManager linearLayoutManager, PageLoadController pageLoadController) {
+        public RecyclerViewOnScrollListener(LinearLayoutManager linearLayoutManager, InfiniteListController infiniteListController) {
             this.mLinearLayoutManager = linearLayoutManager;
-            this.pageLoadController = pageLoadController;
+            this.infiniteListController = infiniteListController;
         }
 
         @Override
@@ -183,7 +176,7 @@ public class InfiniteScrollUtils {
 
             if ((totalItemCount - visibleItemCount)
                     <= (firstVisibleItem + VISIBILITY_THRESHOLD)) {
-                pageLoadController.loadMore();
+                infiniteListController.loadMore();
             }
         }
     }

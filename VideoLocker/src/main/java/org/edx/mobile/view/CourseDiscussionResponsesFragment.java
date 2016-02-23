@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,8 +53,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
-    private ResponsesLoader responsesLoader;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,15 +63,16 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        responsesLoader = new ResponsesLoader(getActivity(),
-                discussionThread.getIdentifier(),
-                discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
-
         // Using application context to prevent activity leak since adapter is retained across config changes
+        final Context context = getContext();
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
-                getActivity().getApplicationContext(), this, discussionThread);
-        controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
-                discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
+                context.getApplicationContext(), this, discussionThread);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        discussionResponsesRecyclerView.setLayoutManager(linearLayoutManager);
+        controller = new PaginationController();
+        controller.loadMore();
+        discussionResponsesRecyclerView.addOnScrollListener(new InfiniteScrollUtils
+                .RecyclerViewOnScrollListener(linearLayoutManager, controller));
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
@@ -127,41 +127,32 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         router.showCourseDiscussionComments(getActivity(), response, discussionThread.isClosed());
     }
 
-    private static class ResponsesLoader implements
-            InfiniteScrollUtils.PageLoader<DiscussionComment> {
-        private InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback;
-
-        @NonNull
-        private final Context context;
-        @NonNull
-        private final String threadId;
-        private final boolean isQuestionTypeThread;
-
+    private class PaginationController implements InfiniteScrollUtils.InfiniteListController {
         @Nullable
         private GetResponsesListTask getResponsesListTask;
         @Nullable
         private GetResponsesListTask getEndorsedListTask;
 
+        private boolean loading;
         private int nextPage = 1;
 
         @Nullable
         private Page<DiscussionComment> unendorsedResponsesPage;
-        private boolean isEndorsedFetched = false;
-
-        public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
-                               boolean isQuestionTypeThread) {
-            this.context = context;
-            this.threadId = threadId;
-            this.isQuestionTypeThread = isQuestionTypeThread;
-        }
+        // The number of the endorsed responses, or -1 if they haven't been queried yet.
+        private int endorsedResponsesCount = -1;
 
         @Override
-        public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-            this.callback = callback;
-            if (isQuestionTypeThread && !isEndorsedFetched) {
-                getEndorsedList();
+        public void loadMore() {
+            if (!loading && (unendorsedResponsesPage == null ||
+                    unendorsedResponsesPage.hasNext())) {
+                loading = true;
+                courseDiscussionResponsesAdapter.setProgressVisible(true);
+                if (endorsedResponsesCount < 0 &&
+                        discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
+                    getEndorsedList();
+                }
+                getResponsesList();
             }
-            getResponsesList();
 
         }
 
@@ -173,13 +164,14 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             if (getEndorsedListTask != null) {
                 getEndorsedListTask.cancel(true);
             }
-            getEndorsedListTask = new GetResponsesListTask(context, threadId, 1, isQuestionTypeThread,
-                    true) {
+            getEndorsedListTask = new GetResponsesListTask(getContext(),
+                    discussionThread.getIdentifier(), 1,
+                    discussionThread.getType() == DiscussionThread.ThreadType.QUESTION, true) {
                 @Override
                 public void onSuccess(Page<DiscussionComment> threadResponsesPage) {
-                    if (callback != null) {
-                        isEndorsedFetched = true;
-                        callback.onPartialPageLoaded(threadResponsesPage.getResults());
+                    if (getEndorsedListTask == this) {
+                        endorsedResponsesCount = threadResponsesPage.getCount();
+                        courseDiscussionResponsesAdapter.addAll(threadResponsesPage.getResults());
                         // If the unendorsed call returned earlier than this one
                         if (unendorsedResponsesPage != null) deliverResult();
                     }
@@ -198,13 +190,15 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             if (getResponsesListTask != null) {
                 getResponsesListTask.cancel(true);
             }
-            getResponsesListTask = new GetResponsesListTask(context, threadId, nextPage,
-                    isQuestionTypeThread, false) {
+            getResponsesListTask = new GetResponsesListTask(getContext(),
+                    discussionThread.getIdentifier(), nextPage,
+                    discussionThread.getType() == DiscussionThread.ThreadType.QUESTION, false) {
                 @Override
                 public void onSuccess(final Page<DiscussionComment> threadResponsesPage) {
-                    if (callback != null) {
+                    if (getResponsesListTask == this) {
                         unendorsedResponsesPage = threadResponsesPage;
-                        if (!isQuestionTypeThread || isEndorsedFetched) {
+                        if (endorsedResponsesCount >= 0 || discussionThread.getType() !=
+                                DiscussionThread.ThreadType.QUESTION) {
                             deliverResult();
                         }
                     }
@@ -220,8 +214,18 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         }
 
         private void deliverResult() {
+            int responseCount = unendorsedResponsesPage.getCount();
+            if (endorsedResponsesCount > 0) {
+                responseCount += endorsedResponsesCount;
+            }
+            discussionThread.setResponseCount(responseCount);
+            courseDiscussionResponsesAdapter.setResponseCount(responseCount);
+            courseDiscussionResponsesAdapter.addAll(unendorsedResponsesPage.getResults());
             ++nextPage;
-            callback.onPageLoaded(unendorsedResponsesPage);
+            if (!unendorsedResponsesPage.hasNext()) {
+                courseDiscussionResponsesAdapter.setProgressVisible(false);
+            }
+            loading = false;
         }
 
         public void reset() {
@@ -234,9 +238,11 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 getEndorsedListTask = null;
             }
             unendorsedResponsesPage = null;
-            isEndorsedFetched = false;
-            callback = null;
+            endorsedResponsesCount = -1;
             nextPage = 1;
+            loading = false;
+            courseDiscussionResponsesAdapter.clear();
+            loadMore();
         }
     }
 
