@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
@@ -44,10 +44,9 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
         }
         searchThreadListTask = new SearchThreadListTask(getActivity(), courseData.getCourse().getId(), searchQuery, nextPage) {
             @Override
-            public void onSuccess(TopicThreads topicThreads) {
+            public void onSuccess(Page<DiscussionThread> threadsPage) {
                 ++nextPage;
-                boolean hasMore = topicThreads.next != null && topicThreads.next.length() > 0;
-                callback.onPageLoaded(topicThreads.getResults(), hasMore);
+                callback.onPageLoaded(threadsPage);
                 if (discussionPostsAdapter.getCount() == 0) {
                     Activity activity = getActivity();
                     if (activity instanceof TaskProcessCallback) {

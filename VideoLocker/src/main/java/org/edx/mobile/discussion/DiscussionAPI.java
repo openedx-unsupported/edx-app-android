@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.google.inject.Inject;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.util.List;
@@ -51,8 +52,10 @@ class RetrofitAdaptor<T> extends Callback {
 */
 
 public class DiscussionAPI {
-    Context context;
-    final DiscussionService discussionService;
+    private static final int PAGE_SIZE = 20;
+
+    private final Context context;
+    private final DiscussionService discussionService;
 
     @Inject
     public DiscussionAPI(@NonNull Context context, @NonNull RestAdapter restAdapter) {
@@ -83,35 +86,36 @@ public class DiscussionAPI {
         return discussionService.getCourseTopics(courseId);
     }
 
-    public TopicThreads getThreadList(String courseId, List<String> topicIds, String filter,
-                                      String orderBy, int pageSize, int page)
+    public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
+                                                String filter, String orderBy, int page)
             throws RetroHttpException {
-        return discussionService.getThreadList(courseId, topicIds, filter, orderBy, pageSize, page);
+        return discussionService.getThreadList(courseId, topicIds, filter, orderBy, PAGE_SIZE,
+                page);
     }
 
-    public TopicThreads getFollowingThreadList(String courseId, String filter, String orderBy,
-                                               int pageSize, int page)
+    public Page<DiscussionThread> getFollowingThreadList(String courseId, String filter,
+                                                         String orderBy, int page)
             throws RetroHttpException {
         return discussionService.getFollowingThreadList(courseId, "True", filter, orderBy,
-                pageSize, page);
+                PAGE_SIZE, page);
     }
 
 
-    public TopicThreads searchThreadList(String courseId, String text, int pageSize, int page)
+    public Page<DiscussionThread> searchThreadList(String courseId, String text, int page)
             throws RetroHttpException {
-        return discussionService.searchThreadList(courseId, text, pageSize, page);
+        return discussionService.searchThreadList(courseId, text, PAGE_SIZE, page);
     }
 
     // get the responses, and all comments for each of which, of a thread
-    public ThreadComments getResponsesList(String threadId, int pageSize, int page)
+    public Page<DiscussionComment> getResponsesList(String threadId, int page)
             throws RetroHttpException {
-        return discussionService.getResponsesList(threadId, pageSize, page);
+        return discussionService.getResponsesList(threadId, PAGE_SIZE, page);
     }
 
-    public ThreadComments getResponsesListForQuestion(String threadId, int pageSize, int page,
-                                                      boolean endorsed)
+    public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int page,
+                                                               boolean endorsed)
             throws RetroHttpException {
-        return discussionService.getResponsesListForQuestion(threadId, pageSize, page, endorsed);
+        return discussionService.getResponsesListForQuestion(threadId, PAGE_SIZE, page, endorsed);
     }
 
     public DiscussionThread setThreadFlagged(DiscussionThread thread, boolean flagged)

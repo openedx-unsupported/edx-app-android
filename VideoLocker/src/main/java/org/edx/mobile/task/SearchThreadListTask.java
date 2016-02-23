@@ -2,12 +2,11 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.model.Page;
 
 public abstract class SearchThreadListTask extends
-        Task<TopicThreads> {
-
-    private static final int PAGE_SIZE = 20;
+        Task<Page<DiscussionThread>> {
 
     final String courseId;
     final String text;
@@ -20,10 +19,10 @@ public abstract class SearchThreadListTask extends
         this.page = page;
     }
 
-    public TopicThreads call() throws Exception {
+    public Page<DiscussionThread> call() throws Exception {
         try {
             if (courseId != null) {
-                return environment.getDiscussionAPI().searchThreadList(courseId, text, PAGE_SIZE, page);
+                return environment.getDiscussionAPI().searchThreadList(courseId, text, page);
             }
         } catch (Exception ex) {
             handle(ex);

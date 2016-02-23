@@ -1,6 +1,7 @@
 package org.edx.mobile.course;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -19,9 +20,9 @@ public interface CourseService {
      *                 Which page to fetch. If not given, defaults to page 1
      */
     @GET("/api/courses/v1/courses/")
-    CourseList getCourseList(@Query("username") String username,
-                             @Query("mobile") boolean mobile,
-                             @Query("page") int page) throws RetroHttpException;
+    Page<CourseDetail> getCourseList(@Query("username") String username,
+                                     @Query("mobile") boolean mobile,
+                                     @Query("page") int page) throws RetroHttpException;
 
     /**
      * @param courseId (optional):

@@ -2,11 +2,10 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 
-import org.edx.mobile.discussion.ThreadComments;
+import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.model.Page;
 
-public abstract class GetResponsesListTask extends Task<ThreadComments> {
-
-    private static final int PAGE_SIZE = 20;
+public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>> {
 
     String threadId;
     int page = 1;
@@ -22,14 +21,14 @@ public abstract class GetResponsesListTask extends Task<ThreadComments> {
         this.shouldGetEndorsed = shouldGetEndorsed;
     }
 
-    public ThreadComments call() throws Exception {
+    public Page<DiscussionComment> call() throws Exception {
         try {
             if (threadId != null) {
                 if (isQuestionType) {
                     return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
-                            PAGE_SIZE, page, shouldGetEndorsed);
+                            page, shouldGetEndorsed);
                 }
-                return environment.getDiscussionAPI().getResponsesList(threadId, PAGE_SIZE, page);
+                return environment.getDiscussionAPI().getResponsesList(threadId, page);
             }
         } catch (Exception ex) {
             handle(ex);

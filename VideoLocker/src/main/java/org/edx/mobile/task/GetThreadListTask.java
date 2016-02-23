@@ -7,15 +7,15 @@ import android.text.TextUtils;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionTopic;
-import org.edx.mobile.discussion.TopicThreads;
+import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class GetThreadListTask extends Task<TopicThreads> {
-    static final int PAGE_SIZE = 20;
+public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
 
     final String courseId;
     final DiscussionTopic topic;
@@ -36,17 +36,16 @@ public abstract class GetThreadListTask extends Task<TopicThreads> {
         this.page = page;
     }
 
-    public TopicThreads call() throws Exception {
+    public Page<DiscussionThread> call() throws Exception {
         try {
             if (courseId != null) {
                 if (!topic.isFollowingType()) {
                     return environment.getDiscussionAPI().getThreadList(courseId,
                             getAllTopicIds(), filter.getQueryParamValue(),
-                            orderBy.getQueryParamValue(), PAGE_SIZE, page);
+                            orderBy.getQueryParamValue(), page);
                 } else {
                     return environment.getDiscussionAPI().getFollowingThreadList(courseId,
-                            filter.getQueryParamValue(), orderBy.getQueryParamValue(),
-                            PAGE_SIZE, page);
+                            filter.getQueryParamValue(), orderBy.getQueryParamValue(), page);
                 }
             }
         } catch (RetroHttpException ex) {
