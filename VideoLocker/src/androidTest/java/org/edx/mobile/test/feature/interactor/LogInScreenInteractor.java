@@ -1,5 +1,6 @@
 package org.edx.mobile.test.feature.interactor;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 
 import org.edx.mobile.R;
@@ -35,6 +36,11 @@ public class LogInScreenInteractor {
         onPasswordView().perform(replaceText(credentials.password));
         onLogInButton().perform(click());
         return new MyCoursesScreenInteractor();
+    }
+
+    public LandingScreenInteractor navigateBack() {
+        Espresso.pressBack();
+        return new LandingScreenInteractor();
     }
 
     private ViewInteraction onUsernameView() {
