@@ -30,7 +30,9 @@
                 android:gravity="center"
                 android:text="@string/course_details_congratulations"
                 android:textColor="@color/edx_brand_primary_dark"
-                android:textSize="@dimen/edx_small" />
+                android:textSize="@dimen/edx_small"
+                android:textAllCaps="true"
+                />
 
             <TextView
                 android:layout_width="match_parent"

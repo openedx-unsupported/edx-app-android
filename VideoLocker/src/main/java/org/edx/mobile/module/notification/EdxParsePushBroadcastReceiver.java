@@ -76,7 +76,7 @@ public class EdxParsePushBroadcastReceiver extends ParsePushBroadcastReceiver {
                     final CourseUpdateNotificationPayload courseUpdateNotificationPayload = (CourseUpdateNotificationPayload) payload;
                     segment.trackNotificationReceived(courseUpdateNotificationPayload.getCourseId());
                     return newNotificationBuilder(context, intent)
-                            .setContentTitle(context.getString(R.string.COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE))
+                            .setContentTitle(context.getString(R.string.course_announcement_notification_action))
                             .setContentText(courseUpdateNotificationPayload.getCourseName())
                             .build();
                 }
