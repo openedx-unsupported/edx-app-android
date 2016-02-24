@@ -5,7 +5,7 @@
     <!-- Certificates -->
 
     <!-- Label congratulation user on finishing course -->
-    <string name="course_details_congratulations">CONGRATULATIONS!</string>
+    <string name="course_details_congratulations">Congratulations!</string>
     <!-- Message for user who has successfully completed a certificate course -->
     <string name="course_details_earned_cert">You’ve passed the course.</string>
     <!-- Button that opens a full view of an earned certificate -->
@@ -108,9 +108,9 @@
     <!-- Button allowing users to send an email for feedback -->
     <string name="label_submit_feedback">Submit Feedback</string>
     <!-- Toggle switch on state label -->
-    <string name="toggle_turn_on">ON</string>
+    <string name="toggle_turn_on">On</string>
     <!-- Toggle switch off state label -->
-    <string name="toggle_turn_off">OFF</string>
+    <string name="toggle_turn_off">Off</string>
     <!-- Logout button label -->
     <string name="logout">Logout</string>
     <!-- Settings screen title -->
@@ -450,7 +450,7 @@
     <!-- Toggle to allow downloads using cellular data -->
     <string name="allow">Allow</string>
     <!-- Toggle to disallow downloads using cellular data -->
-    <string name="do_not_allow">Don’T allow</string>
+    <string name="do_not_allow">Don’t allow</string>
 
     <!-- Player Settings -->
     <!-- Label for closed captions in video player -->
@@ -579,7 +579,7 @@
 
     <!-- Notification related -->
     <!-- Template for notification title -->
-    <string name="COURSE_ANNOUNCEMENT_NOTIFICATION_TITLE">New Announcement</string>
+    <string name="course_announcement_notification_action">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
     <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
