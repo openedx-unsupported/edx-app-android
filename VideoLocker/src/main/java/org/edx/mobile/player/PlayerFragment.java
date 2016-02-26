@@ -844,8 +844,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onFullScreen(boolean isFullScreen) {
         if (isPrepared) {
-            freezePlayer();
-
             isManualFullscreen = isFullScreen;
             if (isFullScreen) {
                 enterFullScreen();
