@@ -340,8 +340,6 @@
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
-    <!-- Topic selection placeholder -->
-    <string name="discussion_add_post_choose_a_topic">Choose a topic…</string>
     <!-- Label for selected topic when creating a post -->
     <string name="discussion_add_post_topic_selection">Topic: {topic}</string>
     <!-- Add post button title in adding a new discussion -->
