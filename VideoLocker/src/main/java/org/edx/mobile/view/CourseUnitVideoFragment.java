@@ -192,20 +192,21 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        BaseFragmentActivity activity = (BaseFragmentActivity) getActivity();
-        if (activity == null) {
+        if (playerFragment == null) {
             return;
         }
 
         if (isVisibleToUser) {
-            checkVideoStatus(unit);
+            if (playerFragment.getPlayingVideo() == null) {
+                checkVideoStatusAndPlay(unit);
+            } else {
+                checkVideoStatus(unit);
+            }
         } else {
-            activity.hideInfoMessage();
+            ((BaseFragmentActivity) getActivity()).hideInfoMessage();
         }
 
-        if (playerFragment != null) {
-            playerFragment.setUserVisibleHint(isVisibleToUser);
-        }
+        playerFragment.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
