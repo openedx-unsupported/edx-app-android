@@ -7,7 +7,7 @@ import org.robolectric.internal.bytecode.InstrumentationConfiguration;
 /**
  * Extends {@link RobolectricGradleTestRunner} to add custom shadows to the mapping.
  */
-public class CustomRobolectricTestRunner extends RobolectricGradleTestRunner {
+public class CustomRobolectricTestRunner extends DataBindingRobolectricGradleTestRunner {
     public CustomRobolectricTestRunner(Class<?> testClass) throws InitializationError {
         super(testClass);
     }

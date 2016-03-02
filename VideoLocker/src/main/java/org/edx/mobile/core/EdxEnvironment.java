@@ -1,8 +1,6 @@
 package org.edx.mobile.core;
 
 
-import android.content.Context;
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -17,11 +15,10 @@ import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
-@Singleton
-public class EdxEnvironment implements IEdxEnvironment{
+import de.greenrobot.event.EventBus;
 
-    @Inject
-    Context context;
+@Singleton
+public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     IDatabase database;
@@ -50,9 +47,11 @@ public class EdxEnvironment implements IEdxEnvironment{
     @Inject
     ServiceManager serviceManager;
 
-
     @Inject
     DiscussionAPI discussionAPI;
+
+    @Inject
+    EventBus eventBus;
 
     @Override
     public IDatabase getDatabase() {
@@ -100,8 +99,11 @@ public class EdxEnvironment implements IEdxEnvironment{
     }
 
     @Override
-    public DiscussionAPI getDiscussionAPI(){
+    public DiscussionAPI getDiscussionAPI() {
         return discussionAPI;
     }
 
+    public EventBus getEventBus() {
+        return eventBus;
+    }
 }

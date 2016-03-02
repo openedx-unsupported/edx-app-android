@@ -13,6 +13,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
+import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -114,37 +115,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         if (callback == null) {
             return;
         }
-        String errorMessage = null;
-        if (ex instanceof RetroHttpException) {
-            RetrofitError cause = ((RetroHttpException) ex).getCause();
-            switch (cause.getKind()) {
-                case NETWORK: {
-                    if (NetworkUtil.isConnected(getContext())) {
-                        errorMessage = getContext().getString(R.string.network_connected_error);
-                    } else {
-                        errorMessage = getContext().getString(R.string.reset_no_network_message);
-                    }
-                    break;
-                }
-                case HTTP: {
-                    if (cause.getResponse() != null) {
-                        final int status = cause.getResponse().getStatus();
-                        if (status == 503) {
-                            errorMessage = getContext().getString(R.string.network_service_unavailable);
-                        }
-                    }
-                }
-                case CONVERSION:
-                case UNEXPECTED: {
-                    // Use default message
-                    break;
-                }
-            }
-        }
-        if (null == errorMessage) {
-            logger.error(ex, true /* Submit crash report since this is an unknown type of error */);
-            errorMessage = getContext().getString(R.string.error_unknown);
-        }
-        callback.onMessage(MessageType.FLYIN_ERROR, errorMessage);
+
+        callback.onMessage(MessageType.FLYIN_ERROR, ErrorUtils.getErrorMessage(ex, context));
     }
 }

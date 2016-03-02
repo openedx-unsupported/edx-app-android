@@ -35,8 +35,6 @@ public abstract class UpdateAccountTask extends
 
 
     public Account call() throws Exception {
-        final Account updatedAccount = userAPI.updateAccount(username, field, value);
-        EventBus.getDefault().post(new AccountUpdatedEvent(updatedAccount));
-        return updatedAccount;
+        return userAPI.updateAccount(username, field, value);
     }
 }

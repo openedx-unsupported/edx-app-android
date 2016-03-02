@@ -1,0 +1,159 @@
+package org.edx.mobile.profiles;
+
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+
+import org.edx.mobile.event.AccountUpdatedEvent;
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.user.Account;
+import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.util.InvalidLocaleException;
+import org.edx.mobile.util.LocaleUtils;
+import org.edx.mobile.util.observer.AsyncCallableUtils;
+import org.edx.mobile.util.observer.Observable;
+import org.edx.mobile.util.observer.Observer;
+import org.edx.mobile.util.observer.CachingObservable;
+
+import java.util.concurrent.Callable;
+
+import de.greenrobot.event.EventBus;
+
+/**
+ * Exposes a given user's profile data and photo as a pair of observable view models
+ */
+public class UserProfileInteractor {
+    @NonNull
+    private final String username;
+
+    @NonNull
+    private final EventBus eventBus;
+
+    private final boolean viewingOwnProfile;
+
+    @NonNull
+    private final CachingObservable<UserProfileViewModel> profileObservable = new CachingObservable<>();
+
+    @NonNull
+    private final CachingObservable<UserProfileImageViewModel> photo = new CachingObservable<>();
+
+    @NonNull
+    private final Logger logger = new Logger(getClass().getName());
+
+    public UserProfileInteractor(@NonNull final String username, @NonNull final UserAPI userAPI, @NonNull EventBus eventBus, @NonNull UserPrefs userPrefs) {
+        this.username = username;
+        this.eventBus = eventBus;
+
+        final ProfileModel model = userPrefs.getProfile();
+        viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
+
+        eventBus.register(this);
+
+        AsyncCallableUtils.observe(new Callable<Account>() {
+            @Override
+            public Account call() throws Exception {
+                return userAPI.getAccount(username);
+            }
+        }, new Observer<Account>() {
+            @Override
+            public void onData(@NonNull Account data) {
+                handleNewAccount(data);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable error) {
+                profileObservable.onError(error);
+            }
+        });
+    }
+
+    @NonNull
+    public Observable<UserProfileViewModel> observeProfile() {
+        return profileObservable;
+    }
+
+    @NonNull
+    public Observable<UserProfileImageViewModel> observeProfileImage() {
+        return photo;
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull AccountUpdatedEvent event) {
+        if (!event.getAccount().getUsername().equalsIgnoreCase(username)) {
+            return;
+        }
+        handleNewAccount(event.getAccount());
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
+        if (!event.getUsername().equalsIgnoreCase(username)) {
+            return;
+        }
+        photo.onData(new UserProfileImageViewModel(event.getUri(), false));
+    }
+
+    @NonNull
+    public String getUsername() {
+        return username;
+    }
+
+    public boolean isViewingOwnProfile() {
+        return viewingOwnProfile;
+    }
+
+    public void destroy() {
+        eventBus.unregister(this);
+    }
+
+    private void handleNewAccount(@NonNull Account accountResponse) {
+        {
+            final UserProfileViewModel.LimitedProfileMessage limitedProfileMessage;
+            String languageName = null;
+            String countryName = null;
+            if (accountResponse.requiresParentalConsent() || accountResponse.getAccountPrivacy() == Account.Privacy.PRIVATE) {
+                limitedProfileMessage = viewingOwnProfile ? UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE : UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE;
+            } else {
+                limitedProfileMessage = UserProfileViewModel.LimitedProfileMessage.NONE;
+                if (!accountResponse.getLanguageProficiencies().isEmpty()) {
+                    try {
+                        languageName = LocaleUtils.getLanguageNameFromCode(accountResponse.getLanguageProficiencies().get(0).getCode());
+                    } catch (InvalidLocaleException e) {
+                        logger.error(e, true);
+                    }
+                }
+
+                if (!TextUtils.isEmpty(accountResponse.getCountry())) {
+                    try {
+                        countryName = LocaleUtils.getCountryNameFromCode(accountResponse.getCountry());
+                    } catch (InvalidLocaleException e) {
+                        logger.error(e, true);
+                    }
+                }
+            }
+
+            final UserProfileViewModel.ContentType contentType;
+            if (viewingOwnProfile && accountResponse.requiresParentalConsent()) {
+                contentType = UserProfileViewModel.ContentType.PARENTAL_CONSENT_REQUIRED;
+
+            } else if (viewingOwnProfile && TextUtils.isEmpty(accountResponse.getBio()) && accountResponse.getAccountPrivacy() != Account.Privacy.ALL_USERS) {
+                contentType = UserProfileViewModel.ContentType.INCOMPLETE;
+
+            } else if (accountResponse.getAccountPrivacy() != Account.Privacy.PRIVATE) {
+                if (TextUtils.isEmpty(accountResponse.getBio())) {
+                    contentType = UserProfileViewModel.ContentType.NO_ABOUT_ME;
+                } else {
+                    contentType = UserProfileViewModel.ContentType.ABOUT_ME;
+                }
+            } else {
+                contentType = UserProfileViewModel.ContentType.EMPTY;
+            }
+            profileObservable.onData(new UserProfileViewModel(limitedProfileMessage, languageName, countryName, contentType, accountResponse.getBio()));
+        }
+        photo.onData(new UserProfileImageViewModel(accountResponse.getProfileImage().hasImage() ? Uri.parse(accountResponse.getProfileImage().getImageUrlFull()) : null, true));
+    }
+
+}
