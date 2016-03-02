@@ -53,31 +53,6 @@ public class EdxCookieManager {
             }
         }
         authSessionCookieExpiration = -1;
-
-    }
-
-    public void clearWebViewCache(Context context){
-        try {
-            clearWebWiewCookie(context);
-
-            boolean success = context.deleteDatabase("webview.db");
-            logger.debug("delete webview.db result = " + success);
-            success =  context.deleteDatabase("webviewCache.db");
-            logger.debug("delete webviewCache.db result = " + success);
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
-
-        File webviewCacheDir = new File(context.getCacheDir().getAbsolutePath()+"/webviewCache");
-        if(webviewCacheDir.exists()){
-            context.deleteFile(webviewCacheDir.getAbsolutePath());
-        }
-
-        File appCacheDir = new File(context.getFilesDir().getAbsolutePath()+ "/webcache");
-        if(appCacheDir.exists()){
-            context.deleteFile(appCacheDir.getAbsolutePath());
-        }
     }
 
     public synchronized  void tryToRefreshSessionCookie( ){
