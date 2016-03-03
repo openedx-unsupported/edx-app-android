@@ -234,18 +234,28 @@ public class DiscussionAddPostFragment extends BaseFragment {
             @Override
             public void onSuccess(CourseTopics courseTopics) {
                 final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
-                allTopics.addAll(courseTopics.getCoursewareTopics());
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
+                allTopics.addAll(courseTopics.getCoursewareTopics());
 
                 final TopicSpinnerAdapter adapter = new TopicSpinnerAdapter(container.getContext(), DiscussionTopicDepth.createFromDiscussionTopics(allTopics));
                 topicsSpinner.setAdapter(adapter);
 
                 {
                     // Attempt to select the topic that we navigated from
-                    // Otherwise, leave the default option, which is "Choose a topic..."
-                    int selectedTopicIndex = adapter.getPosition(discussionTopic);
-                    if (selectedTopicIndex >= 0) {
-                        topicsSpinner.setSelection(selectedTopicIndex);
+                    // Otherwise, leave the default option, which is the first non-courseware topic
+                    if (!discussionTopic.isAllType() && !discussionTopic.isFollowingType()) {
+                        int selectedTopicIndex = -1;
+                        if (discussionTopic.getIdentifier() == null) {
+                            // In case of a parent topic, we need to select the first child topic
+                            if (!discussionTopic.getChildren().isEmpty()) {
+                                selectedTopicIndex = adapter.getPosition(discussionTopic.getChildren().get(0));
+                            }
+                        } else {
+                            selectedTopicIndex = adapter.getPosition(discussionTopic);
+                        }
+                        if (selectedTopicIndex >= 0) {
+                            topicsSpinner.setSelection(selectedTopicIndex);
+                        }
                     }
                 }
             }
