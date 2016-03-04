@@ -1,41 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/edx_grayscale_neutral_white"
-            tools:context="org.edx.mobile.view.CourseHandoutActivity"
-            android:fillViewport="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/edx_grayscale_neutral_white"
+    android:fillViewport="true"
+    tools:context="org.edx.mobile.view.CourseHandoutActivity">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="@dimen/common_course_display_margin_side"
-                    android:paddingRight="@dimen/common_course_display_margin_side"
-                    android:paddingTop="@dimen/common_course_display_margin_top"
-                    android:paddingBottom="@dimen/common_course_display_margin_top"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/common_course_display_margin_top"
+        android:paddingLeft="@dimen/common_course_display_margin_side"
+        android:paddingRight="@dimen/common_course_display_margin_side"
+        android:paddingTop="@dimen/common_course_display_margin_top">
 
         <org.edx.mobile.view.custom.EdxWebView
             android:id="@+id/webview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"/>
+            android:scrollbars="none" />
 
-        <TextView
-            android:id="@+id/flying_message"
-            style="@style/flying_message"
-            android:layout_alignParentTop="true"
-            android:visibility="gone"/>
-
-        <include layout="@layout/loading_indicator"/>
+        <include layout="@layout/loading_indicator" />
 
         <TextView
             android:id="@+id/no_coursehandout_tv"
             style="@style/content_unavailable_error_text"
-            android:text="@string/no_handouts_to_display"/>
+            android:text="@string/no_handouts_to_display" />
 
     </RelativeLayout>
 </ScrollView>

@@ -280,7 +280,7 @@ public class Router {
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
         Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
-        handoutIntent.putExtra(CourseHandoutFragment.ENROLLMENT, courseData);
+        handoutIntent.putExtra(EXTRA_ENROLLMENT, courseData);
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
     }
