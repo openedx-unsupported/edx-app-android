@@ -113,11 +113,6 @@ public class MainApplication extends MultiDexApplication {
         if (needVersionUpgrade) {
             // try repair of download data if app version is updated
             injector.getInstance(IStorage.class).repairDownloadCompletionData();
-
-            //try to clear browser cache.
-            //there is an potential issue related to the 301 redirection.
-            //https://openedx.atlassian.net/browse/MA-794
-            EdxCookieManager.getSharedInstance().clearWebViewCache(this);
         }
 
         // Register Font Awesome module in android-iconify library
