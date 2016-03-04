@@ -26,6 +26,7 @@ import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -142,8 +143,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     private static class ResponsesLoader implements
             InfiniteScrollUtils.PageLoader<DiscussionComment> {
-        private InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback;
-
         @NonNull
         private final Context context;
         @NonNull
@@ -152,73 +151,51 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
         @Nullable
         private GetResponsesListTask getResponsesListTask;
-        @Nullable
-        private GetResponsesListTask getEndorsedListTask;
-
         private int nextPage = 1;
-
-        @Nullable
-        private Page<DiscussionComment> unendorsedResponsesPage;
-        private boolean isEndorsedFetched = false;
+        private boolean isFetchingEndorsed;
 
         public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
                                boolean isQuestionTypeThread) {
             this.context = context;
             this.threadId = threadId;
             this.isQuestionTypeThread = isQuestionTypeThread;
+            this.isFetchingEndorsed = isQuestionTypeThread;
         }
 
         @Override
-        public void loadNextPage(@NonNull InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-            this.callback = callback;
-            if (isQuestionTypeThread && !isEndorsedFetched) {
-                getEndorsedList();
-            }
-            getResponsesList();
-
-        }
-
-        /**
-         * Gets the list of endorsed answers for a {@link DiscussionThread.ThreadType#QUESTION}
-         * type discussion thread
-         */
-        protected void getEndorsedList() {
-            if (getEndorsedListTask != null) {
-                getEndorsedListTask.cancel(true);
-            }
-            getEndorsedListTask = new GetResponsesListTask(context, threadId, 1, isQuestionTypeThread,
-                    true) {
-                @Override
-                public void onSuccess(Page<DiscussionComment> threadResponsesPage) {
-                    if (callback != null) {
-                        isEndorsedFetched = true;
-                        callback.onPartialPageLoaded(threadResponsesPage.getResults());
-                        // If the unendorsed call returned earlier than this one
-                        if (unendorsedResponsesPage != null) deliverResult();
-                    }
-                }
-
-                @Override
-                public void onException(Exception ex) {
-                    logger.error(ex);
-                }
-            };
-            getEndorsedListTask.setProgressCallback(null);
-            getEndorsedListTask.execute();
-        }
-
-        protected void getResponsesList() {
+        public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
             if (getResponsesListTask != null) {
                 getResponsesListTask.cancel(true);
             }
             getResponsesListTask = new GetResponsesListTask(context, threadId, nextPage,
-                    isQuestionTypeThread, false) {
+                    isQuestionTypeThread, isFetchingEndorsed) {
                 @Override
                 public void onSuccess(final Page<DiscussionComment> threadResponsesPage) {
-                    if (callback != null) {
-                        unendorsedResponsesPage = threadResponsesPage;
-                        if (!isQuestionTypeThread || isEndorsedFetched) {
-                            deliverResult();
+                    if (getResponsesListTask == this) {
+                        if (isFetchingEndorsed) {
+                            boolean hasMoreEndorsed = threadResponsesPage.hasNext();
+                            if (hasMoreEndorsed) {
+                                ++nextPage;
+                            } else {
+                                isFetchingEndorsed = false;
+                                nextPage = 1;
+                            }
+                            final List<DiscussionComment> endorsedResponses =
+                                    threadResponsesPage.getResults();
+                            if (hasMoreEndorsed || !endorsedResponses.isEmpty()) {
+                                callback.onPageLoaded(endorsedResponses);
+                            } else {
+                                // If there are no endorsed responses, then just start
+                                // loading the unendorsed ones without triggering the
+                                // callback, since that would just cause the controller
+                                // to wait for the scroll listener to be invoked, which
+                                // would not happen automatically without any changes
+                                // in the adapter dataset.
+                                loadNextPage(callback);
+                            }
+                        } else {
+                            ++nextPage;
+                            callback.onPageLoaded(threadResponsesPage);
                         }
                     }
                 }
@@ -232,23 +209,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             getResponsesListTask.execute();
         }
 
-        private void deliverResult() {
-            ++nextPage;
-            callback.onPageLoaded(unendorsedResponsesPage);
-        }
-
         public void reset() {
             if (getResponsesListTask != null) {
                 getResponsesListTask.cancel(true);
                 getResponsesListTask = null;
             }
-            if (getEndorsedListTask != null) {
-                getEndorsedListTask.cancel(true);
-                getEndorsedListTask = null;
-            }
-            unendorsedResponsesPage = null;
-            isEndorsedFetched = false;
-            callback = null;
+            isFetchingEndorsed = isQuestionTypeThread;
             nextPage = 1;
         }
     }
