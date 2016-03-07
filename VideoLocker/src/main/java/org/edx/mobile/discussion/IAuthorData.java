@@ -8,4 +8,5 @@ public interface IAuthorData {
     String getAuthor();
     String getAuthorLabel();
     Date getCreatedAt();
+    boolean isAuthorAnonymous();
 }
