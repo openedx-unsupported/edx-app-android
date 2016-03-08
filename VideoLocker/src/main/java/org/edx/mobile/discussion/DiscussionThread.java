@@ -58,6 +58,9 @@ public class DiscussionThread implements Serializable, IAuthorData {
     private String authorLabel;
     private int commentCount = 0;
     private int unreadCommentCount = 0;
+    // Since the response count field is not provided in the thread list
+    // query, it is defaulted to -1 to indicate that it's not available.
+    private int responseCount = -1;
     private String commentListUrl;
     private boolean hasEndorsed = false;
     private boolean pinned = false;
@@ -128,6 +131,21 @@ public class DiscussionThread implements Serializable, IAuthorData {
 
     public int getUnreadCommentCount() {
         return unreadCommentCount;
+    }
+
+    /**
+     * @return The response count, or -1 if it's not available.
+     */
+    public int getResponseCount() {
+        return responseCount;
+    }
+
+    /**
+     * Increment the response count.
+     */
+    public void incrementResponseCount() {
+        responseCount++;
+        incrementCommentCount();
     }
 
     public boolean isHasEndorsed() {

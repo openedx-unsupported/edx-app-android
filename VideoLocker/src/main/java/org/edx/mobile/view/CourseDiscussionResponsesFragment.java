@@ -22,6 +22,7 @@ import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetResponsesListTask;
+import org.edx.mobile.task.GetThreadTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -58,6 +59,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Inject
     ISegment segIO;
 
+    @Nullable
+    private GetThreadTask getThreadTask;
+
     private InfiniteScrollUtils.InfiniteListController controller;
 
     private ResponsesLoader responsesLoader;
@@ -82,6 +86,20 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
+
+        responsesLoader.freeze();
+        if (getThreadTask != null) {
+            getThreadTask.cancel(true);
+        }
+        getThreadTask = new GetThreadTask(getContext(), discussionThread.getIdentifier()) {
+            @Override
+            protected void onSuccess(DiscussionThread discussionThread) {
+                courseDiscussionResponsesAdapter.updateDiscussionThread(discussionThread);
+                responsesLoader.unfreeze();
+            }
+        };
+        getThreadTask.setProgressCallback(null);
+        getThreadTask.execute();
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
                 addResponseTextView, R.string.discussion_responses_add_response_button,
@@ -115,12 +133,13 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (discussionThread.containsComment(event.getComment())) {
-            discussionThread.incrementCommentCount();
             if (event.getParent() == null) {
                 // We got a response
+                discussionThread.incrementResponseCount();
                 courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
             } else {
                 // We got a comment to a response
+                discussionThread.incrementCommentCount();
                 courseDiscussionResponsesAdapter.addNewComment(event.getParent());
             }
         }
@@ -153,6 +172,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         private GetResponsesListTask getResponsesListTask;
         private int nextPage = 1;
         private boolean isFetchingEndorsed;
+        private boolean isFrozen;
+        private Runnable deferredDeliveryRunnable;
 
         public ResponsesLoader(@NonNull Context context, @NonNull String threadId,
                                boolean isQuestionTypeThread) {
@@ -172,30 +193,40 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 @Override
                 public void onSuccess(final Page<DiscussionComment> threadResponsesPage) {
                     if (getResponsesListTask == this) {
-                        if (isFetchingEndorsed) {
-                            boolean hasMoreEndorsed = threadResponsesPage.hasNext();
-                            if (hasMoreEndorsed) {
-                                ++nextPage;
-                            } else {
-                                isFetchingEndorsed = false;
-                                nextPage = 1;
+                        final Runnable deliverResultRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isFetchingEndorsed) {
+                                    boolean hasMoreEndorsed = threadResponsesPage.hasNext();
+                                    if (hasMoreEndorsed) {
+                                        ++nextPage;
+                                    } else {
+                                        isFetchingEndorsed = false;
+                                        nextPage = 1;
+                                    }
+                                    final List<DiscussionComment> endorsedResponses =
+                                            threadResponsesPage.getResults();
+                                    if (hasMoreEndorsed || !endorsedResponses.isEmpty()) {
+                                        callback.onPageLoaded(endorsedResponses);
+                                    } else {
+                                        // If there are no endorsed responses, then just start
+                                        // loading the unendorsed ones without triggering the
+                                        // callback, since that would just cause the controller
+                                        // to wait for the scroll listener to be invoked, which
+                                        // would not happen automatically without any changes
+                                        // in the adapter dataset.
+                                        loadNextPage(callback);
+                                    }
+                                } else {
+                                    ++nextPage;
+                                    callback.onPageLoaded(threadResponsesPage);
+                                }
                             }
-                            final List<DiscussionComment> endorsedResponses =
-                                    threadResponsesPage.getResults();
-                            if (hasMoreEndorsed || !endorsedResponses.isEmpty()) {
-                                callback.onPageLoaded(endorsedResponses);
-                            } else {
-                                // If there are no endorsed responses, then just start
-                                // loading the unendorsed ones without triggering the
-                                // callback, since that would just cause the controller
-                                // to wait for the scroll listener to be invoked, which
-                                // would not happen automatically without any changes
-                                // in the adapter dataset.
-                                loadNextPage(callback);
-                            }
+                        };
+                        if (isFrozen) {
+                            deferredDeliveryRunnable = deliverResultRunnable;
                         } else {
-                            ++nextPage;
-                            callback.onPageLoaded(threadResponsesPage);
+                            deliverResultRunnable.run();
                         }
                     }
                 }
@@ -207,6 +238,20 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             };
             getResponsesListTask.setProgressCallback(null);
             getResponsesListTask.execute();
+        }
+
+        public void freeze() {
+            isFrozen = true;
+        }
+
+        public void unfreeze() {
+            if (isFrozen) {
+                isFrozen = false;
+                if (deferredDeliveryRunnable != null) {
+                    deferredDeliveryRunnable.run();
+                    deferredDeliveryRunnable = null;
+                }
+            }
         }
 
         public void reset() {
