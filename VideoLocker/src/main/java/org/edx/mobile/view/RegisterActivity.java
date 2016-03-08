@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.exception.LoginException;
@@ -37,7 +38,6 @@ import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.PropertyUtil;
 import org.edx.mobile.util.ResourceUtil;
 
 import java.util.ArrayList;
@@ -269,7 +269,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
             try {
                 //Send app version in create event
-                String versionName = PropertyUtil.getManifestVersionName(this);
+                String versionName = BuildConfig.VERSION_NAME;
                 String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
 
                 environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
