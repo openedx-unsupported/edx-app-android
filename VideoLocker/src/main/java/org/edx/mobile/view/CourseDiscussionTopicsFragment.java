@@ -33,28 +33,24 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionTopicsFragment extends BaseFragment {
+    private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
     @InjectView(R.id.discussion_topics_searchview)
-    SearchView discussionTopicsSearchView;
+    private SearchView discussionTopicsSearchView;
 
     @InjectView(R.id.discussion_topics_listview)
-    ListView discussionTopicsListView;
-
+    private ListView discussionTopicsListView;
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
+    @Inject
+    private DiscussionTopicsAdapter discussionTopicsAdapter;
 
     @Inject
-    DiscussionTopicsAdapter discussionTopicsAdapter;
+    private Router router;
 
-    @Inject
-    Router router;
-
-    GetTopicListTask getTopicListTask;
-
-    private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
-
+    private GetTopicListTask getTopicListTask;
 
     @Nullable
     @Override
@@ -100,7 +96,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
         discussionTopicsSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query == null || query.trim().length() == 0)
+                if (query == null || query.trim().isEmpty())
                     return false;
                 router.showCourseDiscussionPostsForSearchQuery(getActivity(), query, courseData);
                 return true;
