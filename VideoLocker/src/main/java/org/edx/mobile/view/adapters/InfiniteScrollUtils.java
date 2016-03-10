@@ -67,9 +67,35 @@ public class InfiniteScrollUtils {
         void loadNextPage(@NonNull PageLoadCallback<T> callback);
     }
 
-    public interface PageLoadCallback<T> {
-        void onPartialPageLoaded(List<T> newItems);
-        void onPageLoaded(Page<T> newPage);
+    public static abstract class PageLoadCallback<T> {
+        /**
+         * Callback for new page load, which terminates the loading
+         * controller if it's the last one.
+         *
+         * @param newPage The new page.
+         */
+        public final void onPageLoaded(Page<T> newPage) {
+            onPageLoaded(newPage.getResults(), newPage.hasNext());
+        }
+
+        /**
+         * Callback for new page load, which assumes that there
+         * are more to follow.
+         *
+         * @param newItems A list of the items in the new page.
+         */
+        public final void onPageLoaded(List<T> newItems) {
+            onPageLoaded(newItems, true);
+        }
+
+        /**
+         * Callback for new page load, which terminates the loading
+         * controller if it's the last one.
+         *
+         * @param newItems A list of the items in the new page.
+         * @param hasMore Whether there are more pages to load.
+         */
+        public abstract void onPageLoaded(List<T> newItems, boolean hasMore);
     }
 
     public interface InfiniteListController {
@@ -102,20 +128,12 @@ public class InfiniteScrollUtils {
             adapter.setProgressVisible(true);
             pageLoader.loadNextPage(new PageLoadCallback<T>() {
                 @Override
-                public void onPartialPageLoaded(List<T> newItems) {
+                public void onPageLoaded(List<T> newItems, boolean hasMore) {
                     if (isAbandoned()) {
                         return;
                     }
                     adapter.addAll(newItems);
-                }
-
-                @Override
-                public void onPageLoaded(Page<T> newPage) {
-                    if (isAbandoned()) {
-                        return;
-                    }
-                    adapter.addAll(newPage.getResults());
-                    hasMoreItems = newPage.hasNext();
+                    hasMoreItems = hasMore;
                     if (!hasMoreItems) {
                         adapter.setProgressVisible(false);
                     }
