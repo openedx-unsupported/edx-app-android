@@ -54,8 +54,8 @@
     <string name="share_certificate_popup_header">Share your certificate via…</string>
 
     <!-- Data Usage Dialog -->
-    <!-- Alert dialog error message shown when using a feature with a required internet connection -->
-    <string name="need_data">This feature requires an active internet connection.</string>
+    <!-- Alert dialog error message shown when using a feature with a required Internet connection -->
+    <string name="need_data">This feature requires an active Internet connection.</string>
 
     <!-- Login Activity Place Holders -->
     <!-- Hint text for login field -->
@@ -398,7 +398,7 @@
     <string name="my_all_videos">All Videos</string>
     <!-- Title of recent videos section -->
     <string name="my_recent_videos">Recent Videos</string>
-    <!-- Label indicating user has no internet connection -->
+    <!-- Label indicating user has no Internet connection -->
     <string name="offline_text">Offline Mode</string>
     <!-- Label shown in videos section when user has no videos downloaded -->
     <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
@@ -441,7 +441,7 @@
     <string name="video_only_on_web_short">This video isn’t yet available on mobile.</string>
     <!-- Alert dialog title when login fails -->
     <string name="login_error">Sign-in Error</string>
-    <!-- Alert dialog title when login fails due to lack of internet -->
+    <!-- Alert dialog title when login fails due to lack of Internet -->
     <string name="no_connectivity">Connection Error</string>
 
     <!-- Wifi New Message -->
@@ -502,8 +502,8 @@
     <string name="open_destination_btn_text">Open {platform_destination} in my browser</string>
     <!-- Title of find course screen -->
     <string name="find_courses_title">Find Courses</string>
-    <!-- Message shown when attempting to find courses with no internet connection -->
-    <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the internet.</string>
+    <!-- Message shown when attempting to find courses with no Internet connection -->
+    <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the Internet.</string>
     <!-- Prompt allowing user to choose email program -->
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
@@ -554,7 +554,7 @@
     <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
     <!-- Message shown when user tries to view course handouts, but none are loaded and the user is offline -->
-    <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the internet.</string>
+    <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the Internet.</string>
     <string name="android">Android</string>
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
