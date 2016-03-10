@@ -142,7 +142,19 @@ public class DiscussionComment implements Serializable, IAuthorData {
                 public Date getCreatedAt() {
                     return endorsedAt;
                 }
+
+                @Override
+                public boolean isAuthorAnonymous() {
+                    // because a response cannot be endorsed anonymously
+                    return false;
+                }
             };
         }
+    }
+
+    @Override
+    public boolean isAuthorAnonymous() {
+        // because a comment or a response cannot be posted anonymously
+        return false;
     }
 }

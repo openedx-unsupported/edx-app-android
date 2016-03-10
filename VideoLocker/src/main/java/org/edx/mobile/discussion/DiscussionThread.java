@@ -108,7 +108,7 @@ public class DiscussionThread implements Serializable, IAuthorData {
     }
 
     public String getAuthor() {
-        if (author == null || author.isEmpty()) {
+        if (isAuthorAnonymous()) {
             return "anonymous";
         }
         return author;
@@ -195,4 +195,8 @@ public class DiscussionThread implements Serializable, IAuthorData {
         return comment.getThreadId().equals(identifier);
     }
 
+    @Override
+    public boolean isAuthorAnonymous() {
+        return author == null || author.isEmpty();
+    }
 }

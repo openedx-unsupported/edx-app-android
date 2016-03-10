@@ -42,7 +42,7 @@ public abstract class DiscussionTextUtils {
             final String authorLabel = authorData.getAuthorLabel();
 
             final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
-            if (config.isUserProfilesEnabled()) {
+            if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
                 authorSpan.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {
