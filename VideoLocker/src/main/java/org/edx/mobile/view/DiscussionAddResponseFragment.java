@@ -15,16 +15,20 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateCommentTask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -33,7 +37,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     static public String TAG = DiscussionAddResponseFragment.class.getCanonicalName();
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC_OBJ, optional = true)
-    DiscussionThread discussionTopic;
+    private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -59,6 +63,20 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     @Inject
     private Router router;
 
+    @Inject
+    ISegment segIO;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Map<String, String> values = new HashMap<>();
+        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
+        segIO.trackScreenView(ISegment.Screens.FORUM_ADD_RESPONSE,
+                discussionThread.getCourseId(), discussionThread.getTitle(), values);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_add_response, container, false);
@@ -67,14 +85,14 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textViewTitle.setText(discussionTopic.getTitle());
-        textViewResponse.setText(Html.fromHtml(discussionTopic.getRenderedBody()));
+        textViewTitle.setText(discussionThread.getTitle());
+        textViewResponse.setText(Html.fromHtml(discussionThread.getRenderedBody()));
         DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
                 R.string.post_attribution,
-                discussionTopic, new Runnable() {
+                discussionThread, new Runnable() {
                     @Override
                     public void run() {
-                        router.showUserProfile(getActivity(), discussionTopic.getAuthor());
+                        router.showUserProfile(getActivity(), discussionThread.getAuthor());
                     }
                 });
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +126,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
         final CommentBody commentBody = new CommentBody();
         commentBody.setRawBody(editTextNewComment.getText().toString());
-        commentBody.setThreadId(discussionTopic.getIdentifier());
+        commentBody.setThreadId(discussionThread.getIdentifier());
         commentBody.setParentId(null);
 
         createCommentTask = new CreateCommentTask(getActivity(), commentBody) {

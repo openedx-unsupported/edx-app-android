@@ -8,6 +8,8 @@ import com.segment.analytics.Traits;
 
 import org.edx.mobile.util.images.ShareUtils;
 
+import java.util.Map;
+
 public interface ISegment {
 
     /*
@@ -50,9 +52,13 @@ public interface ISegment {
 
     /* Events not mentioned in PDF */
 
-    Properties trackScreenView(String screenName);
+    Properties trackScreenView(@NonNull String screenName);
 
-    Properties trackScreenView(String screenName, String courseId, String value);
+    Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+            @Nullable String value);
+
+    Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+            @Nullable String value, @Nullable Map<String, String> values);
 
     Properties trackDownloadComplete(String videoId, String courseId,
             String unitUrl);
@@ -66,7 +72,7 @@ public interface ISegment {
             String subSection, String enrollmentId, long videoCount);
 
     Properties trackUserLogin(String method);
-    
+
     Properties trackUserLogout();
 
     Properties trackTranscriptLanguage(String videoId, Double currentTime,
@@ -77,9 +83,9 @@ public interface ISegment {
 
     Properties trackVideoOrientation(String videoId, Double currentTime,
             boolean isLandscape, String courseId, String unitUrl);
-    
+
     Properties trackUserSignUpForAccount();
-    
+
     Properties trackUserFindsCourses();
 
     Properties trackCreateAccountClicked(String appVersion, String source);
@@ -98,7 +104,7 @@ public interface ISegment {
      * @param tracker
      */
     void setTracker(ISegmentTracker tracker);
-    
+
     Properties trackUserConnectionSpeed(String connectionType, float connectionSpeed);
 
     Properties certificateShared(@NonNull String courseId, @NonNull String certificateUrl, @NonNull ShareUtils.ShareType shareType);
@@ -157,6 +163,10 @@ public interface ISegment {
         String CATEGORY = "category";
         String LABEL = "label";
         String ACTION = "action";
+        String SEARCH_STRING = "search_string";
+        String TOPIC_ID = "topic_id";
+        String THREAD_ID = "thread_id";
+        String RESPONSE_ID = "response_id";
 
         String COMPONENT_VIEWED = "Component Viewed";
     }
@@ -230,6 +240,8 @@ public interface ISegment {
 
         String WIFI = "wifi";
         String CELL_DATA = "cell_data";
+        String POSTS_ALL = "all_posts";
+        String POSTS_FOLLOWING = "posts_following";
     }
 
     interface Screens {
@@ -248,6 +260,15 @@ public interface ISegment {
         String MY_VIDEOS_RECENT = "My Videos - Recent Videos";
         String MY_COURSES = "My Courses";
         String SETTINGS = "Settings";
+
+        String FORUM_VIEW_TOPICS = "Forum: View Topics";
+        String FORUM_SEARCH_THREADS = "Forum: Search Threads";
+        String FORUM_VIEW_TOPIC_THREADS = "Forum: View Topic Threads";
+        String FORUM_CREATE_TOPIC_THREAD = "Forum: Create Topic Thread";
+        String FORUM_VIEW_THREAD = "Forum: View Thread";
+        String FORUM_ADD_RESPONSE = "Forum: Add Thread Response";
+        String FORUM_VIEW_RESPONSE_COMMENTS = "Forum: View Response Comments";
+        String FORUM_ADD_RESPONSE_COMMENT = "Forum: Add Response Comment";
     }
 
     interface Events {

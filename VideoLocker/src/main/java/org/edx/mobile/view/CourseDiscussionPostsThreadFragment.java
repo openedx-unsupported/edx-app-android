@@ -278,4 +278,5 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
         }
     }
+
 }

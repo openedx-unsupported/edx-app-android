@@ -20,9 +20,13 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetResponsesListTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
@@ -49,6 +53,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     @Inject
     private Router router;
+
+    @Inject
+    ISegment segIO;
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
@@ -90,6 +97,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        Map<String, String> values = new HashMap<>();
+        values.put(ISegment.Keys.TOPIC_ID, discussionThread.getTopicId());
+        values.put(ISegment.Keys.THREAD_ID, discussionThread.getIdentifier());
+        segIO.trackScreenView(ISegment.Screens.FORUM_VIEW_THREAD,
+                courseData.getCourse().getId(), discussionThread.getTitle(), values);
     }
 
     @Override
@@ -119,12 +132,12 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     @Override
     public void onClickAddComment(@NonNull DiscussionComment response) {
-        router.showCourseDiscussionAddComment(getActivity(), response);
+        router.showCourseDiscussionAddComment(getActivity(), response, discussionThread);
     }
 
     @Override
     public void onClickViewComments(@NonNull DiscussionComment response) {
-        router.showCourseDiscussionComments(getActivity(), response, discussionThread.isClosed());
+        router.showCourseDiscussionComments(getActivity(), response, discussionThread);
     }
 
     private static class ResponsesLoader implements

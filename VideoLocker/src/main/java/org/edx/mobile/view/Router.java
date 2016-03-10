@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.inject.Inject;
@@ -16,7 +16,6 @@ import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionTopic;
-
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
@@ -44,7 +43,6 @@ public class Router {
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
-    public static final String EXTRA_DISCUSSION_TOPIC_CLOSED = "discussion_topic_closed";
 
     @Inject
     Config config;
@@ -213,10 +211,10 @@ public class Router {
         activity.startActivity(addPostIntent);
     }
 
-    public void showCourseDiscussionComments(Context context, DiscussionComment comment, boolean isThreadClosed) {
+    public void showCourseDiscussionComments(Context context, DiscussionComment comment, DiscussionThread discussionThread) {
         Intent commentListIntent = new Intent(context, CourseDiscussionCommentsActivity.class);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT, comment);
-        commentListIntent.putExtra(Router.EXTRA_DISCUSSION_TOPIC_CLOSED, isThreadClosed);
+        commentListIntent.putExtra(Router.EXTRA_DISCUSSION_THREAD, discussionThread);
         commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(commentListIntent);
     }
@@ -252,8 +250,9 @@ public class Router {
         context.startActivity(addResponseIntent);
     }
 
-    public void showCourseDiscussionAddComment(Context context, DiscussionComment discussionComment) {
+    public void showCourseDiscussionAddComment(Context context, DiscussionComment discussionComment, DiscussionThread discussionThread) {
         Intent addResponseIntent = new Intent(context, DiscussionAddCommentActivity.class);
+        addResponseIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
         addResponseIntent.putExtra(EXTRA_DISCUSSION_COMMENT, discussionComment);
         addResponseIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(addResponseIntent);

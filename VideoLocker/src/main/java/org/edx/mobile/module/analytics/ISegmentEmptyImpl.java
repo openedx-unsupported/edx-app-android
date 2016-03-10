@@ -8,6 +8,8 @@ import com.segment.analytics.Traits;
 
 import org.edx.mobile.util.images.ShareUtils;
 
+import java.util.Map;
+
 /**
  * Created by rohan on 2/8/15.
  *
@@ -64,12 +66,20 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
-    public Properties trackScreenView(String screenName) {
+    public Properties trackScreenView(@NonNull String screenName) {
         return null;
     }
 
     @Override
-    public Properties trackScreenView(String screenName, String courseId, String value) {
+    public Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                                      @Nullable String action) {
+        return null;
+    }
+
+    @Override
+    public Properties trackScreenView(@NonNull String screenName, @Nullable String courseId,
+                                      @Nullable String action,
+                                      @Nullable Map<String, String> values) {
         return null;
     }
 

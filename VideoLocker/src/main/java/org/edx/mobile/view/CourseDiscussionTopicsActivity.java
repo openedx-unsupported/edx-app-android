@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.analytics.ISegment;
 
 import roboguice.inject.InjectExtra;
 
@@ -23,6 +24,8 @@ public class CourseDiscussionTopicsActivity extends BaseSingleFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         blockDrawerFromOpening();
+        environment.getSegment().trackScreenView(ISegment.Screens.FORUM_VIEW_TOPICS,
+                courseData.getCourse().getId(), null, null);
     }
 
     @Override

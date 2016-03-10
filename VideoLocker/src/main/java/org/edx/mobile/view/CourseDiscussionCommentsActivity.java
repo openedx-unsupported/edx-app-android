@@ -1,17 +1,12 @@
 package org.edx.mobile.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
-
-import roboguice.inject.InjectExtra;
 
 public class CourseDiscussionCommentsActivity extends BaseSingleFragmentActivity {
 
