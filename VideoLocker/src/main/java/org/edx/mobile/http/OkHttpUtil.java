@@ -69,50 +69,6 @@ public class OkHttpUtil {
     }
 
     /**
-     * Sets cookie headers like "X-CSRFToken" in the given bundle.
-     * This method is helpful in making API calls the way website does.
-     *
-     * @return
-     * @throws Exception
-     */
-    public static Bundle setCookieHeaders(Response response, Bundle headerBundle) throws Exception {
-        Headers headers = response.headers();
-
-        for (int i = 0; i < headers.size(); i++) {
-            if (headers.name(i).equalsIgnoreCase("csrftoken")) {
-                headerBundle.putString("Cookie", headers.name(i)
-                        + "=" + headers.value(i));
-                headerBundle.putString("X-CSRFToken", headers.value(i));
-                break;
-            }
-        }
-
-        return headerBundle;
-    }
-
-    /**
-     * add fields to request header
-     */
-    public static void addHeader(Request.Builder builder, Bundle bundle) {
-        if (bundle != null) {
-            for (String key : bundle.keySet()) {
-                builder.addHeader(key, bundle.getString(key));
-            }
-        }
-    }
-
-    /**
-     * add fileds to request header.
-     */
-    public static Response addHeader(Interceptor.Chain chain, Bundle bundle) throws IOException {
-        Request originalRequest = chain.request();
-
-        Request.Builder builder = originalRequest.newBuilder();
-        addHeader(builder, bundle);
-        return chain.proceed(builder.build());
-    }
-
-    /**
      * get cookie for request. [GET or POST]
      */
     public static List<HttpCookie> getCookies(Context context, String url, boolean isGet)

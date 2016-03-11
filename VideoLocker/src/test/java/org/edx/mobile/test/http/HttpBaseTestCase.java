@@ -244,10 +244,7 @@ public class HttpBaseTestCase extends BaseTestCase {
                     response.setResponseCode(200);
                 }
             } else if ("GET".equals(method)) {
-                if (urlMatches(path, "/login")) {
-                    response.setBody(getMockResponse("get_login"));
-                    response.setResponseCode(200);
-                } else if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
+                if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
                     String baseMockUrl = getBaseMockUrl();
                     response.setBody(String.format(Locale.US, getMockResponse("get_my_user_info"), baseMockUrl));
                     response.setResponseCode(200);

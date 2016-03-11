@@ -124,22 +124,6 @@ public class RestApiManager implements IApi{
     @Override
     public ResetPasswordResponse resetPassword(String emailId) throws Exception {
         OkHttpClient client = OkHttpUtil.getClient(context);
-        String url = getBaseUrl() + "/login";
-        Request request = new Request.Builder()
-            .url(url)
-            .build();
-        Response response = client.newCall(request).execute();
-       // response.body().close();
-
-        final Bundle headerBundle = new Bundle();
-        OkHttpUtil.setCookieHeaders(response, headerBundle);
-
-        client.interceptors().add(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                return OkHttpUtil.addHeader(chain, headerBundle);
-            }
-        });
         RestAdapter restAdapter = new RestAdapter.Builder()
             .setClient(new Ok3Client(client))
             .setEndpoint(getBaseUrl())
