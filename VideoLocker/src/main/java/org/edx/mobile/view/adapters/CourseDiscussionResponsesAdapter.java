@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconImageView;
@@ -225,8 +226,15 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     private void bindNumberResponsesView(NumberResponsesViewHolder holder) {
-        holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().getQuantityString(
-                R.plurals.number_responses_or_comments_responses_label, discussionThread.getCommentCount(), discussionThread.getCommentCount()));
+        int responsesCount = discussionThread.getResponseCount();
+        if (responsesCount < 0) {
+            // The responses count is not available yet, so hide the view.
+            holder.numberResponsesOrCommentsLabel.setVisibility(View.GONE);
+        } else {
+            holder.numberResponsesOrCommentsLabel.setVisibility(View.VISIBLE);
+            holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().getQuantityString(
+                    R.plurals.number_responses_or_comments_responses_label, responsesCount, responsesCount));
+        }
     }
 
     private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder) {
@@ -352,23 +360,32 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     private void bindNumberCommentsView(NumberResponsesViewHolder holder, DiscussionComment response) {
+        String text;
+        Icon icon;
+
         int numChildren = response == null ? 0 : response.getChildCount();
 
-        if (numChildren == 0) {
+        if (response.getChildCount() == 0) {
             if (discussionThread.isClosed()) {
-                holder.numberResponsesOrCommentsLabel.setText(context.getString(
-                        R.string.discussion_add_comment_disabled_title));
-                holder.numberResponsesIconImageView.setIcon(FontAwesomeIcons.fa_lock);
+                text = context.getString(R.string.discussion_add_comment_disabled_title);
+                icon = FontAwesomeIcons.fa_lock;
             } else {
-                holder.numberResponsesOrCommentsLabel.setText(context.getString(
-                        R.string.number_responses_or_comments_add_comment_label));
-                holder.numberResponsesIconImageView.setIcon(FontAwesomeIcons.fa_comment);
+                text = context.getString(R.string.number_responses_or_comments_add_comment_label);
+                icon = FontAwesomeIcons.fa_comment;
             }
         } else {
-            holder.numberResponsesOrCommentsLabel.setText(holder.numberResponsesOrCommentsLabel.getResources().
-                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren));
-            holder.numberResponsesIconImageView.setIcon(FontAwesomeIcons.fa_comment);
+            text = context.getResources().getQuantityString(
+                    R.plurals.number_responses_or_comments_comments_label, numChildren, numChildren);
+            icon = FontAwesomeIcons.fa_comment;
         }
+
+        holder.numberResponsesOrCommentsLabel.setText(text);
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                holder.numberResponsesOrCommentsLabel,
+                new IconDrawable(context, icon)
+                        .colorRes(context, R.color.edx_grayscale_neutral_base)
+                        .sizeRes(context, R.dimen.edx_xxx_small),
+                null, null, null);
     }
 
     @Override
@@ -394,6 +411,11 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         return RowType.RESPONSE;
     }
 
+    public void updateDiscussionThread(@NonNull DiscussionThread discussionThread) {
+        this.discussionThread = discussionThread;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void clear() {
         discussionResponses.clear();
@@ -408,10 +430,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     public void addNewResponse(@NonNull DiscussionComment response) {
         discussionResponses.add(response);
+        discussionThread.incrementResponseCount();
         notifyDataSetChanged();
     }
 
     public void addNewComment(@NonNull DiscussionComment parent) {
+        discussionThread.incrementCommentCount();
         String parentId = parent.getIdentifier();
         for (DiscussionComment response : discussionResponses) {
             if (parentId.equals(response.getIdentifier())) {

@@ -293,6 +293,8 @@
         <item name="android:textSize">@dimen/edx_xxx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing</item>
     </style>
 
 </resources>

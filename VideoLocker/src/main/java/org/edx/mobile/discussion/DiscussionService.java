@@ -107,6 +107,11 @@ public interface DiscussionService {
             throws RetroHttpException;
 
 
+    @GET("/api/discussion/v1/threads/{thread_id}/")
+    DiscussionThread getThread(@Path("thread_id") String threadId)
+            throws RetroHttpException;
+
+
     @GET("/api/discussion/v1/comments/")
     Page<DiscussionComment> getResponsesList(@Query("thread_id") String threadId,
                                              @Query("page_size") int pageSize,

@@ -106,6 +106,10 @@ public class DiscussionAPI {
         return discussionService.searchThreadList(courseId, text, PAGE_SIZE, page);
     }
 
+    public DiscussionThread getThread(String threadId) throws RetroHttpException {
+        return discussionService.getThread(threadId);
+    }
+
     // get the responses, and all comments for each of which, of a thread
     public Page<DiscussionComment> getResponsesList(String threadId, int page)
             throws RetroHttpException {
