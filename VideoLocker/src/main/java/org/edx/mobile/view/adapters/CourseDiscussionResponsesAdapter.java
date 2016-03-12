@@ -430,10 +430,12 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
     public void addNewResponse(@NonNull DiscussionComment response) {
         discussionResponses.add(response);
+        discussionThread.incrementResponseCount();
         notifyDataSetChanged();
     }
 
     public void addNewComment(@NonNull DiscussionComment parent) {
+        discussionThread.incrementCommentCount();
         String parentId = parent.getIdentifier();
         for (DiscussionComment response : discussionResponses) {
             if (parentId.equals(response.getIdentifier())) {

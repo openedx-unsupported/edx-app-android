@@ -135,11 +135,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         if (discussionThread.containsComment(event.getComment())) {
             if (event.getParent() == null) {
                 // We got a response
-                discussionThread.incrementResponseCount();
                 courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
             } else {
                 // We got a comment to a response
-                discussionThread.incrementCommentCount();
                 courseDiscussionResponsesAdapter.addNewComment(event.getParent());
             }
         }
