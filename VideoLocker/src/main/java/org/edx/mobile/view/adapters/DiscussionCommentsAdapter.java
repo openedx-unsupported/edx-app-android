@@ -17,11 +17,28 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 
-public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
+import java.util.ArrayList;
+import java.util.List;
 
+public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements InfiniteScrollUtils.ListContentController<DiscussionComment> {
+
+    @NonNull
     private final Context context;
+
+    @NonNull
     private final Listener listener;
+
+    @NonNull
     private DiscussionComment response;
+
+    private final List<DiscussionComment> discussionComments = new ArrayList<>();
+
+    private boolean progressVisible = false;
+
+    static class RowType {
+        static final int COMMENT = 1;
+        static final int PROGRESS = 2;
+    }
 
     public interface Listener {
         void reportComment(@NonNull DiscussionComment comment);
@@ -29,14 +46,33 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
         void onClickAuthor(@NonNull String username);
     }
 
-    public DiscussionCommentsAdapter(Context context, Listener listener, DiscussionComment response) {
+    public DiscussionCommentsAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionComment response) {
         this.context = context;
         this.listener = listener;
         this.response = response;
     }
 
     @Override
+    public void setProgressVisible(boolean visible) {
+        if (progressVisible != visible) {
+            progressVisible = visible;
+            int progressRowIndex = 1 + discussionComments.size();
+            if (visible) {
+                notifyItemInserted(progressRowIndex);
+            } else {
+                notifyItemRemoved(progressRowIndex);
+            }
+        }
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == RowType.PROGRESS) {
+            return new RecyclerView.ViewHolder(LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.list_view_footer_progress, parent, false)) {};
+        }
+
         return new ViewHolder(LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.row_discussion_comment, parent, false));
@@ -44,6 +80,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        if (!(viewHolder instanceof ViewHolder)) return;
         final ViewHolder holder = (ViewHolder) viewHolder;
         final DiscussionComment discussionComment;
         final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.discussionCommentRow.getLayoutParams();
@@ -55,9 +92,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
             discussionComment = response;
             backgroundRes = R.drawable.row_discussion_first_comment_background;
             layoutParams.topMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
-            final int childrenSize = discussionComment.getChildren().size();
+            final int childCount = discussionComment.getChildCount();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
-                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, childrenSize, childrenSize));
+                    getQuantityString(R.plurals.number_responses_or_comments_comments_label, childCount, childCount));
             iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_comment)
                     .sizeRes(context, R.dimen.edx_xxx_small)
                     .colorRes(context, R.color.edx_grayscale_neutral_base);
@@ -68,8 +105,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
             final int extraSidePadding = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
             holder.discussionCommentRow.setPadding(extraSidePadding, 0, extraSidePadding, 0);
 
-            discussionComment = response.getChildren().get(position - 1);
-            if (position == getItemCount() - 1) {
+            discussionComment = discussionComments.get(position - 1);
+            if (!progressVisible && position == getItemCount() - 1) {
                 backgroundRes = R.drawable.row_discussion_last_comment_background;
                 layoutParams.bottomMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
             } else {
@@ -107,7 +144,34 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 1 + response.getChildren().size();
+        int total = 1 + discussionComments.size();
+        if (progressVisible)
+            total++;
+        return total;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (progressVisible && position == getItemCount() - 1) {
+            return RowType.PROGRESS;
+        }
+
+        return RowType.COMMENT;
+    }
+
+    @Override
+    public void clear() {
+        int commentsCount = discussionComments.size();
+        discussionComments.clear();
+        notifyItemRangeRemoved(1, commentsCount);
+    }
+
+    @Override
+    public void addAll(List<DiscussionComment> items) {
+        int lastCommentIndex = discussionComments.size();
+        discussionComments.addAll(items);
+        notifyItemRangeInserted(lastCommentIndex + 1, items.size());
+        notifyItemChanged(lastCommentIndex); // Last item's background is different, so must be refreshed as well
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
@@ -126,16 +190,19 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter {
     }
 
     public void insertCommentAtEnd(DiscussionComment comment) {
-        response.getChildren().add(comment);
-        notifyItemInserted(response.getChildren().size());
-        notifyItemChanged(response.getChildren().size() - 1); // Last item's background is different, so must be refreshed as well
+        response.incrementChildCount();
+        int lastCommentIndex = discussionComments.size();
+        discussionComments.add(comment);
+        notifyItemInserted(lastCommentIndex + 1);
+        notifyItemChanged(lastCommentIndex); // Last item's background is different, so must be refreshed as well
+        notifyItemChanged(0); // Comments count is shown in the response header, so it also needs to be refreshed.
     }
 
     public void updateComment(DiscussionComment comment) {
-        for (int i = 0; i < response.getChildren().size(); ++i) {
-            if (response.getChildren().get(i).getIdentifier().equals(comment.getIdentifier())) {
-                response.getChildren().set(i, comment);
-                notifyItemChanged(i + 1);
+        for (int i = 0; i < discussionComments.size(); ++i) {
+            if (discussionComments.get(i).getIdentifier().equals(comment.getIdentifier())) {
+                discussionComments.set(i, comment);
+                notifyItemChanged(1 + i);
                 break;
             }
         }

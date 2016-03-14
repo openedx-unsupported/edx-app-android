@@ -110,7 +110,6 @@ public class DiscussionAPI {
         return discussionService.getThread(threadId);
     }
 
-    // get the responses, and all comments for each of which, of a thread
     public Page<DiscussionComment> getResponsesList(String threadId, int page)
             throws RetroHttpException {
         return discussionService.getResponsesList(threadId, PAGE_SIZE, page);
@@ -120,6 +119,11 @@ public class DiscussionAPI {
                                                                boolean endorsed)
             throws RetroHttpException {
         return discussionService.getResponsesListForQuestion(threadId, PAGE_SIZE, page, endorsed);
+    }
+
+    public Page<DiscussionComment> getCommentsList(String responseId, int pageSize, int page)
+            throws RetroHttpException {
+        return discussionService.getCommentsList(responseId, pageSize, page);
     }
 
     public DiscussionThread setThreadFlagged(DiscussionThread thread, boolean flagged)

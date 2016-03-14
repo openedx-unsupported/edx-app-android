@@ -127,6 +127,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Override
     public void onDestroy() {
         super.onDestroy();
+        responsesLoader.reset();
         EventBus.getDefault().unregister(this);
     }
 
