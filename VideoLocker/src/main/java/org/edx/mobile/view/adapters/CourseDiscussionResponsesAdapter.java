@@ -60,6 +60,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     private final List<DiscussionComment> discussionResponses = new ArrayList<>();
 
     private boolean progressVisible = false;
+    // Record the current time at initialization to keep the display of the elapsed time durations stable.
+    private long initialTimeStampMs = System.currentTimeMillis();
 
     static class RowType {
         static final int THREAD = 0;
@@ -152,8 +154,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
         DiscussionTextUtils.setAuthorAttributionText(
                 holder.authorLayoutViewHolder.discussionAuthorTextView,
-                R.string.post_attribution,
-                discussionThread, new Runnable() {
+                R.string.post_attribution, discussionThread, initialTimeStampMs,
+                new Runnable() {
                     @Override
                     public void run() {
                         listener.onClickAuthor(discussionThread.getAuthor());
@@ -273,7 +275,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         DiscussionTextUtils.setAuthorAttributionText(
                 holder.authorLayoutViewHolder.discussionAuthorTextView,
                 R.string.post_attribution,
-                comment, new Runnable() {
+                comment, initialTimeStampMs, new Runnable() {
                     @Override
                     public void run() {
                         listener.onClickAuthor(comment.getAuthor());
@@ -323,7 +325,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             }
             holder.responseAnswerTextView.setText(endorsementTypeStringRes);
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
-                    attributionStringRes, comment.getEndorserData(),
+                    attributionStringRes, comment.getEndorserData(), initialTimeStampMs,
                     new Runnable() {
                         @Override
                         public void run() {
@@ -434,6 +436,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public void addNewResponse(@NonNull DiscussionComment response) {
+        // Since, we have a added a new response we need to update timestamps of all responses
+        initialTimeStampMs = System.currentTimeMillis();
         int offset = 1 + discussionResponses.size();
         discussionResponses.add(response);
         discussionThread.incrementResponseCount();
@@ -442,6 +446,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
     }
 
     public void addNewComment(@NonNull DiscussionComment parent) {
+        // Since, we have a added a new comment we need to update timestamps of all responses as well
+        initialTimeStampMs = System.currentTimeMillis();
         discussionThread.incrementCommentCount();
         String parentId = parent.getIdentifier();
         for (ListIterator<DiscussionComment> responseIterator = discussionResponses.listIterator();
