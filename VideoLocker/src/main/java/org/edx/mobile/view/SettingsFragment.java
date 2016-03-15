@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 
 import com.google.inject.Inject;
@@ -27,6 +28,9 @@ public class SettingsFragment extends BaseFragment {
     @Inject
     protected IEdxEnvironment environment;
 
+    @Inject
+    ExtensionRegistry extensionRegistry;
+
     private Switch wifiSwitch;
 
     @Override
@@ -42,8 +46,11 @@ public class SettingsFragment extends BaseFragment {
         final View layout = inflater.inflate(R.layout.fragment_settings, container, false);
         wifiSwitch = (Switch) layout.findViewById(R.id.wifi_setting);
         updateWifiSwitch();
+        final LinearLayout settingsLayout = (LinearLayout) layout.findViewById(R.id.settings_layout);
+        for (SettingsExtension extension : extensionRegistry.forType(SettingsExtension.class)) {
+            extension.onCreateSettingsView(settingsLayout);
+        }
         return layout;
-
     }
 
     private void updateWifiSwitch() {
