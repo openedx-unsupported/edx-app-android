@@ -216,15 +216,23 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
+        DiscussionThread newThread = event.getDiscussionThread();
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
-        if (discussionTopic.containsThread(event.getDiscussionThread())) {
+        if (discussionTopic.containsThread(newThread)) {
+            if (postsFilter == DiscussionPostsFilter.UNANSWERED &&
+                    newThread.getType() != DiscussionThread.ThreadType.QUESTION) {
+                return;
+            }
+
             int i = 0;
             for (; i < discussionPostsAdapter.getCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
                     break;
                 }
             }
-            discussionPostsAdapter.insert(event.getDiscussionThread(), i);
+            discussionPostsAdapter.insert(newThread, i);
+            // move the ListView's scroll to that newly added post's position
+            discussionPostsListView.setSelection(i);
             // In case this is the first addition, we need to hide the no-item-view
             ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         }
