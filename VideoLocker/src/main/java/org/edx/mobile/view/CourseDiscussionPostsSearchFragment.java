@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 
 import org.edx.mobile.R;
@@ -109,4 +110,14 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
             }
         });
     }
+
+    @Override
+    public void onRestart() {
+        nextPage = 1;
+        controller.resetSilently();
+    }
+
+    @Override
+    public void onItemClick(DiscussionThread thread, AdapterView<?> parent, View view,
+                            int position, long id) {}
 }

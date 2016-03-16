@@ -125,6 +125,15 @@ public abstract class BaseListAdapter<T> extends ArrayAdapter<T> implements OnIt
         notifyDataSetChanged();
     }
 
+    public void moveToTop(int itemPosition) {
+        if (itemPosition < objects.size()) {
+            T item = objects.get(itemPosition);
+            objects.remove(itemPosition);
+            objects.add(0, item);
+            notifyDataSetChanged();
+        }
+    }
+
     /**
      * Clears all items from this adapter.
      */

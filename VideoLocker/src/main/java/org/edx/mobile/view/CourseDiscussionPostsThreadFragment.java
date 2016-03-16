@@ -60,6 +60,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private GetThreadListTask getThreadListTask;
     private int nextPage = 1;
+    private int mSelectedItem = -1;
 
     private enum EmptyQueryResultsFor {
         FOLLOWING,
@@ -169,6 +170,24 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onRestart() {
+        if (postsSort == DiscussionPostsSort.LAST_ACTIVITY_AT && mSelectedItem != -1) {
+            // Move the last viewed thread to the top
+            discussionPostsAdapter.moveToTop(mSelectedItem);
+            mSelectedItem = -1;
+        }
+
+        nextPage = 1;
+        controller.resetSilently();
+    }
+
+    @Override
+    public void onItemClick(DiscussionThread thread, AdapterView<?> parent, View view,
+                            int position, long id) {
+        mSelectedItem = position;
     }
 
     @SuppressWarnings("unused")

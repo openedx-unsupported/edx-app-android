@@ -106,4 +106,9 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ((CourseDiscussionPostsBaseFragment)getFirstFragment()).onRestart();
+    }
 }
