@@ -16,13 +16,7 @@ public abstract class SetThreadVotedTask extends Task<DiscussionThread> {
         this.voted = voted;
     }
 
-    public DiscussionThread call() {
-        try {
-            return environment.getDiscussionAPI().setThreadVoted(thread, voted);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-            return null;
-        }
+    public DiscussionThread call() throws Exception {
+        return environment.getDiscussionAPI().setThreadVoted(thread, voted);
     }
 }

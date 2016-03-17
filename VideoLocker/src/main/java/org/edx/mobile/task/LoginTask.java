@@ -1,6 +1,7 @@
 package org.edx.mobile.task;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.edx.mobile.model.api.AuthResponse;
 import org.edx.mobile.services.ServiceManager;
@@ -11,10 +12,12 @@ import org.edx.mobile.services.ServiceManager;
  *
  */
 public abstract class LoginTask extends Task<AuthResponse> {
+    @NonNull
     String username;
+    @NonNull
     String password;
 
-    public LoginTask(Context context, String username, String password) {
+    public LoginTask(@NonNull Context context, @NonNull String username, @NonNull String password) {
         super(context);
         this.username = username;
         this.password = password;
@@ -22,15 +25,7 @@ public abstract class LoginTask extends Task<AuthResponse> {
 
     @Override
     public AuthResponse call() throws Exception{
-        try {
-            if(username!=null) {
-                return getAuthResponse(context, username, password);
-            }
-        } catch(Exception ex) {
-            handle(ex);
-            logger.error(ex);
-        }
-        return null;
+        return getAuthResponse(context, username, password);
     }
 
     public  AuthResponse getAuthResponse(Context context, String username, String password) throws Exception {

@@ -1,19 +1,21 @@
 package org.edx.mobile.task;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.model.Page;
 
 public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>> {
 
+    @NonNull
     String threadId;
     int page = 1;
     boolean isQuestionType;
     boolean shouldGetEndorsed;
 
-    public GetResponsesListTask(Context context, String threadId, int page, boolean isQuestionType,
-                                boolean shouldGetEndorsed) {
+    public GetResponsesListTask(@NonNull Context context, @NonNull String threadId, int page,
+                                boolean isQuestionType, boolean shouldGetEndorsed) {
         super(context);
         this.threadId = threadId;
         this.page = page;
@@ -22,18 +24,10 @@ public abstract class GetResponsesListTask extends Task<Page<DiscussionComment>>
     }
 
     public Page<DiscussionComment> call() throws Exception {
-        try {
-            if (threadId != null) {
-                if (isQuestionType) {
-                    return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
-                            page, shouldGetEndorsed);
-                }
-                return environment.getDiscussionAPI().getResponsesList(threadId, page);
-            }
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
+        if (isQuestionType) {
+            return environment.getDiscussionAPI().getResponsesListForQuestion(threadId,
+                    page, shouldGetEndorsed);
         }
-        return null;
+        return environment.getDiscussionAPI().getResponsesList(threadId, page);
     }
 }

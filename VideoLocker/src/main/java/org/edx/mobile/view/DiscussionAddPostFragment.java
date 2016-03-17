@@ -211,7 +211,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
 
             @Override
             public void onException(Exception ex) {
-                logger.error(ex);
+                super.onException(ex);
                 addPostButton.setEnabled(true);
             }
         };
@@ -258,11 +258,6 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 values.put(ISegment.Keys.TOPIC_ID, selectedTopic.getIdentifier());
                 segIO.trackScreenView(ISegment.Screens.FORUM_CREATE_TOPIC_THREAD,
                         courseData.getCourse().getId(), selectedTopic.getName(), values);
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
             }
         };
         getTopicListTask.setMessageCallback(null);

@@ -130,8 +130,6 @@ public class UserProfileFragment extends BaseFragment {
                 @Override
                 protected void onException(Exception e) throws RuntimeException {
                     viewHolder.loadingIndicator.setVisibility(View.GONE);
-                    logger.error(e);
-                    showErrorMessage(e);
                 }
             };
             getAccountTask.setProgressCallback(null); // Disable built-in loading indicator

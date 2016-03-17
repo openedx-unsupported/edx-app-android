@@ -93,13 +93,6 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                     }
                 }
             }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-
-            }
         };
         searchThreadListTask.setProgressCallback(null);
         searchThreadListTask.execute();

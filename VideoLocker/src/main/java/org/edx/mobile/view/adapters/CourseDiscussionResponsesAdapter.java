@@ -168,15 +168,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 SetThreadFlaggedTask task = new SetThreadFlaggedTask(context, discussionThread, !discussionThread.isAbuseFlagged()) {
                     @Override
                     public void onSuccess(DiscussionThread topicThread) {
-                        if (topicThread != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = topicThread;
-                            notifyItemChanged(0);
-                        }
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-                        logger.error(ex);
+                        CourseDiscussionResponsesAdapter.this.discussionThread = topicThread;
+                        notifyItemChanged(0);
                     }
                 };
                 task.execute();
@@ -195,16 +188,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 SetThreadVotedTask task = new SetThreadVotedTask(context, discussionThread, !discussionThread.isVoted()) {
                     @Override
                     public void onSuccess(DiscussionThread updatedDiscussionThread) {
-                        if (updatedDiscussionThread != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
-                            EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
-                            notifyItemChanged(0);
-                        }
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-                        logger.error(ex);
+                        CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
+                        EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
+                        notifyItemChanged(0);
                     }
                 };
                 task.execute();
@@ -218,16 +204,9 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 SetThreadFollowedTask task = new SetThreadFollowedTask(context, discussionThread, !discussionThread.isFollowing()) {
                     @Override
                     public void onSuccess(DiscussionThread updatedDiscussionThread) {
-                        if (updatedDiscussionThread != null) {
-                            CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
-                            EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
-                            notifyItemChanged(0);
-                        }
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-                        logger.error(ex);
+                        CourseDiscussionResponsesAdapter.this.discussionThread = updatedDiscussionThread;
+                        EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(updatedDiscussionThread));
+                        notifyItemChanged(0);
                     }
                 };
                 task.execute();
@@ -289,15 +268,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 SetCommentFlaggedTask task = new SetCommentFlaggedTask(context, comment, !comment.isAbuseFlagged()) {
                     @Override
                     public void onSuccess(DiscussionComment comment) {
-                        if (comment != null) {
-                            discussionResponses.set(position - 1, comment);
-                            notifyItemChanged(position);
-                        }
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-                        logger.error(ex);
+                        discussionResponses.set(position - 1, comment);
+                        notifyItemChanged(position);
                     }
                 };
                 task.execute();
@@ -350,15 +322,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 SetCommentVotedTask task = new SetCommentVotedTask(context, response, !response.isVoted()) {
                     @Override
                     public void onSuccess(DiscussionComment comment) {
-                        if (comment != null) {
-                            discussionResponses.set(position - 1, comment);
-                            notifyItemChanged(position);
-                        }
-                    }
-
-                    @Override
-                    public void onException(Exception ex) {
-                        logger.error(ex);
+                        discussionResponses.set(position - 1, comment);
+                        notifyItemChanged(position);
                     }
                 };
                 task.execute();

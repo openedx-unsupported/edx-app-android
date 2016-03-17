@@ -99,17 +99,8 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         }
     }
 
-    protected void handle(final Exception ex) {
-        handler.post(new Runnable() {
-            public void run() {
-                showErrorMessage(ex);
-                onException(ex);
-            }
-        });
-    }
-
-    // TODO: Make this the default behaviour?
-    protected void showErrorMessage(final Exception ex) {
+    @Override
+    protected void onException(Exception ex) {
         final TaskMessageCallback callback = getMessageCallback();
         if (callback == null) {
             return;

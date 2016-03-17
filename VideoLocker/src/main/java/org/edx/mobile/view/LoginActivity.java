@@ -274,13 +274,13 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
                                 throw new LoginException(errorMsg);
                             }
                         } catch (LoginException ex) {
-                            logger.error(ex);
-                            handle(ex);
+                            super.onException(ex);
                         }
                     }
 
                     @Override
                     public void onException(Exception ex) {
+                        super.onException(ex);
                         onUserLoginFailure(ex, null, null);
                     }
 

@@ -29,9 +29,4 @@ public class SetThreadReadTask extends Task<DiscussionThread> {
     protected void onSuccess(DiscussionThread discussionThread) {
         EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
     }
-
-    @Override
-    protected void onException(Exception e) throws RuntimeException {
-        handle(e);
-    }
 }

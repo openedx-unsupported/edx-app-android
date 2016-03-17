@@ -106,12 +106,13 @@ public class CourseHandoutFragment extends BaseFragment {
 
             @Override
             public void onException(Exception ex) {
+                super.onException(ex);
+
                 if (getActivity() == null) {
                     return;
                 }
 
                 isHandoutFetched = false;
-                logger.error(ex);
                 CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
                         FontAwesomeIcons.fa_exclamation_circle);
             }

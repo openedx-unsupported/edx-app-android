@@ -229,11 +229,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                         }
                     }
                 }
-
-                @Override
-                public void onException(Exception ex) {
-                    logger.error(ex);
-                }
             };
             getResponsesListTask.setProgressCallback(null);
             getResponsesListTask.execute();

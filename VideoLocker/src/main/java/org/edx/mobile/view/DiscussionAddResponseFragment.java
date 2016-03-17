@@ -139,7 +139,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
             @Override
             public void onException(Exception ex) {
-                logger.error(ex);
+                super.onException(ex);
                 buttonAddComment.setEnabled(true);
             }
         };

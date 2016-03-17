@@ -17,35 +17,16 @@ public abstract class GetAnnouncementTask extends
     }
 
     public List<AnnouncementsModel> call() throws Exception{
-        try {
-            ServiceManager api = environment.getServiceManager();
-            
-            try {
-                // return instant data from cache
-                final List<AnnouncementsModel> list = api
-                        .getAnnouncement(enrollment.getCourse().getCourse_updates(), true);
-                if (list != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            try {
-                                onSuccess(list);
-                            }catch (Exception ex){
-                                logger.error(ex);
-                            }
-                            stopProgress();
-                        }
-                    });
-                }
-            } catch(Exception ex) {
-                logger.error(ex);
-            }
-            
-            return api.getAnnouncement(enrollment.getCourse().getCourse_updates(), false);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
+        ServiceManager api = environment.getServiceManager();
+
+        // return instant data from cache if available
+        List<AnnouncementsModel> list = api
+                .getAnnouncement(enrollment.getCourse().getCourse_updates(), true);
+        if (list == null) {
+            list = api.getAnnouncement(enrollment.getCourse().getCourse_updates(), false);
         }
-        return null;
+
+        return list;
     }
 
 }

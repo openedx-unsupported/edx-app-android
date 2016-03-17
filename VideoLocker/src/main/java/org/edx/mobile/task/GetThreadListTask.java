@@ -17,16 +17,20 @@ import java.util.List;
 
 public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
 
+    @NonNull
     final String courseId;
+    @NonNull
     final DiscussionTopic topic;
+    @NonNull
     final DiscussionPostsFilter filter;
+    @NonNull
     final DiscussionPostsSort orderBy;
     final int page;
 
-    public GetThreadListTask(Context context, String courseId,
-                             DiscussionTopic topic,
-                             DiscussionPostsFilter filter,
-                             DiscussionPostsSort orderBy,
+    public GetThreadListTask(@NonNull Context context, @NonNull String courseId,
+                             @NonNull DiscussionTopic topic,
+                             @NonNull DiscussionPostsFilter filter,
+                             @NonNull DiscussionPostsSort orderBy,
                              int page) {
         super(context);
         this.courseId = courseId;
@@ -37,22 +41,14 @@ public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
     }
 
     public Page<DiscussionThread> call() throws Exception {
-        try {
-            if (courseId != null) {
-                if (!topic.isFollowingType()) {
-                    return environment.getDiscussionAPI().getThreadList(courseId,
-                            getAllTopicIds(), filter.getQueryParamValue(),
-                            orderBy.getQueryParamValue(), page);
-                } else {
-                    return environment.getDiscussionAPI().getFollowingThreadList(courseId,
-                            filter.getQueryParamValue(), orderBy.getQueryParamValue(), page);
-                }
-            }
-        } catch (RetroHttpException ex) {
-            handle(ex);
-            logger.error(ex, true);
+        if (!topic.isFollowingType()) {
+            return environment.getDiscussionAPI().getThreadList(courseId,
+                    getAllTopicIds(), filter.getQueryParamValue(),
+                    orderBy.getQueryParamValue(), page);
+        } else {
+            return environment.getDiscussionAPI().getFollowingThreadList(courseId,
+                    filter.getQueryParamValue(), orderBy.getQueryParamValue(), page);
         }
-        return null;
     }
 
     @NonNull
