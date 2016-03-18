@@ -30,6 +30,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
 
     @NonNull
     private DiscussionComment response;
+    // Record the current time at initialization to keep the display of the elapsed time durations stable.
+    private long initialTimeStampMs = System.currentTimeMillis();
 
     private final List<DiscussionComment> discussionComments = new ArrayList<>();
 
@@ -133,8 +135,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         holder.discussionCommentBody.setText(commentBody);
 
         DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView,
-                R.string.post_attribution,
-                discussionComment, new Runnable() {
+                R.string.post_attribution, discussionComment, initialTimeStampMs,
+                new Runnable() {
                     @Override
                     public void run() {
                         listener.onClickAuthor(discussionComment.getAuthor());
@@ -190,12 +192,11 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     }
 
     public void insertCommentAtEnd(DiscussionComment comment) {
+        // Since, we have a added a new comment we need to update timestamps of all comments
+        initialTimeStampMs = System.currentTimeMillis();
         response.incrementChildCount();
-        int lastCommentIndex = discussionComments.size();
         discussionComments.add(comment);
-        notifyItemInserted(lastCommentIndex + 1);
-        notifyItemChanged(lastCommentIndex); // Last item's background is different, so must be refreshed as well
-        notifyItemChanged(0); // Comments count is shown in the response header, so it also needs to be refreshed.
+        notifyDataSetChanged();
     }
 
     public void updateComment(DiscussionComment comment) {
