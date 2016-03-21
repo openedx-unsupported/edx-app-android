@@ -289,8 +289,12 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             CourseComponent unit = getUnit(pos);
             CourseUnitFragment unitFragment;
             //FIXME - for the video, let's ignore studentViewMultiDevice for now
-            if (unit instanceof VideoBlockModel && ((VideoBlockModel)unit).getData().encodedVideos.getPreferredVideoInfo() != null) {
-                unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit);
+            if (unit instanceof VideoBlockModel &&
+                    ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null) {
+                    unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit);
+            } else if (unit instanceof VideoBlockModel &&
+                    ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
+                    unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
             } else if (!unit.isMultiDevice()) {
                 unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
             } else if (unit.getType() != BlockType.VIDEO &&

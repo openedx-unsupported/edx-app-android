@@ -30,4 +30,11 @@ public class EncodedVideos implements Serializable {
             return fallback;
         return null;
     }
+
+    @Nullable
+    public VideoInfo getYoutubeVideoInfo() {
+        if (youtube != null && URLUtil.isNetworkUrl(youtube.url))
+            return youtube;
+        return null;
+    }
 }
