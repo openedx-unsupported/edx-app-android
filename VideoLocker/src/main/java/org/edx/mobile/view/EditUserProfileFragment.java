@@ -174,12 +174,6 @@ public class EditUserProfileFragment extends BaseFragment {
                                         hideLoading();
                                     }
 
-                                    @Override
-                                    protected void onException(Exception e) throws RuntimeException {
-                                        super.onException(e);
-                                        showErrorMessage(e);
-                                    }
-
                                     private void hideLoading() {
                                         if (null != viewHolder) {
                                             viewHolder.profileImageProgress.setVisibility(View.GONE);
@@ -424,7 +418,6 @@ public class EditUserProfileFragment extends BaseFragment {
                         @Override
                         protected void onException(Exception e) throws RuntimeException {
                             super.onException(e);
-                            showErrorMessage(e);
                             hideLoading();
                         }
 

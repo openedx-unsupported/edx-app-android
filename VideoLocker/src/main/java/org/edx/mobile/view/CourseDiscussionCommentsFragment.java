@@ -127,7 +127,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
             @Override
             public void onException(Exception ex) {
-                logger.error(ex);
+                super.onException(ex);
                 discussionCommentsAdapter.setProgressVisible(false);
             }
         };
@@ -173,11 +173,6 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
             @Override
             public void onSuccess(DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
             }
         };
         setCommentFlaggedTask.execute();

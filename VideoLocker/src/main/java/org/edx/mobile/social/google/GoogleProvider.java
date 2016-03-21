@@ -62,11 +62,6 @@ public class GoogleProvider implements SocialProvider {
         }
 
         @Override
-        public void onException(Exception ex) {
-            logger.error(ex);
-        }
-
-        @Override
         public String call() throws Exception {
             //try to wait a while .
             try {
@@ -80,25 +75,20 @@ public class GoogleProvider implements SocialProvider {
             //the code refactoring.
             Bundle p = new Bundle();
             String url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
-            try {
-                String json = new HttpManager().get(url, p).body;
-                logger.debug(json);
-                Gson gson = new GsonBuilder().create();
-                GoogleUserProfile userProfile = gson.fromJson(json, GoogleUserProfile.class);
-                String name = userProfile.name;
-                if (TextUtils.isEmpty(name)) {
-                    if (!TextUtils.isEmpty(userProfile.given_name)) {
-                        name = userProfile.given_name + " ";
-                    }
-                    if (!TextUtils.isEmpty(userProfile.family_name)) {
-                        name += userProfile.given_name;
-                    }
+            String json = new HttpManager().get(url, p).body;
+            logger.debug(json);
+            Gson gson = new GsonBuilder().create();
+            GoogleUserProfile userProfile = gson.fromJson(json, GoogleUserProfile.class);
+            String name = userProfile.name;
+            if (TextUtils.isEmpty(name)) {
+                if (!TextUtils.isEmpty(userProfile.given_name)) {
+                    name = userProfile.given_name + " ";
                 }
-                return name;
-            } catch (Exception ex) {
-                //  logger.error(ex);
+                if (!TextUtils.isEmpty(userProfile.family_name)) {
+                    name += userProfile.given_name;
+                }
             }
-            return null;
+            return name;
         }
     }
 

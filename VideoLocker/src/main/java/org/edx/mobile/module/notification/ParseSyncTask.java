@@ -20,16 +20,7 @@ public abstract class ParseSyncTask extends Task<Void> {
 
     @Override
     public Void call( ) throws Exception{
-        try {
-            subscribedChannels = ParseInstallation.getCurrentInstallation().getList("channels");
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex);
-        }
+        subscribedChannels = ParseInstallation.getCurrentInstallation().getList("channels");
         return null;
-    }
-
-    public void onException(Exception ex){
-          //do nothing.?
     }
 }

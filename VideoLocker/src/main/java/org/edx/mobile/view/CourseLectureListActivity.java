@@ -328,6 +328,7 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
 
             @Override
             public void onException(Exception ex) {
+                super.onException(ex);
                 hideProgressDialog();
                 showInfoMessage(getString(R.string.msg_video_not_downloaded));
             }

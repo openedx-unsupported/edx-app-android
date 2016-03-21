@@ -202,8 +202,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
                                     @Override
                                     public void onException(Exception ex) {
+                                        super.onException(ex);
                                         isTaskInProgress = false;
-                                        logger.error(ex);
                                         Toast.makeText(getContext(), R.string.cannot_show_dashboard, Toast.LENGTH_SHORT).show();
                                     }
                                 };
@@ -216,8 +216,8 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
             @Override
             public void onException(Exception ex) {
+                super.onException(ex);
                 isTaskInProgress = false;
-                logger.error(ex);
                 logger.debug("Error during enroll api call");
                 showEnrollErrorMessage(courseId, emailOptIn);
             }

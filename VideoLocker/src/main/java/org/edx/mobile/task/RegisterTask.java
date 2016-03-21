@@ -26,43 +26,37 @@ public abstract class RegisterTask extends Task<RegisterResponse> {
 
     @Override
     public RegisterResponse call( ) throws Exception{
-        try {
-            ServiceManager api = environment.getServiceManager();
-            RegisterResponse res = api.register(parameters);
+        ServiceManager api = environment.getServiceManager();
+        RegisterResponse res = api.register(parameters);
 
-            if (res.isSuccess()) {
-                switch ( backstoreType ){
-                    case  TYPE_GOOGLE :
-                    case  TYPE_FACEBOOK :
-                         // do SOCIAL LOGIN first
-                        if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
-                            auth = api.loginByFacebook(accessToken);
-                        } else if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
-                            auth = api.loginByGoogle(accessToken);
-                        }
-                        if (auth != null && auth.isSuccess()) {
-                            // we got a valid accessToken so profile can be fetched
-                            ProfileModel profile =  api.getProfile();
+        if (res.isSuccess()) {
+            switch ( backstoreType ){
+                case  TYPE_GOOGLE :
+                case  TYPE_FACEBOOK :
+                    // do SOCIAL LOGIN first
+                    if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
+                        auth = api.loginByFacebook(accessToken);
+                    } else if ( backstoreType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
+                        auth = api.loginByGoogle(accessToken);
+                    }
+                    if (auth != null && auth.isSuccess()) {
+                        // we got a valid accessToken so profile can be fetched
+                        ProfileModel profile =  api.getProfile();
 
-                        }
-                        break;
-                    default: //normal email addrss login
-                        String username = parameters.getString("username");
-                        String password = parameters.getString("password");
+                    }
+                    break;
+                default: //normal email addrss login
+                    String username = parameters.getString("username");
+                    String password = parameters.getString("password");
 
-                        auth =  getAuthResponse(context, username, password);
-                        if (auth.isSuccess()) {
-                            logger.debug("login succeeded after email registration");
-                        }
-                }
+                    auth =  getAuthResponse(context, username, password);
+                    if (auth.isSuccess()) {
+                        logger.debug("login succeeded after email registration");
+                    }
             }
-
-            return res;
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
         }
-        return null;
+
+        return res;
     }
 
     public  AuthResponse getAuthResponse(Context context, String username, String password) throws Exception {

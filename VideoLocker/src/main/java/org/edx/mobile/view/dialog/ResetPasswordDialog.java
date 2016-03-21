@@ -122,7 +122,7 @@ public class ResetPasswordDialog extends DialogFragment {
 
             @Override
             public void onException(Exception ex) {
-                logger.error(ex);
+                super.onException(ex);
                 email_et.setEnabled(true);
                 resetLayout.setVisibility(View.GONE);
                 isResetSuccessful = false;

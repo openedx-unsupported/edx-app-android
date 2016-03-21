@@ -78,7 +78,7 @@ public class EdxCookieManager {
 
                 @Override
                 public void onException(Exception ex) {
-                    logger.error(ex);
+                    super.onException(ex);
                     EventBus.getDefault().post(new SessionIdRefreshEvent(false));
                     task = null;
                 }

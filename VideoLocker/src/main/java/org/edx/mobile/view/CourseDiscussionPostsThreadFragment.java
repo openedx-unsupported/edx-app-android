@@ -242,12 +242,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
             }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
-            }
         };
         getThreadListTask.setProgressCallback(null);
         getThreadListTask.execute();

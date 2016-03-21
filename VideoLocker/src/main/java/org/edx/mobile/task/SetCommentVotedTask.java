@@ -16,13 +16,7 @@ public abstract class SetCommentVotedTask extends Task<DiscussionComment> {
         this.voted = voted;
     }
 
-    public DiscussionComment call() {
-        try {
-            return environment.getDiscussionAPI().setCommentVoted(comment, voted);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-            return null;
-        }
+    public DiscussionComment call() throws Exception {
+        return environment.getDiscussionAPI().setCommentVoted(comment, voted);
     }
 }

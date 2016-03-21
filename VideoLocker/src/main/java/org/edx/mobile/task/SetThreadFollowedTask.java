@@ -16,13 +16,7 @@ public abstract class SetThreadFollowedTask extends Task<DiscussionThread> {
         this.followed = followed;
     }
 
-    public DiscussionThread call() {
-        try {
-            return environment.getDiscussionAPI().setThreadFollowed(thread, followed);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-            return null;
-        }
+    public DiscussionThread call() throws Exception {
+        return environment.getDiscussionAPI().setThreadFollowed(thread, followed);
     }
 }

@@ -53,8 +53,8 @@ public class LastAccessManager {
                         }
                         @Override
                         public void onException(Exception ex) {
+                            super.onException(ex);
                             callback.setFetchingLastAccessed( false );
-                            logger.error(ex);
                         }
                     };
 
@@ -118,11 +118,6 @@ public class LastAccessManager {
                             +result.getLastVisitedModuleId());
                          callback.showLastAccessedView(result.getLastVisitedModuleId(), courseId, view);
                     }
-                }
-
-                @Override
-                public void onException(Exception ex) {
-                    logger.error(ex);
                 }
             };
             syncLastAccessTask.execute( );

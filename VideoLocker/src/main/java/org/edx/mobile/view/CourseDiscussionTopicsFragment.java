@@ -128,21 +128,14 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
         getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
             @Override
             public void onSuccess(CourseTopics courseTopics) {
-                if (courseTopics != null) {
-                    logger.debug("GetTopicListTask success=" + courseTopics);
-                    ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
-                    allTopics.addAll(courseTopics.getNonCoursewareTopics());
-                    allTopics.addAll(courseTopics.getCoursewareTopics());
+                logger.debug("GetTopicListTask success=" + courseTopics);
+                ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
+                allTopics.addAll(courseTopics.getNonCoursewareTopics());
+                allTopics.addAll(courseTopics.getCoursewareTopics());
 
-                    List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
-                    discussionTopicsAdapter.setItems(allTopicsWithDepth);
-                    discussionTopicsAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
+                List<DiscussionTopicDepth> allTopicsWithDepth = DiscussionTopicDepth.createFromDiscussionTopics(allTopics);
+                discussionTopicsAdapter.setItems(allTopicsWithDepth);
+                discussionTopicsAdapter.notifyDataSetChanged();
             }
         };
         getTopicListTask.execute();
