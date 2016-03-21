@@ -296,6 +296,10 @@
     <string name="discussion_responses_endorsed">Endorsed</string>
     <!-- Label for time span when its less than a second after posting a response/comment -->
     <string name="just_now">Just now</string>
+    <!-- Label for letting the user know his/her response was successfully added -->
+    <string name="discussion_response_posted">Your response has been added.</string>-->
+    <!-- Label for letting the user know his/her comment was successfully added -->
+    <string name="discussion_comment_posted">Your comment has been added.</string>
 
     <!--Discussion Responses Action Bar-->
     <!--Label to indicate number of votes-->

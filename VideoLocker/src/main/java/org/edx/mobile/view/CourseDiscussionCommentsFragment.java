@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -24,13 +25,12 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.GetCommentsListTask;
 import org.edx.mobile.task.SetCommentFlaggedTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
+import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
-import org.edx.mobile.view.adapters.InfiniteScrollUtils;
-
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -66,6 +66,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private GetCommentsListTask getCommentsListTask;
 
     private int nextPage = 1;
+    private boolean hasMorePages = true;
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
@@ -123,6 +124,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 ++nextPage;
                 callback.onPageLoaded(threadCommentsPage);
                 discussionCommentsAdapter.notifyDataSetChanged();
+                hasMorePages = threadCommentsPage.hasNext();
             }
 
             @Override
@@ -160,7 +162,11 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionCommentPostedEvent event) {
         if (null != event.getParent() && event.getParent().getIdentifier().equals(discussionResponse.getIdentifier())) {
-            discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
+            ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
+            if (!hasMorePages) {
+                discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
+                discussionCommentsListView.smoothScrollToPosition(discussionCommentsAdapter.getItemCount() - 1);
+            }
         }
     }
 
