@@ -1773,7 +1773,7 @@ public class DbTests extends BaseTestCase {
 
     private void lock() throws InterruptedException {
         synchronized (lock) {
-            lock.wait(60 * 1000);
+            lock.wait(1000); // in milliseconds
         }
     }
 
