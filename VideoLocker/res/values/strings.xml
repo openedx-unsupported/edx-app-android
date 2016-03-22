@@ -376,7 +376,7 @@
     <string name="assessment_full_course">Full Course</string>
     <!-- Label for empty video in video only mode-->
     <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select {mode_switcher} above and switch to full course mode.</string>
-   <!-- Label showing assessment only available on website-->
+    <!-- Label showing assessment only available on website-->
     <string name="assessment_not_available">This interactive component isn’t yet available on mobile.</string>
     <!-- Label showing assessment only available on website-->
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
@@ -390,6 +390,10 @@
     <string name="assessment_soon">Soon</string>
     <!-- Label to notify user to rotate device for viewing a video in full screen -->
     <string name="assessment_rotate_for_fullscreen">Rotate your device to view this video in full screen.</string>
+    <!-- Label showing only youtube is available -->
+    <string name="assessment_only_on_youtube">This video can only be played on YouTube.</string>
+    <!-- Label for button to open on youtube -->
+    <string name="assessment_open_on_youtube">View video on YouTube</string>
 
     <!-- Video List -->
     <!-- Label shown to indicate video currently downloading -->
