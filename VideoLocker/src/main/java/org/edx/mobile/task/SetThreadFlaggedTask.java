@@ -16,13 +16,7 @@ public abstract class SetThreadFlaggedTask extends Task<DiscussionThread> {
         this.flagged = flagged;
     }
 
-    public DiscussionThread call() {
-        try {
-            return environment.getDiscussionAPI().setThreadFlagged(thread, flagged);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-            return null;
-        }
+    public DiscussionThread call() throws Exception {
+        return environment.getDiscussionAPI().setThreadFlagged(thread, flagged);
     }
 }

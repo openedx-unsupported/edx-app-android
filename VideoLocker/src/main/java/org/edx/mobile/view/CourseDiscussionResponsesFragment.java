@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -136,9 +137,18 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         if (discussionThread.containsComment(event.getComment())) {
             if (event.getParent() == null) {
                 // We got a response
-                courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
+                ((BaseFragmentActivity)getActivity()).showInfoMessage(getString(R.string.discussion_response_posted));
+                if (!responsesLoader.hasMorePages()) {
+                    courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
+                    discussionResponsesRecyclerView.smoothScrollToPosition(
+                            courseDiscussionResponsesAdapter.getItemCount() - 1);
+                }
             } else {
                 // We got a comment to a response
+                if (event.getParent().getChildCount() == 0) {
+                    // We only need to show this message when the first comment is added
+                    ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
+                }
                 courseDiscussionResponsesAdapter.addNewComment(event.getParent());
             }
         }
@@ -166,6 +176,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         @NonNull
         private final String threadId;
         private final boolean isQuestionTypeThread;
+        private boolean hasMorePages = true;
 
         @Nullable
         private GetResponsesListTask getResponsesListTask;
@@ -219,6 +230,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                                 } else {
                                     ++nextPage;
                                     callback.onPageLoaded(threadResponsesPage);
+                                    hasMorePages = threadResponsesPage.hasNext();
                                 }
                             }
                         };
@@ -228,11 +240,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                             deliverResultRunnable.run();
                         }
                     }
-                }
-
-                @Override
-                public void onException(Exception ex) {
-                    logger.error(ex);
                 }
             };
             getResponsesListTask.setProgressCallback(null);
@@ -260,6 +267,10 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
             }
             isFetchingEndorsed = isQuestionTypeThread;
             nextPage = 1;
+        }
+
+        public boolean hasMorePages() {
+            return hasMorePages;
         }
     }
 

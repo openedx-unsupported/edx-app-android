@@ -36,6 +36,18 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
 
     InfiniteScrollUtils.InfiniteListController controller;
 
+    /**
+     * Callback to match the restart behaviour with the parent activity.
+     */
+    public abstract void onRestart();
+
+    /**
+     * Extension for the child classes to add more functionality to the ListView's onItemClick
+     * function.
+     */
+    public abstract void onItemClick(DiscussionThread thread, AdapterView<?> parent,
+                                     View view, int position, long id);
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -46,13 +58,17 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
                 Context context = getContext();
                 DiscussionThread thread = discussionPostsAdapter.getItem(position);
                 router.showCourseDiscussionResponses(context, thread, courseData);
+
+                new SetThreadReadTask(context, thread, true).execute();
                 if (!thread.isRead()) {
-                    new SetThreadReadTask(context, thread, true).execute();
                     // Refresh the row to mark it as read immediately,
                     // pending the response from the server.
                     thread.setRead(true);
                     discussionPostsAdapter.getView(position, view, parent);
                 }
+
+                CourseDiscussionPostsBaseFragment.this.onItemClick(thread, parent, view,
+                        position, id);
             }
         });
     }

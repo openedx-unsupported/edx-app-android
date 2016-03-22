@@ -15,14 +15,8 @@ public abstract class GetSessesionExchangeCookieTask extends Task<List<HttpCooki
 
     @Override
     public List<HttpCookie> call( ) throws Exception{
-        try {
-                ServiceManager api = environment.getServiceManager();
-                return api.getSessionExchangeCookie();
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-        }
-        return null;
+        ServiceManager api = environment.getServiceManager();
+        return api.getSessionExchangeCookie();
     }
 
 }

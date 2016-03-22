@@ -180,79 +180,60 @@ public class SocialLoginDelegate {
 
         @Override
         public void onSuccess(ProfileModel result) {
-            if (result != null) {
-                try {
-                    if (result.email == null) {
-                        // handle this error, show error message
-                        LoginErrorMessage errorMsg =
-                                new LoginErrorMessage(
-                                        context.getString(R.string.login_error),
-                                        context.getString(R.string.login_failed));
-                        throw new LoginException(errorMsg);
-                    }
-
-                    callback.onUserLoginSuccess(result);
-                } catch (LoginException ex) {
-                    logger.error(ex);
-                    handle(ex);
-                }
+            try {
+                callback.onUserLoginSuccess(result);
+            } catch (LoginException ex) {
+                super.onException(ex);
             }
         }
 
         @Override
         public void onException(Exception ex) {
+            super.onException(ex);
             callback.onUserLoginFailure(ex, this.accessToken, this.backend);
         }
 
         @Override
-        public ProfileModel call( ) {
-            try {
+        public ProfileModel call() throws Exception {
+            ServiceManager api = environment.getServiceManager();
 
+            // do SOCIAL LOGIN first
+            AuthResponse social = null;
+            HashMap<String, CharSequence> descParams = new HashMap<>();
+            String platformName = environment.getConfig().getPlatformName();
+            descParams.put("platform_name", environment.getConfig().getPlatformName());
+            descParams.put("platform_destination", environment.getConfig().getPlatformDestinationName());
+            if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
+                social = api.loginByFacebook(accessToken);
 
-                ServiceManager api = environment.getServiceManager();
-
-                // do SOCIAL LOGIN first
-                AuthResponse social = null;
-                HashMap<String, CharSequence> descParams = new HashMap<>();
-                String platformName = environment.getConfig().getPlatformName();
-                descParams.put("platform_name", environment.getConfig().getPlatformName());
-                descParams.put("platform_destination", environment.getConfig().getPlatformDestinationName());
-                if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                    social = api.loginByFacebook(accessToken);
-
-                    if ( social.error != null && social.error.equals("401") ) {
-                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, descParams);
-                        CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_fb, descParams);
-                        throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
-                    }
-                } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                    social = api.loginByGoogle(accessToken);
-
-                    if ( social.error != null && social.error.equals("401") ) {
-                        CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, descParams);
-                        CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_google, descParams);
-                        throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
-                    }
+                if ( social.error != null && social.error.equals("401") ) {
+                    CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, descParams);
+                    CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_fb, descParams);
+                    throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                 }
+            } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
+                social = api.loginByGoogle(accessToken);
 
-                if (social.isSuccess()) {
-
-                    // we got a valid accessToken so profile can be fetched
-                    ProfileModel profile =  api.getProfile();
-
-                    if (profile.email != null) {
-                        // we got valid profile information
-                        return profile;
-                    }
+                if ( social.error != null && social.error.equals("401") ) {
+                    CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, descParams);
+                    CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_google, descParams);
+                    throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                 }
-                throw new LoginException(new LoginErrorMessage(
-                        context.getString(R.string.login_error),
-                        context.getString(R.string.login_failed)));
-            } catch (Exception e) {
-                logger.error(e);
-                handle(e);
             }
-            return null;
+
+            if (social.isSuccess()) {
+
+                // we got a valid accessToken so profile can be fetched
+                ProfileModel profile =  api.getProfile();
+
+                if (profile.email != null) {
+                    // we got valid profile information
+                    return profile;
+                }
+            }
+            throw new LoginException(new LoginErrorMessage(
+                    context.getString(R.string.login_error),
+                    context.getString(R.string.login_failed)));
         }
 
     }
@@ -276,12 +257,7 @@ public class SocialLoginDelegate {
 
                     @Override
                     public Void call( ) {
-                        try {
-                            socialLogout(socialType);
-                        } catch(Exception ex) {
-                            // no need to handle this error
-                            logger.error(ex);
-                        }
+                        socialLogout(socialType);
                         return null;
                     }
 
@@ -292,7 +268,7 @@ public class SocialLoginDelegate {
 
                     @Override
                     public void onException(Exception ex) {
-                        logger.error(ex);
+                        super.onException(ex);
                         if ( activity instanceof ICommonUI)
                             ((ICommonUI)activity).tryToSetUIInteraction(true);
                     }

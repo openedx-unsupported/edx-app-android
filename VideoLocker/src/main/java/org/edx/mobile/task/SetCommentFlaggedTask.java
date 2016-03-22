@@ -16,13 +16,7 @@ public abstract class SetCommentFlaggedTask extends Task<DiscussionComment> {
         this.flagged = flagged;
     }
 
-    public DiscussionComment call() {
-        try {
-            return environment.getDiscussionAPI().setCommentFlagged(comment, flagged);
-        } catch (Exception ex) {
-            handle(ex);
-            logger.error(ex, true);
-            return null;
-        }
+    public DiscussionComment call() throws Exception {
+        return environment.getDiscussionAPI().setCommentFlagged(comment, flagged);
     }
 }

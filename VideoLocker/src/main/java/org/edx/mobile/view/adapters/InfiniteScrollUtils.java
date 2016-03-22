@@ -100,6 +100,7 @@ public class InfiniteScrollUtils {
 
     public interface InfiniteListController {
         void reset();
+        void resetSilently();
     }
 
     public static class PageLoadController<T> implements InfiniteListController {
@@ -123,14 +124,33 @@ public class InfiniteScrollUtils {
             }
         }
 
+        /**
+         * This function simply shows a spinner while loading the next page.
+         */
         private void onLoadMore() {
+            onLoadMore(false);
+        }
+
+        /**
+         * This function allows us to control the visibility of progress and lazily clear adapter
+         * after a page has loaded.
+         *
+         * @param isRefreshingSilently <code>true</code> If we're doing a silent refresh,
+         *                             <code>false</code> if pagination is being done as usual.
+         */
+        private void onLoadMore(final boolean isRefreshingSilently) {
             final int instanceLoadId = activeLoadId.get();
-            adapter.setProgressVisible(true);
+            if (!isRefreshingSilently) {
+                adapter.setProgressVisible(true);
+            }
             pageLoader.loadNextPage(new PageLoadCallback<T>() {
                 @Override
                 public void onPageLoaded(List<T> newItems, boolean hasMore) {
                     if (isAbandoned()) {
                         return;
+                    }
+                    if (isRefreshingSilently) {
+                        adapter.clear();
                     }
                     adapter.addAll(newItems);
                     hasMoreItems = hasMore;
@@ -154,11 +174,21 @@ public class InfiniteScrollUtils {
 
         @Override
         public void reset() {
-            activeLoadId.incrementAndGet(); // To disregard any in-progress loads
+            initLoading();
             adapter.clear();
+            onLoadMore();
+        }
+
+        @Override
+        public void resetSilently() {
+            initLoading();
+            onLoadMore(true);
+        }
+
+        private void initLoading() {
+            activeLoadId.incrementAndGet(); // To disregard any in-progress loads
             hasMoreItems = true;
             loading = true;
-            onLoadMore();
         }
     }
 

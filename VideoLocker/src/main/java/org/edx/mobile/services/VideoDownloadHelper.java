@@ -159,6 +159,7 @@ public class VideoDownloadHelper {
 
             @Override
             public void onException(Exception ex) {
+                super.onException(ex);
                 callback.onDownloadFailedToStart();
             }
         };

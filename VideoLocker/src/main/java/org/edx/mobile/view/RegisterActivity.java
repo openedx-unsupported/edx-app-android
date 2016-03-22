@@ -331,7 +331,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
                 @Override
                 public void onException(Exception ex) {
-                    logger.error(ex);
+                    super.onException(ex);
                     hideProgress();
                 }
             };

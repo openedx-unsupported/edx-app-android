@@ -217,12 +217,6 @@ public class CourseDetailFragment extends BaseFragment {
                     courseAbout.setVisibility(View.GONE);
                 }
             }
-
-            @Override
-            protected void onException(Exception e) throws RuntimeException {
-                super.onException(e);
-                showErrorMessage(e);
-            }
         };
         getCourseDetailTask.execute();
     }
@@ -337,11 +331,6 @@ public class CourseDetailFragment extends BaseFragment {
                                         environment.getRouter().showMyCourses(getActivity());
                                         environment.getRouter().showCourseDashboardTabs(getActivity(), environment.getConfig(), course, false);
                                     }
-
-                                    @Override
-                                    public void onException(Exception ex) {
-                                        logger.error(ex);
-                                    }
                                 };
                         getEnrolledCourseTask.execute();
                     }
@@ -349,7 +338,7 @@ public class CourseDetailFragment extends BaseFragment {
             }
             @Override
             public void onException(Exception ex) {
-                logger.error(ex);
+                super.onException(ex);
                 Toast.makeText(getContext(), R.string.enrollment_failure, Toast.LENGTH_SHORT).show();
             }
         };

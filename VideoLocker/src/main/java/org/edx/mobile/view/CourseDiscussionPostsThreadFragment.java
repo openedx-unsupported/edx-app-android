@@ -60,6 +60,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private GetThreadListTask getThreadListTask;
     private int nextPage = 1;
+    private int mSelectedItem = -1;
 
     private enum EmptyQueryResultsFor {
         FOLLOWING,
@@ -171,6 +172,24 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onRestart() {
+        if (postsSort == DiscussionPostsSort.LAST_ACTIVITY_AT && mSelectedItem != -1) {
+            // Move the last viewed thread to the top
+            discussionPostsAdapter.moveToTop(mSelectedItem);
+            mSelectedItem = -1;
+        }
+
+        nextPage = 1;
+        controller.resetSilently();
+    }
+
+    @Override
+    public void onItemClick(DiscussionThread thread, AdapterView<?> parent, View view,
+                            int position, long id) {
+        mSelectedItem = position;
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadUpdatedEvent event) {
         // If a listed thread's following status has changed, we need to replace it to show/hide the "following" label
@@ -197,15 +216,23 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     @SuppressWarnings("unused")
     public void onEventMainThread(DiscussionThreadPostedEvent event) {
+        DiscussionThread newThread = event.getDiscussionThread();
         // If a new post is created in this topic, insert it at the top of the list, after any pinned posts
-        if (discussionTopic.containsThread(event.getDiscussionThread())) {
+        if (discussionTopic.containsThread(newThread)) {
+            if (postsFilter == DiscussionPostsFilter.UNANSWERED &&
+                    newThread.getType() != DiscussionThread.ThreadType.QUESTION) {
+                return;
+            }
+
             int i = 0;
             for (; i < discussionPostsAdapter.getCount(); ++i) {
                 if (!discussionPostsAdapter.getItem(i).isPinned()) {
                     break;
                 }
             }
-            discussionPostsAdapter.insert(event.getDiscussionThread(), i);
+            discussionPostsAdapter.insert(newThread, i);
+            // move the ListView's scroll to that newly added post's position
+            discussionPostsListView.setSelection(i);
             // In case this is the first addition, we need to hide the no-item-view
             ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         }
@@ -241,12 +268,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 } else {
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
-            }
-
-            @Override
-            public void onException(Exception ex) {
-                logger.error(ex);
-                //  hideProgress();
             }
         };
         getThreadListTask.setProgressCallback(null);

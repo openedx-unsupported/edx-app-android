@@ -167,6 +167,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment {
 
             @Override
             public void onException(Exception ex) {
+                super.onException(ex);
                 showEmptyAnnouncementMessage();
             }
 
