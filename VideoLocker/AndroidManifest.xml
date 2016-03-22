@@ -214,7 +214,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".view.UserProfileActivity"
+        <activity android:name=".profiles.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoShadow"
             android:label=""/>

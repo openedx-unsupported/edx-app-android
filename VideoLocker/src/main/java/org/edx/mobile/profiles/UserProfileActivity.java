@@ -1,4 +1,4 @@
-package org.edx.mobile.view;
+package org.edx.mobile.profiles;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-
-import roboguice.inject.InjectExtra;
 
 public class UserProfileActivity extends BaseSingleFragmentActivity {
     public static final String EXTRA_USERNAME = "username";
@@ -33,8 +31,6 @@ public class UserProfileActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        final UserProfileFragment fragment = new UserProfileFragment();
-        fragment.setArguments(getIntent().getExtras());
-        return fragment;
+        return UserProfileFragment.newInstance(getIntent().getStringExtra(EXTRA_USERNAME));
     }
 }

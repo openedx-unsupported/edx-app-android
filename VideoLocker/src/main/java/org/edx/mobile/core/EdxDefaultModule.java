@@ -29,6 +29,7 @@ import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
 
+import de.greenrobot.event.EventBus;
 import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
 
@@ -81,6 +82,8 @@ public class EdxDefaultModule extends AbstractModule {
         bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
 
         bind(RestAdapter.class).toProvider(RestAdapterProvider.class);
+
+        bind(EventBus.class).toInstance(EventBus.getDefault());
 
         requestStaticInjection(BrowserUtil.class, MediaConsentUtils.class,
                 DiscussionTextUtils.class);

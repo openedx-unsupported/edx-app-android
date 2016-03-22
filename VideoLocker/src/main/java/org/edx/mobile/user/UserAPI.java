@@ -8,15 +8,14 @@ import android.webkit.MimeTypeMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
@@ -25,7 +24,8 @@ import retrofit.mime.TypedFile;
 @Singleton
 public class UserAPI {
 
-    private UserService userService;
+    @NonNull
+    private final UserService userService;
 
     private Logger logger = new Logger(UserAPI.class.getName());
 
@@ -39,7 +39,9 @@ public class UserAPI {
     }
 
     public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws RetroHttpException {
-        return userService.updateAccount(username, Collections.singletonMap(field, value));
+        final Account updatedAccount = userService.updateAccount(username, Collections.singletonMap(field, value));
+        EventBus.getDefault().post(new AccountUpdatedEvent(updatedAccount));
+        return updatedAccount;
     }
 
     public void setProfileImage(@NonNull String username, @NonNull final File file) throws RetroHttpException, IOException {

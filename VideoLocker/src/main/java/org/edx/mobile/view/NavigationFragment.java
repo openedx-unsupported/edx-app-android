@@ -37,6 +37,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
