@@ -241,6 +241,14 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                         }
                     }
                 }
+
+                @Override
+                protected void onException(Exception ex) {
+                    super.onException(ex);
+                    callback.onError();
+                    nextPage = 1;
+                    hasMorePages = false;
+                }
             };
             getResponsesListTask.setProgressCallback(null);
             getResponsesListTask.execute();

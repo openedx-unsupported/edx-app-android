@@ -94,6 +94,13 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                     }
                 }
             }
+
+            @Override
+            protected void onException(Exception ex) {
+                super.onException(ex);
+                callback.onError();
+                nextPage = 1;
+            }
         };
         searchThreadListTask.setProgressCallback(null);
         searchThreadListTask.execute();
