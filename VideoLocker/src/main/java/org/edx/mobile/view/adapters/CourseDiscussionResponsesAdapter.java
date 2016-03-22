@@ -301,7 +301,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                     new Runnable() {
                         @Override
                         public void run() {
-                            listener.onClickAuthor(comment.getAuthor());
+                            listener.onClickAuthor(comment.getEndorsedBy());
                         }
                     });
             holder.responseAnswerTextView.setVisibility(View.VISIBLE);
