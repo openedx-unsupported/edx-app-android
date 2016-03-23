@@ -53,12 +53,11 @@ import java.util.List;
 public class HttpManager {
     protected final Logger logger = new Logger(getClass().getName());
 
-    @Inject
     Context context;
 
     /**
      * Executes a GET request to given URL with given parameters.
-     * 
+     *
      * @param urlWithAppendedParams
      * @param headers
      * @return
@@ -66,6 +65,12 @@ public class HttpManager {
      * @throws ClientProtocolException
      * @throws IOException
      */
+
+    @Inject
+    public HttpManager(Context context) {
+        this.context = context;
+    }
+
     public HttpResult get(String urlWithAppendedParams, Bundle headers)
             throws ParseException, ClientProtocolException, IOException {
         final DefaultHttpClient client = newClient();
