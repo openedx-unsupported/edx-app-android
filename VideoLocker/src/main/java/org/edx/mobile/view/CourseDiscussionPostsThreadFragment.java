@@ -269,6 +269,13 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                     checkNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
             }
+
+            @Override
+            protected void onException(Exception ex) {
+                super.onException(ex);
+                callback.onError();
+                nextPage = 1;
+            }
         };
         getThreadListTask.setProgressCallback(null);
         getThreadListTask.execute();

@@ -73,6 +73,8 @@ public class NativeFindCoursesFragment extends BaseFragment {
                     @Override
                     protected void onException(Exception e) throws RuntimeException {
                         super.onException(e);
+                        callback.onError();
+                        nextPage = 1;
                         if (null != viewHolder) {
                             viewHolder.loadingIndicator.setVisibility(View.GONE);
                         }

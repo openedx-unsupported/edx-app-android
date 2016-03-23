@@ -96,6 +96,11 @@ public class InfiniteScrollUtils {
          * @param hasMore Whether there are more pages to load.
          */
         public abstract void onPageLoaded(List<T> newItems, boolean hasMore);
+
+        /**
+         * Callback for receiving an error during the page load.
+         */
+        public abstract void onError();
     }
 
     public interface InfiniteListController {
@@ -157,6 +162,16 @@ public class InfiniteScrollUtils {
                     if (!hasMoreItems) {
                         adapter.setProgressVisible(false);
                     }
+                    loading = false;
+                }
+
+                @Override
+                public void onError() {
+                    if (isAbandoned()) {
+                        return;
+                    }
+                    adapter.setProgressVisible(false);
+                    hasMoreItems = false;
                     loading = false;
                 }
 
