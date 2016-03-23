@@ -75,7 +75,7 @@ public class GoogleProvider implements SocialProvider {
             //the code refactoring.
             Bundle p = new Bundle();
             String url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accessToken;
-            String json = new HttpManager().get(url, p).body;
+            String json = new HttpManager(getContext()).get(url, p).body;
             logger.debug(json);
             Gson gson = new GsonBuilder().create();
             GoogleUserProfile userProfile = gson.fromJson(json, GoogleUserProfile.class);
