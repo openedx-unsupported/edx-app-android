@@ -405,9 +405,13 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         initialTimeStampMs = System.currentTimeMillis();
         int offset = 1 + discussionResponses.size();
         discussionResponses.add(response);
-        discussionThread.incrementResponseCount();
+        incrementResponseCount();
         notifyItemInserted(offset);
-        notifyItemChanged(0); // Comments count is shown in the thread details header, so it also needs to be refreshed.
+    }
+
+    public void incrementResponseCount() {
+        discussionThread.incrementResponseCount();
+        notifyItemChanged(0); // Response count is shown in the thread details header, so it also needs to be refreshed.
     }
 
     public void addNewComment(@NonNull DiscussionComment parent) {
@@ -424,7 +428,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 break;
             }
         }
-        notifyItemChanged(0); // Comments count is shown in the thread details header, so it also needs to be refreshed.
     }
 
     public static class ShowMoreViewHolder extends RecyclerView.ViewHolder {

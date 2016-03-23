@@ -142,6 +142,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                     courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
                     discussionResponsesRecyclerView.smoothScrollToPosition(
                             courseDiscussionResponsesAdapter.getItemCount() - 1);
+                } else {
+                    // We still need to update the response count locally
+                    courseDiscussionResponsesAdapter.incrementResponseCount();
                 }
             } else {
                 // We got a comment to a response
