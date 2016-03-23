@@ -168,6 +168,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
             if (!hasMorePages) {
                 discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
                 discussionCommentsListView.smoothScrollToPosition(discussionCommentsAdapter.getItemCount() - 1);
+            } else {
+                // We still need to update the comment count locally
+                discussionCommentsAdapter.incrementCommentCount();
             }
         }
     }
