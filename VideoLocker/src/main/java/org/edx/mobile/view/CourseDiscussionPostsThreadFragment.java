@@ -180,8 +180,16 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             mSelectedItem = -1;
         }
 
-        nextPage = 1;
-        controller.resetSilently();
+        /*
+        If the activity/fragment needs to be reinstantiated upon restoration,
+        then in some cases the onRestart() callback maybe invoked before view
+        initialization, and thus the controller might not be initialized, and
+        therefore we need to guard this with a null check.
+         */
+        if (controller != null) {
+            nextPage = 1;
+            controller.resetSilently();
+        }
     }
 
     @Override
