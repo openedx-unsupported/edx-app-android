@@ -15,7 +15,7 @@ public class LaunchScreenshotTests extends InstrumentationTestCase {
         View view = inflater.inflate(R.layout.activity_launch, null, false);
 
         ViewHelpers.setupView(view)
-                .setExactWidthDp(500)
+                .setExactWidthDp(360)
                 .layout();
 
         Screenshot.snap(view)
