@@ -44,6 +44,8 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        configureDrawer();
+
         notificationDelegate.checkAppUpgrade();
     }
 
