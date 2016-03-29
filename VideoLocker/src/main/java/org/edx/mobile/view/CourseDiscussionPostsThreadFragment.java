@@ -294,9 +294,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         if (activity instanceof TaskProcessCallback) {
             if (discussionPostsAdapter.getCount() == 0) {
                 String resultsText = "";
+                boolean isAllPostsFilter = (postsFilter == DiscussionPostsFilter.ALL);
                 switch (query) {
                     case FOLLOWING:
-                        resultsText = getString(R.string.forum_no_results_for_following);
+                        if (!isAllPostsFilter) {
+                            resultsText = getString(R.string.forum_no_results_for_filtered_following);
+                        } else {
+                            resultsText = getString(R.string.forum_no_results_for_following);
+                        }
                         break;
                     case CATEGORY:
                         resultsText = getString(R.string.forum_no_results_in_category);
@@ -305,8 +310,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                         resultsText = getString(R.string.forum_no_results_for_all_posts);
                         break;
                 }
-                if (postsFilter != DiscussionPostsFilter.ALL) {
-                    resultsText += "\n" + getString(R.string.forum_no_results_with_filter);
+                if (!isAllPostsFilter) {
+                    resultsText += " " + getString(R.string.forum_no_results_with_filter);
                 }
                 ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
             } else {

@@ -54,16 +54,9 @@
 
         <TextView
             android:id="@+id/center_message_box"
-            style="@style/regular_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textAllCaps="true"
-            android:textColor="@color/cyan_4"
-            android:textSize="16sp"
-            android:visibility="gone"/>
+            style="@style/content_unavailable_error_text"
+            tools:text="Error text comes here."
+            tools:visibility="visible"/>
         
     </FrameLayout>
 
