@@ -34,6 +34,7 @@ script:
 #      4mb limit enforced by travis (so use it with caution)
   - ./gradlew testProdDebugUnitTestCoverage
   - ./gradlew copyUnitTestBuildArtifacts
+  - ./gradlew verifyMode screenshotTests
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
