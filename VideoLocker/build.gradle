@@ -14,6 +14,8 @@ buildscript {
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.0"
 
+        classpath 'com.facebook.testing.screenshot:plugin:0.4'
+
     }
 }
 
@@ -25,7 +27,7 @@ edx {
 
 apply plugin: 'com.android.application'
 apply plugin: 'newrelic'
-
+apply plugin: 'com.facebook.testing.screenshot'
 apply from: 'jacoco.gradle'
 
 repositories {
@@ -49,15 +51,15 @@ class AndroidHelper {
 }
 
 dependencies {
-    compile project (':android-iconify')
+    compile project(':android-iconify')
     // Note that we have the Font Awesome TTF file
     // in the local assets as well, to enable the
     // graphical layout editor to render it. Since
     // that is what will be compiled in the APK now,
     // we need to ensure that it's updated along
     // with module updates.
-    compile project (':android-iconify-fontawesome')
-    compile ('com.getbase:floatingactionbutton:1.10.1') {
+    compile project(':android-iconify-fontawesome')
+    compile('com.getbase:floatingactionbutton:1.10.1') {
         exclude module: 'support-annotations'
     }
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -81,7 +83,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-
     // Segment Library
     compile('com.segment.analytics.android:analytics-core:3.4.0@aar') {
         transitive = true
@@ -90,47 +91,41 @@ dependencies {
         exclude module: 'play-services-analytics'
         transitive = true
     }
-
     //Crashlytics Kit
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true
     }
-
     //New Relic Integration
     compile 'com.newrelic.agent.android:android-agent:5.4.0'
-
     // Parse notification service
     compile 'com.parse:parse-android:1.13.0'
     compile 'com.parse.bolts:bolts-android:1.4.0'
-
     //Include DI framework
     compile 'org.roboguice:roboguice:3.0.1'
     provided 'org.roboguice:roboblender:3.0.1'
-
     // For the optional Nullable annotation
     compile 'com.android.support:support-annotations:23.1.1'
-
     // test project configuration
     testCompile 'junit:junit:4.12'
-    testCompile ("org.mockito:mockito-core:1.10.19"){
+    testCompile('org.mockito:mockito-core:1.10.19') {
         exclude group: 'org.hamcrest'
     }
-    testCompile "org.robolectric:robolectric:3.0"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-    testCompile "org.robolectric:shadows-multidex:3.0"
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.robolectric:shadows-support-v4:3.0'
+    testCompile 'org.robolectric:shadows-multidex:3.0'
     testCompile 'org.assertj:assertj-core:1.7.1'
-    testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
+    testCompile('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }
-    testCompile ('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
+    testCompile('com.squareup.assertj:assertj-android-support-v4:1.1.1') {
         exclude group: 'com.android.support'
     }
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
-
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.facebook.testing.screenshot:core:0.4'
 }
 
 configurations {
@@ -162,7 +157,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
     }
 
     defaultConfig {
@@ -180,6 +175,7 @@ android {
         // test configuration
         testApplicationId 'org.edx.mobile.test'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.facebook.testing.screenshot.ScreenshotTestRunner"
         testHandleProfiling true
         testFunctionalTest true
         testBuildType "debuggable"
@@ -289,4 +285,9 @@ android.applicationVariants.all { variant ->
             task.mustRunAfter(configureTask)
         }
     }
+}
+
+screenshots {
+    testApkTarget = 'packageDevDebuggableAndroidTest'
+    connectedAndroidTestTarget = 'connectedDevDebuggableAndroidTest'
 }
