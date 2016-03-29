@@ -57,12 +57,14 @@ public class CropImageActivity extends BaseAppActivity {
                 findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        setResult(Activity.RESULT_OK, new Intent()
-                                        .putExtra(EXTRA_CROP_RECT, imageView.getCropRect())
-                                        .putExtra(EXTRA_IMAGE_URI, imageUri)
-                                        .putExtra(EXTRA_FROM_CAMERA, getIntent().getBooleanExtra(EXTRA_FROM_CAMERA, false))
-                        );
-                        finish();
+                        if (imageView.isReady()) {
+                            setResult(Activity.RESULT_OK, new Intent()
+                                    .putExtra(EXTRA_CROP_RECT, imageView.getCropRect())
+                                    .putExtra(EXTRA_IMAGE_URI, imageUri)
+                                    .putExtra(EXTRA_FROM_CAMERA, getIntent().getBooleanExtra(EXTRA_FROM_CAMERA, false))
+                            );
+                            finish();
+                        }
                     }
                 });
             }
