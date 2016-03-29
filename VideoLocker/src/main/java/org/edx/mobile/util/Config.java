@@ -54,12 +54,15 @@ public class Config {
     public static final String TEST_ACCOUNT_NAME = "NAME";
     public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
 
+    // Features
     public static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
 
     public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
 
     public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
+
+    public static final String BADGES_ENABLED = "BADGES_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
 
@@ -370,6 +373,10 @@ public class Config {
 
     public boolean isUserProfilesEnabled() {
         return getBoolean(USER_PROFILES_ENABLED, false);
+    }
+
+    public boolean isBadgesEnabled() {
+        return getBoolean(BADGES_ENABLED, false);
     }
 
     public boolean isDiscussionsEnabled() {
