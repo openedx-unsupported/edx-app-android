@@ -101,6 +101,14 @@ public class InfiniteScrollUtils {
          * Callback for receiving an error during the page load.
          */
         public abstract void onError();
+
+        /**
+         * Returns the user visibility status of the page load.
+         *
+         * @return <code>true</code> If a silent refresh is being performed,
+         *         <code>false</code> if pagination is being done as usual.
+         */
+        public abstract boolean isRefreshingSilently();
     }
 
     public interface InfiniteListController {
@@ -173,6 +181,11 @@ public class InfiniteScrollUtils {
                     adapter.setProgressVisible(false);
                     hasMoreItems = false;
                     loading = false;
+                }
+
+                @Override
+                public boolean isRefreshingSilently() {
+                    return isRefreshingSilently;
                 }
 
                 /**
