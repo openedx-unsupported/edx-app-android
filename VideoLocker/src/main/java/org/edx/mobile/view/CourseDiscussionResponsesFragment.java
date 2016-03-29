@@ -142,6 +142,9 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                     courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
                     discussionResponsesRecyclerView.smoothScrollToPosition(
                             courseDiscussionResponsesAdapter.getItemCount() - 1);
+                } else {
+                    // We still need to update the response count locally
+                    courseDiscussionResponsesAdapter.incrementResponseCount();
                 }
             } else {
                 // We got a comment to a response
@@ -240,6 +243,14 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                             deliverResultRunnable.run();
                         }
                     }
+                }
+
+                @Override
+                protected void onException(Exception ex) {
+                    super.onException(ex);
+                    callback.onError();
+                    nextPage = 1;
+                    hasMorePages = false;
                 }
             };
             getResponsesListTask.setProgressCallback(null);

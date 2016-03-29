@@ -130,7 +130,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
             @Override
             public void onException(Exception ex) {
                 super.onException(ex);
-                discussionCommentsAdapter.setProgressVisible(false);
+                callback.onError();
+                nextPage = 1;
+                hasMorePages = false;
             }
         };
         getCommentsListTask.setProgressCallback(null);
@@ -166,6 +168,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
             if (!hasMorePages) {
                 discussionCommentsAdapter.insertCommentAtEnd(event.getComment());
                 discussionCommentsListView.smoothScrollToPosition(discussionCommentsAdapter.getItemCount() - 1);
+            } else {
+                // We still need to update the comment count locally
+                discussionCommentsAdapter.incrementCommentCount();
             }
         }
     }

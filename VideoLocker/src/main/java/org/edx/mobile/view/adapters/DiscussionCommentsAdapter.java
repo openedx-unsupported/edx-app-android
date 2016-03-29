@@ -194,9 +194,14 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     public void insertCommentAtEnd(DiscussionComment comment) {
         // Since, we have a added a new comment we need to update timestamps of all comments
         initialTimeStampMs = System.currentTimeMillis();
-        response.incrementChildCount();
         discussionComments.add(comment);
+        incrementCommentCount();
         notifyDataSetChanged();
+    }
+
+    public void incrementCommentCount() {
+        response.incrementChildCount();
+        notifyItemChanged(0);
     }
 
     public void updateComment(DiscussionComment comment) {
