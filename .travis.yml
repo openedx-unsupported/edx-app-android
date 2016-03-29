@@ -4,6 +4,8 @@ sudo: false # Explicitly use container-based infrastructure http://docs.travis-c
 env:
   matrix:
     - ANDROID_TARGET=android-23
+  global:
+    - ADB_INSTALL_TIMEOUT=12
 android:
   components:
     # use the latest revision of Android SDK Tools
@@ -25,6 +27,15 @@ notifications:
 
 before_script:
   - chmod +x gradlew
+  # ARM architecture is used instead of x86 (which is 10x faster) of the lack of support from CI due
+  # to complications of creating a virtual machine within a virtual machine. This may be solved
+  # eventually and would significantly speed some things up.
+  # Create the AVD for android 5.0.
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  # Make sdcard for screenshot tests
+  - mksdcard -l e 256M mysdcard.img
+  # Boot up the emulator in the background
+  - emulator -avd test -no-skin -no-audio -no-window -sdcard mysdcard.img&
 
 script:
 # --debug or --info info flag can be suffixed to following command for more detailed logs of tests
@@ -33,6 +44,11 @@ script:
 #      4mb limit enforced by travis (so use it with caution)
   - ./gradlew testProdDebugUnitTestCoverage
   - ./gradlew copyUnitTestBuildArtifacts
+
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+  # Run screenshot tests and compare them against screenshots in PR
+  - ./gradlew verifyMode screenshotTests -PdisablePreDex
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
@@ -49,5 +65,6 @@ cache:
 
 before_install:
   - pip install --user codecov
+  - pip install --user pillow # For screenshot tests
 after_success:
   - codecov
