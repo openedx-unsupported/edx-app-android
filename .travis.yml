@@ -34,7 +34,7 @@ script:
 # P.S. --debug flag prints too many logs that are mostly not needed, which make it exceed the
 #      4mb limit enforced by travis (so use it with caution)
   - ./gradlew testProdDebugUnitTestCoverage
-  - ./gradlew copyUnitTestBuildArtifacts
+  - ./gradlew copyUnitTestBuildArtifacts --stacktrace
   - ./gradlew verifyMode screenshotTests 
 #  - ./travis-acceptance-tests.sh
 

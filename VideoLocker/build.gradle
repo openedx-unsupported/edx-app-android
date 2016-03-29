@@ -13,6 +13,7 @@ buildscript {
 
         //Included for NewRelic
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.4.0"
+
         classpath 'com.facebook.testing.screenshot:plugin:0.4'
 
     }
