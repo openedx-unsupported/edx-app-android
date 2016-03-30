@@ -237,8 +237,9 @@ android {
         prod { }
 
         dev {
-//            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
         }
+        screenshot {}
     }
 
     buildTypes {
@@ -268,7 +269,7 @@ android {
     }
     testOptions { 
          unitTests.all {
-             maxHeapSize '2g'
+             maxHeapSize '1g'
              jvmArgs '-XX:MaxPermSize=512m'
          }
     }
@@ -294,6 +295,6 @@ android.applicationVariants.all { variant ->
     }
 }
 screenshots {
-        testApkTarget = 'packageProdDebuggableAndroidTest'
-        connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
+        testApkTarget = 'packageScreenshotDebuggableAndroidTest'
+        connectedAndroidTestTarget = 'connectedScreenshotDebuggableAndroidTest'
     }
