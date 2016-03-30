@@ -3,7 +3,7 @@ jdk: oraclejdk7
 sudo: false # Explicitly use container-based infrastructure http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 env:
   matrix:
-    - ANDROID_TARGET=android-23
+    - ANDROID_TARGET=android-22
 android:
   components:
     # use the latest revision of Android SDK Tools
