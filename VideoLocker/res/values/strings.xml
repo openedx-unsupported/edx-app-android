@@ -596,6 +596,7 @@
     <string name="forum_no_results_for_search_query">No results found for “{search_query}”. Try another search term or select a discussion category to browse.</string>
     <string name="forum_no_results_for_all_posts">There are no posts in this course discussion.</string>
     <string name="forum_no_results_for_following">You are not following any posts.</string>
+    <string name="forum_no_results_for_filtered_following">Filter results do not include any followed posts.</string>
     <string name="forum_no_results_in_category">There are no posts in this discussion category.</string>
     <string name="forum_no_results_with_filter">Try removing your post filter.</string>
     <string name="forum_post_i_am_following">Posts I’m Following</string>
