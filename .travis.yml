@@ -20,6 +20,8 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
 
+    - sys-img-x86-android-23
+
 # Disable travis email notifications until builds work properly
 notifications:
   email: true
