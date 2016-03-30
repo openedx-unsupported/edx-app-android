@@ -4,6 +4,8 @@ sudo: false # Explicitly use container-based infrastructure http://docs.travis-c
 env:
   matrix:
     - ANDROID_TARGET=android-23
+  global:
+    - ADB_INSTALL_TIMEOUT=8
 android:
   components:
     # use the latest revision of Android SDK Tools
