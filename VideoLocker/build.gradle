@@ -268,7 +268,7 @@ android {
     }
     testOptions { 
          unitTests.all {
-             maxHeapSize '1024m'
+             maxHeapSize '2g'
              jvmArgs '-XX:MaxPermSize=512m'
          }
     }
