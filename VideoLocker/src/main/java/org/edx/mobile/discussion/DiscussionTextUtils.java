@@ -73,8 +73,7 @@ public abstract class DiscussionTextUtils {
                     stringRes, new HashMap<String, CharSequence>() {{
                         put("time", formattedTime);
                         put("author", authorSpan);
-                        put("author_label", null == authorLabel ? "" : authorLabel.toUpperCase(
-                                context.getResources().getConfiguration().locale));
+                        put("author_label", authorLabel);
                     }}));
         }
 
