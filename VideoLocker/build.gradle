@@ -237,7 +237,7 @@ android {
         prod { }
 
         dev {
-            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+//            minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
         }
         screenshot {}
     }
@@ -295,6 +295,6 @@ android.applicationVariants.all { variant ->
     }
 }
 screenshots {
-        testApkTarget = 'packageScreenshotDebuggableAndroidTest'
-        connectedAndroidTestTarget = 'connectedScreenshotDebuggableAndroidTest'
+        testApkTarget = 'packageDevDebuggableAndroidTest'
+        connectedAndroidTestTarget = 'connectedDevDebuggableAndroidTest'
     }
