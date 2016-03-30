@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <!-- Required by app for storing downloaded videos to the external storage -->
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Required by legacy Google Sign In (TODO: Switch to new Google Sign In) -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
