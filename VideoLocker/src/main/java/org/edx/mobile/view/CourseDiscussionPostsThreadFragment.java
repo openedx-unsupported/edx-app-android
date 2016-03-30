@@ -280,7 +280,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
             @Override
             protected void onException(Exception ex) {
-                super.onException(ex);
+                // Don't display any error message if we're doing a silent
+                // refresh, as that would be confusing to the user.
+                if (!callback.isRefreshingSilently()) {
+                    super.onException(ex);
+                }
                 callback.onError();
                 nextPage = 1;
             }
