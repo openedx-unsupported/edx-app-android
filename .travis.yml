@@ -4,6 +4,8 @@ sudo: false # Explicitly use container-based infrastructure http://docs.travis-c
 env:
   matrix:
     - ANDROID_TARGET=android-23
+  global:
+    - ADB_INSTALL_TIMEOUT=8
 android:
   components:
     # use the latest revision of Android SDK Tools
@@ -20,20 +22,30 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
 
+#    - sys-img-x86-android-23
+    - sys-img-armeabi-v7a-android-23
+
+
 # Disable travis email notifications until builds work properly
 notifications:
   email: true
 
 before_script:
   - chmod +x gradlew
+  - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
 # --debug or --info info flag can be suffixed to following command for more detailed logs of tests
 # It comes in handy to see stacktraces from test failures, which otherwise aren't printed
 # P.S. --debug flag prints too many logs that are mostly not needed, which make it exceed the
 #      4mb limit enforced by travis (so use it with caution)
-  - ./gradlew testProdDebugUnitTestCoverage
-  - ./gradlew copyUnitTestBuildArtifacts
+#  - ./gradlew testProdDebugUnitTestCoverage
+#  - ./gradlew copyUnitTestBuildArtifacts
+#  - ./gradlew verifyMode screenshotTests
+  - ./gradlew screenshotTests
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
