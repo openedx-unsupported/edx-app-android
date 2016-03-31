@@ -50,6 +50,12 @@ public abstract class DiscussionTextUtils {
             final CharSequence formattedTime = getRelativeTimeSpanString(context,
                     initialTimeStampMs, authorData.getCreatedAt().getTime());
             final String authorLabel = authorData.getAuthorLabel();
+            final StringBuilder authorLabelFormatted = new StringBuilder();
+            if (authorLabel != null) {
+                authorLabelFormatted.append("(");
+                authorLabelFormatted.append(authorLabel);
+                authorLabelFormatted.append(")");
+            }
 
             final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
             if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
@@ -73,7 +79,7 @@ public abstract class DiscussionTextUtils {
                     stringRes, new HashMap<String, CharSequence>() {{
                         put("time", formattedTime);
                         put("author", authorSpan);
-                        put("author_label", authorLabel);
+                        put("author_label", authorLabelFormatted.toString());
                     }}));
         }
 
