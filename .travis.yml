@@ -36,6 +36,7 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+  - adb shell pm grant org.edx.mobile android.permission.WRITE_EXTERNAL_STORAGE
 
 script:
 # --debug or --info info flag can be suffixed to following command for more detailed logs of tests
@@ -45,7 +46,7 @@ script:
 #  - ./gradlew testProdDebugUnitTestCoverage
 #  - ./gradlew copyUnitTestBuildArtifacts
 #  - ./gradlew verifyMode screenshotTests
-  - ./gradlew screenshotTests
+  - ./gradlew screenshotTests -PdisablePreDex
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
