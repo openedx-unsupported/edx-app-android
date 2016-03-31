@@ -162,7 +162,7 @@ public class CourseDashboardFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if (courseData == null || !isCoursewareAccessible) return;
 
-        final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig());
+        final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig().getApiHostURL());
         Glide.with(CourseDashboardFragment.this)
                 .load(headerImageUrl)
                 .placeholder(R.drawable.edx_map_login)

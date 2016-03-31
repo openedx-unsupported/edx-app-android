@@ -29,7 +29,7 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         final CourseEntry courseData = enrollment.getCourse();
         holder.setPadding(tag.position == 0);
         holder.setCourseTitle(courseData.getName());
-        holder.setCourseImage(courseData.getCourse_image(environment.getConfig()));
+        holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
 
         if (enrollment.getCourse().hasUpdates()) {
             holder.setHasUpdates(courseData, new OnClickListener() {

@@ -38,7 +38,7 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
         holder.size_of_videos.setText(MemoryUtil.format(getContext(), enrollment.size));
 
         Glide.with(getContext())
-                .load(courseData.getCourse_image(environment.getConfig()))
+                .load(courseData.getCourse_image(environment.getConfig().getApiHostURL()))
                 .placeholder(R.drawable.edx_map)
                 .transform(new TopAnchorFillWidthTransformation(getContext()))
                 .into(holder.courseImage);

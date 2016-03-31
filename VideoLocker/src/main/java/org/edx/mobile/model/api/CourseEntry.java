@@ -1,14 +1,17 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 
 import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -34,10 +37,7 @@ public class CourseEntry implements Serializable {
     private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
-
-    @Inject
-    Config config;
-
+    
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
     }
@@ -54,8 +54,9 @@ public class CourseEntry implements Serializable {
         this.start = start;
     }
 
-    public String getCourse_image(Config config) {
-        return config.getApiHostURL() + course_image;
+    @Nullable
+    public String getCourse_image(@Nullable String baseURL) {
+        return UrlUtil.makeAbsolute(course_image, baseURL);
     }
 
     public void setCourse_image(String course_image) {
