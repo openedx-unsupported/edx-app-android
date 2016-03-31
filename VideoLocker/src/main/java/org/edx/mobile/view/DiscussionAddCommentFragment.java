@@ -59,6 +59,9 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     @InjectView(R.id.tvTimeAuthor)
     private TextView textViewTimeAuthor;
 
+    @InjectView(R.id.discussion_responses_answer_text_view)
+    private TextView responseAnswerTextView;
+
     @Inject
     private Router router;
 
@@ -87,7 +90,9 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         textViewResponse.setText(Html.fromHtml(discussionResponse.getRenderedBody()));
+        DiscussionTextUtils.setEndorsedState(responseAnswerTextView, discussionThread, discussionResponse);
         DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
                 R.string.post_attribution, discussionResponse, new Runnable() {
                     @Override
