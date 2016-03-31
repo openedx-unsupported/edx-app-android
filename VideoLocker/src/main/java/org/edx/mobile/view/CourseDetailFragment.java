@@ -39,6 +39,7 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
+import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -183,7 +184,7 @@ public class CourseDetailFragment extends BaseFragment {
     }
 
     private void setCourseImage() {
-        final String headerImageUrl = environment.getConfig().getApiHostURL() + courseDetail.media.course_image.uri;
+        final String headerImageUrl = courseDetail.media.course_image.getUri(environment.getConfig().getApiHostURL());
         Glide.with(CourseDetailFragment.this)
                 .load(headerImageUrl)
                 .placeholder(R.drawable.edx_map_login)

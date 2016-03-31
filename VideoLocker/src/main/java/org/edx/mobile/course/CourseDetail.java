@@ -2,8 +2,10 @@ package org.edx.mobile.course;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import org.edx.mobile.model.api.StartType;
+import org.edx.mobile.util.UrlUtil;
 
 public class CourseDetail implements Parcelable {
     public String course_id;
@@ -57,7 +59,7 @@ public class CourseDetail implements Parcelable {
     }
 
     public static class Image implements Parcelable {
-        public String uri;
+        private String uri;
 
         protected Image(Parcel in) {
             uri = in.readString();
@@ -85,6 +87,11 @@ public class CourseDetail implements Parcelable {
                 return new Image[size];
             }
         };
+
+        @Nullable
+        public String getUri(String baseURL) {
+            return UrlUtil.makeAbsolute(uri, baseURL);
+        }
     }
 
     public static class Video implements Parcelable {
