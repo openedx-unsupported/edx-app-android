@@ -1,0 +1,36 @@
+machine:
+  java:
+    version: openjdk7
+  python:
+    version: 2.7.10
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+    _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+    GRADLE_OPTS: '-Dorg.gradle.daemon=false'
+
+test:
+  pre:
+    - chmod +x gradlew
+    - mksdcard -l e 256M mysdcard.img
+    - $ANDROID_HOME/tools/emulator -avd testAVD -no-skin -no-audio -no-window -sdcard mysdcard.img:
+        background: true
+    - ./gradlew assembleDevDebuggable -PdisablePreDex:
+        timeout: 720
+    - source environmentSetup.sh && waitForAVD
+#    - ./gradlew installDevDebuggable
+#    - adb shell pm grant org.edx.mobile android.permission.WRITE_EXTERNAL_STORAGE
+  override:
+    - ./gradlew verifyMode screenshotTests -PdisablePreDex
+    - zip -r ~/build_output.zip app/build/outputs/
+
+dependencies:
+  cache_directories:
+    - ~/.android
+    - ~/android
+  override:
+    - pip install pillow
+    - source environmentSetup.sh && getAndroidSDK
+
+general:
+  artifacts:
+    - "~/build_output.zip" # Save APK's, Lint Results, and Test Results
