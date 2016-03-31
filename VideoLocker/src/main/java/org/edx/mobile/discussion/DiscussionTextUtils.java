@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.Config;
@@ -119,5 +122,30 @@ public abstract class DiscussionTextUtils {
         }
 
         return s.subSequence(start, end);
+    }
+
+    public static void setEndorsedState(@NonNull TextView target,
+                                        @NonNull DiscussionThread thread,
+                                        @NonNull DiscussionComment response) {
+        if (response.isEndorsed()) {
+            Context context = target.getContext();
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    target,
+                    new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
+                            .sizeRes(context, R.dimen.edx_xxx_small)
+                            .colorRes(context, R.color.edx_utility_success),
+                    null, null, null);
+            switch (thread.getType()) {
+                case QUESTION:
+                    target.setText(R.string.discussion_responses_answer);
+                    break;
+                case DISCUSSION:
+                default:
+                    target.setText(R.string.discussion_responses_endorsed);
+                    break;
+            }
+            target.setVisibility(View.VISIBLE);
+        }
+
     }
 }
