@@ -20,7 +20,6 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
 
-# Disable travis email notifications until builds work properly
 notifications:
   email: true
 
