@@ -33,17 +33,50 @@ public abstract class DiscussionTextUtils {
     private DiscussionTextUtils() {
     }
 
+    /**
+     * Encapsulates the two variants of author attribution strings, i.e. with and without authorLabel.
+     */
+    public enum AuthorAttributionLabel {
+        POST(R.string.post_attribution, R.string.post_attribution_without_label),
+        ANSWER(R.string.answer_author_attribution, R.string.answer_author_attribution_without_label),
+        ENDORSEMENT(R.string.endorser_attribution, R.string.endorser_attribution_without_label);
+
+        @StringRes
+        private final int stringRes, noLabelStringRes;
+
+        AuthorAttributionLabel(@StringRes int stringRes, @StringRes int noLabelStringRes) {
+            this.stringRes = stringRes;
+            this.noLabelStringRes = noLabelStringRes;
+        }
+
+        /**
+         * @return The string resource with authorLabel included.
+         */
+        @StringRes
+        public int getStringRes() {
+            return stringRes;
+        }
+
+        /**
+         * @return The string resource without the authorLabel.
+         */
+        @StringRes
+        public int getNoLabelStringRes() {
+            return noLabelStringRes;
+        }
+    }
+
     public static void setAuthorAttributionText(@NonNull TextView textView,
-                                                @StringRes final int stringRes,
+                                                @NonNull AuthorAttributionLabel authorAttributionLabel,
                                                 @NonNull final IAuthorData authorData,
                                                 @NonNull final Runnable onAuthorClickListener) {
-        setAuthorAttributionText(textView, stringRes, authorData,
+        setAuthorAttributionText(textView, authorAttributionLabel, authorData,
                 System.currentTimeMillis(), onAuthorClickListener);
     }
 
 
     public static void setAuthorAttributionText(@NonNull TextView textView,
-                                                @StringRes final int stringRes,
+                                                @NonNull AuthorAttributionLabel authorAttributionLabel,
                                                 @NonNull final IAuthorData authorData,
                                                 long initialTimeStampMs,
                                                 @NonNull final Runnable onAuthorClickListener) {
@@ -53,12 +86,6 @@ public abstract class DiscussionTextUtils {
             final CharSequence formattedTime = getRelativeTimeSpanString(context,
                     initialTimeStampMs, authorData.getCreatedAt().getTime());
             final String authorLabel = authorData.getAuthorLabel();
-            final StringBuilder authorLabelFormatted = new StringBuilder();
-            if (authorLabel != null) {
-                authorLabelFormatted.append("(");
-                authorLabelFormatted.append(authorLabel);
-                authorLabelFormatted.append(")");
-            }
 
             final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
             if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
@@ -78,12 +105,18 @@ public abstract class DiscussionTextUtils {
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
+            @StringRes int finalStringRes;
+            HashMap<String, CharSequence> valuesMap = new HashMap<>();
+            valuesMap.put("time", formattedTime);
+            valuesMap.put("author", authorSpan);
+            if (authorLabel != null) {
+                finalStringRes = authorAttributionLabel.getStringRes();
+                valuesMap.put("author_label", authorLabel);
+            } else {
+                finalStringRes = authorAttributionLabel.getNoLabelStringRes();
+            }
             text = trim(ResourceUtil.getFormattedString(context.getResources(),
-                    stringRes, new HashMap<String, CharSequence>() {{
-                        put("time", formattedTime);
-                        put("author", authorSpan);
-                        put("author_label", authorLabelFormatted.toString());
-                    }}));
+                    finalStringRes, valuesMap));
         }
 
         textView.setText(text);

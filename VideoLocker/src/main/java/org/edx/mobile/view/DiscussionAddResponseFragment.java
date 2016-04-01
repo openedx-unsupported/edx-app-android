@@ -88,7 +88,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         textViewTitle.setText(discussionThread.getTitle());
         textViewResponse.setText(Html.fromHtml(discussionThread.getRenderedBody()));
         DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
-                R.string.post_attribution,
+                DiscussionTextUtils.AuthorAttributionLabel.POST,
                 discussionThread, new Runnable() {
                     @Override
                     public void run() {

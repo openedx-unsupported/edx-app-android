@@ -94,7 +94,8 @@ public class DiscussionAddCommentFragment extends BaseFragment {
         textViewResponse.setText(Html.fromHtml(discussionResponse.getRenderedBody()));
         DiscussionTextUtils.setEndorsedState(responseAnswerTextView, discussionThread, discussionResponse);
         DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
-                R.string.post_attribution, discussionResponse, new Runnable() {
+                DiscussionTextUtils.AuthorAttributionLabel.POST,
+                discussionResponse,new Runnable() {
                     @Override
                     public void run() {
                         router.showUserProfile(getActivity(), discussionResponse.getAuthor());
