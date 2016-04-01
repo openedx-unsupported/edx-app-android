@@ -260,12 +260,18 @@
     <string name="discussion_priviledged_author_label_staff">Staff</string>
     <!-- The label to use when indicating a post was authored by a privileged user -->
     <string name="discussion_priviledged_author_attribution">By %s</string>
-    <!-- The date and author of a discussion comment, question, or thread, e.g. "3 days ago by Brian STAFF" -->
-    <string name="post_attribution">{time} by {author} {author_label}</string>
-    <!-- The date and author of an answer to a discussion question e.g. "Marked as answer 2 days ago by Khalid TA" -->
-    <string name="answer_author_attribution">Marked as answer {time} by {author} {author_label}</string>
-    <!-- The date and author of an endorsed response to a discussion thread e.g. "Endorsed 2 days ago by Khalid TA" -->
-    <string name="endorser_attribution">Endorsed {time} by {author} {author_label}</string>
+    <!-- The date and author of a discussion comment, question, or thread, e.g. "3 days ago by Brian (Staff)" -->
+    <string name="post_attribution">{time} by {author} ({author_label})</string>
+    <!-- The date and author of a discussion comment, question, or thread without the author's label, e.g. "3 days ago by Brian" -->
+    <string name="post_attribution_without_label">{time} by {author}</string>
+    <!-- The date and author of an answer to a discussion question e.g. "Marked as answer 2 days ago by Khalid (Community TA)" -->
+    <string name="answer_author_attribution">Marked as answer {time} by {author} ({author_label})</string>
+    <!-- The date and author of an answer to a discussion question without the author's label e.g. "Marked as answer 2 days ago by Khalid" -->
+    <string name="answer_author_attribution_without_label">Marked as answer {time} by {author}</string>
+    <!-- The date and author of an endorsed response to a discussion thread e.g. "Endorsed 2 days ago by Khalid (Community TA)" -->
+    <string name="endorser_attribution">Endorsed {time} by {author} ({author_label})</string>
+    <!-- The date and author of an endorsed response to a discussion thread without the author's label e.g. "Endorsed 2 days ago by Khalid" -->
+    <string name="endorser_attribution_without_label">Endorsed {time} by {author}</string>
     <!-- Label for the visibility of a discussion post that is only visible to cohort -->
     <string name="discussion_post_visibility_cohort">This post is visible only to {cohort}.</string>
     <!-- Label for the visibility of a discussion post that is visible to everyone -->
