@@ -14,8 +14,8 @@ test:
     - mksdcard -l e 256M mysdcard.img
     - $ANDROID_HOME/tools/emulator -avd testAVD -no-skin -no-audio -no-window -sdcard mysdcard.img:
         background: true
-    - ./gradlew assembleDevDebuggable -PdisablePreDex:
-        timeout: 720
+#    - ./gradlew assembleDevDebuggable -PdisablePreDex:
+#        timeout: 720
     - ./gradlew assembleDevDebuggableAndroidTest -PdisablePreDex:
         timeout: 720
     - source environmentSetup.sh && waitForAVD
