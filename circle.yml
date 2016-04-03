@@ -16,6 +16,8 @@ test:
         background: true
     - ./gradlew assembleDevDebuggable -PdisablePreDex:
         timeout: 720
+    - ./gradlew assembleDevDebuggableAndroidTest -PdisablePreDex:
+        timeout: 720
     - source environmentSetup.sh && waitForAVD
 #    - ./gradlew installDevDebuggable
 #    - adb shell pm grant org.edx.mobile android.permission.WRITE_EXTERNAL_STORAGE
