@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="vertical"
-    android:paddingTop="4dp"
-    android:background="?android:attr/activatedBackgroundIndicator" >
+    android:paddingTop="4dp">
 
     <LinearLayout
         android:id="@+id/chapter_row_layout"
@@ -18,7 +18,6 @@
         android:gravity="center_vertical"
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingTop="8dp"
         tools:targetApi="17">
 
@@ -98,9 +97,9 @@
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
             android:background="@android:color/transparent"
+            android:gravity="center"
             android:paddingEnd="5dp"
             android:paddingRight="5dp"
-            android:gravity="center"
             tools:targetApi="17">
 
             <TextView
@@ -120,15 +119,15 @@
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/bulk_download"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="34dp"
+                android:layout_height="48dp"
                 android:baselineAlignBottom="true"
-                android:paddingEnd="1dp"
+                android:paddingEnd="14dp"
                 android:paddingLeft="0dp"
                 android:paddingRight="1dp"
-                android:paddingStart="0dp"
-                android:paddingTop="3dp"
-                app:iconName="fa-arrow-down" />
+                android:paddingStart="4dp"
+                app:iconName="fa-arrow-down"
+                tools:targetApi="17"/>
         </LinearLayout>
 
     </LinearLayout>
