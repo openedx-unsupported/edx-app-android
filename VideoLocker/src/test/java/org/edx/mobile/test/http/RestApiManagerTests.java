@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.RestApiManager;
 import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ProfileModel;

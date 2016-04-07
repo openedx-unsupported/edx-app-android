@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.util.DateUtil;

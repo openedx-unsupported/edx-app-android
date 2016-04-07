@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
@@ -18,7 +16,6 @@ import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.user.UserAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +28,6 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     protected TextView noCourseText;
     private boolean refreshOnResume;
-
-    @Inject
-    private UserAPI userAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +63,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity(), environment);
+        return new CoursesAsyncLoader(getActivity());
     }
 
     @Override

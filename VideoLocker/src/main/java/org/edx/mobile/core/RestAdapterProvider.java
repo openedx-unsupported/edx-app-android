@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.jakewharton.retrofit.Ok3Client;
 
-import org.edx.mobile.discussion.RetroHttpExceptionHandler;
+import org.edx.mobile.http.RetroHttpExceptionHandler;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 
