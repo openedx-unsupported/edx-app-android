@@ -13,6 +13,7 @@ import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.profiles.BadgeAssertion;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,5 +64,9 @@ public class UserAPI {
 
     public List<BadgeAssertion> getBadges(@NonNull String username) throws RetroHttpException {
         return userService.getBadges(username);
+    }
+
+    public List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username) throws RetroHttpException {
+        return userService.getUserEnrolledCourses(username);
     }
 }
