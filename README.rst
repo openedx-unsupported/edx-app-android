@@ -2,7 +2,9 @@ This is the source code for the edX mobile Android app. It is changing rapidly
 and its structure should not be relied upon. See http://code.edx.org for other
 parts of the edX code base.
 
-It requires the "Dogwood" release of open edX or newer.
+It requires the "Dogwood" release of open edX or newer. See
+https://openedx.atlassian.net/wiki/display/COMM/Open+edX+Releases for more
+information.
 
 License
 =======
