@@ -16,6 +16,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
+import org.edx.mobile.discussion.DiscussionThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
 
     @NonNull
     private DiscussionComment response;
+
+    @NonNull
+    private DiscussionThread thread;
     // Record the current time at initialization to keep the display of the elapsed time durations stable.
     private long initialTimeStampMs = System.currentTimeMillis();
 
@@ -48,9 +52,12 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         void onClickAuthor(@NonNull String username);
     }
 
-    public DiscussionCommentsAdapter(@NonNull Context context, @NonNull Listener listener, @NonNull DiscussionComment response) {
+    public DiscussionCommentsAdapter(@NonNull Context context, @NonNull Listener listener,
+                                     @NonNull DiscussionThread thread,
+                                     @NonNull DiscussionComment response) {
         this.context = context;
         this.listener = listener;
+        this.thread = thread;
         this.response = response;
     }
 
@@ -90,8 +97,11 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         @DrawableRes
         final int backgroundRes;
         final IconDrawable iconDrawable;
+        final int standardMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
         if (position == 0) {
+            holder.discussionCommentRow.setPadding(0, standardMargin, 0, 0);
             discussionComment = response;
+            DiscussionTextUtils.setEndorsedState(holder.responseAnswerTextView, thread, response);
             backgroundRes = R.drawable.row_discussion_first_comment_background;
             layoutParams.topMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
             final int childCount = discussionComment.getChildCount();
@@ -104,13 +114,13 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             holder.discussionCommentCountReportTextView.setClickable(false);
 
         } else {
-            final int extraSidePadding = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
-            holder.discussionCommentRow.setPadding(extraSidePadding, 0, extraSidePadding, 0);
+            holder.responseAnswerTextView.setVisibility(View.GONE);
+            holder.discussionCommentRow.setPadding(standardMargin, standardMargin, standardMargin, 0);
 
             discussionComment = discussionComments.get(position - 1);
             if (!progressVisible && position == getItemCount() - 1) {
                 backgroundRes = R.drawable.row_discussion_last_comment_background;
-                layoutParams.bottomMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
+                layoutParams.bottomMargin = standardMargin;
             } else {
                 backgroundRes = R.drawable.row_discussion_comment_background;
             }
@@ -181,6 +191,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         TextView discussionCommentBody;
         TextView discussionCommentAuthorTextView;
         TextView discussionCommentCountReportTextView;
+        TextView responseAnswerTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -188,6 +199,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             discussionCommentBody = (TextView) itemView.findViewById(R.id.discussion_comment_body);
             discussionCommentAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_comment_author_text_view);
             discussionCommentCountReportTextView = (TextView) itemView.findViewById(R.id.discussion_comment_count_report_text_view);
+            responseAnswerTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_text_view);
         }
     }
 

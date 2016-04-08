@@ -121,6 +121,7 @@
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
     <dimen name="widget_margin">10dp</dimen>
+    <dimen name="widget_double_margin">20dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>

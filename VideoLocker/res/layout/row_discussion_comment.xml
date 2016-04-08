@@ -4,7 +4,15 @@
     android:id="@+id/row_discussion_comment_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/discussion_responses_box_padding">
+
+    <include
+        layout="@layout/discussion_endorsed_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/discussion_responses_box_padding"
+        android:layout_marginStart="@dimen/discussion_responses_box_padding" />
 
     <TextView
         android:id="@+id/discussion_comment_body"
@@ -12,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/discussion_responses_box_padding"
         android:layout_marginRight="@dimen/discussion_responses_box_padding"
-        android:layout_marginTop="@dimen/discussion_responses_box_padding"
         android:textColor="@color/edx_grayscale_neutral_dark"
         android:textSize="@dimen/edx_x_small"
         tools:text="This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment. This is the text of a comment." />

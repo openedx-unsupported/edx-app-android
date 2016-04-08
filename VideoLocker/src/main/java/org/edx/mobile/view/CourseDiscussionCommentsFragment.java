@@ -83,7 +83,8 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this, discussionResponse);
+        discussionCommentsAdapter = new DiscussionCommentsAdapter(getActivity(), this,
+                discussionThread, discussionResponse);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(discussionCommentsListView,
                 discussionCommentsAdapter, new InfiniteScrollUtils.PageLoader<DiscussionComment>() {
             @Override

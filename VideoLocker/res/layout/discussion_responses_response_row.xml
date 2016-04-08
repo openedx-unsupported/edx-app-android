@@ -24,15 +24,7 @@
             android:paddingBottom="3dp"
             android:paddingTop="@dimen/discussion_responses_box_padding">
 
-            <TextView
-                android:id="@+id/discussion_responses_answer_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="3dp"
-                android:drawablePadding="4dp"
-                android:text="@string/discussion_responses_answer"
-                android:textColor="@color/edx_utility_success"
-                android:textSize="@dimen/edx_x_small" />
+            <include layout="@layout/discussion_endorsed_text_view" />
 
             <TextView
                 android:id="@+id/discussion_responses_comment_body_text_view"
