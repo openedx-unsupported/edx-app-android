@@ -154,7 +154,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         bindSocialView(holder.socialLayoutViewHolder, discussionThread);
         DiscussionTextUtils.setAuthorAttributionText(
                 holder.authorLayoutViewHolder.discussionAuthorTextView,
-                R.string.post_attribution, discussionThread, initialTimeStampMs,
+                DiscussionTextUtils.AuthorAttributionLabel.POST,
+                discussionThread, initialTimeStampMs,
                 new Runnable() {
                     @Override
                     public void run() {
@@ -253,7 +254,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         DiscussionTextUtils.setAuthorAttributionText(
                 holder.authorLayoutViewHolder.discussionAuthorTextView,
-                R.string.post_attribution,
+                DiscussionTextUtils.AuthorAttributionLabel.POST,
                 comment, initialTimeStampMs, new Runnable() {
                     @Override
                     public void run() {
@@ -282,22 +283,22 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         if (comment.isEndorsed()) {
             DiscussionThread.ThreadType threadType = discussionThread.getType();
-            @StringRes int attributionStringRes;
+            DiscussionTextUtils.AuthorAttributionLabel authorAttributionLabel;
             @StringRes int endorsementTypeStringRes;
             switch (threadType) {
                 case QUESTION:
-                    attributionStringRes = R.string.answer_author_attribution;
+                    authorAttributionLabel = DiscussionTextUtils.AuthorAttributionLabel.ANSWER;
                     endorsementTypeStringRes = R.string.discussion_responses_answer;
                     break;
                 case DISCUSSION:
                 default:
+                    authorAttributionLabel = DiscussionTextUtils.AuthorAttributionLabel.ENDORSEMENT;
                     endorsementTypeStringRes = R.string.discussion_responses_endorsed;
-                    attributionStringRes = R.string.endorser_attribution;
                     break;
             }
             holder.responseAnswerTextView.setText(endorsementTypeStringRes);
             DiscussionTextUtils.setAuthorAttributionText(holder.responseAnswerAuthorTextView,
-                    attributionStringRes, comment.getEndorserData(), initialTimeStampMs,
+                    authorAttributionLabel, comment.getEndorserData(), initialTimeStampMs,
                     new Runnable() {
                         @Override
                         public void run() {

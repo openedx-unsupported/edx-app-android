@@ -145,7 +145,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         holder.discussionCommentBody.setText(commentBody);
 
         DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView,
-                R.string.post_attribution, discussionComment, initialTimeStampMs,
+                DiscussionTextUtils.AuthorAttributionLabel.POST,
+                discussionComment, initialTimeStampMs,
                 new Runnable() {
                     @Override
                     public void run() {
