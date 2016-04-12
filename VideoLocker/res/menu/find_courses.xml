@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_item_search"
-          android:title="Foosball"
+          android:title="@string/search_for_courses"
           app:actionViewClass="android.support.v7.widget.SearchView"
           app:showAsAction="ifRoom" />
 
