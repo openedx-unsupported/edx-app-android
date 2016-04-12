@@ -8,7 +8,11 @@ import android.support.v7.widget.SearchView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import roboguice.inject.ContentView;
 
@@ -46,7 +50,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
-                String searchUrl = baseUrl + "&search_query=" + query;
+                String searchUrl = buildQuery(baseUrl, query, logger);
                 searchView.clearFocus();
                 webView.loadUrl(searchUrl);
                 return true;
@@ -67,5 +71,23 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         if (!isWebViewLoaded()) {
             webView.reload();
         }
+    }
+
+    public static String buildQuery(String baseUrl, String query, Logger logger) {
+        String encodedQuery = null;
+        try {
+            encodedQuery = URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e);
+        }
+        String searchTerm = "search_query=" + encodedQuery;
+
+        String searchUrl;
+        if (baseUrl.contains("?")) {
+            searchUrl = baseUrl + "&" + searchTerm;
+        } else {
+            searchUrl = baseUrl + "?" + searchTerm;
+        }
+        return searchUrl;
     }
 }
