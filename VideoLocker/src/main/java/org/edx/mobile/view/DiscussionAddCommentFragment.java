@@ -137,9 +137,14 @@ public class DiscussionAddCommentFragment extends BaseFragment {
 
         createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
             @Override
-            public void onSuccess(@NonNull DiscussionComment thread) {
-                logger.debug(thread.toString());
-                EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, discussionResponse));
+            public void onSuccess(@NonNull DiscussionComment comment) {
+                logger.debug(comment.toString());
+                if (discussionResponse.getChildCount() == 0) {
+                    discussionResponse.incrementChildCount();
+                    router.showCourseDiscussionComments(getActivity(), discussionResponse,
+                            discussionThread, true);
+                }
+                EventBus.getDefault().post(new DiscussionCommentPostedEvent(comment, discussionResponse));
                 getActivity().finish();
             }
 

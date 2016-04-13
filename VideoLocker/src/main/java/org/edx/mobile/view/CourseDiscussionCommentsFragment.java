@@ -57,6 +57,9 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT)
     private DiscussionComment discussionResponse;
 
+    @InjectExtra(Router.EXTRA_DISCUSSION_COMMENT_POSTED)
+    private boolean isNewCommentPosted;
+
     @Inject
     ISegment segIO;
 
@@ -111,6 +114,10 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                         router.showCourseDiscussionAddComment(context, discussionResponse, discussionThread);
                     }
                 });
+
+        if (isNewCommentPosted) {
+            ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
+        }
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {

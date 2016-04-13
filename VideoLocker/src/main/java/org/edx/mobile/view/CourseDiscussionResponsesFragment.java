@@ -148,10 +148,6 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 }
             } else {
                 // We got a comment to a response
-                if (event.getParent().getChildCount() == 0) {
-                    // We only need to show this message when the first comment is added
-                    ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_comment_posted));
-                }
                 courseDiscussionResponsesAdapter.addNewComment(event.getParent());
             }
         }
@@ -169,7 +165,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
 
     @Override
     public void onClickViewComments(@NonNull DiscussionComment response) {
-        router.showCourseDiscussionComments(getActivity(), response, discussionThread);
+        router.showCourseDiscussionComments(getActivity(), response, discussionThread, false);
     }
 
     private static class ResponsesLoader implements
