@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.assertj.android.api.Assertions;
 import org.edx.mobile.R;
+import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
@@ -14,11 +15,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowWebView;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
-public class WebViewDialogActivityTest extends UiTest {
+public class WebViewDialogActivityTest extends BaseTestCase {
 
     /**
      * Testing method for displaying web view dialog
