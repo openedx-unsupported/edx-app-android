@@ -12,10 +12,12 @@ import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.profiles.BadgeAssertion;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
@@ -57,5 +59,9 @@ public class UserAPI {
     public void deleteProfileImage(@NonNull String username) throws RetroHttpException {
         userService.deleteProfileImage(username);
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
+    }
+
+    public List<BadgeAssertion> getBadges(@NonNull String username) throws RetroHttpException {
+        return userService.getBadges(username);
     }
 }
