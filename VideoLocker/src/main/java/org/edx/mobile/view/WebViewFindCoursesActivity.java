@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.support.v7.widget.SearchView;
@@ -73,7 +74,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         }
     }
 
-    public static String buildQuery(String baseUrl, String query, Logger logger) {
+    public static String buildQuery(@NonNull String baseUrl, @NonNull String query, @NonNull Logger logger) {
         String encodedQuery = null;
         try {
             encodedQuery = URLEncoder.encode(query, "UTF-8");
