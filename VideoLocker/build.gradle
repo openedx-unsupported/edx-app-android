@@ -174,7 +174,7 @@ android {
         targetSdkVersion 21
 
         versionCode 79
-        versionName "2.4.0"
+        versionName "2.3.0"
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
