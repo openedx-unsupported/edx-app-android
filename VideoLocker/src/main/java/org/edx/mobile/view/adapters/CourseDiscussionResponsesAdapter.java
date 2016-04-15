@@ -282,6 +282,8 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         holder.socialLayoutViewHolder.threadFollowContainer.setVisibility(View.INVISIBLE);
 
         if (comment.isEndorsed()) {
+            holder.responseAnswerTextView.setVisibility(View.VISIBLE);
+            holder.responseAnswerAuthorTextView.setVisibility(View.VISIBLE);
             DiscussionThread.ThreadType threadType = discussionThread.getType();
             DiscussionTextUtils.AuthorAttributionLabel authorAttributionLabel;
             @StringRes int endorsementTypeStringRes;
@@ -305,8 +307,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                             listener.onClickAuthor(comment.getEndorsedBy());
                         }
                     });
-            holder.responseAnswerTextView.setVisibility(View.VISIBLE);
-            holder.responseAnswerAuthorTextView.setVisibility(View.VISIBLE);
         } else {
             holder.responseAnswerTextView.setVisibility(View.GONE);
             holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
