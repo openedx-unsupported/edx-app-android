@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/state_closed"
+        android:state_active="false"
+        android:drawable="@drawable/ic_spinner_caret" />
+
+    <item android:id="@+id/state_open">
+        <rotate
+            android:fromDegrees="180"
+            android:toDegrees="180"
+            android:drawable="@drawable/ic_spinner_caret" />
+    </item>
+</selector>

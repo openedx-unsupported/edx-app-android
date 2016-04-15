@@ -57,6 +57,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.view.compat.ViewTreeObserverCompat;
 
 import java.util.List;
 
@@ -298,7 +299,7 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
         mMenu.close();
         if (mTreeObserver != null) {
             if (!mTreeObserver.isAlive()) mTreeObserver = mAnchorView.getViewTreeObserver();
-            mTreeObserver.removeGlobalOnLayoutListener(this);
+            ViewTreeObserverCompat.removeOnGlobalLayoutListener(mTreeObserver, this);
             mTreeObserver = null;
         }
         mAnchorView.removeOnAttachStateChangeListener(this);
@@ -378,7 +379,7 @@ class MenuPopupHelper implements AdapterView.OnItemClickListener, View.OnKeyList
     public void onViewDetachedFromWindow(View v) {
         if (mTreeObserver != null) {
             if (!mTreeObserver.isAlive()) mTreeObserver = v.getViewTreeObserver();
-            mTreeObserver.removeGlobalOnLayoutListener(this);
+            ViewTreeObserverCompat.removeOnGlobalLayoutListener(mTreeObserver, this);
         }
         v.removeOnAttachStateChangeListener(this);
     }

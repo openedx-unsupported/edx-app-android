@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ideally the duration should match the dropdown popup animation, but
+     the default animation of PopupWindow has it's duration set up to use
+     the system-configurable Activity open/close animations' duration,
+     which is not publicly accessible. Prior to Marshmallow, it's not
+     possible to define a custom animation either, and you need to select
+     one of the few system defined ones (of which the default one is
+     probably optimal). Disabling the animation is also not possible pre-
+     Marshmallow (the system just reverts to the default if the property
+     is set to null). Given this situation, the config_shortAnimTime
+     property can be used here as a safe and approximate duration. -->
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:propertyName="rotation"
+    android:valueFrom="0.0"
+    android:valueTo="180.0" />

@@ -3,7 +3,6 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -141,8 +140,6 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 setPostButtonEnabledState();
             }
         });
-
-        ViewCompat.setBackgroundTintList(topicsSpinner, getResources().getColorStateList(R.color.edx_grayscale_neutral_dark));
 
         addPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

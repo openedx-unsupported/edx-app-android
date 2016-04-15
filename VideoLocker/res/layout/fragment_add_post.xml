@@ -46,19 +46,13 @@
                     android:text="@string/discussion_question" />
             </RadioGroup>
 
-            <FrameLayout
-                style="@style/edX.Widget.SpinnerContainer"
+            <org.edx.mobile.view.custom.AlignedDropdownSpinner
+                android:id="@+id/topics_spinner"
+                style="?android:attr/dropDownSpinnerStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/widget_margin">
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/topics_spinner"
-                    style="@style/edX.Widget.Spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@layout/edx_spinner_item" />
-            </FrameLayout>
+                android:layout_marginTop="@dimen/widget_margin"
+                tools:listitem="@layout/edx_spinner_item" />
         </LinearLayout>
 
         <include layout="@layout/edx_divider" />

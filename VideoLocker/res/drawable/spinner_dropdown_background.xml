@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_active="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/edx_grayscale_neutral_white" />
+            <stroke
+                android:width="@dimen/edx_hairline"
+                android:color="@color/edx_grayscale_neutral_light" />
+            <corners android:radius="@dimen/edx_box_radius" />
+            <!-- The horizontal padding is defined to offset the caret
+                 at the end with an RTL relative definition. -->
+            <padding
+                android:left="@dimen/edx_hairline"
+                android:right="@dimen/edx_hairline"
+                android:top="@dimen/edx_hairline"
+                android:bottom="@dimen/edx_hairline" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid
+                android:color="@color/edx_grayscale_neutral_white" />
+            <stroke
+                android:width="@dimen/edx_hairline"
+                android:color="@color/edx_grayscale_neutral_light" />
+            <!-- No bottom rounded corners when the dropdown is being
+                 shown, as we're going for a continuous list view, and
+                 not overlapping it. -->
+            <corners
+                android:radius="@dimen/edx_box_radius"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <padding
+                android:left="@dimen/edx_hairline"
+                android:right="@dimen/edx_hairline"
+                android:top="@dimen/edx_hairline"
+                android:bottom="@dimen/edx_hairline" />
+        </shape>
+    </item>
+</selector>

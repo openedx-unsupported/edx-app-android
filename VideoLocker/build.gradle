@@ -74,11 +74,11 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.0.2'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:cardview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
@@ -110,7 +110,7 @@ dependencies {
     provided 'org.roboguice:roboblender:3.0.1'
 
     // For the optional Nullable annotation
-    compile 'com.android.support:support-annotations:23.1.1'
+    compile 'com.android.support:support-annotations:23.3.0'
 
     // test project configuration
     testCompile 'junit:junit:4.12'
@@ -178,6 +178,7 @@ android {
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
+        vectorDrawables.useSupportLibrary = true
 
         // test configuration
         testApplicationId 'org.edx.mobile.test'

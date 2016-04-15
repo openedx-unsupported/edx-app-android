@@ -22,8 +22,8 @@
     <dimen name="popupMenuRowTextSize">14sp</dimen>
     <dimen name="popupMenuIconDefaultSize">16dp</dimen>
     <dimen name="popupMenuIconPadding">16dp</dimen>
-    <dimen name="spinnerPopupBorder">1dp</dimen>
-    <dimen name="popupSpinnerMinHeight">34dp</dimen>
+    <dimen name="spinner_popup_window_border">1dp</dimen>
+    <dimen name="spinner_popup_min_height">34dp</dimen>
     <dimen name="width_chapter_text">185dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

@@ -16,6 +16,8 @@
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="android:windowBackground">@color/edx_grayscale_neutral_x_light</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
+        <item name="android:spinnerStyle">?android:attr/dropDownSpinnerStyle</item>
+        <item name="android:dropDownSpinnerStyle">@style/edX.Widget.Spinner.Dropdown</item>
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="android:popupMenuStyle">@style/edX.Widget.PopupMenu</item>
         <item name="edgePopupMenuStyle">@style/edX.Widget.EdgePopupMenu</item>
@@ -26,7 +28,12 @@
         <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <!--<item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>-->
-        <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
+        <!-- Set the popup ListView style as the default for dropdown windows, since the
+             default Spinner style is explicitly defining it's ListView style via a
+             separate theme for it's dropdown popup window, and ListPopupWindow (used in
+             both PopupMenu and Spinner) only looks at this global attribute (and thus
+             can only be customized by using a custom theme). -->
+        <item name="android:dropDownListViewStyle">@style/edX.Widget.PopupListView</item>
         <item name="buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:buttonStyle">@style/edX.Widget.Button</item>
         <item name="android:textColorLink">@color/edx_brand_primary_base</item>
@@ -305,10 +312,6 @@
     <style name="edX.Widget.EditText">
         <item name="android:background">@drawable/edx_input_background</item>
         <item name="android:textSize">@dimen/edx_small</item>
-        <item name="android:paddingLeft">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingRight">@dimen/horizontal_input_padding</item>
-        <item name="android:paddingBottom">@dimen/vertical_input_padding</item>
-        <item name="android:paddingTop">@dimen/vertical_input_padding</item>
     </style>
 
     <style name="edX.Widget.Button" parent="@android:style/Widget.TextView">
@@ -372,34 +375,49 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
     </style>
 
-    <style name="edX.Widget.Spinner" parent="Widget.AppCompat.Spinner">
-        <!-- We're using the default appcompat spinner background, but the margin beside the dropdown arrow is to small -->
-        <!-- Add [edX widget_margin of 10dp] minus [AppCompat background's built-in padding of 7dp] -->
-        <item name="android:layout_marginRight">3dp</item>
-        <item name="android:spinnerMode">dropdown</item>
+    <style name="edX.Widget.Spinner.Dropdown" parent="Widget.AppCompat.Spinner.DropDown">
+        <!-- For correct display and behaviour of this style, the AlignedDropdownSpinner
+             widget needs to be used instead of the standard Spinner or AppCompatSpinner.
+             This has also been set as the standard default Spinner style in the theme,
+             so AlignedDropdownSpinner needs to be used everywhere in the app where that
+             doesn't define it's own style. -->
+        <item name="android:background">@drawable/spinner_dropdown_background</item>
+        <item name="dropDownIndicator">@drawable/spinner_dropdown_caret</item>
+        <item name="android:popupBackground">@drawable/spinner_dropdown_window_background</item>
+        <item name="android:popupTheme" tools:targetApi="lollipop">@style/edX.Widget.Spinner.Dropdown.Theme</item>
+        <item name="popupTheme">@style/edX.Widget.Spinner.Dropdown.Theme</item>
+        <item name="android:overlapAnchor" tools:targetApi="lollipop">false</item>
+        <item name="overlapAnchor">false</item>
     </style>
 
-    <style name="edX.Widget.SpinnerContainer">
-        <item name="android:background">@drawable/edx_input_background</item>
+    <style name="edX.Widget.Spinner.Dropdown.Theme" parent="AppTheme">
+        <item name="android:dropDownListViewStyle">@style/edX.Widget.Spinner.Dropdown.ListView</item>
+    </style>
+
+    <style name="edX.Widget.Spinner.Dropdown.ListView" parent="edX.Widget.PopupListView">
+        <item name="android:divider">?android:attr/listDivider</item>
     </style>
 
     <style name="edX.Widget.Spinner.Popup" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:minHeight">@dimen/popupSpinnerMinHeight</item>
-        <item name="android:popupBackground">@drawable/spinner_popup_background</item>
+        <item name="android:minHeight">@dimen/spinner_popup_min_height</item>
+        <item name="android:popupBackground">@drawable/spinner_popup_window_background</item>
         <!-- We need to set a top margin equal to the top padding of the
              background, because ListPopupWindow (which is used internally by
              Spinner) sets it's vertical offset to be the inverse of that by
              default, so it would should up above the Spinner's boundaries.
              Then we need a bottom padding of an equal amount to offset it, in
              order to maintain the expected anchor for centered gravity. -->
-        <item name="android:layout_marginTop">@dimen/spinnerPopupBorder</item>
-        <item name="android:paddingBottom">@dimen/spinnerPopupBorder</item>
+        <item name="android:layout_marginTop">@dimen/spinner_popup_window_border</item>
+        <item name="android:paddingBottom">@dimen/spinner_popup_window_border</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
 
-    <style name="edX.Widget.DropDownListView" parent="Widget.AppCompat.ListView.DropDown" />
+    <style name="edX.Widget.PopupListView" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:scrollbars">none</item>
+        <item name="android:overScrollMode">never</item>
+    </style>
 
     <!-- Spinner with the popup style -->
     <style name="edX.Widget.ListPopupWindow" parent="Widget.AppCompat.ListPopupWindow">
