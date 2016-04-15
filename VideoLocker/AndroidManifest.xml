@@ -148,6 +148,7 @@
         <activity
             android:name=".view.WebViewFindCoursesActivity"
             android:label="@string/find_courses_title"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
         </activity>
 
