@@ -24,7 +24,7 @@ public final class OauthHeaderRequestInterceptor implements Interceptor {
     @Override public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
 
-        Request.Builder buider = originalRequest.newBuilder();
+        Request.Builder builder = originalRequest.newBuilder();
         // generate auth headers
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         AuthResponse auth = pref.getCurrentAuth();
@@ -33,14 +33,14 @@ public final class OauthHeaderRequestInterceptor implements Interceptor {
             // this might be a login with Facebook or Google
             String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
             if (token != null) {
-                buider.addHeader("Authorization", token);
+                builder.addHeader("Authorization", token);
             } else {
                 logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
         } else {
-            buider.addHeader("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
+            builder.addHeader("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
         }
-        return chain.proceed(buider.build());
+        return chain.proceed(builder.build());
     }
 
 }
