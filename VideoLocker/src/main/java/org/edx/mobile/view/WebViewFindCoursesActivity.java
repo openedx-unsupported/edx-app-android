@@ -11,6 +11,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.util.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -39,6 +40,12 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
+
+        Config config =  environment.getConfig();
+        if (!config.getCourseDiscoveryConfig().isWebCourseSearchEnabled()) {
+            //bail out if the search bar is not enabled
+            return result;
+        }
 
         getMenuInflater().inflate(R.menu.find_courses, menu);
         // Get the SearchView and set the searchable configuration
