@@ -117,11 +117,16 @@ public class Config {
         public String getCourseInfoUrlTemplate() {
             return mWebViewConfig.getCourseInfoUrlTemplate();
         }
+
+        public boolean isWebCourseSearchEnabled() {
+            return mWebViewConfig.isWebCourseSearchEnabled();
+        }
     }
 
     public static class WebViewConfig {
         private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
         private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
+        private @SerializedName("SEARCH_BAR_ENABLED") boolean mSearchBarEnabled;
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
@@ -130,6 +135,8 @@ public class Config {
         public String getCourseInfoUrlTemplate() {
             return mCourseInfoUrlTemplate;
         }
+
+        public boolean isWebCourseSearchEnabled() { return mSearchBarEnabled; }
     }
 
     /**
