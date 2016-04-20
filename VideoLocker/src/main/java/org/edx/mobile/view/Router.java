@@ -44,6 +44,7 @@ public class Router {
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
     public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
+    public static final String EXTRA_DISCUSSION_COMMENT_POSTED = "discussion_comment_posted";
 
     @Inject
     Config config;
@@ -212,10 +213,11 @@ public class Router {
         activity.startActivity(addPostIntent);
     }
 
-    public void showCourseDiscussionComments(Context context, DiscussionComment comment, DiscussionThread discussionThread) {
+    public void showCourseDiscussionComments(@NonNull Context context, @NonNull DiscussionComment comment, @NonNull DiscussionThread discussionThread, boolean isNewCommentPosted) {
         Intent commentListIntent = new Intent(context, CourseDiscussionCommentsActivity.class);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT, comment);
         commentListIntent.putExtra(Router.EXTRA_DISCUSSION_THREAD, discussionThread);
+        commentListIntent.putExtra(Router.EXTRA_DISCUSSION_COMMENT_POSTED, isNewCommentPosted);
         commentListIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(commentListIntent);
     }
