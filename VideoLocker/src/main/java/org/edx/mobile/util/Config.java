@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 @Singleton
 public class Config {
@@ -65,6 +67,9 @@ public class Config {
     public static final String BADGES_ENABLED = "BADGES_ENABLED";
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
+
+    // E2E Test
+    public static final String END_TO_END_TEST = "END_TO_END_TEST";
 
     /**
      * Zero Rating configuration.
@@ -225,6 +230,23 @@ public class Config {
 
         public String getName() { return mName; }
         public String getPassword() { return mPassword; }
+    }
+
+    /**
+     * End-to-end test configurations
+     */
+    public class EndToEndConfig {
+        private String DEFAULT_EMAIL_TEMPLATE = "test-{unique_id}@example.com";
+        private @SerializedName("EMAIL_TEMPLATE") String mEmailTemplate;
+        private @SerializedName("TEST_COURSE_ID") String mTestCourseId;
+
+        public String getEmailTemplate() {
+            return TextUtils.isEmpty(mEmailTemplate) ? DEFAULT_EMAIL_TEMPLATE : mEmailTemplate;
+        }
+
+        public String getTestCourseId() {
+            return mTestCourseId;
+        }
     }
 
     /**
@@ -514,6 +536,18 @@ public class Config {
         }
         else {
             return new TestAccountConfig();
+        }
+    }
+
+    public EndToEndConfig getEndToEndConfig() {
+        JsonElement element = getObject(END_TO_END_TEST);
+        if(element != null) {
+            Gson gson = new Gson();
+            EndToEndConfig config = gson.fromJson(element, EndToEndConfig.class);
+            return config;
+        }
+        else {
+            return new EndToEndConfig();
         }
     }
 }
