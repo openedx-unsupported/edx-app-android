@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white" />
+    <stroke android:width="@dimen/spinner_popup_window_border"
+        android:color="@color/edx_grayscale_neutral_base" />
+    <corners android:radius="@dimen/spinner_popup_window_border" />
+    <padding android:top="@dimen/spinner_popup_window_border"
+        android:bottom="@dimen/spinner_popup_window_border"
+        android:left="@dimen/spinner_popup_window_border"
+        android:right="@dimen/spinner_popup_window_border" />
+</shape>

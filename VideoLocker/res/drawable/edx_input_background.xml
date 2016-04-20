@@ -6,4 +6,9 @@
         android:width="@dimen/edx_hairline"
         android:color="@color/edx_grayscale_neutral_light" />
     <corners android:radius="@dimen/edx_box_radius" />
+    <padding
+        android:left="@dimen/horizontal_input_padding"
+        android:right="@dimen/horizontal_input_padding"
+        android:top="@dimen/vertical_input_padding"
+        android:bottom="@dimen/vertical_input_padding" />
 </shape>
