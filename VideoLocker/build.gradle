@@ -299,6 +299,6 @@ android.applicationVariants.all { variant ->
 }
 
 screenshots {
-    testApkTarget = 'packageDevDebuggableAndroidTest'
-    connectedAndroidTestTarget = 'connectedDevDebuggableAndroidTest'
+    testApkTarget = 'packageProdDebuggableAndroidTest'
+    connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }
