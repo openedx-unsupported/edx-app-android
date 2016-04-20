@@ -30,12 +30,13 @@ before_script:
   # ARM architecture is used instead of x86 (which is 10x faster) of the lack of support from CI due
   # to complications of creating a virtual machine within a virtual machine. This may be solved
   # eventually and would significantly speed some things up.
-  # Create the AVD for android 5.0.
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-  # Make sdcard for screenshot tests
+  # Create the AVD for android 5.0
+  - echo no | android create avd --force --name screenshotDevice --target android-21 --abi armeabi-v7a --skin 480x854
   - mksdcard -l e 256M mysdcard.img
+  # Set DPI for screenshot tests
+  - echo "hw.lcd.density=213" >> $HOME/.android/avd/screenshotDevice.avd/config.ini
   # Boot up the emulator in the background
-  - emulator -avd test -no-skin -no-audio -no-window -sdcard mysdcard.img&
+  - emulator -avd screenshotDevice -no-audio -no-window -sdcard mysdcard.img&
 
 script:
 # --debug or --info info flag can be suffixed to following command for more detailed logs of tests
