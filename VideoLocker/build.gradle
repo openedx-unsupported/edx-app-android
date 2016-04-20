@@ -276,6 +276,13 @@ android {
              jvmArgs '-XX:MaxPermSize=512m'
          }
     }
+
+    lintOptions {
+        htmlReport true
+        htmlOutput file("lint-report.html")
+        abortOnError true
+        warningsAsErrors true
+    }
 }
 
 
