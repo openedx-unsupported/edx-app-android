@@ -9,6 +9,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -24,9 +25,13 @@ import org.edx.mobile.R;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
+    private static final Pattern PATTERN_DUPLICATE_WHITESPACE = Pattern.compile("\\s+");
+
     @Inject
     private static Config config;
 
@@ -83,45 +88,69 @@ public abstract class DiscussionTextUtils {
         final CharSequence text;
         {
             final Context context = textView.getContext();
-            final CharSequence formattedTime = getRelativeTimeSpanString(context,
-                    initialTimeStampMs, authorData.getCreatedAt().getTime());
-            final String authorLabel = authorData.getAuthorLabel();
+            final Date dateCreated = authorData.getCreatedAt();
+            final CharSequence formattedTime = dateCreated == null ? null :
+                    getRelativeTimeSpanString(context, initialTimeStampMs, dateCreated.getTime());
 
-            final SpannableString authorSpan = new SpannableString(authorData.getAuthor());
-            if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
-                authorSpan.setSpan(new ClickableSpan() {
-                    @Override
-                    public void onClick(View widget) {
-                        onAuthorClickListener.run();
-                    }
-
-                    @Override
-                    public void updateDrawState(TextPaint ds) {
-                        super.updateDrawState(ds);
-                        ds.setUnderlineText(false);
-                    }
-                }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-            @StringRes int finalStringRes;
-            HashMap<String, CharSequence> valuesMap = new HashMap<>();
-            valuesMap.put("time", formattedTime);
-            valuesMap.put("author", authorSpan);
-            if (authorLabel != null) {
-                finalStringRes = authorAttributionLabel.getStringRes();
-                valuesMap.put("author_label", authorLabel);
+            final String author = authorData.getAuthor();
+            if (TextUtils.isEmpty(author)) {
+                switch (authorAttributionLabel) {
+                    case POST:
+                        text = formattedTime;
+                        break;
+                    default:
+                        text = null;
+                        break;
+                }
             } else {
-                finalStringRes = authorAttributionLabel.getNoLabelStringRes();
+                final String authorLabel = authorData.getAuthorLabel();
+
+                final SpannableString authorSpan = new SpannableString(author);
+                if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
+                    authorSpan.setSpan(new ClickableSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            onAuthorClickListener.run();
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            super.updateDrawState(ds);
+                            ds.setUnderlineText(false);
+                        }
+                    }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                @StringRes int finalStringRes;
+                HashMap<String, CharSequence> valuesMap = new HashMap<>();
+                valuesMap.put("time", formattedTime);
+                valuesMap.put("author", authorSpan);
+                if (authorLabel != null) {
+                    finalStringRes = authorAttributionLabel.getStringRes();
+                    valuesMap.put("author_label", authorLabel);
+                } else {
+                    finalStringRes = authorAttributionLabel.getNoLabelStringRes();
+                }
+                CharSequence formattedText = trim(ResourceUtil.getFormattedString(
+                        context.getResources(), finalStringRes, valuesMap));
+                // If time is not available, then reduce the whitespaces
+                // surrounding it's placeholder in the template to one.
+                if (TextUtils.isEmpty(formattedText) || TextUtils.isEmpty(authorLabel)) {
+                    formattedText = removeDuplicateWhitespace(formattedText);
+                }
+                text = formattedText;
             }
-            text = trim(ResourceUtil.getFormattedString(context.getResources(),
-                    finalStringRes, valuesMap));
         }
 
         textView.setText(text);
-        // Allow ClickableSpan to trigger clicks
-        textView.setMovementMethod(new LinkMovementMethod());
+        if (TextUtils.isEmpty(text)) {
+            textView.setVisibility(View.GONE);
+        } else {
+            // Allow ClickableSpan to trigger clicks
+            textView.setMovementMethod(new LinkMovementMethod());
+        }
     }
 
     private static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
@@ -155,6 +184,10 @@ public abstract class DiscussionTextUtils {
         }
 
         return s.subSequence(start, end);
+    }
+
+    public static CharSequence removeDuplicateWhitespace(CharSequence text) {
+        return PATTERN_DUPLICATE_WHITESPACE.matcher(text).replaceAll(" ");
     }
 
     public static void setEndorsedState(@NonNull TextView target,
