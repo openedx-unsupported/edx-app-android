@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.support.v7.widget.SearchView;
 
@@ -49,7 +51,8 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
         getMenuInflater().inflate(R.menu.find_courses, menu);
         // Get the SearchView and set the searchable configuration
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
 
         Resources resources = getResources();
         searchView.setQueryHint(resources.getString(R.string.search_for_courses));
@@ -69,6 +72,17 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
                 return false;
             }
         });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    searchItem.collapseActionView();
+                    searchView.clearFocus();
+                    searchView.setQuery("", false);
+                }
+            }
+        });
+
         return result;
     }
 
