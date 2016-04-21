@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -30,8 +31,6 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
-    private static final Pattern PATTERN_DUPLICATE_WHITESPACE = Pattern.compile("\\s+");
-
     @Inject
     private static Config config;
 
@@ -137,7 +136,7 @@ public abstract class DiscussionTextUtils {
                         context.getResources(), finalStringRes, valuesMap));
                 // If time is not available, then reduce the whitespaces
                 // surrounding it's placeholder in the template to one.
-                if (TextUtils.isEmpty(formattedText) || TextUtils.isEmpty(authorLabel)) {
+                if (TextUtils.isEmpty(formattedTime)) {
                     formattedText = removeDuplicateWhitespace(formattedText);
                 }
                 text = formattedText;
@@ -187,7 +186,17 @@ public abstract class DiscussionTextUtils {
     }
 
     public static CharSequence removeDuplicateWhitespace(CharSequence text) {
-        return PATTERN_DUPLICATE_WHITESPACE.matcher(text).replaceAll(" ");
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        for (int size = text.length(), i = 0; i < size; i++) {
+            if (Character.isWhitespace(builder.charAt(i))) {
+                int nextIndex = i + 1;
+                if (nextIndex < size && Character.isWhitespace(builder.charAt(nextIndex))) {
+                    builder.replace(i, nextIndex, " ");
+                    break;
+                }
+            }
+        }
+        return builder;
     }
 
     public static void setEndorsedState(@NonNull TextView target,
