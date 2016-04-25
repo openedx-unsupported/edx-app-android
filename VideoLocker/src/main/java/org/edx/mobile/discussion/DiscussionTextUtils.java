@@ -28,7 +28,6 @@ import org.edx.mobile.util.ResourceUtil;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
     @Inject
@@ -137,7 +136,7 @@ public abstract class DiscussionTextUtils {
                 // If time is not available, then reduce the whitespaces
                 // surrounding it's placeholder in the template to one.
                 if (TextUtils.isEmpty(formattedTime)) {
-                    formattedText = removeDuplicateWhitespace(formattedText);
+                    formattedText = removeDuplicateWhitespaces(formattedText);
                 }
                 text = formattedText;
             }
@@ -185,14 +184,13 @@ public abstract class DiscussionTextUtils {
         return s.subSequence(start, end);
     }
 
-    public static CharSequence removeDuplicateWhitespace(CharSequence text) {
+    public static CharSequence removeDuplicateWhitespaces(CharSequence text) {
         SpannableStringBuilder builder = new SpannableStringBuilder(text);
-        for (int size = text.length(), i = 0; i < size; i++) {
-            if (Character.isWhitespace(builder.charAt(i))) {
+        for (int i = 0; i < builder.length(); i++) {
+            if (builder.charAt(i) == ' ') {
                 int nextIndex = i + 1;
-                if (nextIndex < size && Character.isWhitespace(builder.charAt(nextIndex))) {
-                    builder.replace(i, nextIndex, " ");
-                    break;
+                if (nextIndex < builder.length() && builder.charAt(nextIndex) == ' ') {
+                    builder.replace(i, nextIndex + 1, " ");
                 }
             }
         }
