@@ -37,7 +37,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
     }
 
     @Test
-    public void test_DuplicateWhitespacesRemoval() {
+    public void test_DuplicatedWhitespaceRemoved() {
         String input = "  start  end  ";
         String expected = " start end ";
         String output = DiscussionTextUtils.removeDuplicateWhitespaces(input).toString();
@@ -48,7 +48,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
     public void test_TextInTextViewNotNull() {
         DiscussionTextUtils.setAuthorAttributionText(dummyTextView,
                 DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new IAuthorDataImpl("testAuthor", "testLabel", new Date()),
+                new StubAuthorData("testAuthor", "testLabel", new Date()),
                 dummyClickListener);
         assertNotNull(dummyTextView.getText());
     }
@@ -57,7 +57,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
     public void test_AuthorIsTappable() {
         DiscussionTextUtils.setAuthorAttributionText(dummyTextView,
                 DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new IAuthorDataImpl("testAuthor", "testLabel", new Date()),
+                new StubAuthorData("testAuthor", "testLabel", new Date()),
                 dummyClickListener);
         SpannableString cs = (SpannableString) dummyTextView.getText();
         ClickableSpan[] spans = cs.getSpans(0, cs.length(), ClickableSpan.class);
@@ -72,7 +72,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
     public void test_AuthorIsTappable_WhenNoCreationDate() {
         DiscussionTextUtils.setAuthorAttributionText(dummyTextView,
                 DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new IAuthorDataImpl("testAuthor", "testLabel", null),
+                new StubAuthorData("testAuthor", "testLabel", null),
                 dummyClickListener);
         ClickableSpan[] spans = getClickableSpans();
         if (config.isUserProfilesEnabled()) {
@@ -86,7 +86,7 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
     public void test_AuthorIsNotTappable_WhenNoAuthor() {
         DiscussionTextUtils.setAuthorAttributionText(dummyTextView,
                 DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new IAuthorDataImpl(null, "testLabel", new Date()),
+                new StubAuthorData(null, "testLabel", new Date()),
                 dummyClickListener);
         ClickableSpan[] spans = getClickableSpans();
         assertTrue(spans.length == 0);
@@ -97,11 +97,11 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
         return spannableString.getSpans(0, spannableString.length(), ClickableSpan.class);
     }
 
-    private static class IAuthorDataImpl implements IAuthorData {
+    private static class StubAuthorData implements IAuthorData {
         String author, authorLabel;
         Date createdDate;
 
-        public IAuthorDataImpl(String author, String authorLabel, Date createdDate) {
+        public StubAuthorData(String author, String authorLabel, Date createdDate) {
             this.author = author;
             this.authorLabel = authorLabel;
             this.createdDate = createdDate;
