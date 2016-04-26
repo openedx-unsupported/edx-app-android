@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -27,11 +28,8 @@ import org.edx.mobile.util.ResourceUtil;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public abstract class DiscussionTextUtils {
-    private static final Pattern PATTERN_DUPLICATE_WHITESPACE = Pattern.compile("\\s+");
-
     @Inject
     private static Config config;
 
@@ -137,8 +135,8 @@ public abstract class DiscussionTextUtils {
                         context.getResources(), finalStringRes, valuesMap));
                 // If time is not available, then reduce the whitespaces
                 // surrounding it's placeholder in the template to one.
-                if (TextUtils.isEmpty(formattedText) || TextUtils.isEmpty(authorLabel)) {
-                    formattedText = removeDuplicateWhitespace(formattedText);
+                if (TextUtils.isEmpty(formattedTime)) {
+                    formattedText = removeDuplicateWhitespaces(formattedText);
                 }
                 text = formattedText;
             }
@@ -186,8 +184,17 @@ public abstract class DiscussionTextUtils {
         return s.subSequence(start, end);
     }
 
-    public static CharSequence removeDuplicateWhitespace(CharSequence text) {
-        return PATTERN_DUPLICATE_WHITESPACE.matcher(text).replaceAll(" ");
+    public static CharSequence removeDuplicateWhitespaces(CharSequence text) {
+        SpannableStringBuilder builder = new SpannableStringBuilder(text);
+        for (int i = 0; i < builder.length(); i++) {
+            if (builder.charAt(i) == ' ') {
+                int nextIndex = i + 1;
+                if (nextIndex < builder.length() && builder.charAt(nextIndex) == ' ') {
+                    builder.replace(i, nextIndex + 1, " ");
+                }
+            }
+        }
+        return builder;
     }
 
     public static void setEndorsedState(@NonNull TextView target,
