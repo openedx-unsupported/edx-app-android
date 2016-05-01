@@ -1,6 +1,7 @@
 package org.edx.mobile.user;
 
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.profiles.BadgeAssertion;
 
@@ -34,5 +35,5 @@ public interface UserService {
     List<EnrolledCoursesResponse> getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
 
     @GET("/api/badges/v1/assertions/user/{username}")
-    List<BadgeAssertion> getBadges(@Path("username") String username) throws RetroHttpException;
+    Page<BadgeAssertion> getBadges(@Path("username") String username) throws RetroHttpException;
 }
