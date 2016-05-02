@@ -16,6 +16,7 @@ import retrofit.http.Header;
 import retrofit.http.PATCH;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedOutput;
 
 public interface UserService {
@@ -35,5 +36,7 @@ public interface UserService {
     List<EnrolledCoursesResponse> getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
 
     @GET("/api/badges/v1/assertions/user/{username}")
-    Page<BadgeAssertion> getBadges(@Path("username") String username) throws RetroHttpException;
+    Page<BadgeAssertion> getBadges(@Path("username") String username,
+                                   @Query("page") int page,
+                                   @Query("page_size") int pageSize) throws RetroHttpException;
 }

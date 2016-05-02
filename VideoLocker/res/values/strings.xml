@@ -655,5 +655,6 @@
     <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
     <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
     <string name="edit_user_profile_photo_crop_save">Choose</string>
+    <string name="profile_tab_bio">Bio</string>
 
 </resources>

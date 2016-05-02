@@ -4,6 +4,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +28,8 @@ import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
+
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
@@ -133,7 +137,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(profile.contentType == UserProfileViewModel.ContentType.ABOUT_ME ? R.color.white : R.color.edx_grayscale_neutral_xx_light));
+                viewHolder.profileBody.setBackgroundColor(ContextCompat.getColor(UserProfileFragment.this.getContext(), profile.contentType == UserProfileViewModel.ContentType.ABOUT_ME ? R.color.white : R.color.edx_grayscale_neutral_xx_light));
                 viewHolder.parentalConsentRequired.setVisibility(profile.contentType == UserProfileViewModel.ContentType.PARENTAL_CONSENT_REQUIRED ? View.VISIBLE : View.GONE);
                 viewHolder.incompleteContainer.setVisibility(profile.contentType == UserProfileViewModel.ContentType.INCOMPLETE ? View.VISIBLE : View.GONE);
                 viewHolder.noAboutMe.setVisibility(profile.contentType == UserProfileViewModel.ContentType.NO_ABOUT_ME ? View.VISIBLE : View.GONE);
@@ -156,6 +160,15 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
+            }
+
+            @Override
+            public void showTabs(@NonNull List<UserProfileTab> tabs) {
+                viewHolder.profileSectionTabs.getSelectedTabPosition();
+                viewHolder.profileSectionTabs.removeAllTabs();
+                TabLayout.Tab bioTab = viewHolder.profileSectionTabs.newTab();
+                bioTab.setText(R.string.profile_tab_bio);
+                viewHolder.profileSectionTabs.addTab(bioTab);
             }
 
             @Override

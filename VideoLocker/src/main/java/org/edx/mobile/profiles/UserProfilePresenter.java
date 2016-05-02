@@ -6,6 +6,8 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.util.observer.Observer;
 import org.edx.mobile.view.ViewHoldingPresenter;
 
+import java.util.List;
+
 public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresenter.ViewInterface> {
 
     @NonNull
@@ -63,6 +65,8 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
         void showProfile(@NonNull UserProfileViewModel profile);
 
         void showLoading();
+
+        void showTabs(@NonNull List<UserProfileTab> tab);
 
         void showError(@NonNull Throwable error);
 
