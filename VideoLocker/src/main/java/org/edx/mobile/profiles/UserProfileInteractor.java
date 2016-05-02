@@ -135,23 +135,24 @@ public class UserProfileInteractor {
                 }
             }
 
-            final UserProfileViewModel.ContentType contentType;
+            final UserProfileBioModel.ContentType contentType;
             if (viewingOwnProfile && accountResponse.requiresParentalConsent()) {
-                contentType = UserProfileViewModel.ContentType.PARENTAL_CONSENT_REQUIRED;
+                contentType = UserProfileBioModel.ContentType.PARENTAL_CONSENT_REQUIRED;
 
             } else if (viewingOwnProfile && TextUtils.isEmpty(accountResponse.getBio()) && accountResponse.getAccountPrivacy() != Account.Privacy.ALL_USERS) {
-                contentType = UserProfileViewModel.ContentType.INCOMPLETE;
+                contentType = UserProfileBioModel.ContentType.INCOMPLETE;
 
             } else if (accountResponse.getAccountPrivacy() != Account.Privacy.PRIVATE) {
                 if (TextUtils.isEmpty(accountResponse.getBio())) {
-                    contentType = UserProfileViewModel.ContentType.NO_ABOUT_ME;
+                    contentType = UserProfileBioModel.ContentType.NO_ABOUT_ME;
                 } else {
-                    contentType = UserProfileViewModel.ContentType.ABOUT_ME;
+                    contentType = UserProfileBioModel.ContentType.ABOUT_ME;
                 }
             } else {
-                contentType = UserProfileViewModel.ContentType.EMPTY;
+                contentType = UserProfileBioModel.ContentType.EMPTY;
             }
-            profileObservable.onData(new UserProfileViewModel(limitedProfileMessage, languageName, countryName, contentType, accountResponse.getBio()));
+            UserProfileBioModel bioModel = new UserProfileBioModel(contentType, accountResponse.getBio());
+            profileObservable.onData(new UserProfileViewModel(limitedProfileMessage, languageName, countryName, bioModel));
         }
         photo.onData(new UserProfileImageViewModel(accountResponse.getProfileImage().hasImage() ? Uri.parse(accountResponse.getProfileImage().getImageUrlFull()) : null, true));
     }

@@ -1,14 +1,20 @@
 package org.edx.mobile.profiles;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.util.observer.Func1;
+import org.edx.mobile.util.observer.Observables;
 import org.edx.mobile.util.observer.Observer;
 import org.edx.mobile.view.ViewHoldingPresenter;
 
+import java.util.Collections;
 import java.util.List;
 
 public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresenter.ViewInterface> {
+
+    private static final String BIO_TAB = "PROFILE_TAB_BIO";
 
     @NonNull
     private final UserProfileInteractor userProfileInteractor;
@@ -16,6 +22,19 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
     public UserProfilePresenter(@NonNull ISegment segment, @NonNull UserProfileInteractor userProfileInteractor) {
         this.userProfileInteractor = userProfileInteractor;
         segment.trackProfileViewed(userProfileInteractor.getUsername());
+    }
+
+    public UserProfileBioInteractor getBioInteractor() {
+        return new UserProfileBioInteractor(userProfileInteractor.getUsername(), Observables.map(userProfileInteractor.observeProfile(), new Func1<UserProfileViewModel, UserProfileBioModel>() {
+            @Override
+            public UserProfileBioModel call(UserProfileViewModel arg) {
+                return arg.bio;
+            }
+        }));
+    }
+
+    private List<UserProfileTab> builtInTabs() {
+        return Collections.singletonList(new UserProfileTab(BIO_TAB, "Bio", UserProfileBioFragment.class));
     }
 
     @Override
@@ -28,6 +47,7 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
             @Override
             public void onData(@NonNull UserProfileViewModel account) {
                 view.showProfile(account);
+                view.showTabs(builtInTabs());
             }
 
             @Override
