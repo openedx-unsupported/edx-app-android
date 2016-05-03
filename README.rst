@@ -28,7 +28,11 @@ This project is meant to be built using Android Studio. It can also be built fro
 
 *Note: Our build system requires Java 7 or later.  If you see an error
 mentioning "Unsupported major.minor version 51.0 " then you should install a
-newer Java SDK.*
+newer Java SDK.
+
+Refer to http://stackoverflow.com/questions/30631286/how-to-specify-the-jdk-version-in-android-studio 
+for more information on how to configure Android Studio.
+*
 
 Configuration
 =============
