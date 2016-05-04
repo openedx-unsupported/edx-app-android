@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.Account;
@@ -18,6 +19,8 @@ import org.edx.mobile.util.observer.Observable;
 import org.edx.mobile.util.observer.Observer;
 import org.edx.mobile.util.observer.CachingObservable;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import de.greenrobot.event.EventBus;
@@ -26,6 +29,7 @@ import de.greenrobot.event.EventBus;
  * Exposes a given user's profile data and photo as a pair of observable view models
  */
 public class UserProfileInteractor {
+    private static final String PROFILE_TAB_ACCOMPLISHMENTS = "PROFILE_TAB_ACCOMPLISHMENTS";
     @NonNull
     private final String username;
 
@@ -39,6 +43,12 @@ public class UserProfileInteractor {
 
     @NonNull
     private final CachingObservable<UserProfileImageViewModel> photo = new CachingObservable<>();
+
+    @NonNull
+    private final CachingObservable<List<UserProfileTab>> tabs = new CachingObservable<>();
+
+    @NonNull
+    private final List<UserProfileTab> knownTabs = new LinkedList<>();
 
     @NonNull
     private final Logger logger = new Logger(getClass().getName());
@@ -68,6 +78,24 @@ public class UserProfileInteractor {
                 profileObservable.onError(error);
             }
         });
+
+        if() {
+        AsyncCallableUtils.observe(new Callable<Page<BadgeAssertion>>() {
+            @Override
+            public Page<BadgeAssertion> call() throws Exception {
+                return userAPI.getBadges(username, 1);
+            }
+        }, new Observer<Page<BadgeAssertion>>() {
+            @Override
+            public void onData(@NonNull Page<BadgeAssertion> data) {
+                handleBadgesLoaded(data);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable error) {
+                // do nothing. Better to just deal show what we can
+            }
+        });
     }
 
     @NonNull
@@ -78,6 +106,10 @@ public class UserProfileInteractor {
     @NonNull
     public Observable<UserProfileImageViewModel> observeProfileImage() {
         return photo;
+    }
+
+    public Observable<List<UserProfileTab>> observeTabs() {
+        return tabs;
     }
 
     @SuppressWarnings("unused")
@@ -107,6 +139,11 @@ public class UserProfileInteractor {
 
     public void destroy() {
         eventBus.unregister(this);
+    }
+
+    public void handleBadgesLoaded(@NonNull Page<BadgeAssertion> badges) {
+        knownTabs.add(new UserProfileTab(PROFILE_TAB_ACCOMPLISHMENTS, "Accomplishments", UserProfileAccomplishmentsFragment.class);
+        tabs.onData(knownTabs);
     }
 
     private void handleNewAccount(@NonNull Account accountResponse) {

@@ -10,6 +10,7 @@ import org.edx.mobile.util.observer.Observer;
 import org.edx.mobile.view.ViewHoldingPresenter;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresenter.ViewInterface> {
@@ -64,6 +65,19 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
             @Override
             public void onError(@NonNull Throwable error) {
                 // Do nothing; leave whatever image/placeholder is already displayed
+            }
+        });
+        observeOnView(userProfileInteractor.observeTabs()).subscribe(new Observer<List<UserProfileTab>>() {
+            @Override
+            public void onData(@NonNull List<UserProfileTab> data) {
+                LinkedList allTabs = new LinkedList(data);
+                allTabs.addAll(builtInTabs());
+                view.showTabs(allTabs);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable error) {
+                // Do nothing. Better off with what we're already showing
             }
         });
     }
