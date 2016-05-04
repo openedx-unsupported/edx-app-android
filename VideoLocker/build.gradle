@@ -181,13 +181,15 @@ android {
 
         // test configuration
         testApplicationId 'org.edx.mobile.test'
-        
+
         if (project.gradle.startParameter.taskNames.contains("screenshotTests")) {
-            testInstrumentationRunner "com.facebook.testing.screenshot.ScreenshotTestRunner"
-        } else {
-            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("package", "org.edx.mobile.test.screenshot");
+            setTestInstrumentationRunnerArguments map
         }
 
+        testInstrumentationRunner "org.edx.mobile.test.EdXTestRunner"
+        
         testHandleProfiling true
         testFunctionalTest true
         testBuildType "debuggable"
@@ -299,6 +301,6 @@ android.applicationVariants.all { variant ->
 }
 
 screenshots {
-    testApkTarget = 'packageDevDebuggableAndroidTest'
-    connectedAndroidTestTarget = 'connectedDevDebuggableAndroidTest'
+    testApkTarget = 'packageProdDebuggableAndroidTest'
+    connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }
