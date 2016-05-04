@@ -59,7 +59,6 @@ public class ServerJsonDateAdapterFactory implements TypeAdapterFactory {
         @Override
         public Date read(JsonReader in) throws IOException {
             String dateString = in.nextString();
-
             // date formatters aren't thread safe, so sync on them
             synchronized(dateFormatter) {
                 try {
