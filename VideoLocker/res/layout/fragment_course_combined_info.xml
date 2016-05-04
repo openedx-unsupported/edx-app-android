@@ -21,7 +21,7 @@
         <RelativeLayout
             android:id="@+id/announcement_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="fill_parent">
 
             <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
             <LinearLayout
@@ -62,7 +62,7 @@
                 <org.edx.mobile.view.custom.EdxWebView
                     android:id="@+id/announcement_webview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/common_course_display_margin_top"
                     android:orientation="vertical"
                     android:scrollbars="none"/>
