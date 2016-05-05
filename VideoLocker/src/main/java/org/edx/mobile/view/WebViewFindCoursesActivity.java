@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,8 @@ import roboguice.inject.ContentView;
 public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
     private WebView webView;
+    private SearchView searchView;
+    boolean searchActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         getMenuInflater().inflate(R.menu.find_courses, menu);
         // Get the SearchView and set the searchable configuration
         final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView = (SearchView) searchItem.getActionView();
 
         Resources resources = getResources();
         searchView.setQueryHint(resources.getString(R.string.search_for_courses));
@@ -76,9 +79,13 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
                 if (!queryTextFocused) {
+                    searchActive = false;
                     searchItem.collapseActionView();
-                    searchView.clearFocus();
-                    searchView.setQuery("", false);
+                    dismissKeyboard();
+                    showDrawer(true);
+                }  else {
+                    searchActive = true;
+                    showDrawer(false);
                 }
             }
         });
@@ -86,6 +93,26 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         return result;
     }
 
+    private void dismissKeyboard() {
+        searchView.clearFocus();
+        searchView.setQuery("", false);
+    }
+
+    //Closing the Navigation Drawer
+    public void showDrawer(boolean showDrawer) {
+        mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home && searchActive) {
+            dismissKeyboard();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onOnline() {
