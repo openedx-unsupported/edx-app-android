@@ -55,6 +55,9 @@ class RegistrationAgreementView implements IRegistrationFieldView {
 
         // hide error text view
         mErrorView.setVisibility(View.GONE);
+
+        // This tag is necessary for End-to-End tests to work properly
+        mInputView.setTag(mField.getName());
     }
 
     @Override

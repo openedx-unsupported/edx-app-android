@@ -66,10 +66,13 @@ public class Config {
 
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
 
+    // E2E Test
+    public static final String END_TO_END_TEST = "END_TO_END_TEST";
+
     /**
      * Zero Rating configuration.
      */
-    public class ZeroRatingConfig {
+    public static class ZeroRatingConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("CARRIERS") List<String> mCarriers;
         private @SerializedName("WHITE_LIST_OF_DOMAINS") List<String> mWhiteListedDomains;
@@ -92,7 +95,7 @@ public class Config {
      *
      * If TYPE is not "webview" in any letter case, defaults to "native"
      */
-    public class EnrollmentConfig {
+    public static class EnrollmentConfig {
         private @SerializedName("WEBVIEW") WebViewConfig mWebViewConfig;
         private @SerializedName("TYPE") String mCourseEnrollmentType;
 
@@ -142,7 +145,7 @@ public class Config {
     /**
      * Facebook configuration.
      */
-    public class FacebookConfig {
+    public static class FacebookConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("FACEBOOK_APP_ID") String mFacebookAppId;
 
@@ -158,7 +161,7 @@ public class Config {
     /**
      * Google configuration.
      */
-    public class GoogleConfig {
+    public static class GoogleConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
 
         public boolean isEnabled() {
@@ -169,7 +172,7 @@ public class Config {
     /**
      * Twitter configuration.
      */
-    public class TwitterConfig {
+    public static class TwitterConfig {
         private @SerializedName("HASHTAG") String mHashTag;
 
         public String getHashTag() {
@@ -180,7 +183,7 @@ public class Config {
     /**
      * Fabric configuration.
      */
-    public class FabricConfig {
+    public static class FabricConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("FABRIC_KEY") String mFabricKey;
         private @SerializedName("FABRIC_BUILD_SECRET") String mFabricBuildSecret;
@@ -203,7 +206,7 @@ public class Config {
     /**
      * New Relic configuration.
      */
-    public class NewRelicConfig {
+    public static class NewRelicConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("NEW_RELIC_KEY") String mNewRelicKey;
 
@@ -219,7 +222,7 @@ public class Config {
     /**
      * Testing account - we may need a better solution in the future.
      */
-    public class TestAccountConfig {
+    public static class TestAccountConfig {
         private @SerializedName("NAME") String mName;
         private @SerializedName("PASSWORD") String mPassword;
 
@@ -228,9 +231,26 @@ public class Config {
     }
 
     /**
+     * End-to-end test configurations
+     */
+    public static class EndToEndConfig {
+        private static final String DEFAULT_EMAIL_TEMPLATE = "test-{unique_id}@example.com";
+        private @SerializedName("EMAIL_TEMPLATE") String mEmailTemplate;
+        private @SerializedName("TEST_COURSE_ID") String mTestCourseId;
+
+        public String getEmailTemplate() {
+            return TextUtils.isEmpty(mEmailTemplate) ? DEFAULT_EMAIL_TEMPLATE : mEmailTemplate;
+        }
+
+        public String getTestCourseId() {
+            return mTestCourseId;
+        }
+    }
+
+    /**
      * Parse Notification
      */
-    public class ParseNotificationConfig {
+    public static class ParseNotificationConfig {
         private @SerializedName("NOTIFICATIONS_ENABLED") boolean mEnabled;
         private @SerializedName("APPLICATION_ID") String mParseApplicationId;
         private @SerializedName("CLIENT_KEY") String mParseClientKey;
@@ -249,7 +269,7 @@ public class Config {
     /**
      * SegmentIO configuration.
      */
-    public class SegmentConfig {
+    public static class SegmentConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("SEGMENT_IO_WRITE_KEY") String mSegmentWriteKey;
 
@@ -265,7 +285,7 @@ public class Config {
     /**
      * Domain White List configuration.
      */
-    public class DomainWhiteListConfig {
+    public static class DomainWhiteListConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("DOMAINS") List<String> mDomains;
 
@@ -514,6 +534,18 @@ public class Config {
         }
         else {
             return new TestAccountConfig();
+        }
+    }
+
+    public EndToEndConfig getEndToEndConfig() {
+        JsonElement element = getObject(END_TO_END_TEST);
+        if(element != null) {
+            Gson gson = new Gson();
+            EndToEndConfig config = gson.fromJson(element, EndToEndConfig.class);
+            return config;
+        }
+        else {
+            return new EndToEndConfig();
         }
     }
 }
