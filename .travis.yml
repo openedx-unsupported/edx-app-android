@@ -1,6 +1,7 @@
 language: android
 jdk: oraclejdk7
-sudo: false # Explicitly use container-based infrastructure http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: required
+dist: precise # For 7.5GB of memory since the emulator requires a big chunk.
 env:
   matrix:
     - ANDROID_TARGET=android-23
@@ -13,7 +14,7 @@ android:
     - tools
 
     # The BuildTools version used
-    - build-tools-23.0.2
+    - build-tools-23.0.3
 
     # The SDK version used to compile the project
     - android-23
