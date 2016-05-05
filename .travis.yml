@@ -1,11 +1,11 @@
 language: android
-jdk: oraclejdk7
+jdk: oraclejdk8
 sudo: false # Explicitly use container-based infrastructure http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 env:
   matrix:
     - ANDROID_TARGET=android-23
   global:
-    - ADB_INSTALL_TIMEOUT=12
+    - ADB_INSTALL_TIMEOUT=20
 android:
   components:
     # use the latest revision of Android SDK Tools
@@ -13,7 +13,7 @@ android:
     - tools
 
     # The BuildTools version used
-    - build-tools-23.0.2
+    - build-tools-23.0.3
 
     # The SDK version used to compile the project
     - android-23
@@ -49,7 +49,7 @@ script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
   # Run screenshot tests and compare them against screenshots in PR
-  - ./gradlew verifyMode screenshotTests -PdisablePreDex
+  - ./gradlew verifyMode screenshotTests
 
 after_script:
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
