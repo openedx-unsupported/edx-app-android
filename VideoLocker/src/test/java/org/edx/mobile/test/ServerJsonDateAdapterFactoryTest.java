@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.edx.mobile.core.ServerJsonDateAdapterFactory;
 import org.edx.mobile.util.DateUtil;
 import org.junit.Test;
@@ -13,9 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class ServerJsonDateAdapterFactoryTest {
@@ -36,7 +37,14 @@ public class ServerJsonDateAdapterFactoryTest {
         Gson gson = newGson();
         Date date = gson.fromJson(dateString, Date.class);
 
-        assertNotNull(date);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(date);
+        assertEquals(2014, calendar.get(Calendar.YEAR));
+        assertEquals(Calendar.NOVEMBER, calendar.get(Calendar.MONTH));
+        assertEquals(6, calendar.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, calendar.get(Calendar.HOUR_OF_DAY));
+        assertEquals(16, calendar.get(Calendar.MINUTE));
+        assertEquals(45, calendar.get(Calendar.SECOND));
     }
 
     @Test
@@ -45,7 +53,14 @@ public class ServerJsonDateAdapterFactoryTest {
         Gson gson = newGson();
         Date date = gson.fromJson(dateString, Date.class);
 
-        assertNotNull(date);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.setTime(date);
+        assertEquals(2014, calendar.get(Calendar.YEAR));
+        assertEquals(Calendar.NOVEMBER, calendar.get(Calendar.MONTH));
+        assertEquals(6, calendar.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, calendar.get(Calendar.HOUR_OF_DAY));
+        assertEquals(16, calendar.get(Calendar.MINUTE));
+        assertEquals(45, calendar.get(Calendar.SECOND));
     }
 
     @Test
@@ -71,21 +86,8 @@ public class ServerJsonDateAdapterFactoryTest {
         SimpleDateFormat formatter = new SimpleDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT);
         Date date = formatter.parse(dateString);
 
-        // Can't the compare the dates directly since they might have different values at sub second precision
-        // so compare them componentwise for the fields we care about
-
-        Calendar baseCalendar = Calendar.getInstance();
-        baseCalendar.setTime(baseDate);
-
-        Calendar parsedCalendar = Calendar.getInstance();
-        parsedCalendar.setTime(date);
-
-        assertEquals(parsedCalendar.get(Calendar.YEAR), baseCalendar.get(Calendar.YEAR));
-        assertEquals(parsedCalendar.get(Calendar.MONTH), baseCalendar.get(Calendar.MONTH));
-        assertEquals(parsedCalendar.get(Calendar.DAY_OF_MONTH), baseCalendar.get(Calendar.DAY_OF_MONTH));
-        assertEquals(parsedCalendar.get(Calendar.MINUTE), baseCalendar.get(Calendar.MINUTE));
-        assertEquals(parsedCalendar.get(Calendar.HOUR), baseCalendar.get(Calendar.HOUR));
-        assertEquals(parsedCalendar.get(Calendar.SECOND), baseCalendar.get(Calendar.SECOND));
+        baseDate = DateUtils.truncate(baseDate, Calendar.SECOND);
+        assertEquals(baseDate.getTime(), date.getTime());
     }
 
 }

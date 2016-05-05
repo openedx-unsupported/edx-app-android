@@ -21,18 +21,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+// Deals with dates using the formats we get from the LMS
 public class ServerJsonDateAdapterFactory implements TypeAdapterFactory {
 
-    private final List<SimpleDateFormat> dateFormatters;
+    private final SimpleDateFormat serverDateFormatter;
 
     public ServerJsonDateAdapterFactory() {
-        dateFormatters = new LinkedList<>();
-        dateFormatters.add(new SimpleDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT, Locale.US));
-        dateFormatters.add(new SimpleDateFormat(DateUtil.ISO_8601_DATE_TIME_WITH_MICROSECONDS_FORMAT, Locale.US));
-
-        for(SimpleDateFormat formatter : dateFormatters) {
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
+        serverDateFormatter = new SimpleDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT, Locale.US);
+        serverDateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     @Override
@@ -42,16 +38,16 @@ public class ServerJsonDateAdapterFactory implements TypeAdapterFactory {
         }
 
         TypeAdapter<Date> defaultAdapter = (TypeAdapter<Date>) gson.getDelegateAdapter(this, type);
-        return (TypeAdapter<T>) new ServerJsonDateAdapter(defaultAdapter, dateFormatters);
+        return (TypeAdapter<T>) new ServerJsonDateAdapter(defaultAdapter, serverDateFormatter);
     }
 
     final class ServerJsonDateAdapter extends TypeAdapter<Date> {
         private final TypeAdapter<Date> defaultAdapter;
-        private final List<SimpleDateFormat> dateFormatters;
+        private final SimpleDateFormat dateFormatter;
 
-        ServerJsonDateAdapter(TypeAdapter<Date> defaultAdapter, List<SimpleDateFormat> dateFormatters) {
+        ServerJsonDateAdapter(TypeAdapter<Date> defaultAdapter, SimpleDateFormat dateFormatter) {
             this.defaultAdapter = defaultAdapter;
-            this.dateFormatters = dateFormatters;
+            this.dateFormatter = dateFormatter;
         }
 
 
@@ -64,13 +60,18 @@ public class ServerJsonDateAdapterFactory implements TypeAdapterFactory {
         public Date read(JsonReader in) throws IOException {
             String dateString = in.nextString();
 
-            for (SimpleDateFormat dateFormat : dateFormatters) {
-                // date formatters aren't thread safe, so sync on them
-                synchronized(dateFormat) {
+            // date formatters aren't thread safe, so sync on them
+            synchronized(dateFormatter) {
+                try {
+                    return dateFormatter.parse(dateString);
+                } catch (ParseException ignored) {
+                    // Sometimes the server sends us strings with extra microseconds
+                    // ICU doesn't like those and we don't need the precision, so just strip them out
+                    String withoutMicroseconds = dateString.replaceFirst("\\..*Z", "Z");
                     try {
-                        return dateFormat.parse(dateString);
-                    } catch (ParseException ignored) {
-                        // suppress it and try the next loop item
+                        return dateFormatter.parse(withoutMicroseconds);
+                    } catch (ParseException e) {
+                        // fall through to final failure
                     }
                 }
             }
