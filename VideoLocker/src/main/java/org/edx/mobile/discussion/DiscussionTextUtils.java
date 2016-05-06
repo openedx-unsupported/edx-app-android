@@ -7,11 +7,10 @@ import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -76,20 +75,23 @@ public abstract class DiscussionTextUtils {
             if (!TextUtils.isEmpty(author)) {
                 final SpannableString authorSpan = new SpannableString(author);
                 if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
-                    authorSpan.setSpan(new ClickableSpan() {
-                        @Override
-                        public void onClick(View widget) {
-                            onAuthorClickListener.run();
-                        }
-
-                        @Override
-                        public void updateDrawState(TextPaint ds) {
-                            super.updateDrawState(ds);
-                            ds.setUnderlineText(false);
-                        }
-                    }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    // Change the author text color and style
+                    authorSpan.setSpan(new ForegroundColorSpan(
+                                    context.getResources().getColor(R.color.edx_brand_primary_base)),
+                            0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    // Set the click listener on the whole textView
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onAuthorClickListener.run();
+                        }
+                    });
+                } else {
+                    textView.setOnClickListener(null);
+                    textView.setClickable(false);
                 }
                 joinableStrings.add(ResourceUtil.getFormattedString(context.getResources(),
                         R.string.discussion_post_author_attribution, "author", authorSpan));
@@ -112,8 +114,6 @@ public abstract class DiscussionTextUtils {
             textView.setVisibility(View.GONE);
         } else {
             textView.setText(text);
-            // Allow ClickableSpan to trigger clicks
-            textView.setMovementMethod(new LinkMovementMethod());
         }
     }
 
