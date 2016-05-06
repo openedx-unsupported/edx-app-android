@@ -8,6 +8,8 @@ import com.google.inject.Provider;
 import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.http.RetroHttpExceptionHandler;
+import org.edx.mobile.http.serialization.JsonPageDeserializer;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 
@@ -28,6 +30,7 @@ public class RestAdapterProvider implements Provider<RestAdapter> {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
+                .registerTypeAdapter(Page.class, new JsonPageDeserializer())
                 .registerTypeAdapterFactory(new ServerJsonDateAdapterFactory())
                 .serializeNulls()
                 .create();

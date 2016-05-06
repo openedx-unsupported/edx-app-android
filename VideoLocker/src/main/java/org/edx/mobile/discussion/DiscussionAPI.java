@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.util.NetworkUtil;
@@ -52,8 +53,6 @@ class RetrofitAdaptor<T> extends Callback {
 */
 
 public class DiscussionAPI {
-    private static final int PAGE_SIZE = 20;
-
     private final Context context;
     private final DiscussionService discussionService;
 
@@ -89,7 +88,7 @@ public class DiscussionAPI {
     public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
                                                 String filter, String orderBy, int page)
             throws RetroHttpException {
-        return discussionService.getThreadList(courseId, topicIds, filter, orderBy, PAGE_SIZE,
+        return discussionService.getThreadList(courseId, topicIds, filter, orderBy, ApiConstants.STANDARD_PAGE_SIZE,
                 page);
     }
 
@@ -97,13 +96,13 @@ public class DiscussionAPI {
                                                          String orderBy, int page)
             throws RetroHttpException {
         return discussionService.getFollowingThreadList(courseId, "True", filter, orderBy,
-                PAGE_SIZE, page);
+                ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
 
     public Page<DiscussionThread> searchThreadList(String courseId, String text, int page)
             throws RetroHttpException {
-        return discussionService.searchThreadList(courseId, text, PAGE_SIZE, page);
+        return discussionService.searchThreadList(courseId, text, ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
     public DiscussionThread getThread(String threadId) throws RetroHttpException {
@@ -112,13 +111,13 @@ public class DiscussionAPI {
 
     public Page<DiscussionComment> getResponsesList(String threadId, int page)
             throws RetroHttpException {
-        return discussionService.getResponsesList(threadId, PAGE_SIZE, page);
+        return discussionService.getResponsesList(threadId, ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
     public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int page,
                                                                boolean endorsed)
             throws RetroHttpException {
-        return discussionService.getResponsesListForQuestion(threadId, PAGE_SIZE, page, endorsed);
+        return discussionService.getResponsesListForQuestion(threadId, ApiConstants.STANDARD_PAGE_SIZE, page, endorsed);
     }
 
     public Page<DiscussionComment> getCommentsList(String responseId, int pageSize, int page)

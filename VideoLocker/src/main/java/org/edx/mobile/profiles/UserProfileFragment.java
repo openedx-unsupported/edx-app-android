@@ -4,6 +4,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,14 +26,19 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
+import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
-public class UserProfileFragment extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface> {
+public class UserProfileFragment extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface> implements UserProfileBioTabParent {
 
     public static UserProfileFragment newInstance(@NonNull String username) {
         final Bundle bundle = new Bundle();
@@ -71,33 +79,44 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
     }
 
     @NonNull
+    private String getUsername() {
+        return getArguments().getString(UserProfileActivity.EXTRA_USERNAME);
+    }
+
+    @NonNull
     @Override
     protected UserProfilePresenter createPresenter() {
         final Injector injector = RoboGuice.getInjector(getActivity());
+        final String username = getUsername();
         return new UserProfilePresenter(
                 injector.getInstance(ISegment.class),
                 new UserProfileInteractor(
-                        getArguments().getString(UserProfileActivity.EXTRA_USERNAME),
+                        username,
                         injector.getInstance(UserAPI.class),
                         injector.getInstance(EventBus.class),
-                        injector.getInstance(UserPrefs.class))
-        );
+                        injector.getInstance(UserPrefs.class)),
+                new UserProfileTabsInteractor(
+                        username,
+                        injector.getInstance(UserAPI.class),
+                        injector.getInstance(Config.class)
+                ));
     }
 
     @NonNull
     @Override
     protected UserProfilePresenter.ViewInterface createView() {
         final FragmentUserProfileBinding viewHolder = DataBindingUtil.getBinding(getView());
-        {
-            final View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.onEditProfile();
+
+        viewHolder.appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (verticalOffset <= -viewHolder.nameText.getBottom()) {
+                    getActivity().setTitle(getUsername());
+                } else {
+                    getActivity().setTitle("");
                 }
-            };
-            viewHolder.parentalConsentEditProfileButton.setOnClickListener(listener);
-            viewHolder.incompleteEditProfileButton.setOnClickListener(listener);
-        }
+            }
+        });
 
         return new UserProfilePresenter.ViewInterface() {
             @Override
@@ -133,17 +152,13 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.VISIBLE);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(profile.contentType == UserProfileViewModel.ContentType.ABOUT_ME ? R.color.white : R.color.edx_grayscale_neutral_xx_light));
-                viewHolder.parentalConsentRequired.setVisibility(profile.contentType == UserProfileViewModel.ContentType.PARENTAL_CONSENT_REQUIRED ? View.VISIBLE : View.GONE);
-                viewHolder.incompleteContainer.setVisibility(profile.contentType == UserProfileViewModel.ContentType.INCOMPLETE ? View.VISIBLE : View.GONE);
-                viewHolder.noAboutMe.setVisibility(profile.contentType == UserProfileViewModel.ContentType.NO_ABOUT_ME ? View.VISIBLE : View.GONE);
-                viewHolder.bioText.setVisibility(profile.contentType == UserProfileViewModel.ContentType.ABOUT_ME ? View.VISIBLE : View.GONE);
-                viewHolder.bioText.setText(profile.bio);
             }
 
             @Override
             public void showLoading() {
+                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
                 viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
+                viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.VISIBLE);
@@ -151,11 +166,26 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
 
             @Override
             public void showError(@NonNull Throwable error) {
+                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
                 viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
+                viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.VISIBLE);
                 viewHolder.contentError.contentErrorText.setText(ErrorUtils.getErrorMessage(error, getContext()));
+            }
+
+            @Override
+            public void showTabs(@NonNull List<UserProfileTab> tabs) {
+                List<StaticFragmentPagerAdapter.Item> pages = new LinkedList<>();
+                for (UserProfileTab tab : tabs) {
+                    pages.add(new StaticFragmentPagerAdapter.Item(tab.getFragmentClass(), getString(tab.getDisplayName())));
+                }
+                PagerAdapter adapter = new StaticFragmentPagerAdapter(getChildFragmentManager(), pages);
+                viewHolder.profileSectionPager.setAdapter(adapter);
+                viewHolder.profileSectionTabs.setupWithViewPager(viewHolder.profileSectionPager);
+                viewHolder.profileSectionTabs.setVisibility(tabs.size() < 2 ? View.GONE : View.VISIBLE);
+                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
             }
 
             @Override
@@ -188,5 +218,10 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 router.showUserProfileEditor(getActivity(), username);
             }
         };
+    }
+
+    @Override
+    public UserProfileBioInteractor getBioInteractor() {
+        return presenter.getBioInteractor();
     }
 }
