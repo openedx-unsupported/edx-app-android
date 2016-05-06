@@ -1,8 +1,10 @@
 package org.edx.mobile.discussions;
 
-import android.text.SpannableString;
+import android.graphics.Typeface;
+import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import org.mockito.Mockito;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class DiscussionTextUtilsTest extends BaseTestCase {
@@ -151,16 +154,30 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
                 // Test whether author span is clickable or not
                 int start = output.indexOf(input.getAuthor());
                 int end = start + input.getAuthor().length();
-                SpannableString text = (SpannableString) textView.getText();
-                ClickableSpan[] spans = text.getSpans(start, end, ClickableSpan.class);
+                Spanned text = (Spanned) textView.getText();
+                StyleSpan[] styleSpans = text.getSpans(start, end, StyleSpan.class);
+                ForegroundColorSpan[] colorSpans = text.getSpans(start, end, ForegroundColorSpan.class);
                 if (config.isUserProfilesEnabled()) {
-                    assertEquals(1, spans.length);
-                    assertEquals(start, text.getSpanStart(spans[0]));
-                    assertEquals(end, text.getSpanEnd(spans[0]));
-                    spans[0].onClick(textView);
+                    // Verify that the author text is bold
+                    assertEquals(1, styleSpans.length);
+                    assertEquals(start, text.getSpanStart(styleSpans[0]));
+                    assertEquals(end, text.getSpanEnd(styleSpans[0]));
+                    assertEquals(Typeface.BOLD, styleSpans[0].getStyle());
+
+                    // Verify that the correct foreground color is set
+                    assertEquals(1, colorSpans.length);
+                    assertEquals(start, text.getSpanStart(colorSpans[0]));
+                    assertEquals(end, text.getSpanEnd(colorSpans[0]));
+                    assertEquals(context.getResources().getColor(R.color.edx_brand_primary_base),
+                            colorSpans[0].getForegroundColor());
+
+                    // Verify that the whole text view is clickable
+                    textView.performClick();
                     Mockito.verify(listener).run();
                 } else {
-                    assertTrue(spans.length == 0);
+                    assertEquals(0, styleSpans.length);
+                    assertEquals(0, colorSpans.length);
+                    assertFalse(textView.isClickable());
                 }
             }
         }
