@@ -28,6 +28,7 @@ public class RestAdapterProvider implements Provider<RestAdapter> {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
+                .registerTypeAdapterFactory(new ServerJsonDateAdapterFactory())
                 .serializeNulls()
                 .create();
 
