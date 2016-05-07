@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edx_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/edx_margin">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="@dimen/edx_margin"
+            android:layout_marginRight="@dimen/edx_margin"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/app_icon" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_grayscale_neutral_dark"
+                android:textSize="@dimen/edx_small"
+                android:textStyle="bold"
+                tools:text="Name" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_grayscale_neutral_base"
+                android:textSize="@dimen/edx_x_small"
+                tools:text="Description that is long enough to wrap onto another line." />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/edx_grayscale_neutral_light"
+                android:textSize="@dimen/edx_x_small"
+                tools:text="Date" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/share"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/share_accomplishment_button"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
+            android:tint="@color/edx_grayscale_neutral_dark" />
+    </LinearLayout>
+</layout>

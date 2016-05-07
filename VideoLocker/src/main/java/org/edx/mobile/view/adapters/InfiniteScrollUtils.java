@@ -19,39 +19,54 @@ public class InfiniteScrollUtils {
     private static final int VISIBILITY_THRESHOLD = 2; // Load more when only this number of items exists off-screen
 
     public static <T> InfiniteListController configureListViewWithInfiniteList(@NonNull final ListView list, @NonNull final ArrayAdapter<T> adapter, @NonNull final PageLoader<T> pageLoader) {
+        final PageLoadController controller = new PageLoadController<>(
+                configureListContentController(list, adapter),
+                pageLoader);
+        controller.loadMore();
+        list.setOnScrollListener(new ListViewOnScrollListener(new Runnable() {
+            @Override
+            public void run() {
+                controller.loadMore();
+            }
+        }));
+        return controller;
+    }
+
+    @NonNull
+    public static <T> ListContentController<T> configureListContentController(@NonNull ListView list, @NonNull final ArrayAdapter<T> adapter) {
         final View footerView = LayoutInflater.from(list.getContext()).inflate(R.layout.list_view_footer_progress, list, false);
         list.addFooterView(footerView, null, false);
         final View loadingIndicator = footerView.findViewById(R.id.loading_indicator);
-        final PageLoadController controller = new PageLoadController<>(
-                new ListContentController<T>() {
-                    @Override
-                    public void clear() {
-                        adapter.clear();
-                    }
-
-                    @Override
-                    public void addAll(List<T> items) {
-                        adapter.addAll(items);
-                    }
-
-                    @Override
-                    public void setProgressVisible(boolean visible) {
-                        loadingIndicator.setVisibility(visible ? View.VISIBLE : View.GONE);
-                    }
-                },
-                pageLoader);
-        controller.onLoadMore();
-        list.setOnScrollListener(new ListViewOnScrollListener(controller));
         list.setAdapter(adapter);
-        return controller;
+        return new ListContentController<T>() {
+            @Override
+            public void clear() {
+                adapter.clear();
+            }
+
+            @Override
+            public void addAll(List<T> items) {
+                adapter.addAll(items);
+            }
+
+            @Override
+            public void setProgressVisible(boolean visible) {
+                loadingIndicator.setVisibility(visible ? View.VISIBLE : View.GONE);
+            }
+        };
     }
 
     public static <T> InfiniteListController configureRecyclerViewWithInfiniteList(@NonNull final RecyclerView recyclerView, @NonNull final ListContentController<T> adapter, @NonNull final PageLoader<T> pageLoader) {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         final PageLoadController controller = new PageLoadController<>(adapter, pageLoader);
-        controller.onLoadMore();
-        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(linearLayoutManager, controller));
+        controller.loadMore();
+        recyclerView.addOnScrollListener(new RecyclerViewOnScrollListener(linearLayoutManager, new Runnable() {
+            @Override
+            public void run() {
+                controller.loadMore();
+            }
+        }));
         return controller;
     }
 
@@ -93,7 +108,7 @@ public class InfiniteScrollUtils {
          * controller if it's the last one.
          *
          * @param newItems A list of the items in the new page.
-         * @param hasMore Whether there are more pages to load.
+         * @param hasMore  Whether there are more pages to load.
          */
         public abstract void onPageLoaded(List<T> newItems, boolean hasMore);
 
@@ -106,13 +121,14 @@ public class InfiniteScrollUtils {
          * Returns the user visibility status of the page load.
          *
          * @return <code>true</code> If a silent refresh is being performed,
-         *         <code>false</code> if pagination is being done as usual.
+         * <code>false</code> if pagination is being done as usual.
          */
         public abstract boolean isRefreshingSilently();
     }
 
     public interface InfiniteListController {
         void reset();
+
         void resetSilently();
     }
 
@@ -122,7 +138,7 @@ public class InfiniteScrollUtils {
         @NonNull
         final PageLoader<T> pageLoader;
         protected boolean hasMoreItems = true;
-        protected boolean loading = true;
+        protected boolean loading = false;
         final AtomicInteger activeLoadId = new AtomicInteger();
 
         public PageLoadController(@NonNull ListContentController<T> adapter, @NonNull PageLoader<T> pageLoader) {
@@ -220,17 +236,18 @@ public class InfiniteScrollUtils {
         }
     }
 
-    private static class ListViewOnScrollListener implements AbsListView.OnScrollListener {
-        private final PageLoadController pageLoadController;
+    public static class ListViewOnScrollListener implements AbsListView.OnScrollListener {
+        @NonNull
+        private final Runnable onScrollPastVisibilityThreshold;
 
-        protected ListViewOnScrollListener(PageLoadController pageLoadController) {
-            this.pageLoadController = pageLoadController;
+        public ListViewOnScrollListener(@NonNull Runnable onScrollPastVisibilityThreshold) {
+            this.onScrollPastVisibilityThreshold = onScrollPastVisibilityThreshold;
         }
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             if (firstVisibleItem + visibleItemCount >= totalItemCount - VISIBILITY_THRESHOLD) {
-                pageLoadController.loadMore();
+                onScrollPastVisibilityThreshold.run();
             }
         }
 
@@ -241,12 +258,14 @@ public class InfiniteScrollUtils {
 
     public static class RecyclerViewOnScrollListener extends RecyclerView.OnScrollListener {
 
+        @NonNull
         private final LinearLayoutManager mLinearLayoutManager;
-        private final PageLoadController pageLoadController;
+        @NonNull
+        private final Runnable onScrollPastLoadThreshold;
 
-        public RecyclerViewOnScrollListener(LinearLayoutManager linearLayoutManager, PageLoadController pageLoadController) {
+        public RecyclerViewOnScrollListener(@NonNull LinearLayoutManager linearLayoutManager, @NonNull Runnable onScrollPastLoadThreshold) {
             this.mLinearLayoutManager = linearLayoutManager;
-            this.pageLoadController = pageLoadController;
+            this.onScrollPastLoadThreshold = onScrollPastLoadThreshold;
         }
 
         @Override
@@ -259,7 +278,7 @@ public class InfiniteScrollUtils {
 
             if ((totalItemCount - visibleItemCount)
                     <= (firstVisibleItem + VISIBILITY_THRESHOLD)) {
-                pageLoadController.loadMore();
+                onScrollPastLoadThreshold.run();
             }
         }
     }

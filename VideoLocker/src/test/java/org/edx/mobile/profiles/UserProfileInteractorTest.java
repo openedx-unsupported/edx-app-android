@@ -105,8 +105,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null)
+        )));
     }
 
     @Test
@@ -118,8 +120,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.EMPTY,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.EMPTY,
+                        null)
+                )));
     }
 
     @Test
@@ -132,8 +136,11 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.INCOMPLETE,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.INCOMPLETE,
+                        null
+                        )
+                )));
     }
 
     @Test
@@ -146,8 +153,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.OWN_PROFILE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.PARENTAL_CONSENT_REQUIRED,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.PARENTAL_CONSENT_REQUIRED,
+                        null
+                ))));
     }
 
     @Test
@@ -159,8 +168,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.OTHER_USERS_PROFILE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null)
+        )));
     }
 
     @Test
@@ -191,8 +202,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 ProfileValues.LANGUAGE_NAME,
                 ProfileValues.COUNTRY_NAME,
-                UserProfileViewModel.ContentType.ABOUT_ME,
-                ProfileValues.ABOUT_ME)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.ABOUT_ME,
+                        ProfileValues.ABOUT_ME)
+        )));
     }
 
     @Test
@@ -204,8 +217,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null)
+        )));
     }
 
     @Test
@@ -217,8 +232,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null)
+        )));
     }
 
     @Test
@@ -248,16 +265,20 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                null)
+        )));
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
         eventBus.post(new AccountUpdatedEvent(account));
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.ABOUT_ME,
-                ProfileValues.ABOUT_ME)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.ABOUT_ME,
+                        ProfileValues.ABOUT_ME)
+        )));
     }
 
     @Test
@@ -268,8 +289,10 @@ public class UserProfileInteractorTest extends BaseTest {
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null)));
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null)))
+        );
         when(account.getUsername()).thenReturn(ProfileValues.ALTERNATE_USERNAME);
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
         eventBus.post(new AccountUpdatedEvent(account));
