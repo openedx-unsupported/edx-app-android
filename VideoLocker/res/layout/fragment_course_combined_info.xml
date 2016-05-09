@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/announcement_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/common_course_display_margin_side"
         android:paddingRight="@dimen/common_course_display_margin_side"
         android:orientation="vertical">
@@ -63,7 +63,6 @@
             layout="@layout/loading_indicator"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
             android:layout_gravity="center" />
 
     </LinearLayout>
