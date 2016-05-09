@@ -17,7 +17,7 @@
         <!-- Announcement container is populated with announcements via code found in the CourseCombinedInfoFragment -->
 
         <LinearLayout
-            android:id="@+id/notificaton_setting_row"
+            android:id="@+id/notification_setting_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
