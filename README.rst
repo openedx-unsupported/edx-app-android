@@ -75,10 +75,23 @@ If you need to make more in depth UI changes, most of the user interface is spec
 As mentioned, the app relies on the presence of several third party services:
 Facebook, NewRelic, Google+, SegmentIO, and Crashlytics. You must remove references to each of these services you choose not to use. You can comment out the lines that mention these services. We're working to make those dependencies optional.
 
+<<<<<<< 17c09ddb75103a24a3144d5f10dcb08c8d91f15f
 Frequently Asked Questions
 ==========================
 Q: I see an error that mentions "Unsupported major.minor version 51.0". How do I fix this?
 A: Our build system requires Java 7 or later. If you see this error, install Java & or later.
    You will also need to specify the new JDK version in Android Studio.
 	 Refer to this Stack Overflow entry for help doing so:
+=======
+
+Frequently Asked Questions
+==========================
+Q: I see an error that mentions "Unsupported major.minor version 51.0". How do I fix this?
+
+
+A: Our build system requires Java 7 or later. If you see this error, install Java 7 or later.
+
+	 You will also need to specify the new JDK version in Android Studio. Refer to this Stack Overflow entry for help doing so:
+
+>>>>>>> Adding a QA section to the README file
 	 http://stackoverflow.com/questions/30631286/how-to-specify-the-jdk-version-in-android-studio
