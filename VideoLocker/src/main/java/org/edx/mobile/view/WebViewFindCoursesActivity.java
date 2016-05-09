@@ -3,8 +3,10 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,13 +42,24 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
         webView = (WebView) findViewById(R.id.webview);
         webView.loadUrl(environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl());
+
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.label_open_drawer, R.string.label_close_drawer) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
 
-        Config config =  environment.getConfig();
+        Config config = environment.getConfig();
         if (!config.getCourseDiscoveryConfig().isWebCourseSearchEnabled()) {
             //bail out if the search bar is not enabled
             return result;
@@ -95,8 +108,9 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        View sliderMenu = findViewById(R.id.slider_menu);
 
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerVisible(sliderMenu)) {
             menu.clear();
         }
         return super.onPrepareOptionsMenu(menu);
