@@ -8,10 +8,12 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.IAuthorData;
 import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.test.util.TimeUtilsForTests;
 import org.edx.mobile.util.ResourceUtil;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -30,10 +32,10 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
         // Input values
         final String author = "author";
         final String label = "label";
-        final Date creationDate = new Date(1462368150195L); // A day before now
+        final Date creationDate = new Date(TimeUtilsForTests.DEFAULT_TIME);
 
         // Expected output constructs
-        final long now = 1462454550195L; // A day after the creationDate
+        final long now = DateUtils.addDays(creationDate, 1).getTime(); // A day after the creationDate
         final String relativeTime = "Yesterday";
         final String outputAuthor = ResourceUtil.getFormattedString(context.getResources(),
                 R.string.discussion_post_author_attribution, "author", author).toString();
