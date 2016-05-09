@@ -27,7 +27,6 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
     private WebView webView;
     private SearchView searchView;
-    boolean searchActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +65,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
             public boolean onQueryTextSubmit(String query) {
                 String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
                 String searchUrl = buildQuery(baseUrl, query, logger);
-                searchView.clearFocus();
+                searchView.onActionViewCollapsed();
                 webView.loadUrl(searchUrl);
                 return true;
             }
@@ -80,27 +79,16 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
                 if (!queryTextFocused) {
-                    searchActive = false;
-                    searchItem.collapseActionView();
-                    dismissKeyboard();
-                    showDrawerButton(true);
-                }  else {
-                    searchActive = true;
-                    showDrawerButton(false);
+                    searchView.onActionViewCollapsed();
                 }
+                enableDrawerMenuButton(!queryTextFocused);
             }
         });
 
         return result;
     }
 
-    private void dismissKeyboard() {
-        searchView.clearFocus();
-        searchView.setQuery("", false);
-    }
-
-    //Closing the Navigation Drawer
-    public void showDrawerButton(boolean showDrawer) {
+    public void enableDrawerMenuButton(boolean showDrawer) {
         mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
     }
 
@@ -117,8 +105,8 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == android.R.id.home && searchActive) {
-            dismissKeyboard();
+        if (itemId == android.R.id.home && searchView.hasFocus()) {
+            searchView.onActionViewCollapsed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
