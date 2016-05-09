@@ -3,16 +3,14 @@ package org.edx.mobile.discussion;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -25,51 +23,18 @@ import org.edx.mobile.R;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public abstract class DiscussionTextUtils {
-    private static final Pattern PATTERN_DUPLICATE_WHITESPACE = Pattern.compile("\\s+");
-
     @Inject
     private static Config config;
 
     private DiscussionTextUtils() {
     }
 
-    /**
-     * Encapsulates the two variants of author attribution strings, i.e. with and without authorLabel.
-     */
-    public enum AuthorAttributionLabel {
-        POST(R.string.post_attribution, R.string.post_attribution_without_label),
-        ANSWER(R.string.answer_author_attribution, R.string.answer_author_attribution_without_label),
-        ENDORSEMENT(R.string.endorser_attribution, R.string.endorser_attribution_without_label);
-
-        @StringRes
-        private final int stringRes, noLabelStringRes;
-
-        AuthorAttributionLabel(@StringRes int stringRes, @StringRes int noLabelStringRes) {
-            this.stringRes = stringRes;
-            this.noLabelStringRes = noLabelStringRes;
-        }
-
-        /**
-         * @return The string resource with authorLabel included.
-         */
-        @StringRes
-        public int getStringRes() {
-            return stringRes;
-        }
-
-        /**
-         * @return The string resource without the authorLabel.
-         */
-        @StringRes
-        public int getNoLabelStringRes() {
-            return noLabelStringRes;
-        }
-    }
+    public enum AuthorAttributionLabel {POST, ANSWER, ENDORSEMENT}
 
     public static void setAuthorAttributionText(@NonNull TextView textView,
                                                 @NonNull AuthorAttributionLabel authorAttributionLabel,
@@ -79,7 +44,6 @@ public abstract class DiscussionTextUtils {
                 System.currentTimeMillis(), onAuthorClickListener);
     }
 
-
     public static void setAuthorAttributionText(@NonNull TextView textView,
                                                 @NonNull AuthorAttributionLabel authorAttributionLabel,
                                                 @NonNull final IAuthorData authorData,
@@ -88,73 +52,73 @@ public abstract class DiscussionTextUtils {
         final CharSequence text;
         {
             final Context context = textView.getContext();
+            List<CharSequence> joinableStrings = new ArrayList<>();
+            boolean isEndorsed = false;
+            switch (authorAttributionLabel) {
+                case ANSWER:
+                    isEndorsed = true;
+                    joinableStrings.add(context.getString(R.string.discussion_post_marked_as_answer));
+                    break;
+                case ENDORSEMENT:
+                    isEndorsed = true;
+                    joinableStrings.add(context.getString(R.string.discussion_post_endorsed));
+                    break;
+            }
+
             final Date dateCreated = authorData.getCreatedAt();
-            final CharSequence formattedTime = dateCreated == null ? null :
-                    getRelativeTimeSpanString(context, initialTimeStampMs, dateCreated.getTime());
+            if (dateCreated != null) {
+                joinableStrings.add(getRelativeTimeSpanString(context, initialTimeStampMs,
+                        dateCreated.getTime()));
+            }
 
             final String author = authorData.getAuthor();
-            if (TextUtils.isEmpty(author)) {
-                switch (authorAttributionLabel) {
-                    case POST:
-                        text = formattedTime;
-                        break;
-                    default:
-                        text = null;
-                        break;
-                }
-            } else {
-                final String authorLabel = authorData.getAuthorLabel();
-
+            if (!TextUtils.isEmpty(author)) {
                 final SpannableString authorSpan = new SpannableString(author);
                 if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
-                    authorSpan.setSpan(new ClickableSpan() {
-                        @Override
-                        public void onClick(View widget) {
-                            onAuthorClickListener.run();
-                        }
-
-                        @Override
-                        public void updateDrawState(TextPaint ds) {
-                            super.updateDrawState(ds);
-                            ds.setUnderlineText(false);
-                        }
-                    }, 0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    // Change the author text color and style
+                    authorSpan.setSpan(new ForegroundColorSpan(
+                                    context.getResources().getColor(R.color.edx_brand_primary_base)),
+                            0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
 
-                @StringRes int finalStringRes;
-                HashMap<String, CharSequence> valuesMap = new HashMap<>();
-                valuesMap.put("time", formattedTime);
-                valuesMap.put("author", authorSpan);
-                if (authorLabel != null) {
-                    finalStringRes = authorAttributionLabel.getStringRes();
-                    valuesMap.put("author_label", authorLabel);
+                    // Set the click listener on the whole textView
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onAuthorClickListener.run();
+                        }
+                    });
                 } else {
-                    finalStringRes = authorAttributionLabel.getNoLabelStringRes();
+                    textView.setOnClickListener(null);
+                    textView.setClickable(false);
                 }
-                CharSequence formattedText = trim(ResourceUtil.getFormattedString(
-                        context.getResources(), finalStringRes, valuesMap));
-                // If time is not available, then reduce the whitespaces
-                // surrounding it's placeholder in the template to one.
-                if (TextUtils.isEmpty(formattedText) || TextUtils.isEmpty(authorLabel)) {
-                    formattedText = removeDuplicateWhitespace(formattedText);
-                }
-                text = formattedText;
+                joinableStrings.add(ResourceUtil.getFormattedString(context.getResources(),
+                        R.string.discussion_post_author_attribution, "author", authorSpan));
+            }
+
+            final String authorLabel = authorData.getAuthorLabel();
+            if (!TextUtils.isEmpty(authorLabel)) {
+                joinableStrings.add(ResourceUtil.getFormattedString(context.getResources(),
+                        R.string.discussion_post_author_label_attribution, "text", authorLabel));
+            }
+
+            int joinableStringsSize = joinableStrings.size();
+            if (joinableStringsSize == 0 || (isEndorsed && joinableStringsSize == 1)) {
+                text = null;
+            } else {
+                text = org.edx.mobile.util.TextUtils.join(" ", joinableStrings);
             }
         }
-
-        textView.setText(text);
         if (TextUtils.isEmpty(text)) {
             textView.setVisibility(View.GONE);
         } else {
-            // Allow ClickableSpan to trigger clicks
-            textView.setMovementMethod(new LinkMovementMethod());
+            textView.setText(text);
         }
     }
 
-    private static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
-                                                          long timeMs) {
+    public static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
+                                                         long timeMs) {
         if (nowMs - timeMs < DateUtils.SECOND_IN_MILLIS) {
             return context.getString(R.string.just_now);
         } else {
@@ -184,10 +148,6 @@ public abstract class DiscussionTextUtils {
         }
 
         return s.subSequence(start, end);
-    }
-
-    public static CharSequence removeDuplicateWhitespace(CharSequence text) {
-        return PATTERN_DUPLICATE_WHITESPACE.matcher(text).replaceAll(" ");
     }
 
     public static void setEndorsedState(@NonNull TextView target,
