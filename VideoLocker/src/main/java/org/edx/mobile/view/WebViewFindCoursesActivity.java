@@ -3,7 +3,9 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -101,6 +103,16 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     //Closing the Navigation Drawer
     public void showDrawer(boolean showDrawer) {
         mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (mDrawerLayout.isDrawerVisible(Gravity.LEFT)) {
+            menu.clear();
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
