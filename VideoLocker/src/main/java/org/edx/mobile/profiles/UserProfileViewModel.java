@@ -14,16 +14,12 @@ public class UserProfileViewModel {
     public final String location;
 
     @NonNull
-    public final ContentType contentType;
+    public final UserProfileBioModel bio;
 
-    @Nullable
-    public final String bio;
-
-    public UserProfileViewModel(@NonNull LimitedProfileMessage message, @Nullable String language, @Nullable String location, @NonNull ContentType contentType, @Nullable String bio) {
+    public UserProfileViewModel(@NonNull LimitedProfileMessage message, @Nullable String language, @Nullable String location, UserProfileBioModel bio) {
         limitedProfileMessage = message;
         this.language = language;
         this.location = location;
-        this.contentType = contentType;
         this.bio = bio;
     }
 
@@ -31,13 +27,5 @@ public class UserProfileViewModel {
         NONE,
         OWN_PROFILE,
         OTHER_USERS_PROFILE
-    }
-
-    public enum ContentType {
-        EMPTY,
-        NO_ABOUT_ME,
-        INCOMPLETE,
-        PARENTAL_CONSENT_REQUIRED,
-        ABOUT_ME
     }
 }

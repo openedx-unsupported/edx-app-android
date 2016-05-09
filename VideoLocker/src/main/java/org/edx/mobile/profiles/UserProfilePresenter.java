@@ -3,17 +3,34 @@ package org.edx.mobile.profiles;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.util.observer.Func1;
+import org.edx.mobile.util.observer.Observables;
 import org.edx.mobile.util.observer.Observer;
 import org.edx.mobile.view.ViewHoldingPresenter;
+
+import java.util.List;
 
 public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresenter.ViewInterface> {
 
     @NonNull
     private final UserProfileInteractor userProfileInteractor;
 
-    public UserProfilePresenter(@NonNull ISegment segment, @NonNull UserProfileInteractor userProfileInteractor) {
+    @NonNull
+    private final UserProfileTabsInteractor userProfileTabsInteractor;
+
+    public UserProfilePresenter(@NonNull ISegment segment, @NonNull UserProfileInteractor userProfileInteractor, @NonNull UserProfileTabsInteractor userProfileTabsInteractor) {
         this.userProfileInteractor = userProfileInteractor;
+        this.userProfileTabsInteractor = userProfileTabsInteractor;
         segment.trackProfileViewed(userProfileInteractor.getUsername());
+    }
+
+    public UserProfileBioInteractor getBioInteractor() {
+        return new UserProfileBioInteractor(userProfileInteractor.getUsername(), Observables.map(userProfileInteractor.observeProfile(), new Func1<UserProfileViewModel, UserProfileBioModel>() {
+            @Override
+            public UserProfileBioModel call(UserProfileViewModel arg) {
+                return arg.bio;
+            }
+        }));
     }
 
     @Override
@@ -44,6 +61,17 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
                 // Do nothing; leave whatever image/placeholder is already displayed
             }
         });
+        observeOnView(userProfileTabsInteractor.observeTabs()).subscribe(new Observer<List<UserProfileTab>>() {
+            @Override
+            public void onData(@NonNull List<UserProfileTab> data) {
+                view.showTabs(data);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable error) {
+                // Do nothing. Better off with what we're already showing
+            }
+        });
     }
 
     @Override
@@ -63,6 +91,8 @@ public class UserProfilePresenter extends ViewHoldingPresenter<UserProfilePresen
         void showProfile(@NonNull UserProfileViewModel profile);
 
         void showLoading();
+
+        void showTabs(@NonNull List<UserProfileTab> tab);
 
         void showError(@NonNull Throwable error);
 

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import java.util.List;
 
+
 public class Page<T> {
     @NonNull
     private List<T> results;
@@ -13,11 +14,9 @@ public class Page<T> {
     @NonNull
     private PaginationData pagination;
 
-    private final class PaginationData {
-        int count, numPages;
-
-        @Nullable
-        String next, previous;
+    public Page(@NonNull PaginationData pagination, @NonNull List<T> results) {
+        this.results = results;
+        this.pagination = pagination;
     }
 
     @NonNull
@@ -26,20 +25,20 @@ public class Page<T> {
     }
 
     public final int getCount() {
-        return pagination.count;
+        return pagination.getCount();
     }
 
     @Nullable
     public final String getNextUrl() {
-        return pagination.next;
+        return pagination.getNext();
     }
 
     @Nullable
     public final String getPreviousUrl() {
-        return pagination.previous;
+        return pagination.getPrevious();
     }
 
     public final boolean hasNext() {
-        return !TextUtils.isEmpty(pagination.next);
+        return !TextUtils.isEmpty(pagination.getNext());
     }
 }

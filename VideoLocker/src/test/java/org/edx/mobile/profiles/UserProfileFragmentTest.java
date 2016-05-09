@@ -66,30 +66,18 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<UserProfileFr
     }
 
     @Test
-    public void click_onParentalConsentEditProfileButton_callsEditProfile() {
-        view.setEditProfileMenuButtonVisible(true);
-        binding.parentalConsentEditProfileButton.performClick();
-        verify(presenter).onEditProfile();
-    }
-
-    @Test
-    public void click_onIncompleteEditProfileButton_callsEditProfile() {
-        view.setEditProfileMenuButtonVisible(true);
-        binding.incompleteEditProfileButton.performClick();
-        verify(presenter).onEditProfile();
-    }
-
-    @Test
     public void showProfile_withNoAboutMeOrCountryOrLanguage_showsNoAboutMeAndNoCountryAndNoLanguage() {
         view.showProfile(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
                 null,
-                UserProfileViewModel.ContentType.NO_ABOUT_ME,
-                null
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.NO_ABOUT_ME,
+                        null
+                )
         ));
         assertThat(binding.profileBodyContent).isVisible();
-        assertThat(binding.noAboutMe).isVisible();
+//        assertThat(binding.noAboutMe).isVisible();
         assertThat(binding.languageContainer).isNotVisible();
         assertThat(binding.locationContainer).isNotVisible();
     }
@@ -100,11 +88,12 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<UserProfileFr
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 ProfileValues.LANGUAGE_NAME,
                 ProfileValues.COUNTRY_NAME,
-                UserProfileViewModel.ContentType.ABOUT_ME,
-                ProfileValues.ABOUT_ME
+                new UserProfileBioModel(
+                        UserProfileBioModel.ContentType.ABOUT_ME,
+                        ProfileValues.ABOUT_ME)
         ));
         assertThat(binding.profileBodyContent).isVisible();
-        assertThat(binding.bioText).isVisible().hasText(ProfileValues.ABOUT_ME);
+//        assertThat(binding.bioText).isVisible().hasText(ProfileValues.ABOUT_ME);
         assertThat(binding.languageContainer).isVisible();
         assertThat(binding.languageText).hasText(ProfileValues.LANGUAGE_NAME);
         assertThat(binding.locationContainer).isVisible();

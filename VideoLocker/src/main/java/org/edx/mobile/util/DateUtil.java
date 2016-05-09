@@ -10,9 +10,7 @@ import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
-
-    public static final String ISO_8601_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-
+    public static final String ISO_8601_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final Logger logger = new Logger(DateUtil.class.getName());
 
     /*
