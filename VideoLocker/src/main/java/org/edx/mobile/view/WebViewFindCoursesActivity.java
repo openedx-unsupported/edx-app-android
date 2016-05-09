@@ -83,10 +83,10 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
                     searchActive = false;
                     searchItem.collapseActionView();
                     dismissKeyboard();
-                    showDrawer(true);
+                    showDrawerButton(true);
                 }  else {
                     searchActive = true;
-                    showDrawer(false);
+                    showDrawerButton(false);
                 }
             }
         });
@@ -100,7 +100,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     }
 
     //Closing the Navigation Drawer
-    public void showDrawer(boolean showDrawer) {
+    public void showDrawerButton(boolean showDrawer) {
         mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
     }
 
