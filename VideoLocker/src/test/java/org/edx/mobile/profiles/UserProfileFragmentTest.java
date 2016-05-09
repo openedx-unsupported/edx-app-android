@@ -1,6 +1,7 @@
 package org.edx.mobile.profiles;
 
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import org.assertj.core.api.Assertions;
@@ -8,21 +9,30 @@ import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragmentTest;
+import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static org.assertj.android.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
-public class UserProfileFragmentTest extends PresenterFragmentTest<UserProfileFragment, UserProfilePresenter, UserProfilePresenter.ViewInterface> {
+public class UserProfileFragmentTest extends PresenterFragmentTest<
+        UserProfileFragmentTest.TestableUserProfileFragment,
+        UserProfilePresenter,
+        UserProfilePresenter.ViewInterface> {
 
     FragmentUserProfileBinding binding;
 
     @Before
     public void before() {
-        startFragment(UserProfileFragment.newInstance(ProfileValues.USERNAME));
+        startFragment(TestableUserProfileFragment.newInstance(ProfileValues.USERNAME));
         binding = DataBindingUtil.getBinding(fragment.getView());
         Assertions.assertThat(binding).isNotNull();
     }
@@ -108,5 +118,42 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<UserProfileFr
         assertThat(binding.contentError.contentErrorText).hasText(ErrorUtils.getErrorMessage(error, fragment.getActivity()));
         assertThat(binding.profileBodyContent).isNotVisible();
         assertThat(binding.contentLoadingIndicator.getRoot()).isNotVisible();
+    }
+
+    @Test
+    public void showTabs_withBioTabOnly() {
+        final UserProfileTab userProfileTab = new UserProfileTab(R.string.profile_tab_bio, UserProfileBioFragment.class);
+        final List<UserProfileTab> tabs = Collections.singletonList(userProfileTab);
+        view.showTabs(tabs);
+        verify(fragment.mockAdapter).setItems(UserProfileFragment.pagerItemsFromProfileTabs(tabs, fragment.getResources()));
+        assertThat(binding.profileSectionTabs).isNotVisible();
+    }
+
+    @Test
+    public void showTabs_withBioAndAccomplishmentsTab() {
+        final UserProfileTab userProfileTab = new UserProfileTab(R.string.profile_tab_bio, UserProfileBioFragment.class);
+        final UserProfileTab accomplishmentsTab = new UserProfileTab(R.string.profile_tab_accomplishment, UserProfileAccomplishmentsFragment.class);
+        final List<UserProfileTab> tabs = Arrays.asList(userProfileTab, accomplishmentsTab);
+        view.showTabs(tabs);
+        verify(fragment.mockAdapter).setItems(UserProfileFragment.pagerItemsFromProfileTabs(tabs, fragment.getResources()));
+        assertThat(binding.profileSectionTabs).isVisible();
+    }
+
+    public static class TestableUserProfileFragment extends UserProfileFragment {
+
+        private StaticFragmentPagerAdapter mockAdapter = mock(StaticFragmentPagerAdapter.class);
+
+        @NonNull
+        public static TestableUserProfileFragment newInstance(@NonNull String username) {
+            final TestableUserProfileFragment fragment = new TestableUserProfileFragment();
+            fragment.setArguments(createArguments(username));
+            return fragment;
+        }
+
+        @NonNull
+        @Override
+        protected StaticFragmentPagerAdapter createTabAdapter() {
+            return mockAdapter;
+        }
     }
 }

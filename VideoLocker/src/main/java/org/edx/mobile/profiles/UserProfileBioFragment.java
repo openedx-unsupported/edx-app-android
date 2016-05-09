@@ -2,7 +2,6 @@ package org.edx.mobile.profiles;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,12 +16,14 @@ import org.edx.mobile.view.Router;
 
 import javax.inject.Inject;
 
-public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPresenter, UserProfileBioPresenter.ViewInterface> {
+public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPresenter, UserProfileBioPresenter.ViewInterface> implements ScrollingPreferenceChild {
 
     private final Logger logger = new Logger(getClass().getName());
 
     @Inject
     Router router;
+
+    private boolean prefersScrollingHeader = false;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return DataBindingUtil.inflate(inflater, R.layout.fragment_user_profile_bio, container, false).getRoot();
@@ -66,6 +67,8 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
                 viewHolder.noAboutMe.setVisibility(bio.contentType == UserProfileBioModel.ContentType.NO_ABOUT_ME ? View.VISIBLE : View.GONE);
                 viewHolder.bioText.setVisibility(bio.contentType == UserProfileBioModel.ContentType.ABOUT_ME ? View.VISIBLE : View.GONE);
                 viewHolder.bioText.setText(bio.bioText);
+                prefersScrollingHeader = bio.contentType == UserProfileBioModel.ContentType.ABOUT_ME;
+                ((ScrollingPreferenceParent)getParentFragment()).onChildScrollingPreferenceChanged();
             }
 
             @Override
@@ -73,5 +76,10 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
                 router.showUserProfileEditor(getActivity(), username);
             }
         };
+    }
+
+    @Override
+    public boolean prefersScrollingHeader() {
+        return prefersScrollingHeader;
     }
 }

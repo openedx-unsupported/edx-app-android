@@ -2,6 +2,7 @@ package org.edx.mobile.profiles;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,13 +13,12 @@ import com.bumptech.glide.Glide;
 
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.AccomplishmentItemBinding;
-import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
-import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.adapters.LoadingViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements InfiniteScrollUtils.ListContentController<BadgeAssertion> {
+public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @NonNull
     private final List<BadgeAssertion> items = new ArrayList<>();
@@ -36,7 +36,8 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
         this.listener = listener;
     }
 
-    static class RowType {
+    @VisibleForTesting
+    public static class RowType {
         static final int ITEM = 0;
         static final int PROGRESS = 1;
     }
@@ -45,16 +46,26 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case RowType.ITEM:
-                return new ViewHolder(parent);
+                return createItemViewHolder(parent);
             case RowType.PROGRESS: {
-                return new CourseDiscussionResponsesAdapter.ShowMoreViewHolder(LayoutInflater.
-                        from(parent.getContext()).
-                        inflate(R.layout.list_view_footer_progress, parent, false));
+                return createProgressViewHolder(parent);
             }
             default: {
                 throw new IllegalArgumentException(String.valueOf(viewType));
             }
         }
+    }
+
+    @NonNull
+    @VisibleForTesting
+    protected ItemViewHolder createItemViewHolder(@NonNull ViewGroup parent) {
+        return new ItemViewHolder(parent);
+    }
+
+    @NonNull
+    @VisibleForTesting
+    protected LoadingViewHolder createProgressViewHolder(@NonNull ViewGroup parent) {
+        return new LoadingViewHolder(parent);
     }
 
     @Override
@@ -70,7 +81,7 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
         final int viewType = getItemViewType(position);
         switch (viewType) {
             case RowType.ITEM: {
-                ((ViewHolder) holder).setContent(items.get(position));
+                ((ItemViewHolder) holder).setContent(items.get(position));
                 break;
             }
             case RowType.PROGRESS: {
@@ -88,35 +99,24 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
         return items.size() + (isProgressVisible ? 1 : 0);
     }
 
-    public void clear() {
-        final int size = items.size();
+    public void setItems(@NonNull List<BadgeAssertion> newItems) {
         items.clear();
-        notifyItemRangeRemoved(0, size);
-    }
-
-    public void addAll(@NonNull List<BadgeAssertion> newItems) {
-        final int oldSize = items.size();
         items.addAll(newItems);
-        notifyItemRangeInserted(oldSize, newItems.size());
+        notifyDataSetChanged();
     }
 
-    @Override
-    public void setProgressVisible(boolean visible) {
+    public void setPageLoading(boolean visible) {
         if (visible != isProgressVisible) {
             isProgressVisible = visible;
-            if (isProgressVisible) {
-                notifyItemInserted(getItemCount() - 1);
-            } else {
-                notifyItemRemoved(getItemCount());
-            }
+            notifyDataSetChanged();
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
         @NonNull
         public final AccomplishmentItemBinding binding;
 
-        public ViewHolder(@NonNull ViewGroup parent) {
+        public ItemViewHolder(@NonNull ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.accomplishment_item, parent, false));
             binding = DataBindingUtil.bind(itemView);
         }

@@ -1,12 +1,13 @@
 package org.edx.mobile.profiles;
 
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,14 +39,21 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
-public class UserProfileFragment extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface> implements UserProfileBioTabParent {
+public class UserProfileFragment extends PresenterFragment<UserProfilePresenter, UserProfilePresenter.ViewInterface> implements UserProfileBioTabParent, ScrollingPreferenceParent {
 
+    @NonNull
     public static UserProfileFragment newInstance(@NonNull String username) {
+        final UserProfileFragment fragment = new UserProfileFragment();
+        fragment.setArguments(createArguments(username));
+        return fragment;
+    }
+
+    @NonNull
+    @VisibleForTesting
+    public static Bundle createArguments(@NonNull String username) {
         final Bundle bundle = new Bundle();
         bundle.putString(UserProfileActivity.EXTRA_USERNAME, username);
-        final UserProfileFragment fragment = new UserProfileFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+        return bundle;
     }
 
     @Inject
@@ -102,10 +110,18 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 ));
     }
 
+    FragmentUserProfileBinding viewHolder;
+
+    @VisibleForTesting
+    @NonNull
+    protected StaticFragmentPagerAdapter createTabAdapter() {
+        return new StaticFragmentPagerAdapter(getChildFragmentManager());
+    }
+
     @NonNull
     @Override
     protected UserProfilePresenter.ViewInterface createView() {
-        final FragmentUserProfileBinding viewHolder = DataBindingUtil.getBinding(getView());
+        viewHolder = DataBindingUtil.getBinding(getView());
 
         viewHolder.appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -117,6 +133,17 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 }
             }
         });
+
+        viewHolder.profileSectionPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                onChildScrollingPreferenceChanged();
+            }
+        });
+
+        final StaticFragmentPagerAdapter adapter = createTabAdapter();
+        viewHolder.profileSectionPager.setAdapter(adapter);
+        viewHolder.profileSectionTabs.setupWithViewPager(viewHolder.profileSectionPager);
 
         return new UserProfilePresenter.ViewInterface() {
             @Override
@@ -156,7 +183,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
 
             @Override
             public void showLoading() {
-                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
+                ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
                 viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
@@ -166,7 +193,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
 
             @Override
             public void showError(@NonNull Throwable error) {
-                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
+                ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
                 viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
@@ -177,15 +204,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
 
             @Override
             public void showTabs(@NonNull List<UserProfileTab> tabs) {
-                List<StaticFragmentPagerAdapter.Item> pages = new LinkedList<>();
-                for (UserProfileTab tab : tabs) {
-                    pages.add(new StaticFragmentPagerAdapter.Item(tab.getFragmentClass(), getString(tab.getDisplayName())));
-                }
-                PagerAdapter adapter = new StaticFragmentPagerAdapter(getChildFragmentManager(), pages);
-                viewHolder.profileSectionPager.setAdapter(adapter);
-                viewHolder.profileSectionTabs.setupWithViewPager(viewHolder.profileSectionPager);
+                adapter.setItems(pagerItemsFromProfileTabs(tabs, getResources()));
                 viewHolder.profileSectionTabs.setVisibility(tabs.size() < 2 ? View.GONE : View.VISIBLE);
-                ((AppBarLayout.LayoutParams)viewHolder.profileHeader.getLayoutParams()).setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
             }
 
             @Override
@@ -223,5 +243,31 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
     @Override
     public UserProfileBioInteractor getBioInteractor() {
         return presenter.getBioInteractor();
+    }
+
+    @Override
+    public void onChildScrollingPreferenceChanged() {
+        final int position = viewHolder.profileSectionTabs.getSelectedTabPosition();
+        @AppBarLayout.LayoutParams.ScrollFlags
+        final int scrollFlags;
+        if (position >= 0 && ((ScrollingPreferenceChild) ((StaticFragmentPagerAdapter) viewHolder.profileSectionPager.getAdapter()).getFragment(position))
+                .prefersScrollingHeader()) {
+            scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
+        } else {
+            scrollFlags = 0;
+        }
+        final AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams();
+        p.setScrollFlags(scrollFlags);
+        viewHolder.profileHeader.setLayoutParams(p);
+    }
+
+    @NonNull
+    @VisibleForTesting
+    public static List<StaticFragmentPagerAdapter.Item> pagerItemsFromProfileTabs(@NonNull List<UserProfileTab> tabs, @NonNull Resources resources) {
+        final List<StaticFragmentPagerAdapter.Item> pages = new LinkedList<>();
+        for (UserProfileTab tab : tabs) {
+            pages.add(new StaticFragmentPagerAdapter.Item(tab.getFragmentClass(), resources.getString(tab.getDisplayName())));
+        }
+        return pages;
     }
 }

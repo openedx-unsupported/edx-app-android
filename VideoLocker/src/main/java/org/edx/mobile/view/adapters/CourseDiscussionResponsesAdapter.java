@@ -98,11 +98,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             return new DiscussionThreadViewHolder(discussionThreadRow);
         }
         if (viewType == RowType.PROGRESS) {
-            View discussionThreadRow = LayoutInflater.
-                    from(parent.getContext()).
-                    inflate(R.layout.list_view_footer_progress, parent, false);
-
-            return new ShowMoreViewHolder(discussionThreadRow);
+            return new LoadingViewHolder(parent);
         }
 
         View discussionResponseRow = LayoutInflater.
@@ -128,7 +124,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                 bindViewHolderToResponseRow((DiscussionResponseViewHolder) holder, position);
                 break;
             case RowType.PROGRESS:
-                bindViewHolderToShowMoreRow((ShowMoreViewHolder) holder);
+                bindViewHolderToShowMoreRow((LoadingViewHolder) holder);
                 break;
         }
 
@@ -227,7 +223,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         }
     }
 
-    private void bindViewHolderToShowMoreRow(ShowMoreViewHolder holder) {
+    private void bindViewHolderToShowMoreRow(LoadingViewHolder holder) {
     }
 
 
@@ -421,19 +417,13 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         discussionThread.incrementCommentCount();
         String parentId = parent.getIdentifier();
         for (ListIterator<DiscussionComment> responseIterator = discussionResponses.listIterator();
-                responseIterator.hasNext();) {
+             responseIterator.hasNext(); ) {
             DiscussionComment response = responseIterator.next();
             if (parentId.equals(response.getIdentifier())) {
                 response.incrementChildCount();
                 notifyItemChanged(1 + responseIterator.previousIndex());
                 break;
             }
-        }
-    }
-
-    public static class ShowMoreViewHolder extends RecyclerView.ViewHolder {
-        public ShowMoreViewHolder(View itemView) {
-            super(itemView);
         }
     }
 
