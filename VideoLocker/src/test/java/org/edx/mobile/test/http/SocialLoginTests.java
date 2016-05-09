@@ -1,9 +1,7 @@
 package org.edx.mobile.test.http;
 
-import org.edx.mobile.http.Api;
 import org.edx.mobile.model.api.ProfileModel;
 import org.junit.Test;
-import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assume.assumeFalse;

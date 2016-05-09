@@ -5,34 +5,36 @@ import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.model.Page;
+import org.edx.mobile.model.PaginationData;
 import org.edx.mobile.profiles.BadgeAssertion;
-import org.edx.mobile.profiles.BadgeSpec;
+import org.edx.mobile.profiles.BadgeClass;
 import org.edx.mobile.test.BaseTestCase;
 import org.edx.mobile.user.UserAPI;
-
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import retrofit.RestAdapter;
 
+import static org.junit.Assert.assertEquals;
+
 public class UserApiTest extends BaseTestCase {
 
     private BadgeAssertion getTestBadge() {
         return new BadgeAssertion("some user", "http://example.com/evidence", "http://example.com/image.jpg", new Date(),
-                new BadgeSpec(
+                new BadgeClass(
                         "someslug", "some component", "A badge!", "A badge you get for stuff", "http://example.com/image.jpg", "somecourse"
                 )
         );
     }
 
     private String getTestBadgeString() {
-        return new Gson().toJson(Arrays.asList(getTestBadge()));
+        Page<BadgeAssertion> response = new Page<>(new PaginationData(1, 1, null, null), Collections.singletonList(getTestBadge()));
+        return new Gson().toJson(response);
     }
 
     @Test
@@ -47,8 +49,8 @@ public class UserApiTest extends BaseTestCase {
         server.enqueue(new MockResponse().setBody(this.getTestBadgeString()));
 
         UserAPI api = new UserAPI(restAdapter);
-        List<BadgeAssertion> badges = api.getBadges("user");
+        Page<BadgeAssertion> badges = api.getBadges("user", 1);
 
-        assertEquals(badges.size(), 1);
+        assertEquals(badges.getResults().size(), 1);
     }
 }

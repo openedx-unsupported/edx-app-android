@@ -23,7 +23,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.PrefManager;

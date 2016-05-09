@@ -8,7 +8,6 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +16,6 @@ import java.util.List;
 import okhttp3.Cache;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
-import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -65,6 +63,9 @@ public class OkHttpUtil {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             interceptors.add(loggingInterceptor);
         }
+
+        builder.authenticator(new OauthRefreshTokenAuthenticator(context));
+
         return builder.build();
     }
 

@@ -6,31 +6,39 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Implementation of {@link FragmentPagerAdapter} that takes a static list
  * of Fragments as the items.
  */
 public final class StaticFragmentPagerAdapter extends FragmentPagerAdapter {
-    private final Item[] items;
+    private final List<Item> items;
 
     public StaticFragmentPagerAdapter(@NonNull FragmentManager manager, @NonNull Item... items) {
+        this(manager, Arrays.asList(items));
+    }
+
+    public StaticFragmentPagerAdapter(@NonNull FragmentManager manager, @NonNull List<Item> items) {
         super(manager);
-        this.items = items.clone();
+        this.items = new LinkedList<>(items);
     }
 
     @Override
     public int getCount() {
-        return items.length;
+        return items.size();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return items[position].generateFragment();
+        return items.get(position).generateFragment();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return items[position].title;
+        return items.get(position).title;
     }
 
     /**

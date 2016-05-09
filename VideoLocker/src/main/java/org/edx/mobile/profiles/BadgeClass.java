@@ -2,21 +2,21 @@ package org.edx.mobile.profiles;
 
 import com.google.gson.annotations.SerializedName;
 
-public class BadgeSpec {
+public class BadgeClass {
 
     private String slug;
     private @SerializedName("issuing_component") String issuingComponent;
-    private String name;
+    private @SerializedName("display_name") String displayName;
     private String description;
     private @SerializedName("image_url") String imageUrl;
     private @SerializedName("course_id") String courseId;
 
-    public BadgeSpec() {}
+    public BadgeClass() {}
 
-    public BadgeSpec(String slug, String issuingComponent, String name, String description, String imageUrl, String courseId) {
+    public BadgeClass(String slug, String issuingComponent, String displayName, String description, String imageUrl, String courseId) {
         this.slug = slug;
         this.issuingComponent = issuingComponent;
-        this.name = name;
+        this.displayName = displayName;
         this.description = description;
         this.imageUrl = imageUrl;
         this.courseId = courseId;
@@ -30,8 +30,8 @@ public class BadgeSpec {
         return issuingComponent;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public String getDescription() {

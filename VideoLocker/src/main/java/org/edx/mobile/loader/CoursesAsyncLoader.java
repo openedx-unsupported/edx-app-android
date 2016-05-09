@@ -3,6 +3,8 @@ package org.edx.mobile.loader;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -14,29 +16,37 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import roboguice.RoboGuice;
+
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
     private Context context;
 
     private Observer mObserver;
 
+    @Inject
     IEdxEnvironment environment;
 
-    public CoursesAsyncLoader(Context context, IEdxEnvironment environment) {
+    @Inject
+    UserAPI api;
+
+    public CoursesAsyncLoader(Context context) {
         super(context);
         this.context = context;
-        this.environment = environment;
+        RoboGuice.injectMembers(context, this);
     }
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        ProfileModel profile = pref.getCurrentUserProfile();
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = environment.getServiceManager().getEnrolledCourses();
+            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username);
             environment.getNotificationDelegate().syncWithServerForFailure();
             environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             result.setResult(enrolledCoursesResponse);
-        } catch (Exception exception) {
+        } catch (RetroHttpException exception) {
             result.setEx(exception);
         }
         return result;

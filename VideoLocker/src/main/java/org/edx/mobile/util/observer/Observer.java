@@ -6,3 +6,5 @@ public interface Observer<T> {
     void onData(@NonNull T data);
     void onError(@NonNull Throwable error);
 }
+
+

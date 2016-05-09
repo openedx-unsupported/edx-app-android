@@ -25,7 +25,11 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        if(getParentFragment() == null) {
+            // retain instance is inherited through the fragment tree
+            // so don't need it for fragments with parents
+            setRetainInstance(true);
+        }
         if (null == presenter) {
             presenter = createPresenter();
         }

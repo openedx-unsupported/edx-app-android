@@ -27,4 +27,6 @@ public class ApiConstants {
     public static final String COURSE_ID = "courseId";
     public static final String USER_NAME = "username";
     public static final String GROUP_ID = "groupId";
+
+    public static final int STANDARD_PAGE_SIZE = 20;
 }

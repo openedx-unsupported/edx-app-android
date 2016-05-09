@@ -3,7 +3,7 @@ package org.edx.mobile.http;
 import android.content.Context;
 
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 
 import java.io.IOException;

@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -27,6 +29,8 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
     @Mock
     private UserProfileInteractor userProfileInteractor;
     @Mock
+    private UserProfileTabsInteractor userProfileTabsInteractor;
+    @Mock
     private UserPrefs userPrefs;
     @Mock
     private ISegment segment;
@@ -35,16 +39,21 @@ public class UserProfilePresenterTest extends PresenterTest<UserProfilePresenter
 
     private CachingObservable<UserProfileImageViewModel> photoObservable;
 
+    private CachingObservable<List<UserProfileTab>> tabsObservable;
+
     @Before
     public void before() {
         accountObservable = new CachingObservable<>();
         photoObservable = new CachingObservable<>();
+        tabsObservable = new CachingObservable<>();
         when(userProfileInteractor.getUsername()).thenReturn(PROFILE_USERNAME);
         when(userProfileInteractor.observeProfile()).thenReturn(accountObservable);
         when(userProfileInteractor.observeProfileImage()).thenReturn(photoObservable);
+        when(userProfileTabsInteractor.observeTabs()).thenReturn(tabsObservable);
         startPresenter(new UserProfilePresenter(
                 segment,
-                userProfileInteractor
+                userProfileInteractor,
+                userProfileTabsInteractor
         ));
     }
 

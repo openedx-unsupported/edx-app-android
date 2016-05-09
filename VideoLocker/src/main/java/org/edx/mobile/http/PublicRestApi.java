@@ -1,6 +1,6 @@
 package org.edx.mobile.http;
 
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 
 import retrofit.http.Field;

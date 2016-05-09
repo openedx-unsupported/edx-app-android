@@ -10,9 +10,12 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.Page;
 import org.edx.mobile.profiles.BadgeAssertion;
+import org.edx.mobile.model.api.EnrolledCoursesResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +64,11 @@ public class UserAPI {
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
     }
 
-    public List<BadgeAssertion> getBadges(@NonNull String username) throws RetroHttpException {
-        return userService.getBadges(username);
+    public Page<BadgeAssertion> getBadges(@NonNull String username, int page) throws RetroHttpException {
+        return userService.getBadges(username, page, ApiConstants.STANDARD_PAGE_SIZE);
+    }
+
+    public List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username) throws RetroHttpException {
+        return userService.getUserEnrolledCourses(username);
     }
 }

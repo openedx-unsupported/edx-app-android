@@ -16,9 +16,14 @@ public class LandingScreenInteractor {
     public LandingScreenInteractor observeLandingScreen() {
         // Look for edx_logo view which (we assume) is only present on the landing screen
         onView(withId(R.id.edx_logo)).check(matches(isCompletelyDisplayed()));
-        onSignUpView().check(matches(isCompletelyDisplayed()));
+        onRegistrationView().check(matches(isCompletelyDisplayed()));
         onLogInView().check(matches(isCompletelyDisplayed()));
         return this;
+    }
+
+    public RegistrationScreenInteractor navigateToRegistrationScreen() {
+        onRegistrationView().perform(ViewActions.click());
+        return new RegistrationScreenInteractor();
     }
 
     public LogInScreenInteractor navigateToLogInScreen() {
@@ -26,7 +31,7 @@ public class LandingScreenInteractor {
         return new LogInScreenInteractor();
     }
 
-    private ViewInteraction onSignUpView() {
+    private ViewInteraction onRegistrationView() {
         return onView(withText(R.string.sign_up_and_learn));
     }
 

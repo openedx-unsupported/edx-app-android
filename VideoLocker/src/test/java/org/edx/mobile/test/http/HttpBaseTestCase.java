@@ -7,10 +7,11 @@ import com.google.inject.Injector;
 
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;
+import org.edx.mobile.test.util.MockDataUtil;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,9 +19,7 @@ import org.junit.Ignore;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +32,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 import static org.junit.Assert.assertNotNull;
 
 /**
- *  use MockWebService for Api test
+ * use MockWebService for Api test
  */
 @Ignore
 public class HttpBaseTestCase extends BaseTestCase {
@@ -43,9 +42,6 @@ public class HttpBaseTestCase extends BaseTestCase {
     private static final int ERROR_DELAY_FACTOR = 3; // Network errors will be scaled by this value.
     private static final Random random = new Random(); // Random instance for determining delays
     private static final String API_HOST_URL = "API_HOST_URL"; // Config key for API host url
-    // Mock API responses properties file name
-    private static final String MOCK_API_RESPONSES_PROPERTIES = "mock_api_responses.properties";
-
     // Use a mock server to serve fixed responses
     protected MockWebServer server;
     protected Api api;
@@ -76,7 +72,7 @@ public class HttpBaseTestCase extends BaseTestCase {
 
         String oAuthClientId = config.getOAuthClientId();
         String testAccount = config.getTestAccountConfig().getName();
-        shouldSkipTest = TextUtils.isEmpty( oAuthClientId ) || TextUtils.isEmpty(testAccount);
+        shouldSkipTest = TextUtils.isEmpty(oAuthClientId) || TextUtils.isEmpty(testAccount);
 
 
     }
@@ -106,15 +102,16 @@ public class HttpBaseTestCase extends BaseTestCase {
      * Utility method to be used as a prerequisite for testing most API
      *
      * @throws Exception If an exception was encountered during login or
-     * verification
+     *                   verification
      */
     protected void login() throws Exception {
-        Config.TestAccountConfig config2  = config.getTestAccountConfig();
+        Config.TestAccountConfig config2 = config.getTestAccountConfig();
 
         AuthResponse res = api.auth(config2.getName(), config2.getPassword());
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
+        assertNotNull(res.refresh_token);
         print(res.toString());
 
         ProfileModel profile = api.getProfile();
@@ -138,10 +135,11 @@ public class HttpBaseTestCase extends BaseTestCase {
     // The delay randomizing methods below are copied from the Retrofit
     // MockRestAdapter implementation which is distributed under the Apache 2.0
     // License
+
     /**
      * Get the delay (in milliseconds) that should be used for triggering a
      * network error.
-     * <p>
+     * <p/>
      * Because we are triggering an error, use a random delay between 0 and
      * three times the normal network delay to simulate a flaky connection
      * failing anywhere from quickly to slowly.
@@ -191,79 +189,61 @@ public class HttpBaseTestCase extends BaseTestCase {
         return url.matches(pattern);
     }
 
-    /**
-     * Fetches the mock response from the predefined set in the
-     * properties file
-     */
-    private static String getMockResponse(String apiPropertyName) throws IOException {
-        Properties responses = new Properties();
-        InputStream in = HttpBaseTestCase.class.getClassLoader()
-                .getResourceAsStream(MOCK_API_RESPONSES_PROPERTIES);
-        if (in == null) {
-            throw new NullPointerException();
-        }
-        try {
-            responses.load(in);
-        } finally {
-            in.close();
-        }
-        return responses.getProperty(apiPropertyName);
-    }
-
     private MockResponse generateMockResponse(RecordedRequest request) {
         final String method = request.getMethod();
         final String path = request.getPath();
+        final String body = request.getBody().readUtf8();
         MockResponse response = new MockResponse();
         response.addHeader("Set-Cookie", "csrftoken=dummy; Max-Age=31449600; Path=/");
         response.setResponseCode(404);
         try {
             if ("POST".equals(method)) {
                 if (urlMatches(path, "/oauth2/access_token")) {
-                    response.setBody(getMockResponse("post_oauth2_access_token"));
+                    response.setBody(MockDataUtil.getMockResponse("post_oauth2_access_token"));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/staff/course_status_info/[^/]+/[^/]+/[^/]+")) {
                     try {
-                        JSONObject body = new JSONObject(request.getBody().readUtf8());
-                        String moduleId = body.getString("last_visited_module_id");
-                        response.setBody(String.format(Locale.US, getMockResponse("post_course_status_info"), moduleId));
+                        JSONObject jsonObject = new JSONObject(request.getBody().readUtf8());
+                        String moduleId = jsonObject.getString("last_visited_module_id");
+                        response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("post_course_status_info"), moduleId));
                         response.setResponseCode(200);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else if (urlMatches(path, "/api/enrollment/v1/enrollment")) {
                     try {
-                        JSONObject body = new JSONObject(request.getBody().readUtf8());
-                        response.setBody(String.format(Locale.US, getMockResponse("post_enrollment"),
-                                body.getJSONObject("course_details").getString("course_id")));
+                        JSONObject jsonObject = new JSONObject(request.getBody().readUtf8());
+                        response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("post_enrollment"),
+                                jsonObject.getJSONObject("course_details").getString("course_id")));
                         response.setResponseCode(200);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else if (urlMatches(path, "/password_reset")) {
-                    response.setBody(getMockResponse("post_password_reset"));
+                    response.setBody(MockDataUtil.getMockResponse("post_password_reset"));
                     response.setResponseCode(200);
                 }
             } else if ("GET".equals(method)) {
                 if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
                     String baseMockUrl = getBaseMockUrl();
-                    response.setBody(String.format(Locale.US, getMockResponse("get_my_user_info"), baseMockUrl));
+                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_my_user_info"), baseMockUrl));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/[^/]+/course_enrollments")) {
                     String baseMockUrl = getBaseMockUrl();
-                    response.setBody(String.format(Locale.US, getMockResponse("get_course_enrollments"), baseMockUrl));
+                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments"), baseMockUrl));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/video_outlines/courses/[^/]+/[^/]+/[^/]+")) {
-                    response.setBody(getMockResponse("get_video_outlines_courses"));
+                    response.setBody(MockDataUtil.getMockResponse("get_video_outlines_courses"));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/updates")) {
-                    response.setBody(getMockResponse("get_course_info_updates"));
+                    response.setBody(MockDataUtil.getMockResponse("get_course_info_updates"));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/staff/course_status_info/[^/]+/[^/]+/[^/]+")) {
                     Matcher matcher = Pattern.compile(
                             "/api/mobile/v0.5/users/staff/course_status_info/([^/]+)/([^/]+)/([^/]+)", 0).matcher(path);
                     matcher.matches();
                     String moduleId = "i4x://" + matcher.group(1) + '/' + matcher.group(2) + "/course/" + matcher.group(3);
-                    response.setBody(String.format(Locale.US, getMockResponse("get_course_status_info"), moduleId));
+                    response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_status_info"), moduleId));
                     response.setResponseCode(200);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/handouts")) {
                     // TODO: Find out if this is a wrong API call or server issue
@@ -271,7 +251,7 @@ public class HttpBaseTestCase extends BaseTestCase {
                     response.setBody("{\"detail\": \"Not found\"}");
                 } else if (urlMatches(path, "/api/courses/v1/blocks/")) {
                     // TODO: Return different responses based on the parameters?
-                    response.setBody(getMockResponse("get_course_structure"));
+                    response.setBody(MockDataUtil.getMockResponse("get_course_structure"));
                     response.setResponseCode(200);
                 }
             }

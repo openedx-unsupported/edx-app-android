@@ -16,8 +16,7 @@ import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
-import org.edx.mobile.model.api.AuthResponse;
-import org.edx.mobile.model.api.CourseInfoModel;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.ProfileModel;
@@ -32,8 +31,6 @@ import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.social.SocialFactory;
-import org.edx.mobile.social.SocialMember;
 import org.edx.mobile.util.Config;
 
 import java.io.UnsupportedEncodingException;
