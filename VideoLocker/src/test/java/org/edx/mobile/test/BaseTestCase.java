@@ -9,14 +9,13 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
-import org.edx.mobile.CustomRobolectricTestRunner;
 import org.edx.mobile.core.EdxDefaultModule;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.test.util.TimeUtilsForTests;
 import org.edx.mobile.util.Config;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.runner.RunWith;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.IOException;
@@ -25,17 +24,18 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import roboguice.RoboGuice;
 
 @Ignore
 public abstract class BaseTestCase extends BaseTest {
-
     protected final Logger logger = new Logger(getClass().getName());
 
     protected Context context;
     protected Config config;
     protected CustomGuiceModule module;
+
     @Before
     public void setUp() throws Exception {
         context = RuntimeEnvironment.application;
@@ -43,6 +43,8 @@ public abstract class BaseTestCase extends BaseTest {
 
         module = new CustomGuiceModule();
         glueInjections();
+        // Set time zone to a constant value to make time-based tests predictable
+        TimeZone.setDefault(TimeUtilsForTests.DEFAULT_TIME_ZONE);
         print("Started Test Case: " + getClass().getName());
     }
 
