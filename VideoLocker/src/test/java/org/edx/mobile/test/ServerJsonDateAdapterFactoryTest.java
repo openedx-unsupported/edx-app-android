@@ -52,7 +52,6 @@ public class ServerJsonDateAdapterFactoryTest {
         String dateString = "\"2014-11-06T20:16:45.232333Z\"";
         Gson gson = newGson();
         Date date = gson.fromJson(dateString, Date.class);
-
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         calendar.setTime(date);
         assertEquals(2014, calendar.get(Calendar.YEAR));
@@ -85,7 +84,6 @@ public class ServerJsonDateAdapterFactoryTest {
         String dateString = gson.toJson(baseDate).replace("\"", "");
         SimpleDateFormat formatter = new SimpleDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT);
         Date date = formatter.parse(dateString);
-
         baseDate = DateUtils.truncate(baseDate, Calendar.SECOND);
         assertEquals(baseDate.getTime(), date.getTime());
     }
