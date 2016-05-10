@@ -64,6 +64,15 @@ public class ServerJsonDateAdapterFactoryTest {
     }
 
     @Test
+    public void testParsingNull() {
+        String dateString = "null";
+        Gson gson = newGson();
+        Date date = gson.fromJson(dateString, Date.class);
+
+        assertEquals(null, date);
+    }
+
+    @Test
     public void testParsingNonsenseRaises() {
         String dateString = "foobar";
         Gson gson = newGson();

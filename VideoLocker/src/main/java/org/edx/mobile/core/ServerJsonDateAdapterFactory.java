@@ -58,24 +58,29 @@ public class ServerJsonDateAdapterFactory implements TypeAdapterFactory {
 
         @Override
         public Date read(JsonReader in) throws IOException {
-            String dateString = in.nextString();
+            if (in.peek() == JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            } else {
+                String dateString = in.nextString();
 
-            // date formatters aren't thread safe, so sync on them
-            synchronized(dateFormatter) {
-                try {
-                    return dateFormatter.parse(dateString);
-                } catch (ParseException ignored) {
-                    // Sometimes the server sends us strings with extra microseconds
-                    // ICU doesn't like those and we don't need the precision, so just strip them out
-                    String withoutMicroseconds = dateString.replaceFirst("\\..*Z", "Z");
+                // date formatters aren't thread safe, so sync on them
+                synchronized (dateFormatter) {
                     try {
-                        return dateFormatter.parse(withoutMicroseconds);
-                    } catch (ParseException e) {
-                        // fall through to final failure
+                        return dateFormatter.parse(dateString);
+                    } catch (ParseException ignored) {
+                        // Sometimes the server sends us strings with extra microseconds
+                        // ICU doesn't like those and we don't need the precision, so just strip them out
+                        String withoutMicroseconds = dateString.replaceFirst("\\..*Z", "Z");
+                        try {
+                            return dateFormatter.parse(withoutMicroseconds);
+                        } catch (ParseException e) {
+                            // fall through to final failure
+                        }
                     }
                 }
+                throw new JsonSyntaxException("Couldn't parse date: '" + dateString + "'");
             }
-            throw new JsonSyntaxException("Couldn't parse date: '" + dateString + "'");
         }
     }
 }
