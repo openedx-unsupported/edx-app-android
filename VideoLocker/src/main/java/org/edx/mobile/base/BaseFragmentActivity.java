@@ -45,7 +45,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
 
     private MenuItem offlineMenuItem;
-    private ActionBarDrawerToggle mDrawerToggle;
+    protected ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
     private boolean isConnectedToWifi = false;
