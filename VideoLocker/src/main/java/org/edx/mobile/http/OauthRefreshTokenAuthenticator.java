@@ -31,7 +31,8 @@ import roboguice.RoboGuice;
  * Authenticator for 401 responses for refreshing oauth tokens. Checks for
  * the expired oauth token case and then uses the refresh token to retrieve a
  * new access token. Using the new access token, the original http request
- * that received the 401 will be attempted again.
+ * that received the 401 will be attempted again. If no refresh_token is
+ * present, no authentication attempt is made.
  */
 public class OauthRefreshTokenAuthenticator implements Authenticator {
 
@@ -56,6 +57,11 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         }
 
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+
+        if (pref.getCurrentAuth().refresh_token == null) {
+            return null;
+        }
+
         refreshAccessToken(pref);
         return response.request().newBuilder()
                 .header("Authorization", pref.getCurrentAuth().token_type + " " + pref.getCurrentAuth().access_token)

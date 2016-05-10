@@ -23,4 +23,7 @@ public class RetroHttpException extends RuntimeException {
         return cause;
     }
 
+    public int getStatusCode() {
+        return cause.getResponse().getStatus();
+    }
 }
