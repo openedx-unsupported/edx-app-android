@@ -3,7 +3,13 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.support.v7.widget.SearchView;
 
@@ -22,6 +28,7 @@ import roboguice.inject.ContentView;
 public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
     private WebView webView;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +42,24 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
         webView = (WebView) findViewById(R.id.webview);
         webView.loadUrl(environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl());
+
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.label_open_drawer, R.string.label_close_drawer) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
 
-        Config config =  environment.getConfig();
+        Config config = environment.getConfig();
         if (!config.getCourseDiscoveryConfig().isWebCourseSearchEnabled()) {
             //bail out if the search bar is not enabled
             return result;
@@ -49,7 +67,8 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
 
         getMenuInflater().inflate(R.menu.find_courses, menu);
         // Get the SearchView and set the searchable configuration
-        final SearchView searchView = (SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        searchView = (SearchView) searchItem.getActionView();
 
         Resources resources = getResources();
         searchView.setQueryHint(resources.getString(R.string.search_for_courses));
@@ -59,7 +78,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
             public boolean onQueryTextSubmit(String query) {
                 String baseUrl = environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
                 String searchUrl = buildQuery(baseUrl, query, logger);
-                searchView.clearFocus();
+                searchView.onActionViewCollapsed();
                 webView.loadUrl(searchUrl);
                 return true;
             }
@@ -69,9 +88,44 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
                 return false;
             }
         });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
+                if (!queryTextFocused) {
+                    searchView.onActionViewCollapsed();
+                }
+                enableDrawerMenuButton(!queryTextFocused);
+            }
+        });
+
         return result;
     }
 
+    public void enableDrawerMenuButton(boolean showDrawer) {
+        mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        View sliderMenu = findViewById(R.id.slider_menu);
+
+        if (mDrawerLayout != null && mDrawerLayout.isDrawerVisible(sliderMenu)) {
+            menu.clear();
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home && searchView.hasFocus()) {
+            searchView.onActionViewCollapsed();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onOnline() {
