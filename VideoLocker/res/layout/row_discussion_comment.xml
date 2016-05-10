@@ -31,14 +31,18 @@
 
         <TextView
             android:id="@+id/discussion_comment_author_text_view"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textDirection="locale"
             android:padding="@dimen/discussion_responses_box_padding"
             android:textColor="@color/edx_grayscale_neutral_base"
+            android:textDirection="locale"
             android:textSize="@dimen/edx_xxx_small"
             tools:text="Brian 10 minutes ago" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/discussion_comment_count_report_text_view"
