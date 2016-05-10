@@ -102,6 +102,25 @@ public final class AuthenticationTests extends BaseTestCase {
         assertEquals("401_not_caused_by_expired_token", response.request().header("Authorization"));
     }
 
+    @Test
+    public void testAuthenticate_withoutRefreshToken() throws Exception {
+        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
+        pref.put(PrefManager.Key.AUTH_JSON, MockDataUtil.getMockResponse("post_oauth2_access_token_no_refresh_token"));
+
+        client = client.newBuilder()
+                .authenticator(new OauthRefreshTokenAuthenticator(context))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(mockServer.url("/dummy/endpoint/"))
+                .header("Authorization", "expired_token")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertEquals(401, response.code());
+        assertEquals("expired_token", response.request().header("Authorization"));
+    }
+
     final Dispatcher dispatcher = new Dispatcher() {
 
         @Override
@@ -116,14 +135,18 @@ public final class AuthenticationTests extends BaseTestCase {
                 if (path.equals("/oauth2/access_token/")) {
                     response.setResponseCode(200).setBody(MockDataUtil.getMockResponse("post_oauth2_access_token"));
                 } else if (path.equals("/dummy/endpoint/")) {
-                    if (header.equals("expired_token")) {
-                        response.setResponseCode(401)
-                                .addHeader("Authorization", "old_access_token")
-                                .setBody(MockDataUtil.getMockResponse("401_expired_token_body"));
-                    } else if (header.equals("Bearer dummy")) {
-                        response.setResponseCode(200);
-                    } else if (header.equals("401_not_caused_by_expired_token")) {
-                        response.setResponseCode(401);
+                    switch (header) {
+                        case "expired_token":
+                            response.setResponseCode(401)
+                                    .addHeader("Authorization", "old_access_token")
+                                    .setBody(MockDataUtil.getMockResponse("401_expired_token_body"));
+                            break;
+                        case "Bearer dummy":
+                            response.setResponseCode(200);
+                            break;
+                        case "401_not_caused_by_expired_token":
+                            response.setResponseCode(401);
+                            break;
                     }
                 }
             } catch (IOException exception) {
