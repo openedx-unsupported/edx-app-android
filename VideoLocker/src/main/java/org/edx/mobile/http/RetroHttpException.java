@@ -7,7 +7,7 @@ import retrofit.RetrofitError;
 /**
  * Should this be the base class of all http exceptions?
  */
-public class RetroHttpException extends Exception {
+public class RetroHttpException extends RuntimeException {
 
     @NonNull
     private final RetrofitError cause;

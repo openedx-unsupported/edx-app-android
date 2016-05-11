@@ -652,5 +652,11 @@
     <string name="edit_user_profile_photo_crop_cancel">Cancel</string>
     <!-- Button that will confirm the crop region and continue to upload the cropped photo -->
     <string name="edit_user_profile_photo_crop_save">Choose</string>
+    <!-- Tab title for section of profile that displays a user's bio -->
+    <string name="profile_tab_bio">About</string>
+    <!-- Tab title for section of profile that lists a user's accomplishments -->
+    <string name="profile_tab_accomplishment">Accomplishments</string>
+    <!-- Button that will initiate sharing one of a user's accomplishments -->
+    <string name="share_accomplishment_button">Share your accomplishment</string>
 
 </resources>

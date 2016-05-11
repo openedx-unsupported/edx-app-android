@@ -7,23 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.user.UserAPI;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import retrofit.RetrofitError;
 
 public class MyCourseListTabFragment extends CourseListTabFragment {
 
@@ -31,9 +30,6 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     protected TextView noCourseText;
     private boolean refreshOnResume;
-
-    @Inject
-    private UserAPI userAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +65,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> onCreateLoader(int i, Bundle bundle) {
-        return new CoursesAsyncLoader(getActivity(), environment);
+        return new CoursesAsyncLoader(getActivity());
     }
 
     @Override
@@ -90,7 +86,8 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
                 PrefManager prefs = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
                 prefs.clearAuth();
                 getActivity().finish();
-            } else if (result.getEx() instanceof Api.HttpAuthRequiredException) {
+            } else if (result.getEx() instanceof RetroHttpException &&
+                    ((RetroHttpException) result.getEx()).getStatusCode() == 401) {
                 environment.getRouter().forceLogout(
                         getContext(),
                         environment.getSegment(),

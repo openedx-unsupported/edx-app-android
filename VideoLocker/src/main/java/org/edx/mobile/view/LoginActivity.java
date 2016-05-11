@@ -20,14 +20,14 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.model.api.AuthResponse;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
-import org.edx.mobile.task.LoginTask;
+import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -239,60 +239,62 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     public void callServerForLogin() {
 
-        if (NetworkUtil.isConnected(this)) {
-            emailStr = email_et.getText().toString().trim();
-            String passwordStr = password_et.getText().toString().trim();
-
-            if (email_et != null && emailStr.length() == 0) {
-                showErrorMessage(getString(R.string.login_error),
-                        getString(R.string.error_enter_email));
-                email_et.requestFocus();
-            } else if (password_et != null && passwordStr.length() == 0) {
-                showErrorMessage(getString(R.string.login_error),
-                        getString(R.string.error_enter_password));
-                password_et.requestFocus();
-            } else {
-                email_et.setEnabled(false);
-                password_et.setEnabled(false);
-                forgotPassword_tv.setEnabled(false);
-                eulaTv.setEnabled(false);
-
-                clearDialogs();
-
-                LoginTask logintask = new LoginTask(this, email_et.getText().toString().trim(),
-                        password_et.getText().toString()) {
-                    @Override
-                    public void onSuccess(AuthResponse result) {
-                        try {
-                            if (result != null && result.hasValidProfile()) {
-                                onUserLoginSuccess(result.profile);
-                            } else {
-                                LoginErrorMessage errorMsg =
-                                        new LoginErrorMessage(
-                                                getString(R.string.login_error),
-                                                getString(R.string.login_failed));
-                                throw new LoginException(errorMsg);
-                            }
-                        } catch (LoginException ex) {
-                            super.onException(ex);
-                            onUserLoginFailure(ex, null, null);
-                        }
-                    }
-                    @Override
-                    public void onException(Exception ex) {
-                        super.onException(ex);
-                        tryToSetUIInteraction(true);
-                    }
-
-                };
-
-                tryToSetUIInteraction(false);
-                logintask.setProgressDialog(progressbar);
-                logintask.execute();
-            }
-        } else {
+        if (!NetworkUtil.isConnected(this)) {
             showErrorMessage(getString(R.string.no_connectivity),
                     getString(R.string.network_not_connected));
+            return;
+        }
+
+        emailStr = email_et.getText().toString().trim();
+        String passwordStr = password_et.getText().toString().trim();
+
+        if (email_et != null && emailStr.length() == 0) {
+            showErrorMessage(getString(R.string.login_error),
+                    getString(R.string.error_enter_email));
+            email_et.requestFocus();
+        } else if (password_et != null && passwordStr.length() == 0) {
+            showErrorMessage(getString(R.string.login_error),
+                    getString(R.string.error_enter_password));
+            password_et.requestFocus();
+        } else {
+            email_et.setEnabled(false);
+            password_et.setEnabled(false);
+            forgotPassword_tv.setEnabled(false);
+            eulaTv.setEnabled(false);
+
+            clearDialogs();
+
+            LoginTask logintask = new LoginTask(this, email_et.getText().toString().trim(),
+                    password_et.getText().toString()) {
+                @Override
+                public void onSuccess(AuthResponse result) {
+                    try {
+                        if (result != null && result.hasValidProfile()) {
+                            onUserLoginSuccess(result.profile);
+                        } else {
+                            LoginErrorMessage errorMsg =
+                                    new LoginErrorMessage(
+                                            getString(R.string.login_error),
+                                            getString(R.string.login_failed));
+                            throw new LoginException(errorMsg);
+                        }
+                    } catch (LoginException ex) {
+                        super.onException(ex);
+                        onUserLoginFailure(ex, null, null);
+                    }
+                }
+
+                @Override
+                public void onException(Exception ex) {
+                    super.onException(ex);
+                    tryToSetUIInteraction(true);
+                }
+
+            };
+
+            tryToSetUIInteraction(false);
+            logintask.setProgressDialog(progressbar);
+            logintask.execute();
         }
     }
 

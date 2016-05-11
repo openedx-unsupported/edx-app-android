@@ -1,4 +1,6 @@
-package org.edx.mobile.model.api;
+package org.edx.mobile.authentication;
+
+import org.edx.mobile.model.api.ProfileModel;
 
 import java.io.Serializable;
 
@@ -16,14 +18,16 @@ public class AuthResponse implements Serializable {
     public long expires_in;
     public String scope;
     public String error;
+    public String refresh_token;
     
     // non-api field
     public ProfileModel profile;
     
     @Override
     public String toString() {
-        return String.format("access_token=%s; access_type=%s; "
-                + "expires_in=%d; scope=%s", access_token, token_type, expires_in, scope);
+        return String.format(
+                "access_token=%s; token_type=%s; expires_in=%d; scope=%s; refresh_token=%s",
+                access_token, token_type, expires_in, scope, refresh_token);
     }
     
     public boolean isSuccess() {
