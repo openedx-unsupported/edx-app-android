@@ -35,6 +35,8 @@ import com.joanzapata.iconify.internal.Animation;
 import com.joanzapata.iconify.widget.IconImageView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.Task;
@@ -60,7 +62,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
-import org.edx.mobile.base.BaseFragment;
 import roboguice.inject.InjectExtra;
 
 public class EditUserProfileFragment extends BaseFragment {
@@ -104,15 +105,7 @@ public class EditUserProfileFragment extends BaseFragment {
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 
-        getAccountTask = new GetAccountTask(getActivity(), username) {
-            @Override
-            protected void onSuccess(Account account) throws Exception {
-                EditUserProfileFragment.this.account = account;
-                if (null != viewHolder) {
-                    setData(account, formDescription);
-                }
-            }
-        };
+        getAccountTask = new GetAccountTask(getActivity(), username);
         getAccountTask.setTaskProcessCallback(null); // Disable default loading indicator, we have our own
         getAccountTask.execute();
 
@@ -235,6 +228,16 @@ public class EditUserProfileFragment extends BaseFragment {
                     .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(viewHolder.profileImage);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
+        if (event.getAccount().getUsername().equals(username)) {
+            account = event.getAccount();
+            if (null != viewHolder) {
+                setData(account, formDescription);
+            }
         }
     }
 

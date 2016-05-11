@@ -3,7 +3,7 @@ package org.edx.mobile.profiles;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.edx.mobile.event.AccountUpdatedEvent;
+import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.ProfileModel;
@@ -270,7 +270,7 @@ public class UserProfileInteractorTest extends BaseTest {
                 null)
         )));
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
-        eventBus.post(new AccountUpdatedEvent(account));
+        eventBus.post(new AccountDataLoadedEvent(account));
         verify(profileObserver).onData(refEq(new UserProfileViewModel(
                 UserProfileViewModel.LimitedProfileMessage.NONE,
                 null,
@@ -295,7 +295,7 @@ public class UserProfileInteractorTest extends BaseTest {
         );
         when(account.getUsername()).thenReturn(ProfileValues.ALTERNATE_USERNAME);
         when(account.getBio()).thenReturn(ProfileValues.ABOUT_ME);
-        eventBus.post(new AccountUpdatedEvent(account));
+        eventBus.post(new AccountDataLoadedEvent(account));
         verifyNoMoreInteractions(profileObserver);
     }
 

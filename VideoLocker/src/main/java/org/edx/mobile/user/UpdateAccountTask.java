@@ -6,10 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.event.AccountUpdatedEvent;
 import org.edx.mobile.task.Task;
-
-import de.greenrobot.event.EventBus;
 
 public abstract class UpdateAccountTask extends
         Task<Account> {

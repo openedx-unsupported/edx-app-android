@@ -4,11 +4,14 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.user.Account;
 
-public class AccountUpdatedEvent {
+/**
+ * Fired whenever we get/update a user's account details.
+ */
+public class AccountDataLoadedEvent {
     @NonNull
     private final Account account;
 
-    public AccountUpdatedEvent(@NonNull Account account) {
+    public AccountDataLoadedEvent(@NonNull Account account) {
         this.account = account;
     }
 

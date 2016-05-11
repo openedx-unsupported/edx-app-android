@@ -5,9 +5,9 @@ import android.text.TextUtils;
 import com.google.gson.JsonObject;
 import com.google.inject.Injector;
 
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.test.BaseTestCase;

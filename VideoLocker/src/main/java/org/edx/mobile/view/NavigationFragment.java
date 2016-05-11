@@ -31,6 +31,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
@@ -92,15 +93,7 @@ public class NavigationFragment extends BaseFragment {
         pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         profile = pref.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
-            getAccountTask = new GetAccountTask(getActivity(), profile.username) {
-                @Override
-                protected void onSuccess(@NonNull Account account) throws Exception {
-                    NavigationFragment.this.profileImage = account.getProfileImage();
-                    if (null != imageView) {
-                        loadProfileImage(account.getProfileImage(), imageView);
-                    }
-                }
-            };
+            getAccountTask = new GetAccountTask(getActivity(), profile.username);
             getAccountTask.setTaskProcessCallback(null); // Disable global loading indicator
             getAccountTask.execute();
         }
@@ -358,6 +351,17 @@ public class NavigationFragment extends BaseFragment {
                         .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(imageView);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
+        final Account account = event.getAccount();
+        if (account.getUsername().equalsIgnoreCase(profile.username)) {
+            profileImage = account.getProfileImage();
+            if (imageView != null) {
+                loadProfileImage(account.getProfileImage(), imageView);
             }
         }
     }
