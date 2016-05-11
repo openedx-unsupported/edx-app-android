@@ -59,6 +59,7 @@ after_script:
 branches:
   only:
     - master
+    - release-candidate
 
 # Enable caching to speed up the build
 cache:
