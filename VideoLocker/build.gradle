@@ -303,3 +303,4 @@ screenshots {
     testApkTarget = 'packageProdDebuggableAndroidTest'
     connectedAndroidTestTarget = 'connectedProdDebuggableAndroidTest'
 }
+
