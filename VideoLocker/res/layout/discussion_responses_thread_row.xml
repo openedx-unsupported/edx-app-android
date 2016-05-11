@@ -67,10 +67,11 @@
                 app:iconColor="@color/edx_grayscale_neutral_base"
                 app:iconName="fa-thumb-tack" />
 
-            <include
-                layout="@layout/discussion_author_layout"
+            <include layout="@layout/discussion_author_layout" />
+
+            <Space
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1" />
 
             <include layout="@layout/number_responses_or_comments_layout" />
