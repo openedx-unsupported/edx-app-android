@@ -69,4 +69,4 @@ before_install:
   - pip install --user codecov
   - pip install --user pillow # For screenshot tests
 after_success:
-  - codecov
+  - bash <(curl -s https://codecov.io/bash)
