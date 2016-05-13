@@ -1,17 +1,12 @@
 package org.edx.mobile.core;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.http.RetroHttpExceptionHandler;
-import org.edx.mobile.http.serialization.JsonPageDeserializer;
-import org.edx.mobile.model.Page;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.DateUtil;
 
 import okhttp3.OkHttpClient;
 import retrofit.RestAdapter;
@@ -25,16 +20,11 @@ public class RestAdapterProvider implements Provider<RestAdapter> {
     @Inject
     OkHttpClient client;
 
+    @Inject
+    Gson gson;
+
     @Override
     public RestAdapter get() {
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
-                .registerTypeAdapter(Page.class, new JsonPageDeserializer())
-                .registerTypeAdapterFactory(new ServerJsonDateAdapterFactory())
-                .serializeNulls()
-                .create();
-
         return new RestAdapter.Builder()
                 .setClient(new Ok3Client(client))
                 .setEndpoint(config.getApiHostURL())

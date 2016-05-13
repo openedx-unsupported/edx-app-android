@@ -3,6 +3,8 @@ package org.edx.mobile.module.storage;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -26,6 +28,7 @@ import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.services.ServiceManager;
+import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -49,13 +52,11 @@ public class Storage implements IStorage {
     private IDownloadManager dm;
     @Inject
     private UserPrefs pref;
-
     @Inject
     private Config config;
-
-
     @Inject
     ServiceManager serviceManager;
+    @Inject UserAPI api;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -125,9 +126,6 @@ public class Storage implements IStorage {
             // Also, remove its downloaded file
             dm.removeDownload(model.getDmId());
             deleteFile(model.getFilePath());
-        } else {
-            // there are other videos who have same video URL,
-            // So, we can't delete the downloaded file
         }
 
         // anyways, we mark the video as DELETED
@@ -139,8 +137,8 @@ public class Storage implements IStorage {
      * Returns true if delete succeeds or if file does NOT exist, false otherwise.
      * DownloadManager actually deletes the physical file when remove method is called.
      * So, this method might not be required for removing downloads.
-     * @param filepath
-     * @return
+     * @param filepath The file to delete
+     * @return true if delete succeeds or if file does NOT exist, false otherwise.
      */
     private boolean deleteFile(String filepath) {
         try {
@@ -177,7 +175,7 @@ public class Storage implements IStorage {
             final DataCallback<Integer> callback) {
         List<Long> dmidList = db.getDownloadingVideoDmIdsForChapter(enrollmentId, chapter, null);
         if (dmidList == null || dmidList.isEmpty()) {
-            callback.onResult(Integer.valueOf(0));
+            callback.onResult(0);
             return;
         }
 
@@ -187,7 +185,7 @@ public class Storage implements IStorage {
                 dmidArray[i] = dmidList.get(i);
             }
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult(Integer.valueOf(progress));
+            callback.sendResult(progress);
         } catch(Exception ex) {
             callback.sendException(ex);
             logger.error(ex);
@@ -230,7 +228,7 @@ public class Storage implements IStorage {
 
         try {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult((int)progress);
+            callback.sendResult(progress);
         } catch(Exception ex) {
             logger.error(ex);
             callback.sendException(ex);
@@ -265,63 +263,73 @@ public class Storage implements IStorage {
     }
 
     @Override
+    @NonNull
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() {
+        ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
 
-        ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<EnrolledCoursesResponse>();
-        try {
-            List<EnrolledCoursesResponse> enrolledCourses = serviceManager.getEnrolledCourses(true);
-            if(enrolledCourses!=null && enrolledCourses.size()>0){
-                for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
-                    int videoCount = db.getDownloadedVideoCountByCourse(
-                            enrolledCoursesResponse.getCourse().getId(),null);
-                    if(videoCount>0){
-                        enrolledCoursesResponse.videoCount = videoCount;
-                        enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
-                                enrolledCoursesResponse.getCourse().getId(),null);
-                        downloadedCourseList.add(enrolledCoursesResponse);
-                    }
-                }
-                return downloadedCourseList;
-            }
-        } catch (Exception e) {
-            logger.error(e);
+        List<EnrolledCoursesResponse> enrolledCourses = null;
+        String username = getUsername();
+        if (username != null) {
+            enrolledCourses = api.getUserEnrolledCourses(username, true);
         }
-        return null;
+
+        if(enrolledCourses.size()>0){
+            for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
+                int videoCount = db.getDownloadedVideoCountByCourse(
+                        enrolledCoursesResponse.getCourse().getId(),null);
+                if(videoCount>0){
+                    enrolledCoursesResponse.videoCount = videoCount;
+                    enrolledCoursesResponse.size = db.getDownloadedVideosSizeByCourse(
+                            enrolledCoursesResponse.getCourse().getId(),null);
+                    downloadedCourseList.add(enrolledCoursesResponse);
+                }
+            }
+        }
+
+        return downloadedCourseList;
+    }
+
+    @Nullable
+    private String getUsername() {
+        String ret = null;
+        ProfileModel profile = pref.getProfile();
+        if (profile != null) {
+            ret = profile.username;
+        }
+
+        return ret;
     }
 
     @Override
+    @NonNull
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() {
-        try {
-            ArrayList<SectionItemInterface> recentVideolist = new ArrayList<SectionItemInterface>();
+        ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
-            ArrayList<EnrolledCoursesResponse> courseList = null;
+        ArrayList<EnrolledCoursesResponse> courseList = null;
+        String username = getUsername();
+        if (username != null) {
+            courseList = (ArrayList) api.getUserEnrolledCourses(username, true);
+        }
 
-            courseList = (ArrayList)serviceManager.getEnrolledCourses(true);
+        if (courseList != null && !courseList.isEmpty()) {
+            for (final EnrolledCoursesResponse course : courseList) {
+                // add all videos to the list for this course
+                List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
+                        course.getCourse().getId(), null);
 
-            if(courseList==null || courseList.size() ==0){
-                return recentVideolist;
-            }else{
-                for (final EnrolledCoursesResponse course : courseList) {
-                    // add all videos to the list for this course
-                    List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
-                            course.getCourse().getId(), null);
-
-                    // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
-                    if (videos != null && videos.size() > 0) {
-                        // add course header to the list
-                        recentVideolist.add(course);
-                        for (VideoModel videoModel : videos) {
-                            //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
-                            recentVideolist.add((SectionItemInterface)videoModel);
-                        }
+                // ArrayList<IVideoModel> videos = new ArrayList<IVideoModel>();
+                if (videos != null && videos.size() > 0) {
+                    // add course header to the list
+                    recentVideolist.add(course);
+                    for (VideoModel videoModel : videos) {
+                        //TODO : Need to check how SectionItemInterface can be converted to IVideoModel
+                        recentVideolist.add((SectionItemInterface) videoModel);
                     }
                 }
-                return recentVideolist;
             }
-        } catch (Exception e) {
-            logger.error(e);
         }
-        return null;
+
+        return recentVideolist;
     }
 
     @Override
@@ -344,7 +352,7 @@ public class Storage implements IStorage {
     public void getDownloadProgressByDmid(long dmId,
             DataCallback<Integer> callback) {
         if (dmId == 0) {
-            callback.onResult(Integer.valueOf(0));
+            callback.onResult(0);
             return;
         }
         try {
@@ -352,7 +360,7 @@ public class Storage implements IStorage {
             dmidArray[0] = dmId;
 
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult(Integer.valueOf(progress));
+            callback.sendResult(progress);
         } catch(Exception ex) {
             logger.error(ex);
             callback.sendException(ex);
@@ -362,7 +370,7 @@ public class Storage implements IStorage {
     @Override
     public ArrayList<SectionItemInterface> getSortedOrganizedVideosByCourse(
             String courseId) {
-        ArrayList<SectionItemInterface> list = new ArrayList<SectionItemInterface>();
+        ArrayList<SectionItemInterface> list = new ArrayList<>();
 
         ArrayList<VideoModel> downloadList = (ArrayList<VideoModel>) db
                 .getDownloadedVideoListForCourse(courseId, null);
@@ -422,9 +430,7 @@ public class Storage implements IStorage {
         try{
             NativeDownloadModel nm = dm.getDownload(dmId);
             if (nm != null && nm.status == DownloadManager.STATUS_SUCCESSFUL) {
-                long rowsAffected=0;
                 {
-                    //DownloadEntry e = getDownloadByDmId(dmId);
                     DownloadEntry e = (DownloadEntry) db.getDownloadEntryByDmId(dmId, null);
                     e.downloaded = DownloadEntry.DownloadedState.DOWNLOADED;
                     e.filepath = nm.filepath;
@@ -448,7 +454,7 @@ public class Storage implements IStorage {
                             logger.error(ex);
                         }
                     }
-                    rowsAffected = db.updateDownloadCompleteInfoByDmId(dmId, e, null);
+                    db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
                     EventBus.getDefault().post(new DownloadCompletedEvent());
                 }

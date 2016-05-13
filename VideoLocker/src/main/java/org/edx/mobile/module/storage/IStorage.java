@@ -1,5 +1,7 @@
 package org.edx.mobile.module.storage;
 
+import android.support.annotation.NonNull;
+
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -94,14 +96,14 @@ public interface IStorage {
      * videos and no videos downloaded in the course
      * @return
      */
-    ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize();
+    @NonNull ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize();
 
     /**
      * Returns list of all recently downloaded videos list
      * The list contains local videos with only course header sorted based on Downloaded Date.
      * @return
      */
-    ArrayList<SectionItemInterface> getRecentDownloadedVideosList();
+    @NonNull ArrayList<SectionItemInterface> getRecentDownloadedVideosList();
 
     /**
      * This DownloadEntry model is fetched and returned from the db

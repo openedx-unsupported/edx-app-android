@@ -2,10 +2,8 @@ package org.edx.mobile.user;
 
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.profiles.BadgeAssertion;
 
-import java.util.List;
 import java.util.Map;
 
 import retrofit.client.Response;
@@ -33,7 +31,7 @@ public interface UserService {
     Response deleteProfileImage(@Path("username") String username) throws RetroHttpException;
 
     @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
+    Response getUserEnrolledCourses(@Path("username") String username) throws RetroHttpException;
 
     @GET("/api/badges/v1/assertions/user/{username}")
     Page<BadgeAssertion> getBadges(@Path("username") String username,
