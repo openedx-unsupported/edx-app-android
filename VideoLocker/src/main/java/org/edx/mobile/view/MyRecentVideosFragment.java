@@ -34,6 +34,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
+import org.edx.mobile.task.GetRecentDownloadedVideosTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
@@ -44,6 +45,7 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPlayerEventCallback {
@@ -59,6 +61,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     private MenuItem deleteCheckBoxMenuItem;
     private CompoundButton.OnCheckedChangeListener deleteCheckBoxChangeListener;
     private final Logger logger = new Logger(getClass().getName());
+    private GetRecentDownloadedVideosTask getRecentDownloadedVideosTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +148,12 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     @Override
     public void onStop() {
         super.onStop();
+
+        if (getRecentDownloadedVideosTask != null) {
+            getRecentDownloadedVideosTask.cancel(true);
+            getRecentDownloadedVideosTask = null;
+        }
+
         hideConfirmDeleteDialog();
         AppConstants.myVideosDeleteMode = false;
     }
@@ -212,33 +221,46 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
         }
     }
 
-    private void addToRecentAdapter(View view) {
+    private void addToRecentAdapter(final View view) {
         if (adapter == null) {
             return;
         }
         logger.debug("reloading adapter...");
-        String selectedId = adapter.getVideoId();
-        ArrayList<SectionItemInterface> list = environment.getStorage().getRecentDownloadedVideosList();
-        if (list != null) {
-            adapter.clear();
-            for (SectionItemInterface m : list) {
-                adapter.add(m);
-            }
-            logger.debug("reload done");
+        final String selectedId = adapter.getVideoId();
+
+
+        if (getRecentDownloadedVideosTask != null) {
+            getRecentDownloadedVideosTask.cancel(true);
         }
-        if (adapter.getCount() <= 0) {
-            hideDeletePanel(view);
+        else {
+            getRecentDownloadedVideosTask = new GetRecentDownloadedVideosTask(getActivity()) {
+                @Override
+                protected void onSuccess(List<SectionItemInterface> list) throws Exception {
+                    super.onSuccess(list);
+                    if (list != null && !list.isEmpty()) {
+                        adapter.clear();
+                        adapter.addAll(list);
+                        logger.debug("reload done");
+                    }
+
+                    if (adapter.getCount() <= 0) {
+                        hideDeletePanel(view);
+                    }
+                    videoListView.setOnItemClickListener(adapter);
+                    if (selectedId != null) {
+                        adapter.setVideoId(selectedId);
+                    }
+                    notifyAdapter();
+                    // Refresh the previous and next buttons visibility on the video
+                    // player if a video is playing, based on the new data set.
+                    if (playerFragment != null) {
+                        playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
+                    }
+                }
+            };
         }
-        videoListView.setOnItemClickListener(adapter);
-        if (selectedId != null) {
-            adapter.setVideoId(selectedId);
-        }
-        notifyAdapter();
-        // Refresh the previous and next buttons visibility on the video
-        // player if a video is playing, based on the new data set.
-        if (playerFragment != null) {
-            playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
-        }
+
+        getRecentDownloadedVideosTask.execute();
     }
 
     private void playVideoModel() {
@@ -421,7 +443,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     }
 
     protected void showConfirmDeleteDialog(int itemCount) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
+        Map<String, String> dialogMap = new HashMap<>();
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
         dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
         dialogMap.put("yes_button", getString(R.string.label_delete));
@@ -520,8 +542,8 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     }
 
     /**
-     * Returns true if current orientation is LANDSCAPE, false otherwise.
-     * @return
+     * @return  true if current orientation is LANDSCAPE, false otherwise.
+     *
      */
     protected boolean isLandscape() {
         return (getResources().getConfiguration().orientation 
@@ -538,7 +560,6 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
 
     /**
      * Container tab will call this method to restore the saved data
-     * @param savedInstanceState
      */
     protected void restore(Bundle savedInstanceState) {
         playingVideoIndex = savedInstanceState.getInt("playingVideoIndex", -1);
@@ -671,8 +692,7 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     };
 
     /**
-     * Returns user's profile.
-     * @return
+     * @return User's profile.
      */
     protected ProfileModel getProfile() {
         PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);

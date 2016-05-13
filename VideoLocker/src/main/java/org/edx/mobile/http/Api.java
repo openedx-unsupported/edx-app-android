@@ -32,6 +32,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
@@ -60,6 +61,9 @@ public class Api implements IApi {
 
     @Inject
     private CacheManager cache;
+
+    @Inject
+    private UserAPI userApi;
 
     private Context context;
     protected final Logger logger = new Logger(getClass().getName());
@@ -355,8 +359,7 @@ public class Api implements IApi {
 
         Bundle p = new Bundle();
         p.putString("format", "json");
-        String url = getBaseUrl() + "/api/mobile/v0.5/users/" + pref.getCurrentUserProfile().username
-                + "/course_enrollments/";
+        String url = userApi.getUserEnrolledCoursesURL(pref.getCurrentUserProfile().username);
         String json = null;
 
         if (NetworkUtil.isConnected(context) && !fetchFromCache) {
