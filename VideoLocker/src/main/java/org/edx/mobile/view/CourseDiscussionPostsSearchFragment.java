@@ -114,12 +114,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @Override
     public void onResume() {
         super.onResume();
-        discussionTopicsSearchView.post(new Runnable() {
-            @Override
-            public void run() {
-                discussionTopicsSearchView.clearFocus();
-            }
-        });
+        SoftKeyboardUtil.clearViewFocus(discussionTopicsSearchView);
     }
 
     @Override

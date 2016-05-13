@@ -108,12 +108,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             bar.setDisplayShowHomeEnabled(true);
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setIcon(android.R.color.transparent);
-            //If activity is in landscape, hide the Action bar
-            if (isLandscape()) {
-                bar.hide();
-            } else {
-                bar.show();
-            }
         }
     }
 

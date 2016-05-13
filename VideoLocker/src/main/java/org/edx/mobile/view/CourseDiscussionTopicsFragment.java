@@ -24,6 +24,7 @@ import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.GetTopicListTask;
+import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
@@ -144,11 +145,6 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        discussionTopicsSearchView.post(new Runnable() {
-            @Override
-            public void run() {
-                discussionTopicsSearchView.clearFocus();
-            }
-        });
+        SoftKeyboardUtil.clearViewFocus(discussionTopicsSearchView);
     }
 }

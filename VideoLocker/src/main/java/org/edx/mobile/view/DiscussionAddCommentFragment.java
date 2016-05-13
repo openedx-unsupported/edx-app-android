@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateCommentTask;
+import org.edx.mobile.util.SoftKeyboardUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -152,5 +154,13 @@ public class DiscussionAddCommentFragment extends BaseFragment {
         createCommentTask.setTaskProcessCallback(null);
         createCommentTask.setProgressDialog(createCommentProgressBar);
         createCommentTask.execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            SoftKeyboardUtil.clearViewFocus(editTextNewComment);
+        }
     }
 }
