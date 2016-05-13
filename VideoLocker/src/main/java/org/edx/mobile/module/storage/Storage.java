@@ -125,9 +125,6 @@ public class Storage implements IStorage {
             // Also, remove its downloaded file
             dm.removeDownload(model.getDmId());
             deleteFile(model.getFilePath());
-        } else {
-            // there are other videos who have same video URL,
-            // So, we can't delete the downloaded file
         }
 
         // anyways, we mark the video as DELETED
@@ -140,7 +137,7 @@ public class Storage implements IStorage {
      * DownloadManager actually deletes the physical file when remove method is called.
      * So, this method might not be required for removing downloads.
      * @param filepath
-     * @return
+     * @return true if delete succeeds or if file does NOT exist, false otherwise.
      */
     private boolean deleteFile(String filepath) {
         try {
@@ -177,7 +174,7 @@ public class Storage implements IStorage {
             final DataCallback<Integer> callback) {
         List<Long> dmidList = db.getDownloadingVideoDmIdsForChapter(enrollmentId, chapter, null);
         if (dmidList == null || dmidList.isEmpty()) {
-            callback.onResult(Integer.valueOf(0));
+            callback.onResult(0);
             return;
         }
 
@@ -187,7 +184,7 @@ public class Storage implements IStorage {
                 dmidArray[i] = dmidList.get(i);
             }
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult(Integer.valueOf(progress));
+            callback.sendResult(progress);
         } catch(Exception ex) {
             callback.sendException(ex);
             logger.error(ex);
@@ -230,7 +227,7 @@ public class Storage implements IStorage {
 
         try {
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult((int)progress);
+            callback.sendResult(progress);
         } catch(Exception ex) {
             logger.error(ex);
             callback.sendException(ex);
@@ -267,9 +264,13 @@ public class Storage implements IStorage {
     @Override
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() {
 
-        ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<EnrolledCoursesResponse>();
+        ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
         try {
             List<EnrolledCoursesResponse> enrolledCourses = serviceManager.getEnrolledCourses(true);
+            if (enrolledCourses == null) {
+                enrolledCourses = serviceManager.getEnrolledCourses(false);
+            }
+
             if(enrolledCourses!=null && enrolledCourses.size()>0){
                 for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
                     int videoCount = db.getDownloadedVideoCountByCourse(
@@ -292,11 +293,14 @@ public class Storage implements IStorage {
     @Override
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() {
         try {
-            ArrayList<SectionItemInterface> recentVideolist = new ArrayList<SectionItemInterface>();
+            ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
-            ArrayList<EnrolledCoursesResponse> courseList = null;
+            ArrayList<EnrolledCoursesResponse> courseList;
 
             courseList = (ArrayList)serviceManager.getEnrolledCourses(true);
+            if (courseList == null) {
+                courseList = (ArrayList)serviceManager.getEnrolledCourses(false);
+            }
 
             if(courseList==null || courseList.size() ==0){
                 return recentVideolist;
@@ -344,7 +348,7 @@ public class Storage implements IStorage {
     public void getDownloadProgressByDmid(long dmId,
             DataCallback<Integer> callback) {
         if (dmId == 0) {
-            callback.onResult(Integer.valueOf(0));
+            callback.onResult(0);
             return;
         }
         try {
@@ -352,7 +356,7 @@ public class Storage implements IStorage {
             dmidArray[0] = dmId;
 
             int progress = dm.getAverageProgressForDownloads(dmidArray);
-            callback.sendResult(Integer.valueOf(progress));
+            callback.sendResult(progress);
         } catch(Exception ex) {
             logger.error(ex);
             callback.sendException(ex);
@@ -362,7 +366,7 @@ public class Storage implements IStorage {
     @Override
     public ArrayList<SectionItemInterface> getSortedOrganizedVideosByCourse(
             String courseId) {
-        ArrayList<SectionItemInterface> list = new ArrayList<SectionItemInterface>();
+        ArrayList<SectionItemInterface> list = new ArrayList<>();
 
         ArrayList<VideoModel> downloadList = (ArrayList<VideoModel>) db
                 .getDownloadedVideoListForCourse(courseId, null);
@@ -422,9 +426,7 @@ public class Storage implements IStorage {
         try{
             NativeDownloadModel nm = dm.getDownload(dmId);
             if (nm != null && nm.status == DownloadManager.STATUS_SUCCESSFUL) {
-                long rowsAffected=0;
                 {
-                    //DownloadEntry e = getDownloadByDmId(dmId);
                     DownloadEntry e = (DownloadEntry) db.getDownloadEntryByDmId(dmId, null);
                     e.downloaded = DownloadEntry.DownloadedState.DOWNLOADED;
                     e.filepath = nm.filepath;
@@ -448,7 +450,7 @@ public class Storage implements IStorage {
                             logger.error(ex);
                         }
                     }
-                    rowsAffected = db.updateDownloadCompleteInfoByDmId(dmId, e, null);
+                    db.updateDownloadCompleteInfoByDmId(dmId, e, null);
                     callback.sendResult(e);
                     EventBus.getDefault().post(new DownloadCompletedEvent());
                 }

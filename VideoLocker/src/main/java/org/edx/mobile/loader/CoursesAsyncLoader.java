@@ -7,10 +7,8 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.user.UserAPI;
 
 import java.util.List;
 import java.util.Observable;
@@ -20,29 +18,24 @@ import roboguice.RoboGuice;
 
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
-    private Context context;
 
     private Observer mObserver;
 
     @Inject
     IEdxEnvironment environment;
 
-    @Inject
-    UserAPI api;
+    private final Logger logger = new Logger(getClass().getName());
 
     public CoursesAsyncLoader(Context context) {
         super(context);
-        this.context = context;
         RoboGuice.injectMembers(context, this);
     }
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        ProfileModel profile = pref.getCurrentUserProfile();
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username);
+            List<EnrolledCoursesResponse> enrolledCoursesResponse = getEnrolledCourses();
             environment.getNotificationDelegate().syncWithServerForFailure();
             environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             result.setResult(enrolledCoursesResponse);
@@ -50,6 +43,18 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
             result.setEx(exception);
         }
         return result;
+    }
+
+    private List<EnrolledCoursesResponse> getEnrolledCourses() {
+        List<EnrolledCoursesResponse> ret = null;
+
+        try {
+            ret = environment.getServiceManager().getEnrolledCourses(false);
+        } catch (Exception e) {
+            logger.debug(e.toString());
+        }
+
+        return ret;
     }
 
     @Override
