@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
@@ -76,10 +75,10 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         listFragment.setCallback(this);
 
         // Full-screen video in landscape.
-        if (getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_LANDSCAPE) {
+        if (isLandscape()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setActionBarVisible(false);
         }
     }
 

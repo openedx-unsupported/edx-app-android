@@ -1,6 +1,7 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
@@ -264,4 +265,11 @@ public class DiscussionAddPostFragment extends BaseFragment {
         getTopicListTask.execute();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            SoftKeyboardUtil.clearViewFocus(titleEditText);
+        }
+    }
 }

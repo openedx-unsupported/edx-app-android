@@ -61,7 +61,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        
+
         <activity
             android:name="org.edx.mobile.view.LoginActivity"
             android:label="@string/app_name"
@@ -71,7 +71,7 @@
             android:configChanges="keyboardHidden|orientation"
             >
         </activity>
-        
+
         <activity
             android:name="org.edx.mobile.view.MyCoursesListActivity"
             android:label="@string/app_name"
@@ -93,28 +93,37 @@
 
         <activity
             android:name=".view.CourseDiscussionTopicsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name" />
 
-        <activity android:name=".view.CourseDiscussionPostsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+        <activity
+            android:name=".view.CourseDiscussionPostsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name" />
 
-        <activity android:name=".view.CourseDiscussionCommentsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+        <activity
+            android:name=".view.CourseDiscussionCommentsActivity"
+            android:label="@string/app_name" />
 
-        <activity android:name=".view.CourseDiscussionResponsesActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
+        <activity
+            android:name=".view.CourseDiscussionResponsesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name="org.edx.mobile.view.DiscussionAddPostActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/discussion_post_create_new_post" />
+
+        <activity
+            android:name="org.edx.mobile.view.DiscussionAddResponseActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/discussion_add_response_title" />
+
+        <activity
+            android:name="org.edx.mobile.view.DiscussionAddCommentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/discussion_add_comment_title" />
 
         <activity
             android:name="org.edx.mobile.view.CourseUnitNavigationActivity"
@@ -130,14 +139,14 @@
             android:screenOrientation="portrait"
             >
         </activity>
-         
+
         <activity
             android:name="org.edx.mobile.view.MyVideosTabActivity"
             android:label="@string/label_my_videos"
             android:screenOrientation="portrait"
             >
         </activity>
-        
+
         <activity
             android:name="org.edx.mobile.view.DownloadListActivity"
             android:label="@string/title_download"
@@ -168,7 +177,7 @@
             android:label="@string/find_courses_title"
             android:screenOrientation="portrait">
         </activity>
-        
+
         <activity
             android:name="org.edx.mobile.view.VideoListActivity"
             android:label="@string/app_name"
@@ -182,21 +191,6 @@
         <activity
             android:name=".view.CourseAnnouncementsActivity"
             android:label="@string/announcement_title"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="org.edx.mobile.view.DiscussionAddCommentActivity"
-            android:label="@string/discussion_add_comment_title"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="org.edx.mobile.view.DiscussionAddResponseActivity"
-            android:label="@string/discussion_add_response_title"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="org.edx.mobile.view.DiscussionAddPostActivity"
-            android:label="@string/discussion_post_create_new_post"
             android:screenOrientation="portrait" />
 
         <activity
@@ -243,20 +237,20 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
-         
+
         <!-- Setup for Code Coverage -->
         <instrumentation
             android:name="org.edx.mobile.instrumentation.EdxInstrumentation"
             android:targetPackage="org.edx.mobile" >
         </instrumentation>
-	
+
         <!-- adb shell am broadcast -a org.edx.mobile.END_EMMA -->
         <receiver android:name="org.edx.mobile.instrumentation.EndEmmaBroadcast" >
             <intent-filter>
                 <action android:name="org.edx.mobile.END_EMMA" />
             </intent-filter>
         </receiver>
-		 
+
         <!-- Setup Google -->
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

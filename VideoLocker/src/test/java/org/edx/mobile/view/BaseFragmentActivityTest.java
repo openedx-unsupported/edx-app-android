@@ -118,41 +118,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
     }
 
     /**
-     * Generic method to assert action bar visibility state on a specified orientation
-     *
-     * @param orientation The orientation it should be tested on
-     * @param expected    The expected visibility state
-     */
-    private void assertActionBarShowing(int orientation, boolean expected) {
-        ActivityController<? extends BaseFragmentActivity> controller =
-                Robolectric.buildActivity(getActivityClass()).withIntent(getIntent());
-        BaseFragmentActivity activity = controller.get();
-        activity.getResources().getConfiguration().orientation = orientation;
-        controller.create().start();
-        ActionBar bar = activity.getSupportActionBar();
-        assumeNotNull(bar);
-        assertEquals(expected, bar.isShowing());
-    }
-
-    /**
-     * Testing whether action bar is displayed in portrait orientation
-     */
-    @Test
-    @Config(qualifiers = "port")
-    public void showActionBarOnPortraitTest() {
-        assertActionBarShowing(Configuration.ORIENTATION_PORTRAIT, true);
-    }
-
-    /**
-     * Testing whether action bar is hidden in landscape orientation
-     */
-    @Test
-    @Config(qualifiers = "land")
-    public void hideActionBarOnLandscapeTest() {
-        assertActionBarShowing(Configuration.ORIENTATION_LANDSCAPE, false);
-    }
-
-    /**
      * Generic method for asserting pending transition animation
      *
      * @param shadowActivity The shadow activity

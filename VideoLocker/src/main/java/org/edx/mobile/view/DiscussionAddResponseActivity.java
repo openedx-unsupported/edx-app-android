@@ -5,11 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseSingleFragmentActivity;
-import org.edx.mobile.discussion.DiscussionComment;
-
-import roboguice.inject.InjectExtra;
 
 public class DiscussionAddResponseActivity extends BaseSingleFragmentActivity {
     @Inject
