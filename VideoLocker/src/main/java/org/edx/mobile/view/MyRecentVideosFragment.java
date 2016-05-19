@@ -120,12 +120,6 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
             showDeletePanel(getView());
 
             videoListView.setOnItemClickListener(adapter);
-        } else {
-            // probably the landscape player view, so hide action bar
-            ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            if (bar != null) {
-                bar.hide();
-            }
         }
     }
 

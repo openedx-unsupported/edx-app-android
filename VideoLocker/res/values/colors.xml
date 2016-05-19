@@ -125,32 +125,34 @@
     <color name="last_accessed_row_blue">#E5F5FC</color>
 
     <!--  We need to adapt edX color code -->
-    <!--  see  http://ux.edx.org/elements/colors/ -->
-    <color name="edx_brand_primary_x_dark">#003654</color>
-    <color name="edx_brand_primary_dark">#005483</color>
+    <!--  see  http://ux.edx.org/design_elements/colors/ -->
+    <color name="edx_brand_primary_x_dark">#0B344A</color>
+    <color name="edx_brand_primary_dark">#065683</color>
     <color name="edx_brand_primary_base">#0079BC</color>
-    <color name="edx_brand_primary_light">#4CA1D0</color>
-    <color name="edx_brand_primary_x_light">#B2D6EA</color>
+    <color name="edx_brand_primary_light">#53A4D1</color>
+    <color name="edx_brand_primary_x_light">#A6CFE6</color>
     <color name="edx_brand_primary_accent">#0EA6EC</color>
-    <color name="edx_brand_primary_x_accent">#00B2FF</color>
+    <color name="edx_brand_primary_x_accent">#00ABFA</color>
 
-    <color name="edx_brand_secondary_x_dark">#5B283F</color>
-    <color name="edx_brand_secondary_dark">#8E3E63</color>
-    <color name="edx_brand_secondary_x_light">#EFCDDD</color>
-    <color name="edx_brand_secondary_accent">#F26CAA</color>
+    <color name="edx_brand_secondary_x_dark">#50293B</color>
+    <color name="edx_brand_secondary_dark">#8E4164</color>
     <color name="edx_brand_secondary_base">#CB598D</color>
+    <color name="edx_brand_secondary_light">#DB8FB2</color>
+    <color name="edx_brand_secondary_x_light">#EBC5D6</color>
+    <color name="edx_brand_secondary_accent">#F26CAA</color>
 
     <color name="edx_grayscale_neutral_white_t">#FFFFFF</color>
     <color name="edx_grayscale_neutral_white">#FCFCFC</color>
-    <color name="edx_grayscale_neutral_xx_light">#F2F2F2</color>
-    <color name="edx_grayscale_neutral_x_light">#E9E8E8</color>
-    <color name="edx_grayscale_neutral_light">#D3D1D1</color>
+    <color name="edx_grayscale_neutral_xx_light">#EFEFEF</color>
+    <color name="edx_grayscale_neutral_x_light">#E7E6E6</color>
+    <color name="edx_grayscale_neutral_light">#D2D0D0</color>
     <color name="edx_grayscale_neutral_base">#A7A4A4</color>
-    <color name="edx_grayscale_neutral_dark">#646262</color>
-    <color name="edx_grayscale_neutral_x_dark">#424141</color>
+    <color name="edx_grayscale_neutral_dark">#6B6969</color>
+    <color name="edx_grayscale_neutral_x_dark">#4D4B4B</color>
     <color name="edx_grayscale_neutral_black">#111010</color>
     <color name="edx_grayscale_neutral_black_t">#000000</color>
 
+    <color name="edx_utility_success_dark">#1E8142</color>
     <color name="edx_utility_success">#25B85A</color>
     <color name="edx_utility_warning">#FDBC56</color>
     <color name="edx_utility_error">#B20610</color>

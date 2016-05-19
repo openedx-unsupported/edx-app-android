@@ -25,12 +25,18 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
     private final int edx_brand_primary_base;
     @ColorInt
     private final int edx_grayscale_neutral_light;
+    @ColorInt
+    private final int edx_brand_secondary_dark;
+    @ColorInt
+    private final int edx_utility_success_dark;
 
     @Inject
     public DiscussionPostsAdapter(Context context, IEdxEnvironment environment) {
         super(context, R.layout.row_discussion_thread, environment);
         edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
         edx_grayscale_neutral_light = context.getResources().getColor(R.color.edx_grayscale_neutral_light);
+        edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
+        edx_utility_success_dark = context.getResources().getColor(R.color.edx_utility_success_dark);
     }
 
     @Override
@@ -38,12 +44,23 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         ViewHolder holder = (ViewHolder) tag;
 
         {
-            Icon icon = FontAwesomeIcons.fa_comments;
+            Icon icon;
+            @ColorInt
+            final int iconColor;
             if (discussionThread.getType() == DiscussionThread.ThreadType.QUESTION) {
-                icon = discussionThread.isHasEndorsed() ?
-                        FontAwesomeIcons.fa_check_square_o : FontAwesomeIcons.fa_question;
+                if (discussionThread.isHasEndorsed()) {
+                    icon = FontAwesomeIcons.fa_check_square_o;
+                    iconColor = edx_utility_success_dark;
+                } else {
+                    icon = FontAwesomeIcons.fa_question;
+                    iconColor = edx_brand_secondary_dark;
+                }
+            } else {
+                icon = FontAwesomeIcons.fa_comments;
+                iconColor = edx_grayscale_neutral_light;
             }
             holder.discussionPostTypeIcon.setIcon(icon);
+            holder.discussionPostTypeIcon.setIconColor(iconColor);
         }
 
         {
