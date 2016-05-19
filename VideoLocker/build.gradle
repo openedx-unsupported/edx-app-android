@@ -173,8 +173,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
 
-        versionCode 83
-        versionName "2.4.0"
+        versionCode 84
+        versionName "2.5.0"
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
@@ -189,7 +189,7 @@ android {
         }
 
         testInstrumentationRunner "org.edx.mobile.test.EdXTestRunner"
-        
+
         testHandleProfiling true
         testFunctionalTest true
         testBuildType "debuggable"
@@ -272,7 +272,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    testOptions { 
+    testOptions {
          unitTests.all {
              maxHeapSize '1g'
          }
