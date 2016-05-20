@@ -31,9 +31,16 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private boolean isProgressVisible = false;
 
+    private boolean isSharingEnabled = false;
+
     public AccomplishmentListAdapter(@NonNull String imageUrlPrefix, @NonNull Listener listener) {
         this.imageUrlPrefix = imageUrlPrefix;
         this.listener = listener;
+    }
+
+    public void setSharingEnabled(boolean enableSharing) {
+        isSharingEnabled = enableSharing;
+        notifyDataSetChanged();
     }
 
     @VisibleForTesting
@@ -81,7 +88,7 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
         final int viewType = getItemViewType(position);
         switch (viewType) {
             case RowType.ITEM: {
-                ((ItemViewHolder) holder).setContent(items.get(position));
+                ((ItemViewHolder) holder).setContent(items.get(position), isSharingEnabled);
                 break;
             }
             case RowType.PROGRESS: {
@@ -121,17 +128,22 @@ public class AccomplishmentListAdapter extends RecyclerView.Adapter<RecyclerView
             binding = DataBindingUtil.bind(itemView);
         }
 
-        public void setContent(@NonNull final BadgeAssertion badgeAssertion) {
+        public void setContent(@NonNull final BadgeAssertion badgeAssertion, final boolean sharingEnabled) {
             Glide.with(itemView.getContext()).load(imageUrlPrefix + badgeAssertion.getImageUrl()).into(binding.image);
             binding.name.setText(badgeAssertion.getBadgeClass().getDisplayName());
             binding.description.setText(badgeAssertion.getBadgeClass().getDescription());
             binding.date.setText(DateUtils.formatDateTime(itemView.getContext(), badgeAssertion.getCreated().getTime(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
-            binding.share.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onShare(badgeAssertion);
-                }
-            });
+            if (sharingEnabled) {
+                binding.share.setVisibility(View.VISIBLE);
+                binding.share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onShare(badgeAssertion);
+                    }
+                });
+            } else {
+                binding.share.setVisibility(View.GONE);
+            }
         }
     }
 

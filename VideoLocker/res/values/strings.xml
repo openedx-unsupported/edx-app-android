@@ -658,5 +658,7 @@
     <string name="profile_tab_accomplishment">Accomplishments</string>
     <!-- Button that will initiate sharing one of a user's accomplishments -->
     <string name="share_accomplishment_button">Share your accomplishment</string>
+    <!-- Text that pre-populates your post/email/SMS when sharing certificate -->
+    <string name="share_accomplishment_message">I just earned a badge on {platform_name}! Check it out: {badge_url}</string>
 
 </resources>
