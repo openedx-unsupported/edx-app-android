@@ -9,13 +9,9 @@ public class UserProfileTab {
     @StringRes int displayName;
     private final
     @NonNull
-    String identifier;
-    private final
-    @NonNull
     Class<? extends Fragment> fragmentClass;
 
-    public UserProfileTab(@NonNull String identifier, @StringRes int displayName, @NonNull Class<? extends Fragment> fragmentClass) {
-        this.identifier = identifier;
+    public UserProfileTab(@StringRes int displayName, @NonNull Class<? extends Fragment> fragmentClass) {
         this.displayName = displayName;
         this.fragmentClass = fragmentClass;
     }
@@ -23,11 +19,6 @@ public class UserProfileTab {
     @StringRes
     public int getDisplayName() {
         return displayName;
-    }
-
-    @NonNull
-    public String getIdentifier() {
-        return identifier;
     }
 
     @NonNull

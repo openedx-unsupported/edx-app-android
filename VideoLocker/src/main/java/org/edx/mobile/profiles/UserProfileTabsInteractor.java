@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class UserProfileTabsInteractor {
-    private static final String BIO_TAB = "PROFILE_TAB_BIO";
-    private static final String PROFILE_TAB_ACCOMPLISHMENTS = "PROFILE_TAB_ACCOMPLISHMENTS";
 
     @NonNull
     private final String username;
@@ -57,7 +55,7 @@ public class UserProfileTabsInteractor {
 
 
     private List<UserProfileTab> builtInTabs() {
-        return Collections.singletonList(new UserProfileTab(BIO_TAB, R.string.profile_tab_bio, UserProfileBioFragment.class));
+        return Collections.singletonList(new UserProfileTab(R.string.profile_tab_bio, UserProfileBioFragment.class));
     }
 
     private void handleBadgesLoaded(@NonNull Page<BadgeAssertion> badges) {
@@ -66,7 +64,7 @@ public class UserProfileTabsInteractor {
         }
         final List<UserProfileTab> knownTabs = new ArrayList<>();
         knownTabs.addAll(builtInTabs());
-        knownTabs.add(new UserProfileTab(PROFILE_TAB_ACCOMPLISHMENTS, R.string.profile_tab_accomplishment, UserProfileAccomplishmentsFragment.class));
+        knownTabs.add(new UserProfileTab(R.string.profile_tab_accomplishment, UserProfileAccomplishmentsFragment.class));
         tabs.onData(knownTabs);
     }
 }
