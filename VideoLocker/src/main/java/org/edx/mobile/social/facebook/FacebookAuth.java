@@ -59,8 +59,6 @@ public class FacebookAuth extends ISocialImpl {
         super.onActivityCreated(activity, savedInstanceState);
         uiHelper = IUiLifecycleHelper.Factory.getInstance(activity, statusCallback);
         uiHelper.onCreate(savedInstanceState);
-
-        keyHash();
     }
 
     @Override
@@ -106,27 +104,6 @@ public class FacebookAuth extends ISocialImpl {
             logger.debug("Facebook Logged out...");
         } else {
             logger.debug("Facebook state changed ...");
-        }
-    }
-
-    private void keyHash() {
-        try {
-            if ( activity == null )
-                return;
-            PackageInfo info = activity
-                    .getPackageManager()
-                    .getPackageInfo(activity.getPackageName(),
-                            PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                logger.debug("Facebook Key Hash:"+ Base64.encodeToString(md.digest(),
-                        Base64.DEFAULT));
-            }
-        } catch (NameNotFoundException e) {
-            logger.error(e);
-        } catch (NoSuchAlgorithmException e) {
-            logger.error(e);
         }
     }
 

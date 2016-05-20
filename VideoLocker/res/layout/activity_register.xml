@@ -52,7 +52,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <include layout="@layout/panel_signup_social" />
+            <include layout="@layout/panel_social_auth" />
 
             <LinearLayout
                 android:layout_width="match_parent"

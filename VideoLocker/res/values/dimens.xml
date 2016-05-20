@@ -111,8 +111,8 @@
     <dimen name="row_height_cc_option">40dp</dimen>
 
     <dimen name="signup_social_title_margin">5dp</dimen>
-    <dimen name="signup_social_title_margin_large">8dp</dimen>
-    <dimen name="signup_social_title_margin_bottom">1dp</dimen>
+    <dimen name="signup_social_title_margin_large">13dp</dimen>
+    <dimen name="signup_social_title_margin_bottom">6dp</dimen>
 
     <dimen name="edx_hairline">1px</dimen>
     <dimen name="edx_line">3px</dimen>

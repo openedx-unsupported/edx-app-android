@@ -81,10 +81,7 @@ public class Router {
     }
 
     public void showLogin(Context context) {
-        Intent launchIntent = new Intent(context, LoginActivity.class);
-        if (!(context instanceof Activity))
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(launchIntent);
+        context.startActivity(LoginActivity.newIntent(context));
     }
 
     public void showRegistration(Activity sourceActivity) {
