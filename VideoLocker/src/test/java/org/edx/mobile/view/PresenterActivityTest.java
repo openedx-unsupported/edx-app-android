@@ -1,4 +1,3 @@
-
 package org.edx.mobile.view;
 
 import android.content.Intent;

@@ -10,8 +10,8 @@
         android:splitMotionEvents="false">
 
         <Button
-            android:id="@+id/discover_courses_button"
-            style="@style/discover_courses_text"
+            android:id="@+id/course_discovery_button"
+            style="@style/course_discovery_button_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
@@ -19,7 +19,7 @@
             android:layout_marginRight="50dp"
             android:alpha="0.78"
             android:background="@drawable/course_discovery_on_launch_button"
-            android:text="@string/discover_courses"
+            android:text="@string/course_discovery"
             tools:textSize="@dimen/edx_large"
             tools:textColor="@android:color/white" />
 
@@ -40,7 +40,7 @@
             android:layout_marginBottom="35dp">
 
             <Button
-                android:id="@+id/sign_up_btn"
+                android:id="@+id/launch_sign_up_button"
                 style="@style/bold_white_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -58,11 +58,11 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/sign_in_tv"
+                android:id="@+id/launch_sign_in_button"
                 style="@style/bold_text"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/sign_up_btn"
+                android:layout_below="@id/launch_sign_up_button"
                 android:layout_marginTop="10dp"
                 android:background="@null"
                 android:gravity="center"

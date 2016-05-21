@@ -53,14 +53,14 @@ public class LaunchActivity extends PresenterActivity<LaunchPresenter, LaunchPre
 
         activityLaunchBinding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
 
-        activityLaunchBinding.signInTv.setOnClickListener(new OnClickListener() {
+        activityLaunchBinding.launchSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 environment.getRouter().showLogin(LaunchActivity.this);
             }
         });
 
-        activityLaunchBinding.signUpBtn.setOnClickListener(new OnClickListener() {
+        activityLaunchBinding.launchSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -77,8 +77,8 @@ public class LaunchActivity extends PresenterActivity<LaunchPresenter, LaunchPre
         return new LaunchPresenter.LaunchViewInterface(){
             @Override
             public void setCourseDiscoveryButton(boolean enabled) {
-                if(!environment.getConfig().isCourseDiscoveryOnLaunchEnabled()) {
-                    activityLaunchBinding.discoverCoursesButton.setVisibility(View.GONE);
+                if(!enabled) {
+                    activityLaunchBinding.courseDiscoveryButton.setVisibility(View.GONE);
                 }
             }
         };
