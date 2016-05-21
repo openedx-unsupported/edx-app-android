@@ -25,6 +25,7 @@ import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
+import org.edx.mobile.view.launch.LaunchActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -72,12 +73,7 @@ public class Router {
     }
 
     public void showLaunchScreen(Context context) {
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        if (context instanceof Activity)
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        else
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(launchIntent);
+        context.startActivity(LaunchActivity.newIntent(context));
     }
 
     public void showLogin(Context context) {

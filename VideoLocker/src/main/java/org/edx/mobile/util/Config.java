@@ -60,7 +60,7 @@ public class Config {
     public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
     public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
     public static final String BADGES_ENABLED = "BADGES_ENABLED";
-    public static final String COURSE_DISCOVERY_REGISTRATION = "COURSE_DISCOVERY_REGISTRATION";
+    public static final String COURSE_DISCOVERY_ON_LAUNCH = "COURSE_DISCOVERY_ON_LAUNCH";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
 
     // E2E Test
@@ -270,14 +270,14 @@ public class Config {
         }
     }
 
-    public static class CourseDiscoveryRegistrationConfig {
+    public static class CourseDiscoveryOnLaunchConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
 
-        public CourseDiscoveryRegistrationConfig(boolean mEnabled) {
+        public CourseDiscoveryOnLaunchConfig(boolean mEnabled) {
             this.mEnabled = mEnabled;
         }
 
-        public CourseDiscoveryRegistrationConfig() {
+        public CourseDiscoveryOnLaunchConfig() {
         }
 
         public boolean isEnabled() {
@@ -401,7 +401,7 @@ public class Config {
 
     public boolean isCourseSharingEnabled() { return getBoolean(COURSE_SHARING_ENABLED, false); }
 
-    public boolean isCourseDiscoveryRegistrationEnabled() { return getBoolean(COURSE_DISCOVERY_REGISTRATION, false); }
+    public boolean isCourseDiscoveryOnLaunchEnabled() { return getBoolean(COURSE_DISCOVERY_ON_LAUNCH, false); }
 
     public EnrollmentConfig getCourseDiscoveryConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);

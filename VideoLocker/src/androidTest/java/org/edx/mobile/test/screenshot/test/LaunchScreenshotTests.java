@@ -7,7 +7,7 @@ import android.view.View;
 import com.facebook.testing.screenshot.Screenshot;
 
 import org.edx.mobile.R;
-import org.edx.mobile.view.LaunchActivity;
+import org.edx.mobile.view.launch.LaunchActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

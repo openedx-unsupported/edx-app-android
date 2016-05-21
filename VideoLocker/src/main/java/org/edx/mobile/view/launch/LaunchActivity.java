@@ -1,53 +1,71 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view.launch;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.databinding.ActivityLaunchBinding;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.view.PresenterActivity;
 
-public class LaunchActivity extends BaseFragmentActivity {
+public class LaunchActivity extends PresenterActivity<LaunchPresenter, LaunchPresenter.LaunchViewInterface> {
 
+    private ActivityLaunchBinding activityLaunchBinding;
+
+    public static Intent newIntent(Context context) {
+        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        if (context instanceof Activity)
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        else
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return launchIntent;
+    }
+
+    @NonNull
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected LaunchPresenter createPresenter(@Nullable Bundle savedInstanceState) {
+        return new LaunchPresenter(environment.getConfig());
+    }
 
+    @NonNull
+    @Override
+    protected LaunchPresenter.LaunchViewInterface createView(@Nullable Bundle savedInstanceState) {
         //Register for Login Receiver before checking for logged in user
         enableLoginCallback();
 
         //We need to stop the Launch Activity from launching if the user has logged in
-        PrefManager pm =new PrefManager(LaunchActivity.this, PrefManager.Pref.LOGIN);
+        PrefManager pm = new PrefManager(LaunchActivity.this, PrefManager.Pref.LOGIN);
         if (pm.getCurrentUserProfile() != null) {
             finish();
-            return;
         }
-        setContentView(R.layout.activity_launch);
 
-        Button sign_in_tv = (Button) findViewById(R.id.sign_in_tv);
-        sign_in_tv.setOnClickListener(new OnClickListener() {
+        activityLaunchBinding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
+
+        activityLaunchBinding.signInTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 environment.getRouter().showLogin(LaunchActivity.this);
             }
         });
 
-        Button sign_up_button = (Button) findViewById(R.id.sign_up_btn);
-        sign_up_button.setOnClickListener(new OnClickListener() {
+        activityLaunchBinding.signUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     environment.getSegment().trackUserSignUpForAccount();
-                }catch(Exception e){
+                } catch (Exception e) {
                     logger.error(e);
                 }
                 environment.getRouter().showRegistration(LaunchActivity.this);
@@ -55,6 +73,15 @@ public class LaunchActivity extends BaseFragmentActivity {
         });
 
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
+
+        return new LaunchPresenter.LaunchViewInterface(){
+            @Override
+            public void setCourseDiscoveryButton(boolean enabled) {
+                if(!environment.getConfig().isCourseDiscoveryOnLaunchEnabled()) {
+                    activityLaunchBinding.discoverCoursesButton.setVisibility(View.GONE);
+                }
+            }
+        };
     }
 
     @Override
@@ -82,7 +109,6 @@ public class LaunchActivity extends BaseFragmentActivity {
         // un-register loginReceiver
         unregisterReceiver(loginReceiver);
     }
-
 
 
     @Override
