@@ -113,6 +113,20 @@ public class NetworkUtil {
         return false;
     }
 
+    public static class ZeroRatedNetworkInfo {
+        private final Context context;
+        private final Config config;
+
+        public ZeroRatedNetworkInfo(Context context, Config config) {
+            this.context = context.getApplicationContext();
+            this.config = config;
+        }
+
+        public boolean isOnZeroRatedNetwork() {
+            return NetworkUtil.isOnZeroRatedNetwork(context, config);
+        }
+    }
+
     /**
      * Verify that there is an active network connection on which downloading is allowed. If
      * there is no such connection, then an appropriate message is displayed.

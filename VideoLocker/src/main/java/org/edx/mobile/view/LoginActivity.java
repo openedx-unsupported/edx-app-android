@@ -1,33 +1,32 @@
 package org.edx.mobile.view;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.LoginTask;
+import org.edx.mobile.databinding.ActivityLoginBinding;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
-import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
@@ -36,64 +35,60 @@ import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
+import org.edx.mobile.view.login.LoginPresenter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends BaseFragmentActivity implements SocialLoginDelegate.MobileLoginCallback {
+public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface> implements SocialLoginDelegate.MobileLoginCallback {
 
-    private TextView login_tv;
-    private EditText email_et, password_et;
-
+    public String emailStr;
     private SimpleAlertDialog NoNetworkFragment;
-
     private ResetPasswordDialog resetDialog;
     private SuccessDialogFragment successFragment;
-    private ProgressBar progressbar;
-    private ViewGroup loginButtonLayout;
-    public String emailStr;
-    private TextView forgotPassword_tv;
-    private TextView eulaTv;
-    private LinearLayout errorLayout;
-    private TextView errorHeader;
-    private TextView errorMessage;
     private SocialLoginDelegate socialLoginDelegate;
 
+    private ActivityLoginBinding activityLoginBinding;
+
+
+    public static Intent newIntent(Context context) {
+        Intent launchIntent = new Intent(context, LoginActivity.class);
+        if (!(context instanceof Activity))
+            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return launchIntent;
+    }
+
+    @NonNull
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    protected LoginPresenter createPresenter(@Nullable Bundle savedInstanceState) {
+        return new LoginPresenter(
+                environment.getConfig(),
+                new NetworkUtil.ZeroRatedNetworkInfo(getApplicationContext(), environment.getConfig()));
+    }
 
+    @NonNull
+    @Override
+    protected LoginPresenter.LoginViewInterface createView(@Nullable Bundle savedInstanceState) {
+        activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         hideSoftKeypad();
-
-        // setup for social login
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
 
-        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
-        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
-        imgFacebook.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
-        imgGoogle.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
+        activityLoginBinding.socialAuth.facebookButton.imgFacebook.setOnClickListener(
+                socialLoginDelegate.createSocialButtonClickHandler(
+                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
+        activityLoginBinding.socialAuth.googleButton.imgGoogle.setOnClickListener(
+                socialLoginDelegate.createSocialButtonClickHandler(
+                        SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
 
-
-        email_et = (EditText) findViewById(R.id.email_et);
-
-        password_et = (EditText) findViewById(R.id.password_et);
-        progressbar = (ProgressBar) findViewById(R.id.progress_indicator);
-        login_tv = (TextView) findViewById(R.id.login_btn_tv);
-
-        loginButtonLayout = (ViewGroup) findViewById(R.id.login_button_layout);
-        loginButtonLayout.setOnClickListener(new OnClickListener() {
-
+        activityLoginBinding.loginButtonLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check for Validation
+                // Check for Validation˜
                 callServerForLogin();
             }
         });
 
-        forgotPassword_tv = (TextView) findViewById(R.id.forgot_password_tv);
-        forgotPassword_tv.setOnClickListener(new OnClickListener() {
-
+        activityLoginBinding.forgotPasswordTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Calling help dialog
@@ -105,72 +100,54 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             }
         });
 
-        eulaTv = (TextView) findViewById(R.id.end_user_agreement_tv);
         String platformName = environment.getConfig().getPlatformName();
         CharSequence licenseText = ResourceUtil.getFormattedString(getResources(), R.string.licensing_agreement, "platform_name", platformName);
-        eulaTv.setText(licenseText);
-        eulaTv.setOnClickListener(new OnClickListener() {
+        activityLoginBinding.endUserAgreementTv.setText(licenseText);
+        activityLoginBinding.endUserAgreementTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEulaDialog();
             }
         });
 
-        errorLayout = (LinearLayout) findViewById(R.id.error_layout);
-        errorHeader = (TextView) findViewById(R.id.error_header);
-        errorMessage = (TextView) findViewById(R.id.error_message);
-
         environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
 
-        View closeButton = findViewById(R.id.actionbar_close_btn);
-        if (closeButton != null) {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
+        activityLoginBinding.panelCustomActionBar.actionbarCloseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // enable login buttons at launch
         tryToSetUIInteraction(true);
 
         Config config = environment.getConfig();
-        // check if third party traffic is enabled
-        boolean isOnZeroRatedNetwork = NetworkUtil.isOnZeroRatedNetwork(getApplicationContext(), config);
 
-        if (isOnZeroRatedNetwork) {
-            findViewById(R.id.panel_login_social).setVisibility(View.GONE);
-        } else {
-            if (!config.getFacebookConfig().isEnabled()
-                    && !config.getGoogleConfig().isEnabled()) {
-                findViewById(R.id.panel_login_social).setVisibility(View.GONE);
-            } else if (!config.getFacebookConfig().isEnabled()) {
-                findViewById(R.id.facebook_layout).setVisibility(View.GONE);
-            } else if (!config.getGoogleConfig().isEnabled()) {
-                findViewById(R.id.google_layout).setVisibility(View.GONE);
+        activityLoginBinding.panelCustomActionBar.activityTitle.setText(
+                ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
+
+        String envDisplayName = config.getEnvironmentDisplayName();
+        if (envDisplayName != null && envDisplayName.length() > 0) {
+            activityLoginBinding.versionEnvTv.setVisibility(View.VISIBLE);
+            String versionName = BuildConfig.VERSION_NAME;
+            String text = String.format("%s %s %s",
+                    getString(R.string.label_version), versionName, envDisplayName);
+            activityLoginBinding.versionEnvTv.setText(text);
+        }
+
+        return new LoginPresenter.LoginViewInterface() {
+            @Override
+            public void setSocialLoginButtons(boolean googleEnabled, boolean facebookEnabled) {
+                if (!facebookEnabled && !googleEnabled) {
+                    activityLoginBinding.panelLoginSocial.setVisibility(View.GONE);
+                } else if (!facebookEnabled) {
+                    activityLoginBinding.socialAuth.facebookButton.facebookLayout.setVisibility(View.GONE);
+                } else if (!googleEnabled) {
+                    activityLoginBinding.socialAuth.googleButton.googleLayout.setVisibility(View.GONE);
+                }
             }
-        }
-
-        TextView customTitle = (TextView) findViewById(R.id.activity_title);
-        if (customTitle != null) {
-            customTitle.setText(ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
-        }
-
-        TextView version_tv = (TextView) findViewById(R.id.tv_version_no);
-        try {
-            String envDisplayName = config.getEnvironmentDisplayName();
-
-            if (envDisplayName != null && envDisplayName.length() > 0) {
-                version_tv.setVisibility(View.VISIBLE);
-                String versionName = BuildConfig.VERSION_NAME;
-                String text = String.format("%s %s %s",
-                        getString(R.string.label_version), versionName, envDisplayName);
-                version_tv.setText(text);
-            }
-        } catch (Exception e) {
-            logger.error(e);
-        }
+        };
     }
 
     @Override
@@ -183,7 +160,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("username", email_et.getText().toString().trim());
+        outState.putString("username", activityLoginBinding.emailEt.getText().toString().trim());
 
         socialLoginDelegate.onActivitySaveInstanceState(outState);
 
@@ -192,7 +169,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     @Override
     protected void onStart() {
         super.onStart();
-        if (email_et.getText().toString().length() == 0) {
+        if (activityLoginBinding.emailEt.getText().toString().length() == 0) {
             displayLastEmailId();
         }
 
@@ -204,7 +181,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            email_et.setText(savedInstanceState.getString("username"));
+            activityLoginBinding.emailEt.setText(savedInstanceState.getString("username"));
         }
     }
 
@@ -230,11 +207,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     private void displayLastEmailId() {
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
         String emailId = pref.getString("email");
-        email_et.setText(emailId);
-    }
-
-    public ProgressBar getProgressBar() {
-        return this.progressbar;
+        activityLoginBinding.emailEt.setText(emailId);
     }
 
     public void callServerForLogin() {
@@ -245,27 +218,27 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             return;
         }
 
-        emailStr = email_et.getText().toString().trim();
-        String passwordStr = password_et.getText().toString().trim();
+        emailStr = activityLoginBinding.emailEt.getText().toString().trim();
+        String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
 
-        if (email_et != null && emailStr.length() == 0) {
+        if (activityLoginBinding.emailEt != null && emailStr.length() == 0) {
             showErrorMessage(getString(R.string.login_error),
                     getString(R.string.error_enter_email));
-            email_et.requestFocus();
-        } else if (password_et != null && passwordStr.length() == 0) {
+            activityLoginBinding.emailEt.requestFocus();
+        } else if (activityLoginBinding.passwordEt != null && passwordStr.length() == 0) {
             showErrorMessage(getString(R.string.login_error),
                     getString(R.string.error_enter_password));
-            password_et.requestFocus();
+            activityLoginBinding.passwordEt.requestFocus();
         } else {
-            email_et.setEnabled(false);
-            password_et.setEnabled(false);
-            forgotPassword_tv.setEnabled(false);
-            eulaTv.setEnabled(false);
+            activityLoginBinding.emailEt.setEnabled(false);
+            activityLoginBinding.passwordEt.setEnabled(false);
+            activityLoginBinding.forgotPasswordTv.setEnabled(false);
+            activityLoginBinding.endUserAgreementTv.setEnabled(false);
 
             clearDialogs();
 
-            LoginTask logintask = new LoginTask(this, email_et.getText().toString().trim(),
-                    password_et.getText().toString()) {
+            LoginTask logintask = new LoginTask(this, activityLoginBinding.emailEt.getText().toString().trim(),
+                    activityLoginBinding.passwordEt.getText().toString()) {
                 @Override
                 public void onSuccess(AuthResponse result) {
                     try {
@@ -293,7 +266,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
             };
 
             tryToSetUIInteraction(false);
-            logintask.setProgressDialog(progressbar);
+            logintask.setProgressDialog(activityLoginBinding.progress.progressIndicator);
             logintask.execute();
         }
     }
@@ -306,9 +279,7 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     }
 
     public String getEmail() {
-        String email = email_et.getText().toString().trim();
-
-        return email;
+        return activityLoginBinding.emailEt.getText().toString().trim();
     }
 
     private void showResetPasswordDialog() {
@@ -381,9 +352,9 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        Animation errorMessageAnim = errorLayout.getAnimation();
+        Animation errorMessageAnim = activityLoginBinding.errorLayout.getAnimation();
         if (errorMessageAnim == null || errorMessageAnim.hasEnded()) {
-            ViewAnimationUtil.hideMessageBar(errorLayout);
+            ViewAnimationUtil.hideMessageBar(activityLoginBinding.errorLayout);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -431,19 +402,19 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
      */
     public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
         tryToSetUIInteraction(false);
-        task.setProgressDialog(progressbar);
+        task.setProgressDialog(activityLoginBinding.progress.progressIndicator);
     }
 
     public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-        pref.put("email", email_et.getText().toString().trim());
+        pref.put("email", activityLoginBinding.emailEt.getText().toString().trim());
 
         pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
 
         environment.getSegment().identifyUser(profile.id.toString(), profile.email,
-                email_et.getText().toString().trim());
+                activityLoginBinding.emailEt.getText().toString().trim());
 
         String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
         if (backendKey != null) {
@@ -477,27 +448,25 @@ public class LoginActivity extends BaseFragmentActivity implements SocialLoginDe
     public boolean tryToSetUIInteraction(boolean enable) {
         if (enable) {
             unblockTouch();
-            loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
-            loginButtonLayout.setEnabled(enable);
-            login_tv.setText(getString(R.string.login));
+            activityLoginBinding.loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
+            activityLoginBinding.loginButtonLayout.setEnabled(enable);
+            activityLoginBinding.loginBtnTv.setText(getString(R.string.login));
         } else {
             blockTouch();
-            loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
-            loginButtonLayout.setEnabled(enable);
-            login_tv.setText(getString(R.string.signing_in));
+            activityLoginBinding.loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
+            activityLoginBinding.loginButtonLayout.setEnabled(enable);
+            activityLoginBinding.loginBtnTv.setText(getString(R.string.signing_in));
         }
 
 
-        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
-        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
-        imgFacebook.setClickable(enable);
-        imgGoogle.setClickable(enable);
+        activityLoginBinding.socialAuth.facebookButton.imgFacebook.setClickable(enable);
+        activityLoginBinding.socialAuth.googleButton.imgGoogle.setClickable(enable);
 
-        email_et.setEnabled(enable);
-        password_et.setEnabled(enable);
+        activityLoginBinding.emailEt.setEnabled(enable);
+        activityLoginBinding.passwordEt.setEnabled(enable);
 
-        forgotPassword_tv.setEnabled(enable);
-        eulaTv.setEnabled(enable);
+        activityLoginBinding.forgotPasswordTv.setEnabled(enable);
+        activityLoginBinding.endUserAgreementTv.setEnabled(enable);
 
         return true;
     }

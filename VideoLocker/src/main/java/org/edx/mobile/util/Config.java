@@ -149,6 +149,14 @@ public class Config {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("FACEBOOK_APP_ID") String mFacebookAppId;
 
+        public FacebookConfig(boolean mEnabled, String mFacebookAppId) {
+            this.mEnabled = mEnabled;
+            this.mFacebookAppId = mFacebookAppId;
+        }
+
+        public FacebookConfig() {
+        }
+
         public boolean isEnabled() {
             return mEnabled && !TextUtils.isEmpty(mFacebookAppId);
         }
@@ -163,6 +171,13 @@ public class Config {
      */
     public static class GoogleConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
+
+        public GoogleConfig(boolean mEnabled) {
+            this.mEnabled = mEnabled;
+        }
+
+        public GoogleConfig() {
+        }
 
         public boolean isEnabled() {
             return mEnabled;

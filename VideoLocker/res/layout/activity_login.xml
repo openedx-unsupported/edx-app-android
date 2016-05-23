@@ -1,166 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:splitMotionEvents="false">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:fillViewport="true"
-        android:layout_marginTop="50dp">
+        android:splitMotionEvents="false">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:background="@android:color/white"
+            android:fillViewport="true">
 
-            <LinearLayout
-                android:id="@+id/top_layout"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:orientation="vertical" >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/edx_logo_height"
-                    android:layout_marginBottom="@dimen/logo_margin_bottom"
-                    android:layout_marginLeft="44dp"
-                    android:layout_marginRight="44dp"
-                    android:layout_marginTop="@dimen/logo_margin_top" >
-
-                    <ImageView
-                        android:id="@+id/login_map"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:contentDescription="@string/app_name"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/edx_map_login" />
-
-                    <ImageView
-                        android:id="@+id/login_logo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/edx_logo_login" />
-                </RelativeLayout>
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/top_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="44dp"
-                    android:paddingRight="44dp" >
+                    android:layout_marginBottom="3dp"
+                    android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/email_et"
-                        style="@style/edit_text_style"
-                        android:hint="@string/email_username"
-                        android:inputType="textEmailAddress"
-                        android:maxLength="100"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/edx_logo_height"
+                        android:layout_marginBottom="@dimen/logo_margin_bottom"
+                        android:layout_marginLeft="44dp"
+                        android:layout_marginRight="44dp"
+                        android:layout_marginTop="@dimen/logo_margin_top">
 
-                    <EditText
-                        android:id="@+id/password_et"
-                        style="@style/edit_text_style"
-                        android:layout_marginTop="8dp"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:maxLength="100"/>
+                        <ImageView
+                            android:id="@+id/login_map"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:contentDescription="@string/app_name"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/edx_map_login" />
 
-                    <TextView
-                        android:id="@+id/forgot_password_tv"
-                        style="@style/semibold_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/forgot_password"
-                        android:textColor="@color/cyan_text_navigation"
-                        android:textSize="12sp" />
-
-                    <FrameLayout
-                        style="@style/edX.Widget.SignInButtonLayout"
-                        android:id="@+id/login_button_layout"
-                        android:contentDescription="@string/login_btn">
-
-                        <TextView
-                            style="@style/edX.Widget.SignInButton"
-                            android:id="@+id/login_btn_tv"
-                            android:text="@string/login" />
-
-                        <include layout="@layout/button_progress_indicator" />
-                    </FrameLayout>
+                        <ImageView
+                            android:id="@+id/login_logo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/edx_logo_login" />
+                    </RelativeLayout>
 
                     <LinearLayout
-                        android:id="@+id/panel_login_social"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingLeft="44dp"
+                        android:paddingRight="44dp">
 
-                        <include layout="@layout/view_signin_title_row" />
+                        <EditText
+                            android:id="@+id/email_et"
+                            style="@style/edit_text_style"
+                            android:hint="@string/email_username"
+                            android:inputType="textEmailAddress"
+                            android:maxLength="100" />
 
-                        <include layout="@layout/panel_login_social" />
+                        <EditText
+                            android:id="@+id/password_et"
+                            style="@style/edit_text_style"
+                            android:layout_marginTop="8dp"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            android:maxLength="100" />
+
+                        <TextView
+                            android:id="@+id/forgot_password_tv"
+                            style="@style/semibold_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="@string/forgot_password"
+                            android:textColor="@color/cyan_text_navigation"
+                            android:textSize="12sp" />
+
+                        <FrameLayout
+                            android:id="@+id/login_button_layout"
+                            style="@style/edX.Widget.SignInButtonLayout"
+                            android:contentDescription="@string/login_btn">
+
+                            <TextView
+                                android:id="@+id/login_btn_tv"
+                                style="@style/edX.Widget.SignInButton"
+                                android:text="@string/login" />
+
+                            <include layout="@layout/button_progress_indicator"
+                                android:id="@+id/progress"/>
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:id="@+id/panel_login_social"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/view_signin_title_row" />
+
+                            <include layout="@layout/panel_social_auth"
+                                android:id="@+id/social_auth"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/by_signing_up_tv"
+                            style="@style/regular_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:gravity="center"
+                            android:text="@string/by_signing_up"
+                            android:textColor="@color/grey_redirected_txt"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/end_user_agreement_tv"
+                            style="@style/regular_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:linksClickable="true"
+                            android:textColor="@color/cyan_text_navigation"
+                            android:textSize="11sp"
+                            tools:text="@string/licensing_agreement" />
+
+                        <TextView
+                            android:id="@+id/version_env_tv"
+                            style="@style/regular_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="15dp"
+                            android:gravity="center_horizontal"
+                            android:text=""
+                            android:textColor="@color/transparent_black_80"
+                            android:textSize="10sp"
+                            android:visibility="invisible" />
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/by_signing_up_tv"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
-                        android:gravity="center"
-                        android:text="@string/by_signing_up"
-                        android:textColor="@color/grey_redirected_txt"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/end_user_agreement_tv"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:linksClickable="true"
-                        tools:text="@string/licensing_agreement"
-                        android:textColor="@color/cyan_text_navigation"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/tv_version_no"
-                        style="@style/regular_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_horizontal"
-                        android:text=""
-                        android:textColor="@color/transparent_black_80"
-                        android:visibility="invisible"
-                        android:textSize="10sp" />
                 </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
+            </RelativeLayout>
+        </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
-        <include layout="@layout/panel_error_message_with_title" />
-    </LinearLayout>
+            <include layout="@layout/panel_error_message_with_title" />
+        </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/custom_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" >
-        <include layout="@layout/panel_custom_action_bar" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/custom_action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
 
-</RelativeLayout>
+            <include layout="@layout/panel_custom_action_bar"
+                android:id="@+id/panel_custom_action_bar"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
