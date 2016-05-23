@@ -1,6 +1,7 @@
 package org.edx.mobile.profiles;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +16,9 @@ import org.mockito.Mock;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTest<
         UserProfileAccomplishmentsFragmentTest.TestableUserProfileAccomplishmentsFragment,
@@ -45,7 +48,7 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     @Test
     public void setModel_withZeroItemsAndLoadingTrue_setsAdapterItemsAndLoading() {
         final List<BadgeAssertion> items = Collections.emptyList();
-        view.setModel(new UserProfileAccomplishmentsPresenter.ViewModel(items, true));
+        view.setModel(new UserProfileAccomplishmentsPresenter.ViewModel(items, true, false));
         verify(mockAdapter).setItems(items);
         verify(mockAdapter).setPageLoading(true);
     }
@@ -53,9 +56,17 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     @Test
     public void setModel_withZeroItemsAndLoadingFalse_setsAdapterItemsAndLoading() {
         final List<BadgeAssertion> items = Collections.emptyList();
-        view.setModel(new UserProfileAccomplishmentsPresenter.ViewModel(items, false));
+        view.setModel(new UserProfileAccomplishmentsPresenter.ViewModel(items, false, false));
         verify(mockAdapter).setItems(items);
         verify(mockAdapter).setPageLoading(false);
+    }
+
+    @Test
+    public void test_startBadgeShareIntent_startsShareActivity() {
+        final String badgeUrl = "http://example.com";
+        view.startBadgeShareIntent(badgeUrl);
+        assertThat(shadowOf(fragment.getActivity()).getNextStartedActivity())
+                .hasAction(Intent.ACTION_SEND);
     }
 
     @Test

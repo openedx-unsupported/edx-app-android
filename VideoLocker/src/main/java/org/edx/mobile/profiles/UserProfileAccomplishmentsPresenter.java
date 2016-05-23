@@ -5,6 +5,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.model.Page;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.observer.AsyncCallableUtils;
 import org.edx.mobile.util.observer.Observer;
@@ -23,6 +25,8 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
     @NonNull
     private final String username;
 
+    private final boolean viewingOwnProfile;
+
     private InfiniteScrollUtils.PageLoadController pageLoadController;
 
     private int page = 1;
@@ -32,9 +36,11 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
     private boolean pageLoading = false;
 
-    public UserProfileAccomplishmentsPresenter(@NonNull UserAPI userAPI, @NonNull String username) {
+    public UserProfileAccomplishmentsPresenter(@NonNull UserAPI userAPI, @NonNull UserPrefs userPrefs, @NonNull String username) {
         this.userAPI = userAPI;
         this.username = username;
+        final ProfileModel model = userPrefs.getProfile();
+        viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
     }
 
     @Override
@@ -92,7 +98,7 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
     private void setViewModel() {
         assert getView() != null;
-        getView().setModel(new ViewModel(badges, pageLoading));
+        getView().setModel(new ViewModel(badges, pageLoading, viewingOwnProfile));
     }
 
     public void onScrolledToEnd() {
@@ -104,23 +110,25 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
     public void onClickShare(@NonNull BadgeAssertion badgeAssertion) {
         assert getView() != null;
-        getView().startShareIntent(badgeAssertion.getAssertionUrl());
+        getView().startBadgeShareIntent(badgeAssertion.getAssertionUrl());
     }
 
     public interface ViewInterface {
         void setModel(@NonNull ViewModel model);
 
-        void startShareIntent(@NonNull String sharedContent);
+        void startBadgeShareIntent(@NonNull String sharedContent);
     }
 
     public static class ViewModel {
         @NonNull
         public final List<BadgeAssertion> badges;
         public final boolean pageLoading;
+        public final boolean enableSharing;
 
-        public ViewModel(@NonNull List<BadgeAssertion> badges, boolean pageLoading) {
+        public ViewModel(@NonNull List<BadgeAssertion> badges, boolean pageLoading, boolean enableSharing) {
             this.badges = badges;
             this.pageLoading = pageLoading;
+            this.enableSharing = enableSharing;
         }
     }
 }

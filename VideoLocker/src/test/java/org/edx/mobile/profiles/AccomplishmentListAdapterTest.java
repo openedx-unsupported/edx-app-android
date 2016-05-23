@@ -57,7 +57,7 @@ public class AccomplishmentListAdapterTest extends BaseTestCase {
         adapter.setItems(Collections.singletonList(badgeAssertion));
         final AccomplishmentListAdapter.ItemViewHolder viewHolder = mock(AccomplishmentListAdapter.ItemViewHolder.class);
         adapter.onBindViewHolder(viewHolder, 0);
-        verify(viewHolder).setContent(badgeAssertion);
+        verify(viewHolder).setContent(badgeAssertion, false);
     }
 
     @Test

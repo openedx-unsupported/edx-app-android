@@ -15,12 +15,15 @@ import com.google.inject.Injector;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
+import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.RoboGuice;
 
@@ -38,6 +41,7 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
         final Injector injector = RoboGuice.getInjector(getActivity());
         return new UserProfileAccomplishmentsPresenter(
                 injector.getInstance(UserAPI.class),
+                injector.getInstance(UserPrefs.class),
                 ((UserProfileBioTabParent) getParentFragment()).getBioInteractor().getUsername());
     }
 
@@ -66,11 +70,16 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
             public void setModel(@NonNull UserProfileAccomplishmentsPresenter.ViewModel model) {
                 adapter.setItems(model.badges);
                 adapter.setPageLoading(model.pageLoading);
+                adapter.setSharingEnabled(model.enableSharing);
             }
 
             @Override
-            public void startShareIntent(@NonNull String sharedContent) {
-                startActivity(ShareUtils.newShareIntent(sharedContent));
+            public void startBadgeShareIntent(@NonNull String badgeUrl) {
+                final Map<String, CharSequence> shareTextParams = new HashMap<>();
+                shareTextParams.put("platform_name", getString(R.string.platform_name));
+                shareTextParams.put("badge_url", badgeUrl);
+                final String shareText = ResourceUtil.getFormattedString(getResources(), R.string.share_accomplishment_message, shareTextParams).toString();
+                startActivity(ShareUtils.newShareIntent(shareText));
             }
         };
     }
