@@ -74,16 +74,13 @@
     <color name="grey_text_mycourse">#454951</color>
     <color name="grey_last_accessed">#464A50</color>
     <color name="red_error_text">#F47676</color>
-    <color name="red_offline_bar">#BA2E6E</color>
     <color name="grey_act_background">#E2E3E5</color>
     <color name="grey_text_tab">#898B8E</color>
     <color name="cyan_text_navigation">#299ED7</color>
     <color name="progress_wheel_color">#7DC88F</color>
     <color name="include_msg_color">#65C89D</color>
-    <color name="offline_text">#BA2E6E</color>
     <color name="cyan_circle">#1F9FD9</color>
     <color name="grey_circle">#E6E6E7</color>
-    <color name="offline_panel">#E6BA2E6E</color>
     <color name="browser_panel">#E2E3E5</color>
     <color name="white_list_clicked">#F1F1F2</color>
     <color name="transparent_download_bg">#E63E4247</color>

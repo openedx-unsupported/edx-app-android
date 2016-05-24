@@ -1,19 +1,20 @@
 package org.edx.mobile.base;
 
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.event.LogoutEvent;
 import org.edx.mobile.event.NetworkConnectivityChangeEvent;
+import org.edx.mobile.event.NewVersionAvailableEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
@@ -32,6 +34,8 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
+import org.edx.mobile.view.common.BannerDisplayCallback;
+import org.edx.mobile.view.common.BannerType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +43,32 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public abstract class BaseFragmentActivity extends BaseAppActivity
-        implements NetworkSubject, ICommonUI {
+        implements BannerDisplayCallback, NetworkSubject, ICommonUI {
 
     public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
     public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
 
-    private MenuItem offlineMenuItem;
+    /**
+     * The banner at the top for indicating offline mode or unsupported app version.
+     */
+    private View banner;
+    /**
+     * The banner text view.
+     */
+    private TextView bannerTextView;
+    /**
+     * The banner details slide-in popup.
+     */
+    private TextView bannerExpanded;
+    /**
+     * The type of the banner that is being displayed, or null if no banner is being
+     * displayed.
+     */
+    private BannerType displayedBannerType;
+    /**
+     * Flag for determining if the sub-decoration has been set up.
+     */
+    private boolean subDecorInstalled;
     protected ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
     private boolean isUiOnline = true;
@@ -89,7 +113,9 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
-        updateActionBarShadow();
+        // Ensure that the sub-decoration is initialized even without
+        // any content view setup, to accommodate Fragment-only Activities.
+        ensureSubDecor();
 
         logger.debug("created");
     }
@@ -133,29 +159,78 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
+    /* RoboAppCompatActivity injects the content view from
+     * it's onCreate() implementation, so that needs to be
+     * intercepted and the sub-decoration layout setup
+     * before the content view setup, instead of relying on
+     * setting this up in our own onCreate() implementation.
+     */
 
-    private void updateActionBarShadow() {
-        //Check for JellyBeans version
-        if (Build.VERSION.SDK_INT == 18) {
-            // Get the content view
-            View contentView = findViewById(android.R.id.content);
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        ensureSubDecor();
+        super.setContentView(layoutResID);
+    }
 
-            // Make sure it's a valid instance of a FrameLayout
-            if (contentView instanceof FrameLayout) {
-                TypedValue tv = new TypedValue();
+    @Override
+    public void setContentView(@NonNull View view) {
+        ensureSubDecor();
+        super.setContentView(view);
+    }
 
-                // Get the windowContentOverlay value of the current theme
-                if (getTheme().resolveAttribute(
-                        android.R.attr.windowContentOverlay, tv, true)) {
+    @Override
+    public void setContentView(@NonNull View view, @Nullable ViewGroup.LayoutParams params) {
+        ensureSubDecor();
+        super.setContentView(view, params);
+    }
 
-                    // If it's a valid resource, set it as the foreground drawable
-                    // for the content view
-                    if (tv.resourceId != 0) {
-                        ((FrameLayout) contentView).setForeground(
-                                getResources().getDrawable(tv.resourceId));
-                    }
+    @Override
+    public void addContentView(@NonNull View view, @Nullable ViewGroup.LayoutParams params) {
+        ensureSubDecor();
+        super.addContentView(view, params);
+    }
+
+    /**
+     * Set up the basic decoration layout, such as the offline banner, and
+     * the error and warning fly-in notifications.
+     */
+    private void ensureSubDecor() {
+        if (!subDecorInstalled) {
+            super.setContentView(R.layout.activity_base_decor);
+            banner = findViewById(R.id.banner);
+            bannerTextView = (TextView) findViewById(R.id.banner_text);
+            bannerExpanded = (TextView) findViewById(R.id.banner_expanded);
+            banner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ViewAnimationUtil.showMessageBar(bannerExpanded);
                 }
-            }
+            });
+
+            /* Remove the ID from the old content parent, in favor of the
+             * one defined by our sub-decoration layout. Note that this
+             * approach only works for the AppCompatActivity implementation,
+             * since it always gets the content parent from it's ID. If we
+             * stop using the appcompat library at some point, then this
+             * approach will need to be modified according to how
+             * AppCompatActivity sets up it's own sub-decoration, by
+             * intercepting all the setContentView() and addContentView()
+             * calls, and manually adding the content view to the custom
+             * designated parent.
+             */
+            getWindow().findViewById(android.R.id.content).setId(View.NO_ID);
+            subDecorInstalled = true;
+        }
+    }
+
+    @Override
+    public void onContentChanged() {
+        /* Don't call through to the super implementation if we're only
+         * setting up the sub-decoration. The RoboAppCompatActivity
+         * implementation does the view injections from this callback.
+         */
+        if (subDecorInstalled) {
+            super.onContentChanged();
         }
     }
 
@@ -245,9 +320,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * @return Return true if the menu should be displayed.
      */
     protected boolean createOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        offlineMenuItem = menu.findItem(R.id.offline);
-        offlineMenuItem.setVisible(!NetworkUtil.isConnected(this));
+        // No default menu for now
         return true;
     }
 
@@ -286,6 +359,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * proceed, true to consume it here.
      */
     protected boolean handleOptionsItemSelected(MenuItem item) {
+        // No default menu to handle selection for
         return false;
     }
 
@@ -336,6 +410,30 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     public void stopAnimation(View view) {
         if (view != null) {
             ViewAnimationUtil.stopAnimation(view);
+        }
+    }
+
+    /**
+     * Display the banner at the top of the Activity.
+     *
+     * @param bannerType The banner type
+     */
+    @Override
+    public void showBanner(@NonNull BannerType bannerType) {
+        bannerTextView.setText(bannerType.getShortMessageRes(this));
+        bannerExpanded.setText(bannerType.getLongMessageRes(this));
+        bannerExpanded.setOnClickListener(bannerType.getClickListener());
+        banner.setVisibility(View.VISIBLE);
+        displayedBannerType = bannerType;
+    }
+
+    /**
+     * Hide the banner at the top of the Activity.
+     */
+    private void hideOfflineBanner() {
+        if (displayedBannerType == BannerType.OFFLINE) {
+            banner.setVisibility(View.GONE);
+            displayedBannerType = null;
         }
     }
 
@@ -460,12 +558,20 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     /**
+     * callback from EventBus
+     *
+     * @param event
+     */
+    public void onEvent(NewVersionAvailableEvent event) {
+        bannerExpanded.setText(event.getNotificationString(this));
+        ViewAnimationUtil.showMessageBar(bannerExpanded);
+    }
+
+    /**
      * Sub-classes may override this method to handle connected state.
      */
     protected void onOnline() {
-        if (offlineMenuItem != null) {
-            offlineMenuItem.setVisible(false);
-        }
+        hideOfflineBanner();
         logger.debug("You are now online");
     }
 
@@ -473,9 +579,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Sub-classes may override this method to handle disconnected state.
      */
     protected void onOffline() {
-        if (offlineMenuItem != null) {
-            offlineMenuItem.setVisible(true);
-        }
+        showBanner(BannerType.OFFLINE);
         logger.debug("You are now offline");
     }
 

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 
 import java.util.List;
@@ -37,8 +35,6 @@ public abstract class CourseListTabFragment extends BaseFragment implements Netw
     protected MyCourseAdapter adapter;
 
     protected SwipeRefreshLayout swipeLayout;
-    protected LinearLayout offlinePanel;
-    protected View offlineBar;
     protected ProgressBar progressBar;
 
     protected PrefManager pmFeatures;
@@ -96,8 +92,6 @@ public abstract class CourseListTabFragment extends BaseFragment implements Netw
                              Bundle savedInstanceState) {
         View view = inflater.inflate(getViewResourceID(), container, false);
 
-        offlineBar = view.findViewById(R.id.offline_bar);
-        offlinePanel = (LinearLayout) view.findViewById(R.id.offline_panel);
         progressBar = (ProgressBar) view.findViewById(R.id.loading_indicator);
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -141,37 +135,14 @@ public abstract class CourseListTabFragment extends BaseFragment implements Netw
 
     @Override
     public void onOnline() {
-        if (offlineBar != null && swipeLayout != null) {
-            offlineBar.setVisibility(View.GONE);
-            hideOfflinePanel();
-            swipeLayout.setEnabled(true);
-        }
-    }
-
-    public void hideOfflinePanel() {
-        ViewAnimationUtil.stopAnimation(offlinePanel);
-        if (offlinePanel.getVisibility() == View.VISIBLE) {
-            offlinePanel.setVisibility(View.GONE);
-        }
-    }
-
-    public void showOfflinePanel() {
-        ViewAnimationUtil.showMessageBar(offlinePanel);
+        swipeLayout.setEnabled(true);
     }
 
     @Override
     public void onOffline() {
-        offlineBar.setVisibility(View.VISIBLE);
-        showOfflinePanel();
         //Disable swipe functionality and hide the loading view
         swipeLayout.setEnabled(false);
         invalidateSwipeFunctionality();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        hideOfflinePanel();
     }
 
     /**

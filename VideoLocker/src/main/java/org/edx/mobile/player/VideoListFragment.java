@@ -52,7 +52,6 @@ import java.util.Map;
 
 public class VideoListFragment extends MyVideosBaseFragment {
 
-    public static View offlineBar;
     private boolean isLandscape = false;
     private VideoBaseAdapter<SectionItemInterface> adapter;
     private ListView videoListView;
@@ -131,16 +130,9 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
             videoListView.setEmptyView(getView().findViewById(
                     R.id.empty_list_view));
-            offlineBar = (View) getView().findViewById(R.id.offline_bar);
 
             if (!(NetworkUtil.isConnected(getActivity()))) {
-                if (offlineBar != null)
-                    offlineBar.setVisibility(View.VISIBLE);
                 showDeletePanel(getView());
-            } else {
-                if (offlineBar != null) {
-                    offlineBar.setVisibility(View.GONE);
-                }
             }
 
             setAdaptertoVideoList();
@@ -570,10 +562,6 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void onOffline() {
         if (!isLandscape) {
-            if (offlineBar != null) {
-                offlineBar.setVisibility(View.VISIBLE);
-            }
-
             hideOpenInBrowserPanel();
             if (!myVideosFlag) {
                 addDataToOfflineAdapter();
@@ -595,9 +583,6 @@ public class VideoListFragment extends MyVideosBaseFragment {
 
     public void onOnline() {
         if (!isLandscape) {
-            if (offlineBar != null) {
-                offlineBar.setVisibility(View.GONE);
-            }
             if (!myVideosFlag) {
                 AppConstants.videoListDeleteMode = false;
                 addDataToOnlineAdapter();

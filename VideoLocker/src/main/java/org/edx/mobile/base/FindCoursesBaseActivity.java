@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.edx.mobile.R;
@@ -31,7 +30,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
-    private View offlineBar;
     private WebView webview;
     private boolean isWebViewLoaded;
     private ProgressBar progressWheel;
@@ -42,7 +40,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         super.onCreate(arg0);
 
         webview = (WebView) findViewById(R.id.webview);
-        offlineBar = findViewById(R.id.offline_bar);
         progressWheel = (ProgressBar) findViewById(R.id.loading_indicator);
 
         setupWebView();
@@ -97,8 +94,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     protected void onOnline() {
         if (!isWebViewLoaded) {
             super.onOnline();
-            offlineBar.setVisibility(View.GONE);
-            hideOfflineMessage();
         }
     }
 
@@ -107,35 +102,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         // If the WebView is not loaded, then show the offline mode message
         if (!isWebViewLoaded) {
             super.onOffline();
-            offlineBar.setVisibility(View.VISIBLE);
-            showOfflineMessage();
             hideLoadingProgress();
-        }
-    }
-
-    /**
-     * This function shows the offline mode message
-     */
-    private void showOfflineMessage() {
-        if (webview != null) {
-            webview.setVisibility(View.GONE);
-        }
-        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if (offlineModeTv != null) {
-            offlineModeTv.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * This function hides the offline mode message
-     */
-    private void hideOfflineMessage() {
-        if (webview != null) {
-            webview.setVisibility(View.VISIBLE);
-        }
-        TextView offlineModeTv = (TextView) findViewById(R.id.offline_mode_message);
-        if (offlineModeTv != null) {
-            offlineModeTv.setVisibility(View.GONE);
         }
     }
 
@@ -285,7 +252,6 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     @Override
     public void onPageLoadError() {
         isWebViewLoaded = false;
-        showOfflineMessage();
     }
 
     /**

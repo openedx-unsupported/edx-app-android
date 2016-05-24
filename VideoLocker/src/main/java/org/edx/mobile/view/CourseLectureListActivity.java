@@ -39,13 +39,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
 
 @ContentView(R.layout.activity_lecture_list)
 public class CourseLectureListActivity extends BaseFragmentActivity {
 
-    @InjectView(R.id.offline_bar)
-    View offlineBar;
     private LectureAdapter adapter;
     private DownloadSizeExceedDialog downloadFragment;
     private String openInBrowserUrl;
@@ -235,19 +232,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     @Override
     protected void onOffline() {
         super.onOffline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.VISIBLE);
-        }
         if (isActivityVisible) {
             finish();
-        }
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.GONE);
         }
     }
 

@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.interfaces.NetworkObserver;
@@ -26,8 +24,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
     public static String TAG = CourseAnnouncementsActivity.class.getCanonicalName();
 
-    private View offlineBar;
-
 
     Bundle bundle;
     String activityTitle;
@@ -37,7 +33,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
         bundle = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        offlineBar = findViewById(R.id.offline_bar);
 
         courseData = (EnrolledCoursesResponse) bundle
                 .getSerializable(Router.EXTRA_ENROLLMENT);
@@ -95,10 +90,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     @Override
     protected void onOffline() {
         super.onOffline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.VISIBLE);
-        }
-
         for (Fragment fragment : getSupportFragmentManager().getFragments()){
             if (fragment instanceof NetworkObserver){
                 ((NetworkObserver) fragment).onOffline();
@@ -115,10 +106,6 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     @Override
     protected void onOnline() {
         super.onOnline();
-        if (offlineBar != null) {
-            offlineBar.setVisibility(View.GONE);
-        }
-
         for (Fragment fragment : getSupportFragmentManager().getFragments()){
             if (fragment instanceof NetworkObserver){
                 ((NetworkObserver) fragment).onOnline();

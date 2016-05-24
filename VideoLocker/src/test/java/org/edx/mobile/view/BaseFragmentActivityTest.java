@@ -5,45 +5,39 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.AnimRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.view.common.BannerType;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowView;
 import org.robolectric.util.ActivityController;
 import org.robolectric.util.Scheduler;
 
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNotNull;
-import static org.junit.Assume.assumeThat;
 import static org.junit.Assume.assumeTrue;
 
 // TODO: Test network connectivity change events too, after we manage to mock them
@@ -86,35 +80,6 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      */
     protected boolean appliesPrevTransitionOnRestart() {
         return false;
-    }
-
-    /**
-     * Testing window content overlay hack for API level 18
-     */
-    @Test
-    @Config(sdk = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public void updateActionBarShadowTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).create().get();
-
-        // Get the content view
-        View contentView = activity.findViewById(android.R.id.content);
-
-        // Make sure it's a valid instance of a FrameLayout
-        assumeThat(contentView, instanceOf(FrameLayout.class));
-        TypedValue tv = new TypedValue();
-
-        // Get the windowContentOverlay value of the current theme
-        assumeTrue(activity.getTheme().resolveAttribute(
-                android.R.attr.windowContentOverlay, tv, true));
-
-        // If it's a valid resource, confirm that is has been set as
-        // the foreground drawable for the content view
-        assumeTrue(tv.resourceId != 0);
-        Drawable contentForeground = ((FrameLayout) contentView).getForeground();
-        assertEquals(tv.resourceId, Shadows.shadowOf(
-                contentForeground).getCreatedFromResId());
     }
 
     /**
@@ -203,14 +168,7 @@ public abstract class BaseFragmentActivityTest extends UiTest {
      */
     @Test
     public void initializeOptionsMenuTest() {
-        BaseFragmentActivity activity =
-                Robolectric.buildActivity(getActivityClass())
-                        .withIntent(getIntent()).setup().get();
-        Menu menu = Shadows.shadowOf(activity).getOptionsMenu();
-        assertNotNull(menu);
-        MenuItem offlineItem = menu.findItem(R.id.offline);
-        assertNotNull(offlineItem);
-        assertThat(offlineItem).hasTitle(activity.getText(R.string.offline_text));
+        // No default menu to test for now
     }
 
     /**
@@ -299,6 +257,40 @@ public abstract class BaseFragmentActivityTest extends UiTest {
         });
         activity.stopAnimation(view);
         assertThat(view).hasAnimation(null);
+    }
+
+    /**
+     * Testing show banner method
+     */
+    @Test
+    public void showBannerTest() {
+        final BaseFragmentActivity activity =
+                Robolectric.buildActivity(getActivityClass())
+                        .withIntent(getIntent()).setup().get();
+        final Window window = activity.getWindow();
+        final View banner = window.findViewById(R.id.banner);
+        assertNotNull(banner);
+        assertThat(banner).hasVisibility(View.GONE);
+        final TextView bannerTextView = (TextView) window.findViewById(R.id.banner_text);
+        assertNotNull(bannerTextView);
+        final TextView bannerExpanded = (TextView) window.findViewById(R.id.banner_expanded);
+        assertNotNull(bannerExpanded);
+        assertThat(bannerExpanded).hasVisibility(View.GONE);
+        for (final BannerType bannerType : BannerType.values()) {
+            activity.showBanner(bannerType);
+            assertThat(banner).isVisible();
+            assertThat(bannerTextView).hasText(bannerType.getShortMessageRes(activity));
+            assertThat(bannerExpanded).hasVisibility(View.GONE);
+            assertAnimateLayouts(bannerExpanded, new Runnable() {
+                @Override
+                public void run() {
+                    ShadowView.clickOn(banner);
+                    assertThat(bannerExpanded).hasText(bannerType.getLongMessageRes(activity));
+                    assertEquals(bannerType.getClickListener(),
+                            Shadows.shadowOf(bannerExpanded).getOnClickListener());
+                }
+            });
+        }
     }
 
     /**

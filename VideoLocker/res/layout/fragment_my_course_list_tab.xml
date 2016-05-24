@@ -1,13 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <View
-        android:id="@+id/offline_bar"
-        style="@style/offline_bar"
-        android:layout_alignParentTop="true"
-        android:visibility="visible" />
 
     <TextView
         android:id="@+id/no_course_tv"
@@ -17,8 +11,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/offline_bar">
+        android:layout_height="match_parent">
 
         <ListView
             tools:listitem="@layout/row_course_list"
@@ -34,16 +27,6 @@
 
     <include layout="@layout/loading_indicator" />
 
-    <LinearLayout
-        android:id="@+id/offline_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <include layout="@layout/panel_offline_mode" />
-    </LinearLayout>
-
-</RelativeLayout>
+</FrameLayout>
 
 

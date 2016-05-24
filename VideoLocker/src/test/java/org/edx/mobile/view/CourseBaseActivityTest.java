@@ -93,7 +93,6 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         CourseBaseActivity activity = controller.get();
 
         controller.create();
-        assertNotNull(activity.findViewById(R.id.offline_bar));
         assertNotNull(activity.findViewById(R.id.last_access_bar));
         DrawerLayout drawerLayout = (DrawerLayout)
                 activity.findViewById(R.id.drawer_layout);

@@ -19,6 +19,7 @@ import com.parse.ParseInstallation;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
+import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
@@ -126,6 +127,13 @@ public abstract class MainApplication extends MultiDexApplication {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+
+        /* Post a sticky network connectivity change event to the even bus, so
+         * that any entities that try to register for sticky events would
+         * always and consistently receive an immediate callback after the
+         * registration.
+         */
+        EventBus.getDefault().postSticky(new NetworkConnectivityChangeEvent());
     }
 
     /**

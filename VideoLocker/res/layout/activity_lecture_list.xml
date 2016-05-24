@@ -7,19 +7,6 @@
     android:splitMotionEvents="false">
 
     <LinearLayout
-        android:id="@+id/top_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical" >
-
-        <View
-            android:id="@+id/offline_bar"
-            style="@style/offline_bar"
-            android:visibility="invisible" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/open_in_browser_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,8 +21,7 @@
         style="@style/list_courses"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/open_in_browser_panel"
-        android:layout_below="@id/top_panel" />
+        android:layout_above="@id/open_in_browser_panel" />
 
     <TextView
         android:id="@+id/flying_message"
