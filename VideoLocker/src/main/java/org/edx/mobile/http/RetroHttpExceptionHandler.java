@@ -19,6 +19,12 @@ public class RetroHttpExceptionHandler implements ErrorHandler {
             String body = new String(((TypedByteArray) response.getBody()).getBytes());
             logger.warn("body = " + body);
             logger.warn("status and reason = " + response.getStatus() + ":" + response.getReason());
+            if (RetrofitError.Kind.HTTP == cause.getKind()) {
+                return new HttpResponseStatusException(cause, response.getStatus());
+            }
+        }
+        if (RetrofitError.Kind.NETWORK == cause.getKind()) {
+            return new HttpConnectivityException(cause);
         }
         return new RetroHttpException(cause);
     }
