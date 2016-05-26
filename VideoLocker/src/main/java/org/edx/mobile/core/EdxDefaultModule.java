@@ -27,7 +27,6 @@ import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.download.IDownloadManagerImpl;
 import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.module.notification.ParseNotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
@@ -71,17 +70,7 @@ public class EdxDefaultModule extends AbstractModule {
             bind(IApi.class).to(Api.class);
         }
 
-        if (config.isNotificationEnabled()) {
-            Config.ParseNotificationConfig parseNotificationConfig =
-                    config.getParseNotificationConfig();
-            if (parseNotificationConfig.isEnabled()) {
-                bind(NotificationDelegate.class).to(ParseNotificationDelegate.class);
-            } else {
-                bind(NotificationDelegate.class).to(DummyNotificationDelegate.class);
-            }
-        } else {
-            bind(NotificationDelegate.class).to(DummyNotificationDelegate.class);
-        }
+        bind(NotificationDelegate.class).to(DummyNotificationDelegate.class);
 
         bind(IEdxEnvironment.class).to(EdxEnvironment.class);
 
