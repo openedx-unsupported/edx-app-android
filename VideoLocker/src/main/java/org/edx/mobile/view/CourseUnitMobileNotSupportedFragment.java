@@ -20,7 +20,7 @@ public class CourseUnitMobileNotSupportedFragment extends CourseUnitFragment {
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitMobileNotSupportedFragment newInstance(CourseComponent unit) {
+    public static CourseUnitMobileNotSupportedFragment newInstance(CourseComponent unit) {
         CourseUnitMobileNotSupportedFragment f = new CourseUnitMobileNotSupportedFragment();
 
         // Supply num input as an argument.

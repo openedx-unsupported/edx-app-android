@@ -53,7 +53,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
             fragment.setTaskProcessCallback(this);
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+            bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
             bundle.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
             bundle.putString(Router.EXTRA_LAST_ACCESSED_ID
                     , getIntent().getStringExtra(Router.EXTRA_LAST_ACCESSED_ID));

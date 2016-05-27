@@ -4,12 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/edx_grayscale_neutral_x_light" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/discussion_post_refine_layout_height"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/edx_grayscale_neutral_white">
 
         <TextView
             android:id="@+id/discussion_posts_refine_text_view"
@@ -42,7 +43,7 @@
             tools:targetApi="17" />
 
     </LinearLayout>
-    
+
     <View style="@style/gray_separator" />
 
     <ListView
@@ -50,8 +51,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/edx_grayscale_neutral_x_light"
         tools:listitem="@layout/row_discussion_thread"/>
+
+    <TextView
+        android:id="@+id/center_message_box"
+        style="@style/content_unavailable_error_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:text="Error text comes here." />
 
     <include layout="@layout/create_new_item_layout" />
 

@@ -1,6 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -20,6 +19,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
@@ -28,29 +28,35 @@ import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.model.Page;
+import org.edx.mobile.task.GetSpecificCourseTopicsTask;
 import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
-import org.edx.mobile.view.common.MessageType;
-import org.edx.mobile.view.common.TaskProcessCallback;
+
+import java.io.Serializable;
+import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
+    public static final String ARG_DISCUSSION_HAS_TOPIC_NAME = "discussion_has_topic_name";
 
     @InjectView(R.id.discussion_posts_filter_spinner)
-    Spinner discussionPostsFilterSpinner;
+    private Spinner discussionPostsFilterSpinner;
 
     @InjectView(R.id.discussion_posts_sort_spinner)
-    Spinner discussionPostsSortSpinner;
+    private Spinner discussionPostsSortSpinner;
 
     @InjectView(R.id.create_new_item_text_view)
     private TextView createNewPostTextView;
 
     @InjectView(R.id.create_new_item_layout)
     private ViewGroup createNewPostLayout;
+
+    @InjectView(R.id.center_message_box)
+    private TextView centerMessageBox;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
@@ -59,6 +65,14 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
     private GetThreadListTask getThreadListTask;
+
+    /**
+     * Runnable for deferring the fetching of threads for a topic, until we
+     * have fetched the {@link #discussionTopic} object.
+     */
+    @Nullable
+    private Runnable populatePostListRunnable;
+
     private int nextPage = 1;
     private int mSelectedItem = -1;
 
@@ -68,10 +82,45 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         COURSE
     }
 
+    public static CourseDiscussionPostsThreadFragment newInstance(@NonNull String topicId,
+                                                                  @NonNull Serializable courseData,
+                                                                  boolean hasTopicName) {
+        CourseDiscussionPostsThreadFragment f = new CourseDiscussionPostsThreadFragment();
+        Bundle args = new Bundle();
+        args.putString(Router.EXTRA_DISCUSSION_TOPIC_ID, topicId);
+        args.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+        args.putBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME, hasTopicName);
+        f.setArguments(args);
+        return f;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        if (discussionTopic == null) {
+            // Either we are coming from a deep link or courseware's inline discussion
+            String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
+            GetSpecificCourseTopicsTask getTopicsTask = new GetSpecificCourseTopicsTask(getContext(),
+                    courseData.getCourse().getId(), Collections.singletonList(topicId)) {
+                @Override
+                protected void onSuccess(CourseTopics courseTopics) throws Exception {
+                    discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
+                    if (!getArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
+                        // We only need to set the title here when coming from a deep link
+                        getActivity().setTitle(discussionTopic.getName());
+                    }
+                    if (populatePostListRunnable != null) {
+                        populatePostListRunnable.run();
+                    }
+                }
+            };
+            getTopicsTask.setProgressCallback(null);
+            getTopicsTask.execute();
+        } else {
+            getActivity().setTitle(discussionTopic.getName());
+        }
     }
 
     @Nullable
@@ -242,18 +291,26 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             // move the ListView's scroll to that newly added post's position
             discussionPostsListView.setSelection(i);
             // In case this is the first addition, we need to hide the no-item-view
-            ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
+            setNoResultView(null);
         }
     }
 
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        populatePostList(callback);
+        if (discussionTopic == null) {
+            populatePostListRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    populatePostList(callback);
+                }
+            };
+        } else {
+            populatePostList(callback);
+        }
     }
 
     private void clearListAndLoadFirstPage() {
         nextPage = 1;
-        ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
         controller.reset();
     }
@@ -270,11 +327,11 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 ++nextPage;
                 callback.onPageLoaded(threadsPage);
                 if (discussionTopic.isAllType()) {
-                    checkNoResultView(EmptyQueryResultsFor.COURSE);
+                    setNoResultView(EmptyQueryResultsFor.COURSE);
                 } else if (discussionTopic.isFollowingType()) {
-                    checkNoResultView(EmptyQueryResultsFor.FOLLOWING);
+                    setNoResultView(EmptyQueryResultsFor.FOLLOWING);
                 } else {
-                    checkNoResultView(EmptyQueryResultsFor.CATEGORY);
+                    setNoResultView(EmptyQueryResultsFor.CATEGORY);
                 }
             }
 
@@ -293,35 +350,35 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         getThreadListTask.execute();
     }
 
-    private void checkNoResultView(EmptyQueryResultsFor query) {
-        Activity activity = getActivity();
-        if (activity instanceof TaskProcessCallback) {
-            if (discussionPostsAdapter.getCount() == 0) {
-                String resultsText = "";
-                boolean isAllPostsFilter = (postsFilter == DiscussionPostsFilter.ALL);
-                switch (query) {
-                    case FOLLOWING:
-                        if (!isAllPostsFilter) {
-                            resultsText = getString(R.string.forum_no_results_for_filtered_following);
-                        } else {
-                            resultsText = getString(R.string.forum_no_results_for_following);
-                        }
-                        break;
-                    case CATEGORY:
-                        resultsText = getString(R.string.forum_no_results_in_category);
-                        break;
-                    case COURSE:
-                        resultsText = getString(R.string.forum_no_results_for_all_posts);
-                        break;
-                }
-                if (!isAllPostsFilter) {
-                    resultsText += " " + getString(R.string.forum_no_results_with_filter);
-                }
-                ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
-            } else {
-                ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
+    private void setNoResultView(@Nullable EmptyQueryResultsFor query) {
+        if (discussionPostsAdapter.getCount() == 0) {
+            String resultsText = "";
+            boolean isAllPostsFilter = (postsFilter == DiscussionPostsFilter.ALL);
+            switch (query) {
+                case FOLLOWING:
+                    if (!isAllPostsFilter) {
+                        resultsText = getString(R.string.forum_no_results_for_filtered_following);
+                    } else {
+                        resultsText = getString(R.string.forum_no_results_for_following);
+                    }
+                    break;
+                case CATEGORY:
+                    resultsText = getString(R.string.forum_no_results_in_category);
+                    break;
+                case COURSE:
+                    resultsText = getString(R.string.forum_no_results_for_all_posts);
+                    break;
             }
+            if (!isAllPostsFilter) {
+                resultsText += " " + getString(R.string.forum_no_results_with_filter);
+            }
+
+            centerMessageBox.setText(resultsText);
+            centerMessageBox.setVisibility(View.VISIBLE);
+            discussionPostsListView.setVisibility(View.GONE);
+        } else {
+            centerMessageBox.setVisibility(View.GONE);
+            discussionPostsListView.setVisibility(View.VISIBLE);
         }
     }
-
 }

@@ -34,16 +34,15 @@ public class Router {
     public static final String EXTRA_BUNDLE = "bundle";
     public static final String EXTRA_COURSE_ID = "course_id";
     public static final String EXTRA_COURSE_DETAIL = "course_detail";
-    public static final String EXTRA_ENROLLMENT = "enrollment";
+    public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_COURSE_UNIT = "course_unit";
     public static final String EXTRA_COURSE_COMPONENT_ID = "course_component_id";
-    public static final String EXTRA_COURSE_DATA = "course_data";
     public static final String EXTRA_LAST_ACCESSED_ID = "last_accessed_id";
     public static final String EXTRA_SEARCH_QUERY = "search_query";
     public static final String EXTRA_DISCUSSION_TOPIC = "discussion_topic";
     public static final String EXTRA_DISCUSSION_THREAD = "discussion_thread";
     public static final String EXTRA_DISCUSSION_COMMENT = "discussion_comment";
-    public static final String EXTRA_DISCUSSION_TOPIC_OBJ = "discussion_topic_obj";
+    public static final String EXTRA_DISCUSSION_TOPIC_ID = "discussion_topic_id";
 
     @Inject
     Config config;
@@ -112,7 +111,7 @@ public class Router {
      */
     public void showCourseAnnouncement(Activity activity, EnrolledCoursesResponse model) {
         final Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, true);
         final Intent courseDetail = new Intent(activity, CourseAnnouncementsActivity.class);
         courseDetail.putExtra(EXTRA_BUNDLE, courseBundle);
@@ -158,7 +157,7 @@ public class Router {
     private Intent createCourseOutlineIntent(Activity activity, EnrolledCoursesResponse model,
                                              String courseComponentId, String lastAccessedId) {
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putString(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(activity, CourseOutlineActivity.class);
@@ -171,7 +170,7 @@ public class Router {
     public void showCourseUnitDetail(Fragment fragment, int requestCode, EnrolledCoursesResponse model,
                                      String courseComponentId) {
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putSerializable(EXTRA_COURSE_COMPONENT_ID, courseComponentId);
 
         Intent courseDetail = new Intent(fragment.getActivity(), CourseUnitNavigationActivity.class);
@@ -184,7 +183,7 @@ public class Router {
     public void showCourseDashboard(Activity activity, EnrolledCoursesResponse model,
                                     boolean announcements) {
         Bundle courseBundle = new Bundle();
-        courseBundle.putSerializable(EXTRA_ENROLLMENT, model);
+        courseBundle.putSerializable(EXTRA_COURSE_DATA, model);
         courseBundle.putBoolean(EXTRA_ANNOUNCEMENTS, announcements);
 
         Intent courseDashboard = new Intent(activity, CourseDashboardActivity.class);
@@ -241,9 +240,9 @@ public class Router {
         context.startActivity(discussionResponsesIntent);
     }
 
-    public void showCourseDiscussionAddResponse(Context context, DiscussionThread discussionTopic) {
+    public void showCourseDiscussionAddResponse(Context context, DiscussionThread discussionThread) {
         Intent addResponseIntent = new Intent(context, DiscussionAddResponseActivity.class);
-        addResponseIntent.putExtra(EXTRA_DISCUSSION_TOPIC_OBJ, discussionTopic);
+        addResponseIntent.putExtra(EXTRA_DISCUSSION_THREAD, discussionThread);
         addResponseIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(addResponseIntent);
     }
@@ -278,7 +277,7 @@ public class Router {
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
         Intent handoutIntent = new Intent(activity, CourseHandoutActivity.class);
-        handoutIntent.putExtra(EXTRA_ENROLLMENT, courseData);
+        handoutIntent.putExtra(EXTRA_COURSE_DATA, courseData);
         handoutIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(handoutIntent);
     }

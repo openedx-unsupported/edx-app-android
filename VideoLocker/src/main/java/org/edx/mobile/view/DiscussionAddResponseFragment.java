@@ -38,7 +38,7 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
     static public String TAG = DiscussionAddResponseFragment.class.getCanonicalName();
 
-    @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC_OBJ, optional = true)
+    @InjectExtra(value = Router.EXTRA_DISCUSSION_THREAD, optional = true)
     private DiscussionThread discussionThread;
 
     protected final Logger logger = new Logger(getClass().getName());

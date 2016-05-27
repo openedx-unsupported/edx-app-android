@@ -49,9 +49,6 @@ public class HttpBaseTestCase extends BaseTestCase {
     // before sending the response.
     protected boolean useArtificialDelay = false;
     protected ServiceManager serviceManager;
-    //there are third party extension to handle conditionally skip some test programmatically.
-    //but i think it is not a good idea to introduce more libs only for this purpose.
-    protected boolean shouldSkipTest = false;
 
     /**
      * Returns the base url used by the mock server
@@ -69,12 +66,6 @@ public class HttpBaseTestCase extends BaseTestCase {
         api = new Api(RuntimeEnvironment.application);
 
         super.setUp();
-
-        String oAuthClientId = config.getOAuthClientId();
-        String testAccount = config.getTestAccountConfig().getName();
-        shouldSkipTest = TextUtils.isEmpty(oAuthClientId) || TextUtils.isEmpty(testAccount);
-
-
     }
 
     @Override

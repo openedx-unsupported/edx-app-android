@@ -16,7 +16,6 @@ import org.edx.mobile.task.SetThreadReadTask;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
-import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 
@@ -25,14 +24,13 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
     @InjectView(R.id.discussion_posts_listview)
     ListView discussionPostsListView;
 
-    @InjectExtra(Router.EXTRA_COURSE_DATA)
-    EnrolledCoursesResponse courseData;
-
     @Inject
     DiscussionPostsAdapter discussionPostsAdapter;
 
     @Inject
     Router router;
+
+    EnrolledCoursesResponse courseData;
 
     InfiniteScrollUtils.InfiniteListController controller;
 
@@ -47,6 +45,12 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
      */
     public abstract void onItemClick(DiscussionThread thread, AdapterView<?> parent,
                                      View view, int position, long id);
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        courseData = (EnrolledCoursesResponse) getArguments().getSerializable(Router.EXTRA_COURSE_DATA);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

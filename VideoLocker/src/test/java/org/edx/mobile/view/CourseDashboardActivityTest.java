@@ -46,7 +46,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         }
         Intent intent = super.getIntent();
         Bundle extras = new Bundle();
-        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        extras.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         intent.putExtra(Router.EXTRA_BUNDLE, extras);
         return intent;
     }
@@ -67,7 +67,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         Intent intent = getIntent();
         Bundle data = intent.getBundleExtra(Router.EXTRA_BUNDLE);
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
-                data.getSerializable(Router.EXTRA_ENROLLMENT);
+                data.getSerializable(Router.EXTRA_COURSE_DATA);
         ActivityController<? extends CourseDashboardActivity> controller =
                 Robolectric.buildActivity(getActivityClass()).withIntent(intent);
         CourseDashboardActivity activity = controller.get();
@@ -113,7 +113,7 @@ public class CourseDashboardActivityTest extends BaseVideosDownloadStateActivity
         Intent newIntent = assertNextStartedActivity(activity, CourseOutlineActivity.class);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
-        assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(courseData, newData.getSerializable(Router.EXTRA_COURSE_DATA));
         // We don't seem to have one-to-one mapping between the course list and detail ids
         /*assertEquals(courseData.getCourse().getId(),
                 newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));*/

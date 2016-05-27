@@ -117,7 +117,7 @@ public class VideoListFragment extends BaseFragment {
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
-                        .getSerializableExtra(Router.EXTRA_ENROLLMENT);
+                        .getSerializableExtra(Router.EXTRA_COURSE_DATA);
             }
         }
 

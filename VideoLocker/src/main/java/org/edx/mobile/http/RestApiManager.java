@@ -388,7 +388,7 @@ public class RestApiManager implements IApi{
         String username = URLEncoder.encode(pref.getCurrentUserProfile().username, "UTF-8");
         String block_counts = URLEncoder.encode("video", "UTF-8");
         String requested_fields = URLEncoder.encode("graded,format,student_view_multi_device", "UTF-8");
-        String student_view_data = URLEncoder.encode("video", "UTF-8");
+        String student_view_data = URLEncoder.encode("video,discussion", "UTF-8");
 
         String response;
         if (!NetworkUtil.isConnected(context)){

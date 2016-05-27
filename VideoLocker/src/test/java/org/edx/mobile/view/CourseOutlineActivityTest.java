@@ -98,8 +98,8 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Bundle args = fragment.getArguments();
         assertNotNull(args);
         Bundle data = intent.getBundleExtra(Router.EXTRA_BUNDLE);
-        assertEquals(data.getSerializable(Router.EXTRA_ENROLLMENT),
-                args.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(data.getSerializable(Router.EXTRA_COURSE_DATA),
+                args.getSerializable(Router.EXTRA_COURSE_DATA));
         if (provideCourseId) {
             assertEquals(data.getString(Router.EXTRA_COURSE_COMPONENT_ID),
                     args.getString(Router.EXTRA_COURSE_COMPONENT_ID));
@@ -119,7 +119,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent intent = getIntent();
         Bundle extras = intent.getBundleExtra(Router.EXTRA_BUNDLE);
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
-                extras.getSerializable(Router.EXTRA_ENROLLMENT);
+                extras.getSerializable(Router.EXTRA_COURSE_DATA);
         assertNotNull(courseData);
         CourseComponent courseComponent;
         try {
@@ -160,7 +160,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent newIntent = assertNextStartedActivity(activity, CourseOutlineActivity.class);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
-        assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(courseData, newData.getSerializable(Router.EXTRA_COURSE_DATA));
         assertEquals(subsectionId, newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
 
         // Back stack reconstruction upon receiving a specific path
@@ -184,7 +184,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
             assertThat(newIntent).hasComponent(activity, CourseOutlineActivity.class);
             newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
             assertNotNull(newData);
-            assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+            assertEquals(courseData, newData.getSerializable(Router.EXTRA_COURSE_DATA));
             assertEquals(nextComp.getId(), newData.getString(Router.EXTRA_COURSE_COMPONENT_ID));
         }
     }
@@ -197,7 +197,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent intent = getIntent();
         Bundle extras = intent.getBundleExtra(Router.EXTRA_BUNDLE);
         EnrolledCoursesResponse courseData = (EnrolledCoursesResponse)
-                extras.getSerializable(Router.EXTRA_ENROLLMENT);
+                extras.getSerializable(Router.EXTRA_COURSE_DATA);
         assertNotNull(courseData);
         CourseComponent courseComponent;
         try {
@@ -243,7 +243,7 @@ public class CourseOutlineActivityTest extends CourseBaseActivityTest {
         Intent newIntent = assertNextStartedActivity(activity, CourseUnitNavigationActivity.class);
         Bundle newData = newIntent.getBundleExtra(Router.EXTRA_BUNDLE);
         assertNotNull(newData);
-        assertEquals(courseData, newData.getSerializable(Router.EXTRA_ENROLLMENT));
+        assertEquals(courseData, newData.getSerializable(Router.EXTRA_COURSE_DATA));
         assertEquals(courseUnit.getId(), newData.getSerializable(
                 Router.EXTRA_COURSE_COMPONENT_ID));
 
