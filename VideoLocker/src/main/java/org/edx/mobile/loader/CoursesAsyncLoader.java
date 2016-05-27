@@ -20,8 +20,7 @@ import roboguice.RoboGuice;
 
 public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
     private AsyncTaskResult<List<EnrolledCoursesResponse>> mData;
-    private Context context;
-
+    private final Context context;
     private Observer mObserver;
 
     @Inject
@@ -38,17 +37,28 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
+
         PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         ProfileModel profile = pref.getCurrentUserProfile();
+        List<EnrolledCoursesResponse> enrolledCoursesResponse = null;
+
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();
+
         try {
-            List<EnrolledCoursesResponse> enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username);
-            environment.getNotificationDelegate().syncWithServerForFailure();
-            environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
-            result.setResult(enrolledCoursesResponse);
+            if (profile != null) {
+                enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, false);
+                environment.getNotificationDelegate().syncWithServerForFailure();
+                if (enrolledCoursesResponse != null) {
+                    environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
+                }
+            }
+
         } catch (RetroHttpException exception) {
             result.setEx(exception);
         }
+
+        result.setResult(enrolledCoursesResponse);
+
         return result;
     }
 

@@ -12,14 +12,16 @@ import org.edx.mobile.base.MyVideosBaseFragment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.task.GetAllDownloadedVideosTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MyAllVideosFragment extends MyVideosBaseFragment {
     private MyAllVideoCourseAdapter myCoursesAdaptor;
     protected final Logger logger = new Logger(getClass().getName());
+    private GetAllDownloadedVideosTask getAllDownloadedVideosTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,6 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
                 Intent videoIntent = new Intent(getActivity(), VideoListActivity.class);
                 videoIntent.putExtra(Router.EXTRA_ENROLLMENT, model);
                 videoIntent.putExtra("FromMyVideos", true);
-                //videoIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(videoIntent);
             }
         };
@@ -70,22 +71,35 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
     @Override
     public void onStop() {
         super.onStop();
+        if (getAllDownloadedVideosTask != null) {
+            getAllDownloadedVideosTask.cancel(true);
+            getAllDownloadedVideosTask = null;
+        }
     }
-    
-    private void addMyAllVideosData(){
-        try{
-            if(myCoursesAdaptor!=null){
-                myCoursesAdaptor.clear();
-                ArrayList<EnrolledCoursesResponse> coursesList = environment.getStorage()
-                        .getDownloadedCoursesWithVideoCountAndSize();
-                for (EnrolledCoursesResponse m : coursesList) {
-                    if(m.isIs_active()){
-                        myCoursesAdaptor.add(m);
+
+    private void addMyAllVideosData() {
+        if (myCoursesAdaptor != null) {
+            myCoursesAdaptor.clear();
+
+            if (getAllDownloadedVideosTask != null) {
+                getAllDownloadedVideosTask.cancel(true);
+            } else {
+                getAllDownloadedVideosTask = new GetAllDownloadedVideosTask(getActivity()) {
+
+                    @Override
+                    protected void onSuccess(List<EnrolledCoursesResponse> enrolledCoursesResponses) throws Exception {
+                        super.onSuccess(enrolledCoursesResponses);
+                        if (enrolledCoursesResponses != null) {
+                            for (EnrolledCoursesResponse m : enrolledCoursesResponses) {
+                                if (m.isIs_active()) {
+                                    myCoursesAdaptor.add(m);
+                                }
+                            }
+                        }
                     }
-                }
+                };
             }
-        }catch(Exception e){
-            logger.error(e);
+            getAllDownloadedVideosTask.execute();
         }
     }
 }
