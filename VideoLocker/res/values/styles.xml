@@ -232,11 +232,6 @@
         <item name="android:background">@null</item>
     </style>
 
-    <style name="add_fab">
-        <item name="fab_colorNormal">@color/cyan_3</item>
-        <item name="fab_colorPressed">@color/cyan_5</item>
-    </style>
-
     <style name="custom_fb_btn">
         <item name="android:background">@drawable/custom_fb_button_selector</item>
         <item name="android:drawablePadding">2dp</item>
