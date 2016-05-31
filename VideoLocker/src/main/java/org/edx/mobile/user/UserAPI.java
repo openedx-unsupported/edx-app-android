@@ -11,15 +11,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.commons.io.IOUtils;
-import org.edx.mobile.event.AccountUpdatedEvent;
+import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.util.Config;
 
 import java.io.File;
@@ -56,12 +56,14 @@ public class UserAPI {
     }
 
     public Account getAccount(@NonNull String username) throws RetroHttpException {
-        return userService.getAccount(username);
+        final Account account = userService.getAccount(username);
+        EventBus.getDefault().post(new AccountDataLoadedEvent(account));
+        return account;
     }
 
     public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws RetroHttpException {
         final Account updatedAccount = userService.updateAccount(username, Collections.singletonMap(field, value));
-        EventBus.getDefault().post(new AccountUpdatedEvent(updatedAccount));
+        EventBus.getDefault().post(new AccountDataLoadedEvent(updatedAccount));
         return updatedAccount;
     }
 

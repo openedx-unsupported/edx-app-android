@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.edx.mobile.event.AccountUpdatedEvent;
+import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
@@ -81,7 +81,7 @@ public class UserProfileInteractor {
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(@NonNull AccountUpdatedEvent event) {
+    public void onEventMainThread(@NonNull AccountDataLoadedEvent event) {
         if (!event.getAccount().getUsername().equalsIgnoreCase(username)) {
             return;
         }
