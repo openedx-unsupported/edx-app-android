@@ -48,9 +48,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
             if (profile != null) {
                 enrolledCoursesResponse = api.getUserEnrolledCourses(profile.username, false);
                 environment.getNotificationDelegate().syncWithServerForFailure();
-                if (enrolledCoursesResponse != null) {
-                    environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
-                }
+                environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             }
 
         } catch (RetroHttpException exception) {

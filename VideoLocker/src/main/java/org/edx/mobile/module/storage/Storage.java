@@ -268,14 +268,10 @@ public class Storage implements IStorage {
     public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws RetroHttpException {
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
 
-        List<EnrolledCoursesResponse> enrolledCourses = null;
         String username = getUsername();
-        if (username != null) {
-            enrolledCourses = api.getUserEnrolledCourses(username, true);
-        }
 
-        if(enrolledCourses.size()>0){
-            for(EnrolledCoursesResponse enrolledCoursesResponse : enrolledCourses){
+        if (username != null) {
+            for(EnrolledCoursesResponse enrolledCoursesResponse : api.getUserEnrolledCourses(username, true)){
                 int videoCount = db.getDownloadedVideoCountByCourse(
                         enrolledCoursesResponse.getCourse().getId(),null);
                 if(videoCount>0){
@@ -306,14 +302,9 @@ public class Storage implements IStorage {
     public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws RetroHttpException {
         ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
-        ArrayList<EnrolledCoursesResponse> courseList = null;
         String username = getUsername();
         if (username != null) {
-            courseList = (ArrayList) api.getUserEnrolledCourses(username, true);
-        }
-
-        if (courseList != null && !courseList.isEmpty()) {
-            for (final EnrolledCoursesResponse course : courseList) {
+            for (final EnrolledCoursesResponse course : api.getUserEnrolledCourses(username, true)) {
                 // add all videos to the list for this course
                 List<VideoModel> videos = db.getSortedDownloadsByDownloadedDateForCourseId(
                         course.getCourse().getId(), null);
