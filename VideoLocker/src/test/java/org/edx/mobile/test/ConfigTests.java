@@ -228,35 +228,6 @@ public class ConfigTests extends BaseTestCase {
         assertTrue(config.getGoogleConfig().isEnabled());
     }
 
-
-    @Test
-    public void testParseNoConfig() {
-        JsonObject configBase = new JsonObject();
-        Config config = new Config(configBase);
-        assertFalse(config.getParseNotificationConfig().isEnabled());
-        assertNull(config.getParseNotificationConfig().getParseApplicationId());
-        assertNull(config.getParseNotificationConfig().getParseClientKey());
-    }
-
-    @Test
-    public void testParseConfig() {
-        String key = "fake-key";
-        String secret = "fake-secret";
-
-        JsonObject parseConfig = new JsonObject();
-        parseConfig.add(PARSE_ENABLED, new JsonPrimitive(true));
-        parseConfig.add(PARSE_APPLICATION_ID, new JsonPrimitive(key));
-        parseConfig.add(PARSE_CLIENT_KEY, new JsonPrimitive(secret));
-
-        JsonObject configBase = new JsonObject();
-        configBase.add(PARSE, parseConfig);
-
-        Config config = new Config(configBase);
-        assertTrue(config.getParseNotificationConfig().isEnabled());
-        assertEquals(key, config.getParseNotificationConfig().getParseApplicationId());
-        assertEquals(secret, config.getParseNotificationConfig().getParseClientKey());
-    }
-
     @Test
     public void testFabricNoConfig() {
         JsonObject configBase = new JsonObject();

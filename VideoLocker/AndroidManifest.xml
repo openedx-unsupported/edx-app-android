@@ -273,20 +273,6 @@
         <!--  https://www.parse.com/apps/quickstart#parse_push/android/existing  -->
         <service android:name="com.parse.PushService" />
         <!-- we have to add a level of indirection to avoid crash as parse maybe disabled by setting -->
-        <receiver android:name="org.edx.mobile.module.notification.EdxParseBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="org.edx.mobile.module.notification.EdxParsePushBroadcastReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.parse.push.intent.RECEIVE" />
-                <action android:name="com.parse.push.intent.DELETE" />
-                <action android:name="com.parse.push.intent.OPEN" />
-            </intent-filter>
-        </receiver>
         <receiver android:name="com.parse.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>

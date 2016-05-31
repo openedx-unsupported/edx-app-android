@@ -263,25 +263,6 @@ public class Config {
     }
 
     /**
-     * Parse Notification
-     */
-    public static class ParseNotificationConfig {
-        private @SerializedName("NOTIFICATIONS_ENABLED") boolean mEnabled;
-        private @SerializedName("APPLICATION_ID") String mParseApplicationId;
-        private @SerializedName("CLIENT_KEY") String mParseClientKey;
-
-        public boolean isEnabled() {
-            return mEnabled && !TextUtils.isEmpty(mParseClientKey);
-        }
-
-        public String getParseApplicationId() { return mParseApplicationId; }
-
-        public String getParseClientKey() {
-            return mParseClientKey;
-        }
-    }
-
-    /**
      * SegmentIO configuration.
      */
     public static class SegmentConfig {
@@ -513,18 +494,6 @@ public class Config {
         }
         else {
             return new NewRelicConfig();
-        }
-    }
-
-    public ParseNotificationConfig getParseNotificationConfig() {
-        JsonElement element = getObject(PARSE);
-        if(element != null) {
-            Gson gson = new Gson();
-            ParseNotificationConfig config = gson.fromJson(element, ParseNotificationConfig.class);
-            return config;
-        }
-        else {
-            return new ParseNotificationConfig();
         }
     }
 
