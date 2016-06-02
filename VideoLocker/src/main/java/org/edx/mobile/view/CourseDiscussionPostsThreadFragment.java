@@ -39,12 +39,14 @@ import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
+    @InjectView(R.id.spinners_container)
+    private ViewGroup spinnersContainerLayout;
 
     @InjectView(R.id.discussion_posts_filter_spinner)
-    Spinner discussionPostsFilterSpinner;
+    private Spinner discussionPostsFilterSpinner;
 
     @InjectView(R.id.discussion_posts_sort_spinner)
-    Spinner discussionPostsSortSpinner;
+    private Spinner discussionPostsSortSpinner;
 
     @InjectView(R.id.create_new_item_text_view)
     private TextView createNewPostTextView;
@@ -243,6 +245,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             discussionPostsListView.setSelection(i);
             // In case this is the first addition, we need to hide the no-item-view
             ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
+            // And show the filter and sort spinners
+            spinnersContainerLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -253,6 +257,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private void clearListAndLoadFirstPage() {
         nextPage = 1;
+        discussionPostsListView.setVisibility(View.INVISIBLE);
         ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
         discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
         controller.reset();
@@ -289,7 +294,9 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 nextPage = 1;
             }
         };
-        getThreadListTask.setProgressCallback(null);
+        if (nextPage > 1 || callback.isRefreshingSilently()) {
+            getThreadListTask.setProgressCallback(null);
+        }
         getThreadListTask.execute();
     }
 
@@ -320,6 +327,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                 ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
             } else {
                 ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
+                spinnersContainerLayout.setVisibility(View.VISIBLE);
+                discussionPostsListView.setVisibility(View.VISIBLE);
             }
         }
     }
