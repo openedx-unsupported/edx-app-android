@@ -19,10 +19,10 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HasDownloadEntry;
@@ -35,12 +35,11 @@ import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.adapters.CourseOutlineAdapter;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class CourseOutlineFragment extends MyVideosBaseFragment {
+public class CourseOutlineFragment extends BaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
     static public String TAG = CourseOutlineFragment.class.getCanonicalName();
@@ -50,12 +49,18 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
     private CourseOutlineAdapter adapter;
     private ListView listView;
     private TaskProcessCallback taskProcessCallback;
+    private EnrolledCoursesResponse courseData;
+    private String courseComponentId;
+
 
     @Inject
     CourseManager courseManager;
 
     @Inject
     VideoDownloadHelper downloadManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -194,18 +199,22 @@ public class CourseOutlineFragment extends MyVideosBaseFragment {
         }
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        ArrayList<SectionEntry> saveEntries = new ArrayList<SectionEntry>();
-        if(adapter!=null){
-            //FIXME - we need to save data into the outState
+    private void restore(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
+            courseComponentId = (String) savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if ( courseData != null)
+            outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        if ( courseComponentId != null )
+            outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
+    }
+
     public void reloadList(){
         if ( adapter != null ){
             adapter.reloadData();
