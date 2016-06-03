@@ -91,6 +91,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                         ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
                     } else {
                         ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
+                        discussionPostsListView.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -106,7 +107,9 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                 nextPage = 1;
             }
         };
-        searchThreadListTask.setProgressCallback(null);
+        if (nextPage > 1 || callback.isRefreshingSilently()) {
+            searchThreadListTask.setProgressCallback(null);
+        }
         searchThreadListTask.execute();
 
     }

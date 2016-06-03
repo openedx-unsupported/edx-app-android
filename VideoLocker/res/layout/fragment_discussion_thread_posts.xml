@@ -7,9 +7,12 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/spinners_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/discussion_post_refine_layout_height"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/discussion_posts_refine_text_view"
@@ -42,7 +45,7 @@
             tools:targetApi="17" />
 
     </LinearLayout>
-    
+
     <View style="@style/gray_separator" />
 
     <ListView
@@ -51,7 +54,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/edx_grayscale_neutral_x_light"
-        tools:listitem="@layout/row_discussion_thread"/>
+        android:visibility="invisible"
+        tools:listitem="@layout/row_discussion_thread"
+        tools:visibility="visible" />
 
     <include layout="@layout/create_new_item_layout" />
 
