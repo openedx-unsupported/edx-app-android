@@ -5,8 +5,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +18,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
-import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
@@ -48,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPlayerEventCallback {
+public class MyRecentVideosFragment extends BaseFragment implements IPlayerEventCallback {
 
     private MyRecentVideoAdapter adapter;
     private ListView videoListView;
@@ -62,6 +63,9 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
     private CompoundButton.OnCheckedChangeListener deleteCheckBoxChangeListener;
     private final Logger logger = new Logger(getClass().getName());
     private GetRecentDownloadedVideosTask getRecentDownloadedVideosTask;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -637,14 +641,6 @@ public class MyRecentVideosFragment extends MyVideosBaseFragment implements IPla
             return new PreviousClickListener();
         }
         return null;
-    }
-
-    @Override
-    public void reloadList() {
-        if (getView() != null) {
-            addToRecentAdapter(getView());
-            notifyAdapter();
-        }
     }
 
     private class NextClickListener implements OnClickListener{

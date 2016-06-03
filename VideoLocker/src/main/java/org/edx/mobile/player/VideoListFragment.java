@@ -18,7 +18,8 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -50,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VideoListFragment extends MyVideosBaseFragment {
+public class VideoListFragment extends BaseFragment {
 
     public static View offlineBar;
     private boolean isLandscape = false;
@@ -69,8 +70,12 @@ public class VideoListFragment extends MyVideosBaseFragment {
     private DownloadEntry videoModel;
     private boolean downloadAvailable = false;
     private Button deleteButton;
+
     @Inject
     TranscriptManager transcriptManager;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     private final Logger logger = new Logger(getClass().getName());
 
@@ -1269,13 +1274,6 @@ public class VideoListFragment extends MyVideosBaseFragment {
         @Override
         public void onClick(View v) {
             playPrevious();
-        }
-    }
-
-    @Override
-    public void reloadList() {
-        if(myVideosFlag){
-            addDataToMyVideoAdapter();
         }
     }
 
