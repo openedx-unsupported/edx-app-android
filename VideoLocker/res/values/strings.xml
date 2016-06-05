@@ -409,8 +409,6 @@
     <string name="my_all_videos">All Videos</string>
     <!-- Title of recent videos section -->
     <string name="my_recent_videos">Recent Videos</string>
-    <!-- Label indicating user has no Internet connection -->
-    <string name="offline_text">Offline Mode</string>
     <!-- Label shown in videos section when user has no videos downloaded -->
     <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
 
@@ -460,6 +458,20 @@
     <string name="allow">Allow</string>
     <!-- Toggle to disallow downloads using cellular data -->
     <string name="do_not_allow">Don’t allow</string>
+
+    <!-- Banners for offline mode and upgrade prompts -->
+    <!-- Header for the offline mode banner -->
+    <string name="banner_offline_header">Offline</string>
+    <!-- Content of the offline mode banner -->
+    <string name="banner_offline_content">@string/reset_no_network_message</string>
+    <!-- Header for the unsupported version banner -->
+    <string name="banner_unsupported_header">Upgrade</string>
+    <!-- Content of the unsupported version banner -->
+    <string name="banner_unsupported_content">Your version of the {platform_name} app is no longer supported. Upgrade to the latest version.</string>
+    <!-- Content of the deprecated version banner -->
+    <string name="banner_deprecated_content">Your version of the {platform_name} app is no longer supported. Upgrade to the latest version by {last_supported_date} to continue accessing course content online.</string>
+    <!-- Content for new version available banner -->
+    <string name="banner_new_version_content">A new version of the {platform_name} app is available. Upgrade to the latest version.</string>
 
     <!-- Player Settings -->
     <!-- Label for closed captions in video player -->
@@ -513,8 +525,6 @@
     <string name="open_destination_btn_text">Open {platform_destination} in my browser</string>
     <!-- Title of find course screen -->
     <string name="find_courses_title">Find Courses</string>
-    <!-- Message shown when attempting to find courses with no Internet connection -->
-    <string name="find_courses_offline_text">You are in offline mode.\nTo find courses, connect to the Internet.</string>
     <!-- Prompt allowing user to choose email program -->
     <string name="email_chooser_header">Send email using...</string>
     <!-- Error shown when user attempts to send email, but has no email app -->
@@ -566,8 +576,6 @@
     <!-- Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app -->
     <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
-    <!-- Message shown when user tries to view course handouts, but none are loaded and the user is offline -->
-    <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the Internet.</string>
     <string name="android">Android</string>
 
     <!--  Email subject line when user attempts to submit feedback about the app -->

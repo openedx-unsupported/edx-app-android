@@ -2,9 +2,14 @@ package org.edx.mobile.view;
 
 import android.os.Bundle;
 
-import org.edx.mobile.base.BaseFragmentActivity;
+import com.google.inject.Inject;
 
-public class SplashActivity extends BaseFragmentActivity {
+import org.edx.mobile.base.BaseAppActivity;
+import org.edx.mobile.core.IEdxEnvironment;
+
+public class SplashActivity extends BaseAppActivity {
+    @Inject
+    private IEdxEnvironment environment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

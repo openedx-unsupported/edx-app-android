@@ -19,7 +19,7 @@
             android:paddingBottom="@dimen/widget_margin"
             android:paddingLeft="@dimen/edx_margin"
             android:paddingRight="@dimen/edx_margin"
-            android:paddingTop="@dimen/widget_double_margin">
+            android:paddingTop="@dimen/widget_margin_double">
 
             <include layout="@layout/discussion_endorsed_text_view" />
 

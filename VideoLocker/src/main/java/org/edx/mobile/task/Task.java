@@ -14,6 +14,7 @@ import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.images.ErrorUtils;
+import org.edx.mobile.view.common.BannerDisplayCallback;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskMessageCallback;
 import org.edx.mobile.view.common.TaskProcessCallback;
@@ -32,6 +33,8 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     private WeakReference<TaskProgressCallback> progressCallback;
     @Nullable
     private WeakReference<TaskMessageCallback> messageCallback;
+    @Nullable
+    private WeakReference<BannerDisplayCallback> bannerDisplayCallback;
 
     protected final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
@@ -54,6 +57,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     public void setTaskProcessCallback(@Nullable TaskProcessCallback callback) {
         setProgressCallback(callback);
         setMessageCallback(callback);
+        setBannerDisplayCallback(callback);
     }
 
     public void setProgressCallback(@Nullable TaskProgressCallback callback) {
@@ -64,6 +68,10 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         messageCallback = callback == null ? null : new WeakReference<>(callback);
     }
 
+    public void setBannerDisplayCallback(@Nullable BannerDisplayCallback callback) {
+        bannerDisplayCallback = callback == null ? null : new WeakReference<>(callback);
+    }
+
     @Nullable
     private TaskProgressCallback getProgressCallback() {
         return progressCallback == null ? null : progressCallback.get();
@@ -72,6 +80,11 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     @Nullable
     private TaskMessageCallback getMessageCallback() {
         return messageCallback == null ? null : messageCallback.get();
+    }
+
+    @Nullable
+    private BannerDisplayCallback getBannerDisplayCallback() {
+        return bannerDisplayCallback == null ? null : bannerDisplayCallback.get();
     }
 
     @Override
@@ -102,11 +115,7 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
 
     @Override
     protected void onException(Exception ex) {
-        final TaskMessageCallback callback = getMessageCallback();
-        if (callback == null) {
-            return;
-        }
-
-        callback.onMessage(MessageType.FLYIN_ERROR, ErrorUtils.getErrorMessage(ex, context));
+        ErrorUtils.displayErrorMessage(ex, context,
+                getMessageCallback(), getBannerDisplayCallback());
     }
 }

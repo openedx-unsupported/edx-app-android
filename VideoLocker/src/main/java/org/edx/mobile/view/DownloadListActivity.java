@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.ListView;
 
 import org.edx.mobile.R;
@@ -29,9 +28,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
     @Nullable
     private DownloadEntryAdapter adapter;
 
-    @Nullable
-    private View offlineBar;
-
     @NonNull
     private final Handler handler = new Handler();
 
@@ -44,8 +40,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_downloads_list);
 
         environment.getSegment().trackScreenView(ISegment.Screens.DOWNLOADS);
-
-        offlineBar = findViewById(R.id.offline_bar);
 
         adapter = new DownloadEntryAdapter(this, environment) {
             @Override
@@ -101,20 +95,6 @@ public class DownloadListActivity extends BaseFragmentActivity {
         super.onPause();
         observable.setObserver(null);
         handler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    protected void onOffline() {
-        super.onOffline();
-        assert offlineBar != null;
-        offlineBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        assert offlineBar != null;
-        offlineBar.setVisibility(View.GONE);
     }
 
     private void fetchOngoingDownloads() {
