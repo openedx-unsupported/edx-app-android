@@ -40,7 +40,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
         offlineBar = findViewById(R.id.offline_bar);
 
         courseData = (EnrolledCoursesResponse) bundle
-                .getSerializable(Router.EXTRA_ENROLLMENT);
+                .getSerializable(Router.EXTRA_COURSE_DATA);
 
         //check courseData again, it may be fetched from local cache
         if ( courseData != null ) {
@@ -73,7 +73,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
                     bundle.remove(Router.EXTRA_COURSE_ID);
                     courseData = api.getCourseById(courseId);
                     if (courseData != null && courseData.getCourse() != null ) {
-                        bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+                        bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
                         activityTitle = courseData.getCourse().getName();
                         return true;
                     }
@@ -109,7 +109,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class CourseAnnouncementsActivity extends BaseFragmentActivity {
 
                 if (courseData != null) {
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+                    bundle.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
                     fragment.setArguments(bundle);
 
                 }

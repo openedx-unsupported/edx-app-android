@@ -20,7 +20,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
 
         Bundle data = savedInstanceState != null ? savedInstanceState :
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
-        courseData = (EnrolledCoursesResponse) data.getSerializable(Router.EXTRA_ENROLLMENT);
+        courseData = (EnrolledCoursesResponse) data.getSerializable(Router.EXTRA_COURSE_DATA);
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
@@ -61,6 +61,6 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
     }
 }

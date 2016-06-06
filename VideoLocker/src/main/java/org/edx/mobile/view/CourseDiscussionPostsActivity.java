@@ -21,7 +21,7 @@ import java.util.Map;
 
 import roboguice.inject.InjectExtra;
 
-public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
+public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
 
     @Inject
     private CourseDiscussionPostsThreadFragment courseDiscussionPostsThreadFragment;
@@ -74,6 +74,16 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
         } else {
             fragment = courseDiscussionPostsThreadFragment;
         }
+
+        // TODO: Move argument setting logic to base class
+        // Currently RoboGuice doesn't allowing injecting arguments of a Fragment
+        if (fragment.getArguments() == null) {
+            Bundle args = new Bundle();
+            args.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
+            args.putBoolean(CourseDiscussionPostsThreadFragment.ARG_DISCUSSION_HAS_TOPIC_NAME,
+                    discussionTopic != null);
+            fragment.setArguments(args);
+        }
         fragment.setRetainInstance(true);
 
         return fragment;
@@ -99,8 +109,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
                 ImageSpan iSpan = new ImageSpan(starIcon, ImageSpan.ALIGN_BASELINE);
                 title.setSpan(iSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 setTitle(title);
-            }
-            else {
+            } else {
                 setTitle(discussionTopic.getName());
             }
         }
@@ -109,6 +118,6 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity  {
     @Override
     protected void onRestart() {
         super.onRestart();
-        ((CourseDiscussionPostsBaseFragment)getFirstFragment()).onRestart();
+        ((CourseDiscussionPostsBaseFragment) getFirstFragment()).onRestart();
     }
 }

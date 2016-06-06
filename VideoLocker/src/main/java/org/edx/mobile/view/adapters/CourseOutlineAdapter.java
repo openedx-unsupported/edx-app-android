@@ -20,6 +20,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
@@ -232,13 +233,16 @@ public class CourseOutlineAdapter extends BaseAdapter {
         viewHolder.rowTitle.setText(unit.getDisplayName());
 
         if (row.component instanceof VideoBlockModel) {
-            final DownloadEntry videoData = ((VideoBlockModel)row.component).getDownloadEntry(storage);
+            final DownloadEntry videoData = ((VideoBlockModel) row.component).getDownloadEntry(storage);
             if (null != videoData) {
                 updateUIForVideo(viewHolder, videoData);
                 return;
             }
         }
-        if (!unit.isMultiDevice()) {
+        if (row.component instanceof DiscussionBlockModel) {
+            viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
+            checkAccessStatus(viewHolder, unit);
+        } else if (!unit.isMultiDevice()) {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
@@ -247,8 +251,6 @@ public class CourseOutlineAdapter extends BaseAdapter {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             if (unit.getType() == BlockType.PROBLEM) {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_list);
-            } else if (unit.getType() == BlockType.DISCUSSION) {
-                viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
             } else {
                 viewHolder.rowType.setIcon(FontAwesomeIcons.fa_file_o);
             }

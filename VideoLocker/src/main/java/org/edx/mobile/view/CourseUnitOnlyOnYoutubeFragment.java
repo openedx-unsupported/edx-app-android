@@ -15,7 +15,7 @@ import org.edx.mobile.services.ViewPagerDownloadManager;
 
 public class CourseUnitOnlyOnYoutubeFragment extends CourseUnitFragment {
 
-    static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit) {
+    public static CourseUnitOnlyOnYoutubeFragment newInstance(CourseComponent unit) {
         CourseUnitOnlyOnYoutubeFragment fragment = new CourseUnitOnlyOnYoutubeFragment();
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);

@@ -37,4 +37,21 @@ public class EncodedVideos implements Serializable {
             return youtube;
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EncodedVideos that = (EncodedVideos) o;
+
+        if (fallback != null ? !fallback.equals(that.fallback) : that.fallback != null)
+            return false;
+        if (mobileHigh != null ? !mobileHigh.equals(that.mobileHigh) : that.mobileHigh != null)
+            return false;
+        if (mobileLow != null ? !mobileLow.equals(that.mobileLow) : that.mobileLow != null)
+            return false;
+        return youtube != null ? youtube.equals(that.youtube) : that.youtube == null;
+
+    }
 }

@@ -85,7 +85,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitVideoFragment newInstance(VideoBlockModel unit) {
+    public static CourseUnitVideoFragment newInstance(VideoBlockModel unit) {
         CourseUnitVideoFragment f = new CourseUnitVideoFragment();
 
         // Supply num input as an argument.
@@ -144,7 +144,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
-                    .getSerializableExtra(Router.EXTRA_ENROLLMENT);
+                    .getSerializableExtra(Router.EXTRA_COURSE_DATA);
             }
         }
 

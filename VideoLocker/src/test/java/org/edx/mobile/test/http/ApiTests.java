@@ -1,5 +1,7 @@
 package org.edx.mobile.test.http;
 
+import com.google.gson.Gson;
+
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
@@ -12,13 +14,20 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.BlockPath;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
+import org.edx.mobile.model.course.DiscussionBlockModel;
+import org.edx.mobile.model.course.DiscussionData;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.model.course.VideoData;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
+import org.edx.mobile.test.util.MockDataUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -32,21 +41,14 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
 
 /**
  * This class contains unit tests for API calls to server.
  * <p/>
- * We don't really want to have unit tests that talk to a live server and we can't run
- * them on CI since we don't even know what server to talk to.
- * As such, these are disabled until we figure out what we want to do about them.
- * Probably we want to mock the HTTP responses so we can still exercise the rest of the
- * API logic.
- *
- * If you want to run them locally, you can just temporarily remove the @Ignore annotation
+ * Note: We aren't actually calling a live server for responses
+ * as we already have a mock server implemented.
  */
 
-@Ignore
 public class ApiTests extends HttpBaseTestCase {
 
 
@@ -55,10 +57,10 @@ public class ApiTests extends HttpBaseTestCase {
         super.setUp();
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testSyncLastSubsection() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
@@ -82,10 +84,10 @@ public class ApiTests extends HttpBaseTestCase {
         print("sync returned: " + model.last_visited_module_id);
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testGetLastAccessedModule() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         EnrolledCoursesResponse e = api.getEnrolledCourses().get(0);
@@ -102,8 +104,6 @@ public class ApiTests extends HttpBaseTestCase {
 
     @Test
     public void testResetPassword() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         print("test: reset password");
         ResetPasswordResponse model = api.resetPassword("user@edx.org");
         assertTrue(model != null);
@@ -111,10 +111,10 @@ public class ApiTests extends HttpBaseTestCase {
         print("test: finished: reset password");
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testHandouts() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         // get a course id for this test
@@ -130,8 +130,6 @@ public class ApiTests extends HttpBaseTestCase {
 
     @Test
     public void testChannelId() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         // get a course id for this test
@@ -143,9 +141,10 @@ public class ApiTests extends HttpBaseTestCase {
         assertTrue(subscription_id != null);
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testCourseStructure() throws Exception {
-        assumeFalse(shouldSkipTest);
         login();
 
         // get a course id for this test
@@ -169,14 +168,13 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     @Override
     public void login() throws Exception {
-        assumeFalse(shouldSkipTest);
         super.login();
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testGetAnnouncement() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         // get a course id for this test
@@ -194,8 +192,6 @@ public class ApiTests extends HttpBaseTestCase {
 
     @Test
     public void testReadRegistrationDescription() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         RegistrationDescription form = api.getRegistrationDescription();
 
         assertNotNull(form);
@@ -208,10 +204,10 @@ public class ApiTests extends HttpBaseTestCase {
         assertNotNull(form.getFields().get(0).getFieldType());
     }
 
+    // TODO: Debug and fix test failure
+    @Ignore
     @Test
     public void testEnrollInACourse() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         print("test: Enroll in a course");
@@ -226,8 +222,6 @@ public class ApiTests extends HttpBaseTestCase {
 
     @Test
     public void testGetCourseStructure() throws Exception {
-        assumeFalse(shouldSkipTest);
-
         login();
 
         // General overall testing of CourseComponent API without recursion
@@ -295,9 +289,9 @@ public class ApiTests extends HttpBaseTestCase {
         for (HasDownloadEntry video : videos) {
             assertNotNull(video);
             assertTrue(video instanceof CourseComponent);
-            CourseComponent videoComponenet = (CourseComponent) video;
-            assertFalse(videoComponenet.isContainer());
-            assertEquals(BlockType.VIDEO, videoComponenet.getType());
+            CourseComponent videoComponent = (CourseComponent) video;
+            assertFalse(videoComponent.isContainer());
+            assertEquals(BlockType.VIDEO, videoComponent.getType());
         }
 
         for (BlockType type : BlockType.values()) {
@@ -306,12 +300,12 @@ public class ApiTests extends HttpBaseTestCase {
             courseComponent.fetchAllLeafComponents(typeComponents, typeSet);
             for (CourseComponent typeComponent : typeComponents) {
                 assertEquals(type, typeComponent.getType());
+                verifyModelParsing(typeComponent);
             }
 
             if (type != blockType) {
                 assertNotSame(courseComponent,
                         courseComponent.getAncestor(EnumSet.of(type)));
-                break;
             }
         }
 
@@ -333,6 +327,54 @@ public class ApiTests extends HttpBaseTestCase {
                 component = component.getParent();
             }
         }
+
+
     }
 
+    /**
+     * Verifies the parsing of course structure json to {@link CourseComponent} model class.
+     *
+     * @param component Parsed {@link CourseComponent} model.
+     */
+    private void verifyModelParsing(CourseComponent component) throws IOException, JSONException {
+        JSONObject jsonObj;
+        jsonObj = new JSONObject(MockDataUtil.getMockResponse("get_course_structure"));
+        jsonObj = jsonObj.getJSONObject("blocks");
+        jsonObj = jsonObj.getJSONObject(component.getId());
+        assertNotNull(jsonObj);
+        // Not using the getDisplayName function below, because it returns a placeholder text
+        // when the display_name field's value is empty.
+        assertEquals(jsonObj.getString("display_name"), component.getInternalName());
+        assertEquals(jsonObj.getBoolean("graded"), component.isGraded());
+        assertEquals(jsonObj.getString("student_view_url"), component.getBlockUrl());
+        assertEquals(jsonObj.getBoolean("student_view_multi_device"), component.isMultiDevice());
+        assertEquals(jsonObj.getString("lms_web_url"), component.getWebUrl());
+
+        // Type specific validations
+        Gson gson = new Gson();
+        switch (component.getType()) {
+            case VIDEO: {
+                JSONObject dataObj = jsonObj.getJSONObject("student_view_data");
+                // Our current parser checks the existence of these fields to determine the type to convert into
+                assertTrue(dataObj.has("encoded_videos") || dataObj.has("transcripts"));
+                String dataRawJson = dataObj.toString();
+                assertTrue(component instanceof VideoBlockModel);
+                VideoBlockModel model = (VideoBlockModel) component;
+                VideoData expected = gson.fromJson(dataRawJson, VideoData.class);
+                assertEquals(expected, model.getData());
+                break;
+            }
+            case DISCUSSION: {
+                JSONObject dataObj = jsonObj.getJSONObject("student_view_data");
+                // Our current parser checks the existence of these fields to determine the type to convert into
+                assertTrue(dataObj.has("topic_id"));
+                String dataRawJson = dataObj.toString();
+                assertTrue(component instanceof DiscussionBlockModel);
+                DiscussionBlockModel model = (DiscussionBlockModel) component;
+                DiscussionData expected = gson.fromJson(dataRawJson, DiscussionData.class);
+                assertEquals(expected, model.getData());
+                break;
+            }
+        }
+    }
 }

@@ -58,7 +58,7 @@ public abstract class CourseBaseActivityTest extends BaseFragmentActivityTest {
         }
         Intent intent = super.getIntent();
         Bundle extras = new Bundle();
-        extras.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        extras.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         if (provideCourseId) {
             CourseComponent courseComponent;
             try {

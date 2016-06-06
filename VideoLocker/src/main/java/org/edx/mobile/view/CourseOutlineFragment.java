@@ -100,7 +100,7 @@ public class CourseOutlineFragment extends BaseFragment {
         restore(savedInstanceState);
         final Bundle bundle = getArguments();
         if( courseData == null ) {
-            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
+            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             courseComponentId = bundle.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
         loadData(getView());
@@ -201,7 +201,7 @@ public class CourseOutlineFragment extends BaseFragment {
 
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
+            courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
             courseComponentId = (String) savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
         }
     }
@@ -210,7 +210,7 @@ public class CourseOutlineFragment extends BaseFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if ( courseData != null)
-            outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+            outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         if ( courseComponentId != null )
             outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
     }

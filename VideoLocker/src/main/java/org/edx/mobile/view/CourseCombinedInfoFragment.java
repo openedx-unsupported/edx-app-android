@@ -87,7 +87,7 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment {
 
         try {
             final Bundle bundle = getArguments();
-            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_ENROLLMENT);
+            courseData = (EnrolledCoursesResponse) bundle.getSerializable(Router.EXTRA_COURSE_DATA);
             FacebookProvider fbProvider = new FacebookProvider();
 
             if (courseData != null) {

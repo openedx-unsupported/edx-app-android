@@ -80,6 +80,12 @@ public interface DiscussionService {
     CourseTopics getCourseTopics(@Path("course_id") String courseId) throws RetroHttpException;
 
 
+    @GET("/api/discussion/v1/course_topics/{course_id}")
+    CourseTopics getSpecificCourseTopics(@Path("course_id") String courseId,
+                                         @Query("topic_id") List<String> topicIds)
+            throws RetroHttpException;
+
+
     @GET("/api/discussion/v1/threads/")
     Page<DiscussionThread> getThreadList(@Query("course_id") String courseId,
                                          @Query("topic_id") List<String> topicIds,

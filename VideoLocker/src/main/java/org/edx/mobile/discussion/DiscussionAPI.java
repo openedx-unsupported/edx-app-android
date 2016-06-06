@@ -85,6 +85,11 @@ public class DiscussionAPI {
         return discussionService.getCourseTopics(courseId);
     }
 
+    public CourseTopics getSpecificCourseTopics(String courseId, List<String> topicIds)
+            throws RetroHttpException {
+        return discussionService.getSpecificCourseTopics(courseId, topicIds);
+    }
+
     public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
                                                 String filter, String orderBy, int page)
             throws RetroHttpException {

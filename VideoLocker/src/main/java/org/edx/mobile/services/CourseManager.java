@@ -17,6 +17,8 @@ import org.edx.mobile.model.course.BlockModel;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.model.course.DiscussionBlockModel;
+import org.edx.mobile.model.course.DiscussionData;
 import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.IBlock;
@@ -90,17 +92,18 @@ public class CourseManager {
 
     private static void normalizeCourseStructure(CourseStructureV1Model courseStructureV1Model,
                                                 BlockModel block,
-                                                CourseComponent parent){
+                                                CourseComponent parent) {
 
-        if ( block.isContainer() ){
+        if (block.isContainer()) {
             CourseComponent child = new CourseComponent(block, parent);
             for (BlockModel m : courseStructureV1Model.getDescendants(block)) {
                 normalizeCourseStructure(courseStructureV1Model, m, child);
             }
         } else {
-            if ( BlockType.VIDEO == block.type && block.data != null
-                && (block.data  instanceof VideoData) ){
+            if (BlockType.VIDEO == block.type && block.data instanceof VideoData) {
                 new VideoBlockModel(block, parent);
+            } else if (BlockType.DISCUSSION == block.type && block.data instanceof DiscussionData) {
+                new DiscussionBlockModel(block, parent);
             } else { //everything else.. we fallback to html component
                 new HtmlBlockModel(block, parent);
             }
