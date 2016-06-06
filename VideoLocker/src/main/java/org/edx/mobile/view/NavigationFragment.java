@@ -46,6 +46,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
+import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -62,7 +63,6 @@ public class NavigationFragment extends BaseFragment {
 
     private PrefManager pref;
     private final Logger logger = new Logger(getClass().getName());
-    private PrefManager socialPref;
     private NetworkCheckDialogFragment newFragment;
 
     private IUiLifecycleHelper uiLifecycleHelper;
@@ -89,7 +89,6 @@ public class NavigationFragment extends BaseFragment {
         uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), callback);
         uiLifecycleHelper.onCreate(savedInstanceState);
         Context context = getActivity().getBaseContext();
-        socialPref = new PrefManager(context, PrefManager.Pref.FEATURES);
         pref = new PrefManager(context, PrefManager.Pref.LOGIN);
         profile = pref.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
@@ -172,7 +171,7 @@ public class NavigationFragment extends BaseFragment {
                 Activity act = getActivity();
                 ((BaseFragmentActivity) act).closeDrawer();
 
-                if (!(act instanceof MyVideosTabActivity)) {
+                if (!(act instanceof MyVideosActivity)) {
                     environment.getRouter().showMyVideos(act);
                     //Finish need not be called if the current activity is MyCourseListing
                     // as on returning back from FindCourses,
@@ -312,10 +311,6 @@ public class NavigationFragment extends BaseFragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public static String getNavigationFragmentTag() {
-        return TAG;
     }
 
     private void updateWifiSwitch(View layout) {

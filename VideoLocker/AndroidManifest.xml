@@ -141,7 +141,7 @@
         </activity>
 
         <activity
-            android:name="org.edx.mobile.view.MyVideosTabActivity"
+            android:name=".view.my_videos.MyVideosActivity"
             android:label="@string/label_my_videos"
             android:screenOrientation="portrait"
             >
