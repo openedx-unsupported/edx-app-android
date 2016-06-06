@@ -57,6 +57,8 @@ public class InfiniteScrollUtils {
     }
 
     public static <T> InfiniteListController configureRecyclerViewWithInfiniteList(@NonNull final RecyclerView recyclerView, @NonNull final ListContentController<T> adapter, @NonNull final PageLoader<T> pageLoader) {
+        // Don't allow the progress spinner item positioning changes to be animated
+        recyclerView.setItemAnimator(null);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         final PageLoadController controller = new PageLoadController<>(adapter, pageLoader);
