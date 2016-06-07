@@ -1,5 +1,10 @@
 package org.edx.mobile.http;
 
+import android.support.annotation.NonNull;
+
+import org.edx.mobile.module.prefs.LoginPrefs;
+import org.edx.mobile.module.prefs.PrefManager;
+
 public class ApiConstants {
 
     public static final String URL_MY_USER_INFO ="/api/mobile/v0.5/my_user_info";
@@ -29,4 +34,19 @@ public class ApiConstants {
     public static final String GROUP_ID = "groupId";
 
     public static final int STANDARD_PAGE_SIZE = 20;
+
+    @NonNull
+    public static String getOAuthGroupIdForAuthBackend(@NonNull LoginPrefs.AuthBackend authBackend) {
+        switch (authBackend) {
+            case FACEBOOK: {
+                return PrefManager.Value.BACKEND_FACEBOOK;
+            }
+            case GOOGLE: {
+                return PrefManager.Value.BACKEND_GOOGLE;
+            }
+            default: {
+                throw new IllegalArgumentException(authBackend.name());
+            }
+        }
+    }
 }

@@ -2,6 +2,7 @@ package org.edx.mobile.http;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -31,8 +32,8 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
-import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
@@ -71,6 +72,9 @@ public class RestApiManager implements IApi{
 
     @Inject
     IEdxEnvironment environment;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     private final OkHttpClient oauthBasedClient;
     private final OauthRestApi oauthRestApi;
@@ -126,36 +130,16 @@ public class RestApiManager implements IApi{
 
     @Override
     public AuthResponse auth(String username, String password) throws Exception {
-
         AuthResponse response = restApi.doLogin("password", environment.getConfig().getOAuthClientId(), username, password);
-
-        // store auth token response
-        Gson gson = new GsonBuilder().create();
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(response));
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
-
+        loginPrefs.storeAuthTokenResponse(response, LoginPrefs.AuthBackend.PASSWORD);
         return response;
     }
 
     @Override
     public ProfileModel getProfile() throws Exception {
         ProfileModel res = oauthRestApi.getProfile();
-        Gson gson = new GsonBuilder().create();
-        if (res != null) {
-            res.json = gson.toJson(res);
-            // FIXME: store the profile only from one place, right now it happens from LoginTask also.
-            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-            pref.put(PrefManager.Key.PROFILE_JSON, res.json);
-
-        // store profile json
-            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-
-            //it is the routine for login
-            DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).setUserName( res.username );
-        }
-
+        loginPrefs.storeUserProfile(res);
+        DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).setUserName( res.username );
         return res;
     }
 
@@ -180,14 +164,12 @@ public class RestApiManager implements IApi{
 
     @Override
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-
         if (!NetworkUtil.isConnected(context)){
-            return oauthRestApi.getEnrolledCourses(pref.getCurrentUserProfile().username);
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername());
         } else if (fetchFromCache) {
-            return oauthRestApi.getEnrolledCourses(pref.getCurrentUserProfile().username);
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername());
         } else {
-            return oauthRestApi.getEnrolledCoursesNoCache(pref.getCurrentUserProfile().username);
+            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername());
         }
     }
 
@@ -251,57 +233,33 @@ public class RestApiManager implements IApi{
 
     @Override
     public AuthResponse loginByFacebook(String accessToken) throws Exception {
-
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
-
-        return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
+        return socialLogin2(accessToken, LoginPrefs.AuthBackend.FACEBOOK);
     }
 
     @Override
     public AuthResponse loginByGoogle(String accessToken) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
-
-        return socialLogin2(accessToken, PrefManager.Value.BACKEND_GOOGLE);
+        return socialLogin2(accessToken, LoginPrefs.AuthBackend.GOOGLE);
     }
 
-    private AuthResponse socialLogin2(String accessToken, String backend)
+    private AuthResponse socialLogin2(String accessToken, @NonNull LoginPrefs.AuthBackend authBackend)
         throws Exception {
-
-        AuthResponse response =
-            restApi.doExchangeAccessToken(accessToken, environment.getConfig().getOAuthClientId(), backend);
-
-        // store auth token response
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(response));
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
-
-        return response;
+        final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
+        return restApi.doExchangeAccessToken(accessToken, environment.getConfig().getOAuthClientId(), backend);
     }
-
-
 
     @Override
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
         String date = DateUtil.getModificationDate();
         EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
         body.last_visited_module_id = lastVisitedModuleId;
         body.modification_date = date;
-
-        return  oauthRestApi.syncLastAccessedSubsection(body, username, courseId);
+        return  oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId);
 
     }
 
     @Override
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
-        return  oauthRestApi.getLastAccessedSubsection(username, courseId);
+        return oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId);
     }
 
     @Override
@@ -384,8 +342,7 @@ public class RestApiManager implements IApi{
     }
 
     public CourseComponent getCourseStructure(String courseId, boolean preferCache) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = URLEncoder.encode(pref.getCurrentUserProfile().username, "UTF-8");
+        String username = URLEncoder.encode(loginPrefs.getUsername(), "UTF-8");
         String block_counts = URLEncoder.encode("video", "UTF-8");
         String requested_fields = URLEncoder.encode("graded,format,student_view_multi_device", "UTF-8");
         String student_view_data = URLEncoder.encode("video,discussion", "UTF-8");

@@ -1,6 +1,9 @@
 package org.edx.mobile.core;
 
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -9,6 +12,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.ServiceManager;
@@ -16,6 +20,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.view.Router;
 
 import de.greenrobot.event.EventBus;
+import roboguice.RoboGuice;
 
 @Singleton
 public class EdxEnvironment implements IEdxEnvironment {
@@ -31,6 +36,9 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     UserPrefs userPrefs;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Inject
     ISegment segment;
@@ -66,6 +74,11 @@ public class EdxEnvironment implements IEdxEnvironment {
     @Override
     public UserPrefs getUserPrefs() {
         return userPrefs;
+    }
+
+    @Override
+    public LoginPrefs getLoginPrefs() {
+        return loginPrefs;
     }
 
     @Override

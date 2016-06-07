@@ -496,14 +496,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     /**
-     * Returns user's profile.
-     */
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(this, PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
-    }
-
-    /**
      * Blocks touch event for this activity.
      * Use {@link #unblockTouch()} method to unblock and activate touch events.
      */

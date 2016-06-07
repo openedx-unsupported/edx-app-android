@@ -37,6 +37,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.user.Account;
@@ -60,7 +61,9 @@ public class NavigationFragment extends BaseFragment {
     @Inject
     Config config;
 
-    private PrefManager pref;
+    @Inject
+    LoginPrefs loginPrefs;
+
     private final Logger logger = new Logger(getClass().getName());
     private PrefManager socialPref;
     private NetworkCheckDialogFragment newFragment;
@@ -90,8 +93,7 @@ public class NavigationFragment extends BaseFragment {
         uiLifecycleHelper.onCreate(savedInstanceState);
         Context context = getActivity().getBaseContext();
         socialPref = new PrefManager(context, PrefManager.Pref.FEATURES);
-        pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        profile = pref.getCurrentUserProfile();
+        profile = loginPrefs.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
             getAccountTask = new GetAccountTask(getActivity(), profile.username);
             getAccountTask.setTaskProcessCallback(null); // Disable global loading indicator

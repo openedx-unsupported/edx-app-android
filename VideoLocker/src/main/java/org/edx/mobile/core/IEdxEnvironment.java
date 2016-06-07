@@ -6,6 +6,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
 import org.edx.mobile.module.notification.NotificationDelegate;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.services.ServiceManager;
@@ -24,6 +25,8 @@ public interface IEdxEnvironment {
     IDownloadManager getDownloadManager();
 
     UserPrefs getUserPrefs();
+
+    LoginPrefs getLoginPrefs();
 
     ISegment getSegment();
 

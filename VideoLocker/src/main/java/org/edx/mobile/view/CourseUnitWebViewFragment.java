@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -26,6 +27,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
@@ -55,6 +57,9 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     @InjectView(R.id.content_unavailable_error_text)
     private TextView errorTextView;
+
+    @Inject
+    private LoginPrefs loginPrefs;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {
         CourseUnitWebViewFragment f = new CourseUnitWebViewFragment();
@@ -245,17 +250,12 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
         showLoadingProgress();
 
         if (unit != null) {
-            PrefManager pref = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-            AuthResponse auth = pref.getCurrentAuth();
-            Map<String, String> map = new HashMap<String, String>();
-            if (auth == null || !auth.isSuccess()) {
-                // this might be a login with Facebook or Google
-                String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
-                if (token != null) {
-                    map.put("Authorization", token);
-                }
+            Map<String, String> map = new HashMap<>();
+            final String token = loginPrefs.getAuthorizationHeader();
+            if (token != null) {
+                map.put("Authorization", token);
             } else {
-                map.put("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
+                logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
 
             // Requery the session cookie if unavailable or expired if we are on

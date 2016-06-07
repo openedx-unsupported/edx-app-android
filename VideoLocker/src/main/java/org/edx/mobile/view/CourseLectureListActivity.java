@@ -21,6 +21,7 @@ import org.edx.mobile.model.api.LectureModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.EnqueueDownloadTask;
 import org.edx.mobile.util.AppConstants;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -54,6 +57,9 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
     private EnrolledCoursesResponse enrollment;
     private SectionEntry chapter;
     private String activityTitle;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +93,8 @@ public class CourseLectureListActivity extends BaseFragmentActivity {
             public void onItemClicked(LectureModel model) {
                 try {
                     if (model.videos != null && model.videos.size() > 0 && enrollment != null) {
-                        String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                                .username, enrollment.getCourse().getId());
+                        String prefName = PrefManager.getPrefNameForLastAccessedBy(
+                                loginPrefs.getUsername(), enrollment.getCourse().getId());
                         PrefManager prefManager = new PrefManager(CourseLectureListActivity.this, prefName);
                         prefManager.putLastAccessedSubsection(model.videos.get(0).getSection().getId(), false);
                     }

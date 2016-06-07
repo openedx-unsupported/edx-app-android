@@ -30,6 +30,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.util.Config;
@@ -62,6 +63,9 @@ public class ServiceManager {
     @Inject
     IApi api;
 
+    @Inject
+    LoginPrefs loginPrefs;
+
     public ServiceManager() {
         cacheManager = new CacheManager(MainApplication.instance());
     }
@@ -69,12 +73,10 @@ public class ServiceManager {
     private HttpRequestEndPoint getEndPointCourseStructure(final String courseId) {
         return new HttpRequestEndPoint() {
             public String getUrl() {
-                PrefManager pref = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
-
                 String url = Uri.parse(config.getApiHostURL() + "/api/courses/v1/blocks/?")
                         .buildUpon()
                         .appendQueryParameter("course_id", courseId)
-                        .appendQueryParameter("username", pref.getCurrentUserProfile().username)
+                        .appendQueryParameter("username", loginPrefs.getUsername())
                         .appendQueryParameter("depth", "all")
                         .appendQueryParameter("requested_fields", "graded,format,student_view_multi_device")
                         .appendQueryParameter("student_view_data", "video,discussion")

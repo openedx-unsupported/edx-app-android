@@ -1,6 +1,7 @@
 package org.edx.mobile.view.dialog;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,7 +34,7 @@ public class CCLanguageDialogFragment extends RoboDialogFragment {
     }
 
     public static CCLanguageDialogFragment getInstance(LinkedHashMap<String, String> dialogMap,
-            IListDialogCallback callback, String languageSelected) {
+            IListDialogCallback callback, @Nullable String languageSelected) {
         CCLanguageDialogFragment d = new CCLanguageDialogFragment();
 
         d.callback = callback;
