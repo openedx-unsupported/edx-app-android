@@ -71,7 +71,10 @@ public class Router {
     }
 
     public void showLaunchScreen(Context context) {
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        Intent launchIntent = new Intent(context,
+                config.getLaunchScreenConfig().isCourseDiscoveryEnabled()
+                        ? LaunchActivity.class
+                        : LaunchActivity.class);
         if (context instanceof Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         else
@@ -307,7 +310,7 @@ public class Router {
         if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
             findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
         } else {
-            findCoursesIntent =  NativeFindCoursesActivity.newIntent(context);
+            findCoursesIntent = NativeFindCoursesActivity.newIntent(context);
         }
         //Add this flag as multiple activities need to be created
         findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
