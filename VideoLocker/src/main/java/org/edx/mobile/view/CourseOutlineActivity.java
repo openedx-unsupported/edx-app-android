@@ -3,15 +3,16 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.R;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
+
+import javax.inject.Inject;
 
 
 /**
@@ -23,6 +24,12 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     @Inject
     CourseManager courseManager;
+
+    @Inject
+    LoginPrefs loginPrefs;
+
+    @Inject
+    LastAccessManager lastAccessManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +45,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
         if (isOnCourseOutline()) {
             setTitle(courseData.getCourse().getName());
-            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         }
     }
 
@@ -69,14 +76,14 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
         }
 
         if (isOnCourseOutline()) {
-            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
         } else {
             environment.getSegment().trackScreenView(
                     ISegment.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
 
             // Update the last accessed item reference if we are in the course subsection view
-            String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                    .username, courseComponent.getCourseId());
+            String prefName = PrefManager.getPrefNameForLastAccessedBy(
+                    loginPrefs.getUsername(), courseComponent.getCourseId());
             final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
             prefManager.putLastAccessedSubsection(courseComponent.getId(), false);
         }

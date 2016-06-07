@@ -1,10 +1,9 @@
 package org.edx.mobile.base;
 
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.answers.Answers;
@@ -18,16 +17,12 @@ import com.newrelic.agent.android.NewRelic;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.core.EdxDefaultModule;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.Router;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -69,8 +64,6 @@ public abstract class MainApplication extends MultiDexApplication {
      */
     private void init() {
         application = this;
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
-
         injector = RoboGuice.getOrCreateBaseApplicationInjector((Application) this, RoboGuice.DEFAULT_STAGE,
                 (Module) RoboGuice.newDefaultRoboModule(this), (Module) new EdxDefaultModule(this));
 
@@ -112,17 +105,6 @@ public abstract class MainApplication extends MultiDexApplication {
         );
     }
 
-    /**
-     * callback when application is launched from background or from a cold launch,
-     */
-    public void onApplicationLaunchedFromBackground() {
-        logger.debug("onApplicationLaunchedFromBackground");
-        PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-        if (pref.hasAuthTokenSocialCookie()) {
-            injector.getInstance(Router.class).forceLogout(this, injector.getInstance(ISegment.class), injector.getInstance(NotificationDelegate.class));
-        }
-    }
-
     private boolean needVersionUpgrade(Context context) {
         boolean needVersionUpgrade = false;
         PrefManager.AppInfoPrefManager pmanager = new PrefManager.AppInfoPrefManager(context);
@@ -146,38 +128,8 @@ public abstract class MainApplication extends MultiDexApplication {
         return injector;
     }
 
-    private final class MyActivityLifecycleCallbacks
-            implements Application.ActivityLifecycleCallbacks {
-
-        Activity prevPausedOne;
-
-        public void onActivityCreated(Activity activity, Bundle bundle) {
-
-        }
-
-        public void onActivityDestroyed(Activity activity) {
-
-        }
-
-        public void onActivityPaused(Activity activity) {
-            prevPausedOne = activity;
-        }
-
-        public void onActivityResumed(Activity activity) {
-            if (null == prevPausedOne || prevPausedOne == activity) {
-                //application launched from background,
-                onApplicationLaunchedFromBackground();
-            }
-        }
-
-        public void onActivitySaveInstanceState(Activity activity,
-                                                Bundle outState) {
-        }
-
-        public void onActivityStarted(Activity activity) {
-        }
-
-        public void onActivityStopped(Activity activity) {
-        }
+    @NonNull
+    public static IEdxEnvironment getEnvironment(@NonNull Context context) {
+        return RoboGuice.getInjector(context).getInstance(IEdxEnvironment.class);
     }
 }

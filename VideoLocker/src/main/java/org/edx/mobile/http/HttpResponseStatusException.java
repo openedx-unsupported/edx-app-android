@@ -10,6 +10,11 @@ public class HttpResponseStatusException extends RetroHttpException {
         this.statusCode = statusCode;
     }
 
+    public HttpResponseStatusException(int statusCode) {
+        super(String.valueOf(statusCode));
+        this.statusCode = statusCode;
+    }
+
     public int getStatusCode() {
         return statusCode;
     }

@@ -14,6 +14,7 @@ import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 
 import java.util.List;
@@ -23,20 +24,17 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
     private String username;
 
     @Inject
-    public IDatabaseImpl(Context context) {
-        super(context);
+    private final LoginPrefs loginPrefs;
 
+    @Inject
+    public IDatabaseImpl(Context context, LoginPrefs loginPrefs) {
+        super(context);
+        this.loginPrefs = loginPrefs;
     }
 
     private String username() {
         if (username == null) {
-            UserPrefs userprefs = new UserPrefs(context);
-            if (userprefs != null) {
-                ProfileModel profile = userprefs.getProfile();
-                if (profile != null) {
-                    return profile.username;
-                }
-            }
+            return loginPrefs.getUsername();
         }
         return username;
     }

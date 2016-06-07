@@ -1,5 +1,6 @@
 package org.edx.mobile.test.module;
 
+import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.download.NativeDownloadModel;
 import org.edx.mobile.module.download.DownloadFactory;
 import org.edx.mobile.module.download.IDownloadManager;
@@ -26,7 +27,7 @@ public class DownloadTests extends BaseTestCase {
     public void testAddDownload() throws Exception {
         File dir = null;
         try {
-           dir = new UserPrefs(RuntimeEnvironment.application).getDownloadFolder();
+           dir = new UserPrefs(RuntimeEnvironment.application, MainApplication.getEnvironment(RuntimeEnvironment.application).getLoginPrefs()).getDownloadFolder();
         }catch (Exception ex){
             // it happens in CI environment and we should skip the test.
             print( "dir is null, it happens in CI environment and we should skip the test.");

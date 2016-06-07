@@ -32,6 +32,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
@@ -63,6 +64,9 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     private CompoundButton.OnCheckedChangeListener deleteCheckBoxChangeListener;
     private final Logger logger = new Logger(getClass().getName());
     private GetRecentDownloadedVideosTask getRecentDownloadedVideosTask;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -274,7 +278,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
         Context context = getContext();
         String prefName = PrefManager.getPrefNameForLastAccessedBy(
-                getProfile().username, videoModel.eid);
+                loginPrefs.getUsername(), videoModel.eid);
         PrefManager prefManager = new PrefManager(context, prefName);
         VideoResponseModel vrm;
         try {
@@ -680,13 +684,4 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             logger.error(ex);
         }
     };
-
-    /**
-     * @return User's profile.
-     */
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
-    }
-
 }

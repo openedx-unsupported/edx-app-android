@@ -3,6 +3,7 @@ package org.edx.mobile.module.prefs;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
@@ -20,9 +21,13 @@ public class UserPrefs {
     private Context context;
     private final Logger logger = new Logger(getClass().getName());
 
+    @NonNull
+    private final LoginPrefs loginPrefs;
+
     @Inject
-    public UserPrefs(Context context) {
+    public UserPrefs(Context context, @NonNull LoginPrefs loginPrefs) {
         this.context = context;
+        this.loginPrefs = loginPrefs;
     }
 
     /**
@@ -44,8 +49,7 @@ public class UserPrefs {
      * @return
      */
     public File getDownloadFolder() {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        ProfileModel profile = pref.getCurrentUserProfile();
+        ProfileModel profile = getProfile();
         
         File android = new File(Environment.getExternalStorageDirectory(), "Android");
         File downloadsDir = new File(android, "data");
@@ -64,7 +68,6 @@ public class UserPrefs {
 
     @Nullable
     public ProfileModel getProfile() {
-        PrefManager pm = new PrefManager(context, PrefManager.Pref.LOGIN);
-        return pm.getCurrentUserProfile();
+        return loginPrefs.getCurrentUserProfile();
     }
 }

@@ -12,6 +12,7 @@ import org.edx.mobile.authentication.LoginService;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
@@ -43,6 +44,9 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     @Inject
     Config config;
 
+    @Inject
+    LoginPrefs loginPrefs;
+
     public OauthRefreshTokenAuthenticator(Context context) {
         this.context = context;
         RoboGuice.injectMembers(context, this);
@@ -56,19 +60,23 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
             return null;
         }
 
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-
-        if (pref.getCurrentAuth().refresh_token == null) {
+        final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
+        if (null == currentAuth || null == currentAuth.refresh_token) {
             return null;
         }
-
-        refreshAccessToken(pref);
+        final AuthResponse refreshedAuth;
+        try {
+            refreshedAuth = refreshAccessToken(currentAuth);
+        } catch (RetroHttpException e) {
+            return null;
+        }
         return response.request().newBuilder()
-                .header("Authorization", pref.getCurrentAuth().token_type + " " + pref.getCurrentAuth().access_token)
+                .header("Authorization", refreshedAuth.token_type + " " + refreshedAuth.access_token)
                 .build();
     }
 
-    private void refreshAccessToken(@NonNull PrefManager pref) {
+    @NonNull
+    private AuthResponse refreshAccessToken(AuthResponse currentAuth) throws RetroHttpException {
         OkHttpClient client = OkHttpUtil.getClient(context);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new Ok3Client(client))
@@ -78,9 +86,9 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
 
         AuthResponse refreshTokenResponse;
         refreshTokenResponse = loginService.refreshAccessToken(
-                "refresh_token", config.getOAuthClientId(), pref.getCurrentAuth().refresh_token);
-        Gson gson = new GsonBuilder().create();
-        pref.put(PrefManager.Key.AUTH_JSON, gson.toJson(refreshTokenResponse));
+                "refresh_token", config.getOAuthClientId(), currentAuth.refresh_token);
+        loginPrefs.storeRefreshTokenResponse(refreshTokenResponse);
+        return refreshTokenResponse;
     }
 
     /**
