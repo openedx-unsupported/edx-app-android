@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -44,38 +45,30 @@ public class Config {
     private static final String NEW_RELIC = "NEW_RELIC";
     private static final String SEGMENT_IO = "SEGMENT_IO";
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
-    private static final String PARSE = "PARSE";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
-    private static final String PARSE_APPLICATION_ID = "APPLICATION_ID";
-    private static final String PARSE_CLIENT_KEY = "CLIENT_KEY";
-
     private static final String TEST_ACCOUNT = "TEST_ACCOUNT";
-    public static final String TEST_ACCOUNT_NAME = "NAME";
-    public static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
+    private static final String TEST_ACCOUNT_NAME = "NAME";
+    private static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
 
     // Features
-    public static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
-    public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
-
-    public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
-
-    public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
-
-    public static final String BADGES_ENABLED = "BADGES_ENABLED";
-
+    private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
+    private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
+    private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
+    private static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
+    private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
+    private static final String END_TO_END_TEST = "END_TO_END_TEST";
 
-    // E2E Test
-    public static final String END_TO_END_TEST = "END_TO_END_TEST";
-
-    /**
-     * Zero Rating configuration.
-     */
     public static class ZeroRatingConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("CARRIERS") List<String> mCarriers;
-        private @SerializedName("WHITE_LIST_OF_DOMAINS") List<String> mWhiteListedDomains;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("CARRIERS")
+        private List<String> mCarriers;
+
+        @SerializedName("WHITE_LIST_OF_DOMAINS")
+        private List<String> mWhiteListedDomains;
 
         public boolean isEnabled() {
             return mEnabled;
@@ -91,16 +84,19 @@ public class Config {
     }
 
     /**
-     * Course Enrollment configuration.
-     *
      * If TYPE is not "webview" in any letter case, defaults to "native"
      */
     public static class EnrollmentConfig {
-        private @SerializedName("WEBVIEW") WebViewConfig mWebViewConfig;
-        private @SerializedName("TYPE") String mCourseEnrollmentType;
+        @SerializedName("WEBVIEW")
+        private WebViewConfig mWebViewConfig;
+
+        @SerializedName("TYPE")
+        private String mCourseEnrollmentType;
 
         public boolean isWebviewCourseDiscoveryEnabled() {
-            if (mCourseEnrollmentType == null) { return false; }
+            if (mCourseEnrollmentType == null) {
+                return false;
+            }
 
             switch (mCourseEnrollmentType.toUpperCase(Locale.US)) {
                 case "WEBVIEW":
@@ -111,7 +107,7 @@ public class Config {
                     logger.debug("No match in config for COURSE_ENROLLMENT.TYPE:" + mCourseEnrollmentType + ". Defaulting to Native");
                     return false;
             }
-    }
+        }
 
         public String getCourseSearchUrl() {
             return mWebViewConfig.getCourseSearchUrl();
@@ -127,9 +123,14 @@ public class Config {
     }
 
     public static class WebViewConfig {
-        private @SerializedName("COURSE_SEARCH_URL") String mSearchUrl;
-        private @SerializedName("COURSE_INFO_URL_TEMPLATE") String mCourseInfoUrlTemplate;
-        private @SerializedName("SEARCH_BAR_ENABLED") boolean mSearchBarEnabled;
+        @SerializedName("COURSE_SEARCH_URL")
+        private String mSearchUrl;
+
+        @SerializedName("COURSE_INFO_URL_TEMPLATE")
+        private String mCourseInfoUrlTemplate;
+
+        @SerializedName("SEARCH_BAR_ENABLED")
+        private boolean mSearchBarEnabled;
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
@@ -139,15 +140,17 @@ public class Config {
             return mCourseInfoUrlTemplate;
         }
 
-        public boolean isWebCourseSearchEnabled() { return mSearchBarEnabled; }
+        public boolean isWebCourseSearchEnabled() {
+            return mSearchBarEnabled;
+        }
     }
 
-    /**
-     * Facebook configuration.
-     */
     public static class FacebookConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("FACEBOOK_APP_ID") String mFacebookAppId;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("FACEBOOK_APP_ID")
+        private String mFacebookAppId;
 
         public FacebookConfig(boolean mEnabled, String mFacebookAppId) {
             this.mEnabled = mEnabled;
@@ -166,11 +169,9 @@ public class Config {
         }
     }
 
-    /**
-     * Google configuration.
-     */
     public static class GoogleConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
 
         public GoogleConfig(boolean mEnabled) {
             this.mEnabled = mEnabled;
@@ -184,24 +185,24 @@ public class Config {
         }
     }
 
-    /**
-     * Twitter configuration.
-     */
     public static class TwitterConfig {
-        private @SerializedName("HASHTAG") String mHashTag;
+        @SerializedName("HASHTAG")
+        private String mHashTag;
 
         public String getHashTag() {
             return mHashTag;
         }
     }
 
-    /**
-     * Fabric configuration.
-     */
     public static class FabricConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("FABRIC_KEY") String mFabricKey;
-        private @SerializedName("FABRIC_BUILD_SECRET") String mFabricBuildSecret;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("FABRIC_KEY")
+        private String mFabricKey;
+
+        @SerializedName("FABRIC_BUILD_SECRET")
+        private String mFabricBuildSecret;
 
         public boolean isEnabled() {
             return mEnabled
@@ -218,12 +219,12 @@ public class Config {
         }
     }
 
-    /**
-     * New Relic configuration.
-     */
     public static class NewRelicConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("NEW_RELIC_KEY") String mNewRelicKey;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("NEW_RELIC_KEY")
+        private String mNewRelicKey;
 
         public boolean isEnabled() {
             return mEnabled && !TextUtils.isEmpty(mNewRelicKey);
@@ -234,24 +235,30 @@ public class Config {
         }
     }
 
-    /**
-     * Testing account - we may need a better solution in the future.
-     */
     public static class TestAccountConfig {
-        private @SerializedName("NAME") String mName;
-        private @SerializedName("PASSWORD") String mPassword;
+        @SerializedName("NAME")
+        private String mName;
 
-        public String getName() { return mName; }
-        public String getPassword() { return mPassword; }
+        @SerializedName("PASSWORD")
+        private String mPassword;
+
+        public String getName() {
+            return mName;
+        }
+
+        public String getPassword() {
+            return mPassword;
+        }
     }
 
-    /**
-     * End-to-end test configurations
-     */
     public static class EndToEndConfig {
         private static final String DEFAULT_EMAIL_TEMPLATE = "test-{unique_id}@example.com";
-        private @SerializedName("EMAIL_TEMPLATE") String mEmailTemplate;
-        private @SerializedName("TEST_COURSE_ID") String mTestCourseId;
+
+        @SerializedName("EMAIL_TEMPLATE")
+        private String mEmailTemplate;
+
+        @SerializedName("TEST_COURSE_ID")
+        private String mTestCourseId;
 
         public String getEmailTemplate() {
             return TextUtils.isEmpty(mEmailTemplate) ? DEFAULT_EMAIL_TEMPLATE : mEmailTemplate;
@@ -262,12 +269,12 @@ public class Config {
         }
     }
 
-    /**
-     * SegmentIO configuration.
-     */
     public static class SegmentConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("SEGMENT_IO_WRITE_KEY") String mSegmentWriteKey;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("SEGMENT_IO_WRITE_KEY")
+        private String mSegmentWriteKey;
 
         public boolean isEnabled() {
             return mEnabled && !TextUtils.isEmpty(mSegmentWriteKey);
@@ -278,12 +285,12 @@ public class Config {
         }
     }
 
-    /**
-     * Domain White List configuration.
-     */
     public static class DomainWhiteListConfig {
-        private @SerializedName("ENABLED") boolean mEnabled;
-        private @SerializedName("DOMAINS") List<String> mDomains;
+        @SerializedName("ENABLED")
+        private boolean mEnabled;
+
+        @SerializedName("DOMAINS")
+        private List<String> mDomains;
 
         public boolean isEnabled() {
             return mEnabled;
@@ -317,30 +324,27 @@ public class Config {
 
     private String getString(String key, String defaultValue) {
         JsonElement element = getObject(key);
-        if(element != null) {
+        if (element != null) {
             return element.getAsString();
-        }
-        else {
+        } else {
             return defaultValue;
         }
     }
 
     private boolean getBoolean(String key, boolean defaultValue) {
         JsonElement element = getObject(key);
-        if(element != null) {
+        if (element != null) {
             return element.getAsBoolean();
-        }
-        else {
+        } else {
             return defaultValue;
         }
     }
 
     private int getInteger(String key, int defaultValue) {
         JsonElement element = getObject(key);
-        if(element != null) {
+        if (element != null) {
             return element.getAsInt();
-        }
-        else {
+        } else {
             return defaultValue;
         }
     }
@@ -388,6 +392,7 @@ public class Config {
     /**
      * Empty or no config returns false.
      * Otherwise, returns the value from the config.
+     *
      * @return
      */
     public boolean isSpeedTestEnabled() {
@@ -406,130 +411,78 @@ public class Config {
         return getBoolean(DISCUSSIONS_ENABLED, false);
     }
 
-    public boolean areCertificateLinksEnabled() { return getBoolean(CERTIFICATES_ENABLED, false); }
+    public boolean areCertificateLinksEnabled() {
+        return getBoolean(CERTIFICATES_ENABLED, false);
+    }
 
-    public boolean isCourseSharingEnabled() { return getBoolean(COURSE_SHARING_ENABLED, false); }
+    public boolean isCourseSharingEnabled() {
+        return getBoolean(COURSE_SHARING_ENABLED, false);
+    }
 
+    @NonNull
     public EnrollmentConfig getCourseDiscoveryConfig() {
-        JsonElement element = getObject(COURSE_ENROLLMENT);
-
-        if(element != null) {
-            return new Gson().fromJson(element, EnrollmentConfig.class);
-        }
-        else {
-            return new EnrollmentConfig();
-        }
+        return getObjectOrNewInstance(COURSE_ENROLLMENT, EnrollmentConfig.class);
     }
 
-    /**
-     * Returns Zero Rating configuration.
-     * @return
-     */
+    @NonNull
     public ZeroRatingConfig getZeroRatingConfig() {
-        JsonElement element = getObject(ZERO_RATING);
-        if(element != null) {
-            Gson gson = new Gson();
-            ZeroRatingConfig config = gson.fromJson(element, ZeroRatingConfig.class);
-            return config;
-        }
-        else {
-            return new ZeroRatingConfig();
-        }
+        return getObjectOrNewInstance(ZERO_RATING, ZeroRatingConfig.class);
     }
 
+    @NonNull
     public FacebookConfig getFacebookConfig() {
-        JsonElement element = getObject(FACEBOOK);
-        if(element != null) {
-            Gson gson = new Gson();
-            FacebookConfig config = gson.fromJson(element, FacebookConfig.class);
-            return config;
-        }
-        else {
-            return new FacebookConfig();
-        }
+        return getObjectOrNewInstance(FACEBOOK, FacebookConfig.class);
     }
 
+    @NonNull
     public GoogleConfig getGoogleConfig() {
-        JsonElement element = getObject(GOOGLE);
-        if(element != null) {
-            Gson gson = new Gson();
-            GoogleConfig config = gson.fromJson(element, GoogleConfig.class);
-            return config;
-        }
-        else {
-            return new GoogleConfig();
-        }
+        return getObjectOrNewInstance(GOOGLE, GoogleConfig.class);
     }
 
+    @NonNull
     public TwitterConfig getTwitterConfig() {
-        JsonElement element = getObject(TWITTER);
-        if(element != null) {
-            Gson gson = new Gson();
-            TwitterConfig config = gson.fromJson(element, TwitterConfig.class);
-            return config;
-        }
-        else {
-            return new TwitterConfig();
-        }
+        return getObjectOrNewInstance(TWITTER, TwitterConfig.class);
     }
 
+    @NonNull
     public FabricConfig getFabricConfig() {
-        JsonElement element = getObject(FABRIC);
-        if(element != null) {
-            Gson gson = new Gson();
-            FabricConfig config = gson.fromJson(element, FabricConfig.class);
-            return config;
-        }
-        else {
-            return new FabricConfig();
-        }
+        return getObjectOrNewInstance(FABRIC, FabricConfig.class);
     }
 
+    @NonNull
     public NewRelicConfig getNewRelicConfig() {
-        JsonElement element = getObject(NEW_RELIC);
-        if(element != null) {
-            Gson gson = new Gson();
-            NewRelicConfig config = gson.fromJson(element, NewRelicConfig.class);
-            return config;
-        }
-        else {
-            return new NewRelicConfig();
-        }
+        return getObjectOrNewInstance(NEW_RELIC, NewRelicConfig.class);
     }
 
+    @NonNull
     public SegmentConfig getSegmentConfig() {
-        JsonElement element = getObject(SEGMENT_IO);
-        if(element != null) {
-            Gson gson = new Gson();
-            SegmentConfig config = gson.fromJson(element, SegmentConfig.class);
-            return config;
-        }
-        else {
-            return new SegmentConfig();
-        }
+        return getObjectOrNewInstance(SEGMENT_IO, SegmentConfig.class);
     }
 
+    @NonNull
     public TestAccountConfig getTestAccountConfig() {
-        JsonElement element = getObject(TEST_ACCOUNT);
-        if(element != null) {
-            Gson gson = new Gson();
-            TestAccountConfig config = gson.fromJson(element, TestAccountConfig.class);
-            return config;
-        }
-        else {
-            return new TestAccountConfig();
-        }
+        return getObjectOrNewInstance(TEST_ACCOUNT, TestAccountConfig.class);
     }
 
+    @NonNull
     public EndToEndConfig getEndToEndConfig() {
-        JsonElement element = getObject(END_TO_END_TEST);
-        if(element != null) {
+        return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
+    }
+
+    @NonNull
+    private <T> T getObjectOrNewInstance(@NonNull String key, @NonNull Class<T> cls) {
+        JsonElement element = getObject(key);
+        if (element != null) {
             Gson gson = new Gson();
-            EndToEndConfig config = gson.fromJson(element, EndToEndConfig.class);
-            return config;
-        }
-        else {
-            return new EndToEndConfig();
+            return gson.fromJson(element, cls);
+        } else {
+            try {
+                return cls.newInstance();
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
