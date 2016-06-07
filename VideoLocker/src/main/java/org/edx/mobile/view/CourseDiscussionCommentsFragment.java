@@ -187,7 +187,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
                 discussionCommentsAdapter.updateComment(comment);
             }
         };
-        setCommentFlaggedTask.setTaskProcessCallback(null);
+        setCommentFlaggedTask.setProgressCallback(null);
         setCommentFlaggedTask.execute();
     }
 

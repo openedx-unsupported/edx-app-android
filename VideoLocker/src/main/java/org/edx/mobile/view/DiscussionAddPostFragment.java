@@ -216,7 +216,6 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 addPostButton.setEnabled(true);
             }
         };
-        createThreadTask.setTaskProcessCallback(null);
         createThreadTask.setProgressDialog(addPostProgressBar);
         createThreadTask.execute();
     }

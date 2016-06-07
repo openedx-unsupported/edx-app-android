@@ -6,18 +6,14 @@ import android.support.annotation.NonNull;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.ThreadBody;
 
-public abstract class CreateThreadTask extends
-Task<DiscussionThread> {
-
+public abstract class CreateThreadTask extends Task<DiscussionThread> {
     @NonNull
-    ThreadBody thread;
+    private final ThreadBody thread;
 
     public CreateThreadTask(@NonNull Context context, @NonNull ThreadBody thread) {
-        super(context);
+        super(context, Type.USER_INITIATED);
         this.thread = thread;
     }
-
-
 
     public DiscussionThread call( ) throws Exception{
         return environment.getDiscussionAPI().createThread(thread);

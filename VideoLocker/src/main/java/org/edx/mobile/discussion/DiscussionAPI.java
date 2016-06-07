@@ -170,10 +170,6 @@ public class DiscussionAPI {
         return discussionService.createThread(threadBody);
     }
 
-    public DiscussionComment createResponse(ResponseBody responseBody) throws RetroHttpException {
-        return discussionService.createResponse(responseBody);
-    }
-
     public DiscussionComment createComment(CommentBody commentBody) throws RetroHttpException {
         return discussionService.createComment(commentBody.threadId, commentBody.rawBody,
                 commentBody.parentId);

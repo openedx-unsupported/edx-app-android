@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import org.edx.mobile.discussion.DiscussionComment;
 
 public abstract class SetCommentFlaggedTask extends Task<DiscussionComment> {
+    @NonNull
     private final DiscussionComment comment;
+    @NonNull
     private final boolean flagged;
 
     public SetCommentFlaggedTask(@NonNull Context context,
                                  @NonNull DiscussionComment comment, boolean flagged) {
-        super(context);
+        super(context, Type.USER_INITIATED);
         this.comment = comment;
         this.flagged = flagged;
     }

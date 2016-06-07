@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -558,6 +559,13 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
         ViewAnimationUtil.hideMessageBar(error_layout);
         return true;
+    }
+
+    public void showErrorDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton(R.string.label_ok, null)
+                .create().show();
     }
 
     @Override

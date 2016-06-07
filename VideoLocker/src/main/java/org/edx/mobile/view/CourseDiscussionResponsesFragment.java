@@ -81,9 +81,8 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
                 discussionThread.getIdentifier(),
                 discussionThread.getType() == DiscussionThread.ThreadType.QUESTION);
 
-        // Using application context to prevent activity leak since adapter is retained across config changes
         courseDiscussionResponsesAdapter = new CourseDiscussionResponsesAdapter(
-                getActivity().getApplicationContext(), this, discussionThread);
+                getActivity(), this, discussionThread);
         controller = InfiniteScrollUtils.configureRecyclerViewWithInfiniteList(
                 discussionResponsesRecyclerView, courseDiscussionResponsesAdapter, responsesLoader);
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
