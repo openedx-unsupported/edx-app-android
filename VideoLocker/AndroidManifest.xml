@@ -99,7 +99,7 @@
         <activity
             android:name=".view.CourseDiscussionPostsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" />
+            android:label="@string/discussion_title" />
 
         <activity
             android:name=".view.CourseDiscussionCommentsActivity"

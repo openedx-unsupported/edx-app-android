@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
-import org.edx.mobile.base.MyVideosBaseFragment;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
@@ -18,20 +21,19 @@ import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 
 import java.util.List;
 
-public class MyAllVideosFragment extends MyVideosBaseFragment {
+public class MyAllVideosFragment extends BaseFragment {
+
     private MyAllVideoCourseAdapter myCoursesAdaptor;
     protected final Logger logger = new Logger(getClass().getName());
     private GetAllDownloadedVideosTask getAllDownloadedVideosTask;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_ALL);
-    }
-
-    @Override
-    public void reloadList() {
-        addMyAllVideosData();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class MyAllVideosFragment extends MyVideosBaseFragment {
                 AppConstants.myVideosDeleteMode = false;
                 
                 Intent videoIntent = new Intent(getActivity(), VideoListActivity.class);
-                videoIntent.putExtra(Router.EXTRA_ENROLLMENT, model);
+                videoIntent.putExtra(Router.EXTRA_COURSE_DATA, model);
                 videoIntent.putExtra("FromMyVideos", true);
                 startActivity(videoIntent);
             }

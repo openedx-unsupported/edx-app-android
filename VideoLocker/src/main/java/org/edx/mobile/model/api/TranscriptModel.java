@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 @SuppressWarnings("serial")
-public class TranscriptModel implements Serializable{
+public class TranscriptModel implements Serializable {
 
     @SerializedName("en")
     public String englishUrl;
@@ -26,40 +26,40 @@ public class TranscriptModel implements Serializable{
 
     @SerializedName("zh")
     public String chineseUrl;
-    
+
     @SerializedName("fr")
     public String frenchUrl;
 
-    public LinkedHashMap<String, String> getLanguageList(Context context){
+    public LinkedHashMap<String, String> getLanguageList(Context context) {
         LinkedHashMap<String, String> languageArray = new LinkedHashMap<String, String>();
-        if(chineseUrl!=null){
-            languageArray.put(context.getString(R.string.cc_chinese_code), 
+        if (chineseUrl != null) {
+            languageArray.put(context.getString(R.string.cc_chinese_code),
                     context.getString(R.string.lbl_cc_chinese));
         }
-        if(englishUrl!=null){
-            languageArray.put(context.getString(R.string.cc_english_code), 
+        if (englishUrl != null) {
+            languageArray.put(context.getString(R.string.cc_english_code),
                     context.getString(R.string.lbl_cc_english));
         }
-        if(frenchUrl!=null){
-            languageArray.put(context.getString(R.string.cc_french_code), 
+        if (frenchUrl != null) {
+            languageArray.put(context.getString(R.string.cc_french_code),
                     context.getString(R.string.lbl_cc_french));
         }
-        if(germanUrl!=null){
-            languageArray.put(context.getString(R.string.cc_german_code), 
+        if (germanUrl != null) {
+            languageArray.put(context.getString(R.string.cc_german_code),
                     context.getString(R.string.lbl_cc_german));
         }
-        if(portugueseUrl!=null){
-            languageArray.put(context.getString(R.string.cc_portugal_code), 
+        if (portugueseUrl != null) {
+            languageArray.put(context.getString(R.string.cc_portugal_code),
                     context.getString(R.string.lbl_cc_portugal));
         }
-        if(spanishUrl!=null){
-            languageArray.put(context.getString(R.string.cc_spanish_code), 
+        if (spanishUrl != null) {
+            languageArray.put(context.getString(R.string.cc_spanish_code),
                     context.getString(R.string.lbl_cc_spanish));
         }
-        
-        if(languageArray.size()>0){
+
+        if (languageArray.size() > 0) {
             return languageArray;
-        }else{
+        } else {
             return null;
         }
     }
@@ -69,4 +69,25 @@ public class TranscriptModel implements Serializable{
         String label = context.getResources().getString(resId);
         return label;
     }*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TranscriptModel that = (TranscriptModel) o;
+
+        if (englishUrl != null ? !englishUrl.equals(that.englishUrl) : that.englishUrl != null)
+            return false;
+        if (spanishUrl != null ? !spanishUrl.equals(that.spanishUrl) : that.spanishUrl != null)
+            return false;
+        if (germanUrl != null ? !germanUrl.equals(that.germanUrl) : that.germanUrl != null)
+            return false;
+        if (portugueseUrl != null ? !portugueseUrl.equals(that.portugueseUrl) : that.portugueseUrl != null)
+            return false;
+        if (chineseUrl != null ? !chineseUrl.equals(that.chineseUrl) : that.chineseUrl != null)
+            return false;
+        return frenchUrl != null ? frenchUrl.equals(that.frenchUrl) : that.frenchUrl == null;
+
+    }
 }

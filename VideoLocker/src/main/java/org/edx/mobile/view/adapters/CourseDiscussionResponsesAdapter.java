@@ -169,6 +169,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         notifyItemChanged(0);
                     }
                 };
+                task.setTaskProcessCallback(null);
                 task.execute();
             }
         });
@@ -190,6 +191,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         notifyItemChanged(0);
                     }
                 };
+                task.setTaskProcessCallback(null);
                 task.execute();
             }
         });
@@ -206,6 +208,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         notifyItemChanged(0);
                     }
                 };
+                task.setTaskProcessCallback(null);
                 task.execute();
             }
         });
@@ -269,6 +272,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         notifyItemChanged(position);
                     }
                 };
+                task.setTaskProcessCallback(null);
                 task.execute();
             }
         });
@@ -323,6 +327,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
                         notifyItemChanged(position);
                     }
                 };
+                task.setTaskProcessCallback(null);
                 task.execute();
             }
         });

@@ -17,7 +17,7 @@ public class CourseUnitEmptyFragment extends CourseUnitFragment{
     /**
      * Create a new instance of fragment
      */
-    static CourseUnitEmptyFragment newInstance(CourseComponent unit) {
+    public static CourseUnitEmptyFragment newInstance(CourseComponent unit) {
         CourseUnitEmptyFragment f = new CourseUnitEmptyFragment();
 
         // Supply num input as an argument.

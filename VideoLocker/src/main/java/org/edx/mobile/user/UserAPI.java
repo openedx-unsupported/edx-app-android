@@ -48,7 +48,8 @@ public class UserAPI {
     @Inject
     CacheManager cache;
 
-    @Inject Gson gson;
+    @Inject
+    Gson gson;
 
     @Inject
     public UserAPI(@NonNull RestAdapter restAdapter) {
@@ -86,12 +87,15 @@ public class UserAPI {
         return userService.getBadges(username, page, ApiConstants.STANDARD_PAGE_SIZE);
     }
 
-    public @NonNull String getUserEnrolledCoursesURL(@NonNull String username) {
+    public
+    @NonNull
+    String getUserEnrolledCoursesURL(@NonNull String username) {
         return config.getApiHostURL() + "/api/mobile/v0.5/users/" + username + "/course_enrollments";
     }
 
-    public List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws RetroHttpException {
-        List<EnrolledCoursesResponse> ret = null;
+    public
+    @NonNull
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws RetroHttpException {
         String json = null;
 
         final String cacheKey = getUserEnrolledCoursesURL(username);
@@ -100,8 +104,7 @@ public class UserAPI {
         if (tryCache) {
             try {
                 json = cache.get(cacheKey);
-            }
-            catch (IOException | NoSuchAlgorithmException e) {
+            } catch (IOException | NoSuchAlgorithmException e) {
                 logger.debug(e.toString());
             }
         }
@@ -109,39 +112,27 @@ public class UserAPI {
         // if we don't have a json yet, get it from userService
         if (json == null) {
             Response response = userService.getUserEnrolledCourses(username);
-
-            if (response != null) {
-                TypedInput input = response.getBody();
-                if (input != null) {
-                    try {
-                        json = IOUtils.toString(input.in());
-                    }
-                    catch (IOException e) {
-                        json = null;
-                        logger.debug(e.toString());
-                    }
-                }
-            }
-        }
-
-        if (json != null) {
-
-            // cache result
+            TypedInput input = response.getBody();
             try {
-                cache.put(cacheKey, json);
-            }
-            catch (IOException | NoSuchAlgorithmException e) {
-                logger.debug(e.toString());
-            }
-
-            // NOTE: trying to pass in List<EnrolledCourseResponse> (with the help of token type) yields NoClassDefFoundError
-            JsonArray ary = gson.fromJson(json, JsonArray.class);
-            ret = new ArrayList<>(ary.size());
-            for (int cnt=0; cnt<ary.size(); ++cnt) {
-                ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+                json = IOUtils.toString(input.in());
+            } catch (IOException e) {
+                throw new RetroHttpException(e);
             }
         }
 
+        // cache result
+        try {
+            cache.put(cacheKey, json);
+        } catch (IOException | NoSuchAlgorithmException e) {
+            logger.debug(e.toString());
+        }
+
+        // We aren't use TypeToken here because it throws NoClassDefFoundError
+        final JsonArray ary = gson.fromJson(json, JsonArray.class);
+        final List<EnrolledCoursesResponse> ret = new ArrayList<>(ary.size());
+        for (int cnt = 0; cnt < ary.size(); ++cnt) {
+            ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+        }
         return ret;
     }
 }

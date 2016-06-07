@@ -96,12 +96,12 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(Router.EXTRA_ENROLLMENT, courseData);
+        outState.putSerializable(Router.EXTRA_COURSE_DATA, courseData);
         outState.putString(Router.EXTRA_COURSE_COMPONENT_ID, courseComponentId);
     }
 
     protected void restore(Bundle savedInstanceState) {
-        courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_ENROLLMENT);
+        courseData = (EnrolledCoursesResponse) savedInstanceState.getSerializable(Router.EXTRA_COURSE_DATA);
         courseComponentId = savedInstanceState.getString(Router.EXTRA_COURSE_COMPONENT_ID);
 
         if (courseComponentId == null) {

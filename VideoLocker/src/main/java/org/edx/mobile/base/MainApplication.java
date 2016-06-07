@@ -7,7 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
-import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.joanzapata.iconify.Iconify;
@@ -77,7 +78,7 @@ public abstract class MainApplication extends MultiDexApplication {
 
         // initialize Fabric
         if (config.getFabricConfig().isEnabled() && !BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new CrashlyticsCore(), new Answers());
             EventBus.getDefault().register(new CrashlyticsCrashReportObserver());
         }
 
@@ -105,9 +106,9 @@ public abstract class MainApplication extends MultiDexApplication {
         Iconify.with(new FontAwesomeModule());
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
+                .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
         );
     }
 
@@ -137,7 +138,7 @@ public abstract class MainApplication extends MultiDexApplication {
     public static class CrashlyticsCrashReportObserver {
         @SuppressWarnings("unused")
         public void onEventMainThread(Logger.CrashReportEvent e) {
-            Crashlytics.logException(e.getError());
+            CrashlyticsCore.getInstance().logException(e.getError());
         }
     }
 

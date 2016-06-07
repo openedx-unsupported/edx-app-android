@@ -38,7 +38,7 @@ import roboguice.inject.InjectView;
 public class CourseHandoutFragment extends BaseFragment {
     protected final Logger logger = new Logger(getClass().getName());
 
-    @InjectExtra(Router.EXTRA_ENROLLMENT)
+    @InjectExtra(Router.EXTRA_COURSE_DATA)
     private EnrolledCoursesResponse courseData;
 
     @Inject

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +17,10 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.course.BlockType;
 import org.edx.mobile.model.course.CourseComponent;
-import org.edx.mobile.model.course.HtmlBlockModel;
-import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
+import org.edx.mobile.view.adapters.CourseUnitPagerAdapter;
 import org.edx.mobile.view.common.PageViewStateCallback;
 import org.edx.mobile.view.custom.DisableableViewPager;
 
@@ -67,7 +63,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         pager = (DisableableViewPager)findViewById(R.id.pager);
-        pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
 
 
@@ -170,7 +166,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         mPreviousBtn.setEnabled(curIndex > 0);
         mNextBtn.setEnabled(curIndex < pagerAdapter.getCount() - 1);
- 
+
         findViewById(R.id.course_unit_nav_bar).requestLayout();
 
         setTitle(selectedUnit.getDisplayName());
@@ -268,57 +264,6 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
             pager.setEnabled(true);
-        }
-    }
-
-    private class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
-        public CourseUnitPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public CourseComponent getUnit(int pos) {
-            if (pos >= unitList.size())
-                pos = unitList.size() - 1;
-            if (pos < 0)
-                pos = 0;
-            return unitList.get(pos);
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            CourseComponent unit = getUnit(pos);
-            CourseUnitFragment unitFragment;
-            //FIXME - for the video, let's ignore studentViewMultiDevice for now
-            if (unit instanceof VideoBlockModel &&
-                    ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null) {
-                    unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit);
-            } else if (unit instanceof VideoBlockModel &&
-                    ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
-                    unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
-            } else if (!unit.isMultiDevice()) {
-                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
-            } else if (unit.getType() != BlockType.VIDEO &&
-                    unit.getType() != BlockType.HTML &&
-                    unit.getType() != BlockType.OTHERS &&
-                    unit.getType() != BlockType.DISCUSSION &&
-                    unit.getType() != BlockType.PROBLEM) {
-                unitFragment = CourseUnitEmptyFragment.newInstance(unit);
-            } else if (unit instanceof HtmlBlockModel) {
-                unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
-            }
-            //fallback
-            else {
-                unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
-            }
-
-            unitFragment.setHasComponentCallback(CourseUnitNavigationActivity.this);
-
-            return unitFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return unitList.size();
         }
     }
 
