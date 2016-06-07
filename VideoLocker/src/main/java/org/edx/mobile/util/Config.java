@@ -57,13 +57,10 @@ public class Config {
     // Features
     public static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     public static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
-
     public static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
-
     public static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
-
     public static final String BADGES_ENABLED = "BADGES_ENABLED";
-
+    public static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
 
     // E2E Test
@@ -142,9 +139,6 @@ public class Config {
         public boolean isWebCourseSearchEnabled() { return mSearchBarEnabled; }
     }
 
-    /**
-     * Facebook configuration.
-     */
     public static class FacebookConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("FACEBOOK_APP_ID") String mFacebookAppId;
@@ -166,9 +160,6 @@ public class Config {
         }
     }
 
-    /**
-     * Google configuration.
-     */
     public static class GoogleConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
 
@@ -184,9 +175,6 @@ public class Config {
         }
     }
 
-    /**
-     * Twitter configuration.
-     */
     public static class TwitterConfig {
         private @SerializedName("HASHTAG") String mHashTag;
 
@@ -195,9 +183,6 @@ public class Config {
         }
     }
 
-    /**
-     * Fabric configuration.
-     */
     public static class FabricConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("FABRIC_KEY") String mFabricKey;
@@ -218,9 +203,6 @@ public class Config {
         }
     }
 
-    /**
-     * New Relic configuration.
-     */
     public static class NewRelicConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("NEW_RELIC_KEY") String mNewRelicKey;
@@ -262,10 +244,7 @@ public class Config {
         }
     }
 
-    /**
-     * SegmentIO configuration.
-     */
-    public static class SegmentConfig {
+    public static class SegmentIOConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("SEGMENT_IO_WRITE_KEY") String mSegmentWriteKey;
 
@@ -278,9 +257,6 @@ public class Config {
         }
     }
 
-    /**
-     * Domain White List configuration.
-     */
     public static class DomainWhiteListConfig {
         private @SerializedName("ENABLED") boolean mEnabled;
         private @SerializedName("DOMAINS") List<String> mDomains;
@@ -291,6 +267,21 @@ public class Config {
 
         public List<String> getDomains() {
             return mDomains != null ? mDomains : new ArrayList<String>();
+        }
+    }
+
+    public static class NewLogistrationConfig {
+        private @SerializedName("ENABLED") boolean mEnabled;
+
+        public NewLogistrationConfig(boolean mEnabled) {
+            this.mEnabled = mEnabled;
+        }
+
+        public NewLogistrationConfig() {
+        }
+
+        public boolean isEnabled() {
+            return mEnabled;
         }
     }
 
@@ -410,6 +401,8 @@ public class Config {
 
     public boolean isCourseSharingEnabled() { return getBoolean(COURSE_SHARING_ENABLED, false); }
 
+    public boolean isNewLogistrationEnabled() { return getBoolean(NEW_LOGISTRATION_ENABLED, false); }
+
     public EnrollmentConfig getCourseDiscoveryConfig() {
         JsonElement element = getObject(COURSE_ENROLLMENT);
 
@@ -421,10 +414,6 @@ public class Config {
         }
     }
 
-    /**
-     * Returns Zero Rating configuration.
-     * @return
-     */
     public ZeroRatingConfig getZeroRatingConfig() {
         JsonElement element = getObject(ZERO_RATING);
         if(element != null) {
@@ -497,15 +486,15 @@ public class Config {
         }
     }
 
-    public SegmentConfig getSegmentConfig() {
+    public SegmentIOConfig getSegmentConfig() {
         JsonElement element = getObject(SEGMENT_IO);
         if(element != null) {
             Gson gson = new Gson();
-            SegmentConfig config = gson.fromJson(element, SegmentConfig.class);
+            SegmentIOConfig config = gson.fromJson(element, SegmentIOConfig.class);
             return config;
         }
         else {
-            return new SegmentConfig();
+            return new SegmentIOConfig();
         }
     }
 

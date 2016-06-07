@@ -2,6 +2,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Launch Activity text styles -->
+    <style name="course_discovery_button_text">
+        <item name="android:textSize">@dimen/edx_large</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
     <style name="section_title" parent="@style/regular_white_text">
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">13dp</item>
