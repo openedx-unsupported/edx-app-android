@@ -1224,7 +1224,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     if(temp.length()==0){
                         subTitlesTv.setVisibility(View.GONE);
                     }else{
-                        subTitlesTv.setText(Html.fromHtml(temp));
+                        subTitlesTv.setText(temp);
                         subTitlesTv.setVisibility(View.VISIBLE);
                     }
                 }else{
