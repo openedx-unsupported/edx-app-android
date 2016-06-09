@@ -118,13 +118,12 @@ public class UserAPI {
             } catch (IOException e) {
                 throw new RetroHttpException(e);
             }
-        }
-
-        // cache result
-        try {
-            cache.put(cacheKey, json);
-        } catch (IOException | NoSuchAlgorithmException e) {
-            logger.debug(e.toString());
+            // cache result
+            try {
+                cache.put(cacheKey, json);
+            } catch (IOException | NoSuchAlgorithmException e) {
+                logger.debug(e.toString());
+            }
         }
 
         // We aren't use TypeToken here because it throws NoClassDefFoundError

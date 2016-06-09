@@ -130,7 +130,9 @@ public class Storage implements IStorage {
         }
 
         // anyways, we mark the video as DELETED
-        return db.deleteVideoByVideoId(model, null);
+        int videosDeleted = db.deleteVideoByVideoId(model, null);
+        EventBus.getDefault().post(new DownloadedVideoDeletedEvent());
+        return videosDeleted;
     }
 
     /**
