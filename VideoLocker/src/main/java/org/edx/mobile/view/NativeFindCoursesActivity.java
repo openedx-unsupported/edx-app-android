@@ -22,7 +22,9 @@ public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
         super.onCreate(savedInstanceState);
         setTitle(getString(R.string.find_courses_title));
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
-        configureDrawer();
+        if (environment.getLoginPrefs().getUsername() != null) {
+            configureDrawer();
+        }
     }
 
     @Override
