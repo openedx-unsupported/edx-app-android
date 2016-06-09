@@ -66,11 +66,11 @@ public class DiscoveryLaunchActivity extends BaseFragmentActivity {
                 environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this);
             }
         });
+        binding.exploreSubjects.setVisibility(View.GONE); // TODO: delete this line once we implement listener
         binding.exploreSubjects.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // FIXME: Where should this go?
-                environment.getRouter().showFindCourses(DiscoveryLaunchActivity.this);
             }
         });
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
