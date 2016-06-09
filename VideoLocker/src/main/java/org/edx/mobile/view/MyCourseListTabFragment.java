@@ -10,20 +10,19 @@ import android.widget.TextView;
 import org.edx.mobile.R;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpResponseStatusException;
-import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.LoginPrefs;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
-import retrofit.RetrofitError;
 
 public class MyCourseListTabFragment extends CourseListTabFragment {
 
@@ -31,6 +30,9 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     protected TextView noCourseText;
     private boolean refreshOnResume;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +86,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
         if (result.getEx() != null) {
             logger.error(result.getEx());
             if (result.getEx() instanceof AuthException) {
-                PrefManager prefs = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-                prefs.clearAuth();
+                loginPrefs.clear();
                 getActivity().finish();
             } else if (result.getEx() instanceof HttpResponseStatusException &&
                     ((HttpResponseStatusException) result.getEx()).getStatusCode() == 401) {

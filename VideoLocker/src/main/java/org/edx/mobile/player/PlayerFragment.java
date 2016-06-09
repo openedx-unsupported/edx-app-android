@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,9 +42,7 @@ import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
-import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.social.facebook.FacebookProvider;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.DeviceSettingUtil;
@@ -970,8 +967,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public void onConnectedToMobile(){
-        UserPrefs pref = new UserPrefs(getActivity());
-        boolean wifiPreference = pref.isDownloadOverWifiOnly();
+        boolean wifiPreference = environment.getUserPrefs().isDownloadOverWifiOnly();
         if(!NetworkUtil.isOnZeroRatedNetwork(getActivity(), environment.getConfig()) && wifiPreference){
             //If the user is connected to a non zero rated mobile data network and his wifi preference is on,
             //then prompt user to set change his wifi settings
@@ -1492,13 +1488,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     p.x + 10 -(int)popupWidth, p.y + 10 - (int)popupHeight);
 
             TextView tv_none = (TextView) layout.findViewById(R.id.tv_cc_cancel);
-            if(languageSubtitle!=null){
-                if(languageSubtitle.equalsIgnoreCase("none")){
-                    tv_none.setBackgroundResource(R.color.cyan_text_navigation_20);
-                }else{
-                    tv_none.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
-                }
-            }else{
+            if (languageSubtitle != null) {
+                tv_none.setBackgroundResource(R.drawable.white_bottom_rounded_selector);
+            } else {
                 tv_none.setBackgroundResource(R.color.cyan_text_navigation_20);
             }
             tv_none.setOnClickListener(new OnClickListener() {
@@ -1507,7 +1499,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     try{
                         removeSubtitleDisplayCallBack();
                         hideCCPopUp();
-                        setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
+                        setSubtitleLanguage(null);
                         try{
                             if(player!=null){
                                 environment.getSegment().trackHideTranscript(videoEntry.videoId,
@@ -1584,7 +1576,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                     try{
                         removeSubtitleDisplayCallBack();
                         try{
-                            setSubtitleLanguage(getString(R.string.lbl_cc_cancel));
+                            setSubtitleLanguage(null);
                             if(player!=null){
                                 environment.getSegment().trackHideTranscript(videoEntry.videoId,
                                         player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
@@ -1656,23 +1648,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             if(srtList!=null && srtList.size()>0){
                 final String languageSubtitle = getSubtitleLanguage();
                 if(languageSubtitle!=null){
-                    if(!languageSubtitle.equalsIgnoreCase(getString(R.string.lbl_cc_cancel))){
-                        srt = srtList.get(languageSubtitle);
-                        if (srt != null) {
-                            try{
-                                if(player!=null){
-                                    environment.getSegment().trackShowTranscript(videoEntry.videoId,
-                                            player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                            videoEntry.eid, videoEntry.lmsUrl);
-                                }
-                            }catch(Exception e){
-                                logger.error(e);
+                    srt = srtList.get(languageSubtitle);
+                    if (srt != null) {
+                        try{
+                            if(player!=null){
+                                environment.getSegment().trackShowTranscript(videoEntry.videoId,
+                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
+                                        videoEntry.eid, videoEntry.lmsUrl);
                             }
-                            if(subtitleDisplayHandler==null){
-                                subtitleDisplayHandler = new Handler();
-                            }
-                            subtitleDisplayHandler.post(subtitleProcessesor);
+                        }catch(Exception e){
+                            logger.error(e);
                         }
+                        if(subtitleDisplayHandler==null){
+                            subtitleDisplayHandler = new Handler();
+                        }
+                        subtitleDisplayHandler.post(subtitleProcessesor);
                     }
                 }
             }
@@ -1681,25 +1671,16 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
+    @Inject
+    LoginPrefs loginPrefs;
+
     @Nullable
     private String getSubtitleLanguage() {
-        String language = null;
-        try{
-            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-            language = pm.getString(PrefManager.Key.TRANSCRIPT_LANGUAGE);
-        }catch(Exception e){
-            logger.error(e);
-        }
-        return language;
+        return loginPrefs.getSubtitleLanguage();
     }
 
-    private void setSubtitleLanguage(String language) {
-        try{
-            PrefManager pm = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-            pm.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, language);
-        }catch(Exception e){
-            logger.error(e);
-        }
+    private void setSubtitleLanguage(@Nullable String language) {
+        loginPrefs.setSubtitleLanguage(language);
     }
 
     @Override

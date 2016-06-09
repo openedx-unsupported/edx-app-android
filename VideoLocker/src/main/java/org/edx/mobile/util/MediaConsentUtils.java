@@ -9,7 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.logger.Logger;
+import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
@@ -40,7 +41,7 @@ public class MediaConsentUtils {
             case ConnectivityManager.TYPE_ETHERNET:
                 return true;
             default:
-                return !new UserPrefs(context).isDownloadOverWifiOnly() ||
+                return !MainApplication.getEnvironment(context).getUserPrefs().isDownloadOverWifiOnly() ||
                         NetworkUtil.isOnZeroRatedNetwork(context, config);
         }
     }

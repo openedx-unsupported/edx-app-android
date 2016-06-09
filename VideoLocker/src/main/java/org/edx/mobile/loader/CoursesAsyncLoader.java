@@ -9,6 +9,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.user.UserAPI;
 
@@ -29,6 +30,9 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     @Inject
     UserAPI api;
 
+    @Inject
+    LoginPrefs loginPrefs;
+
     public CoursesAsyncLoader(Context context) {
         super(context);
         this.context = context;
@@ -37,9 +41,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
 
     @Override
     public AsyncTaskResult<List<EnrolledCoursesResponse>> loadInBackground() {
-
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        ProfileModel profile = pref.getCurrentUserProfile();
+        ProfileModel profile = loginPrefs.getCurrentUserProfile();
         List<EnrolledCoursesResponse> enrolledCoursesResponse = null;
 
         AsyncTaskResult<List<EnrolledCoursesResponse>> result = new AsyncTaskResult<>();

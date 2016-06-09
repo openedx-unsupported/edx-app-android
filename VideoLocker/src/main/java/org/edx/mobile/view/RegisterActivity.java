@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
@@ -27,6 +29,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
@@ -43,6 +46,8 @@ import org.edx.mobile.util.ResourceUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
 
@@ -55,6 +60,8 @@ public class RegisterActivity extends BaseFragmentActivity
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
 
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +70,7 @@ public class RegisterActivity extends BaseFragmentActivity
 
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
-        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig());
+        socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
 
         boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(
                 getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN, environment.getConfig());
@@ -126,11 +133,7 @@ public class RegisterActivity extends BaseFragmentActivity
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //if user cancel the registration, do the clean up
-                    PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-                    pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-                    pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-
+                    loginPrefs.clearSocialLoginToken();
                     finish();
                 }
             });
@@ -251,9 +254,8 @@ public class RegisterActivity extends BaseFragmentActivity
             parameters.putString("terms_of_service", "true");
 
             //set parameter required by social registration
-            PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
-            String access_token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
-            String backstore = pref.getString(PrefManager.Key.AUTH_TOKEN_BACKEND);
+            final String access_token = loginPrefs.getSocialLoginAccessToken();
+            final String backstore = loginPrefs.getSocialLoginProvider();
             boolean fromSocialNet = !TextUtils.isEmpty(access_token);
             if (fromSocialNet) {
                 parameters.putString("access_token", access_token);
@@ -279,27 +281,21 @@ public class RegisterActivity extends BaseFragmentActivity
 
             showProgress();
 
-            SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
-            RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
+            final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
+            final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
+                @Override
+                public void onSuccess(AuthResponse auth) {
+                    environment.getRouter().showMyCourses(RegisterActivity.this);
+                    finish();
+                }
 
                 @Override
-                public void onSuccess(RegisterResponse result) {
-                    if (result != null) {
-                        logger.debug("registration success=" + result.isSuccess());
-                        hideProgress();
-
-                        if (!result.isSuccess()) {
-                            FormFieldMessageBody messageBody = result.getMessageBody();
-                            // show general failure message if there wasn't any error for any of the input fields
-                            if (messageBody == null || messageBody.isEmpty()) {
-                                String errorMessage = result.getValue();
-                                if (errorMessage == null || errorMessage.isEmpty()) {
-                                    errorMessage = getString(R.string.sign_up_error);
-                                }
-                                RegisterActivity.this.showErrorMessage(null, errorMessage);
-                                return;
-                            }
-
+                public void onException(Exception ex) {
+                    hideProgress();
+                    if (ex instanceof LoginAPI.RegistrationException) {
+                        final FormFieldMessageBody messageBody = ((LoginAPI.RegistrationException) ex).getRegisterResponse().getMessageBody();
+                        boolean fieldErrorShown = false;
+                        if (messageBody != null) {
                             for (String key : messageBody.keySet()) {
                                 if (key == null)
                                     continue;
@@ -307,32 +303,25 @@ public class RegisterActivity extends BaseFragmentActivity
                                     if (key.equalsIgnoreCase(fieldView.getField().getName())) {
                                         List<RegisterResponseFieldError> error = messageBody.get(key);
                                         showErrorOnField(error, fieldView);
+                                        fieldErrorShown = true;
                                         break;
                                     }
                                 }
                             }
-
-                        } else {
-                            AuthResponse auth = getAuth();
-                            if (auth != null && auth.isSuccess()) {
-                                //in the future we will show different messages based on different registration
-                                //condition
-                                showProgress();
-                                environment.getRouter().showMyCourses(RegisterActivity.this);
-                                finish();
-                            } else {
-                                RegisterActivity.this.showErrorMessage(null, getString(R.string.sign_up_error));
-                            }
                         }
+                        if (!fieldErrorShown) {
+                            // The error does not apply to a form field, so show it as a message instead
+                            String errorMessage = ((LoginAPI.RegistrationException) ex).getRegisterResponse().getValue();
+                            if (errorMessage == null || errorMessage.isEmpty()) {
+                                errorMessage = getString(R.string.sign_up_error);
+                            }
+                            RegisterActivity.this.showErrorMessage(null, errorMessage);
+                        }
+                    } else if (ex instanceof AuthException) {
+                        RegisterActivity.this.showErrorMessage(null, getString(R.string.sign_up_error));
                     } else {
-                        hideProgress();
+                        super.onException(ex);
                     }
-                }
-
-                @Override
-                public void onException(Exception ex) {
-                    super.onException(ex);
-                    hideProgress();
                 }
             };
             task.execute();
@@ -464,9 +453,7 @@ public class RegisterActivity extends BaseFragmentActivity
                     populateFormField("name", name);
 
                     //Should we save the email here?
-                    PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-                    pref.put("email", email);
-                    pref.put(PrefManager.Key.TRANSCRIPT_LANGUAGE, "none");
+                    loginPrefs.setLastAuthenticatedEmail(email);
                 }
             }
         });
@@ -540,17 +527,7 @@ public class RegisterActivity extends BaseFragmentActivity
     /*
      *  callback if login to edx success using social access_token
      */
-    public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
-
-        PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
-        environment.getSegment().identifyUser(profile.id.toString(), profile.email, "");
-
-        String backendKey = pref.getString(PrefManager.Key.SEGMENT_KEY_BACKEND);
-        if (backendKey != null) {
-            environment.getSegment().trackUserLogin(backendKey);
-        }
-
-
+    public void onUserLoginSuccess(ProfileModel profile)  {
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             showProgress();
@@ -562,10 +539,10 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * callback if login to edx failed using social access_token
-     *
-     * @param ex
      */
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {
+        // FIXME: We are assuming that if we get here, the accessToken is valid. That may not be the case!
+
         //we should redirect to current page.
         //do nothing
         //we need to add 1)access_token   2) provider 3) client_id
@@ -630,5 +607,4 @@ public class RegisterActivity extends BaseFragmentActivity
 
         return true;
     }
-
 }

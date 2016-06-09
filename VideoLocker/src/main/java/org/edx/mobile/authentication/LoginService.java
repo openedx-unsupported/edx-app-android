@@ -1,14 +1,12 @@
 package org.edx.mobile.authentication;
 
 import org.edx.mobile.http.ApiConstants;
+import org.edx.mobile.http.RetroHttpException;
 
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
-/**
- * Created by cleeedx on 4/11/16.
- */
 public interface LoginService {
 
     /**
@@ -20,7 +18,7 @@ public interface LoginService {
     AuthResponse getAccessToken(@Field("grant_type") String grant_type,
                                 @Field("client_id") String client_id,
                                 @Field("username") String username,
-                                @Field("password") String password);
+                                @Field("password") String password) throws RetroHttpException;
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -30,5 +28,5 @@ public interface LoginService {
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     AuthResponse refreshAccessToken(@Field("grant_type") String grant_type,
                                     @Field("client_id") String client_id,
-                                    @Field("refresh_token") String refresh_token);
+                                    @Field("refresh_token") String refresh_token) throws RetroHttpException;
 }

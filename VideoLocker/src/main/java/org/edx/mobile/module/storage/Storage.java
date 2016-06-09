@@ -27,6 +27,7 @@ import org.edx.mobile.module.db.DatabaseModelFactory;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.download.IDownloadManager;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.user.UserAPI;
@@ -55,6 +56,8 @@ public class Storage implements IStorage {
     private UserPrefs pref;
     @Inject
     private Config config;
+    @Inject
+    private LoginPrefs loginPrefs;
     @Inject
     ServiceManager serviceManager;
     @Inject UserAPI api;
@@ -473,8 +476,7 @@ public class Storage implements IStorage {
                 @Override
                 public void run() {
                     try {
-                        UserPrefs userprefs = new UserPrefs(context);
-                        ProfileModel profile = userprefs.getProfile();
+                        ProfileModel profile = loginPrefs.getCurrentUserProfile();
                         if (profile == null) {
                             // user no logged in
                             return;
