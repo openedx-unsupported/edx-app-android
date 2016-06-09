@@ -71,8 +71,8 @@ public class Router {
 
     public void showLaunchScreen(Context context) {
         Intent launchIntent = new Intent(context,
-                config.getLaunchScreenConfig().isCourseDiscoveryEnabled()
-                        ? LaunchActivity.class
+                config.isNewLogistrationEnabled()
+                        ? DiscoveryLaunchActivity.class
                         : LaunchActivity.class);
         if (context instanceof Activity)
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

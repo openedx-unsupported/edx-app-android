@@ -312,6 +312,14 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="edX.Widget.BluePillButton" parent="@style/edX.Widget.Button">
+        <item name="android:paddingLeft">@dimen/widget_margin</item>
+        <item name="android:paddingRight">@dimen/widget_margin</item>
+        <item name="android:minHeight">@dimen/edx_button_height</item>
+        <item name="android:background">@drawable/edx_creation_button</item>
+        <item name="android:textColor">@color/edx_grayscale_neutral_white</item>
+    </style>
+
     <style name="edX.Widget.DisableableButton" parent="edX.Widget.Button">
         <item name="android:textColor">?attr/disableableButtonTextColor</item>
     </style>

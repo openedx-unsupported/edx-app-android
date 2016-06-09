@@ -59,7 +59,7 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
-    private static final String LAUNCH_SCREEN = "LAUNCH_SCREEN";
+    private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -302,15 +302,6 @@ public class Config {
         }
     }
 
-    public static class LaunchScreenConfig {
-        @SerializedName("COURSE_DISCOVERY_ENABLED")
-        private boolean courseDiscoveryEnabled = true; // STOPSHIP: Should be false by default
-
-        public boolean isCourseDiscoveryEnabled() {
-            return courseDiscoveryEnabled;
-        }
-    }
-
     @Inject
     public Config(Context context) {
         try {
@@ -399,6 +390,10 @@ public class Config {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
     }
 
+    public boolean isNewLogistrationEnabled() {
+        return getBoolean(NEW_LOGISTRATION_ENABLED, false);
+    }
+
     /**
      * Empty or no config returns false.
      * Otherwise, returns the value from the config.
@@ -477,11 +472,6 @@ public class Config {
     @NonNull
     public EndToEndConfig getEndToEndConfig() {
         return getObjectOrNewInstance(END_TO_END_TEST, EndToEndConfig.class);
-    }
-
-    @NonNull
-    public LaunchScreenConfig getLaunchScreenConfig() {
-        return getObjectOrNewInstance(LAUNCH_SCREEN, LaunchScreenConfig.class);
     }
 
     @NonNull
