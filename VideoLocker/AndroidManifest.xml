@@ -260,15 +260,6 @@
 
         <service android:name="org.edx.mobile.services.DownloadSpeedService" />
 
-        <receiver
-            android:name="org.edx.mobile.receivers.NetworkConnectivityReceiver"
-            android:label="NetworkChangeReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
-
         <!--   Parse Setup -->
         <!--  https://www.parse.com/apps/quickstart#parse_push/android/existing  -->
         <service android:name="com.parse.PushService" />
