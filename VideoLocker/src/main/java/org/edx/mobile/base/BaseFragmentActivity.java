@@ -32,6 +32,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -558,6 +559,10 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
         ViewAnimationUtil.hideMessageBar(error_layout);
         return true;
+    }
+
+    public void showErrorDialog(String message) {
+        AlertDialogFragment.newInstance(message).show(getSupportFragmentManager(), null);
     }
 
     @Override

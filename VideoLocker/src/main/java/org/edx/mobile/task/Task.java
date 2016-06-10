@@ -2,17 +2,15 @@ package org.edx.mobile.task;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.google.inject.Inject;
 
-import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskMessageCallback;
@@ -21,34 +19,46 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.lang.ref.WeakReference;
 
-import retrofit.RetrofitError;
 import roboguice.util.RoboAsyncTask;
 
 public abstract class Task<T> extends RoboAsyncTask<T> {
 
-    private ProgressBar progressBar;
-
-    @Nullable
-    private WeakReference<TaskProgressCallback> progressCallback;
-    @Nullable
-    private WeakReference<TaskMessageCallback> messageCallback;
+    public enum Type {
+        USER_INITIATED, LOADING_CACHED, LOADING_NON_CACHED
+    }
 
     protected final Handler handler = new Handler();
     protected final Logger logger = new Logger(getClass().getName());
 
+    @Nullable
+    private WeakReference<TaskProgressCallback> progressCallback;
+
+    @Nullable
+    private WeakReference<TaskMessageCallback> messageCallback;
+
+    private ProgressBar progressBar;
+
     @Inject
     protected IEdxEnvironment environment;
 
+    private final Type taskType;
+
     public Task(Context context) {
+        this(context, Type.LOADING_NON_CACHED);
+    }
+
+    public Task(Context context, Type type) {
         super(context);
 
         if (context instanceof TaskProcessCallback) {
             setTaskProcessCallback((TaskProcessCallback) context);
         }
+        this.taskType = type;
     }
 
-    public void setProgressDialog(ProgressBar progressBar) {
+    public void setProgressDialog(@NonNull ProgressBar progressBar) {
         this.progressBar = progressBar;
+        this.progressCallback = null;
     }
 
     public void setTaskProcessCallback(@Nullable TaskProcessCallback callback) {
@@ -107,6 +117,20 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
             return;
         }
 
-        callback.onMessage(MessageType.FLYIN_ERROR, ErrorUtils.getErrorMessage(ex, context));
+        callback.onMessage(getMessageType(), ErrorUtils.getErrorMessage(ex, context));
+    }
+
+    /**
+     * @return The {@link MessageType} based on the {@link #taskType}.
+     */
+    private MessageType getMessageType() {
+        switch (taskType) {
+            case USER_INITIATED:
+                return MessageType.DIALOG;
+            case LOADING_CACHED:
+            case LOADING_NON_CACHED:
+            default:
+                return MessageType.FLYIN_ERROR;
+        }
     }
 }
