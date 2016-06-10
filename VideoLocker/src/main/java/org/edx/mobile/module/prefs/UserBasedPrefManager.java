@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.notification.NotificationPreference;
 
@@ -20,8 +21,7 @@ public class UserBasedPrefManager extends PrefManager {
 
     public  static final UserBasedPrefManager getInstance(UserPrefType userPrefType){
         Context context = MainApplication.instance().getApplicationContext();
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        ProfileModel profileModel = pref.getCurrentUserProfile();
+        ProfileModel profileModel = MainApplication.getEnvironment(MainApplication.instance()).getLoginPrefs().getCurrentUserProfile();
         String prefName = profileModel == null ? userPrefType.name() : profileModel.username + "_" + userPrefType.name();
         return new UserBasedPrefManager(context, prefName);
     }

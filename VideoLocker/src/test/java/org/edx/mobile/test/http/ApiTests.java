@@ -105,7 +105,7 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     public void testResetPassword() throws Exception {
         print("test: reset password");
-        ResetPasswordResponse model = api.resetPassword("user@edx.org");
+        ResetPasswordResponse model = loginAPI.resetPassword("user@edx.org");
         assertTrue(model != null);
         print(model.value);
         print("test: finished: reset password");

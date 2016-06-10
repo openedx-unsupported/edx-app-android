@@ -1,12 +1,13 @@
 package org.edx.mobile.test.util;
 
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Created by cleeedx on 4/14/16.
- */
 public class MockDataUtil {
 
     private static final String MOCK_API_RESPONSES_PROPERTIES = "mock_api_responses.properties";
@@ -24,5 +25,9 @@ public class MockDataUtil {
             in.close();
         }
         return responses.getProperty(apiPropertyName);
+    }
+
+    public static <T> T getMockResponse(@NonNull String apiPropertyName, @NonNull Class<T> cls) throws IOException {
+        return new Gson().fromJson(getMockResponse(apiPropertyName), cls);
     }
 }

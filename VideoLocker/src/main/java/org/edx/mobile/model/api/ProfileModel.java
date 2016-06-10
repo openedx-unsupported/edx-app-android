@@ -10,7 +10,4 @@ public class ProfileModel implements Serializable {
     public String name;
     public String course_enrollments;
     // public String url;
-    
-    // hold the json response as it is
-    public String json;
 }

@@ -9,13 +9,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.AuthErrorResponse;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -28,9 +28,7 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
@@ -65,6 +63,9 @@ public class Api implements IApi {
     @Inject
     private UserAPI userApi;
 
+    @Inject
+    private LoginPrefs loginPrefs;
+
     private Context context;
     protected final Logger logger = new Logger(getClass().getName());
 
@@ -72,121 +73,6 @@ public class Api implements IApi {
     public Api(Context context) {
         this.context = context;
 
-    }
-
-    /**
-     * Resets password for the given email id.
-     *
-     * @param emailId
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public ResetPasswordResponse resetPassword(String emailId)
-            throws Exception {
-
-        Bundle params = new Bundle();
-        params.putString("email", emailId);
-
-        String url = getBaseUrl() + "/password_reset/";
-
-        String json = http.post(url, params, null);
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Reset password response=" + json);
-
-        // store auth token response
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_JSON, json);
-
-        Gson gson = new GsonBuilder().create();
-        ResetPasswordResponse res = gson.fromJson(json, ResetPasswordResponse.class);
-
-        return res;
-    }
-
-    /**
-     * Executes HTTP POST for auth call, and returns response.
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public AuthResponse auth(String username, String password)
-            throws Exception {
-        Bundle p = new Bundle();
-        p.putString("grant_type", "password");
-        p.putString("client_id", config.getOAuthClientId());
-        p.putString("username", username);
-        p.putString("password", password);
-
-        String url = getBaseUrl() + "/oauth2/access_token/";
-        String json = http.post(url, p, null);
-        logger.debug("Auth response= " + json);
-
-        // store auth token response
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_JSON, json);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
-
-        Gson gson = new GsonBuilder().create();
-        AuthResponse res = gson.fromJson(json, AuthResponse.class);
-
-        return res;
-    }
-
-    /**
-     * Returns user's basic profile information for current active session.
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public ProfileModel getProfile() throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-
-        String url = getBaseUrl() + "/api/mobile/v0.5/my_user_info";
-        String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-
-        logger.debug("Url for getProfile: " + urlWithAppendedParams);
-
-        String json = http.get(urlWithAppendedParams, getAuthHeaders()).body;
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("GetProfile response=" + json);
-
-        Gson gson = new GsonBuilder().create();
-        ProfileModel res = gson.fromJson(json, ProfileModel.class);
-        res.json = json;
-
-        // store profile json
-        if (res != null) {
-            // FIXME: store the profile only from one place, right now it happens from LoginTask also.
-            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-            pref.put(PrefManager.Key.PROFILE_JSON, res.json);
-        }
-
-        // hold the json string as it is
-        res.json = json;
-
-
-        // store profile json
-        if (json != null) {
-            PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-            pref.put(PrefManager.Key.PROFILE_JSON, json);
-            pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
-            pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
-
-            //it is the routine for login
-            DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).setUserName(res.username);
-        }
-
-        return res;
     }
 
     /**
@@ -355,11 +241,9 @@ public class Api implements IApi {
      */
     @Override
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-
         Bundle p = new Bundle();
         p.putString("format", "json");
-        String url = userApi.getUserEnrolledCoursesURL(pref.getCurrentUserProfile().username);
+        String url = userApi.getUserEnrolledCoursesURL(loginPrefs.getUsername());
         String json = null;
 
         if (NetworkUtil.isConnected(context) && !fetchFromCache) {
@@ -394,7 +278,7 @@ public class Api implements IApi {
             // nothing to do here
         }
         if (authError != null && authError.detail != null) {
-            throw new AuthException(authError);
+            throw new AuthException(authError.detail);
         }
 
         TypeToken<ArrayList<EnrolledCoursesResponse>> t = new TypeToken<ArrayList<EnrolledCoursesResponse>>() {
@@ -521,22 +405,8 @@ public class Api implements IApi {
      */
     private Bundle getAuthHeaders() {
         Bundle headers = new Bundle();
-
-        // generate auth headers
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        AuthResponse auth = pref.getCurrentAuth();
-
-        if (auth == null || !auth.isSuccess()) {
-            // this might be a login with Facebook or Google
-            String token = pref.getString(PrefManager.Key.AUTH_TOKEN_SOCIAL);
-            if (token != null) {
-                headers.putString("Authorization", token);
-            } else {
-                logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
-            }
-        } else {
-            headers.putString("Authorization", String.format("%s %s", auth.token_type, auth.access_token));
-        }
+        final String token = loginPrefs.getAuthorizationHeader();
+        headers.putString("Authorization", token);
         return headers;
     }
 
@@ -665,69 +535,9 @@ public class Api implements IApi {
     }
 
     @Override
-    public AuthResponse loginByFacebook(String accessToken) throws Exception {
-
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.FACEBOOK);
-
-        return socialLogin2(accessToken, PrefManager.Value.BACKEND_FACEBOOK);
-    }
-
-    @Override
-    public AuthResponse loginByGoogle(String accessToken) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.GOOGLE);
-
-        return socialLogin2(accessToken, PrefManager.Value.BACKEND_GOOGLE);
-    }
-
-    private AuthResponse socialLogin2(String accessToken, String backend)
-            throws Exception {
-        Bundle headers = new Bundle();
-        headers.putString("Content-Type", "application/x-www-form-urlencoded");
-
-
-//        URL: /exchange_oauth_token
-//        Method: POST
-//        Request parameters (all strings):
-//        provider (required): Which third party provided the access token (value should be one of "Google" or "Facebook")
-//        access_token (required): The third-party access token
-//        client_id (required): The id for an OAuth client (which must be provisioned via admin interface)
-//        scope (optional): The requested scope for the first-party access token
-//        Example response:
-//        {"access_token": "<redacted>", "token_type": "Bearer", "expires_in": 2591999, "scope": ""}
-
-        Bundle p = new Bundle();
-        p.putString("access_token", accessToken);
-        p.putString("client_id", config.getOAuthClientId());
-
-        //oauth2/exchange_access_token/<backend>/
-        logger.debug("access_token: " + accessToken);
-        logger.debug("client_id: " + config.getOAuthClientId());
-        String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
-        logger.debug("Url for social login: " + url);
-
-
-        String json = http.post(url, p, null);
-        logger.debug("Auth response= " + json);
-
-        // store auth token response
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_JSON, json);
-        pref.put(PrefManager.Key.SEGMENT_KEY_BACKEND, ISegment.Values.PASSWORD);
-
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json, AuthResponse.class);
-
-    }
-
-
-    @Override
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
                                                                          String lastVisitedModuleId) throws Exception {
-
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
+        final String username = loginPrefs.getUsername();
 
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
         logger.debug("PATCH url for syncLastAccessed Subsection: " + url);
@@ -754,13 +564,9 @@ public class Api implements IApi {
 
     @Override
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        PrefManager pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        String username = pref.getCurrentUserProfile().username;
-
+        final String username = loginPrefs.getUsername();
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
         logger.debug("Url of get last accessed subsection: " + url);
-
-        String date = DateUtil.getModificationDate();
 
         String json = http.get(url, getAuthHeaders()).body;
 
@@ -770,45 +576,7 @@ public class Api implements IApi {
         logger.debug("Response of get last viewed subsection.id = " + json);
 
         Gson gson = new GsonBuilder().create();
-        SyncLastAccessedSubsectionResponse res = gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-
-        return res;
-    }
-
-    /**
-     * Creates new account.
-     *
-     * @param parameters
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public RegisterResponse register(Bundle parameters)
-            throws Exception {
-        String url = getBaseUrl() + "/user_api/v1/account/registration/";
-
-        String json = http.post(url, parameters, null);
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Register response= " + json);
-
-        //the server side response format is not client friendly ... so..
-        Gson gson = new GsonBuilder().create();
-        try {
-            FormFieldMessageBody body = gson.fromJson(json, FormFieldMessageBody.class);
-            if (body != null && body.size() > 0) {
-                RegisterResponse res = new RegisterResponse();
-                res.setMessageBody(body);
-                return res;
-            }
-        } catch (Exception ex) {
-            //normal workflow , ignore it.
-        }
-        RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
-
-        return res;
+        return gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
     }
 
     /**

@@ -26,7 +26,6 @@ public class DbTests extends BaseTestCase {
         super.setUp();
         db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, RuntimeEnvironment
                 .application );
-        db.setUserName(username);
     }
 
     @Override

@@ -1,19 +1,22 @@
 package org.edx.mobile.services;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.GetLastAccessedTask;
 import org.edx.mobile.task.SyncLastAccessedTask;
 
-/**
- * This can be injected in the future when we use DI
- */
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class LastAccessManager {
+
     public static interface LastAccessManagerCallback{
         boolean isFetchingLastAccessed();
         void setFetchingLastAccessed(boolean accessed);
@@ -21,12 +24,13 @@ public class LastAccessManager {
     }
 
     protected final Logger logger = new Logger(getClass().getName());
-    private static LastAccessManager manager;
 
-    public static final LastAccessManager getSharedInstance(){
-        if ( manager == null )
-            manager = new LastAccessManager();
-        return manager;
+    @NonNull
+    private final LoginPrefs loginPrefs;
+
+    @Inject
+    public LastAccessManager(@NonNull LoginPrefs loginPrefs) {
+        this.loginPrefs = loginPrefs;
     }
 
     public void fetchLastAccessed(final LastAccessManagerCallback callback, final String courseId) {
@@ -36,9 +40,9 @@ public class LastAccessManager {
     public void fetchLastAccessed(final LastAccessManagerCallback callback, final View view, final String courseId){
         try{
             if(!callback.isFetchingLastAccessed()) {
-                if(courseId!=null && getProfile()!=null && getProfile().username!=null){
-                    String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                        .username, courseId);
+                final String username = loginPrefs.getUsername();
+                if(courseId!=null && username!=null){
+                    String prefName = PrefManager.getPrefNameForLastAccessedBy(username, courseId);
                     final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
                     final String prefModuleId = prefManager.getLastAccessedSubsectionId();
 
@@ -124,10 +128,5 @@ public class LastAccessManager {
         }catch(Exception e){
             logger.error(e);
         }
-    }
-
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(MainApplication.instance(), PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
     }
 }
