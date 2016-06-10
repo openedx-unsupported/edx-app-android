@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +32,7 @@ import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
 import org.edx.mobile.view.NavigationFragment;
+import org.edx.mobile.view.dialog.AlertDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -562,10 +562,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showErrorDialog(String message) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton(R.string.label_ok, null)
-                .create().show();
+        AlertDialogFragment.newInstance(message).show(getSupportFragmentManager(), null);
     }
 
     @Override
