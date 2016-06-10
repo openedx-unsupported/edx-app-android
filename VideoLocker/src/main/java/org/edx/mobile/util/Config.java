@@ -47,10 +47,6 @@ public class Config {
     private static final String PUSH_NOTIFICATIONS_FLAG = "PUSH_NOTIFICATIONS";
     private static final String WHITE_LIST_OF_DOMAINS = "WHITE_LIST_OF_DOMAINS";
 
-    private static final String TEST_ACCOUNT = "TEST_ACCOUNT";
-    private static final String TEST_ACCOUNT_NAME = "NAME";
-    private static final String TEST_ACCOUNT_PASSWORD = "PASSWORD";
-
     // Features
     private static final String USER_PROFILES_ENABLED = "USER_PROFILES_ENABLED";
     private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
@@ -232,22 +228,6 @@ public class Config {
 
         public String getNewRelicKey() {
             return mNewRelicKey;
-        }
-    }
-
-    public static class TestAccountConfig {
-        @SerializedName("NAME")
-        private String mName;
-
-        @SerializedName("PASSWORD")
-        private String mPassword;
-
-        public String getName() {
-            return mName;
-        }
-
-        public String getPassword() {
-            return mPassword;
         }
     }
 
@@ -457,11 +437,6 @@ public class Config {
     @NonNull
     public SegmentConfig getSegmentConfig() {
         return getObjectOrNewInstance(SEGMENT_IO, SegmentConfig.class);
-    }
-
-    @NonNull
-    public TestAccountConfig getTestAccountConfig() {
-        return getObjectOrNewInstance(TEST_ACCOUNT, TestAccountConfig.class);
     }
 
     @NonNull

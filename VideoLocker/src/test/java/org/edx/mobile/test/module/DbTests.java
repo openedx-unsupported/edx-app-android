@@ -1,12 +1,16 @@
 package org.edx.mobile.test.module;
 
+import com.google.inject.Injector;
+
 import org.edx.mobile.model.VideoModel;
+import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.test.BaseTestCase;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
@@ -20,13 +24,24 @@ public class DbTests extends BaseTestCase {
     final Object lock = new Object();
     private IDatabase db;
     private final String username = "unittest";
+    private LoginPrefs loginPrefs;
+
+    @Override
+    protected void inject(Injector injector) throws Exception {
+        super.inject(injector);
+        loginPrefs = injector.getInstance(LoginPrefs.class);
+    }
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         db = DatabaseFactory.getInstance( DatabaseFactory.TYPE_DATABASE_NATIVE, RuntimeEnvironment
                 .application );
-        db.setUserName(username);
+
+        // Our database makes use of the authenticated user's username, so we must mock it.
+        final ProfileModel profileModel = new ProfileModel();
+        profileModel.username = username;
+        loginPrefs.storeUserProfile(profileModel);
     }
 
     @Override
@@ -48,7 +63,7 @@ public class DbTests extends BaseTestCase {
         assertTrue("Row Id must be non zero positive number", rowId > 0);
 
         VideoModel video = db.getVideoEntryByVideoId(videoId, null);
-        assertNotNull("Shoud have got one video object", video);
+        assertNotNull("Should have got one video object", video);
 
         Integer count = db.deleteVideoByVideoId(video, null);
         assertNotNull(count);

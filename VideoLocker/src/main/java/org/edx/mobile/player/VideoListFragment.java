@@ -28,6 +28,7 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
@@ -78,6 +79,9 @@ public class VideoListFragment extends BaseFragment {
     protected IEdxEnvironment environment;
 
     private final Logger logger = new Logger(getClass().getName());
+
+    @Inject
+    LoginPrefs loginPrefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -484,8 +488,8 @@ public class VideoListFragment extends BaseFragment {
 
             DownloadEntry v = (DownloadEntry) model;
             try {
-                String prefName = PrefManager.getPrefNameForLastAccessedBy(getProfile()
-                        .username, v.eid);
+                String prefName = PrefManager.getPrefNameForLastAccessedBy(
+                        loginPrefs.getUsername(), v.eid);
                 PrefManager prefManager = new PrefManager(getActivity(), prefName);
                 VideoResponseModel vrm =  environment.getServiceManager().getVideoById(v.eid, v.videoId);
                 prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
@@ -1300,14 +1304,4 @@ public class VideoListFragment extends BaseFragment {
             logger.error(ex);
         }
     };
-    
-    /**
-     * Returns user's profile.
-     * @return
-     */
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
-    }
-
 }

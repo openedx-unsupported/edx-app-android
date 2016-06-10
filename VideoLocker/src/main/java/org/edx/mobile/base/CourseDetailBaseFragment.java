@@ -21,7 +21,7 @@ import org.edx.mobile.base.BaseFragment;
 
 public abstract class CourseDetailBaseFragment extends BaseFragment {
 
-   @Inject
+    @Inject
     protected IEdxEnvironment environment;
 
     protected final Logger logger = new Logger(getClass().getName());
@@ -34,24 +34,24 @@ public abstract class CourseDetailBaseFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public void showOpenInBrowserPanel(final String url) {
-        if(TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url))
             return;
 
         try {
             final StringBuffer urlStringBuffer = new StringBuffer();
-            if (!url.contains("http://") && !url.contains("https://")){
+            if (!url.contains("http://") && !url.contains("https://")) {
                 urlStringBuffer.append("http://");
                 urlStringBuffer.append(url);
-            }else{
+            } else {
                 urlStringBuffer.append(url);
             }
-            
-            if(getView()!=null){
+
+            if (getView() != null) {
                 getView().findViewById(R.id.open_in_browser_panel).setVisibility(
                         View.VISIBLE);
                 TextView openInBrowserTv = (TextView) getView().findViewById
@@ -72,8 +72,8 @@ public abstract class CourseDetailBaseFragment extends BaseFragment {
 
     public void hideOpenInBrowserPanel() {
         try {
-            if(getView()!=null){
-                if(getView().findViewById(R.id.open_in_browser_panel)!=null){
+            if (getView() != null) {
+                if (getView().findViewById(R.id.open_in_browser_panel) != null) {
                     getView().findViewById(R.id.open_in_browser_panel).setVisibility(
                             View.GONE);
                 }
@@ -82,15 +82,5 @@ public abstract class CourseDetailBaseFragment extends BaseFragment {
             logger.debug("Error in showing player");
             logger.error(ex);
         }
-    }
-    
-
-    /**
-     * Returns user's profile.
-     * @return
-     */
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
     }
 }

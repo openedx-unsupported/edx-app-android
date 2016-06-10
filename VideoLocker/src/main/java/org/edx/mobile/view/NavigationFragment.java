@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +36,7 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.user.Account;
@@ -61,7 +61,9 @@ public class NavigationFragment extends BaseFragment {
     @Inject
     Config config;
 
-    private PrefManager pref;
+    @Inject
+    LoginPrefs loginPrefs;
+
     private final Logger logger = new Logger(getClass().getName());
     private NetworkCheckDialogFragment newFragment;
 
@@ -88,9 +90,7 @@ public class NavigationFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), callback);
         uiLifecycleHelper.onCreate(savedInstanceState);
-        Context context = getActivity().getBaseContext();
-        pref = new PrefManager(context, PrefManager.Pref.LOGIN);
-        profile = pref.getCurrentUserProfile();
+        profile = loginPrefs.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
             getAccountTask = new GetAccountTask(getActivity(), profile.username);
             getAccountTask.setTaskProcessCallback(null); // Disable global loading indicator

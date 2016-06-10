@@ -17,7 +17,7 @@ public abstract class FeatureTest {
         // Ensure we are not logged in
         final MainApplication application = MainApplication.instance();
         environment = application.getInjector().getInstance(EdxEnvironment.class);
-        new PrefManager(application, PrefManager.Pref.LOGIN).clearAuth();
+        environment.getLoginPrefs().clear();
         environment.getSegment().resetIdentifyUser();
     }
 }

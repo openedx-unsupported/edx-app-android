@@ -23,7 +23,7 @@ public class UiTest extends HttpBaseTestCase {
     protected IEdxEnvironment environment;
 
     @Override
-    protected void inject(Injector injector) {
+    protected void inject(Injector injector) throws Exception {
         super.inject(injector);
         environment = injector.getInstance(IEdxEnvironment.class);
     }

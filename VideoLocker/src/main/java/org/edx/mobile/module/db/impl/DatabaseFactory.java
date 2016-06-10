@@ -35,7 +35,7 @@ public class DatabaseFactory {
         if (type == TYPE_DATABASE_NATIVE) {
             // manage singleton object
             if (dbMap.get(type) == null) {
-                db = new IDatabaseImpl(context);
+                db = new IDatabaseImpl(context, MainApplication.getEnvironment(context).getLoginPrefs());
                 dbMap.put(type, db);
                 logger.debug("Database object created");
             }
