@@ -7,9 +7,9 @@
 - Did you rebase against master? (TODO How to rebase)
 
 ### Creating the PR
-Open a new pull request against the edx-app-android repository. The title of the PR should describe the feature, fix, or change that is being made. The description should have information that is relavent to anyone reviewing the PR.
+Open a new pull request against the edx-app-android repository. The title of the PR should describe the feature, fix, or change that is being made. The description should have information that is relevant to anyone reviewing the PR.
 
-Example template below. Some of these items may not be relavent for every PR, for example, an open source contributor external to edX may not be using our JIRA ticketing system and will not have a JIRA ticket number.
+Example template below. Some of these items may not be relevant for every PR, for example, an open source contributor external to edX may not be using our JIRA ticketing system and will not have a JIRA ticket number.
 
 ```
 ### Description
@@ -53,12 +53,12 @@ As your PR is being reviewed, there will be comments added to the PR. When you a
 Sometimes you might get a comment that is out of scope such as an auto-format showing a line of code that could be problematic but unrelated. Feel free to discuss with the reviewer.
 
 #### Rebasing
-There different ways to update your branch with the current master branch. The preferred way is to rebase against master rather than erging while PR comments are being addressed. Rebase often! When you are ready to merge, there will be no conflicts since they have already been resolved when rebasing.
+There different ways to update your branch with the current master branch. The preferred way is to rebase against master rather than merging while PR comments are being addressed. Rebase often! When you are ready to merge, there will be no conflicts since they have already been resolved when rebasing.
 
 #### Merging!
-Commits can get messy so we want to squash all of our commits into logical units. Usually this means submitting one commit per PR but sometimes multiple somewhat related changes may be made in one pull request. For exameple, a feature depends on another area of the code to be refactored. Whether the feature is implemented or not, the refactoring can be considered a sepearate commit.
+Commits can get messy so we want to squash all of our commits into logical units. Usually this means submitting one commit per PR but sometimes multiple somewhat related changes may be made in one pull request. For example, a feature depends on another area of the code to be refactored. Whether the feature is implemented or not, the refactoring can be considered a sepearate commit.
 
-- Two thumbs up from 2 sepearate reviewers :+1:
+- Two thumbs up from 2 separate reviewers :+1:
 - Rebased (preferred) or merge against master branch (TODO rebasing)
 - Squashed commits
 - Commit message properly describes the change.
@@ -73,5 +73,5 @@ Check if the code being changed in the PR works.
 ##### Syntax
 #### TODO Tests
 Are there tests?
-#### TODO Accessiblity
+#### TODO Accessibility
 
