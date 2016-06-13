@@ -22,8 +22,8 @@ import org.edx.mobile.discussion.DiscussionUtils;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.task.GetAndReadThreadTask;
 import org.edx.mobile.task.GetResponsesListTask;
-import org.edx.mobile.task.GetThreadTask;
 import org.edx.mobile.view.adapters.CourseDiscussionResponsesAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -61,7 +61,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     ISegment segIO;
 
     @Nullable
-    private GetThreadTask getThreadTask;
+    private GetAndReadThreadTask getAndReadThreadTask;
 
     private InfiniteScrollUtils.InfiniteListController controller;
 
@@ -88,18 +88,20 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         discussionResponsesRecyclerView.setAdapter(courseDiscussionResponsesAdapter);
 
         responsesLoader.freeze();
-        if (getThreadTask != null) {
-            getThreadTask.cancel(true);
+        if (getAndReadThreadTask != null) {
+            getAndReadThreadTask.cancel(true);
         }
-        getThreadTask = new GetThreadTask(getContext(), discussionThread.getIdentifier()) {
+        // Setting a thread's "read" state gives us back the updated Thread object.
+        getAndReadThreadTask = new GetAndReadThreadTask(getContext(), discussionThread) {
             @Override
             protected void onSuccess(DiscussionThread discussionThread) {
+                super.onSuccess(discussionThread);
                 courseDiscussionResponsesAdapter.updateDiscussionThread(discussionThread);
                 responsesLoader.unfreeze();
             }
         };
-        getThreadTask.setProgressCallback(null);
-        getThreadTask.execute();
+        getAndReadThreadTask.setProgressCallback(null);
+        getAndReadThreadTask.execute();
 
         DiscussionUtils.setStateOnTopicClosed(discussionThread.isClosed(),
                 addResponseTextView, R.string.discussion_responses_add_response_button,
@@ -136,7 +138,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
         if (discussionThread.containsComment(event.getComment())) {
             if (event.getParent() == null) {
                 // We got a response
-                ((BaseFragmentActivity)getActivity()).showInfoMessage(getString(R.string.discussion_response_posted));
+                ((BaseFragmentActivity) getActivity()).showInfoMessage(getString(R.string.discussion_response_posted));
                 if (!responsesLoader.hasMorePages()) {
                     courseDiscussionResponsesAdapter.addNewResponse(event.getComment());
                     discussionResponsesRecyclerView.smoothScrollToPosition(

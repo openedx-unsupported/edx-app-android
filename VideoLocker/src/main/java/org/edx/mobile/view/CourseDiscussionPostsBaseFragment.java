@@ -12,7 +12,6 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.SetThreadReadTask;
 import org.edx.mobile.view.adapters.DiscussionPostsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
@@ -63,10 +62,9 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
                 DiscussionThread thread = discussionPostsAdapter.getItem(position);
                 router.showCourseDiscussionResponses(context, thread, courseData);
 
-                new SetThreadReadTask(context, thread, true).execute();
                 if (!thread.isRead()) {
-                    // Refresh the row to mark it as read immediately,
-                    // pending the response from the server.
+                    // Refresh the row to mark it as read immediately.
+                    // There will be a silent refresh upon return to this Activity.
                     thread.setRead(true);
                     discussionPostsAdapter.getView(position, view, parent);
                 }
