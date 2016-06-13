@@ -56,9 +56,11 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
         this.taskType = type;
     }
 
-    public void setProgressDialog(@NonNull ProgressBar progressBar) {
+    public void setProgressDialog(@Nullable ProgressBar progressBar) {
         this.progressBar = progressBar;
-        this.progressCallback = null;
+        if (progressBar != null) {
+            this.progressCallback = null;
+        }
     }
 
     public void setTaskProcessCallback(@Nullable TaskProcessCallback callback) {
@@ -67,7 +69,12 @@ public abstract class Task<T> extends RoboAsyncTask<T> {
     }
 
     public void setProgressCallback(@Nullable TaskProgressCallback callback) {
-        progressCallback = callback == null ? null : new WeakReference<>(callback);
+        if (callback == null) {
+            progressCallback = null;
+        } else {
+            progressCallback = new WeakReference<>(callback);
+            progressBar = null;
+        }
     }
 
     public void setMessageCallback(@Nullable TaskMessageCallback callback) {
