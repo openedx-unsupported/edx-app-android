@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.SearchView;
 
 import org.edx.mobile.R;
@@ -33,8 +32,6 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     private SearchView discussionTopicsSearchView;
 
     private SearchThreadListTask searchThreadListTask;
-
-    private int nextPage = 1;
 
     @Nullable
     @Override
@@ -122,22 +119,4 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
         super.onResume();
         SoftKeyboardUtil.clearViewFocus(discussionTopicsSearchView);
     }
-
-    @Override
-    public void onRestart() {
-        /*
-        If the activity/fragment needs to be reinstantiated upon restoration,
-        then in some cases the onRestart() callback maybe invoked before view
-        initialization, and thus the controller might not be initialized, and
-        therefore we need to guard this with a null check.
-         */
-        if (controller != null) {
-            nextPage = 1;
-            controller.resetSilently();
-        }
-    }
-
-    @Override
-    public void onItemClick(DiscussionThread thread, AdapterView<?> parent, View view,
-                            int position, long id) {}
 }
