@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,45 +29,36 @@ public class LaunchActivity extends BaseFragmentActivity {
     @Inject
     LoginAPI loginAPI;
 
-    private Subscription logInSubscription;
+    private final static int LOG_IN_REQUEST_CODE = 42; // Arbitrary, unique request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Finish this activity if the user logs in from another activity
-        logInSubscription = loginAPI.getLogInEvents().subscribe(new Observer<LogInEvent>() {
-            @Override
-            public void onData(@NonNull LogInEvent data) {
-                finish();
-            }
-
-            @Override
-            public void onError(@NonNull Throwable error) {
-                // This will never happen
-                throw new RuntimeException(error);
-            }
-        });
         final ActivityLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_launch);
         binding.signInTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getRouter().showLogin(LaunchActivity.this);
+                startActivityForResult(LoginActivity.newIntent(LaunchActivity.this), LOG_IN_REQUEST_CODE);
             }
         });
         binding.signUpBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 environment.getSegment().trackUserSignUpForAccount();
-                environment.getRouter().showRegistration(LaunchActivity.this);
+                startActivityForResult(RegisterActivity.newIntent(LaunchActivity.this), LOG_IN_REQUEST_CODE);
             }
         });
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        logInSubscription.unsubscribe();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == RESULT_OK) {
+            // We initiated the log in screen, so let's go to my courses.
+            finish();
+            environment.getRouter().showMyCourses(this);
+        }
     }
 
     @Override

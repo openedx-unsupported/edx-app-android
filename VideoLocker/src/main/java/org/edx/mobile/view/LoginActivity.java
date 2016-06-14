@@ -390,12 +390,8 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     public void onUserLoginSuccess(ProfileModel profile) {
-        if (isActivityStarted()) {
-            // do NOT launch next screen if app minimized
-            environment.getRouter().showMyCourses(this);
-            // but finish this screen anyways as login is succeeded
-            finish();
-        }
+        setResult(RESULT_OK);
+        finish();
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {

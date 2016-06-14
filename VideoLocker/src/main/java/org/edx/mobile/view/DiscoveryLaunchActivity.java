@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,36 +29,23 @@ public class DiscoveryLaunchActivity extends BaseFragmentActivity {
     @Inject
     LoginAPI loginAPI;
 
-    private Subscription logInSubscription;
+    private final static int LOG_IN_REQUEST_CODE = 42; // Arbitrary, unique request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Finish this activity if the user logs in from another activity
-        logInSubscription = loginAPI.getLogInEvents().subscribe(new Observer<LogInEvent>() {
-            @Override
-            public void onData(@NonNull LogInEvent data) {
-                finish();
-            }
-
-            @Override
-            public void onError(@NonNull Throwable error) {
-                // This will never happen
-                throw new RuntimeException(error);
-            }
-        });
         final ActivityDiscoveryLaunchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_discovery_launch);
         binding.logIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                environment.getRouter().showLogin(DiscoveryLaunchActivity.this);
+                startActivityForResult(LoginActivity.newIntent(DiscoveryLaunchActivity.this), LOG_IN_REQUEST_CODE);
             }
         });
         binding.signUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 environment.getSegment().trackUserSignUpForAccount();
-                environment.getRouter().showRegistration(DiscoveryLaunchActivity.this);
+                startActivityForResult(RegisterActivity.newIntent(DiscoveryLaunchActivity.this), LOG_IN_REQUEST_CODE);
             }
         });
         binding.discoverCourses.setOnClickListener(new OnClickListener() {
@@ -77,9 +65,20 @@ public class DiscoveryLaunchActivity extends BaseFragmentActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        logInSubscription.unsubscribe();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == RESULT_OK) {
+            // We initiated the log in screen, so let's go to my courses.
+            environment.getRouter().showMyCourses(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (loginPrefs.getUsername() != null) {
+            finish(); // We're logged in now, finish this activity.
+        }
     }
 
     @Override

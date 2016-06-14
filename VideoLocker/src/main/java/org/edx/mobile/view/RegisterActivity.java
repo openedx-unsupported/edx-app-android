@@ -1,10 +1,12 @@
 package org.edx.mobile.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -46,6 +48,11 @@ import javax.inject.Inject;
 
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
+
+    @NonNull
+    public static Intent newIntent(@NonNull Context context) {
+        return new Intent(context, RegisterActivity.class);
+    }
 
     private ViewGroup createAccountBtn;
     private LinearLayout requiredFieldsLayout;
@@ -509,12 +516,7 @@ public class RegisterActivity extends BaseFragmentActivity
      *  callback if login to edx success using social access_token
      */
     public void onUserLoginSuccess(ProfileModel profile) {
-        if (isActivityStarted()) {
-            // do NOT launch next screen if app minimized
-            showProgress();
-            environment.getRouter().showMyCourses(this);
-        }
-        // but finish this screen anyways as login is succeeded
+        setResult(RESULT_OK);
         finish();
     }
 

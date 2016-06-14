@@ -24,6 +24,8 @@ public class NativeFindCoursesActivity extends BaseSingleFragmentActivity {
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
         if (environment.getLoginPrefs().getUsername() != null) {
             configureDrawer();
+        } else {
+            blockDrawerFromOpening();
         }
     }
 

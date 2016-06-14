@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +29,6 @@ import com.joanzapata.iconify.widget.IconImageView;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
-import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.course.GetCourseDetailTask;
@@ -39,7 +37,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
-import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -53,6 +50,8 @@ import roboguice.inject.InjectExtra;
 
 
 public class CourseDetailFragment extends BaseFragment {
+
+    private final static int LOG_IN_FOR_ENROLL_REQUEST_CODE = 42; // Arbitrary, unique request code
 
     @Nullable
     private GetCourseDetailTask getCourseDetailTask;
@@ -313,6 +312,11 @@ public class CourseDetailFragment extends BaseFragment {
      */
     public void enrollInCourse() {
         environment.getSegment().trackEnrollClicked(courseDetail.course_id, emailOptIn);
+        if (null == environment.getLoginPrefs().getUsername()) {
+            // STOPSHIP: should go to registration
+            startActivityForResult(LoginActivity.newIntent(getActivity()), LOG_IN_FOR_ENROLL_REQUEST_CODE);
+            return;
+        }
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(getActivity(),
                 courseDetail.course_id, emailOptIn) {
             @Override

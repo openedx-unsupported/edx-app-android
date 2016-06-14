@@ -16,8 +16,11 @@ import android.widget.Toast;
 
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
+import org.edx.mobile.view.LoginActivity;
+import org.edx.mobile.view.Router;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -25,9 +28,13 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public abstract class FindCoursesBaseActivity extends BaseFragmentActivity implements
         URLInterceptorWebViewClient.IActionListener,
         URLInterceptorWebViewClient.IPageStatusListener {
+
+    private final static int LOG_IN_FOR_ENROLL_REQUEST_CODE = 42; // Arbitrary, unique request code
 
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
@@ -169,6 +176,14 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOG_IN_FOR_ENROLL_REQUEST_CODE && resultCode == RESULT_OK) {
+
+        }
+    }
+
+    @Override
     public void onClickEnroll(final String courseId, final boolean emailOptIn) {
         if (isTaskInProgress) {
             // avoid duplicate actions
@@ -177,6 +192,12 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         }
 
         environment.getSegment().trackEnrollClicked(courseId, emailOptIn);
+
+        if (null == environment.getLoginPrefs().getUsername()) {
+            // STOPSHIP: should go to registration
+            startActivityForResult(LoginActivity.newIntent(FindCoursesBaseActivity.this), LOG_IN_FOR_ENROLL_REQUEST_CODE);
+            return;
+        }
 
         isTaskInProgress = true;
 

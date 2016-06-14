@@ -35,6 +35,8 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
         super.onCreate(savedInstanceState);
         if (environment.getLoginPrefs().getUsername() != null) {
             configureDrawer();
+        } else {
+            blockDrawerFromOpening();
         }
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
         webView = (WebView) findViewById(R.id.webview);
