@@ -29,6 +29,7 @@ import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.IStorage;
+import org.edx.mobile.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,12 +57,15 @@ public class CourseOutlineAdapter extends BaseAdapter {
     private IStorage storage;
     private DownloadListener mDownloadListener;
     private Context context;
+    private Config config;
 
     private boolean currentVideoMode;
     private int numOfTotalUnits;
 
-    public CourseOutlineAdapter(Context context, IDatabase dbStore, IStorage storage, DownloadListener listener) {
+    public CourseOutlineAdapter(Context context, Config config, IDatabase dbStore, IStorage storage,
+                                DownloadListener listener) {
         this.context = context;
+        this.config = config;
         this.dbStore = dbStore;
         this.storage = storage;
         this.mDownloadListener = listener;
@@ -239,7 +243,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 return;
             }
         }
-        if (row.component instanceof DiscussionBlockModel) {
+        if (config.isDiscussionsEnabled() && row.component instanceof DiscussionBlockModel) {
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_comments_o);
             checkAccessStatus(viewHolder, unit);
         } else if (!unit.isMultiDevice()) {

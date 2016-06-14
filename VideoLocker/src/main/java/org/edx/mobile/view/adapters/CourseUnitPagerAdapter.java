@@ -11,6 +11,7 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.DiscussionBlockModel;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.model.course.VideoBlockModel;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.view.CourseUnitDiscussionFragment;
 import org.edx.mobile.view.CourseUnitEmptyFragment;
 import org.edx.mobile.view.CourseUnitFragment;
@@ -22,15 +23,18 @@ import org.edx.mobile.view.CourseUnitWebViewFragment;
 import java.util.List;
 
 public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
+    private Config config;
     private List<CourseComponent> unitList;
     private EnrolledCoursesResponse courseData;
     private CourseUnitFragment.HasComponent callback;
 
     public CourseUnitPagerAdapter(FragmentManager manager,
+                                  Config config,
                                   List<CourseComponent> unitList,
                                   EnrolledCoursesResponse courseData,
                                   CourseUnitFragment.HasComponent callback) {
         super(manager);
+        this.config = config;
         this.unitList = unitList;
         this.courseData = courseData;
         this.callback = callback;
@@ -55,7 +59,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         } else if (unit instanceof VideoBlockModel &&
                 ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
-        } else if (unit instanceof DiscussionBlockModel) {
+        } else if (config.isDiscussionsEnabled() && unit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(unit, courseData);
         } else if (!unit.isMultiDevice()) {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);

@@ -172,30 +172,31 @@ public class CourseOutlineFragment extends BaseFragment {
     private void initializeAdapter() {
         if (adapter == null) {
             // creating adapter just once
-            adapter = new CourseOutlineAdapter(getActivity(), environment.getDatabase(),
-                    environment.getStorage(), new CourseOutlineAdapter.DownloadListener() {
-                @Override
-                public void download(List<? extends HasDownloadEntry> models) {
-                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
-                    if (NetworkUtil.verifyDownloadPossible(activity)) {
-                        downloadManager.downloadVideos(models, getActivity(),
-                                (VideoDownloadHelper.DownloadManagerCallback) getActivity());
-                    }
-                }
+            adapter = new CourseOutlineAdapter(getActivity(), environment.getConfig(),
+                    environment.getDatabase(), environment.getStorage(),
+                    new CourseOutlineAdapter.DownloadListener() {
+                        @Override
+                        public void download(List<? extends HasDownloadEntry> models) {
+                            CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                            if (NetworkUtil.verifyDownloadPossible(activity)) {
+                                downloadManager.downloadVideos(models, getActivity(),
+                                        (VideoDownloadHelper.DownloadManagerCallback) getActivity());
+                            }
+                        }
 
-                @Override
-                public void download(DownloadEntry videoData) {
-                    CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
-                    if (NetworkUtil.verifyDownloadPossible(activity)) {
-                        downloadManager.downloadVideo(videoData, activity, activity);
-                    }
-                }
+                        @Override
+                        public void download(DownloadEntry videoData) {
+                            CourseOutlineActivity activity = (CourseOutlineActivity) getActivity();
+                            if (NetworkUtil.verifyDownloadPossible(activity)) {
+                                downloadManager.downloadVideo(videoData, activity, activity);
+                            }
+                        }
 
-                @Override
-                public void viewDownloadsStatus() {
-                    environment.getRouter().showDownloads(getActivity());
-                }
-            });
+                        @Override
+                        public void viewDownloadsStatus() {
+                            environment.getRouter().showDownloads(getActivity());
+                        }
+                    });
         }
     }
 
