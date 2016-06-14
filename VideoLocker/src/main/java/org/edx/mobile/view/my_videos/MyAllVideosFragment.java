@@ -1,7 +1,8 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view.my_videos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,17 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
+import org.edx.mobile.module.storage.DownloadCompletedEvent;
+import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.task.GetAllDownloadedVideosTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.view.Router;
+import org.edx.mobile.view.VideoListActivity;
 import org.edx.mobile.view.adapters.MyAllVideoCourseAdapter;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class MyAllVideosFragment extends BaseFragment {
 
@@ -34,21 +41,21 @@ public class MyAllVideosFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_ALL);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View view       =   inflater.inflate(R.layout.fragment_my_all_videos, container, false);
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_my_all_videos, container, false);
 
-        ListView myCourseList = (ListView) view.findViewById(R.id.my_video_course_list);
+        ListView myCourseList = (ListView) view.findViewById(R.id.videos_course_list);
         myCourseList.setEmptyView(view.findViewById(R.id.empty_list_view));
 
         myCoursesAdaptor = new MyAllVideoCourseAdapter(getActivity(), environment) {
             @Override
             public void onItemClicked(EnrolledCoursesResponse model) {
                 AppConstants.myVideosDeleteMode = false;
-                
                 Intent videoIntent = new Intent(getActivity(), VideoListActivity.class);
                 videoIntent.putExtra(Router.EXTRA_COURSE_DATA, model);
                 videoIntent.putExtra("FromMyVideos", true);
@@ -56,10 +63,9 @@ public class MyAllVideosFragment extends BaseFragment {
             }
         };
 
-        addMyAllVideosData();
         myCourseList.setAdapter(myCoursesAdaptor);
         myCourseList.setOnItemClickListener(myCoursesAdaptor);
-        
+
         return view;
     }
 
@@ -67,9 +73,8 @@ public class MyAllVideosFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         addMyAllVideosData();
-        myCoursesAdaptor.notifyDataSetChanged();
     }
-    
+
     @Override
     public void onStop() {
         super.onStop();
@@ -79,29 +84,40 @@ public class MyAllVideosFragment extends BaseFragment {
         }
     }
 
-    private void addMyAllVideosData() {
-        if (myCoursesAdaptor != null) {
-            myCoursesAdaptor.clear();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
-            if (getAllDownloadedVideosTask != null) {
-                getAllDownloadedVideosTask.cancel(true);
-            } else {
-                getAllDownloadedVideosTask = new GetAllDownloadedVideosTask(getActivity()) {
-
-                    @Override
-                    protected void onSuccess(List<EnrolledCoursesResponse> enrolledCoursesResponses) throws Exception {
-                        super.onSuccess(enrolledCoursesResponses);
-                        if (enrolledCoursesResponses != null) {
-                            for (EnrolledCoursesResponse m : enrolledCoursesResponses) {
-                                if (m.isIs_active()) {
-                                    myCoursesAdaptor.add(m);
-                                }
-                            }
+    protected void addMyAllVideosData() {
+        if (myCoursesAdaptor == null) {
+            return;
+        }
+        if (getAllDownloadedVideosTask != null) {
+            getAllDownloadedVideosTask.cancel(true);
+        }
+        getAllDownloadedVideosTask = new GetAllDownloadedVideosTask(getActivity()) {
+            @Override
+            protected void onSuccess(List<EnrolledCoursesResponse> enrolledCoursesResponses) throws Exception {
+                super.onSuccess(enrolledCoursesResponses);
+                myCoursesAdaptor.clear();
+                if (enrolledCoursesResponses != null) {
+                    for (EnrolledCoursesResponse m : enrolledCoursesResponses) {
+                        if (m.isIs_active()) {
+                            myCoursesAdaptor.add(m);
                         }
                     }
-                };
+                }
             }
-            getAllDownloadedVideosTask.execute();
-        }
+        };
+        getAllDownloadedVideosTask.execute();
+    }
+
+    public void onEventMainThread(DownloadedVideoDeletedEvent e) {
+        addMyAllVideosData();
+    }
+    public void onEventMainThread(DownloadCompletedEvent e) {
+        addMyAllVideosData();
     }
 }

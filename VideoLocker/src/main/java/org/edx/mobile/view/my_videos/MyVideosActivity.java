@@ -1,8 +1,7 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view.my_videos;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
@@ -12,9 +11,10 @@ import org.edx.mobile.base.BaseVideosDownloadStateActivity;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.view.adapters.StaticFragmentPagerAdapter;
 
-public class MyVideosTabActivity extends BaseVideosDownloadStateActivity {
+public class MyVideosActivity extends BaseVideosDownloadStateActivity {
 
     private View offlineBar;
+    private StaticFragmentPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MyVideosTabActivity extends BaseVideosDownloadStateActivity {
 
     private void initializeTabs() {
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter adapter = new StaticFragmentPagerAdapter(getSupportFragmentManager(),
+        adapter = new StaticFragmentPagerAdapter(getSupportFragmentManager(),
                 new StaticFragmentPagerAdapter.Item(MyAllVideosFragment.class,
                         getText(R.string.my_all_videos)),
                 new StaticFragmentPagerAdapter.Item(MyRecentVideosFragment.class,
@@ -68,5 +68,4 @@ public class MyVideosTabActivity extends BaseVideosDownloadStateActivity {
         super.onOnline();
         offlineBar.setVisibility(View.GONE);
     }
-
 }

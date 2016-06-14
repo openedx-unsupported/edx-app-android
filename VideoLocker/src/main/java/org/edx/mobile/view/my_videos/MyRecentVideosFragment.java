@@ -1,10 +1,11 @@
-package org.edx.mobile.view;
+package org.edx.mobile.view.my_videos;
 
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +27,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
@@ -34,6 +34,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.task.GetRecentDownloadedVideosTask;
@@ -49,6 +50,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 public class MyRecentVideosFragment extends BaseFragment implements IPlayerEventCallback {
 
@@ -74,16 +77,16 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_RECENT);
         setHasOptionsMenu(!isLandscape());
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_video_list_with_player_container, null);
-        environment.getSegment().trackScreenView(ISegment.Screens.MY_VIDEOS_RECENT);
-
         return view;
     }
 
@@ -144,7 +147,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     @Override
     public void onResume() {
         super.onResume();
-        addToRecentAdapter(getView());
+        addToRecentAdapter();
     }
 
     @Override
@@ -166,6 +169,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         if (playerFragment != null) {
             ((NetworkSubject) getActivity()).unregisterNetworkObserver(playerFragment);
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -223,45 +227,43 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         }
     }
 
-    private void addToRecentAdapter(final View view) {
+    private void addToRecentAdapter() {
         if (adapter == null) {
             return;
         }
-        logger.debug("reloading adapter...");
-        final String selectedId = adapter.getVideoId();
-
-
         if (getRecentDownloadedVideosTask != null) {
             getRecentDownloadedVideosTask.cancel(true);
         }
-        else {
-            getRecentDownloadedVideosTask = new GetRecentDownloadedVideosTask(getActivity()) {
-                @Override
-                protected void onSuccess(List<SectionItemInterface> list) throws Exception {
-                    super.onSuccess(list);
-                    if (list != null && !list.isEmpty()) {
-                        adapter.clear();
-                        adapter.addAll(list);
-                        logger.debug("reload done");
-                    }
-
-                    if (adapter.getCount() <= 0) {
-                        hideDeletePanel(view);
-                    }
-                    videoListView.setOnItemClickListener(adapter);
-                    if (selectedId != null) {
-                        adapter.setVideoId(selectedId);
-                    }
-                    notifyAdapter();
-                    // Refresh the previous and next buttons visibility on the video
-                    // player if a video is playing, based on the new data set.
-                    if (playerFragment != null) {
-                        playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
-                    }
+        logger.debug("MyRecentVideoAdapter reloading");
+        final String selectedId = adapter.getVideoId();
+        getRecentDownloadedVideosTask = new GetRecentDownloadedVideosTask(getActivity()) {
+            @Override
+            protected void onSuccess(List<SectionItemInterface> list) throws Exception {
+                super.onSuccess(list);
+                if (list != null) {
+                    adapter.clear();
+                    adapter.addAll(list);
+                    logger.debug("MyRecentVideoAdapter reloaded.");
                 }
-            };
-        }
 
+                if (adapter.getCount() <= 0) {
+                    hideDeletePanel(getView());
+                } else {
+                    showDeletePanel(getView());
+                }
+
+                videoListView.setOnItemClickListener(adapter);
+                if (selectedId != null) {
+                    adapter.setVideoId(selectedId);
+                }
+                notifyAdapter();
+                // Refresh the previous and next buttons visibility on the video
+                // player if a video is playing, based on the new data set.
+                if (playerFragment != null) {
+                    playerFragment.setNextPreviousListeners(getNextListener(), getPreviousListener());
+                }
+            }
+        };
         getRecentDownloadedVideosTask.execute();
     }
 
@@ -303,7 +305,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
         String filepath = null;
         // check if file available on local
-        if (videoModel.filepath != null && videoModel.filepath.length()>0) {
+        if (!TextUtils.isEmpty(videoModel.filepath)) {
             if (videoModel.isDownloaded()) {
                 File f = new File(videoModel.filepath);
                 if (f.exists()) {
@@ -449,20 +451,20 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
         dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
         dialogMap.put("yes_button", getString(R.string.label_delete));
-        dialogMap.put("no_button",  getString(R.string.label_cancel));
+        dialogMap.put("no_button", getString(R.string.label_cancel));
         deleteDialogFragment = DeleteVideoDialogFragment.newInstance(dialogMap,
                 new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                onConfirmDelete();
-                deleteDialogFragment.dismiss();
-            }
+                    @Override
+                    public void onPositiveClicked() {
+                        onConfirmDelete();
+                        deleteDialogFragment.dismiss();
+                    }
 
-            @Override
-            public void onNegativeClicked() {
-                deleteDialogFragment.dismiss();
-            }
-        });
+                    @Override
+                    public void onNegativeClicked() {
+                        deleteDialogFragment.dismiss();
+                    }
+                });
         deleteDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         deleteDialogFragment.show(getFragmentManager(), "dialog");
         deleteDialogFragment.setCancelable(false);
@@ -481,13 +483,21 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         if (list != null) {
             for (SectionItemInterface section : list) {
                 if (section.isDownload()) {
+                    // TODO The removeDownload() triggers a callback upon video deletion.
+                    // Would be better if removeDownload() could take a list of videos to delete.
                     DownloadEntry de = (DownloadEntry) section;
                     environment.getStorage().removeDownload(de);
                     deletedVideoCount++;
+                    // Although the adapter is refreshed below, we update the adapter here to
+                    // prevent a user from being able to click a deleted video while the adapter is
+                    // refreshing. 
+                    adapter.remove(section);
                 }
             }
         }
-        addToRecentAdapter(getView());
+        // Although the videos are removed from the adapter above, the section the videos are in
+        // is not available so we refresh the adapter here.
+        addToRecentAdapter();
         notifyAdapter();
         videoListView.setOnItemClickListener(adapter);
         setCheckBoxVisible(false);
@@ -502,7 +512,8 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
 
 
     @Override
-    public void onError() {}
+    public void onError() {
+    }
 
     @Override
     public void onPlaybackStarted() {
@@ -544,11 +555,10 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     }
 
     /**
-     * @return  true if current orientation is LANDSCAPE, false otherwise.
-     *
+     * @return true if current orientation is LANDSCAPE, false otherwise.
      */
     protected boolean isLandscape() {
-        return (getResources().getConfiguration().orientation 
+        return (getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE);
     }
 
@@ -633,28 +643,28 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         return false;
     }
 
-    private View.OnClickListener getNextListener(){
+    private View.OnClickListener getNextListener() {
         if (hasNextVideo(playingVideoIndex)) {
             return new NextClickListener();
         }
         return null;
     }
 
-    private View.OnClickListener getPreviousListener(){
+    private View.OnClickListener getPreviousListener() {
         if (hasPreviousVideo(playingVideoIndex)) {
             return new PreviousClickListener();
         }
         return null;
     }
 
-    private class NextClickListener implements OnClickListener{
+    private class NextClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             playNext();
         }
     }
 
-    private class PreviousClickListener implements OnClickListener{
+    private class PreviousClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             playPrevious();
@@ -684,4 +694,8 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             logger.error(ex);
         }
     };
+
+    public void onEventMainThread(DownloadCompletedEvent e) {
+        addToRecentAdapter();
+    }
 }

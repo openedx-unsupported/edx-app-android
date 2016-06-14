@@ -19,18 +19,14 @@ import android.widget.TextView;
 
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.base.BaseFragmentActivity;
-import org.edx.mobile.exception.AuthException;
-import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
@@ -40,8 +36,8 @@ import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
-import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.util.images.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +51,6 @@ public class RegisterActivity extends BaseFragmentActivity
     private LinearLayout requiredFieldsLayout;
     private LinearLayout optionalFieldsLayout;
     private LinearLayout agreementLayout;
-    private LinearLayout registrationLayout;
     private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
@@ -138,7 +133,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             });
         }
-        registrationLayout = (LinearLayout) findViewById(R.id.registrationLayout);
 
         TextView customTitle = (TextView) findViewById(R.id.activity_title);
         if (customTitle != null) {
@@ -228,106 +222,93 @@ public class RegisterActivity extends BaseFragmentActivity
     }
 
     private void createAccount() {
-        if (NetworkUtil.isConnected(this)) {
-            ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollview);
 
-            boolean hasError = false;
-            // prepare query (POST body)
-            Bundle parameters = new Bundle();
-            for (IRegistrationFieldView v : mFieldViews) {
-                if (v.isValidInput()) {
-                    if (v.hasValue()) {
-                        // we submit the field only if it provides a value
-                        parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
-                    }
-                } else {
-                    if (!hasError) {
-                        // this is the first input field with error, so focus on it
-                        scrollToView(scrollView, v.getView());
-                    }
-                    hasError = true;
+        boolean hasError = false;
+        // prepare query (POST body)
+        Bundle parameters = new Bundle();
+        for (IRegistrationFieldView v : mFieldViews) {
+            if (v.isValidInput()) {
+                if (v.hasValue()) {
+                    // we submit the field only if it provides a value
+                    parameters.putString(v.getField().getName(), v.getCurrentValue().getAsString());
                 }
-            }
-
-            // set honor_code and terms_of_service to true
-            parameters.putString("honor_code", "true");
-            parameters.putString("terms_of_service", "true");
-
-            //set parameter required by social registration
-            final String access_token = loginPrefs.getSocialLoginAccessToken();
-            final String backstore = loginPrefs.getSocialLoginProvider();
-            boolean fromSocialNet = !TextUtils.isEmpty(access_token);
-            if (fromSocialNet) {
-                parameters.putString("access_token", access_token);
-                parameters.putString("provider", backstore);
-                parameters.putString("client_id", environment.getConfig().getOAuthClientId());
-            }
-
-
-            // do NOT proceed if validations are failed
-            if (hasError) {
-                return;
-            }
-
-            try {
-                //Send app version in create event
-                String versionName = BuildConfig.VERSION_NAME;
-                String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
-
-                environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
-            } catch (Exception e) {
-                logger.error(e);
-            }
-
-            showProgress();
-
-            final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
-            final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
-                @Override
-                public void onSuccess(AuthResponse auth) {
-                    environment.getRouter().showMyCourses(RegisterActivity.this);
-                    finish();
+            } else {
+                if (!hasError) {
+                    // this is the first input field with error, so focus on it
+                    scrollToView(scrollView, v.getView());
                 }
-
-                @Override
-                public void onException(Exception ex) {
-                    hideProgress();
-                    if (ex instanceof LoginAPI.RegistrationException) {
-                        final FormFieldMessageBody messageBody = ((LoginAPI.RegistrationException) ex).getRegisterResponse().getMessageBody();
-                        boolean fieldErrorShown = false;
-                        if (messageBody != null) {
-                            for (String key : messageBody.keySet()) {
-                                if (key == null)
-                                    continue;
-                                for (IRegistrationFieldView fieldView : mFieldViews) {
-                                    if (key.equalsIgnoreCase(fieldView.getField().getName())) {
-                                        List<RegisterResponseFieldError> error = messageBody.get(key);
-                                        showErrorOnField(error, fieldView);
-                                        fieldErrorShown = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (!fieldErrorShown) {
-                            // The error does not apply to a form field, so show it as a message instead
-                            String errorMessage = ((LoginAPI.RegistrationException) ex).getRegisterResponse().getValue();
-                            if (errorMessage == null || errorMessage.isEmpty()) {
-                                errorMessage = getString(R.string.sign_up_error);
-                            }
-                            RegisterActivity.this.showErrorMessage(null, errorMessage);
-                        }
-                    } else if (ex instanceof AuthException) {
-                        RegisterActivity.this.showErrorMessage(null, getString(R.string.sign_up_error));
-                    } else {
-                        super.onException(ex);
-                    }
-                }
-            };
-            task.execute();
-        } else {
-            RegisterActivity.this.showErrorMessage(getString(R.string.no_connectivity), getString(R.string.network_not_connected));
+                hasError = true;
+            }
         }
+
+        // set honor_code and terms_of_service to true
+        parameters.putString("honor_code", "true");
+        parameters.putString("terms_of_service", "true");
+
+        //set parameter required by social registration
+        final String access_token = loginPrefs.getSocialLoginAccessToken();
+        final String backstore = loginPrefs.getSocialLoginProvider();
+        boolean fromSocialNet = !TextUtils.isEmpty(access_token);
+        if (fromSocialNet) {
+            parameters.putString("access_token", access_token);
+            parameters.putString("provider", backstore);
+            parameters.putString("client_id", environment.getConfig().getOAuthClientId());
+        }
+
+
+        // do NOT proceed if validations are failed
+        if (hasError) {
+            return;
+        }
+
+        try {
+            //Send app version in create event
+            String versionName = BuildConfig.VERSION_NAME;
+            String appVersion = String.format("%s v%s", getString(R.string.android), versionName);
+
+            environment.getSegment().trackCreateAccountClicked(appVersion, backstore);
+        } catch (Exception e) {
+            logger.error(e);
+        }
+
+        showProgress();
+
+        final SocialFactory.SOCIAL_SOURCE_TYPE backsourceType = SocialFactory.SOCIAL_SOURCE_TYPE.fromString(backstore);
+        final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
+            @Override
+            public void onSuccess(AuthResponse auth) {
+                environment.getRouter().showMyCourses(RegisterActivity.this);
+                finish();
+            }
+
+            @Override
+            public void onException(Exception ex) {
+                hideProgress();
+                if (ex instanceof LoginAPI.RegistrationException) {
+                    final FormFieldMessageBody messageBody = ((LoginAPI.RegistrationException) ex).getFormErrorBody();
+                    boolean fieldErrorShown = false;
+                    for (String key : messageBody.keySet()) {
+                        if (key == null)
+                            continue;
+                        for (IRegistrationFieldView fieldView : mFieldViews) {
+                            if (key.equalsIgnoreCase(fieldView.getField().getName())) {
+                                List<RegisterResponseFieldError> error = messageBody.get(key);
+                                showErrorOnField(error, fieldView);
+                                fieldErrorShown = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (fieldErrorShown) {
+                        // We are showing an error message on a visible form field.
+                        return; // Return here to avoid showing the generic error pop-up.
+                    }
+                }
+                RegisterActivity.this.showErrorMessage(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+            }
+        };
+        task.execute();
     }
 
     /**
@@ -527,7 +508,7 @@ public class RegisterActivity extends BaseFragmentActivity
     /*
      *  callback if login to edx success using social access_token
      */
-    public void onUserLoginSuccess(ProfileModel profile)  {
+    public void onUserLoginSuccess(ProfileModel profile) {
         if (isActivityStarted()) {
             // do NOT launch next screen if app minimized
             showProgress();

@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import org.edx.mobile.discussion.DiscussionComment;
 
 public abstract class SetCommentVotedTask extends Task<DiscussionComment> {
+    @NonNull
     private final DiscussionComment comment;
+    @NonNull
     private final boolean voted;
 
     public SetCommentVotedTask(@NonNull Context context,
                                @NonNull DiscussionComment comment, boolean voted) {
-        super(context);
+        super(context, Type.USER_INITIATED);
         this.comment = comment;
         this.voted = voted;
     }

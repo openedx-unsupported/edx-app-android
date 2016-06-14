@@ -1,12 +1,10 @@
 package org.edx.mobile.services;
 
 import android.net.Uri;
-import android.os.Bundle;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.http.HttpManager;
 import org.edx.mobile.http.HttpRequestDelegate;
@@ -20,9 +18,6 @@ import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.RegisterResponse;
-import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.TranscriptModel;
@@ -31,13 +26,10 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.util.Config;
 
-import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -173,19 +165,6 @@ public class ServiceManager {
         return null;
     }
 
-
-    public ResetPasswordResponse resetPassword(String emailId) throws Exception {
-        return api.resetPassword(emailId);
-    }
-
-    public AuthResponse auth(String username, String password) throws Exception {
-        return api.auth(username, password);
-    }
-
-    public ProfileModel getProfile() throws Exception {
-        return api.getProfile();
-    }
-
     public List<EnrolledCoursesResponse> getEnrolledCourses() throws Exception {
         return api.getEnrolledCourses();
     }
@@ -210,16 +189,6 @@ public class ServiceManager {
         return api.downloadTranscript(url);
     }
 
-    public AuthResponse loginByFacebook(String accessToken) throws Exception {
-        return api.loginByFacebook(accessToken);
-    }
-
-
-    public AuthResponse loginByGoogle(String accessToken) throws Exception {
-        return api.loginByGoogle(accessToken);
-    }
-
-
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
         return api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
     }
@@ -228,11 +197,6 @@ public class ServiceManager {
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
         return api.getLastAccessedSubsection(courseId);
     }
-
-    public RegisterResponse register(Bundle parameters) throws Exception {
-        return api.register(parameters);
-    }
-
 
     public RegistrationDescription getRegistrationDescription() throws Exception {
         return api.getRegistrationDescription();

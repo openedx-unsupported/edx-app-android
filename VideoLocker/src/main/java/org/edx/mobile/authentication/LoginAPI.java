@@ -3,20 +3,27 @@ package org.edx.mobile.authentication;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.edx.mobile.exception.AuthException;
+import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.RetroHttpException;
-import org.edx.mobile.model.api.RegisterResponse;
+import org.edx.mobile.model.api.FormFieldMessageBody;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Observable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.RestAdapter;
 
@@ -33,9 +40,6 @@ public class LoginAPI {
     private final LoginPrefs loginPrefs;
 
     @NonNull
-    private final ServiceManager serviceManager;
-
-    @NonNull
     private final ISegment segment;
 
     @NonNull
@@ -44,13 +48,21 @@ public class LoginAPI {
     @NonNull
     private final BasicObservable<LogInEvent> logInEvents = new BasicObservable<>();
 
+    @NonNull
+    private final Gson gson;
+
     @Inject
-    public LoginAPI(@NonNull RestAdapter restAdapter, @NonNull Config config, @NonNull LoginPrefs loginPrefs, @NonNull ServiceManager serviceManager, @NonNull ISegment segment, @NonNull NotificationDelegate notificationDelegate) {
+    public LoginAPI(@NonNull RestAdapter restAdapter,
+                    @NonNull Config config,
+                    @NonNull LoginPrefs loginPrefs,
+                    @NonNull ISegment segment,
+                    @NonNull NotificationDelegate notificationDelegate,
+                    @NonNull Gson gson) {
         this.config = config;
         this.loginPrefs = loginPrefs;
-        this.serviceManager = serviceManager;
         this.segment = segment;
         this.notificationDelegate = notificationDelegate;
+        this.gson = gson;
         loginService = restAdapter.create(LoginService.class);
     }
 
@@ -81,29 +93,30 @@ public class LoginAPI {
 
     @NonNull
     public AuthResponse logInUsingFacebook(String accessToken) throws Exception {
-        final AuthResponse response = serviceManager.loginByFacebook(accessToken);
-        finishSocialLogIn(response, LoginPrefs.AuthBackend.FACEBOOK);
-        return response;
+        return finishSocialLogIn(accessToken, LoginPrefs.AuthBackend.FACEBOOK);
     }
 
     @NonNull
     public AuthResponse logInUsingGoogle(String accessToken) throws Exception {
-        final AuthResponse response = serviceManager.loginByGoogle(accessToken);
-        finishSocialLogIn(response, LoginPrefs.AuthBackend.GOOGLE);
-        return response;
+        return finishSocialLogIn(accessToken, LoginPrefs.AuthBackend.GOOGLE);
     }
 
-    private void finishSocialLogIn(@NonNull AuthResponse response, @NonNull LoginPrefs.AuthBackend authBackend) throws Exception {
+    @NonNull
+    private AuthResponse finishSocialLogIn(@NonNull String accessToken, @NonNull LoginPrefs.AuthBackend authBackend) throws Exception {
+        final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
+        final AuthResponse response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(), backend);
         if (response.error != null && response.error.equals("401")) {
+            // TODO: Introduce a more explicit error code to indicate that an account is not linked.
             throw new AccountNotLinkedException();
         }
         finishLogIn(response, authBackend, "");
+        return response;
     }
 
     private void finishLogIn(@NonNull AuthResponse response, @NonNull LoginPrefs.AuthBackend authBackend, @NonNull String usernameUsedToLogIn) throws Exception {
         loginPrefs.storeAuthTokenResponse(response, authBackend);
         try {
-            response.profile = serviceManager.getProfile();
+            response.profile = getProfile();
         } catch (Throwable e) {
             // The app doesn't properly handle the scenario that we are logged in but we don't have
             // a cached profile. So if we fail to fetch the profile, let's erase the stored token.
@@ -122,13 +135,6 @@ public class LoginAPI {
         }
         notificationDelegate.resubscribeAll();
         logInEvents.sendData(new LogInEvent());
-    }
-
-    private void register(@NonNull Bundle parameters) throws Exception {
-        final RegisterResponse res = serviceManager.register(parameters);
-        if (!res.isSuccess()) {
-            throw new RegistrationException(res);
-        }
     }
 
     @NonNull
@@ -154,20 +160,55 @@ public class LoginAPI {
         return logInEvents;
     }
 
+    @NonNull
+    public ResetPasswordResponse resetPassword(@NonNull String email) throws RetroHttpException {
+        return loginService.resetPassword(email);
+    }
+
+    @NonNull
+    private void register(Bundle parameters) throws Exception {
+        try {
+            final Map<String, String> parameterMap = new HashMap<>();
+            for (String key : parameters.keySet()) {
+                parameterMap.put(key, parameters.getString(key));
+            }
+            loginService.register(parameterMap);
+        } catch (HttpResponseStatusException e) {
+            if ((e.getStatusCode() == 400 || e.getStatusCode() == 409) && !android.text.TextUtils.isEmpty(e.getBody())) {
+                try {
+                    final FormFieldMessageBody body = gson.fromJson(e.getBody(), FormFieldMessageBody.class);
+                    if (body != null && body.size() > 0) {
+                        throw new RegistrationException(body);
+                    }
+                } catch (JsonSyntaxException ex) {
+                    // Looks like the response does not contain form validation errors.
+                }
+            }
+            throw e;
+        }
+    }
+
+    @NonNull
+    public ProfileModel getProfile() throws Exception {
+        ProfileModel res = loginService.getProfile();
+        loginPrefs.storeUserProfile(res);
+        return res;
+    }
+
     public static class AccountNotLinkedException extends Exception {
     }
 
     public static class RegistrationException extends Exception {
         @NonNull
-        private final RegisterResponse registerResponse;
+        private final FormFieldMessageBody formErrorBody;
 
-        public RegistrationException(@NonNull RegisterResponse registerResponse) {
-            this.registerResponse = registerResponse;
+        public RegistrationException(@NonNull FormFieldMessageBody formErrorBody) {
+            this.formErrorBody = formErrorBody;
         }
 
         @NonNull
-        public RegisterResponse getRegisterResponse() {
-            return registerResponse;
+        public FormFieldMessageBody getFormErrorBody() {
+            return formErrorBody;
         }
     }
 }

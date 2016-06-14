@@ -56,6 +56,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                 searchQuery = query;
                 nextPage = 1;
                 controller.reset();
+                discussionPostsListView.setVisibility(View.INVISIBLE);
                 return true;
             }
 
@@ -91,6 +92,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                         ((TaskProcessCallback) activity).onMessage(MessageType.ERROR, resultsText);
                     } else {
                         ((TaskProcessCallback) activity).onMessage(MessageType.EMPTY, "");
+                        discussionPostsListView.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -106,7 +108,11 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
                 nextPage = 1;
             }
         };
-        searchThreadListTask.setProgressCallback(null);
+        // Initially we need to show the spinner at the center of the screen. After that, the
+        // ListView will start showing a footer-based loading indicator.
+        if (nextPage > 1 || callback.isRefreshingSilently()) {
+            searchThreadListTask.setProgressCallback(null);
+        }
         searchThreadListTask.execute();
 
     }

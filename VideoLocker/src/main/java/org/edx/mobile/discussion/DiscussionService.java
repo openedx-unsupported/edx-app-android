@@ -181,11 +181,6 @@ public interface DiscussionService {
             throws RetroHttpException;
 
 
-    @POST("/api/discussion/v1/comments/")
-    DiscussionComment createResponse(@Body ResponseBody responseBody)
-            throws RetroHttpException;
-
-
     @FormUrlEncoded
     @POST("/api/discussion/v1/comments/")
     DiscussionComment createComment(@Field("thread_id") String threadId,

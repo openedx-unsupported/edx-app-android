@@ -131,30 +131,26 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         hideLoadingProgress();
     }
 
-    public void onMessage(@NonNull MessageType messageType, @NonNull String message){
+    public void onMessage(@NonNull MessageType messageType, @NonNull String message) {
         //TODO - -we need to define different UI message view for different message type?
-        switch ( messageType ){
+        switch (messageType) {
             case FLYIN_ERROR:
                 this.showErrorMessage("", message);
                 break;
             case FLYIN_WARNING:
-                this.showInfoMessage(message);
-                break;
             case FLYIN_INFO:
                 this.showInfoMessage(message);
                 break;
             case ERROR:
-                this.showMessageInSitu(message);
-                break;
             case WARNING:
-                this.showMessageInSitu(message);
-                break;
             case INFO:
                 this.showMessageInSitu(message);
                 break;
             case EMPTY:
                 this.hideMessageInSitu();
                 break;
+            case DIALOG:
+                this.showErrorDialog(message);
         }
     }
 
@@ -170,5 +166,4 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
             centerMessageBox.setVisibility(View.GONE);
         }
     }
-
 }

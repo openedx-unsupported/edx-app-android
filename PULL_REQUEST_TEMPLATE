@@ -1,0 +1,30 @@
+### Description
+
+[MA-XXXX](https://openedx.atlassian.net/browse/MA-XXXX)
+
+Add a description of your changes here.
+
+### Notes
+- Example: Use example.sandbox.edx.org to test against
+- Example: This PR will not address x,y, and z, because of a, b, and c.
+- Example: Feature is behind a flag
+- Example: Why I didn't add any tests
+
+### Testing
+- [ ] i18n
+- [ ] RTL
+- [ ] safecommit shows 0 violations
+- [ ] Unit, integration, acceptance tests as appropriate
+- [ ] Analytics
+- [ ] Performance
+- [ ] Database migrations are backwards-compatible
+
+### Reviewers
+If you've been tagged for review, please check your corresponding box once you've given the :+1:.
+- [ ] Code review: @Reviewer1
+- [ ] Code review: @Reviewer2
+- [ ] UI strings/error msgs review: @...
+- [ ] UX review: @...
+- [ ] Accessibility review: @...
+- [ ] Product review: @...
+- [ ] FYI @someone

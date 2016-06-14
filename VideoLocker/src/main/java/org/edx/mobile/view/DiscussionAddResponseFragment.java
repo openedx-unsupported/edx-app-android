@@ -145,7 +145,6 @@ public class DiscussionAddResponseFragment extends BaseFragment {
                 buttonAddComment.setEnabled(true);
             }
         };
-        createCommentTask.setTaskProcessCallback(null);
         createCommentTask.setProgressDialog(createCommentProgressBar);
         createCommentTask.execute();
     }

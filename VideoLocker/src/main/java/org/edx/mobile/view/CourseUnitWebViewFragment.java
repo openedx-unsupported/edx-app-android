@@ -254,8 +254,6 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             final String token = loginPrefs.getAuthorizationHeader();
             if (token != null) {
                 map.put("Authorization", token);
-            } else {
-                logger.warn("Token cannot be null when AUTH_JSON is also null, something is WRONG!");
             }
 
             // Requery the session cookie if unavailable or expired if we are on

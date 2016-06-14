@@ -2,7 +2,6 @@ package org.edx.mobile.http;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,7 +28,6 @@ import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.db.impl.DatabaseFactory;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.user.UserAPI;
@@ -75,90 +73,6 @@ public class Api implements IApi {
     public Api(Context context) {
         this.context = context;
 
-    }
-
-    /**
-     * Resets password for the given email id.
-     *
-     * @param emailId
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public ResetPasswordResponse resetPassword(String emailId)
-            throws Exception {
-
-        Bundle params = new Bundle();
-        params.putString("email", emailId);
-
-        String url = getBaseUrl() + "/password_reset/";
-
-        String json = http.post(url, params, null);
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Reset password response=" + json);
-
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json, ResetPasswordResponse.class);
-    }
-
-    /**
-     * Executes HTTP POST for auth call, and returns response.
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public AuthResponse auth(String username, String password)
-            throws Exception {
-        Bundle p = new Bundle();
-        p.putString("grant_type", "password");
-        p.putString("client_id", config.getOAuthClientId());
-        p.putString("username", username);
-        p.putString("password", password);
-
-        String url = getBaseUrl() + "/oauth2/access_token/";
-        String json = http.post(url, p, null);
-        logger.debug("Auth response= " + json);
-
-        Gson gson = new GsonBuilder().create();
-        AuthResponse res = gson.fromJson(json, AuthResponse.class);
-
-        loginPrefs.storeAuthTokenResponse(res, LoginPrefs.AuthBackend.PASSWORD);
-
-        return res;
-    }
-
-    /**
-     * Returns user's basic profile information for current active session.
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public ProfileModel getProfile() throws Exception {
-        Bundle p = new Bundle();
-        p.putString("format", "json");
-
-        String url = getBaseUrl() + "/api/mobile/v0.5/my_user_info";
-        String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
-
-        logger.debug("Url for getProfile: " + urlWithAppendedParams);
-
-        final HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
-        if (result.statusCode < 200 || result.statusCode >= 300) {
-            throw new HttpResponseStatusException(result.statusCode);
-        }
-        final String json = result.body;
-        logger.debug("GetProfile response=" + json);
-
-        final ProfileModel res = new GsonBuilder().create().fromJson(json, ProfileModel.class);
-
-        loginPrefs.storeUserProfile(res);
-        DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE).setUserName(res.username);
-        return res;
     }
 
     /**
@@ -621,52 +535,6 @@ public class Api implements IApi {
     }
 
     @Override
-    public AuthResponse loginByFacebook(String accessToken) throws Exception {
-        return socialLogin2(accessToken, LoginPrefs.AuthBackend.FACEBOOK);
-    }
-
-    @Override
-    public AuthResponse loginByGoogle(String accessToken) throws Exception {
-        return socialLogin2(accessToken, LoginPrefs.AuthBackend.GOOGLE);
-    }
-
-    private AuthResponse socialLogin2(String accessToken, @NonNull LoginPrefs.AuthBackend authBackend)
-            throws Exception {
-        Bundle headers = new Bundle();
-        headers.putString("Content-Type", "application/x-www-form-urlencoded");
-
-
-//        URL: /exchange_oauth_token
-//        Method: POST
-//        Request parameters (all strings):
-//        provider (required): Which third party provided the access token (value should be one of "Google" or "Facebook")
-//        access_token (required): The third-party access token
-//        client_id (required): The id for an OAuth client (which must be provisioned via admin interface)
-//        scope (optional): The requested scope for the first-party access token
-//        Example response:
-//        {"access_token": "<redacted>", "token_type": "Bearer", "expires_in": 2591999, "scope": ""}
-
-        Bundle p = new Bundle();
-        p.putString("access_token", accessToken);
-        p.putString("client_id", config.getOAuthClientId());
-
-        //oauth2/exchange_access_token/<backend>/
-        logger.debug("access_token: " + accessToken);
-        logger.debug("client_id: " + config.getOAuthClientId());
-        final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
-        String url = getBaseUrl() + "/oauth2/exchange_access_token/" + backend + "/";
-        logger.debug("Url for social login: " + url);
-
-
-        String json = http.post(url, p, null);
-        logger.debug("Auth response= " + json);
-
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json, AuthResponse.class);
-    }
-
-
-    @Override
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId,
                                                                          String lastVisitedModuleId) throws Exception {
         final String username = loginPrefs.getUsername();
@@ -709,42 +577,6 @@ public class Api implements IApi {
 
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-    }
-
-    /**
-     * Creates new account.
-     *
-     * @param parameters
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public RegisterResponse register(Bundle parameters)
-            throws Exception {
-        String url = getBaseUrl() + "/user_api/v1/account/registration/";
-
-        String json = http.post(url, parameters, null);
-
-        if (json == null) {
-            return null;
-        }
-        logger.debug("Register response= " + json);
-
-        //the server side response format is not client friendly ... so..
-        Gson gson = new GsonBuilder().create();
-        try {
-            FormFieldMessageBody body = gson.fromJson(json, FormFieldMessageBody.class);
-            if (body != null && body.size() > 0) {
-                RegisterResponse res = new RegisterResponse();
-                res.setMessageBody(body);
-                return res;
-            }
-        } catch (Exception ex) {
-            //normal workflow , ignore it.
-        }
-        RegisterResponse res = gson.fromJson(json, RegisterResponse.class);
-
-        return res;
     }
 
     /**

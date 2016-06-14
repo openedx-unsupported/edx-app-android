@@ -24,6 +24,7 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
+import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -58,7 +59,7 @@ public class Router {
     }
 
     public void showMyVideos(Activity sourceActivity) {
-        Intent myVideosIntent = new Intent(sourceActivity, MyVideosTabActivity.class);
+        Intent myVideosIntent = new Intent(sourceActivity, MyVideosActivity.class);
         myVideosIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         sourceActivity.startActivity(myVideosIntent);
     }

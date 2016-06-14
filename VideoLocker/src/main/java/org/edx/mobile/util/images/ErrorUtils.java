@@ -9,6 +9,8 @@ import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
+import java.net.HttpURLConnection;
+
 public enum ErrorUtils {
     ;
 
@@ -25,8 +27,14 @@ public enum ErrorUtils {
             }
         } else if (ex instanceof HttpResponseStatusException) {
             final int status = ((HttpResponseStatusException) ex).getStatusCode();
-            if (status == 503) {
-                errorMessage = context.getString(R.string.network_service_unavailable);
+            switch (status) {
+                case HttpURLConnection.HTTP_UNAVAILABLE:
+                    errorMessage = context.getString(R.string.network_service_unavailable);
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                    errorMessage = context.getString(R.string.action_not_completed);
+                    break;
             }
         }
         if (null == errorMessage) {

@@ -1,7 +1,6 @@
 package org.edx.mobile.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +46,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.view.dialog.IDialogCallback;
 import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
+import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -65,7 +65,6 @@ public class NavigationFragment extends BaseFragment {
     LoginPrefs loginPrefs;
 
     private final Logger logger = new Logger(getClass().getName());
-    private PrefManager socialPref;
     private NetworkCheckDialogFragment newFragment;
 
     private IUiLifecycleHelper uiLifecycleHelper;
@@ -91,8 +90,6 @@ public class NavigationFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         uiLifecycleHelper = IUiLifecycleHelper.Factory.getInstance(getActivity(), callback);
         uiLifecycleHelper.onCreate(savedInstanceState);
-        Context context = getActivity().getBaseContext();
-        socialPref = new PrefManager(context, PrefManager.Pref.FEATURES);
         profile = loginPrefs.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
             getAccountTask = new GetAccountTask(getActivity(), profile.username);
@@ -174,7 +171,7 @@ public class NavigationFragment extends BaseFragment {
                 Activity act = getActivity();
                 ((BaseFragmentActivity) act).closeDrawer();
 
-                if (!(act instanceof MyVideosTabActivity)) {
+                if (!(act instanceof MyVideosActivity)) {
                     environment.getRouter().showMyVideos(act);
                     //Finish need not be called if the current activity is MyCourseListing
                     // as on returning back from FindCourses,
@@ -314,10 +311,6 @@ public class NavigationFragment extends BaseFragment {
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public static String getNavigationFragmentTag() {
-        return TAG;
     }
 
     private void updateWifiSwitch(View layout) {

@@ -13,7 +13,7 @@ public class SocialLoginTests extends HttpBaseTestCase {
 
     @Test
     public void testGetProfile() throws Exception {
-        ProfileModel profile = api.getProfile();
+        ProfileModel profile = loginAPI.getProfile();
         assertNotNull(profile);
         assertNotNull("profile.email cannot be null", profile.email);
         print("finished getProfile");
