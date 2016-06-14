@@ -35,6 +35,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
+import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.task.GetRecentDownloadedVideosTask;
@@ -155,7 +156,6 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             getRecentDownloadedVideosTask.cancel(true);
             getRecentDownloadedVideosTask = null;
         }
-
         hideConfirmDeleteDialog();
         AppConstants.myVideosDeleteMode = false;
     }
@@ -335,6 +335,18 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
                 videoModel.getTitle(), transcript, videoModel);
 
         adapter.setVideoId(this.videoModel.videoId);
+    }
+
+    private void destroyPlayer() {
+        if (playerFragment == null) {
+            return;
+        }
+        showDeletePanel(getView());
+        playerFragment.lockOrientation();
+        getChildFragmentManager().beginTransaction().remove(playerFragment).commitAllowingStateLoss();
+        View container = getView().findViewById(R.id.container_player);
+        container.setVisibility(View.GONE);
+        playerFragment = null;
     }
 
     private void showPlayer() {
@@ -703,4 +715,9 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     public void onEventMainThread(DownloadCompletedEvent e) {
         addToRecentAdapter();
     }
+
+    public void onEventMainThread(DownloadedVideoDeletedEvent e) {
+        destroyPlayer();
+    }
+
 }
