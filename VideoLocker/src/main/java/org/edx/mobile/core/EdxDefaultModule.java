@@ -30,6 +30,7 @@ import org.edx.mobile.module.notification.DummyNotificationDelegate;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
+import org.edx.mobile.util.AppUpdateUtils;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
@@ -88,6 +89,6 @@ public class EdxDefaultModule extends AbstractModule {
                 .create());
 
         requestStaticInjection(BrowserUtil.class, MediaConsentUtils.class,
-                DiscussionTextUtils.class);
+                DiscussionTextUtils.class, AppUpdateUtils.class);
     }
 }

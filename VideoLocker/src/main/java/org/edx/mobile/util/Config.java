@@ -1,6 +1,7 @@
 package org.edx.mobile.util;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -12,7 +13,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.squareup.phrase.Phrase;
 
+import org.edx.mobile.BuildConfig;
 import org.edx.mobile.logger.Logger;
 
 import java.io.InputStream;
@@ -35,6 +38,7 @@ public class Config {
     private static final String FEEDBACK_EMAIL_ADDRESS = "FEEDBACK_EMAIL_ADDRESS";
     private static final String OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID";
     private static final String SPEED_TEST_ENABLED = "SPEED_TEST_ENABLED";
+    private static final String APP_UPDATE_URIS = "APP_UPDATE_URIS";
 
     /* Composite configuration keys */
     private static final String COURSE_ENROLLMENT = "COURSE_ENROLLMENT";
@@ -385,6 +389,26 @@ public class Config {
 
     public String getOAuthClientId() {
         return getString(OAUTH_CLIENT_ID);
+    }
+
+    /**
+     * @return A list of URIs for updating the app, or an empty list if none are available.
+     */
+    @NonNull
+    public List<Uri> getAppUpdateUris() {
+        //noinspection unchecked
+        final List<String> uriStrings = getObjectOrNewInstance(APP_UPDATE_URIS, ArrayList.class);
+        final List<Uri> uris = new ArrayList<>(uriStrings.size());
+        for (final String uriString : uriStrings) {
+            if (uriString != null) {
+                // Replace the 'application_id' token with the actual application ID.
+                uris.add(Uri.parse(Phrase.from(uriString)
+                        .put("application_id", BuildConfig.APPLICATION_ID)
+                        .format()
+                        .toString()));
+            }
+        }
+        return uris;
     }
 
     public boolean isNotificationEnabled() {
