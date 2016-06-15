@@ -15,6 +15,7 @@
         android:layout_height="@dimen/video_player_height"
         android:clickable="true"
         android:contentDescription="@string/video_player"
+        android:importantForAccessibility="no"
         android:orientation="vertical" />
 
     <LinearLayout

@@ -12,9 +12,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,8 +77,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         IS_NETWORK_MESSAGE_DISPLAYED, IS_SHOWN_WIFI_SETTINGS_MESSAGE
     }
 
-    private static final boolean IS_AUTOPLAY_ENABLED = true;
-
     private static final String KEY_PLAYER = "player";
     private static final String KEY_VIDEO = "video";
     private static final String KEY_PREPARED = "isPrepared";
@@ -116,7 +115,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
-
+    private AccessibilityManager.TouchExplorationStateChangeListener touchExplorationStateChangeListener;
 
 
     private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
@@ -192,8 +191,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     /**
      * Restores the saved instance of the player.
-     *
-     * @param savedInstanceState
      */
     private void restore(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -364,9 +361,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             showProgress();
         }
 
+        boolean touchExploreEnabled = getTouchExploreEnabled();
+        player.setAutoHideControls(!touchExploreEnabled);
+
+        setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
+            @Override
+            public void onTouchExplorationStateChanged(boolean enabled) {
+                player.setAutoHideControls(!enabled);
+            }
+        });
+
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
-        if (isPrepared) handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
+        if (isPrepared) {
+            handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
+        }
     }
 
     public void handleOnPause(){
@@ -375,7 +384,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try{
             orientationDetector.stop();
             handler.removeCallbacks(unfreezeCallback);
+            handler.removeCallbacks(requestAccessibilityFocusCallback);
             freezePlayer();
+            setTouchExploreChangeListener(null);
         }catch(Exception e){
             logger.error(e);
         }
@@ -384,6 +395,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     @Override
     public void onStop() {
         super.onStop();
+
+        setTouchExploreChangeListener(null);
+
         if(audioManager!=null) {
             audioManager.abandonAudioFocus(this);
         }
@@ -550,6 +564,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             controller.setNextPreviousListeners(nextListner, prevListner);
             player.setController(controller);
             reAttachPlayEventListener();
+
         } catch(Exception e) {
             logger.error(e);
         }
@@ -739,10 +754,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         // clear errors
         clearAllErrors();
         initializeClosedCaptioning();
-        if (IS_AUTOPLAY_ENABLED) {
-            handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
-        }
-
+        handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
         environment.getSegment().trackVideoLoading(videoEntry.videoId, videoEntry.eid,
                 videoEntry.lmsUrl);
     }
@@ -813,13 +825,12 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             callback.saveCurrentPlaybackPosition(0);
             callback.onPlaybackComplete();
         }
-        //removeSubtitleCallBack();
         hideCCPopUp();
         hideSettingsPopUp();
         try{
             if(player!=null){
                 if(player.getController()!=null){
-                    player.getController().show(5000);
+                    player.getController().showSpecial( (getTouchExploreEnabled() ? 0L : 5000L) );
                 }
             }
         }catch(Exception e){
@@ -932,13 +943,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         public void run() {
             if (isResumed() && !isRemoving()) {
                 if (player != null) {
+
                     player.unfreeze();
                     hideProgress();
-                    if (player.isPlaying()) {
+                    if (player.isPlaying() || getTouchExploreEnabled()) {
                         updateController("player unfreezed");
                     }
 
-                    if (IS_AUTOPLAY_ENABLED && isPrepared && !isAutoPlayDone) {
+                    if (isPrepared && !isAutoPlayDone) {
                         isAutoPlayDone = true;
                         player.start();
                     }
@@ -947,10 +959,22 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         pauseDueToDialog = false;
                         player.pause();
                     }
-
                 }
                 orientationDetector.start();
                 handler.sendEmptyMessage(MSG_TYPE_TICK);
+            }
+
+            // as before, request accessibility focus after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
+            // some devices take little time to be ready
+            handler.postDelayed(requestAccessibilityFocusCallback, UNFREEZE_DELAY_MS);
+        }
+    };
+
+    private Runnable requestAccessibilityFocusCallback = new Runnable() {
+        @Override
+        public void run() {
+            if (player != null) {
+                player.requestAccessibilityFocusPausePlay();
             }
         }
     };
@@ -1064,11 +1088,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
-
-    public void handleSettings(Point p) {
-
-    }
-
     /**
      * This runnable handles the displaying of
      * Subtitles on the screen per 100 mili seconds
@@ -1115,24 +1134,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 srtList = null;
             }
 
-            srtList = new LinkedHashMap<String, TimedTextObject>();
+            srtList = new LinkedHashMap<>();
             try
             {
                 LinkedHashMap<String, InputStream> localHashMap = transcriptManager
                         .fetchTranscriptsForVideo(transcript,getActivity());
 
                 if (localHashMap != null){
-                    Object[] keyList = localHashMap.keySet().toArray();
-                    for(int i=0; i<keyList.length; i++){
-                        InputStream localInputStream = (InputStream)localHashMap.get(keyList[i]);
+                    for(String thisKey : localHashMap.keySet()){
+                        InputStream localInputStream = localHashMap.get(thisKey);
                         if (localInputStream != null)
                         {
                             TimedTextObject localTimedTextObject =
                                     new FormatSRT().parseFile("temp.srt", localInputStream);
-                            srtList.put(keyList[i].toString(), localTimedTextObject);
-                            //srtList.add(localTimedTextObject);
-                            if (localInputStream != null)
-                                localInputStream.close();
+                            srtList.put(thisKey, localTimedTextObject);
+                            localInputStream.close();
                         }
                     }
 
@@ -1176,7 +1192,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     /**
      * This function sets the closed caption data on the TextView
-     * @param text
      */
     private void setClosedCaptionData(Caption text){
         try{
@@ -1327,11 +1342,78 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         }
     }
 
+    @Nullable
+    private AccessibilityManager getAccessibilityManager() {
+        return (AccessibilityManager)getActivity().getSystemService(Context.ACCESSIBILITY_SERVICE);
+    }
+
+    /**
+     * @return True if talkback mode is on
+     */
+    private boolean getTouchExploreEnabled() {
+        boolean ret = false;
+        AccessibilityManager am = getAccessibilityManager();
+        if (am != null && am.isTouchExplorationEnabled()) {
+            ret = true;
+        }
+        return ret;
+    }
+
+    /**
+     * @param am The accessibility manager to unregister from
+     * @return True if successful
+     */
+    private boolean unregisterTouchExploreChangeListener(@NonNull AccessibilityManager am) {
+        boolean ret = false;
+        if (touchExplorationStateChangeListener == null) {
+            ret = true;
+        }
+        else if (am.removeTouchExplorationStateChangeListener(touchExplorationStateChangeListener)) {
+            touchExplorationStateChangeListener = null;
+            ret = true;
+        }
+        return ret;
+    }
+
+    /**
+     * If a listener is previously registered, unregisters then registers this one
+     * @param am The accessibility manager to unregister from/register to
+     * @param listener The new listener
+     * @return True if successful
+     */
+    private boolean registerTouchExploreChangeListener(@NonNull AccessibilityManager am, @NonNull AccessibilityManager.TouchExplorationStateChangeListener listener) {
+        boolean ret = false;
+        if (unregisterTouchExploreChangeListener(am) && am.addTouchExplorationStateChangeListener(listener)) {
+            touchExplorationStateChangeListener = listener;
+            ret = true;
+        }
+        return ret;
+    }
+
+    protected boolean setTouchExploreChangeListener(@Nullable AccessibilityManager.TouchExplorationStateChangeListener listener) {
+        boolean ret = false;
+        if (listener != touchExplorationStateChangeListener) {
+            AccessibilityManager am = getAccessibilityManager();
+            if (am != null) {
+                if (listener != null) {
+                    ret = registerTouchExploreChangeListener(am, listener);
+                }
+                else {
+                    ret = unregisterTouchExploreChangeListener(am);
+                }
+            }
+        }
+        else {
+            ret = true;
+        }
+        return ret;
+    }
+
     //The method that displays the popup.
     private void showSettingsPopup(final Point p) {
         try{
             if(player!=null){
-                player.getController().setAutoHide(false);
+                player.getController().setAutoHide(!getTouchExploreEnabled());
                 Activity context = getActivity();
                 Resources r = getResources();
                 float popupHeight = TypedValue.applyDimension(
@@ -1358,7 +1440,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                         hideTransparentImage();
                         if(player!=null){
                             player.getController().setSettingsBtnDrawable(false);
-                            player.getController().setAutoHide(true);
+                            player.getController().setAutoHide(!getTouchExploreEnabled());
                         }
                     }
                 });
@@ -1383,7 +1465,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                             }
                         }
                     });
-                    return;
                 }else{
                     tv_closedCaption.setBackgroundResource(R.drawable.grey_roundedbg);
                     tv_closedCaption.setOnClickListener(null);
@@ -1397,7 +1478,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     /**
      * This function is used to show popup in landscape mode and
      * the Point defines the current position of Settings button
-     * @param {@link android.graphics.Point}
+     * @param p {@link android.graphics.Point}
      */
     private void showClosedCaptionLandscapePopup(Point p){
         try{
@@ -1456,11 +1537,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             lv_ccLang.setAdapter(ccAdaptor);
             lv_ccLang.setOnItemClickListener(ccAdaptor);
 
-            //LinkedHashMap<String, String> languageList = getLanguageList();
             if(languageList!=null && languageList.size()>0){
                 HashMap<String, String> lang;
                 for(int i=0; i<languageList.size();i++){
-                    lang = new HashMap<String, String>();
+                    lang = new HashMap<>();
                     lang.put(languageList.keySet().toArray()[i].toString(),
                             languageList.values().toArray()[i].toString());
                     ccAdaptor.add(lang);
@@ -1721,16 +1801,14 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * Returns the video model that this fragment is supposed to play.
-     * @return
+     * @return the video model that this fragment is supposed to play.
      */
     public VideoModel getPlayingVideo() {
         return videoEntry;
     }
 
     /**
-     * Returns true if playback is ongoing, false otherwise.
-     * @return
+     * @return true if playback is ongoing, false otherwise.
      */
     public boolean isPlaying() {
         return (player != null && player.isPlaying());
@@ -1741,6 +1819,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      *
      * @return <code>true</code> if the video player is frozen
      */
+    @SuppressWarnings("unused")
     public boolean isFrozen() {
         return (player != null && player.isFrozen());
     }
@@ -1799,8 +1878,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     /**
-     * This method returns true if message is displayed on player to change wifi settings.
-     * @return
+     * @return true if message is displayed on player to change wifi settings.
      */
     public boolean isShownWifiSettingsMessage(){
         return curMessageTypes.contains(VideoNotPlayMessageType.IS_SHOWN_WIFI_SETTINGS_MESSAGE);
