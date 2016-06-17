@@ -19,31 +19,22 @@ import roboguice.inject.InjectView;
 
 
 public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {
-
     @InjectView(R.id.discussion_posts_listview)
-    ListView discussionPostsListView;
+    protected ListView discussionPostsListView;
 
     @Inject
-    DiscussionPostsAdapter discussionPostsAdapter;
+    protected DiscussionPostsAdapter discussionPostsAdapter;
 
     @Inject
-    Router router;
+    protected Router router;
 
-    EnrolledCoursesResponse courseData;
+    protected EnrolledCoursesResponse courseData;
 
-    InfiniteScrollUtils.InfiniteListController controller;
+    protected InfiniteScrollUtils.InfiniteListController controller;
 
-    /**
-     * Callback to match the restart behaviour with the parent activity.
-     */
-    public abstract void onRestart();
+    protected int nextPage = 1;
 
-    /**
-     * Extension for the child classes to add more functionality to the ListView's onItemClick
-     * function.
-     */
-    public abstract void onItemClick(DiscussionThread thread, AdapterView<?> parent,
-                                     View view, int position, long id);
+    private boolean isRestart = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,10 +59,26 @@ public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment imp
                     thread.setRead(true);
                     discussionPostsAdapter.getView(position, view, parent);
                 }
-
-                CourseDiscussionPostsBaseFragment.this.onItemClick(thread, parent, view,
-                        position, id);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (isRestart) {
+        /*
+         * If the activity/fragment needs to be reinstantiated upon restoration,
+         * then in some cases the onStart() callback maybe invoked before view
+         * initialization, and thus the controller might not be initialized, and
+         * therefore we need to guard this with a null check.
+         */
+            if (controller != null) {
+                nextPage = 1;
+                controller.resetSilently();
+            }
+        }
+        isRestart = true;
     }
 }

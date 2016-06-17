@@ -80,9 +80,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @Nullable
     private Runnable populatePostListRunnable;
 
-    private int nextPage = 1;
-    private int mSelectedItem = -1;
-
     private enum EmptyQueryResultsFor {
         FOLLOWING,
         CATEGORY,
@@ -232,32 +229,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    public void onRestart() {
-        if (postsSort == DiscussionPostsSort.LAST_ACTIVITY_AT && mSelectedItem != -1) {
-            // Move the last viewed thread to the top
-            discussionPostsAdapter.moveToTop(mSelectedItem);
-            mSelectedItem = -1;
-        }
-
-        /*
-        If the activity/fragment needs to be reinstantiated upon restoration,
-        then in some cases the onRestart() callback maybe invoked before view
-        initialization, and thus the controller might not be initialized, and
-        therefore we need to guard this with a null check.
-         */
-        if (controller != null) {
-            nextPage = 1;
-            controller.resetSilently();
-        }
-    }
-
-    @Override
-    public void onItemClick(DiscussionThread thread, AdapterView<?> parent, View view,
-                            int position, long id) {
-        mSelectedItem = position;
     }
 
     @SuppressWarnings("unused")
