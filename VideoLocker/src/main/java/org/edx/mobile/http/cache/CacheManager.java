@@ -5,9 +5,9 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.Sha1Util;
+import org.edx.mobile.util.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,13 +55,13 @@ public class CacheManager {
     public String get(String url) throws IOException, NoSuchAlgorithmException {
         String hash = Sha1Util.SHA1(url);
         File file = new File(cacheFolder, hash);
-        
+
         if (!file.exists()) {
             logger.debug("Cache.get failed, not cached");
             // not in cache
             return null;
         }
-        
+
         FileInputStream in = new FileInputStream(file);
         String cache = IOUtils.toString(in, Charset.defaultCharset());
         in.close();

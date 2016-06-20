@@ -10,7 +10,6 @@ import com.google.gson.JsonArray;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.ApiConstants;
@@ -21,9 +20,11 @@ import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +115,7 @@ public class UserAPI {
             Response response = userService.getUserEnrolledCourses(username);
             TypedInput input = response.getBody();
             try {
-                json = IOUtils.toString(input.in());
+                json = IOUtils.toString(input.in(), Charset.defaultCharset());
             } catch (IOException e) {
                 throw new RetroHttpException(e);
             }
