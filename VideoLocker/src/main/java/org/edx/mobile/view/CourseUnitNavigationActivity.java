@@ -63,7 +63,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         pager = (DisableableViewPager)findViewById(R.id.pager);
-        pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(), unitList, courseData, this);
+        pagerAdapter = new CourseUnitPagerAdapter(getSupportFragmentManager(),
+                environment.getConfig(), unitList, courseData, this);
         pager.setAdapter(pagerAdapter);
 
 

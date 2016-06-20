@@ -11,6 +11,8 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
+
 import org.edx.mobile.R;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.model.Filter;
@@ -36,8 +38,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -48,7 +50,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 // The SDK version needs to be lesser than Lollipop because of this
@@ -394,6 +395,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
         List<CourseComponent> unitList = new ArrayList<>();
+        List<Class<? extends CourseUnitFragment>> classesList = new ArrayList<>();
 
         VideoBlockModel encodeVideosModel = Mockito.mock(VideoBlockModel.class);
         VideoData videoData = Mockito.mock(VideoData.class);
@@ -402,6 +404,7 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(encodeVideosModel.getData()).thenReturn(videoData);
         unitList.add(encodeVideosModel);
+        classesList.add(CourseUnitVideoFragment.class);
 
         VideoBlockModel youtubeVideosModel = Mockito.mock(VideoBlockModel.class);
         VideoData videoData2 = Mockito.mock(VideoData.class);
@@ -410,128 +413,155 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
                 .thenReturn(Mockito.mock(VideoInfo.class));
         when(youtubeVideosModel.getData()).thenReturn(videoData2);
         unitList.add(youtubeVideosModel);
+        classesList.add(CourseUnitOnlyOnYoutubeFragment.class);
 
         DiscussionBlockModel discussionModel = Mockito.mock(DiscussionBlockModel.class);
         unitList.add(discussionModel);
+        if (config.isDiscussionsEnabled()) {
+            classesList.add(CourseUnitDiscussionFragment.class);
+        } else {
+            classesList.add(CourseUnitMobileNotSupportedFragment.class);
+        }
 
         CourseComponent nonMultiDeviceModel = Mockito.mock(CourseComponent.class);
         when(nonMultiDeviceModel.isMultiDevice()).thenReturn(false);
         unitList.add(nonMultiDeviceModel);
+        classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
         HtmlBlockModel htmlModel = Mockito.mock(HtmlBlockModel.class);
         when(htmlModel.isMultiDevice()).thenReturn(true);
         when(htmlModel.getType()).thenReturn(BlockType.HTML);
         unitList.add(htmlModel);
+        classesList.add(CourseUnitWebViewFragment.class);
 
         CourseComponent unknownModel = Mockito.mock(CourseComponent.class);
         when(unknownModel.isMultiDevice()).thenReturn(true);
         when(unknownModel.getType()).thenReturn(BlockType.COURSE);
         unitList.add(unknownModel);
+        classesList.add(CourseUnitEmptyFragment.class);
 
         CourseComponent problemModel = Mockito.mock(CourseComponent.class);
         when(problemModel.isMultiDevice()).thenReturn(true);
         when(problemModel.getType()).thenReturn(BlockType.PROBLEM);
         unitList.add(problemModel);
+        classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
         CourseComponent othersModel = Mockito.mock(CourseComponent.class);
         when(othersModel.isMultiDevice()).thenReturn(true);
         when(othersModel.getType()).thenReturn(BlockType.OTHERS);
         unitList.add(othersModel);
+        classesList.add(CourseUnitMobileNotSupportedFragment.class);
 
-        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, unitList,
-                courseData, hasComponent);
+        CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+                unitList, courseData, hasComponent);
 
-        assertTrue(adapter.getItem(0) instanceof CourseUnitVideoFragment);
-        assertTrue(adapter.getItem(1) instanceof CourseUnitOnlyOnYoutubeFragment);
-        assertTrue(adapter.getItem(2) instanceof CourseUnitDiscussionFragment);
-        assertTrue(adapter.getItem(3) instanceof CourseUnitMobileNotSupportedFragment);
-        assertTrue(adapter.getItem(4) instanceof CourseUnitWebViewFragment);
-        assertTrue(adapter.getItem(5) instanceof CourseUnitEmptyFragment);
-        assertTrue(adapter.getItem(6) instanceof CourseUnitMobileNotSupportedFragment);
-        assertTrue(adapter.getItem(7) instanceof CourseUnitMobileNotSupportedFragment);
+        for (int size = unitList.size(), i = 0; i < size; i++) {
+            assertThat(adapter.getItem(i)).isInstanceOf(classesList.get(i));
+        }
     }
 
+    /**
+     * Tests creation of various fragments in the {@link CourseUnitNavigationActivity}'s
+     * ViewPager, by supplying its {@link CourseUnitPagerAdapter} with a single
+     * {@link CourseComponent} model at a time via parameterization.
+     */
     // TODO: Robolectric doesn't have a Gradle-based parameterized test suite, need to implement it.
     @Ignore
     @RunWith(Parameterized.class)
-    public static class ParameterizedFragmentCreation {
-        @Parameterized.Parameters(name= "{index}: testUnitFragmentCreation({0})={1}")
+    public static class ParameterizedFragmentCreation extends UiTest {
+        private static final String DISCUSSIONS_ENABLED = "DISCUSSIONS_ENABLED";
+
+        @Parameterized.Parameters
         public static Collection<Object[]> data() {
-            List<CourseComponent> unitList = new ArrayList<>();
+            List<Object[]> argsList = new ArrayList<>();
+            {
+                VideoBlockModel encodedVideosModel = Mockito.mock(VideoBlockModel.class);
+                VideoData videoData = Mockito.mock(VideoData.class);
+                videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
+                when(videoData.encodedVideos.getPreferredVideoInfo())
+                        .thenReturn(Mockito.mock(VideoInfo.class));
+                when(encodedVideosModel.getData()).thenReturn(videoData);
+                argsList.add(new Object[] {encodedVideosModel, CourseUnitVideoFragment.class, true});
 
-            VideoBlockModel encodeVideosModel = Mockito.mock(VideoBlockModel.class);
-            VideoData videoData = Mockito.mock(VideoData.class);
-            videoData.encodedVideos = Mockito.mock(EncodedVideos.class);
-            when(videoData.encodedVideos.getPreferredVideoInfo())
-                    .thenReturn(Mockito.mock(VideoInfo.class));
-            when(encodeVideosModel.getData()).thenReturn(videoData);
-            unitList.add(encodeVideosModel);
+                VideoBlockModel youtubeVideosModel = Mockito.mock(VideoBlockModel.class);
+                VideoData videoData2 = Mockito.mock(VideoData.class);
+                videoData2.encodedVideos = Mockito.mock(EncodedVideos.class);
+                when(videoData2.encodedVideos.getYoutubeVideoInfo())
+                        .thenReturn(Mockito.mock(VideoInfo.class));
+                when(youtubeVideosModel.getData()).thenReturn(videoData2);
+                argsList.add(new Object[] {youtubeVideosModel, CourseUnitOnlyOnYoutubeFragment.class, true});
 
-            VideoBlockModel youtubeVideosModel = Mockito.mock(VideoBlockModel.class);
-            VideoData videoData2 = Mockito.mock(VideoData.class);
-            videoData2.encodedVideos = Mockito.mock(EncodedVideos.class);
-            when(videoData2.encodedVideos.getYoutubeVideoInfo())
-                    .thenReturn(Mockito.mock(VideoInfo.class));
-            when(youtubeVideosModel.getData()).thenReturn(videoData2);
-            unitList.add(youtubeVideosModel);
+                DiscussionBlockModel discussionModel = Mockito.mock(DiscussionBlockModel.class);
+                argsList.add(new Object[] {discussionModel, CourseUnitDiscussionFragment.class, true});
+                argsList.add(new Object[] {discussionModel, CourseUnitMobileNotSupportedFragment.class, false});
 
-            DiscussionBlockModel discussionModel = Mockito.mock(DiscussionBlockModel.class);
-            unitList.add(discussionModel);
+                CourseComponent nonMultiDeviceModel = Mockito.mock(CourseComponent.class);
+                when(nonMultiDeviceModel.isMultiDevice()).thenReturn(false);
+                argsList.add(new Object[] {nonMultiDeviceModel, CourseUnitMobileNotSupportedFragment.class, true});
 
-            CourseComponent nonMultiDeviceModel = Mockito.mock(CourseComponent.class);
-            when(nonMultiDeviceModel.isMultiDevice()).thenReturn(false);
-            unitList.add(nonMultiDeviceModel);
+                HtmlBlockModel htmlModel = Mockito.mock(HtmlBlockModel.class);
+                when(htmlModel.isMultiDevice()).thenReturn(true);
+                when(htmlModel.getType()).thenReturn(BlockType.HTML);
+                argsList.add(new Object[] {htmlModel, CourseUnitWebViewFragment.class, true});
 
-            HtmlBlockModel htmlModel = Mockito.mock(HtmlBlockModel.class);
-            when(htmlModel.isMultiDevice()).thenReturn(true);
-            when(htmlModel.getType()).thenReturn(BlockType.HTML);
-            unitList.add(htmlModel);
+                CourseComponent unknownModel = Mockito.mock(CourseComponent.class);
+                when(unknownModel.isMultiDevice()).thenReturn(true);
+                when(unknownModel.getType()).thenReturn(BlockType.COURSE);
+                argsList.add(new Object[] {unknownModel, CourseUnitEmptyFragment.class, true});
 
-            CourseComponent unknownModel = Mockito.mock(CourseComponent.class);
-            when(unknownModel.isMultiDevice()).thenReturn(true);
-            when(unknownModel.getType()).thenReturn(BlockType.COURSE);
-            unitList.add(unknownModel);
+                CourseComponent problemModel = Mockito.mock(CourseComponent.class);
+                when(problemModel.isMultiDevice()).thenReturn(true);
+                when(problemModel.getType()).thenReturn(BlockType.PROBLEM);
+                argsList.add(new Object[] {problemModel, CourseUnitMobileNotSupportedFragment.class, true});
 
-            CourseComponent problemModel = Mockito.mock(CourseComponent.class);
-            when(problemModel.isMultiDevice()).thenReturn(true);
-            when(problemModel.getType()).thenReturn(BlockType.PROBLEM);
-            unitList.add(problemModel);
+                CourseComponent othersModel = Mockito.mock(CourseComponent.class);
+                when(othersModel.isMultiDevice()).thenReturn(true);
+                when(othersModel.getType()).thenReturn(BlockType.OTHERS);
+                argsList.add(new Object[] {othersModel, CourseUnitMobileNotSupportedFragment.class, true});
+            }
 
-            CourseComponent othersModel = Mockito.mock(CourseComponent.class);
-            when(othersModel.isMultiDevice()).thenReturn(true);
-            when(othersModel.getType()).thenReturn(BlockType.OTHERS);
-            unitList.add(othersModel);
-
-            return Arrays.asList(new Object[][] {
-                    {unitList.get(0), CourseUnitVideoFragment.class},
-                    {unitList.get(1), CourseUnitOnlyOnYoutubeFragment.class},
-                    {unitList.get(2), CourseUnitDiscussionFragment.class},
-                    {unitList.get(3), CourseUnitMobileNotSupportedFragment.class},
-                    {unitList.get(4), CourseUnitWebViewFragment.class},
-                    {unitList.get(5), CourseUnitEmptyFragment.class},
-                    {unitList.get(6), CourseUnitMobileNotSupportedFragment.class},
-                    {unitList.get(7), CourseUnitMobileNotSupportedFragment.class}
-            });
+            return argsList;
         }
 
+        /**
+         * The {@link CourseComponent} that we provide to the {@link CourseUnitPagerAdapter} as input.
+         */
         @Parameterized.Parameter
-        public CourseComponent input;
+        public CourseComponent paramCourseComponent;
 
+        /**
+         * The {@link Fragment} that we expect the {@link CourseUnitPagerAdapter} will create an
+         * instance of.
+         */
         @Parameterized.Parameter(value = 1)
-        public Class expected;
+        public Class expectedFragmentClass;
+
+        /**
+         * A flag denoting whether inline discussions should be enabled in the config, that is
+         * provided as a parameter.
+         */
+        @Parameterized.Parameter(value = 2)
+        public boolean isDiscussionsEnabled;
 
         @Test
-        public void test() {
+        public void test() throws IOException {
+            config = new org.edx.mobile.util.Config(generateConfigProperties());
+
             FragmentManager fragmentManager = Mockito.mock(FragmentManager.class);
             EnrolledCoursesResponse courseData = Mockito.mock(EnrolledCoursesResponse.class);
             CourseUnitFragment.HasComponent hasComponent = Mockito.mock(CourseUnitFragment.HasComponent.class);
 
-            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager,
-                    Collections.singletonList(input),
-                    courseData, hasComponent);
+            CourseUnitPagerAdapter adapter = new CourseUnitPagerAdapter(fragmentManager, config,
+                    Collections.singletonList(paramCourseComponent), courseData, hasComponent);
 
-//            Assert.assertThat(adapter.getItem(0), instanceOf(expected));
-            assertThat(adapter.getItem(0)).isInstanceOf(expected);
+            assertThat(adapter.getItem(0)).isInstanceOf(expectedFragmentClass);
+        }
+
+        @Override
+        protected JsonObject generateConfigProperties() throws IOException {
+            JsonObject properties = super.generateConfigProperties();
+            properties.addProperty(DISCUSSIONS_ENABLED, isDiscussionsEnabled);
+            return properties;
         }
     }
 }
