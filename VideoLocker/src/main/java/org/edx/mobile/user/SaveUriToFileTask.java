@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.apache.commons.io.IOUtils;
 import org.edx.mobile.task.Task;
+import org.edx.mobile.util.IOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;

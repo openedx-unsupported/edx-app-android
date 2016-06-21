@@ -7,7 +7,6 @@ import android.os.Bundle;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -29,22 +27,21 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +93,7 @@ public class HttpManager {
         
         InputStream inputStream = AndroidHttpClient
                 .getUngzippedContent(response.getEntity());
-        String strRes = IOUtils.toString(inputStream);
+        String strRes = IOUtils.toString(inputStream, Charset.defaultCharset());
 
         // String response =
         // EntityUtils.toString(client.execute(get).getEntity(), "UTF-8");
@@ -181,7 +178,7 @@ public class HttpManager {
 
         InputStream inputStream = AndroidHttpClient
                 .getUngzippedContent(response.getEntity());
-        String strRes = IOUtils.toString(inputStream);
+        String strRes = IOUtils.toString(inputStream, Charset.defaultCharset());
 
         client.getConnectionManager().shutdown();
 
@@ -258,7 +255,7 @@ public class HttpManager {
         }
         InputStream inputStream = AndroidHttpClient
                 .getUngzippedContent(response.getEntity());
-        String strRes = IOUtils.toString(inputStream);
+        String strRes = IOUtils.toString(inputStream, Charset.defaultCharset());
 
         client.getConnectionManager().shutdown();
 

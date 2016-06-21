@@ -6,7 +6,6 @@ import android.os.Environment;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.commons.io.IOUtils;
 import org.edx.mobile.R;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.util.Sha1Util;
@@ -21,6 +20,7 @@ import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.IOUtils;
 
 @Singleton
 public class TranscriptManager {
