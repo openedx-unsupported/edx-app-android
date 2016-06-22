@@ -11,6 +11,7 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.user.ProfileImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -69,5 +70,11 @@ public class UserPrefs {
     @Nullable
     public ProfileModel getProfile() {
         return loginPrefs.getCurrentUserProfile();
+    }
+
+    @Nullable
+    public ProfileImage getProfileImage() {
+        PrefManager pm = new PrefManager(context, PrefManager.Pref.LOGIN);
+        return pm.getCurrentUserProfileImage();
     }
 }

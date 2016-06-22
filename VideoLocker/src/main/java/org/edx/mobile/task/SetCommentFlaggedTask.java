@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.discussion.DiscussionComment;
+import org.edx.mobile.discussion.DiscussionThread;
 
 public abstract class SetCommentFlaggedTask extends Task<DiscussionComment> {
     @NonNull
@@ -20,5 +21,10 @@ public abstract class SetCommentFlaggedTask extends Task<DiscussionComment> {
 
     public DiscussionComment call() throws Exception {
         return environment.getDiscussionAPI().setCommentFlagged(comment, flagged);
+    }
+
+    @Override
+    protected void onSuccess(DiscussionComment discussionComment) {
+        discussionComment = comment.patchObject(discussionComment);
     }
 }

@@ -1,93 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:showIn="@layout/discussion_responses_response_row">
-    <RelativeLayout
-        style="@style/discussion_responses_nested_card_layout"
-        android:layout_height="@dimen/discussion_responses_secondary_actions_bar_height">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/discussion_responses_nested_card_layout"
+    android:layout_height="@dimen/discussion_responses_secondary_actions_bar_height"
+    tools:showIn="@layout/row_discussion_responses_response">
 
-        <LinearLayout
-            android:id="@+id/discussion_responses_action_bar_vote_container"
+    <LinearLayout
+        android:id="@+id/discussion_responses_action_bar_vote_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/discussion_responses_thread_text_view_spacing">
+
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/discussion_responses_action_bar_vote_icon_view"
+            android:layout_width="@dimen/edx_x_small"
+            android:layout_height="@dimen/edx_x_small"
+            android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
+            android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
+            app:iconColor="@color/edx_grayscale_neutral_dark"
+            app:iconName="fa-plus" />
+
+        <TextView
+            android:id="@+id/discussion_responses_action_bar_vote_count_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            tools:text="2 votes" />
 
-            <org.edx.mobile.view.custom.IconImageViewXml
-                android:id="@+id/discussion_responses_action_bar_vote_icon_view"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
-                android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa-plus" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/discussion_responses_action_bar_vote_count_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
-                android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
-                tools:text="2 votes" />
+    <LinearLayout
+        android:id="@+id/discussion_responses_action_bar_follow_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/discussion_responses_thread_text_view_spacing"
+        android:visibility="gone">
 
-        </LinearLayout>
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/discussion_responses_action_bar_follow_icon_view"
+            android:layout_width="@dimen/edx_x_small"
+            android:layout_height="@dimen/edx_x_small"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
+            android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
+            app:iconColor="@color/edx_grayscale_neutral_dark"
+            app:iconName="fa-star" />
 
-        <RelativeLayout
-            android:id="@+id/discussion_responses_action_bar_follow_relative_layout"
+        <TextView
+            android:id="@+id/discussion_responses_action_bar_follow_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:text="@string/forum_follow" />
 
-            <org.edx.mobile.view.custom.IconImageViewXml
-                android:id="@+id/discussion_responses_action_bar_follow_icon_view"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
-                android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
-                android:layout_centerVertical="true"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa-star" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/discussion_responses_action_bar_follow_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/discussion_responses_action_bar_follow_icon_view"
-                android:layout_toRightOf="@+id/discussion_responses_action_bar_follow_icon_view"
-                android:text="@string/forum_follow" />
+    <LinearLayout
+        android:id="@+id/discussion_responses_action_bar_report_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:padding="@dimen/discussion_responses_thread_text_view_spacing">
 
-        </RelativeLayout>
+        <org.edx.mobile.view.custom.IconImageViewXml
+            android:id="@+id/discussion_responses_action_bar_report_icon_view"
+            android:layout_width="@dimen/edx_x_small"
+            android:layout_height="@dimen/edx_x_small"
+            android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
+            android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
+            app:iconColor="@color/edx_grayscale_neutral_dark"
+            app:iconName="fa-flag" />
 
-        <RelativeLayout
-            android:id="@+id/discussion_responses_action_bar_report_layout"
+        <TextView
+            android:id="@+id/discussion_responses_action_bar_report_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true">
-
-            <org.edx.mobile.view.custom.IconImageViewXml
-                android:id="@+id/discussion_responses_action_bar_report_icon_view"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_responses_action_bar_icon_margin"
-                android:layout_marginRight="@dimen/discussion_responses_action_bar_icon_margin"
-                android:layout_centerVertical="true"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
-                app:iconName="fa-flag" />
-
-            <TextView
-                android:id="@+id/discussion_responses_action_bar_report_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/discussion_responses_action_bar_report_icon_view"
-                android:layout_toRightOf="@+id/discussion_responses_action_bar_report_icon_view"
-                android:text="@string/discussion_responses_report_label" />
-
-        </RelativeLayout>
-    </RelativeLayout>
-</merge>
+            android:layout_height="wrap_content"
+            android:text="@string/discussion_responses_report_label" />
+    </LinearLayout>
+</FrameLayout>

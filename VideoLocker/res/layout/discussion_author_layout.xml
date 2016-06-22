@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/discussion_author_layout_author_text_view"
-    style="@style/discussion_responses_small_text"
-    tools:text="Brian Z 2 months ago  Staff" />

@@ -36,7 +36,7 @@ import roboguice.inject.InjectView;
 
 public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
 
-    @InjectView(R.id.discussion_comments_listview)
+    @InjectView(R.id.discussion_recycler_view)
     private RecyclerView discussionCommentsListView;
 
     @InjectView(R.id.create_new_item_text_view)
@@ -76,7 +76,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_comments, container, false);
+        return inflater.inflate(R.layout.fragment_discussion_responses_or_comments, container, false);
     }
 
     @Override
@@ -184,6 +184,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
         setCommentFlaggedTask = new SetCommentFlaggedTask(context, comment, !comment.isAbuseFlagged()) {
             @Override
             public void onSuccess(DiscussionComment comment) {
+                super.onSuccess(comment);
                 discussionCommentsAdapter.updateComment(comment);
             }
         };

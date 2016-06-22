@@ -1,7 +1,7 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -17,11 +18,18 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.util.Config;
+import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.RoboGuice;
+
 public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements InfiniteScrollUtils.ListContentController<DiscussionComment> {
+
+    @Inject
+    private Config config;
 
     @NonNull
     private final Context context;
@@ -42,6 +50,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     private boolean progressVisible = false;
 
     static class RowType {
+        static final int RESPONSE = 0;
         static final int COMMENT = 1;
         static final int PROGRESS = 2;
     }
@@ -59,6 +68,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         this.listener = listener;
         this.thread = thread;
         this.response = response;
+        RoboGuice.getInjector(context).injectMembers(this);
     }
 
     @Override
@@ -79,31 +89,32 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         if (viewType == RowType.PROGRESS) {
             return new RecyclerView.ViewHolder(LayoutInflater.
                     from(parent.getContext()).
-                    inflate(R.layout.list_view_footer_progress, parent, false)) {};
+                    inflate(R.layout.list_view_footer_progress, parent, false)) {
+            };
         }
 
-        return new ViewHolder(LayoutInflater.
+        @LayoutRes
+        final int layout;
+        if (viewType == RowType.RESPONSE) {
+            layout = R.layout.row_discussion_comments_response;
+        } else {
+            layout = R.layout.row_discussion_comments_comment;
+        }
+        return new ResponseOrCommentViewHolder(LayoutInflater.
                 from(parent.getContext()).
-                inflate(R.layout.row_discussion_comment, parent, false));
+                inflate(layout, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if (!(viewHolder instanceof ViewHolder)) return;
-        final ViewHolder holder = (ViewHolder) viewHolder;
+        if (getItemViewType(position) == RowType.PROGRESS) return;
+        final ResponseOrCommentViewHolder holder = (ResponseOrCommentViewHolder) viewHolder;
         final DiscussionComment discussionComment;
-        final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.discussionCommentRow.getLayoutParams();
-        layoutParams.topMargin = layoutParams.bottomMargin = 0;
-        @DrawableRes
-        final int backgroundRes;
         final IconDrawable iconDrawable;
-        final int standardMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
         if (position == 0) {
-            holder.discussionCommentRow.setPadding(0, standardMargin, 0, 0);
             discussionComment = response;
-            DiscussionTextUtils.setEndorsedState(holder.responseAnswerTextView, thread, response);
-            backgroundRes = R.drawable.row_discussion_first_comment_background;
-            layoutParams.topMargin = context.getResources().getDimensionPixelOffset(R.dimen.discussion_responses_standard_margin);
+
+            DiscussionTextUtils.setEndorsedState(holder.authorLayoutViewHolder.answerTextView, thread, response);
             final int childCount = discussionComment.getChildCount();
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childCount, childCount));
@@ -114,22 +125,14 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             holder.discussionCommentCountReportTextView.setClickable(false);
 
         } else {
-            holder.responseAnswerTextView.setVisibility(View.GONE);
-            holder.discussionCommentRow.setPadding(standardMargin, standardMargin, standardMargin, 0);
-
+            holder.authorLayoutViewHolder.answerTextView.setVisibility(View.GONE);
             discussionComment = discussionComments.get(position - 1);
-            if (!progressVisible && position == getItemCount() - 1) {
-                backgroundRes = R.drawable.row_discussion_last_comment_background;
-                layoutParams.bottomMargin = standardMargin;
-            } else {
-                backgroundRes = R.drawable.row_discussion_comment_background;
-            }
 
             iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_flag)
                     .sizeRes(context, R.dimen.edx_xxx_small)
-                    .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
+                    .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
             holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
-            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_dark));
+            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
 
             holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
@@ -137,15 +140,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
                 }
             });
         }
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
-        holder.discussionCommentRow.setLayoutParams(layoutParams);
-        holder.discussionCommentRow.setBackgroundResource(backgroundRes);
 
-        String commentBody = discussionComment.getRawBody();
-        holder.discussionCommentBody.setText(commentBody);
-
-        DiscussionTextUtils.setAuthorAttributionText(holder.discussionCommentAuthorTextView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
+        holder.authorLayoutViewHolder.populateViewHolder(config, discussionComment,
                 discussionComment, initialTimeStampMs,
                 new Runnable() {
                     @Override
@@ -153,13 +149,20 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
                         listener.onClickAuthor(discussionComment.getAuthor());
                     }
                 });
+
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
+
+        String commentBody = discussionComment.getRawBody();
+        holder.discussionCommentBody.setText(commentBody);
     }
 
     @Override
     public int getItemCount() {
         int total = 1 + discussionComments.size();
-        if (progressVisible)
+        if (progressVisible) {
             total++;
+        }
         return total;
     }
 
@@ -167,6 +170,10 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
     public int getItemViewType(int position) {
         if (progressVisible && position == getItemCount() - 1) {
             return RowType.PROGRESS;
+        }
+
+        if (position == 0) {
+            return RowType.RESPONSE;
         }
 
         return RowType.COMMENT;
@@ -187,20 +194,18 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         notifyItemChanged(lastCommentIndex); // Last item's background is different, so must be refreshed as well
     }
 
-    private static class ViewHolder extends RecyclerView.ViewHolder {
-        View discussionCommentRow;
-        TextView discussionCommentBody;
-        TextView discussionCommentAuthorTextView;
-        TextView discussionCommentCountReportTextView;
-        TextView responseAnswerTextView;
+    private static class ResponseOrCommentViewHolder extends RecyclerView.ViewHolder {
+        public final View discussionCommentRow;
+        public final TextView discussionCommentBody;
+        public final TextView discussionCommentCountReportTextView;
+        public final AuthorLayoutViewHolder authorLayoutViewHolder;
 
-        public ViewHolder(View itemView) {
+        public ResponseOrCommentViewHolder(View itemView) {
             super(itemView);
             discussionCommentRow = itemView.findViewById(R.id.row_discussion_comment_layout);
             discussionCommentBody = (TextView) itemView.findViewById(R.id.discussion_comment_body);
-            discussionCommentAuthorTextView = (TextView) itemView.findViewById(R.id.discussion_comment_author_text_view);
             discussionCommentCountReportTextView = (TextView) itemView.findViewById(R.id.discussion_comment_count_report_text_view);
-            responseAnswerTextView = (TextView) itemView.findViewById(R.id.discussion_responses_answer_text_view);
+            authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));
         }
     }
 

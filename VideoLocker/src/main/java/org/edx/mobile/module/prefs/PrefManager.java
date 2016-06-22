@@ -2,9 +2,17 @@ package org.edx.mobile.module.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
+import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.Sha1Util;
 
@@ -142,6 +150,73 @@ public class PrefManager {
         return defaultValue;
     }
 
+    /**
+     * Returns current user's profile from the preferences.
+     * @return
+     */
+    @Nullable
+    public ProfileModel getCurrentUserProfile() {
+        String json = getString(PrefManager.Key.PROFILE_JSON);
+        if (json == null) {
+            return null;
+        }
+        
+        Gson gson = new GsonBuilder().create();
+        ProfileModel res = gson.fromJson(json, ProfileModel.class);
+
+        return res;
+    }
+
+    /**
+     * @return The current user's {@link ProfileImage} from the preferences.
+     */
+    @Nullable
+    public ProfileImage getCurrentUserProfileImage() {
+        String json = getString(Key.PROFILE_IMAGE);
+        if (json == null) {
+            return null;
+        }
+
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(json, ProfileImage.class);
+    }
+    
+    /**
+     * Returns current user's profile from the preferences.
+     * @return
+     */
+    public AuthResponse getCurrentAuth() {
+        String json = getString(PrefManager.Key.AUTH_JSON);
+        if (json == null) {
+            return null;
+        }
+
+        Gson gson = new GsonBuilder().create();
+        AuthResponse res = gson.fromJson(json, AuthResponse.class);
+        
+        return res;
+    }
+
+    /**
+     * Clears auth token info and current profile information from preferences.
+     */
+    public void clearAuth() {
+        put(PrefManager.Key.PROFILE_JSON, null);
+        put(PrefManager.Key.AUTH_JSON, null);
+        put(PrefManager.Key.AUTH_TOKEN_SOCIAL, null);
+        put(PrefManager.Key.AUTH_TOKEN_BACKEND, null);
+        put(PrefManager.Key.AUTH_TOKEN_SOCIAL_COOKIE, null);
+        //assessment webview related session_id
+        EdxCookieManager.getSharedInstance().clearWebWiewCookie(MainApplication.instance());
+    }
+
+    /**
+     *  check if app is currently logged in through Google/Facebook
+     */
+    public boolean hasAuthTokenSocialCookie(){
+        return  null !=  getString(Key.AUTH_TOKEN_SOCIAL_COOKIE);
+    }
+    
     /**
      * Stores information of last accesses subsection for given id.
      * Modification date is also stored for current time.
@@ -296,9 +371,11 @@ public class PrefManager {
         public static final String PROFILE_JSON = "profile_json";
         public static final String AUTH_JSON = "auth_json";
         public static final String AUTH_EMAIL = "email";
+        public static final String PROFILE_IMAGE = "profile_image";
         //TODO- need to rename these constants. causing confusion
         public static final String AUTH_TOKEN_SOCIAL = "facebook_token";
         public static final String AUTH_TOKEN_BACKEND = "google_token";
+        public static final String AUTH_TOKEN_SOCIAL_COOKIE = "social_auth_cookie";
         public static final String DOWNLOAD_ONLY_ON_WIFI = "download_only_on_wifi";
         public static final String DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG = "download_off_wifi_dialog_flag";
         public static final String TRANSCRIPT_LANGUAGE = "transcript_language";

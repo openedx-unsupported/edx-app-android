@@ -37,7 +37,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         threadFollowIconImageView = (IconImageView) itemView.
                 findViewById(R.id.discussion_responses_action_bar_follow_icon_view);
         threadFollowContainer = itemView.
-                findViewById(R.id.discussion_responses_action_bar_follow_relative_layout);
+                findViewById(R.id.discussion_responses_action_bar_follow_container);
     }
 
     public void setDiscussionThread(final DiscussionThread discussionThread) {
