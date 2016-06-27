@@ -3,14 +3,16 @@ package org.edx.mobile.util;
 import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 
+import com.google.gson.internal.bind.util.ISO8601Utils;
+
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.edx.mobile.logger.Logger;
 
 @SuppressLint("SimpleDateFormat")
 public class DateUtil {
-    public static final String ISO_8601_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final Logger logger = new Logger(DateUtil.class.getName());
 
     /*
@@ -21,12 +23,11 @@ public class DateUtil {
         if(date==null){
             return null;
         }
-        SimpleDateFormat parse_to_format = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss'Z'");
 
         java.util.Date parsedate = null;
+        final ParsePosition parsePosition = new ParsePosition(0);
         try {
-            parsedate = parse_to_format.parse(date);
+            parsedate = ISO8601Utils.parse(date, parsePosition);
             logger.debug("Parsed Data"+parsedate);
             return parsedate;
 
@@ -36,56 +37,11 @@ public class DateUtil {
         return parsedate;
     }
 
-    /*
-     * Function to convert mins to Hours:Mins from Mins
-     */
-    public static String convertMinsToHours(int minutes) {
-        int hr = minutes / 60;
-        int min = minutes % 60;
-        return String.format("%02d:%02d", hr, min);
-    }
-    
-    
     /**
-     * 
-     * @return yyyy-MM-dd HH:mm:ss formate date as string
+     * @return The current date and time in a ISO 8601 compliant format.
      */
     public static String getCurrentTimeStamp(){
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
-            String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
-            return currentTimeStamp;
-        } catch (Exception e) {
-            logger.error(e);
-            return null;
-        }
-    }
-
-    /**
-     * Returns date in below format which is required for modification date
-     * of last accessed subsection.
-     * Format is "2014-11-20 22:10:54.569200+00:00".
-     * @return
-     */
-    public static String getModificationDate() {
-        try {
-            // ISO 8601 international standard date format
-            final String ISO8601 = "yyyy-MM-dd HH:mm:ss.SSSSSSZ";
-            
-            SimpleDateFormat dateFormat = new SimpleDateFormat(ISO8601);
-            String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
-            
-            // last timezone part must have colon in it
-            int len = currentTimeStamp.length();
-            String tz = currentTimeStamp.substring(len - 5);
-            String timezone = tz.substring(0, 3) + ":" + tz.substring(3);
-            
-            String formattedTimestamp = currentTimeStamp.substring(0, len-5) + timezone;
-            return formattedTimestamp;
-        } catch (Exception e) {
-            logger.error(e);
-            return null;
-        }
+        return ISO8601Utils.format(new Date(), true); // Find todays date
     }
 
     /**

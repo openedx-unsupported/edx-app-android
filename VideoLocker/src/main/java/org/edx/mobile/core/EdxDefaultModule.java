@@ -14,6 +14,7 @@ import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.RestApiManager;
+import org.edx.mobile.http.serialization.ISO8601DateTypeAdapter;
 import org.edx.mobile.http.serialization.JsonPageDeserializer;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.module.analytics.ISegment;
@@ -31,7 +32,6 @@ import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.MediaConsentUtils;
 
 import de.greenrobot.event.EventBus;
@@ -82,9 +82,8 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(Gson.class).toInstance(new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat(DateUtil.ISO_8601_DATE_TIME_FORMAT)
+                .registerTypeAdapterFactory(ISO8601DateTypeAdapter.FACTORY)
                 .registerTypeAdapter(Page.class, new JsonPageDeserializer())
-                .registerTypeAdapterFactory(new ServerJsonDateAdapterFactory())
                 .serializeNulls()
                 .create());
 
