@@ -3,8 +3,6 @@ package org.edx.mobile.view;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
@@ -119,7 +117,7 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == android.R.id.home && searchView.hasFocus()) {
+        if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {
             searchView.onActionViewCollapsed();
             return true;
         } else {
