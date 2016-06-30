@@ -47,13 +47,13 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
 
     private boolean pageIsLoaded;
 
-    @InjectView(R.id.loading_indicator)
+    @InjectView(tag="loading_indicator")
     private ProgressBar progressWheel;
 
-    @InjectView(R.id.course_unit_webView)
+    @InjectView(tag="course_unit_webView")
     private WebView webView;
 
-    @InjectView(R.id.content_unavailable_error_text)
+    @InjectView(tag="content_unavailable_error_text")
     private TextView errorTextView;
 
     public static CourseUnitWebViewFragment newInstance(HtmlBlockModel unit) {

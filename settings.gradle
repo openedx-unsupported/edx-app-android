@@ -1,1 +1,1 @@
-include ':VideoLocker', ':android-iconify', ':android-iconify-fontawesome'
+include ':app', ':VideoLocker', ':android-iconify', ':android-iconify-fontawesome'

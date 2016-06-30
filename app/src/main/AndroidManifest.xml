@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.edx.mobile.app"
+    android:installLocation="auto">
+
+    <application />
+</manifest>

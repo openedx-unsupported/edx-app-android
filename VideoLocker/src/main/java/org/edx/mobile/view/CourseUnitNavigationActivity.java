@@ -44,13 +44,13 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     private List<CourseComponent> unitList = new ArrayList<>();
     private CourseUnitPagerAdapter pagerAdapter;
 
-    @InjectView(R.id.goto_next)
+    @InjectView(tag="goto_next")
     private Button mNextBtn;
-    @InjectView(R.id.goto_prev)
+    @InjectView(tag="goto_prev")
     private Button mPreviousBtn;
-    @InjectView(R.id.next_unit_title)
+    @InjectView(tag="next_unit_title")
     private TextView mNextUnitLbl;
-    @InjectView(R.id.prev_unit_title)
+    @InjectView(tag="prev_unit_title")
     private TextView mPreviousUnitLbl;
 
     protected void onCreate(Bundle savedInstanceState) {

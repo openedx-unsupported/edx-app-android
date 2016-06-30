@@ -46,22 +46,22 @@ public class DiscussionAddCommentFragment extends BaseFragment {
 
     protected final Logger logger = new Logger(getClass().getName());
 
-    @InjectView(R.id.etNewComment)
+    @InjectView(tag="etNewComment")
     private EditText editTextNewComment;
 
-    @InjectView(R.id.btnAddComment)
+    @InjectView(tag="btnAddComment")
     private ViewGroup buttonAddComment;
 
-    @InjectView(R.id.progress_indicator)
+    @InjectView(tag="progress_indicator")
     private ProgressBar createCommentProgressBar;
 
-    @InjectView(R.id.tvResponse)
+    @InjectView(tag="tvResponse")
     private TextView textViewResponse;
 
-    @InjectView(R.id.tvTimeAuthor)
+    @InjectView(tag="tvTimeAuthor")
     private TextView textViewTimeAuthor;
 
-    @InjectView(R.id.discussion_responses_answer_text_view)
+    @InjectView(tag="discussion_responses_answer_text_view")
     private TextView responseAnswerTextView;
 
     @Inject

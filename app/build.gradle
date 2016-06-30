@@ -1,0 +1,64 @@
+
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile project(':android-iconify')
+    compile project(':VideoLocker')
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    dataBinding.enabled true
+
+    defaultConfig {
+        applicationId "org.edx.mobile.app"
+        testApplicationId 'org.edx.mobile.test'
+        minSdkVersion 14
+        targetSdkVersion 21
+
+        versionCode 84
+        versionName "2.5.0"
+    }
+
+    productFlavors {
+        prod {}
+        dev {
+            minSdkVersion 21
+            // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
+        }
+    }
+
+    signingConfigs {
+        releasekey {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+            pseudoLocalesEnabled true
+            // Set device language to "en_XA" to test glyphs, or "ar_XB" to test RTL support
+            manifestPlaceholders = [supportsRtl: "true"]
+        }
+        debuggable.initWith(buildTypes.debug)
+        debuggable {
+            testCoverageEnabled = false
+            // Set to "false" to work around debugger issue: https://code.google.com/p/android/issues/detail?id=123771
+        }
+
+        release {
+            signingConfig signingConfigs.releasekey
+        }
+    }
+}

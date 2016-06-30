@@ -36,13 +36,13 @@ import roboguice.inject.InjectView;
 
 public class CourseDiscussionCommentsFragment extends BaseFragment implements DiscussionCommentsAdapter.Listener {
 
-    @InjectView(R.id.discussion_comments_listview)
+    @InjectView(tag="discussion_comments_listview")
     private RecyclerView discussionCommentsListView;
 
-    @InjectView(R.id.create_new_item_text_view)
+    @InjectView(tag="create_new_item_text_view")
     private TextView createNewCommentTextView;
 
-    @InjectView(R.id.create_new_item_layout)
+    @InjectView(tag="create_new_item_layout")
     private ViewGroup createNewCommentLayout;
 
     @Inject

@@ -19,7 +19,7 @@ import roboguice.inject.InjectView;
 
 
 public abstract class CourseDiscussionPostsBaseFragment extends BaseFragment implements InfiniteScrollUtils.PageLoader<DiscussionThread> {
-    @InjectView(R.id.discussion_posts_listview)
+    @InjectView(tag="discussion_posts_listview")
     protected ListView discussionPostsListView;
 
     @Inject

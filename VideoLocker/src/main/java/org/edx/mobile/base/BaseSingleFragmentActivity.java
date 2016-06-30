@@ -20,15 +20,15 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
 
     public static final String FIRST_FRAG_TAG = "first_frag";
 
-    @InjectView(R.id.offline_bar)
+    @InjectView(tag="offline_bar")
     @Nullable
     View offlineBar;
 
-    @InjectView(R.id.loading_indicator)
+    @InjectView(tag="loading_indicator")
     @Nullable
     ProgressBar progressSpinner;
 
-    @InjectView(R.id.center_message_box)
+    @InjectView(tag="center_message_box")
     @Nullable
     TextView centerMessageBox;
 

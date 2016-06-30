@@ -45,25 +45,25 @@ import roboguice.inject.InjectView;
 public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBaseFragment {
     public static final String ARG_DISCUSSION_HAS_TOPIC_NAME = "discussion_has_topic_name";
 
-    @InjectView(R.id.spinners_container)
+    @InjectView(tag="spinners_container")
     private ViewGroup spinnersContainerLayout;
 
-    @InjectView(R.id.discussion_posts_filter_spinner)
+    @InjectView(tag="discussion_posts_filter_spinner")
     private Spinner discussionPostsFilterSpinner;
 
-    @InjectView(R.id.discussion_posts_sort_spinner)
+    @InjectView(tag="discussion_posts_sort_spinner")
     private Spinner discussionPostsSortSpinner;
 
-    @InjectView(R.id.create_new_item_text_view)
+    @InjectView(tag="create_new_item_text_view")
     private TextView createNewPostTextView;
 
-    @InjectView(R.id.create_new_item_layout)
+    @InjectView(tag="create_new_item_layout")
     private ViewGroup createNewPostLayout;
 
-    @InjectView(R.id.center_message_box)
+    @InjectView(tag="center_message_box")
     private TextView centerMessageBox;
 
-    @InjectView(R.id.loading_indicator)
+    @InjectView(tag="loading_indicator")
     private ProgressBar loadingIndicator;
 
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)

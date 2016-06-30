@@ -37,13 +37,13 @@ import roboguice.inject.InjectView;
 
 public class CourseDiscussionResponsesFragment extends BaseFragment implements CourseDiscussionResponsesAdapter.Listener {
 
-    @InjectView(R.id.discussion_responses_recycler_view)
+    @InjectView(tag="discussion_responses_recycler_view")
     private RecyclerView discussionResponsesRecyclerView;
 
-    @InjectView(R.id.create_new_item_text_view)
+    @InjectView(tag="create_new_item_text_view")
     private TextView addResponseTextView;
 
-    @InjectView(R.id.create_new_item_layout)
+    @InjectView(tag="create_new_item_layout")
     private ViewGroup addResponseLayout;
 
     @InjectExtra(Router.EXTRA_DISCUSSION_THREAD)

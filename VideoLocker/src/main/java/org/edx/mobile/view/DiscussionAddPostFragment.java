@@ -57,25 +57,25 @@ public class DiscussionAddPostFragment extends BaseFragment {
     @InjectExtra(Router.EXTRA_DISCUSSION_TOPIC)
     private DiscussionTopic discussionTopic;
 
-    @InjectView(R.id.discussion_question_segmented_group)
+    @InjectView(tag="discussion_question_segmented_group")
     private RadioGroup discussionQuestionSegmentedGroup;
 
-    @InjectView(R.id.topics_spinner)
+    @InjectView(tag="topics_spinner")
     private Spinner topicsSpinner;
 
-    @InjectView(R.id.title_edit_text)
+    @InjectView(tag="title_edit_text")
     private EditText titleEditText;
 
-    @InjectView(R.id.body_edit_text)
+    @InjectView(tag="body_edit_text")
     private EditText bodyEditText;
 
-    @InjectView(R.id.add_post_button)
+    @InjectView(tag="add_post_button")
     private ViewGroup addPostButton;
 
-    @InjectView(R.id.add_post_button_text)
+    @InjectView(tag="add_post_button_text")
     private TextView addPostButtonText;
 
-    @InjectView(R.id.progress_indicator)
+    @InjectView(tag="progress_indicator")
     private ProgressBar addPostProgressBar;
 
     @Inject

@@ -41,13 +41,13 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.activity_course_base)
 public abstract  class CourseBaseActivity  extends BaseFragmentActivity implements TaskProcessCallback{
 
-    @InjectView(R.id.offline_bar)
+    @InjectView(tag="offline_bar")
     View offlineBar;
 
-    @InjectView(R.id.last_access_bar)
+    @InjectView(tag="last_access_bar")
     View lastAccessBar;
 
-    @InjectView(R.id.loading_indicator)
+    @InjectView(tag="loading_indicator")
     ProgressBar progressWheel;
 
     @Inject

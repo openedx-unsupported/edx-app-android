@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.joanzapata.iconify">
+<manifest package="com.joanzapata.iconify"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

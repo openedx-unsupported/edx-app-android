@@ -36,10 +36,10 @@ import roboguice.inject.InjectView;
 public class CourseDiscussionTopicsFragment extends BaseFragment {
     private static final Logger logger = new Logger(CourseDiscussionTopicsFragment.class.getName());
 
-    @InjectView(R.id.discussion_topics_searchview)
+    @InjectView(tag="discussion_topics_searchview")
     private SearchView discussionTopicsSearchView;
 
-    @InjectView(R.id.discussion_topics_listview)
+    @InjectView(tag="discussion_topics_listview")
     private ListView discussionTopicsListView;
 
     @InjectExtra(Router.EXTRA_COURSE_DATA)

@@ -47,10 +47,10 @@ public class CourseHandoutFragment extends BaseFragment {
     @Inject
     private IEdxEnvironment environment;
 
-    @InjectView(R.id.webview)
+    @InjectView(tag="webview")
     private WebView webview;
 
-    @InjectView(R.id.no_coursehandout_tv)
+    @InjectView(tag="no_coursehandout_tv")
     private TextView errorTextView;
 
     private boolean isHandoutFetched;

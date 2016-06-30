@@ -44,7 +44,7 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.activity_lecture_list)
 public class CourseLectureListActivity extends BaseFragmentActivity {
 
-    @InjectView(R.id.offline_bar)
+    @InjectView(tag="offline_bar")
     View offlineBar;
     private LectureAdapter adapter;
     private DownloadSizeExceedDialog downloadFragment;

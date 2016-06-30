@@ -28,7 +28,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
 
-    @InjectView(R.id.discussion_topics_searchview)
+    @InjectView(tag="discussion_topics_searchview")
     private SearchView discussionTopicsSearchView;
 
     private SearchThreadListTask searchThreadListTask;
