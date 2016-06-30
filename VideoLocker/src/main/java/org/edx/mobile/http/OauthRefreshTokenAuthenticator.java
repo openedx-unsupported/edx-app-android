@@ -62,19 +62,13 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
             return null;
         }
 
-        try {
-            refreshAccessToken(pref);
-        } catch (HttpConnectivityException e) {
-            throw e.getRealCause();
-        } catch (RetroHttpException e) {
-            return null;
-        }
+        refreshAccessToken(pref);
         return response.request().newBuilder()
                 .header("Authorization", pref.getCurrentAuth().token_type + " " + pref.getCurrentAuth().access_token)
                 .build();
     }
 
-    private void refreshAccessToken(@NonNull PrefManager pref) throws RetroHttpException {
+    private void refreshAccessToken(@NonNull PrefManager pref) {
         OkHttpClient client = OkHttpUtil.getClient(context);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new Ok3Client(client))
