@@ -21,8 +21,6 @@ import org.edx.mobile.authentication.LoginTask;
 import org.edx.mobile.databinding.ActivityLoginBinding;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
-import org.edx.mobile.http.HttpResponseStatusException;
-import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
@@ -34,7 +32,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
-import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
@@ -244,12 +241,26 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                     activityLoginBinding.passwordEt.getText().toString()) {
                 @Override
                 public void onSuccess(AuthResponse result) {
-                    onUserLoginSuccess(result.profile);
+                    try {
+                        if (result != null && result.hasValidProfile()) {
+                            onUserLoginSuccess(result.profile);
+                        } else {
+                            LoginErrorMessage errorMsg =
+                                    new LoginErrorMessage(
+                                            getString(R.string.login_error),
+                                            getString(R.string.login_failed));
+                            throw new LoginException(errorMsg);
+                        }
+                    } catch (LoginException ex) {
+                        super.onException(ex);
+                        onUserLoginFailure(ex, null, null);
+                    }
                 }
 
                 @Override
                 public void onException(Exception ex) {
-                    onUserLoginFailure(ex, null, null);
+                    super.onException(ex);
+                    tryToSetUIInteraction(true);
                 }
 
             };
@@ -394,7 +405,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         task.setProgressDialog(activityLoginBinding.progress.progressIndicator);
     }
 
-    public void onUserLoginSuccess(ProfileModel profile) {
+    public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
 
         // save this email id
         PrefManager pref = new PrefManager(this, PrefManager.Pref.LOGIN);
@@ -420,18 +431,14 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         tryToSetUIInteraction(true);
 
 
-        if (ex instanceof LoginException) {
+        // handle if this is a LoginException
+        if (ex != null && ex instanceof LoginException) {
             LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
 
             showErrorMessage(
                     error.getMessageLine1(),
                     (error.getMessageLine2() != null) ?
                             error.getMessageLine2() : getString(R.string.login_failed));
-        } else if (ex instanceof HttpResponseStatusException &&
-                ((HttpResponseStatusException) ex).getStatusCode() == 401) {
-            showErrorMessage(getString(R.string.login_error), getString(R.string.login_failed));
-        } else if (ex instanceof RetroHttpException) {
-            showErrorMessage("", ErrorUtils.getErrorMessage(ex, this));
         } else {
             logger.error(ex);
         }

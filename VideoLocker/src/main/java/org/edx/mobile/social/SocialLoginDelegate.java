@@ -180,7 +180,11 @@ public class SocialLoginDelegate {
 
         @Override
         public void onSuccess(ProfileModel result) {
-            callback.onUserLoginSuccess(result);
+            try {
+                callback.onUserLoginSuccess(result);
+            } catch (LoginException ex) {
+                super.onException(ex);
+            }
         }
 
         @Override
@@ -281,7 +285,7 @@ public class SocialLoginDelegate {
     public interface MobileLoginCallback {
         void onSocialLoginSuccess(String accessToken, String backend, Task task);
         void onUserLoginFailure(Exception ex, String accessToken, String backend);
-        void onUserLoginSuccess(ProfileModel profile);
+        void onUserLoginSuccess(ProfileModel profile) throws LoginException;
         boolean showErrorMessage(String header, String message);
     }
 
