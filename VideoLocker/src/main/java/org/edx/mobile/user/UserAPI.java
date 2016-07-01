@@ -14,6 +14,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.ApiConstants;
+import org.edx.mobile.http.HttpConnectivityException;
 import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
@@ -116,18 +117,31 @@ public class UserAPI {
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
-            Response response = userService.getUserEnrolledCourses(username);
-            TypedInput input = response.getBody();
             try {
-                json = IOUtils.toString(input.in(), Charset.defaultCharset());
-            } catch (IOException e) {
-                throw new RetroHttpException(RetrofitError.networkError(null, e));
-            }
-            // cache result
-            try {
-                cache.put(cacheKey, json);
-            } catch (IOException | NoSuchAlgorithmException e) {
-                logger.debug(e.toString());
+                Response response = userService.getUserEnrolledCourses(username);
+                TypedInput input = response.getBody();
+                try {
+                    json = IOUtils.toString(input.in(), Charset.defaultCharset());
+                } catch (IOException e) {
+                    throw new HttpConnectivityException(RetrofitError.networkError(null, e));
+                }
+                // cache result
+                try {
+                    cache.put(cacheKey, json);
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    logger.debug(e.toString());
+                }
+            } catch (HttpConnectivityException connectivityException) {
+                // Cache has already been checked, and connectivity
+                // can't be established, so throw the exception.
+                if (tryCache) throw connectivityException;
+                // Otherwise fall back to fetching from the cache
+                try {
+                    json = cache.get(cacheKey);
+                } catch (IOException | NoSuchAlgorithmException e) {
+                    logger.debug(e.toString());
+                    throw connectivityException;
+                }
             }
         }
 
