@@ -52,6 +52,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+// The SDK version needs to be lesser than Lollipop because of this
+// issue: https://github.com/robolectric/robolectric/issues/1810
+@Config(sdk = 19)
 public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
     /**
      * Method for defining the subclass of {@link CourseUnitNavigationActivity}

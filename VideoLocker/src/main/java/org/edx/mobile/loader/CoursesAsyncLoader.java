@@ -127,4 +127,5 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
     private void releaseResources(AsyncTaskResult<List<EnrolledCoursesResponse>> data) {
 
     }
+
 }
