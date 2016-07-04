@@ -142,6 +142,8 @@ public class UserAPI {
                     logger.debug(e.toString());
                     throw connectivityException;
                 }
+                // If the cache is empty, throw the exception.
+                if (json == null) throw connectivityException;
             }
         }
 
