@@ -73,10 +73,7 @@ public class Router {
 
     public void showLaunchScreen(Context context) {
         Intent launchIntent = new Intent(context, LaunchActivity.class);
-        if (context instanceof Activity)
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        else
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(launchIntent);
     }
 
