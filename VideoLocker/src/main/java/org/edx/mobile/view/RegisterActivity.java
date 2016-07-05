@@ -540,7 +540,7 @@ public class RegisterActivity extends BaseFragmentActivity
     /*
      *  callback if login to edx success using social access_token
      */
-    public void onUserLoginSuccess(ProfileModel profile) throws LoginException {
+    public void onUserLoginSuccess(ProfileModel profile) {
 
         PrefManager pref = new PrefManager(RegisterActivity.this, PrefManager.Pref.LOGIN);
         environment.getSegment().identifyUser(profile.id.toString(), profile.email, "");

@@ -7,6 +7,7 @@ import android.webkit.MimeTypeMap;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -35,6 +36,7 @@ import de.greenrobot.event.EventBus;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.ConversionException;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
@@ -101,6 +103,7 @@ public class UserAPI {
     List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws RetroHttpException {
         String json = null;
 
+        // TODO: Use OkHttp's automatic caching system
         final String cacheKey = getUserEnrolledCoursesURL(username);
 
         // try to get from cache if we should
@@ -145,11 +148,16 @@ public class UserAPI {
         }
 
         // We aren't use TypeToken here because it throws NoClassDefFoundError
-        final JsonArray ary = gson.fromJson(json, JsonArray.class);
-        final List<EnrolledCoursesResponse> ret = new ArrayList<>(ary.size());
-        for (int cnt = 0; cnt < ary.size(); ++cnt) {
-            ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+        try {
+            final JsonArray ary = gson.fromJson(json, JsonArray.class);
+            final List<EnrolledCoursesResponse> ret = new ArrayList<>(ary.size());
+            for (int cnt = 0; cnt < ary.size(); ++cnt) {
+                ret.add(gson.fromJson(ary.get(cnt), EnrolledCoursesResponse.class));
+            }
+            return ret;
+        } catch (JsonSyntaxException e) {
+            throw new RetroHttpException(RetrofitError.conversionError(
+                    null, null, null, null, new ConversionException(e)));
         }
-        return ret;
     }
 }

@@ -20,7 +20,7 @@ public class RetroHttpExceptionHandler implements ErrorHandler {
             logger.warn("body = " + body);
             logger.warn("status and reason = " + response.getStatus() + ":" + response.getReason());
             if (RetrofitError.Kind.HTTP == cause.getKind()) {
-                return new HttpResponseStatusException(cause, response.getStatus());
+                return new HttpResponseStatusException(cause);
             }
         }
         if (RetrofitError.Kind.NETWORK == cause.getKind()) {
