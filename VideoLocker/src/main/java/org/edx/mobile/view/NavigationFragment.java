@@ -106,7 +106,7 @@ public class NavigationFragment extends BaseFragment {
                     .into(imageView);
         } else {
             Glide.with(NavigationFragment.this)
-                    .load(R.drawable.xsie)
+                    .load(R.drawable.profile_photo_placeholder)
                     .into(imageView);
         }
     }
@@ -338,7 +338,7 @@ public class NavigationFragment extends BaseFragment {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
             if (null == event.getUri()) {
                 Glide.with(NavigationFragment.this)
-                        .load(R.drawable.xsie)
+                        .load(R.drawable.profile_photo_placeholder)
                         .into(imageView);
             } else {
                 Glide.with(NavigationFragment.this)

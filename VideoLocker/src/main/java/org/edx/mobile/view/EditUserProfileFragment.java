@@ -220,7 +220,7 @@ public class EditUserProfileFragment extends BaseFragment {
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (null == event.getUri()) {
             Glide.with(this)
-                    .load(R.drawable.xsie)
+                    .load(R.drawable.profile_photo_placeholder)
                     .into(viewHolder.profileImage);
         } else {
             Glide.with(this)
@@ -281,7 +281,7 @@ public class EditUserProfileFragment extends BaseFragment {
                         .into(viewHolder.profileImage);
             } else {
                 Glide.with(EditUserProfileFragment.this)
-                        .load(R.drawable.xsie)
+                        .load(R.drawable.profile_photo_placeholder)
                         .into(viewHolder.profileImage);
             }
 

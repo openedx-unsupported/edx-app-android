@@ -227,6 +227,10 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+
+        if (project.hasProperty('RES_DIR')) {
+            prod.res.srcDirs = [RES_DIR]
+        }
     }
 
     lintOptions {
@@ -236,7 +240,11 @@ android {
     }
 
     productFlavors {
-        prod { }
+        prod {
+            if (project.hasProperty('APPLICATION_ID')) {
+                applicationId APPLICATION_ID
+            }
+        }
         dev {
             minSdkVersion 21 // Disables multidex to drastically speed up build: https://developer.android.com/tools/building/multidex.html#dev-build
         }
