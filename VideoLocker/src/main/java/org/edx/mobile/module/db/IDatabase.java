@@ -459,11 +459,6 @@ public interface IDatabase {
                                               String section, String subSection);
 
     /**
-     * @param userName
-     */
-    void setUserName(String userName);
-
-    /**
      * update assessment unit access record
      */
     Integer updateAccess(DataCallback<Integer> callback, String unitId, boolean visited);

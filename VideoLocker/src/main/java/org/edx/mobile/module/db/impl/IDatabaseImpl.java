@@ -2,43 +2,37 @@ package org.edx.mobile.module.db.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.edx.mobile.model.VideoModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.db.DownloadEntry.DownloadedState;
 import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.DbStructure;
 import org.edx.mobile.module.db.IDatabase;
-import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 
 import java.util.List;
 
 @Singleton
 public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
-    private String username;
 
     @Inject
-    public IDatabaseImpl(Context context) {
-        super(context);
+    private final LoginPrefs loginPrefs;
 
+    @Inject
+    public IDatabaseImpl(Context context, LoginPrefs loginPrefs) {
+        super(context);
+        this.loginPrefs = loginPrefs;
     }
 
+    @Nullable
     private String username() {
-        if (username == null) {
-            UserPrefs userprefs = new UserPrefs(context);
-            if (userprefs != null) {
-                ProfileModel profile = userprefs.getProfile();
-                if (profile != null) {
-                    return profile.username;
-                }
-            }
-        }
-        return username;
+        return loginPrefs.getUsername();
     }
 
     @Override
@@ -529,7 +523,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public List<VideoModel> getDownloadedVideoListForCourse(String courseId,
-            final DataCallback<List<VideoModel>> callback) {
+                                                            final DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
                         + DbStructure.Column.USERNAME + "=?",
@@ -541,7 +535,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public Long getDownloadedVideosSizeByCourse(String courseId,
-        final DataCallback<Long> callback) {
+                                                final DataCallback<Long> callback) {
         String sqlQuery = "SELECT SUM(" + DbStructure.Column.SIZE + ") FROM "
                 + DbStructure.Table.DOWNLOADS + " WHERE "
                 + DbStructure.Column.EID + "=? AND "
@@ -558,7 +552,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public List<VideoModel> getSortedDownloadsByDownloadedDateForCourseId(String courseId,
-            DataCallback<List<VideoModel>> callback) {
+                                                                          DataCallback<List<VideoModel>> callback) {
         DbOperationGetVideos op = new DbOperationGetVideos(false, DbStructure.Table.DOWNLOADS, null,
                 DbStructure.Column.EID + "=? AND " + DbStructure.Column.DOWNLOADED + "=? AND "
                         + DbStructure.Column.USERNAME + "=?",
@@ -697,7 +691,7 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
 
     @Override
     public DownloadedState getDownloadedStateForVideoId(String videoId,
-            final DataCallback<DownloadedState> dataCallback) {
+                                                        final DataCallback<DownloadedState> dataCallback) {
         DbOperationGetColumn<Integer> op = new DbOperationGetColumn<Integer>(false,
                 DbStructure.Table.DOWNLOADS, new String[]{DbStructure.Column.DOWNLOADED},
                 DbStructure.Column.VIDEO_ID + "=? AND " + DbStructure.Column.USERNAME + "=?",
@@ -759,12 +753,6 @@ public class IDatabaseImpl extends IDatabaseBaseImpl implements IDatabase {
         op.setCallback(callback);
         return enqueue(op);
     }
-
-    @Override
-    public void setUserName(String userName) {
-        this.username = userName;
-    }
-
 
     /**
      * update assessment unit access record

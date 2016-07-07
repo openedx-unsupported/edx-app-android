@@ -31,14 +31,6 @@ public interface OauthRestApi {
 
     /* GET calls */
 
-    /**
-     * Returns user's basic profile information for current active session.
-     * @return
-     * @throws Exception
-     */
-    @GET(URL_MY_USER_INFO)
-    ProfileModel getProfile();
-
     @GET(URL_VIDEO_OUTLINE)
     List<VideoResponseModel> getCourseHierarchy(@Path(COURSE_ID) String courseId);
 

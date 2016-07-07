@@ -48,7 +48,7 @@ public abstract class BaseTestCase extends BaseTest {
         print("Started Test Case: " + getClass().getName());
     }
 
-    private void glueInjections() {
+    private void glueInjections() throws Exception {
         addBindings();
         if ( !module.isEmpty()  ) {
             Injector injector = RoboGuice.getOrCreateBaseApplicationInjector(RuntimeEnvironment.application, RoboGuice.DEFAULT_STAGE,
@@ -60,7 +60,7 @@ public abstract class BaseTestCase extends BaseTest {
     /**
      * subclass should inject the properties marked as @Inject
      */
-    protected void inject(Injector injector ){}
+    protected void inject(Injector injector) throws Exception {}
 
     protected void addBindings() {
         module.addBinding(Config.class, config);

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.inject.Injector;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.model.api.ProfileModel;
@@ -49,6 +50,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     // before sending the response.
     protected boolean useArtificialDelay = false;
     protected ServiceManager serviceManager;
+    protected LoginAPI loginAPI;
 
     /**
      * Returns the base url used by the mock server
@@ -83,10 +85,11 @@ public class HttpBaseTestCase extends BaseTestCase {
     }
 
     @Override
-    protected void inject(Injector injector) {
+    protected void inject(Injector injector) throws Exception {
         super.inject(injector);
         injector.injectMembers(api);
         serviceManager = injector.getInstance(ServiceManager.class);
+        loginAPI = injector.getInstance(LoginAPI.class);
     }
 
     /**
@@ -96,17 +99,14 @@ public class HttpBaseTestCase extends BaseTestCase {
      *                   verification
      */
     protected void login() throws Exception {
-        Config.TestAccountConfig config2 = config.getTestAccountConfig();
-
-        AuthResponse res = api.auth(config2.getName(), config2.getPassword());
+        // The credentials given here don't matter, we will always get the same mock response
+        AuthResponse res = loginAPI.logInUsingEmail("example@example.com", "password");
         assertNotNull(res);
         assertNotNull(res.access_token);
         assertNotNull(res.token_type);
         assertNotNull(res.refresh_token);
         print(res.toString());
-
-        ProfileModel profile = api.getProfile();
-        assertNotNull(profile);
+        assertNotNull(res.profile);
     }
 
     @Override

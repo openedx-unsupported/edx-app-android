@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.api.ProfileModel;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
-import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.social.facebook.FacebookProvider;
 import org.edx.mobile.social.google.GoogleOauth2;
 import org.edx.mobile.social.google.GoogleProvider;
@@ -29,8 +32,6 @@ import java.util.HashMap;
 /**
  * Code refactored from Login Activity, for the logic of login to social site are the same
  * for both login and registration.
- *
- * Created by hanning on 3/11/15.
  */
 public class SocialLoginDelegate {
 
@@ -38,8 +39,8 @@ public class SocialLoginDelegate {
 
     private Activity activity;
     private MobileLoginCallback callback;
-    private SocialUserInfoCallback userInfoCallback;
     private ISocial google, facebook;
+    private final LoginPrefs loginPrefs;
 
     private String userEmail;
 
@@ -62,12 +63,11 @@ public class SocialLoginDelegate {
     };
 
 
-
-
-    public SocialLoginDelegate(Activity activity, Bundle savedInstanceState, MobileLoginCallback callback, Config config){
+    public SocialLoginDelegate(Activity activity, Bundle savedInstanceState, MobileLoginCallback callback, Config config, LoginPrefs loginPrefs) {
 
         this.activity = activity;
         this.callback = callback;
+        this.loginPrefs = loginPrefs;
 
         google = SocialFactory.getInstance(activity, SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, config);
         google.setCallback(googleCallback);
@@ -79,21 +79,17 @@ public class SocialLoginDelegate {
         facebook.onActivityCreated(activity, savedInstanceState);
     }
 
-    public void init(){
-
-    }
-
-    public void onActivityDestroyed(){
+    public void onActivityDestroyed() {
         google.onActivityDestroyed(activity);
         facebook.onActivityDestroyed(activity);
     }
 
-    public void onActivitySaveInstanceState(Bundle outState){
+    public void onActivitySaveInstanceState(Bundle outState) {
         google.onActivitySaveInstanceState(activity, outState);
         facebook.onActivitySaveInstanceState(activity, outState);
     }
 
-    public void onActivityStarted(){
+    public void onActivityStarted() {
         google.onActivityStarted(activity);
         facebook.onActivityStarted(activity);
     }
@@ -108,69 +104,65 @@ public class SocialLoginDelegate {
         facebook.onActivityStopped(activity);
     }
 
-    public void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
-           facebook.login();
-        else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
+    public void socialLogin(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)
+            facebook.login();
+        else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)
             google.login();
     }
 
-    public void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK )
+    public void socialLogout(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
+        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK)
             facebook.logout();
-        else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE )
+        else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE)
             google.logout();
     }
 
     /**
      * called with you to use social login
+     *
      * @param accessToken
      * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend) {
-        PrefManager pref = new PrefManager(activity, PrefManager.Pref.LOGIN);
-        pref.put(PrefManager.Key.AUTH_TOKEN_SOCIAL, accessToken);
-        pref.put(PrefManager.Key.AUTH_TOKEN_BACKEND, backend);
-
-        //for debug purpose.
-   //     Exception  ex = new RuntimeException( );
-   //     callback.onUserLoginFailure(ex, accessToken, backend);
-
-        Task<?> task = new ProfileTask(activity,accessToken, backend);
+        loginPrefs.saveSocialLoginToken(accessToken, backend);
+        Task<?> task = new ProfileTask(activity, accessToken, backend);
         callback.onSocialLoginSuccess(accessToken, backend, task);
         task.execute();
     }
 
 
-    public void setUserEmail(String email){
+    public void setUserEmail(String email) {
         this.userEmail = email;
     }
 
-    public String getUserEmail(){
+    public String getUserEmail() {
         return this.userEmail;
     }
 
 
-    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback){
+    public void getUserInfo(SocialFactory.SOCIAL_SOURCE_TYPE socialType, String accessToken, final SocialUserInfoCallback userInfoCallback) {
         SocialProvider socialProvider = null;
-        if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK ) {
+        if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
             socialProvider = new FacebookProvider();
-        } else if ( socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE ) {
+        } else if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE) {
             socialProvider = new GoogleProvider((GoogleOauth2) google);
         }
 
-        if ( socialProvider != null ) {
+        if (socialProvider != null) {
             socialProvider.getUserInfo(activity, socialType, accessToken, userInfoCallback);
         }
 
     }
 
 
-
     private class ProfileTask extends Task<ProfileModel> {
 
-        private  String accessToken;
-        private  String backend;
+        private String accessToken;
+        private String backend;
+
+        @Inject
+        LoginAPI loginAPI;
 
         public ProfileTask(Context context, String accessToken, String backend) {
             super(context);
@@ -180,11 +172,7 @@ public class SocialLoginDelegate {
 
         @Override
         public void onSuccess(ProfileModel result) {
-            try {
-                callback.onUserLoginSuccess(result);
-            } catch (LoginException ex) {
-                super.onException(ex);
-            }
+            callback.onUserLoginSuccess(result);
         }
 
         @Override
@@ -195,58 +183,45 @@ public class SocialLoginDelegate {
 
         @Override
         public ProfileModel call() throws Exception {
-            ServiceManager api = environment.getServiceManager();
-
-            // do SOCIAL LOGIN first
-            AuthResponse social = null;
-            HashMap<String, CharSequence> descParams = new HashMap<>();
-            String platformName = environment.getConfig().getPlatformName();
+            final AuthResponse auth;
+            final HashMap<String, CharSequence> descParams = new HashMap<>();
             descParams.put("platform_name", environment.getConfig().getPlatformName());
             descParams.put("platform_destination", environment.getConfig().getPlatformDestinationName());
             if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_FACEBOOK)) {
-                social = api.loginByFacebook(accessToken);
-
-                if ( social.error != null && social.error.equals("401") ) {
+                try {
+                    auth = loginAPI.logInUsingFacebook(accessToken);
+                } catch (LoginAPI.AccountNotLinkedException e) {
                     CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_fb, descParams);
                     CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_fb, descParams);
                     throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                 }
             } else if (backend.equalsIgnoreCase(PrefManager.Value.BACKEND_GOOGLE)) {
-                social = api.loginByGoogle(accessToken);
-
-                if ( social.error != null && social.error.equals("401") ) {
+                try {
+                    auth = loginAPI.logInUsingGoogle(accessToken);
+                } catch (LoginAPI.AccountNotLinkedException e) {
                     CharSequence title = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_title_google, descParams);
                     CharSequence desc = ResourceUtil.getFormattedString(context.getResources(), R.string.error_account_not_linked_desc_google, descParams);
                     throw new LoginException(new LoginErrorMessage(title.toString(), desc.toString()));
                 }
+            } else {
+                throw new IllegalArgumentException("Unknown backend: " + backend);
             }
-
-            if (social.isSuccess()) {
-
-                // we got a valid accessToken so profile can be fetched
-                ProfileModel profile =  api.getProfile();
-
-                if (profile.email != null) {
-                    // we got valid profile information
-                    return profile;
-                }
-            }
-            throw new LoginException(new LoginErrorMessage(
-                    context.getString(R.string.login_error),
-                    context.getString(R.string.login_failed)));
+            return auth.profile;
         }
 
     }
 
-    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+    public SocialButtonClickHandler createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
         return new SocialButtonClickHandler(socialType);
     }
 
-    public  class SocialButtonClickHandler implements View.OnClickListener{
+    public class SocialButtonClickHandler implements View.OnClickListener {
         private SocialFactory.SOCIAL_SOURCE_TYPE socialType;
-        private SocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType){
+
+        private SocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
             this.socialType = socialType;
         }
+
         @Override
         public void onClick(View v) {
             if (!NetworkUtil.isConnected(activity)) {
@@ -256,7 +231,7 @@ public class SocialLoginDelegate {
                 Task<Void> logout = new Task<Void>(activity) {
 
                     @Override
-                    public Void call( ) {
+                    public Void call() {
                         socialLogout(socialType);
                         return null;
                     }
@@ -269,27 +244,29 @@ public class SocialLoginDelegate {
                     @Override
                     public void onException(Exception ex) {
                         super.onException(ex);
-                        if ( activity instanceof ICommonUI)
-                            ((ICommonUI)activity).tryToSetUIInteraction(true);
+                        if (activity instanceof ICommonUI)
+                            ((ICommonUI) activity).tryToSetUIInteraction(true);
                     }
                 };
-                if ( activity instanceof ICommonUI)
-                    ((ICommonUI)activity).tryToSetUIInteraction(false);
+                if (activity instanceof ICommonUI)
+                    ((ICommonUI) activity).tryToSetUIInteraction(false);
                 logout.execute();
             }
         }
     }
 
 
-
     public interface MobileLoginCallback {
         void onSocialLoginSuccess(String accessToken, String backend, Task task);
+
         void onUserLoginFailure(Exception ex, String accessToken, String backend);
-        void onUserLoginSuccess(ProfileModel profile) throws LoginException;
+
+        void onUserLoginSuccess(ProfileModel profile);
+
         boolean showErrorMessage(String header, String message);
     }
 
-    public interface SocialUserInfoCallback{
+    public interface SocialUserInfoCallback {
         void setSocialUserInfo(String email, String name);
     }
 

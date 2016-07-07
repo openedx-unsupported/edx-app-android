@@ -33,6 +33,7 @@ import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
@@ -80,6 +81,9 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Inject
     TranscriptManager transcriptManager;
+
+    @Inject
+    LoginPrefs loginPrefs;
 
 
     /**
@@ -730,15 +734,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             logger.error(ex);
         }
     };
-
-    /**
-     * Returns user's profile.
-     * @return
-     */
-    protected ProfileModel getProfile() {
-        PrefManager prefManager = new PrefManager(getActivity(), PrefManager.Pref.LOGIN);
-        return prefManager.getCurrentUserProfile();
-    }
 
     /**
      * mostly the orientation changes.

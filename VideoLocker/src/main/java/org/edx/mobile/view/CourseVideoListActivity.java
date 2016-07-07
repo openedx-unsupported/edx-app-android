@@ -15,6 +15,8 @@ import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.services.VideoDownloadHelper;
 import org.edx.mobile.util.NetworkUtil;
 
+import javax.inject.Inject;
+
 /**
  * Created by hanning on 5/15/15.
  */
@@ -25,6 +27,9 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
 
     private boolean isFetchingLastAccessed;
     private Handler mHandler = new Handler();
+
+    @Inject
+    LastAccessManager lastAccessManager;
 
 
     protected void onCreate(Bundle arg0) {
@@ -113,7 +118,7 @@ public abstract class CourseVideoListActivity  extends CourseBaseActivity implem
         if (courseComponentId == null) return;
 
         if (isOnCourseOutline())
-            LastAccessManager.getSharedInstance().fetchLastAccessed(this, courseData.getCourse().getId());
+            lastAccessManager.fetchLastAccessed(this, courseData.getCourse().getId());
 
         updateListUI();
     }
