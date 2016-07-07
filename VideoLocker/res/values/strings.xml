@@ -13,16 +13,12 @@
 
     <!-- Course Discovery -->
 
-    <!-- Enroll Now button text -->
-    <string name="course_detail_enroll_now_button">Enroll now</string>
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
     <!-- View Course button text text-->
     <string name="view_course_button_text">View course</string>
     <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
     <string name="you_are_now_enrolled">You are now enrolled in this course.</string>
-    <!-- Error shown user attempts to enroll in a course they are already enrolled in -->
-    <string name="already_enrolled">You are already enrolled in this course.</string>
     <!-- Error message shown when dashboard cannot be shown from course detail view -->
     <string name="cannot_show_dashboard">Unable to show dashboard.</string>
 
@@ -80,10 +76,6 @@
     <string name="error_heading">The following error occurred while logging you in</string>
     <!-- Error during log in. -->
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
-    <!-- Error logging in without activating account. -->
-    <string name="login_failed_no_grant">This account has not been activated. Check your e-mail for activation instructions.</string>
-    <!-- Button text allowing a user to go to the register screen -->
-    <string name="new_user">Need an account?</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
     <string name="login_title">Sign in to {platform_name}</string>
@@ -142,8 +134,6 @@
         <item quantity="one">Are you sure you want to delete this video?</item>
         <item quantity="other">Are you sure you want to delete these videos?</item>
     </plurals>
-    <!-- Alert dialog button label -->
-    <string name="delete_successful_dialog_title_help">Delete</string>
     <!-- Alert dialog title for users with zero rated data -->
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
@@ -176,8 +166,6 @@
     <string name="announcement_subtitle">Keep up with the latest news</string>
     <!-- Accessible content description of school code label a course -->
     <string name="school_code">School Code</string>
-    <!-- Accessible content description of course code label for a course -->
-    <string name="course_code">Course Code</string>
     <!-- Accessible content description of course name label field -->
     <string name="course_name">Course Name</string>
     <!-- Label indicating new course content has been downloaded -->
@@ -202,16 +190,8 @@
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
     <string name="course_content">Course Content</string>
-    <!-- Accessible content description of label for course name -->
-    <string name="chapter_name">Course Name</string>
-    <!-- Tab title for courseware section -->
-    <string name="tab_label_courseware">Courseware</string>
-    <!-- Tab title for course announcements section -->
-    <string name="tab_label_announcement">Announcements</string>
     <!-- Tab title for course handouts section -->
     <string name="tab_label_handouts">Handouts</string>
-    <!-- Tab title for course info section -->
-    <string name="tab_label_course_info">Course Info</string>
     <!-- Button for last accessed course section. Will be followed by course name -->
     <string name="last_accessed">Last Accessed</string>
     <!-- Label shown when no courseware content is available -->
@@ -222,8 +202,6 @@
     <string name="no_announcements_to_display">There are currently no announcements for this course.</string>
     <!-- Label shown when no handouts are available for a course -->
     <string name="no_handouts_to_display">There are currently no handouts for this course.</string>
-    <!-- Label shown when there is no course information available for a course -->
-    <string name="no_information_to_display">Additional course information is currently unavailable.</string>
 
     <!-- Discussion Topics -->
     <!-- Label for the discussion topics page -->
@@ -314,10 +292,6 @@
     <string name="discussion_responses_report_label">Report</string>
     <!--Label for discussion response that has been marked as inappropriate-->
     <string name="discussion_responses_reported_label">Unreport</string>
-    <!--Label for a discussion thread that the user is not following-->
-    <string name="discussion_responses_action_bar_follow_text">Follow</string>
-    <!--Label for a discussion thread that the user is following-->
-    <string name="discussion_responses_action_bar_unfollow_text">Unfollow</string>
 
     <!-- Title in adding a new comment -->
     <string name="discussion_add_comment_title">Add a comment</string>
@@ -336,8 +310,6 @@
     <string name="discussion_add_response_title">Add a response</string>
     <!-- Title when adding a new response is disabled -->
     <string name="discussion_add_response_disabled_title">Responses are closed for this post</string>
-    <!-- Title in showing list of responses -->
-    <string name="discussion_responses">Responses</string>
     <!-- Add response button title in adding a new response -->
     <string name="discussion_add_response_button_label">Add response</string>
     <!-- Add response button description for accessibility in adding a new response -->
@@ -373,10 +345,6 @@
     <string name="assessment_previous_unit">Previous Unit</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
     <string name="assessment_previous">Previous</string>
-    <!-- Label for mode switch menu item-->
-    <string name="assessment_video_only">Video Only</string>
-    <!-- Label for mode switch menu item-->
-    <string name="assessment_full_course">Full Course</string>
     <!-- Label for empty video in video only mode-->
     <string name="assessment_empty_video_info">There are no videos in this section. To view other section content, select {mode_switcher} above and switch to full course mode.</string>
     <!-- Label showing assessment only available on website-->
@@ -385,8 +353,6 @@
     <string name="assessment_explore_on_web">Explore other parts of this course or view this on web.</string>
     <!-- Button to show wiew on web for assessment-->
     <string name="assessment_view_on_web">View on Web</string>
-    <!-- Label for homework for assessment-->
-    <string name="assessment_homework">Homework</string>
     <!-- Label to show empty assessment -->
     <string name="assessment_empty">There are no learning material in this section.</string>
     <!-- Label to show a course will be starting soon -->
@@ -415,11 +381,6 @@
     <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
 
     <!-- My Downloads -->
-    <!-- Message indicating videos downloaded -->
-    <plurals name="text_download_msg">
-        <item quantity="one">Video Downloaded</item>
-        <item quantity="other">Videos Downloaded</item>
-    </plurals>
     <!-- Button action label to view an item -->
     <string name="view_button_text">View</string>
     <!-- Error text when downloading an item fails -->
@@ -432,12 +393,6 @@
     </plurals>
     <!-- Alert dialog title to confirm download of a large quantity of data -->
     <string name="download_exceed_title">Large Download</string>
-    <!-- Alert dialog text at end of video -->
-    <string name="title_lecture_complete">You’ve reached the end of this video.</string>
-    <!-- Alert dialog prompt at end of video. -->
-    <string name="msg_lecture_complete">Would you like to watch the next video?</string>
-    <!-- Message shown video download in process -->
-    <string name="video_download_in_progress">Video Downloads in Progress</string>
     <!-- Message shown a single video download begins -->
     <string name="msg_started_one_video_download">"Downloading 1 Video"</string>
     <!-- When a video download is about to start and we don't know it's file size yet -->
@@ -464,16 +419,12 @@
     <!-- Player Settings -->
     <!-- Label for closed captions in video player -->
     <string name="lbl_closed_caption">Closed Captions</string>
-    <!-- Label for speed in video player -->
-    <string name="lbl_video_speed">Video Speed</string>
     <!-- Label for no closed captions selected -->
     <string name="lbl_cc_cancel">None</string>
     <!-- Accessibility Label for Video Player -->
     <string name="video_player">Video Player</string>
     <!-- Accessibility Label for View on Web button on Video Player top bar -->
     <string name="video_player_view_on_web">View on web</string>
-    <!-- Accessibility Label for Share button on Video Player top bar -->
-    <string name="video_player_share">Share</string>
     <!-- Accessibility Label for Play button of Video Player -->
     <string name="video_player_play">Play</string>
     <!-- Accessibility Label for Pause button of Video Player -->
@@ -495,8 +446,6 @@
     <string name="find_course_text">Looking for a new challenge?</string>
     <!-- Button label to bring up course finder -->
     <string name="find_course_btn_text">Find a mobile-friendly course</string>
-    <!-- Button label to bring up course finder -->
-    <string name="signin_with_text">signing in to this app in with</string>
     <!-- Message between sign in button and social login buttons -->
     <string name="or_sign_in_with">Or sign in with</string>
     <!-- Facebook login method -->
@@ -507,10 +456,6 @@
     <string name="course_not_listed_text">Can’t find one of your courses?</string>
     <!-- Accessible content description of course not listed button on Course list screen -->
     <string name="course_not_listed_btn">Can’t find one of your courses button</string>
-    <!-- Message on course page for course that hasn't started -->
-    <string name="course_content_available_text">This course hasn’t started yet. Come back on {start_time} to see your videos.</string>
-    <!-- Button text, allowing user to open the platform's website in a web browser -->
-    <string name="open_destination_btn_text">Open {platform_destination} in my browser</string>
     <!-- Title of find course screen -->
     <string name="find_courses_title">Find Courses</string>
     <!-- Message shown when attempting to find courses with no Internet connection -->
@@ -557,8 +502,6 @@
     <string name="enrollment_failure">We could not enroll you in this course at this time.</string>
     <!-- Alert dialog button allowing user to repeat their attempted action -->
     <string name="try_again">Try again</string>
-    <!-- Error shown when registering an account fails -->
-    <string name="sign_up_error">Your account could not be created. Try again later.</string>
 
     <!-- data charges may apply dialog text -->
     <!-- Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app -->
@@ -566,8 +509,6 @@
     <!-- Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app -->
     <string name="open_external_url_desc">This link will open in your mobile browser, and you may incur additional data charges.</string>
 
-    <!-- Message shown when user tries to view course handouts, but none are loaded and the user is offline -->
-    <string name="offline_handouts_text">You are in offline mode. To view handouts, connect to the Internet.</string>
     <string name="android">Android</string>
 
     <!--  Email subject line when user attempts to submit feedback about the app -->
@@ -589,8 +530,6 @@
     </plurals>
 
     <!-- Notification related -->
-    <!-- Template for notification title -->
-    <string name="course_announcement_notification_action">New Announcement</string>
     <!-- toggle between subscribe and unsubscribe to course announcement -->
     <string name="notification_toggle">Allow Notifications</string>
     <!-- Placeholder title for course content with no title -->
@@ -605,7 +544,6 @@
     <string name="forum_no_results_in_category">There are no posts in this discussion category.</string>
     <string name="forum_no_results_with_filter">Try removing your post filter.</string>
     <string name="forum_post_i_am_following">Posts I’m Following</string>
-    <string name="show_more_records">More...</string>
     <string name="forum_follow">Follow</string>
     <string name="forum_unfollow">Unfollow</string>
 

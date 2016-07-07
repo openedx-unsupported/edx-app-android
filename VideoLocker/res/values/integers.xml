@@ -1,7 +1,4 @@
 <resources>
     <!-- This delay is to start Animation for hiding info / error messages -->
 	<integer name="message_delay">4000</integer>
-
-    <!-- This is animation time for activity transition -->
-    <integer name="activity_transition_duration">220</integer>
 </resources>

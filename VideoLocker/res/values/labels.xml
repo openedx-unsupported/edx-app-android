@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Closed caption button label -->
-	<string name="lbl_cc">CC</string>
     <!-- Divider between current time and total time. For example  "2:33/5:10" -->
 	<string name="lbl_slash">/</string>
     <!-- Name of mode when user has no internet connection causing some features to be unavailable -->
     <string name="lbl_offline_mode">Offline Mode</string>
     <!-- Label describing the meaning of offline mode -->
     <string name="lbl_offline_mode_desc">In offline mode, you can only view videos that are saved on your device.</string>
-    <!-- Button allowing user to open a web page corresponding to the current screen in a web browser -->
-    <string name="lbl_open_in_browser">Open in Browser</string>
     <!-- Button allowing user to open a web page corresponding to the current screen in a web browser -->
     <string name="lbl_view_on_web">VIEW ON WEB</string>
     <!-- Label indicating that the only course content visible in the app is videos -->

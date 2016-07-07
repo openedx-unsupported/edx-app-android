@@ -25,20 +25,7 @@
     <dimen name="spinnerPopupBorder">1dp</dimen>
     <dimen name="popupSpinnerMinHeight">34dp</dimen>
     <dimen name="width_chapter_text">185dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="avatar_view_width">32dp</dimen>
-    <dimen name="avatar_view_height">32dp</dimen>
-    <dimen name="avatar_image_radius">6dp</dimen>
-    <dimen name="avatar_image_radius_small">3dp</dimen>
-    <dimen name="avatar_border_width">1dp</dimen>
-    <dimen name="group_avatar_radius">3dp</dimen>
-    <dimen name="group_avatar_gap">1px</dimen>
-    <dimen name="group_avatar_overflow_text">24sp</dimen>
-    <dimen name="course_detail_margin_left">20dp</dimen>
-    <dimen name="course_detail_margin_right">20dp</dimen>
     <dimen name="course_detail_margin">12dp</dimen>
-    <dimen name="default_row_text">12sp</dimen>
     <dimen name="course_card_height">190dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
     <dimen name="large_indicator_icon_width">100dp</dimen>
@@ -85,14 +72,11 @@
     <dimen name="video_player_bottom_control_right_margin">4dp</dimen>
     <dimen name="video_player_seekbar_height">24dp</dimen>
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
-    <dimen name="video_player_seekbar_padding">0dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
 
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
     <dimen name="discussion_posts_filter_popup_width">120dp</dimen>
     <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>
-    <dimen name="discussion_post_box_height">50dp</dimen>
-    <dimen name="discussion_post_extra_box_height">25dp</dimen>
     <dimen name="discussion_posts_icon_margin">5dp</dimen>
 
     <dimen name="discussion_responses_box_padding">10dp</dimen>
@@ -130,7 +114,6 @@
     <dimen name="create_new_item_icon_margin">3dp</dimen>
     <dimen name="button_horizontal_padding">22dp</dimen>
     <dimen name="x_small_icon_margin">5dp</dimen>
-    <dimen name="base_icon_margin">7dp</dimen>
     <dimen name="empty_list_text_max_width">240dp</dimen>
     <dimen name="content_unavailable_error_icon_size">80dp</dimen>
 
@@ -151,7 +134,6 @@
 
     <dimen name="user_profile_image_diameter">166dp</dimen>
     <dimen name="user_profile_image_border_width">3dp</dimen>
-    <dimen name="crop_image_guideline_width">3dp</dimen>
 
     <!-- font awesome sizes -->
     <dimen name="fa_xxxx_large">38dp</dimen>

@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:maxWidth="@dimen/width_chapter_text"
         android:singleLine="true"
-        tools:text="@string/chapter_name"
+        tools:text="Chapter Name"
         android:textSize="16sp"
         tools:targetApi="17" />
 

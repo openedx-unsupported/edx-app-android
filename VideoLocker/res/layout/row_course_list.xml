@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            tools:src="@drawable/sample_course_image" />
+            tools:background="@color/edx_brand_primary_base" />
 
         <RelativeLayout
             android:id="@+id/course_item_detail"
