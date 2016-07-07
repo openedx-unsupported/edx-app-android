@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.google.inject.Inject;
 
 import org.edx.mobile.http.ApiConstants;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.util.NetworkUtil;
 
@@ -68,10 +68,10 @@ public class DiscussionAPI {
      *
      * @param courseId
      * @return
-     * @throws RetroHttpException
+     * @throws HttpException
      */
     public CourseDiscussionInfo getCourseDiscussionInfo(String courseId, boolean preferCache)
-            throws RetroHttpException {
+            throws HttpException {
         if (!NetworkUtil.isConnected(context)) {
             return discussionService.getCourseDiscussionInfoWithCacheEnabled(courseId);
         } else if (preferCache) {
@@ -81,96 +81,96 @@ public class DiscussionAPI {
         }
     }
 
-    public CourseTopics getTopicList(String courseId) throws RetroHttpException {
+    public CourseTopics getTopicList(String courseId) throws HttpException {
         return discussionService.getCourseTopics(courseId);
     }
 
     public CourseTopics getSpecificCourseTopics(String courseId, List<String> topicIds)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getSpecificCourseTopics(courseId, topicIds);
     }
 
     public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
                                                 String filter, String orderBy, int page)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getThreadList(courseId, topicIds, filter, orderBy, ApiConstants.STANDARD_PAGE_SIZE,
                 page);
     }
 
     public Page<DiscussionThread> getFollowingThreadList(String courseId, String filter,
                                                          String orderBy, int page)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getFollowingThreadList(courseId, "True", filter, orderBy,
                 ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
 
     public Page<DiscussionThread> searchThreadList(String courseId, String text, int page)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.searchThreadList(courseId, text, ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
-    public DiscussionThread getThread(String threadId) throws RetroHttpException {
+    public DiscussionThread getThread(String threadId) throws HttpException {
         return discussionService.getThread(threadId);
     }
 
     public Page<DiscussionComment> getResponsesList(String threadId, int page)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getResponsesList(threadId, ApiConstants.STANDARD_PAGE_SIZE, page);
     }
 
     public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int page,
                                                                boolean endorsed)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getResponsesListForQuestion(threadId, ApiConstants.STANDARD_PAGE_SIZE, page, endorsed);
     }
 
     public Page<DiscussionComment> getCommentsList(String responseId, int pageSize, int page)
-            throws RetroHttpException {
+            throws HttpException {
         return discussionService.getCommentsList(responseId, pageSize, page);
     }
 
     public DiscussionThread setThreadFlagged(DiscussionThread thread, boolean flagged)
-            throws RetroHttpException {
+            throws HttpException {
         FlagBody flagBody = new FlagBody(flagged);
         return discussionService.setThreadFlagged(thread.getIdentifier(), flagBody);
     }
 
     public DiscussionComment setCommentFlagged(DiscussionComment comment, boolean flagged)
-            throws RetroHttpException {
+            throws HttpException {
         FlagBody flagBody = new FlagBody(flagged);
         return discussionService.setCommentFlagged(comment.getIdentifier(), flagBody);
     }
 
     public DiscussionThread setThreadVoted(DiscussionThread thread, boolean voted)
-            throws RetroHttpException {
+            throws HttpException {
         VoteBody voteBody = new VoteBody(voted);
         return discussionService.setThreadVoted(thread.getIdentifier(), voteBody);
     }
 
     public DiscussionComment setCommentVoted(DiscussionComment comment, boolean voted)
-            throws RetroHttpException {
+            throws HttpException {
         VoteBody voteBody = new VoteBody(voted);
         return discussionService.setCommentVoted(comment.getIdentifier(), voteBody);
     }
 
     public DiscussionThread setThreadFollowed(DiscussionThread thread, boolean following)
-            throws RetroHttpException {
+            throws HttpException {
         FollowBody followBody = new FollowBody(following);
         return discussionService.setThreadFollowed(thread.getIdentifier(), followBody);
     }
 
     public DiscussionThread setThreadRead(DiscussionThread thread, boolean read)
-            throws RetroHttpException {
+            throws HttpException {
         ReadBody readBody = new ReadBody(read);
         return discussionService.setThreadRead(thread.getIdentifier(), readBody);
     }
 
-    public DiscussionThread createThread(ThreadBody threadBody) throws RetroHttpException {
+    public DiscussionThread createThread(ThreadBody threadBody) throws HttpException {
         return discussionService.createThread(threadBody);
     }
 
-    public DiscussionComment createComment(CommentBody commentBody) throws RetroHttpException {
+    public DiscussionComment createComment(CommentBody commentBody) throws HttpException {
         return discussionService.createComment(commentBody.threadId, commentBody.rawBody,
                 commentBody.parentId);
     }

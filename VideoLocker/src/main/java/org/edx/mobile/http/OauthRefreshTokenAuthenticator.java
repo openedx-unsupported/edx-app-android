@@ -3,8 +3,6 @@ package org.edx.mobile.http;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.jakewharton.retrofit.Ok3Client;
 
@@ -13,7 +11,6 @@ import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +64,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         final AuthResponse refreshedAuth;
         try {
             refreshedAuth = refreshAccessToken(currentAuth);
-        } catch (RetroHttpException e) {
+        } catch (HttpException e) {
             return null;
         }
         return response.request().newBuilder()
@@ -76,7 +73,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     }
 
     @NonNull
-    private AuthResponse refreshAccessToken(AuthResponse currentAuth) throws RetroHttpException {
+    private AuthResponse refreshAccessToken(AuthResponse currentAuth) throws HttpException {
         OkHttpClient client = OkHttpUtil.getClient(context);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new Ok3Client(client))

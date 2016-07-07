@@ -14,7 +14,7 @@ import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpConnectivityException;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Page;
@@ -59,19 +59,19 @@ public class UserAPI {
         userService = restAdapter.create(UserService.class);
     }
 
-    public Account getAccount(@NonNull String username) throws RetroHttpException {
+    public Account getAccount(@NonNull String username) throws HttpException {
         final Account account = userService.getAccount(username);
         EventBus.getDefault().post(new AccountDataLoadedEvent(account));
         return account;
     }
 
-    public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws RetroHttpException {
+    public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws HttpException {
         final Account updatedAccount = userService.updateAccount(username, Collections.singletonMap(field, value));
         EventBus.getDefault().post(new AccountDataLoadedEvent(updatedAccount));
         return updatedAccount;
     }
 
-    public void setProfileImage(@NonNull String username, @NonNull final File file) throws RetroHttpException, IOException {
+    public void setProfileImage(@NonNull String username, @NonNull final File file) throws HttpException, IOException {
         final String mimeType = "image/jpeg";
         logger.debug("Uploading file of type " + mimeType + " from " + file.toString());
         userService.setProfileImage(
@@ -81,12 +81,12 @@ public class UserAPI {
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, Uri.fromFile(file)));
     }
 
-    public void deleteProfileImage(@NonNull String username) throws RetroHttpException {
+    public void deleteProfileImage(@NonNull String username) throws HttpException {
         userService.deleteProfileImage(username);
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
     }
 
-    public Page<BadgeAssertion> getBadges(@NonNull String username, int page) throws RetroHttpException {
+    public Page<BadgeAssertion> getBadges(@NonNull String username, int page) throws HttpException {
         return userService.getBadges(username, page, ApiConstants.STANDARD_PAGE_SIZE);
     }
 
@@ -98,7 +98,7 @@ public class UserAPI {
 
     public
     @NonNull
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws RetroHttpException {
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws HttpException {
         String json = null;
 
         final String cacheKey = getUserEnrolledCoursesURL(username);

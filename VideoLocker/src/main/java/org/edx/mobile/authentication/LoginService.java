@@ -1,9 +1,8 @@
 package org.edx.mobile.authentication;
 
 import org.edx.mobile.http.ApiConstants;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.RegisterResponse;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 
@@ -16,7 +15,6 @@ import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
-import retrofit.http.QueryMap;
 
 import static org.edx.mobile.http.ApiConstants.URL_MY_USER_INFO;
 
@@ -28,7 +26,7 @@ public interface LoginService {
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_REGISTRATION)
-    Response register(@FieldMap Map<String, String> parameters) throws RetroHttpException;
+    Response register(@FieldMap Map<String, String> parameters) throws HttpException;
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -39,7 +37,7 @@ public interface LoginService {
     AuthResponse getAccessToken(@Field("grant_type") String grant_type,
                                 @Field("client_id") String client_id,
                                 @Field("username") String username,
-                                @Field("password") String password) throws RetroHttpException;
+                                @Field("password") String password) throws HttpException;
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -49,7 +47,7 @@ public interface LoginService {
     @POST(ApiConstants.URL_ACCESS_TOKEN)
     AuthResponse refreshAccessToken(@Field("grant_type") String grant_type,
                                     @Field("client_id") String client_id,
-                                    @Field("refresh_token") String refresh_token) throws RetroHttpException;
+                                    @Field("refresh_token") String refresh_token) throws HttpException;
 
 
     /**
@@ -62,19 +60,19 @@ public interface LoginService {
     @POST(ApiConstants.URL_EXCHANGE_ACCESS_TOKEN)
     AuthResponse exchangeAccessToken(@Field("access_token") String accessToken,
                                      @Field("client_id") String clientId,
-                                     @Path(ApiConstants.GROUP_ID) String groupId) throws RetroHttpException;
+                                     @Path(ApiConstants.GROUP_ID) String groupId) throws HttpException;
 
     /**
      * Reset password for account associated with an email address.
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_PASSWORD_RESET)
-    ResetPasswordResponse resetPassword(@Field("email") String email) throws RetroHttpException;
+    ResetPasswordResponse resetPassword(@Field("email") String email) throws HttpException;
 
 
     /**
      * @return basic profile information for currently authenticated user.
      */
     @GET(URL_MY_USER_INFO)
-    ProfileModel getProfile() throws RetroHttpException;
+    ProfileModel getProfile() throws HttpException;
 }

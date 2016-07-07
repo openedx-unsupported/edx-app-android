@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.http.RetroHttpException;
 
 public abstract class GetThreadTask extends Task<DiscussionThread> {
 
