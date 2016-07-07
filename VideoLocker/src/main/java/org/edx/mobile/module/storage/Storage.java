@@ -9,7 +9,7 @@ import android.support.annotation.Nullable;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.VideoModel;
@@ -270,7 +270,7 @@ public class Storage implements IStorage {
 
     @Override
     @NonNull
-    public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws RetroHttpException {
+    public ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws HttpException {
         ArrayList<EnrolledCoursesResponse> downloadedCourseList = new ArrayList<>();
 
         String username = getUsername();
@@ -304,7 +304,7 @@ public class Storage implements IStorage {
 
     @Override
     @NonNull
-    public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws RetroHttpException {
+    public ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws HttpException {
         ArrayList<SectionItemInterface> recentVideolist = new ArrayList<>();
 
         String username = getUsername();

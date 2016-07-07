@@ -3,7 +3,7 @@ package org.edx.mobile.http;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class HttpResponseStatusException extends RetroHttpException {
+public class HttpResponseStatusException extends HttpException {
     private final int statusCode;
     @Nullable
     private final String body;

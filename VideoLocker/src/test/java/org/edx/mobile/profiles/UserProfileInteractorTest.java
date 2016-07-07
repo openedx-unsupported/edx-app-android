@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.BaseTest;
@@ -312,7 +312,7 @@ public class UserProfileInteractorTest extends BaseTest {
         when(account.getProfileImage()).thenReturn(mock(ProfileImage.class));
         try {
             when(userAPI.getAccount(ProfileValues.USERNAME)).thenReturn(account);
-        } catch (RetroHttpException e) {
+        } catch (HttpException e) {
             throw new RuntimeException(e);
         }
         return account;

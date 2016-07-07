@@ -26,6 +26,6 @@ public class RetroHttpExceptionHandler implements ErrorHandler {
         if (RetrofitError.Kind.NETWORK == cause.getKind()) {
             return new HttpConnectivityException(cause);
         }
-        return new RetroHttpException(cause);
+        return new HttpException(cause);
     }
 }

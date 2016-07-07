@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 
 import de.greenrobot.event.EventBus;
 
@@ -19,7 +19,7 @@ public class GetAndReadThreadTask extends Task<DiscussionThread> {
     }
 
     @Override
-    public DiscussionThread call() throws RetroHttpException {
+    public DiscussionThread call() throws HttpException {
         return environment.getDiscussionAPI().setThreadRead(thread, true);
     }
 

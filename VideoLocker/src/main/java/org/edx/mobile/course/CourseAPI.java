@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
@@ -31,13 +31,13 @@ public class CourseAPI {
 
     public
     @NonNull
-    Page<CourseDetail> getCourseList(int page) throws RetroHttpException {
+    Page<CourseDetail> getCourseList(int page) throws HttpException {
         return courseService.getCourseList(getUsername(), true, page);
     }
 
     public
     @NonNull
-    CourseDetail getCourseDetail(@NonNull String courseId) throws RetroHttpException {
+    CourseDetail getCourseDetail(@NonNull String courseId) throws HttpException {
         // Empty courseId will return a 200 for a list of course details, instead of a single course
         if (TextUtils.isEmpty(courseId)) throw new IllegalArgumentException();
         return courseService.getCourseDetail(courseId, getUsername());

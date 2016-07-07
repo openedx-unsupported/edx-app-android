@@ -16,7 +16,7 @@
 
 package org.edx.mobile.discussion;
 
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 
 import java.util.List;
@@ -68,22 +68,22 @@ public interface DiscussionService {
     @Headers("Cache-Control: no-cache")
     @GET("/api/discussion/v1/courses/{course_id}/")
     CourseDiscussionInfo getCourseDiscussionInfo(@Path("course_id") String courseId)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/courses/{course_id}/")
     CourseDiscussionInfo getCourseDiscussionInfoWithCacheEnabled(@Path("course_id") String courseId)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/course_topics/{course_id}")
-    CourseTopics getCourseTopics(@Path("course_id") String courseId) throws RetroHttpException;
+    CourseTopics getCourseTopics(@Path("course_id") String courseId) throws HttpException;
 
 
     @GET("/api/discussion/v1/course_topics/{course_id}")
     CourseTopics getSpecificCourseTopics(@Path("course_id") String courseId,
                                          @Query("topic_id") List<String> topicIds)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/threads/")
@@ -93,7 +93,7 @@ public interface DiscussionService {
                                          @Query("order_by") String orderBy,
                                          @Query("page_size") int pageSize,
                                          @Query("page") int page)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/threads/")
@@ -103,26 +103,26 @@ public interface DiscussionService {
                                                   @Query("order_by") String orderBy,
                                                   @Query("page_size") int pageSize,
                                                   @Query("page") int page)
-            throws RetroHttpException;
+            throws HttpException;
 
     @GET("/api/discussion/v1/threads/")
     Page<DiscussionThread> searchThreadList(@Query("course_id") String courseId,
                                             @Query("text_search") String text,
                                             @Query("page_size") int pageSize,
                                             @Query("page") int page)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread getThread(@Path("thread_id") String threadId)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/comments/")
     Page<DiscussionComment> getResponsesList(@Query("thread_id") String threadId,
                                              @Query("page_size") int pageSize,
                                              @Query("page") int page)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/comments/")
@@ -130,55 +130,55 @@ public interface DiscussionService {
                                                         @Query("page_size") int pageSize,
                                                         @Query("page") int page,
                                                         @Query("endorsed") boolean endorsed)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @GET("/api/discussion/v1/comments/{comment_id}/")
     Page<DiscussionComment> getCommentsList(@Path("comment_id") String responseId,
                                             @Query("page_size") int pageSize,
                                             @Query("page") int page)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread setThreadFlagged(@Path("thread_id") String threadId,
                                       @Body FlagBody flagBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/comments/{comment_id}/")
     DiscussionComment setCommentFlagged(@Path("comment_id") String commentId,
                                         @Body FlagBody flagBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread setThreadVoted(@Path("thread_id") String threadId,
                                     @Body VoteBody voteBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/comments/{comment_id}/")
     DiscussionComment setCommentVoted(@Path("comment_id") String commentId,
                                       @Body VoteBody voteBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread setThreadFollowed(@Path("thread_id") String threadId,
                                        @Body FollowBody followBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @PATCH("/api/discussion/v1/threads/{thread_id}/")
     DiscussionThread setThreadRead(@Path("thread_id") String threadId,
                                    @Body ReadBody readBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @POST("/api/discussion/v1/threads/")
     DiscussionThread createThread(@Body ThreadBody threadBody)
-            throws RetroHttpException;
+            throws HttpException;
 
 
     @FormUrlEncoded
@@ -186,5 +186,5 @@ public interface DiscussionService {
     DiscussionComment createComment(@Field("thread_id") String threadId,
                                     @Field("raw_body") String rawBody,
                                     @Field("parent_id") String parentId)
-            throws RetroHttpException;
+            throws HttpException;
 }

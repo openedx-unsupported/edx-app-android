@@ -8,7 +8,6 @@ import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionThread;
-import org.edx.mobile.http.RetroHttpException;
 import org.edx.mobile.model.Page;
 
 import java.util.ArrayList;

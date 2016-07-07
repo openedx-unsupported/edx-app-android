@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.http.OkHttpUtil;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.PaginationData;
 import org.edx.mobile.profiles.BadgeAssertion;
@@ -38,7 +38,7 @@ public class UserApiTest extends BaseTestCase {
     }
 
     @Test
-    public void testApiReturnsResult() throws RetroHttpException {
+    public void testApiReturnsResult() throws HttpException {
         MockWebServer server = new MockWebServer();
 
         RestAdapter restAdapter = new RestAdapter.Builder()

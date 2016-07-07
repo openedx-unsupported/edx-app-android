@@ -6,11 +6,10 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.user.UserAPI;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
                 environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             }
 
-        } catch (RetroHttpException exception) {
+        } catch (HttpException exception) {
             result.setEx(exception);
         }
 

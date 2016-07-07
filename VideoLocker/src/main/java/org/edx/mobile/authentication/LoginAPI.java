@@ -11,7 +11,7 @@ import com.google.inject.Singleton;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpResponseStatusException;
-import org.edx.mobile.http.RetroHttpException;
+import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -68,7 +68,7 @@ public class LoginAPI {
 
     @NonNull
     public AuthResponse getAccessToken(@NonNull String username,
-                                       @NonNull String password) throws RetroHttpException {
+                                       @NonNull String password) throws HttpException {
         String grantType = "password";
         String clientID = config.getOAuthClientId();
         return loginService.getAccessToken(grantType, clientID, username, password);
@@ -161,7 +161,7 @@ public class LoginAPI {
     }
 
     @NonNull
-    public ResetPasswordResponse resetPassword(@NonNull String email) throws RetroHttpException {
+    public ResetPasswordResponse resetPassword(@NonNull String email) throws HttpException {
         return loginService.resetPassword(email);
     }
 
