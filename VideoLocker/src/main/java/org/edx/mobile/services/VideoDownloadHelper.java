@@ -43,6 +43,8 @@ public class VideoDownloadHelper {
 
     protected final Logger logger = new Logger(getClass().getName());
 
+    private static int SUPREME_DOWNLOAD_SIZE_LIMIT_PER_VIDEO = 5;
+
     private DownloadSizeExceedDialog downloadFragment;
 
     @Inject
@@ -51,6 +53,32 @@ public class VideoDownloadHelper {
     @Inject
     ISegment segment;
 
+    public void downloadVideo(DownloadEntry downloadEntry, final FragmentActivity activity, final DownloadManagerCallback callback) {
+        ArrayList<DownloadEntry> downloadEntries = new ArrayList<>();
+        downloadEntries.add(downloadEntry);
+
+        long downloadSize = 0;
+        if (null == downloadEntry
+                || downloadEntry.downloaded == DownloadEntry.DownloadedState.DOWNLOADING
+                || downloadEntry.downloaded == DownloadEntry.DownloadedState.DOWNLOADED
+                || downloadEntry.isVideoForWebOnly) {
+        } else {
+            downloadSize = downloadSize + downloadEntry.getSize();
+        }
+
+
+        if (downloadSize > MemoryUtil.getAvailableExternalMemory(activity)) {
+            ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
+            callback.updateListUI();
+        } else {
+            if (downloadSize < MemoryUtil.MB * SUPREME_DOWNLOAD_SIZE_LIMIT_PER_VIDEO) {
+                startDownload(downloadEntries, 1, activity, callback);
+            } else {
+                showDownloadSizeExceedDialog(downloadEntries, 1, activity, callback);
+            }
+        }
+
+    }
 
     public void downloadVideos(final List<? extends HasDownloadEntry> model, final FragmentActivity activity,
                                final DownloadManagerCallback callback) {
@@ -95,47 +123,16 @@ public class VideoDownloadHelper {
                 downloadCount++;
             }
         }
-        if (downloadSize > MemoryUtil
-                .getAvailableExternalMemory(activity)) {
+        if (downloadSize > MemoryUtil.getAvailableExternalMemory(activity)) {
             ((BaseFragmentActivity) activity).showInfoMessage(activity.getString(R.string.file_size_exceeded));
             callback.updateListUI();
         } else {
-            if (downloadSize < MemoryUtil.GB) {
+            if (downloadSize < MemoryUtil.MB * downloadCount * SUPREME_DOWNLOAD_SIZE_LIMIT_PER_VIDEO) {
                 startDownload(downloadList, downloadCount, activity, callback);
             } else {
                 showDownloadSizeExceedDialog(downloadList, downloadCount, activity, callback);
             }
         }
-    }
-
-    // Dialog fragment to display message to user regarding
-    private void showDownloadSizeExceedDialog(final ArrayList<DownloadEntry> de,
-                                              final int noOfDownloads, final FragmentActivity activity, final DownloadManagerCallback callback) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title", activity.getString(R.string.download_exceed_title));
-        dialogMap.put("message_1", activity.getString(R.string.download_exceed_message));
-        downloadFragment = DownloadSizeExceedDialog.newInstance(dialogMap,
-                new IDialogCallback() {
-                    @Override
-                    public void onPositiveClicked() {
-                        startDownload(de, noOfDownloads, activity, callback);
-                    }
-
-                    @Override
-                    public void onNegativeClicked() {
-                        //  updateList();
-                        downloadFragment.dismiss();
-                    }
-                });
-        downloadFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        downloadFragment.show(activity.getSupportFragmentManager(), "dialog");
-        downloadFragment.setCancelable(false);
-    }
-
-    public void downloadVideo(DownloadEntry downloadEntry, final FragmentActivity activity, final DownloadManagerCallback callback) {
-        List<DownloadEntry> downloadEntries = new ArrayList<>();
-        downloadEntries.add(downloadEntry);
-        startDownload(downloadEntries, 1, activity, callback);
     }
 
     private void startDownload(List<DownloadEntry> downloadList,
@@ -163,10 +160,32 @@ public class VideoDownloadHelper {
                 callback.onDownloadFailedToStart();
             }
         };
-
-
         callback.showProgressDialog(downloadList.size());
         downloadTask.execute();
+    }
+
+    // Dialog fragment to display message to user regarding
+    private void showDownloadSizeExceedDialog(final ArrayList<DownloadEntry> de,
+                                              final int noOfDownloads, final FragmentActivity activity, final DownloadManagerCallback callback) {
+        Map<String, String> dialogMap = new HashMap<String, String>();
+        dialogMap.put("title", activity.getString(R.string.download_exceed_title));
+        dialogMap.put("message_1", activity.getString(R.string.download_exceed_message, Integer.toString(noOfDownloads*SUPREME_DOWNLOAD_SIZE_LIMIT_PER_VIDEO)+ " MB"));
+        downloadFragment = DownloadSizeExceedDialog.newInstance(dialogMap,
+                new IDialogCallback() {
+                    @Override
+                    public void onPositiveClicked() {
+                        startDownload(de, noOfDownloads, activity, callback);
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+                        //  updateList();
+                        downloadFragment.dismiss();
+                    }
+                });
+        downloadFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        downloadFragment.show(activity.getSupportFragmentManager(), "dialog");
+        downloadFragment.setCancelable(false);
     }
 
 }
