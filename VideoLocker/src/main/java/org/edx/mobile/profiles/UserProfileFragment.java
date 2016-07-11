@@ -212,7 +212,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             public void setPhotoImage(@NonNull UserProfileImageViewModel model) {
                 if (null == model.uri) {
                     Glide.with(UserProfileFragment.this)
-                            .load(R.drawable.xsie)
+                            .load(R.drawable.profile_photo_placeholder)
                             .into(viewHolder.profileImage);
 
                 } else if (model.shouldReadFromCache) {
