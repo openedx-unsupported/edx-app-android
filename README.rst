@@ -93,7 +93,7 @@ To customize images, colors, and layouts, you can specify a custom resource dire
 
 Any resources placed here will override resources of the same name in the ``VideoLocker/res`` directory.
 
-To remove the edX branding you will need to override the drawables for: ``edx_logo``, ``edx_logo_login``, ``ic_launcher``, and ``profile_photo_placeholder``. These come in a number of resolutions, be sure to replace them all.
+To remove all edX branding, override the drawables for: ``edx_logo``, ``edx_logo_login``, ``ic_launcher``, ``ic_new_cert``, and ``profile_photo_placeholder``. These come in a number of resolutions, be sure to replace them all.
 
 If you need to make more in depth UI changes, most of the user interface is specified in standard Android XML files, which you can also override by placing new versions in your ``RES_DIR``.
 
