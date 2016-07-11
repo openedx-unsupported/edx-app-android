@@ -28,7 +28,7 @@
                     android:layout_width="@dimen/user_profile_image_diameter"
                     android:layout_height="@dimen/user_profile_image_diameter"
                     app:civ_border_width="@dimen/user_profile_image_border_width"
-                    tools:src="@drawable/app_icon" />
+                    tools:src="@drawable/profile_photo_placeholder" />
 
                 <TextView
                     android:id="@+id/name_text"

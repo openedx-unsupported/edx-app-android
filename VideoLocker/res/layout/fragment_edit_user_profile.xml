@@ -40,7 +40,7 @@
                         android:layout_width="46dp"
                         android:layout_height="46dp"
                         app:civ_border_width="1dp"
-                        tools:src="@drawable/app_icon" />
+                        tools:src="@drawable/profile_photo_placeholder" />
 
                     <org.edx.mobile.view.custom.IconImageViewXml
                         android:id="@+id/profile_image_progress"
