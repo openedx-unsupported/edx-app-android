@@ -54,7 +54,7 @@
                 android:singleLine="true"
                 android:textDirection="locale"
                 android:textSize="16sp"
-                tools:text="@string/chapter_name" />
+                tools:text="Title" />
 
             <LinearLayout
                 android:id="@+id/row_subtitle_panel"
@@ -74,7 +74,7 @@
                     android:textDirection="locale"
                     android:textSize="14sp"
                     android:visibility="gone"
-                    tools:text="@string/chapter_name" />
+                    tools:text="Subtitle" />
 
                 <org.edx.mobile.view.custom.IconImageViewXml
                     android:id="@+id/row_subtitle_icon"

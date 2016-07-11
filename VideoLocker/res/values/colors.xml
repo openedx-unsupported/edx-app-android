@@ -18,52 +18,31 @@
 <resources>
 
     <!-- official styles guide -->
-    <color name="cyan_6">#256a97</color>
-    <color name="cyan_5">#3185bd</color>
     <color name="cyan_4">#00a0e3</color>
-    <color name="cyan_3">#4bb4fb</color>
     <color name="cyan_2">#a7dffb</color>
-    <color name="cyan_1">#d8f1fb</color>
     <color name="grey_6">#333435</color>
-    <color name="grey_5">#3d3e3f</color>
     <color name="grey_4">#8c8c8c</color>
     <color name="grey_3">#cccccc</color>
     <color name="grey_2">#e6e6e6</color>
-    <color name="grey_1">#f2f2f2</color>
-    <color name="pink_5">#3e0a21</color>
-    <color name="pink_4">#70113f</color>
-    <color name="pink_3">#b72667</color>
-    <color name="pink_2">#e86caa</color>
-    <color name="pink_1">#ed9bc7</color>
 
     <color name="edx_white">#fafafa</color>
-    <color name="edx_black">#191919</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent_black">#90000000</color>
-    <color name="transparent_black_70">#B2000000</color>
     <color name="transparent_black_80">#CC000000</color>
     <color name="transparent_black_50">#80000000</color>
     <color name="transparent_black_10">#19000000</color>
-    <color name="transparent_white">#B3FFFFFF</color>
     <color name="transparent_white_90">#E6FFFFFF</color>
     <color name="transparent_white_85">#D9FFFFFF</color>
-    <color name="transparent_white_70">#B2FFFFFF</color>
-    <color name="transparent_white_50">#80FFFFFF</color>
     <color name="transparent_white_30">#4DFFFFFF</color>
     <color name="transparent_white_26">#42FFFFFF</color>
     <color name="transparent_white_20">#33FFFFFF</color>
     <color name="transparent_white_10">#19FFFFFF</color>
     <color name="cyan_text_navigation_20">#20299ED7</color>
     <color name="disabled_chapter_list">#EBEBED</color>
-    <color name="grey">#323232</color>
     <color name="grey_light">#3c4045</color>
     <color name="grey_medium">#666666</color>
-    <color name="border_color_1">#BDBDBD</color>
-    <color name="border_color_2">#F2F2F2</color>
-    <color name="cyan">#52AFDE</color>
-    <color name="dark_grey">#282B2F</color>
     <color name="light_gray">#CCCCCC</color>
     <color name="grey_text">#464A50</color>
     <color name="grey_nav_background">#282B2F</color>
@@ -72,23 +51,18 @@
     <color name="grey_nav_pressed_background">#888889</color>
     <color name="grey_video_size_text">#9EA7B3</color>
     <color name="grey_text_mycourse">#454951</color>
-    <color name="grey_last_accessed">#464A50</color>
     <color name="red_error_text">#F47676</color>
     <color name="red_offline_bar">#BA2E6E</color>
     <color name="grey_act_background">#E2E3E5</color>
     <color name="grey_text_tab">#898B8E</color>
     <color name="cyan_text_navigation">#299ED7</color>
     <color name="progress_wheel_color">#7DC88F</color>
-    <color name="include_msg_color">#65C89D</color>
     <color name="offline_text">#BA2E6E</color>
     <color name="cyan_circle">#1F9FD9</color>
-    <color name="grey_circle">#E6E6E7</color>
     <color name="offline_panel">#E6BA2E6E</color>
-    <color name="browser_panel">#E2E3E5</color>
     <color name="white_list_clicked">#F1F1F2</color>
     <color name="transparent_download_bg">#E63E4247</color>
     <color name="video_section_bg">#3E4247</color>
-    <color name="last_viewed_layout">#F6FCFF</color>
     <color name="red_download_failed_text">#fd7575</color>
     <color name="tab_bg">#3E4247</color>
     <color name="delete_panel_bg">#3E4247</color>
@@ -99,23 +73,6 @@
     <color name="delete_btn_disabled">#565A5F</color>
     <color name="org_code_txt">#8A8C8F</color>
     <color name="transparent_cc_bg">#661F2124</color>
-    <!-- TODO : we should change color name to be more meaningful, and to match  http://ux.edx.org/elements/colors/  -->
-    <color name="grey_text_course_not_started">#00454951</color>
-
-    <!-- social sharing -->
-    <color name="group_next_disabled">#aeaeae</color>
-    <color name="group_next_enabled">#33b5e5</color>
-    <color name="group_create_title">#5c5c5c</color>
-    <color name="facebook_blue">#3b5998</color>
-    <color name="facebook_blue_pressed">#425d9e</color>
-
-    <color name="friend_picker_light_gray">#e2e3e5</color>
-    <color name="friend_picker_dark_gray">#3e4247</color>
-    <color name="friend_picker_med_blue">#33b5e5</color>
-    <color name="friend_picker_divider">#e2e3e5</color>
-    <color name="friend_picker_item_text">#7e7e7e</color>
-    <color name="friend_picker_item_text_disabled">#bfbfbf</color>
-    <color name="avatar_overflow_text">#8c8c8c</color>
 
     <color name="crop_circle_border_color">@color/edx_grayscale_neutral_white_t</color>
     <color name="crop_circle_overlay_color">#c8000000</color>

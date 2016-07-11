@@ -110,12 +110,6 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="download_in_progress_bar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:background">@color/edx_brand_primary_x_light</item>
-    </style>
-
     <style name="separator_base">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
@@ -230,11 +224,6 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:switchMinWidth">90dp</item>
         <item name="android:background">@null</item>
-    </style>
-
-    <style name="custom_fb_btn">
-        <item name="android:background">@drawable/custom_fb_button_selector</item>
-        <item name="android:drawablePadding">2dp</item>
     </style>
 
     <style name="spinner">

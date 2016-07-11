@@ -1,15 +1,5 @@
 <resources>
-    <string name="tab_chapter_list">tab_chapter_list</string>
-    <string name="tab_lecture_list">tab_lecture_list</string>
-    <string name="tab_video_list">tab_video_list</string>
-    <string name="tab_announcement">tab_announcement</string>
-    <string name="tab_handouts">tab_handouts</string>
-    <string name="tab_course_info">tab_course_info</string>
-    <string name="tab_my_all_videos">tab_my_all_videos</string>
-    <string name="tab_my_recent_videos">tab_my_recent_videos</string>
-
     <string name="eula_file_link">file:///android_asset/EULA.htm</string>
-    <string name="new_user_file_name">file:///android_asset/NEW_USER.htm</string>
     <string name="course_not_listed_file_name">file:///android_asset/COURSE_NOT_LISTED.htm</string>
 
     <!-- Speed Test.

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/transparent_white_50" android:state_pressed="true" />
-    <item android:drawable="@color/last_viewed_layout" android:state_pressed="false" />
-</selector>
