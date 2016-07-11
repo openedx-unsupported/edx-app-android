@@ -64,16 +64,45 @@ To use a custom configuration in place of the default configuration, you will ne
 The full set of known keys can be found in the
 ``org/edx/mobile/util/Config.java`` file or see `additional documentation <https://openedx.atlassian.net/wiki/display/MA/App+Configuration+Flags>`_.
 
-Additional Customization
-------------------------
-Right now this code is constructed specifically to build the *edx.org* app. We're working on making it easier for Open edX installations to apply customizations and select third party services without modifying the repository itself. Until that work is complete, you will need to modify or replace files within your fork of the repo.
 
-To remove the edX branding you will need to replace the ``edx_logo`` files in standard locations under ``res/drawables``. These come in a number of resolutions. See Google's documentation for more information on different app icon sizes. Additionally, you will need to replace the ``edx-map`` images used in the login screen.
+Building For Release
+--------------------
+To build an APK for release, you must specify an application ID and signing key. Create or edit the ``gradle.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. For example:
 
-If you need to make more in depth UI changes, most of the user interface is specified in standard Android XML files, editable from within Android Studio.
+::
 
-As mentioned, the app relies on the presence of several third party services:
-Facebook, NewRelic, Google+, SegmentIO, and Crashlytics. You must remove references to each of these services you choose not to use. You can comment out the lines that mention these services. We're working to make those dependencies optional.
+    APPLICATION_ID=com.example.yourapp
+    RELEASE_STORE_FILE=../../path/to/your.keystore
+    RELEASE_STORE_PASSWORD=your store password here
+    RELEASE_KEY_PASSWORD=your key password here
+    RELEASE_KEY_ALIAS=your key alias here
+
+Now you can build a release build from Android Studio. Or, in the directory of ``edx-app-android`` you can build a release build with this gradle command:
+
+::
+
+    ./gradlew assembleProdRelease
+
+Customization
+-------------
+To customize images, colors, and layouts, you can specify a custom resource directory. Create or edit the ``gradle.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. For example:
+
+::
+
+    RES_DIR = ../../path/to/your/res
+
+Any resources placed here will override resources of the same name in the ``VideoLocker/res`` directory.
+
+To remove the edX branding you will need to override the drawables for: ``edx_logo``, ``edx_logo_login``, ``app_icon``, and ``profile_photo_placeholder``. These come in a number of resolutions, be sure to replace them all.
+
+If you need to make more in depth UI changes, most of the user interface is specified in standard Android XML files, which you can also override by placing new versions in your ``RES_DIR``.
+
+Third Party Services
+--------------------
+The app relies on the presence of several third party services: Facebook, NewRelic, Google+, SegmentIO, and Crashlytics. You may need to remove services you choose not to use. You can comment out the lines of code that mention these services.
+
+We're working on making it easier for Open edX installations to apply customizations and select third party services without modifying the repository itself.
+
 
 Frequently Asked Questions
 ==========================
