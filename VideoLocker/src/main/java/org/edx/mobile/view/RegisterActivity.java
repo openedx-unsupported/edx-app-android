@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -38,6 +39,7 @@ import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
+import org.edx.mobile.util.IntentFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,11 @@ public class RegisterActivity extends BaseFragmentActivity
 
     @Inject
     LoginPrefs loginPrefs;
+
+    @NonNull
+    public static Intent newIntent() {
+        return IntentFactory.newIntentForComponent(RegisterActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,8 +285,7 @@ public class RegisterActivity extends BaseFragmentActivity
         final RegisterTask task = new RegisterTask(this, parameters, access_token, backsourceType) {
             @Override
             public void onSuccess(AuthResponse auth) {
-                environment.getRouter().showMyCourses(RegisterActivity.this);
-                finish();
+                onUserLoginSuccess(auth.profile);
             }
 
             @Override
@@ -509,12 +515,7 @@ public class RegisterActivity extends BaseFragmentActivity
      *  callback if login to edx success using social access_token
      */
     public void onUserLoginSuccess(ProfileModel profile) {
-        if (isActivityStarted()) {
-            // do NOT launch next screen if app minimized
-            showProgress();
-            environment.getRouter().showMyCourses(this);
-        }
-        // but finish this screen anyways as login is succeeded
+        setResult(RESULT_OK);
         finish();
     }
 

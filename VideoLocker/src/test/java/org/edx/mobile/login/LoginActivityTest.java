@@ -1,7 +1,6 @@
 package org.edx.mobile.login;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.RuntimeApplication;
 import org.edx.mobile.view.LoginActivity;
 import org.edx.mobile.view.PresenterActivityTest;
 import org.edx.mobile.view.login.LoginPresenter;
@@ -14,7 +13,7 @@ public class LoginActivityTest extends PresenterActivityTest<LoginActivity, Logi
 
     @Before
     public void setup() {
-        startActivity(LoginActivity.newIntent(RuntimeApplication.application));
+        startActivity(LoginActivity.newIntent());
     }
 
     @Test

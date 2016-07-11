@@ -1,11 +1,13 @@
 package org.edx.mobile.base;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,6 +20,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
+import org.edx.mobile.view.LoginActivity;
 import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import org.edx.mobile.view.dialog.EnrollmentFailureDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
@@ -29,6 +32,10 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
         URLInterceptorWebViewClient.IActionListener,
         URLInterceptorWebViewClient.IPageStatusListener {
 
+    private static final int LOG_IN_REQUEST_CODE = 42;
+    private static final String INSTANCE_COURSE_ID = "enrollCourseId";
+    private static final String INSTANCE_EMAIL_OPT_IN = "enrollEmailOptIn";
+
     private static final String ACTION_ENROLLED = "ACTION_ENROLLED_TO_COURSE";
 
     private View offlineBar;
@@ -36,10 +43,12 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     private boolean isWebViewLoaded;
     private ProgressBar progressWheel;
     private boolean isTaskInProgress = false;
+    private String lastClickEnrollCourseId;
+    private boolean lastClickEnrollEmailOptIn;
 
     @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         webview = (WebView) findViewById(R.id.webview);
         offlineBar = findViewById(R.id.offline_bar);
@@ -47,12 +56,11 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
         setupWebView();
         enableEnrollCallback();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setTitle(getString(R.string.find_courses_title));
+        if (null != savedInstanceState) {
+            lastClickEnrollCourseId = savedInstanceState.getString(INSTANCE_COURSE_ID);
+            lastClickEnrollEmailOptIn = savedInstanceState.getBoolean(INSTANCE_EMAIL_OPT_IN);
+        }
     }
 
     @Override
@@ -169,10 +177,32 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            onClickEnroll(lastClickEnrollCourseId, lastClickEnrollEmailOptIn);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(INSTANCE_COURSE_ID, lastClickEnrollCourseId);
+        outState.putBoolean(INSTANCE_EMAIL_OPT_IN, lastClickEnrollEmailOptIn);
+    }
+
+    @Override
     public void onClickEnroll(final String courseId, final boolean emailOptIn) {
         if (isTaskInProgress) {
             // avoid duplicate actions
             logger.debug("already enroll task is in progress, so skipping Enroll action");
+            return;
+        }
+
+        if (environment.getLoginPrefs().getUsername() == null) {
+            lastClickEnrollCourseId = courseId;
+            lastClickEnrollEmailOptIn = emailOptIn;
+            startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
             return;
         }
 

@@ -71,18 +71,22 @@ public class Router {
     }
 
     public void showLaunchScreen(Context context) {
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
+        final Intent launchIntent = new Intent(context,
+                config.isNewLogistrationEnabled()
+                        ? DiscoveryLaunchActivity.class
+                        : LaunchActivity.class);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(launchIntent);
     }
 
-    public void showLogin(Context context) {
-        context.startActivity(LoginActivity.newIntent(context));
+    @NonNull
+    public Intent getLogInIntent() {
+        return LoginActivity.newIntent();
     }
 
-    public void showRegistration(Activity sourceActivity) {
-        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
-        sourceActivity.startActivity(launchIntent);
+    @NonNull
+    public Intent getRegisterIntent() {
+        return RegisterActivity.newIntent();
     }
 
     public void showMyCourses(Activity sourceActivity) {
@@ -262,7 +266,6 @@ public class Router {
         delegate.unsubscribeAll();
 
         showLaunchScreen(context);
-        showLogin(context);
     }
 
     public void showHandouts(Activity activity, EnrolledCoursesResponse courseData) {
@@ -298,6 +301,18 @@ public class Router {
             findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
         } else {
             findCoursesIntent = NativeFindCoursesActivity.newIntent(context);
+        }
+        //Add this flag as multiple activities need to be created
+        findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(findCoursesIntent);
+    }
+
+    public void showExploreSubjects(@NonNull Context context) {
+        final Intent findCoursesIntent;
+        if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
+            findCoursesIntent = new Intent(context, WebViewExploreSubjectsActivity.class);
+        } else {
+            throw new RuntimeException("'Explore Subjects' is not implemented for native course discovery");
         }
         //Add this flag as multiple activities need to be created
         findCoursesIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

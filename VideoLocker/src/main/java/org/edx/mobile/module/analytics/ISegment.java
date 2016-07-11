@@ -84,6 +84,10 @@ public interface ISegment {
     Properties trackVideoOrientation(String videoId, Double currentTime,
             boolean isLandscape, String courseId, String unitUrl);
 
+    Properties trackDiscoverCoursesClicked();
+
+    Properties trackExploreSubjectsClicked();
+
     Properties trackUserSignUpForAccount();
 
     Properties trackUserFindsCourses();
@@ -199,10 +203,12 @@ public interface ISegment {
         String USERLOGOUT = "edx.bi.app.user.logout";
         String USERLOGIN = "edx.bi.app.user.login";
         String APP_NAME = "edx.mobileapp.android";
-        String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
+        String DISCOVER_COURSES_CLICK = "edx.bi.app.discover.courses.tapped";
+        String EXPLORE_SUBJECTS_CLICK = "edx.bi.app.discover.explore.tapped";
         String USER_FIND_COURSES = "edx.bi.app.search.find_courses.clicked";
         String CREATE_ACCOUNT_CLICK = "edx.bi.app.user.register.clicked";
         String USER_COURSE_ENROLL = "edx.bi.app.course.enroll.clicked";
+        String USER_NO_ACCOUNT = "edx.bi.app.user.signup.clicked";
         String CONVERSION = "conversion";
         String USER_ENGAGEMENT = "user-engagement";
         String COURSE_DISCOVERY = "course-discovery";
@@ -292,6 +298,8 @@ public interface ISegment {
         String FIND_COURSES = "Find Courses Clicked";
         String CREATE_ACCOUNT_CLICKED = "Create Account Clicked";
         String ENROLL_COURSES = "Enroll Course Clicked";
+        String DISCOVER_COURSES = "Discover Courses";
+        String EXPLORE_SUBJECTS = "Explore Subjects";
         String SPEED = "Connected Speed Report";
         String SOCIAL_CERTIFICATE_SHARED = "Shared a certificate";
         String SOCIAL_COURSE_DETAIL_SHARED = "Shared a course";
