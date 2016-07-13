@@ -137,6 +137,6 @@ public abstract class MainApplication extends MultiDexApplication {
 
     @NonNull
     public static IEdxEnvironment getEnvironment(@NonNull Context context) {
-        return RoboGuice.getInjector(context).getInstance(IEdxEnvironment.class);
+        return RoboGuice.getInjector(context.getApplicationContext()).getInstance(IEdxEnvironment.class);
     }
 }
