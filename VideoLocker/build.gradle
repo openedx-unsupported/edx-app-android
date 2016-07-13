@@ -168,8 +168,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
 
-        versionCode 84
-        versionName "2.5.0"
+        versionCode 90
+        versionName "2.6.0"
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
