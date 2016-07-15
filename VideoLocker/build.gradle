@@ -49,6 +49,74 @@ class AndroidHelper {
         }
     }
 }
+/**
+ * Computes a semantic version string, e.g. "1.0" or "2.5.7" by parsing git branches or tags.
+ * Branch name takes priority, otherwise the last annotated tag name will be used.
+ * @return The semantic version string, or "0.0.1" if we failed to determine one.
+ */
+def getVersionName = { ->
+    def description = "0.0.1";
+    try {
+        def branch = System.getenv("BRANCH")
+        if (null == branch || branch.isEmpty()) {
+            def branchout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+                standardOutput = branchout
+            }
+            branch = branchout.toString().trim()
+        }
+
+        def hasSemanticVersion = { s ->
+            // This branch/tag contains a semantic version (e.g. "rc/2.6.0" or "release/2.5")
+            return s.indexOf("rc/") >= 0 || s.indexOf("release/") >= 0
+        }
+        if (hasSemanticVersion(branch)) {
+            description = branch;
+        } else {
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'describe'
+                standardOutput = stdout
+            }
+            def describe = stdout.toString().trim()
+            if (hasSemanticVersion(describe)) {
+                description = describe;
+            }
+        }
+    }
+    catch (e) {
+        logger.error("Could not determine version name", e)
+    }
+    return description.substring(description.indexOf("/") + 1).split("-")[0].trim()
+}
+
+/**
+ * @return An integer representation of the string returned by getVersionName()
+ */
+def getVersionCode = { ->
+    try {
+        def versionName = getVersionName()
+        def semVer = versionName.split('\\.')
+        def vCode;
+        vCode = semVer[0].toInteger() * 1000000 // Major version
+        if (semVer.length > 1) {
+            vCode += semVer[1].toInteger() * 1000 // Minor version
+            if (semVer.length > 2) {
+                vCode += semVer[2].toInteger() * 1 // Patch version
+            }
+        }
+        return vCode
+    } catch (e) {
+        logger.error("Could not determine version code", e)
+        return 1;
+    }
+}
+
+task(version) << {
+    println String.format('%s (%s)', getVersionName(), getVersionCode())
+}
+
 
 dependencies {
     compile project (':android-iconify')
@@ -168,8 +236,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
 
-        versionCode 90
-        versionName "2.6.0"
+        versionCode getVersionCode()
+        versionName getVersionName()
 
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
