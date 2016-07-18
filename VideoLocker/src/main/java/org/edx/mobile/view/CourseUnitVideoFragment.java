@@ -53,9 +53,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
 public class CourseUnitVideoFragment extends CourseUnitFragment
     implements IPlayerEventCallback{
 
@@ -67,7 +64,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     private boolean isActivityStarted;
     private static final int MSG_UPDATE_PROGRESS = 1022;
     private DeleteVideoDialogFragment downloadSizeExceedDialog;
-    private String openInBrowserUrl;
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
@@ -81,9 +77,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     @Inject
     TranscriptManager transcriptManager;
-
-    @Inject
-    LoginPrefs loginPrefs;
 
 
     /**
@@ -266,38 +259,17 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private void startOnlinePlay(DownloadEntry model){
-
         if ( !isPlayerVisible()) {
             // don't try to showPlayer() if already shown here
             // this will cause player to freeze
             showPlayer();
         }
 
-        DownloadEntry de = (DownloadEntry) model;
-        addVideoDatatoDb(de);
-
+        addVideoDatatoDb(model);
 
         playVideoModel(model);
         notifyAdapter();
     }
-
-
-    private void startOnlineDownload(DownloadEntry videoData, ProgressWheel progressWheel){
-        long downloadSize = videoData.size;
-        if (downloadSize > MemoryUtil
-            .getAvailableExternalMemory(getActivity())) {
-            ((BaseFragmentActivity) getActivity())
-                .showInfoMessage(getString(R.string.file_size_exceeded));
-            notifyAdapter();
-        } else {
-            if (downloadSize < MemoryUtil.GB) {
-                startDownload(videoData, progressWheel);
-            } else {
-                showStartDownloadDialog(videoData, progressWheel);
-            }
-        }
-    }
-
 
     public synchronized void playVideoModel(final DownloadEntry video) {
         try {
@@ -418,7 +390,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private void showPlayer() {
-        hideOpenInBrowserPanel();
         try {
             if(getView()!=null){
                 View container = getView().findViewById(R.id.player_container);
@@ -431,73 +402,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             logger.warn("Error in showing player");
         }
     }
-
-    private void hideOpenInBrowserPanel() {
-        try {
-            getView().findViewById(R.id.open_in_browser_panel).setVisibility(
-                View.GONE);
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("Error in hideOpenInBrowserPanel");
-        }
-    }
-
-    private void showOpenInBrowserPanel() {
-        try {
-            if (NetworkUtil.isConnected(getActivity())) {
-                if (isPlayerVisible()) {
-                    hideOpenInBrowserPanel();
-                } else {
-                    final StringBuffer urlStringBuffer = new StringBuffer();
-                    if (!openInBrowserUrl.contains("http://") && !openInBrowserUrl.contains("https://")) {
-                        urlStringBuffer.append("http://");
-                        urlStringBuffer.append(openInBrowserUrl);
-                    } else {
-                        urlStringBuffer.append(openInBrowserUrl);
-                    }
-                    getView().findViewById(R.id.open_in_browser_panel)
-                        .setVisibility(View.VISIBLE);
-                    TextView openInBrowserTv = (TextView) getView().findViewById(
-                        R.id.open_in_browser_btn);
-                    openInBrowserTv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            BrowserUtil.open(getActivity(),
-                                urlStringBuffer.toString());
-                        }
-                    });
-                }
-            } else {
-                hideOpenInBrowserPanel();
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("Error in showOpenInBrowserPanel");
-        }
-    }
-
-    public void onOffline() {
-        if (!isLandscape) {
-            hideOpenInBrowserPanel();
-            if (!myVideosFlag) {
-
-            }
-        }
-    }
-
-
-    public void onOnline() {
-        if (!isLandscape) {
-
-            if (!myVideosFlag) {
-                 showOpenInBrowserPanel();
-                 handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-            }
-
-        }
-    }
-
-
 
     @Override
     public void onStop() {

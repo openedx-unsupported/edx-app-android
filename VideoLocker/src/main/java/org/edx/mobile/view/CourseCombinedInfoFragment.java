@@ -12,9 +12,12 @@ import android.widget.Switch;
 
 import com.facebook.Settings;
 import com.facebook.widget.LikeView;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.CourseDetailBaseFragment;
+import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
@@ -28,10 +31,11 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseCombinedInfoFragment extends CourseDetailBaseFragment {
+public class CourseCombinedInfoFragment extends BaseFragment {
 
     static final String TAG = CourseCombinedInfoFragment.class.getCanonicalName();
 
+    private final Logger logger = new Logger(getClass().getName());
 
     private EdxWebView announcementWebView;
     private View notificationSettingRow;
@@ -40,6 +44,9 @@ public class CourseCombinedInfoFragment extends CourseDetailBaseFragment {
     private EnrolledCoursesResponse courseData;
     private List<AnnouncementsModel> savedAnnouncements;
     private IUiLifecycleHelper uiHelper;
+
+    @Inject
+    protected IEdxEnvironment environment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

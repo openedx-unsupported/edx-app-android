@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/primary">
-        <clip android:drawable="@drawable/ic_seek_background" />
+        <shape android:shape="line">
+            <stroke
+                android:width="@dimen/video_player_seekbar_line_width"
+                android:color="@color/edx_grayscale_neutral_x_dark" />
+        </shape>
     </item>
-    
     <item android:id="@android:id/secondaryProgress">
-        <scale
-            android:drawable="@drawable/ic_seek_secondary"
-            android:scaleWidth="100%" />
+        <scale android:scaleWidth="100%">
+            <shape android:shape="line">
+                <stroke
+                    android:width="@dimen/video_player_seekbar_line_width"
+                    android:color="@color/edx_brand_primary_dark" />
+            </shape>
+        </scale>
     </item>
-    
     <item android:id="@android:id/progress">
-        <scale
-            android:drawable="@drawable/ic_seek_progress"
-            android:scaleWidth="100%" />
+        <scale android:scaleWidth="100%">
+            <shape android:shape="line">
+                <stroke
+                    android:width="@dimen/video_player_seekbar_line_width"
+                    android:color="@color/edx_brand_primary_accent" />
+            </shape>
+        </scale>
     </item>
-
 </layer-list>

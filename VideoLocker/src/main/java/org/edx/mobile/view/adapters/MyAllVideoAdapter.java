@@ -1,12 +1,14 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.ClipDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import org.edx.mobile.model.db.DownloadEntry.WatchedState;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.CheckboxDrawableUtil;
 import org.edx.mobile.util.MemoryUtil;
 
 public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
@@ -53,25 +56,25 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                 holder.course_title.setVisibility(View.GONE);
                 holder.section_title.setVisibility(View.GONE);
                 holder.videolayout.setVisibility(View.VISIBLE);
-                
+
                 DownloadEntry videoData = (DownloadEntry) sectionItem;
                 String selectedVideoId = getVideoId();
                 holder.videoTitle.setText(videoData.getTitle());
-                
+
                 holder.videoSize.setText(MemoryUtil.format(getContext(), videoData.size));
                 holder.videoPlayingTime.setText(videoData.getDurationReadable());
 
-                dbStore.getWatchedStateForVideoId(videoData.videoId, 
+                dbStore.getWatchedStateForVideoId(videoData.videoId,
                         new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(WatchedState result) {
                         WatchedState ws = result;
                         if(ws == null || ws == WatchedState.UNWATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.cyan_circle);
+                            holder.video_watched_status.setProgress(100);
                         } else if(ws == WatchedState.PARTIALLY_WATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.ic_partially_watched);
+                            holder.video_watched_status.setProgress(50);
                         } else {
-                            holder.video_watched_status.setImageResource(R.drawable.grey_circle);
+                            holder.video_watched_status.setProgress(0);
                         }
                     }
                     @Override
@@ -79,7 +82,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                         logger.error(ex);
                     }
                 });
-                
+
                 if(videoData.isDownloaded()){
                     if (selectedVideoId != null) {
                         if (selectedVideoId.equalsIgnoreCase(videoData.videoId)) {
@@ -116,7 +119,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                 .findViewById(R.id.video_playing_time);
         holder.videoSize = (TextView) convertView
                 .findViewById(R.id.video_size);
-        holder.video_watched_status = (ImageView) convertView
+        holder.video_watched_status = (ProgressBar) convertView
                 .findViewById(R.id.video_watched_status);
         holder.course_title = (TextView) convertView
                 .findViewById(R.id.txt_course_title);
@@ -140,6 +143,14 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                         }
                     }
                 });
+        holder.delete_checkbox.setButtonDrawable(
+                CheckboxDrawableUtil.createStateListDrawable(
+                        holder.delete_checkbox.getContext(),
+                        R.dimen.fa_large,
+                        R.color.edx_brand_primary_base,
+                        R.color.edx_grayscale_neutral_x_dark
+                )
+        );
         return holder;
     }
 
@@ -148,7 +159,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
         TextView videoTitle;
         TextView videoPlayingTime;
         TextView videoSize;
-        ImageView video_watched_status;
+        ProgressBar video_watched_status;
         CheckBox delete_checkbox;
         TextView course_title;
         TextView section_title;

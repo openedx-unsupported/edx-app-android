@@ -5,6 +5,9 @@
     <dimen name="common_course_display_margin_top">15dp</dimen>
     <dimen name="common_course_display_margin_side">20dp</dimen>
 
+    <!-- Per Material Design Guidelines -->
+    <dimen name="action_bar_icon_size">24dp</dimen>
+
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_diameter">85dp</dimen>
@@ -71,6 +74,7 @@
     <dimen name="video_player_bottom_control_left_margin">4dp</dimen>
     <dimen name="video_player_bottom_control_right_margin">4dp</dimen>
     <dimen name="video_player_seekbar_height">24dp</dimen>
+    <dimen name="video_player_seekbar_line_width">4dp</dimen>
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
 

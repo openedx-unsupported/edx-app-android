@@ -140,12 +140,6 @@
             >
         </activity>
 
-        <activity
-            android:name="org.edx.mobile.view.CourseLectureListActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
-        </activity>
 
         <activity
             android:name=".view.my_videos.MyVideosActivity"

@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -23,8 +22,6 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
@@ -32,16 +29,11 @@ import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
-import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.Router;
 import org.edx.mobile.view.VideoListActivity;
 import org.edx.mobile.view.adapters.MyAllVideoAdapter;
-import org.edx.mobile.view.adapters.OfflineVideoAdapter;
-import org.edx.mobile.view.adapters.OnlineVideoAdapter;
 import org.edx.mobile.view.adapters.VideoBaseAdapter;
 import org.edx.mobile.view.custom.ProgressWheel;
 import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
@@ -49,7 +41,6 @@ import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class VideoListFragment extends BaseFragment {
@@ -58,13 +49,11 @@ public class VideoListFragment extends BaseFragment {
     private boolean isLandscape = false;
     private VideoBaseAdapter<SectionItemInterface> adapter;
     private ListView videoListView;
-    private boolean myVideosFlag = false;
     private boolean isActivityStarted;
     private static final int MSG_UPDATE_PROGRESS = 1022;
     private DeleteVideoDialogFragment confirmDeleteFragment, downloadSizeExceedDialog;
     private String openInBrowserUrl;
     private String chapterName;
-    private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
     private int playingVideoIndex = -1;
     private VideoListCallback callback;
@@ -103,36 +92,12 @@ public class VideoListFragment extends BaseFragment {
 
         Intent extraIntent = getActivity().getIntent();
         if(extraIntent!=null){
-            if (extraIntent.hasExtra("FromMyVideos")) {
-                myVideosFlag = extraIntent.getBooleanExtra(
-                        "FromMyVideos", false);
-            }
-
-            // read incoming chapter name
-            if (chapterName == null) {
-                chapterName = extraIntent.getStringExtra("chapter");
-            }
-
-            // read incoming lecture model
-            if (lecture == null) {
-                lecture = (LectureModel) extraIntent
-                        .getSerializableExtra("lecture");
-            }
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
                         .getSerializableExtra(Router.EXTRA_COURSE_DATA);
             }
         }
-
-        if (chapterName == null) {
-            if (enrollment != null && lecture != null) {
-                if (lecture.chapter != null) {
-                    chapterName = lecture.chapter.chapter;
-                }
-            }
-        }
-
         videoListView = (ListView) getView().findViewById(R.id.list_video);
 
         if (videoListView != null) {
@@ -140,7 +105,7 @@ public class VideoListFragment extends BaseFragment {
 
             videoListView.setEmptyView(getView().findViewById(
                     R.id.empty_list_view));
-            offlineBar = (View) getView().findViewById(R.id.offline_bar);
+            offlineBar = getView().findViewById(R.id.offline_bar);
 
             if (!(NetworkUtil.isConnected(getActivity()))) {
                 if (offlineBar != null)
@@ -165,241 +130,8 @@ public class VideoListFragment extends BaseFragment {
     }
 
     public void setAdaptertoVideoList(){
-        if (!myVideosFlag) {
-            if (!NetworkUtil.isConnected(getActivity())) {
-                addDataToOfflineAdapter();
-            } else {
-                addDataToOnlineAdapter();
-            }
-        } else {
-            showDeletePanel(getView());
-            hideOpenInBrowserPanel();
-            addDataToMyVideoAdapter();
-        }
-    }
-    
-    
-    private void addDataToOnlineAdapter() {
-        try {
-            String selectedId = null;
-            if(adapter!=null){
-                selectedId = adapter.getVideoId();
-            }
-            adapter = new OnlineVideoAdapter(getActivity(),environment) {
-                @Override
-                public void onItemClicked(final SectionItemInterface model, final int position) {
-
-                    if (model.isDownload()) {
-                        // hide delete panel first, so that multiple-tap is blocked
-                        hideDeletePanel(VideoListFragment.this.getView());
-                        DownloadEntry de = (DownloadEntry) model;
-
-                        if ( de.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), getString(R.string.video_only_on_web_short), Toast.LENGTH_SHORT).show();
-                            startOnlinePlay(model, position);
-                            return;
-                        }
-
-                        if(!de.isDownloaded()){
-                            IDialogCallback dialogCallback = new IDialogCallback() {
-                                @Override
-                                public void onPositiveClicked() {
-                                    startOnlinePlay(model, position);
-                                }
-
-                                @Override
-                                public void onNegativeClicked() {
-                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
-                                    notifyAdapter();
-                                }
-                            };
-                            MediaConsentUtils.requestStreamMedia(getActivity(), dialogCallback);
-                        }else{
-                            //Video is downloaded. Hence play
-                            startOnlinePlay(model, position);
-                        }
-                    }
-                }
-
-                @Override
-                public void download(final DownloadEntry videoData, final ProgressWheel progressWheel) {
-                    try {
-                        if (NetworkUtil.isConnected(getContext())) {
-                            IDialogCallback dialogCallback = new IDialogCallback() {
-                                @Override
-                                public void onPositiveClicked() {
-                                    startOnlineDownload(videoData, progressWheel);
-                                }
-
-                                @Override
-                                public void onNegativeClicked() {
-                                    ((VideoListActivity) getActivity()).showInfoMessage(getString(R.string.wifi_off_message));
-                                    notifyAdapter();
-                                }
-                            };
-                            MediaConsentUtils.requestStreamMedia(getActivity(), dialogCallback);
-                        }
-                    } catch (Exception e) {
-                        logger.error(e);
-                    }
-                }
-            };
-
-            if(selectedId!=null){
-                adapter.setVideoId(selectedId);
-            }
-            videoListView.setAdapter(adapter);
-            videoListView.setOnItemClickListener(adapter);
-
-            if (lecture != null) {
-                setActivityTitle(lecture.name);
-                for (VideoResponseModel m : lecture.videos) {
-                    if (openInBrowserUrl == null
-                            || openInBrowserUrl.equalsIgnoreCase("")) {
-                        openInBrowserUrl = m.getSectionUrl();
-                    }
-                    final DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
-                            .getDownloadEntryfromVideoResponseModel(m);
-                    adapter.add(downloadEntry);
-                }
-
-            } else {
-                setActivityTitle(chapterName);
-
-                List<SectionItemInterface> list =  environment.getServiceManager()
-                        .getLiveOrganizedVideosByChapter(enrollment.getCourse()
-                            .getId(), chapterName);
-                for (SectionItemInterface m : list) {
-                    if (m.isVideo()) {
-                        VideoResponseModel vidmodel = (VideoResponseModel) m;
-                        DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
-                                .getDownloadEntryfromVideoResponseModel(vidmodel);
-                        adapter.add(downloadEntry);
-                    } else {
-                        adapter.add(m);
-                    }
-                }
-            }
-            adapter.setSelectedPosition(playingVideoIndex);
-            adapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            logger.error(e);
-        }
-    }
-
-    private void startOnlinePlay(SectionItemInterface model, int position){
-        // hide delete panel first, so that multiple-tap is blocked
-        hideDeletePanel(VideoListFragment.this.getView());
-
-        if ( !isPlayerVisible()) {
-            // don't try to showPlayer() if already shown here
-            // this will cause player to freeze
-            showPlayer();
-        }
-
-        DownloadEntry de = (DownloadEntry) model;
-        addVideoDatatoDb(de);
-        adapter.setVideoId(de.videoId);
-
-        // initialize index for this model
-        playingVideoIndex = position;
-
-        play(model);
-        notifyAdapter();
-    }
-
-
-    private void startOnlineDownload(DownloadEntry videoData, ProgressWheel progressWheel){
-        long downloadSize = videoData.size;
-        if (downloadSize > MemoryUtil
-                .getAvailableExternalMemory(getActivity())) {
-            ((VideoListActivity) getActivity())
-                    .showInfoMessage(getString(R.string.file_size_exceeded));
-            notifyAdapter();
-        } else {
-            if (downloadSize < MemoryUtil.GB) {
-                startDownload(videoData, progressWheel);
-            } else {
-                showStartDownloadDialog(videoData, progressWheel);
-            }
-        }
-    }
-
-    private void addDataToOfflineAdapter() {
-        try {
-            String selectedId = null;
-            if(adapter!=null){
-                selectedId = adapter.getVideoId();
-            }
-            adapter = new OfflineVideoAdapter(getActivity(), environment) {
-                @Override
-                public void onItemClicked(SectionItemInterface model,
-                        int position) {
-                    if (model.isDownload()) {
-
-                        DownloadEntry downloadEntry = (DownloadEntry) model;
-                        if ( downloadEntry.isVideoForWebOnly ){
-                            Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
-                        }
-                        else if (downloadEntry.isDownloaded()) {
-                            adapter.setVideoId(downloadEntry.videoId);
-                            // hide delete panel first, so that multiple-tap is blocked
-                            hideDeletePanel(VideoListFragment.this.getView());
-
-                            showPlayer();
-                            // initialize index for this model
-                            playingVideoIndex = position;
-
-                            play(model);
-                            notifyAdapter();
-                        } else {
-                            ((VideoListActivity) getActivity())
-                                    .showOfflineAccessMessage();
-                        }
-                    }
-                }
-
-                @Override
-                public void onSelectItem() {
-                    handleCheckboxSelection();
-                }
-            };
-            if(selectedId!=null){
-                adapter.setVideoId(selectedId);
-            }
-            videoListView.setAdapter(adapter);
-            videoListView.setOnItemClickListener(adapter);
-
-            setActivityTitle(chapterName);
-
-            List<SectionItemInterface> list = environment.getServiceManager()
-                    .getLiveOrganizedVideosByChapter(enrollment.getCourse()
-                        .getId(), chapterName);
-            downloadAvailable = false;
-            for (SectionItemInterface m : list) {
-                if (m.isVideo()) {
-                    VideoResponseModel vidmodel = (VideoResponseModel) m;
-                    DownloadEntry downloadEntry = (DownloadEntry) environment.getStorage()
-                            .getDownloadEntryfromVideoResponseModel(vidmodel);
-                    adapter.add(downloadEntry);
-                    if(downloadEntry.isDownloaded()){
-                        downloadAvailable = true;
-                    }
-                } else {
-                    adapter.add(m);
-                }
-            }
-
-            if(!downloadAvailable){
-                hideDeletePanel(getView());
-            }
-
-            adapter.setSelectedPosition(playingVideoIndex);
-            adapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            logger.error(e);
-        }
-
+        showDeletePanel(getView());
+        addDataToMyVideoAdapter();
     }
 
     private void addDataToMyVideoAdapter() {
@@ -484,8 +216,6 @@ public class VideoListFragment extends BaseFragment {
 
     private void play(SectionItemInterface model) {
         if (model instanceof DownloadEntry) {
-            hideOpenInBrowserPanel();
-
             DownloadEntry v = (DownloadEntry) model;
             try {
                 String prefName = PrefManager.getPrefNameForLastAccessedBy(
@@ -516,7 +246,6 @@ public class VideoListFragment extends BaseFragment {
 
     private void showPlayer() {
         hideDeletePanel(getView());
-        hideOpenInBrowserPanel();
         adapter.setIsPlayerOn(true);
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
@@ -533,61 +262,10 @@ public class VideoListFragment extends BaseFragment {
         }
     }
 
-    private void hideOpenInBrowserPanel() {
-        try {
-            getView().findViewById(R.id.open_in_browser_panel).setVisibility(
-                    View.GONE);
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("Error in hideOpenInBrowserPanel");
-        }
-    }
-
-    private void showOpenInBrowserPanel() {
-        try {
-            if (NetworkUtil.isConnected(getActivity())) {
-                if (isPlayerVisible()) {
-                    hideOpenInBrowserPanel();
-                } else {
-                    final StringBuffer urlStringBuffer = new StringBuffer();
-                    if (!openInBrowserUrl.contains("http://") && !openInBrowserUrl.contains("https://")) {
-                        urlStringBuffer.append("http://");
-                        urlStringBuffer.append(openInBrowserUrl);
-                    } else {
-                        urlStringBuffer.append(openInBrowserUrl);
-                    }
-                    getView().findViewById(R.id.open_in_browser_panel)
-                    .setVisibility(View.VISIBLE);
-                    TextView openInBrowserTv = (TextView) getView().findViewById(
-                            R.id.open_in_browser_btn);
-                    openInBrowserTv.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            BrowserUtil.open(getActivity(),
-                                    urlStringBuffer.toString());
-                        }
-                    });
-                }
-            } else {
-                hideOpenInBrowserPanel();
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-            logger.warn("Error in showOpenInBrowserPanel");
-        }
-    }
-
     public void onOffline() {
         if (!isLandscape) {
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.VISIBLE);
-            }
-
-            hideOpenInBrowserPanel();
-            if (!myVideosFlag) {
-                addDataToOfflineAdapter();
-                //Call handleDeleteView only after adding data to adapter
-                handleDeleteView();
             }
         }
     }
@@ -607,15 +285,6 @@ public class VideoListFragment extends BaseFragment {
             if (offlineBar != null) {
                 offlineBar.setVisibility(View.GONE);
             }
-            if (!myVideosFlag) {
-                AppConstants.videoListDeleteMode = false;
-                addDataToOnlineAdapter();
-                showOpenInBrowserPanel();
-                hideDeletePanel(getView());
-                hideConfirmDeleteDialog();
-                handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-            }
-
         }
     }
 
@@ -648,8 +317,6 @@ public class VideoListFragment extends BaseFragment {
 
     private void showDeletePanel(View view) {
         try {
-            hideOpenInBrowserPanel();
-
             if (isPlayerVisible()) {
                 hideDeletePanel(view);
             } else {
@@ -663,7 +330,6 @@ public class VideoListFragment extends BaseFragment {
                 final Button cancelButton = (Button) view.findViewById(
                         R.id.cancel_btn);
 
-                if (myVideosFlag) {
                     if (AppConstants.myVideosDeleteMode) {
                         deleteButton.setVisibility(View.VISIBLE);
                         cancelButton.setVisibility(View.VISIBLE);
@@ -673,25 +339,11 @@ public class VideoListFragment extends BaseFragment {
                         cancelButton.setVisibility(View.GONE);
                         editButton.setVisibility(View.VISIBLE);
                     }
-                } else {
-                    if (AppConstants.videoListDeleteMode) {
-                        deleteButton.setVisibility(View.VISIBLE);
-                        cancelButton.setVisibility(View.VISIBLE);
-                        editButton.setVisibility(View.GONE);
-                    } else {
-                        deleteButton.setVisibility(View.GONE);
-                        cancelButton.setVisibility(View.GONE);
-                        editButton.setVisibility(View.VISIBLE);
-                    }
-                }
 
                 deleteButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ArrayList<SectionItemInterface> list;
-                        if (myVideosFlag)
-                            list = adapter.getSelectedItems();
-                        else
                             list = adapter.getSelectedItems();
 
                         if (list != null && list.size() > 0) {
@@ -706,11 +358,7 @@ public class VideoListFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         editButton.setVisibility(View.VISIBLE);
-                        if (myVideosFlag) {
-                            AppConstants.myVideosDeleteMode = false;
-                        } else {
-                            AppConstants.videoListDeleteMode = false;
-                        }
+                        AppConstants.myVideosDeleteMode = false;
                         if (getActivity() instanceof VideoListActivity) {
                             ((VideoListActivity) getActivity()).hideCheckBox();
                         }
@@ -730,15 +378,9 @@ public class VideoListFragment extends BaseFragment {
                     public void onClick(View v) {
                         editButton.setVisibility(View.GONE);
 
-                        if (myVideosFlag) {
                             AppConstants.myVideosDeleteMode = true;
                             adapter.setSelectedPosition(playingVideoIndex);
                             adapter.notifyDataSetChanged();
-                        } else {
-                            AppConstants.videoListDeleteMode = true;
-                            adapter.setSelectedPosition(playingVideoIndex);
-                            adapter.notifyDataSetChanged();
-                        }
 
                         disableDeleteButton();
                         deleteButton.setVisibility(View.VISIBLE);
@@ -763,9 +405,7 @@ public class VideoListFragment extends BaseFragment {
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
         hideConfirmDeleteDialog();
-        if(myVideosFlag){
-            adapter.unselectAll();
-        }
+        adapter.unselectAll();
     }
 
     @Override
@@ -778,9 +418,6 @@ public class VideoListFragment extends BaseFragment {
     public void onStart() {
         super.onStart();
         isActivityStarted = true;
-        if (!myVideosFlag) {
-            handler.sendEmptyMessage(MSG_UPDATE_PROGRESS);
-        }
     }
 
     public void setAllVideosChecked() {
@@ -800,28 +437,7 @@ public class VideoListFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
     }
 
-    public boolean isActivityStarted() {
-        return isActivityStarted;
-    }
-
-    private final Handler handler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == MSG_UPDATE_PROGRESS) {
-                if (isActivityStarted()) {
-                    if (NetworkUtil.isConnected(getActivity())) {
-                        if (adapter != null && enrollment!=null && chapterName!=null && lecture!=null) {
-                            if(environment.getDatabase().isAnyVideoDownloadingInSubSection(null, enrollment.getCourse().getId(), chapterName, lecture.name)){
-                                adapter.setSelectedPosition(playingVideoIndex);
-                                adapter.notifyDataSetChanged();
-                                logger.debug("Download list reloaded");
-                            }
-                        }
-                        sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS, 3000);
-                    }
-                }
-            }
-        }
-    };
+    private final Handler handler = new Handler();
 
     public void markPlaying() {
         environment.getStorage().markVideoPlaying(videoModel, watchedStateCallback);
@@ -887,45 +503,24 @@ public class VideoListFragment extends BaseFragment {
     public void onConfirmDelete() {
         ArrayList<SectionItemInterface> list;
         int deletedVideoCount = 0;
-        if (myVideosFlag) {
-            list = adapter.getSelectedItems();
-            if (list != null) {
-                for (SectionItemInterface section : list) {
-                    if (section.isDownload()) {
-                        DownloadEntry de = (DownloadEntry) section;
-                        environment.getStorage().removeDownload(de);
-                        deletedVideoCount++;
-                    }
+        list = adapter.getSelectedItems();
+        if (list != null) {
+            for (SectionItemInterface section : list) {
+                if (section.isDownload()) {
+                    DownloadEntry de = (DownloadEntry) section;
+                    environment.getStorage().removeDownload(de);
+                    deletedVideoCount++;
                 }
             }
-            addDataToMyVideoAdapter();
-            adapter.setSelectedPosition(playingVideoIndex);
-            adapter.notifyDataSetChanged();
-            ((VideoListActivity) getActivity()).hideCheckBox();
-            AppConstants.myVideosDeleteMode = false;
-            videoListView.setOnItemClickListener(adapter);
-            if(adapter.getCount()<=0){
-                finishActivity();
-            }
-        } else {
-            list = adapter.getSelectedItems();
-            if (list != null) {
-                for (SectionItemInterface section : list) {
-                    if (section.isDownload()) {
-                        DownloadEntry de = (DownloadEntry) section;
-                        if(de.isDownloaded()){
-                            environment.getStorage().removeDownload(de);
-                            deletedVideoCount++;
-                        }
-                    }
-                }
-            }
-            addDataToOfflineAdapter();
-            adapter.setSelectedPosition(playingVideoIndex);
-            adapter.notifyDataSetChanged();
-            videoListView.setOnItemClickListener(adapter);
-            AppConstants.videoListDeleteMode = false;
-            ((VideoListActivity) getActivity()).hideCheckBox();
+        }
+        addDataToMyVideoAdapter();
+        adapter.setSelectedPosition(playingVideoIndex);
+        adapter.notifyDataSetChanged();
+        ((VideoListActivity) getActivity()).hideCheckBox();
+        AppConstants.myVideosDeleteMode = false;
+        videoListView.setOnItemClickListener(adapter);
+        if(adapter.getCount()<=0){
+            finishActivity();
         }
 
         if(deletedVideoCount>0){
@@ -967,9 +562,9 @@ public class VideoListFragment extends BaseFragment {
         }
 
         if (selectedItemsNo == totalVideos) {
-            ((VideoListActivity) getActivity()).setCheckBoxSelected();
+            ((VideoListActivity) getActivity()).setSelectAllChecked(true);
         } else if (selectedItemsNo < totalVideos) {
-            ((VideoListActivity) getActivity()).unsetCheckBoxSelected();
+            ((VideoListActivity) getActivity()).setSelectAllChecked(false);
         }
     }
 
