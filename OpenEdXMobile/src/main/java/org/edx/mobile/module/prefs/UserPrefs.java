@@ -42,7 +42,7 @@ public class UserPrefs {
         final PrefManager wifiPrefManager = new PrefManager(context,
                 PrefManager.Pref.WIFI);
         boolean onlyWifi = wifiPrefManager.getBoolean(
-                PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true);
+                PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false);
         return onlyWifi;
     }
 

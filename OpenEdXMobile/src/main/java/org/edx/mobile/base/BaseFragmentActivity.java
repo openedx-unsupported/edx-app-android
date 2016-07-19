@@ -156,6 +156,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
             mDrawerLayout.closeDrawers();
         } else {
             super.onBackPressed();
+            moveTaskToBack(false);
         }
     }
 
