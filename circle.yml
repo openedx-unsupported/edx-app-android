@@ -23,7 +23,7 @@ dependencies:
         - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/staging ./config
         - cp -r config/pro/gradle.properties VideoLocker/gradle.properties
         - echo "edx.dir = '../config/pro/'" > VideoLocker/edx.properties
-        - cp -r config/config.yaml $CIRCLE_ARTIFACTS
+        - cp -r config/pro/config.yaml $CIRCLE_ARTIFACTS
 
 test:
     pre:

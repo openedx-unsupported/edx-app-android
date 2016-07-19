@@ -36,6 +36,13 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
+apply plugin: 'com.github.triplet.play'
+
+play {
+    track = 'beta'
+    serviceAccountEmail = "$System.env.SERVICE_ACCOUNT_EMAIL"
+    pk12File = file("$System.env.RELEASE_PK12_FILE")
+}
 
 class AndroidHelper {
 
