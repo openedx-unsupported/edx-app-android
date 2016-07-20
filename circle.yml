@@ -28,7 +28,7 @@ dependencies:
 
 test:
     pre:
-        # - ./gradlew testProdDebugUnitTestCoverage
+        - ./gradlew testProdReleaseUnitTestCoverage -PdisablePreDex
         - ./gradlew assembleProdRelease -PdisablePreDex
     override:
         # - emulator -avd circleci-android22 -no-audio -no-window:
@@ -60,10 +60,8 @@ test:
         # - adb shell screencap /data/local/NativeFindCoursesActivity.png
         # - adb pull /data/local/NativeFindCoursesActivity.png VideoLocker/build/outputs/NativeFindCoursesActivity.png
     post:
-        - ls -lasp /home/ubuntu/edx-app-android/VideoLocker/
-        - ls -lasp /home/ubuntu/edx-app-android/VideoLocker/build/outputs
-        #- cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
-        #- cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
+        - cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
+        - cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
 
 # https://github.com/Triple-T/gradle-play-publisher
 deployment:

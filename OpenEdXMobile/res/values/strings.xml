@@ -135,7 +135,7 @@
     <!-- Label for switch controlling whether users permit downloading using cellular data or only wifi -->
     <string name="wifi_dialog_title_help">Allow cellular download</string>
     <!-- Password reset sent succesfully alert -->
-    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address. 
+    <string name="success_dialog_message_help">We’ve sent a message with password reset instructions to your e-mail address.
         If you don’t see it in the next few minutes, make sure to check your spam folder.</string>
     <!-- Password reset dialog prompt -->
     <string name="confirm_dialog_message_help">Enter the e-mail address for your account, and we’ll send you instructions to reset your password.</string>
