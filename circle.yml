@@ -6,6 +6,7 @@ general:
 machine:
     environment:
         GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3584m -XX:+HeapDumpOnOutOfMemoryError"'
+        RELEASE_PK12_FILE: "../config/beta.p12"
 
 dependencies:
     pre:
@@ -27,8 +28,8 @@ dependencies:
 
 test:
     pre:
-        - ./gradlew testProdDebugUnitTestCoverage
-        # - ./gradlew assembleProdDebug -PdisablePreDex
+        # - ./gradlew testProdDebugUnitTestCoverage
+        - ./gradlew assembleProdRelease -PdisablePreDex
     override:
         # - emulator -avd circleci-android22 -no-audio -no-window:
         #     background: true
@@ -59,8 +60,10 @@ test:
         # - adb shell screencap /data/local/NativeFindCoursesActivity.png
         # - adb pull /data/local/NativeFindCoursesActivity.png VideoLocker/build/outputs/NativeFindCoursesActivity.png
     post:
-        - cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
-        - cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
+        - ls -lasp /home/ubuntu/edx-app-android/VideoLocker/
+        - ls -lasp /home/ubuntu/edx-app-android/VideoLocker/build/outputs
+        #- cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
+        #- cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
 
 # https://github.com/Triple-T/gradle-play-publisher
 deployment:
