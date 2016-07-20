@@ -1,5 +1,6 @@
 package org.edx.mobile.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -259,6 +260,7 @@ public class LoginActivity
         return activityLoginBinding.emailEt.getText().toString().trim();
     }
 
+    @SuppressLint("ValidFragment")
     private void showResetPasswordDialog() {
         ResetPasswordDialogFragment.newInstance(getEmail()).show(getSupportFragmentManager(), null);
     }
