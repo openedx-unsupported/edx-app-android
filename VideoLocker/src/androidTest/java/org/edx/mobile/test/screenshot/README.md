@@ -1,8 +1,18 @@
 # Screenshot Tests
 
-**Requires an emulator or device to run.** Having two devices connected may cause some issues. 
+## Requirements
 
-Screenshot tests should be made against the Prod build.
+* **Requires an emulator or device to run.** Having two devices connected may cause some issues. 
+
+* Screenshot tests should be made against the Prod build.
+
+* Requires python package PIL
+```
+"ImportError: No module named PIL" 
+```
+You need the python imaging library, or pillow.
+Try "pip install image" or "sudo pip install image"
+If you don't have pip, try "sudo easy_install pip"
 
 ## CI
 Screenshot tests will be run on travis every time a commit in a PR is made against master. The command used by travis to verify screenshots is `./gradlew verifyMode screenshotTests`. This will run the screenshot tests and then run a diff against the screenshots stored in the repository. If the screenshot are different, the task will fail.
