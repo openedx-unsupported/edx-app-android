@@ -131,7 +131,6 @@ public class CourseDashboardFragment extends BaseFragment {
                     && !TextUtils.isEmpty(courseData.getCourse().getDiscussionUrl())
                     && environment.getConfig().isDiscussionsEnabled()) {
                 holder = createViewHolder(inflater, parent);
-
                 holder.typeView.setIcon(FontAwesomeIcons.fa_comments_o);
                 holder.titleView.setText(R.string.discussion_title);
                 holder.subtitleView.setText(R.string.discussion_subtitle);
@@ -143,18 +142,20 @@ public class CourseDashboardFragment extends BaseFragment {
                 });
             }
 
-            holder = createViewHolder(inflater, parent);
-
-            holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
-            holder.titleView.setText(R.string.handouts_title);
-            holder.subtitleView.setText(R.string.handouts_subtitle);
-            holder.rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (courseData != null)
-                        environment.getRouter().showHandouts(getActivity(), courseData);
-                }
-            });
+            if (courseData != null
+                    && !TextUtils.isEmpty(courseData.getCourse().getCourse_handouts())) {
+                holder = createViewHolder(inflater, parent);
+                holder.typeView.setIcon(FontAwesomeIcons.fa_file_text_o);
+                holder.titleView.setText(R.string.handouts_title);
+                holder.subtitleView.setText(R.string.handouts_subtitle);
+                holder.rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (courseData != null)
+                            environment.getRouter().showHandouts(getActivity(), courseData);
+                    }
+                });
+            }
 
             holder = createViewHolder(inflater, parent);
 
