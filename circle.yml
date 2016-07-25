@@ -1,12 +1,12 @@
 general:
     branches:
         only:
-            - proversity/release
+            - proversity/production
 
 machine:
     environment:
         GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx3584m -XX:+HeapDumpOnOutOfMemoryError"'
-        RELEASE_PK12_FILE: "../config/beta.p12"
+        RELEASE_PK12_FILE: "../config/release.p12"
 
 dependencies:
     pre:
@@ -21,7 +21,7 @@ dependencies:
         - echo "y" | android update sdk --no-ui --all --filter extra-google-google_play_services
         - echo "y" | android update sdk --no-ui --all --filter extra-google-analytics_sdk_v2
     post:
-        - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/staging ./config
+        - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/production ./config
         - cp -r config/pro/gradle.properties VideoLocker/gradle.properties
         - echo "edx.dir = '../config/pro'" > VideoLocker/edx.properties
         - cp -r config/pro/config.yaml $CIRCLE_ARTIFACTS
@@ -31,34 +31,7 @@ test:
         - ./gradlew testProdReleaseUnitTestCoverage -PdisablePreDex
         - ./gradlew assembleProdRelease -PdisablePreDex
     override:
-        # - emulator -avd circleci-android22 -no-audio -no-window:
-        #     background: true
-        #     parallel: true
-        # - circle-android wait-for-boot
-        # - adb shell input keyevent 82 # unlock
-        # - adb install VideoLocker/build/outputs/apk/VideoLocker-prod-debug.apk
-        # - sleep 30
         - sleep 10
-        # - adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n io.proversity.edx/io.proversity.edx.view.SplashActivity
-        # - adb shell screencap /data/local/SplashActivity.png
-        # - adb pull /data/local/SplashActivity.png VideoLocker/build/outputs/SplashActivity.png
-        # - adb shell am start -W -n io.proversity.edx/io.proversity.edx.view.LoginActivity
-        # - adb shell screencap /data/local/LoginActivity.png
-        # - adb pull /data/local/LoginActivity.png VideoLocker/build/outputs/LoginActivity.png
-        # - adb shell input tap 720 1016 # email
-        # - adb shell input text staff@example.com
-        # - adb shell input keyevent 66
-        # - adb shell input tap 720 1208 # password
-        # - adb shell input text edx
-        # - adb shell input keyevent 66
-        # - adb shell input tap 720 1521 # signin
-        # - sleep 10
-        # - adb shell am start -W -n io.proversity.edx/io.proversity.edx.view.MyCoursesListActivity
-        # - adb shell screencap /data/local/MyCoursesListActivity.png
-        # - adb pull /data/local/MyCoursesListActivity.png VideoLocker/build/outputs/MyCoursesListActivity.png
-        # - adb shell input tap 720 620 # find courses
-        # - adb shell screencap /data/local/NativeFindCoursesActivity.png
-        # - adb pull /data/local/NativeFindCoursesActivity.png VideoLocker/build/outputs/NativeFindCoursesActivity.png
     post:
         - cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
         - cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
@@ -66,10 +39,6 @@ test:
 # https://github.com/Triple-T/gradle-play-publisher
 deployment:
   beta:
-    branch: proversity/release
+    branch: proversity/production
     commands:
       - ./gradlew publishApkProdRelease -PdisablePreDex -Dorg.gradle.project.track=beta
-  # production:
-  #   branch: proversity/production
-  #   commands:
-  #     - ./gradlew publishApkRelease -Dorg.gradle.project.track=production
