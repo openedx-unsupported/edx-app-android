@@ -27,6 +27,12 @@ notifications:
   email: true
 
 before_script:
+  - git fetch --tags
+  - git fetch --unshallow || true
+  - export DESCRIBE=$(git describe)
+  - export PR=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR | jq -r .head.ref`; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH, DESCRIBE=$DESCRIBE"
   - chmod +x gradlew
   # ARM architecture is used instead of x86 (which is 10x faster) of the lack of support from CI due
   # to complications of creating a virtual machine within a virtual machine. This may be solved
