@@ -173,7 +173,7 @@ public class UserAPI {
 
     public
     @NonNull
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws Exception {
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, String org, boolean tryCache) throws Exception {
         String json = null;
 
         final String cacheKey = getUserEnrolledCoursesURL(username);
@@ -189,9 +189,9 @@ public class UserAPI {
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
-            Response<ResponseBody> response = userService.getUserEnrolledCourses(username).execute();
+            Response<ResponseBody> response = userService.getUserEnrolledCourses(username, org).execute();
             if (response.isSuccessful()) {
-                json = userService.getUserEnrolledCourses(username).execute().body().string();
+                json = userService.getUserEnrolledCourses(username, org).execute().body().string();
                 // cache result
                 try {
                     cache.put(cacheKey, json);
