@@ -18,19 +18,18 @@ import org.edx.mobile.view.OnSwipeListener;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class Player extends MediaPlayer implements OnErrorListener,
-        OnPreparedListener, PlayerController.MediaPlayerControl, OnBufferingUpdateListener,
+        OnPreparedListener, OnBufferingUpdateListener,
         OnCompletionListener, OnInfoListener, IPlayer {
 
     // Player states
-    public static enum PlayerState {
+    public enum PlayerState {
         RESET, URI_SET, PREPARED,
         PLAYING, PAUSED, ERROR, LAGGING, PLAYBACK_COMPLETE, STOPPED
     }
-
-    ;
 
     private PlayerState state;
     private int bufferPercent;
@@ -38,6 +37,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     private boolean isFullScreen;
     private boolean isPlayingLocally;
     private boolean playWhenPrepared;
+    private boolean autoHideControls;
     private transient IPlayerListener callback;
     private transient PlayerController controller;
     private int lastCurrentPosition;
@@ -50,7 +50,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
     private String lmsURL;
     private String videoUri;
     private static final Logger logger = new Logger(Player.class.getName());
-
 
     public Player() {
         init();
@@ -76,6 +75,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
         lastCurrentPosition = 0;
         lastDuration = 0;
         isFrozen = false;
+        autoHideControls = true;
     }
 
     @Override
@@ -154,6 +154,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
     @Override
     public void toggleFullScreen() {
         setFullScreen(!isFullScreen);
+
         if (callback != null) {
             callback.onFullScreen(isFullScreen);
         }
@@ -354,7 +355,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
                     }
                 } catch (Exception ex) {
                     logger.error(ex);
-                    ;
                 }
             }
 
@@ -399,7 +399,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                         && state != PlayerState.RESET
                         && state != PlayerState.URI_SET) {
                     logger.debug("Player touched");
-                    if (controller.isShowing()) {
+                    if (controller.isShowing() && autoHideControls) {
                         controller.hide();
                     } else {
                         controller.setLmsUrl(lmsURL);
@@ -439,12 +439,37 @@ public class Player extends MediaPlayer implements OnErrorListener,
     }
 
     @Override
+    /**
+     * Controls will be hidden immediately if changed to false
+     */
+    public void setAutoHideControls(boolean autoHide) {
+        autoHideControls = autoHide;
+        if (!autoHide && autoHideControls) {
+            hideController();
+        }
+    }
+
+    @Override
+    public boolean getAutoHideControls() {
+        return autoHideControls;
+    }
+
+    @Override
     public void showController() {
         if (controller != null) {
             controller.hide();
             controller.setTitle(videoTitle);
             controller.setLmsUrl(lmsURL);
+
+            if (autoHideControls) {
+                controller.resetShowTimeoutMS();
+            }
+            else {
+                controller.setShowTimeoutMS(0);
+            }
+
             controller.show();
+
             logger.debug("Player controller shown");
         }
     }
@@ -453,6 +478,13 @@ public class Player extends MediaPlayer implements OnErrorListener,
     public void hideController() {
         if (controller != null) {
             controller.hide();
+        }
+    }
+
+    @Override
+    public void requestAccessibilityFocusPausePlay() {
+        if (controller != null && controller.isShowing()) {
+            controller.requestAccessibilityFocusPausePlay();
         }
     }
 
@@ -546,6 +578,8 @@ public class Player extends MediaPlayer implements OnErrorListener,
 
             // reload controller
             showController();
+
+            requestAccessibilityFocusPausePlay();
         } else {
             logger.warn("Cannot start");
         }
@@ -594,7 +628,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 && (delta <= 1000)) {
             // no need to perform seek if current position is almost same as seekTo
             // Delta of 1000 is used to skip seek of 1 sec difference from current position
-            logger.debug(String.format("Skipping seek to %d from %d ; state=%s",
+            logger.debug(String.format(Locale.US, "Skipping seek to %d from %d ; state=%s",
                     msec, lastCurrentPosition, state.toString()));
             return;
         }
@@ -609,7 +643,7 @@ public class Player extends MediaPlayer implements OnErrorListener,
                 || state == PlayerState.STOPPED
                 || state == PlayerState.PLAYBACK_COMPLETE
                 || state == PlayerState.LAGGING) {
-            logger.debug(String.format("seeking to %d from %d ; state=%s",
+            logger.debug(String.format(Locale.US, "seeking to %d from %d ; state=%s",
                     msec, lastCurrentPosition, state.toString()));
             super.seekTo(msec);
             lastCurrentPosition = msec;
@@ -639,7 +673,6 @@ public class Player extends MediaPlayer implements OnErrorListener,
             }
         } catch (Exception ex) {
             logger.error(ex);
-            ;
         }
 
         return lastCurrentPosition;

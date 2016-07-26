@@ -2,44 +2,48 @@ package org.edx.mobile.player;
 
 import android.graphics.Point;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 
 import java.io.Serializable;
 
 public interface IPlayer extends Serializable {
     
-    static final long serialVersionUID = 5689385691113719237L;
+    long serialVersionUID = 5689385691113719237L;
 
-    public void setUri(String uri, int seekTo) throws Exception;
-    public void setUriAndPlay(String uri, int seekTo) throws Exception;
-    public void restart() throws Exception;
-    public void restart(int seekTo) throws Exception;
-    public boolean isInError();
-    public boolean isPlayingLocally();
-    public void start();
-    public boolean isPlaying();
-    public boolean isPaused();
-    public boolean isFrozen();
-    public void pause();
-    public int getCurrentPosition();
-    public void setFullScreen(boolean isFullScreen);
-    public boolean isFullScreen();
-    public void setPreview(Preview preview);
-    public void release();
-    public void setPlayerListener(IPlayerListener listener);
-    public void setController(PlayerController controller);
-    public void freeze();
-    public void unfreeze();
-    public void setVideoTitle(String title);
-    public int getLastFreezePosition();
-    public void showController();
-    public void hideController();
-    public void reset();
-    public void setLMSUrl(String url);
-    public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev);
-    public void callSettings(Point p);
-    public void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked);
-    public PlayerController getController();
-    public boolean isReset();
+    void setUri(String uri, int seekTo) throws Exception;
+    void setUriAndPlay(String uri, int seekTo) throws Exception;
+    void restart() throws Exception;
+    void restart(int seekTo) throws Exception;
+    boolean isInError();
+    boolean isPlayingLocally();
+    void start();
+    boolean isPlaying();
+    boolean isPaused();
+    boolean isFrozen();
+    void pause();
+    int getCurrentPosition();
+    void setFullScreen(boolean isFullScreen);
+    boolean isFullScreen();
+    void setPreview(Preview preview);
+    void release();
+    void setPlayerListener(IPlayerListener listener);
+    void setController(PlayerController controller);
+    void freeze();
+    void unfreeze();
+    void setVideoTitle(String title);
+    int getLastFreezePosition();
+    void setAutoHideControls(boolean autoHide);
+    boolean getAutoHideControls();
+    void showController();
+    void hideController();
+    void requestAccessibilityFocusPausePlay();
+    void reset();
+    void setLMSUrl(String url);
+    void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev);
+    void callSettings(Point p);
+    void callPlayerSeeked(long previousPos, long nextPos, boolean isRewindClicked);
+    PlayerController getController();
+    boolean isReset();
 
     // methods from PlayerController.MediaPlayerControl interface
     int     getDuration();
