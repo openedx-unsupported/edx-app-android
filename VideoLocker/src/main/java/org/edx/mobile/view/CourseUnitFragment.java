@@ -14,6 +14,8 @@ import org.edx.mobile.base.BaseFragment;
 public abstract class CourseUnitFragment extends BaseFragment implements PageViewStateCallback, RunnableCourseComponent {
     public interface HasComponent {
         CourseComponent getComponent();
+        void navigateNextComponent();
+        void navigatePreviousComponent();
     }
 
     protected CourseComponent unit;

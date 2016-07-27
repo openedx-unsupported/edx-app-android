@@ -577,10 +577,19 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public void setNextPreviousListeners(View.OnClickListener next, View.OnClickListener prev) {
-        if (player != null && isScreenLandscape()) {
-            this.prevListner = prev;
-            this.nextListner = next;
-            player.setNextPreviousListeners(next, prev);
+        this.prevListner = prev;
+        this.nextListner = next;
+        updateNextPreviousListeners();
+    }
+
+    private void updateNextPreviousListeners() {
+        if (player != null) {
+            if (isScreenLandscape()) {
+                player.setNextPreviousListeners(nextListner, prevListner);
+            }
+            else {
+                player.setNextPreviousListeners(null, null);
+            }
         }
     }
 
@@ -1787,6 +1796,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             // controller should also refresh, so hide and show it
             player.hideController();
             player.showController();
+            updateNextPreviousListeners();
         }
     }
 

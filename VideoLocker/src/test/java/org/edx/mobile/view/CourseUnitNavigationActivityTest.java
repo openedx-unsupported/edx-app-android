@@ -285,7 +285,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         } else {
             assertThat(prevUnitLabel).isVisible();
             assertThat(prevUnitLabel).hasText(prevSection.getDisplayName());
-            assertThat(prevButton).hasText(R.string.assessment_previous_unit);
         }
         if (nextSection == null ||
                 currentUnit.getParent().equals(nextSection)) {
@@ -294,7 +293,6 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         } else {
             assertThat(nextUnitLabel).isVisible();
             assertThat(nextUnitLabel).hasText(nextSection.getDisplayName());
-            assertThat(nextButton).hasText(R.string.assessment_next_unit);
         }
     }
     /**
@@ -306,20 +304,12 @@ public class CourseUnitNavigationActivityTest extends CourseBaseActivityTest {
         boolean isLandscape = activity.getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_LANDSCAPE;
         ActionBar bar = activity.getSupportActionBar();
-        if (bar != null) {
-            assertEquals(!isLandscape, bar.isShowing());
-        }
         View courseUnitNavBar = activity.findViewById(R.id.course_unit_nav_bar);
         assertNotNull(courseUnitNavBar);
-        if (isLandscape) {
-            assertThat(courseUnitNavBar).isNotVisible();
-        } else {
-            assertThat(courseUnitNavBar).isVisible();
-        }
         View pagerView = activity.findViewById(R.id.pager);
         assertNotNull(pagerView);
         assertThat(pagerView).isInstanceOf(DisableableViewPager.class);
-        assertEquals(!isLandscape, ((DisableableViewPager) pagerView).isEnabled());
+        assertEquals(true, (pagerView).isEnabled());
     }
 
     /**
