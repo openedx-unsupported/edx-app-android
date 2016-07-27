@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -106,29 +108,43 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         mPreviousBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = pager.getCurrentItem();
-                if (index > 0) {
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-                    if (curView != null)
-                        curView.onPageDisappear();
-                    pager.setCurrentItem(index - 1);
-                }
+                navigatePreviousComponent();
             }
         });
         mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int index = pager.getCurrentItem();
-                if (index < pagerAdapter.getCount() - 1) {
-                    PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
-                    if (curView != null)
-                        curView.onPageDisappear();
-                    pager.setCurrentItem(index + 1);
-                }
+                navigateNextComponent();
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateUIForOrientation();
+    }
+
+    @Override
+    public void navigatePreviousComponent() {
+        int index = pager.getCurrentItem();
+        if (index > 0) {
+            PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
+            if (curView != null)
+                curView.onPageDisappear();
+            pager.setCurrentItem(index - 1);
+        }
+    }
+
+    @Override
+    public void navigateNextComponent() {
+        int index = pager.getCurrentItem();
+        if (index < pagerAdapter.getCount() - 1) {
+            PageViewStateCallback curView = (PageViewStateCallback) pagerAdapter.instantiateItem(pager, index);
+            if (curView != null)
+                curView.onPageDisappear();
+            pager.setCurrentItem(index + 1);
+        }
     }
 
     @Override
@@ -154,6 +170,8 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         courseComponentId = selectedUnit.getId();
         environment.getDatabase().updateAccess(null, selectedUnit.getId(), true);
 
+        updateUIForOrientation();
+
         String prefName = PrefManager.getPrefNameForLastAccessedBy(
                 loginPrefs.getUsername(), selectedUnit.getCourseId());
         final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
@@ -178,25 +196,19 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
 
         setTitle(selectedUnit.getDisplayName());
 
-        // fix: https://openedx.atlassian.net/browse/MA-995
-        // code below decides to show Next/Previous Unit name or only Next/Previous
-        // based on units in a subsection
         String currentSubsectionId = selectedUnit.getParent().getId();
         if (curIndex + 1 <= pagerAdapter.getCount() - 1) {
             String nextUnitSubsectionId = unitList.get(curIndex + 1).getParent().getId();
             if (currentSubsectionId.equalsIgnoreCase(nextUnitSubsectionId)) {
                 mNextUnitLbl.setVisibility(View.GONE);
-                mNextBtn.setText(R.string.assessment_next);
             }
             else {
                 mNextUnitLbl.setText(unitList.get(curIndex + 1).getParent().getDisplayName());
                 mNextUnitLbl.setVisibility(View.VISIBLE);
-                mNextBtn.setText(R.string.assessment_next_unit);
             }
         }
         else {
             // we have reached the end and next button is disabled
-            mNextBtn.setText(R.string.assessment_next);
             mNextUnitLbl.setVisibility(View.GONE);
         }
 
@@ -204,17 +216,14 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
             String prevUnitSubsectionId = unitList.get(curIndex - 1).getParent().getId();
             if (currentSubsectionId.equalsIgnoreCase(prevUnitSubsectionId)) {
                 mPreviousUnitLbl.setVisibility(View.GONE);
-                mPreviousBtn.setText(R.string.assessment_previous);
             }
             else {
                 mPreviousUnitLbl.setText(unitList.get(curIndex - 1).getParent().getDisplayName());
                 mPreviousUnitLbl.setVisibility(View.VISIBLE);
-                mPreviousBtn.setText(R.string.assessment_previous_unit);
             }
         }
         else {
             // we have reached the start and previous button is disabled
-            mPreviousBtn.setText(R.string.assessment_previous);
             mPreviousUnitLbl.setVisibility(View.GONE);
         }
     }
@@ -234,7 +243,7 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
         PrefManager.UserPrefManager userPrefManager = new PrefManager.UserPrefManager(MainApplication.instance());
         EnumSet<BlockType> types =  userPrefManager.isUserPrefVideoModel() ?
                              EnumSet.of(BlockType.VIDEO) : EnumSet.allOf(BlockType.class);
-        ((CourseComponent) selectedUnit.getRoot()).fetchAllLeafComponents(leaves, types);
+        selectedUnit.getRoot().fetchAllLeafComponents(leaves, types);
         unitList.addAll( leaves );
         pagerAdapter.notifyDataSetChanged();
 
@@ -263,11 +272,27 @@ public class CourseUnitNavigationActivity extends CourseBaseActivity implements 
     }
 
     private void updateUIForOrientation(){
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        Fragment fragment = null;
+        int currentItem = pager.getCurrentItem();
+
+        if (currentItem < pagerAdapter.getCount()) {
+            fragment = pagerAdapter.getItem(currentItem);
+        }
+
+        boolean isCurrentFragmentVideoUnit = false;
+        if (fragment != null && fragment instanceof CourseUnitVideoFragment)  {
+            isCurrentFragmentVideoUnit = true;
+        }
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && isCurrentFragmentVideoUnit) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setActionBarVisible(false);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.GONE);
-            pager.setEnabled(false);
+            pager.setEnabled(true);
+
         } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setActionBarVisible(true);
             findViewById(R.id.course_unit_nav_bar).setVisibility(View.VISIBLE);
             pager.setEnabled(true);

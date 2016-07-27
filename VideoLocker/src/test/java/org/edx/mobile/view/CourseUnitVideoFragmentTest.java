@@ -64,7 +64,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     public void initializeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertTrue(fragment.getRetainInstance());
 
@@ -84,7 +84,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
     private void assertActionBarShowing(int orientation, boolean expected) {
         AppCompatActivity activity = Robolectric.setupActivity(FragmentUtilActivity.class);
         activity.getResources().getConfiguration().orientation = orientation;
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit(), false, false);
         activity.getSupportFragmentManager()
                 .beginTransaction().add(1, fragment, null).commit();
         assertTrue(fragment.getRetainInstance());
@@ -107,8 +107,8 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     @Config(qualifiers = "land")
-    public void hideActionBarOnLandscapeTest() {
-        assertActionBarShowing(Configuration.ORIENTATION_LANDSCAPE, false);
+    public void showActionBarOnLandscapeTest() {
+        assertActionBarShowing(Configuration.ORIENTATION_LANDSCAPE, true);
     }
 
     /**
@@ -129,16 +129,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
                 Configuration.ORIENTATION_LANDSCAPE;
         View view = fragment.getView();
         assertNotNull(view);
-        View messageContainer = view.findViewById(R.id.message_container);
-        if (isLandscape) {
-            assertThat(messageContainer).isNotVisible();
-        } else {
-            assertThat(messageContainer).isVisible();
-        }
         Window window = fragment.getActivity().getWindow();
-        int windowAttributes = window.getAttributes().flags;
-        int expectedFlag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
-        assertEquals(isLandscape, (windowAttributes & expectedFlag) > 0);
 
         View playerContainer = view.findViewById(R.id.player_container);
         if (playerContainer != null) {
@@ -158,7 +149,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
      */
     @Test
     public void orientationChangeTest() {
-        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit());
+        CourseUnitVideoFragment fragment = CourseUnitVideoFragment.newInstance(getVideoUnit(), false, false);
         SupportFragmentTestUtil.startVisibleFragment(fragment, FragmentUtilActivity.class, 1);
         assertNotEquals(Configuration.ORIENTATION_LANDSCAPE,
                 fragment.getResources().getConfiguration().orientation);
@@ -167,7 +158,7 @@ public class CourseUnitVideoFragmentTest extends UiTest {
         testOrientationChange(fragment, Configuration.ORIENTATION_PORTRAIT);
     }
 
-    private static class FragmentUtilActivity extends AppCompatActivity {
+    private static class FragmentUtilActivity extends AppCompatActivity implements CourseUnitFragment.HasComponent {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -176,6 +167,19 @@ public class CourseUnitVideoFragmentTest extends UiTest {
             view.setId(1);
 
             setContentView(view);
+        }
+
+        @Override
+        public CourseComponent getComponent() {
+            return null;
+        }
+
+        @Override
+        public void navigateNextComponent() {
+        }
+
+        @Override
+        public void navigatePreviousComponent() {
         }
     }
 }

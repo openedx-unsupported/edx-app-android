@@ -4,54 +4,35 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.LectureModel;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.TranscriptModel;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.impl.DatabaseFactory;
-import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
-import org.edx.mobile.player.TranscriptManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
-import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
-import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.MediaConsentUtils;
-import org.edx.mobile.util.MemoryUtil;
 import org.edx.mobile.util.NetworkUtil;
-import org.edx.mobile.view.custom.ProgressWheel;
-import org.edx.mobile.view.dialog.DeleteVideoDialogFragment;
 import org.edx.mobile.view.dialog.IDialogCallback;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CourseUnitVideoFragment extends CourseUnitFragment
     implements IPlayerEventCallback{
@@ -59,35 +40,35 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     protected final Logger logger = new Logger(getClass().getName());
     VideoBlockModel unit;
     private PlayerFragment playerFragment;
-    private boolean isLandscape = false;
     private boolean myVideosFlag = false;
     private boolean isActivityStarted;
     private static final int MSG_UPDATE_PROGRESS = 1022;
-    private DeleteVideoDialogFragment downloadSizeExceedDialog;
     private String chapterName;
     private LectureModel lecture;
     private EnrolledCoursesResponse enrollment;
     private DownloadEntry videoModel;
-    private boolean downloadAvailable = false;
-    private Button deleteButton;
 
     private Runnable playPending;
     private final Handler playHandler = new Handler();
     private View messageContainer;
 
-    @Inject
-    TranscriptManager transcriptManager;
+    private final static String HAS_NEXT_UNIT_ID = "has_next_unit";
+    private boolean hasNextUnit;
 
+    private final static String HAS_PREV_UNIT_ID = "has_prev_unit";
+    private boolean hasPreviousUnit;
 
     /**
      * Create a new instance of fragment
      */
-    public static CourseUnitVideoFragment newInstance(VideoBlockModel unit) {
+    public static CourseUnitVideoFragment newInstance(VideoBlockModel unit, boolean hasNextUnit, boolean hasPreviousUnit) {
         CourseUnitVideoFragment f = new CourseUnitVideoFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putSerializable(Router.EXTRA_COURSE_UNIT, unit);
+        args.putBoolean(HAS_NEXT_UNIT_ID, hasNextUnit);
+        args.putBoolean(HAS_PREV_UNIT_ID, hasPreviousUnit);
         f.setArguments(args);
 
         return f;
@@ -102,6 +83,8 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         setRetainInstance(true);
         unit = getArguments() == null ? null :
             (VideoBlockModel) getArguments().getSerializable(Router.EXTRA_COURSE_UNIT);
+        hasNextUnit = getArguments().getBoolean(HAS_NEXT_UNIT_ID);
+        hasPreviousUnit = getArguments().getBoolean(HAS_PREV_UNIT_ID);
     }
 
     /**
@@ -153,21 +136,37 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             }
         }
 
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            isLandscape = false;
-        } else {
-            isLandscape = true;
-            // probably the landscape player view, so hide action bar
-            ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            if(bar!=null){
-                bar.hide();
-            }
-        }
         if (playerFragment == null) {
 
             playerFragment = new PlayerFragment();
             playerFragment.setCallback(this);
+
+            final CourseUnitVideoFragment.HasComponent hasComponent = (CourseUnitVideoFragment.HasComponent)getActivity();
+            if (hasComponent != null) {
+                View.OnClickListener next = null;
+                View.OnClickListener prev = null;
+
+                if (hasNextUnit) {
+                    next = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            hasComponent.navigateNextComponent();
+                        }
+                    };
+                }
+
+                if (hasPreviousUnit) {
+                    prev = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            hasComponent.navigatePreviousComponent();
+                        }
+                    };
+                }
+
+                playerFragment.setNextPreviousListeners(next, prev);
+            }
+
             try{
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -332,11 +331,7 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
 
     private String getVideoPath(DownloadEntry video){
         String filepath = null;
-        // check if file available on local
-        if( video.isVideoForWebOnly ){
-            //don't download anything
-        }
-        else if (video.filepath != null && video.filepath.length()>0) {
+        if (!(video.filepath != null && video.filepath.length()>0)) {
             if (video.isDownloaded()) {
                 File f = new File(video.filepath);
                 if (f.exists()) {
@@ -409,8 +404,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         isActivityStarted = false;
         AppConstants.videoListDeleteMode = false;
 
-        if(myVideosFlag){
-        }
         try {
             if (playerFragment != null) {
                 playerFragment.onStop();
@@ -434,6 +427,11 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUIForOrientation();
+    }
 
     public boolean isActivityStarted() {
         return isActivityStarted;
@@ -509,10 +507,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     public void onPlaybackComplete() {
         try {
             DownloadEntry v = videoModel;
-//            if (v == null) {
-//                v = (DownloadEntry) adapter.getItem(playingVideoIndex);
-//            }
-
             if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
@@ -524,70 +518,6 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
             logger.error(ex);
         }
     }
-
-    public void startDownload(final DownloadEntry downloadEntry, final ProgressWheel progressWheel) {
-        try{
-
-                boolean isVideoFilePresentByUrl = DatabaseFactory.getInstance(DatabaseFactory.TYPE_DATABASE_NATIVE)
-                    .isVideoFilePresentByUrl(
-                    downloadEntry.url, null);
-                boolean reloadListFlag = true;
-                if(isVideoFilePresentByUrl){
-                    CircularProgressTask circularTask = new CircularProgressTask();
-                    circularTask.setProgressBar(progressWheel);
-                    circularTask.execute();
-                    reloadListFlag = false;
-                }
-
-                if (environment.getSegment() != null) {
-                    environment.getSegment().trackSingleVideoDownload(downloadEntry.videoId, downloadEntry.eid,
-                        downloadEntry.lmsUrl);
-                }
-
-                if (environment.getStorage().addDownload(downloadEntry) != -1) {
-                    ((BaseFragmentActivity) getActivity())
-                        .showInfoMessage(getString(R.string.msg_started_one_video_download));
-                } else {
-                    ((BaseFragmentActivity) getActivity())
-                        .showInfoMessage(getString(R.string.msg_video_not_downloaded));
-                }
-
-                //If the video is already downloaded, dont reload the adapter
-                if (reloadListFlag) {
-                    //adapter.notifyDataSetChanged();
-                }
-                transcriptManager.downloadTranscriptsForVideo(downloadEntry.transcript);
-
-        }catch(Exception e){
-            logger.error(e);
-        }
-    }
-
-    protected void showStartDownloadDialog(final DownloadEntry de, final ProgressWheel progressWheel) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title", getString(R.string.download_exceed_title));
-        dialogMap.put("message_1", getString(R.string.download_exceed_message));
-        dialogMap.put("yes_button", getString(R.string.label_yes));
-        dialogMap.put("no_button",  getString(R.string.label_no));
-        downloadSizeExceedDialog = DeleteVideoDialogFragment.newInstance(dialogMap,
-            new IDialogCallback() {
-                @Override
-                public void onPositiveClicked() {
-                    startDownload(de, progressWheel);
-                }
-
-                @Override
-                public void onNegativeClicked() {
-                    notifyAdapter();
-                    downloadSizeExceedDialog.dismiss();
-                }
-            });
-        downloadSizeExceedDialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        downloadSizeExceedDialog.show(getFragmentManager(), "dialog");
-        downloadSizeExceedDialog.setCancelable(false);
-    }
-
-
 
     private boolean isPlayerVisible() {
         if (getActivity() == null) {
@@ -639,31 +569,20 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
         }
     };
 
-    /**
-     * mostly the orientation changes.
-     * @param newConfig
-     */
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    private void updateUIForOrientation() {
         //TODO - should we use load different layout file?
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             messageContainer.setVisibility(View.GONE);
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
                 float screenHeight = displayMetrics.heightPixels;
                 playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) screenHeight));
                 playerContainer.requestLayout();
             }
         } else {
             messageContainer.setVisibility(View.VISIBLE);
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
             LinearLayout playerContainer = (LinearLayout)getView().findViewById(R.id.player_container);
             if ( playerContainer != null ) {
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -671,11 +590,15 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
                 float ideaHeight = screenWidth * 9 / 16;
 
                 playerContainer.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
+                        LinearLayout.LayoutParams.MATCH_PARENT, (int) ideaHeight));
                 playerContainer.requestLayout();
             }
         }
     }
 
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        updateUIForOrientation();
+    }
 }
