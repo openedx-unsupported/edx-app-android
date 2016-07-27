@@ -44,36 +44,6 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
         final String endorsePrefix = context.getString(R.string.discussion_post_endorsed);
         final String answerPrefix = context.getString(R.string.discussion_post_marked_as_answer);
 
-        // For post
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(author, label, creationDate), now,
-                relativeTime + " " + outputAuthor + " " + outputAuthorLbl);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(null, label, creationDate), now,
-                relativeTime + " " + outputAuthorLbl);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(author, null, creationDate), now,
-                relativeTime + " " + outputAuthor);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(author, label, null), now,
-                outputAuthor + " " + outputAuthorLbl);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(null, null, creationDate), now,
-                relativeTime);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(author, null, null), now,
-                outputAuthor);
-        assertSetAuthorAttributionText(textView,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                new StubAuthorData(null, label, null), now,
-                outputAuthorLbl);
-
         // For endorsed
         assertSetAuthorAttributionText(textView,
                 DiscussionTextUtils.AuthorAttributionLabel.ENDORSEMENT,
@@ -181,6 +151,65 @@ public class DiscussionTextUtilsTest extends BaseTestCase {
                     assertEquals(0, colorSpans.length);
                     assertFalse(textView.isClickable());
                 }
+            }
+        }
+    }
+
+    @Test
+    public void testSetAuthor_AllCombinations() {
+        final TextView textView = new TextView(context);
+
+        // Input values
+        final String author = "author";
+        final String label = "label";
+        final Date creationDate = Mockito.mock(Date.class);
+
+        // Expected output constructs
+        final String outputAuthorLbl = ResourceUtil.getFormattedString(context.getResources(),
+                R.string.discussion_post_author_label_attribution, "text", label).toString();
+
+        assertSetAuthorText(textView,
+                new StubAuthorData(author, label, creationDate),
+                author + " " + outputAuthorLbl);
+        assertSetAuthorText(textView,
+                new StubAuthorData(author, null, creationDate),
+                author);
+        assertSetAuthorText(textView,
+                new StubAuthorData(null, label, creationDate),
+                outputAuthorLbl);
+        assertSetAuthorText(textView,
+                new StubAuthorData(null, null, creationDate),
+                outputAuthorLbl);
+    }
+
+    private void assertSetAuthorText(TextView textView, IAuthorData input,
+                                                String expectedOutput) {
+        DiscussionTextUtils.setAuthorText(textView, input);
+        if (expectedOutput == null) {
+            assertTrue(textView.getVisibility() == View.GONE);
+        } else {
+            String output = textView.getText().toString();
+            assertEquals(expectedOutput, output);
+
+            if (!input.isAuthorAnonymous()) {
+                int start = output.indexOf(input.getAuthor());
+                int end = start + input.getAuthor().length();
+                Spanned text = (Spanned) textView.getText();
+                StyleSpan[] styleSpans = text.getSpans(start, end, StyleSpan.class);
+                ForegroundColorSpan[] colorSpans = text.getSpans(start, end, ForegroundColorSpan.class);
+
+                // Verify that the author text is bold
+                assertEquals(1, styleSpans.length);
+                assertEquals(start, text.getSpanStart(styleSpans[0]));
+                assertEquals(end, text.getSpanEnd(styleSpans[0]));
+                assertEquals(Typeface.BOLD, styleSpans[0].getStyle());
+
+                // Verify that the correct foreground color is set
+                assertEquals(1, colorSpans.length);
+                assertEquals(start, text.getSpanStart(colorSpans[0]));
+                assertEquals(end, text.getSpanEnd(colorSpans[0]));
+                assertEquals(context.getResources().getColor(R.color.edx_brand_primary_base),
+                        colorSpans[0].getForegroundColor());
             }
         }
     }

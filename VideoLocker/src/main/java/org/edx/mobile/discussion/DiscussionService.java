@@ -92,7 +92,8 @@ public interface DiscussionService {
                                          @Query("view") String view,
                                          @Query("order_by") String orderBy,
                                          @Query("page_size") int pageSize,
-                                         @Query("page") int page)
+                                         @Query("page") int page,
+                                         @Query("requested_fields") List<String> requestedFields)
             throws HttpException;
 
 
@@ -102,14 +103,17 @@ public interface DiscussionService {
                                                   @Query("view") String view,
                                                   @Query("order_by") String orderBy,
                                                   @Query("page_size") int pageSize,
-                                                  @Query("page") int page)
+                                                  @Query("page") int page,
+                                                  @Query("requested_fields")
+                                                  List<String> requestedFields)
             throws HttpException;
 
     @GET("/api/discussion/v1/threads/")
     Page<DiscussionThread> searchThreadList(@Query("course_id") String courseId,
                                             @Query("text_search") String text,
                                             @Query("page_size") int pageSize,
-                                            @Query("page") int page)
+                                            @Query("page") int page,
+                                            @Query("requested_fields") List<String> requestedFields)
             throws HttpException;
 
 
@@ -121,7 +125,8 @@ public interface DiscussionService {
     @GET("/api/discussion/v1/comments/")
     Page<DiscussionComment> getResponsesList(@Query("thread_id") String threadId,
                                              @Query("page_size") int pageSize,
-                                             @Query("page") int page)
+                                             @Query("page") int page,
+                                             @Query("requested_fields") List<String> requestedFields)
             throws HttpException;
 
 
@@ -129,14 +134,17 @@ public interface DiscussionService {
     Page<DiscussionComment> getResponsesListForQuestion(@Query("thread_id") String threadId,
                                                         @Query("page_size") int pageSize,
                                                         @Query("page") int page,
-                                                        @Query("endorsed") boolean endorsed)
+                                                        @Query("endorsed") boolean endorsed,
+                                                        @Query("requested_fields")
+                                                        List<String> requestedFields)
             throws HttpException;
 
 
     @GET("/api/discussion/v1/comments/{comment_id}/")
     Page<DiscussionComment> getCommentsList(@Path("comment_id") String responseId,
                                             @Query("page_size") int pageSize,
-                                            @Query("page") int page)
+                                            @Query("page") int page,
+                                            @Query("requested_fields") List<String> requestedFields)
             throws HttpException;
 
 

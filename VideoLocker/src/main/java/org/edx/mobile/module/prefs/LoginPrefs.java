@@ -12,6 +12,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.services.EdxCookieManager;
+import org.edx.mobile.user.ProfileImage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -146,6 +147,12 @@ public class LoginPrefs {
 
     public void setLastAuthenticatedEmail(@Nullable String emailAddress) {
         pref.put(PrefManager.Key.AUTH_EMAIL, emailAddress);
+    }
+
+    public void setProfileImage(@NonNull String username, @Nullable ProfileImage profileImage) {
+        if (username.equals(getUsername())) {
+            pref.put(PrefManager.Key.PROFILE_IMAGE, gson.toJson(profileImage));
+        }
     }
 
     @NonNull

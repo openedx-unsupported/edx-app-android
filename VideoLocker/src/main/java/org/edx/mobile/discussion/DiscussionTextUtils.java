@@ -2,22 +2,19 @@ package org.edx.mobile.discussion;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.TextViewCompat;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.edx.mobile.R;
 import org.edx.mobile.util.Config;
@@ -34,15 +31,7 @@ public abstract class DiscussionTextUtils {
     private DiscussionTextUtils() {
     }
 
-    public enum AuthorAttributionLabel {POST, ANSWER, ENDORSEMENT}
-
-    public static void setAuthorAttributionText(@NonNull TextView textView,
-                                                @NonNull AuthorAttributionLabel authorAttributionLabel,
-                                                @NonNull final IAuthorData authorData,
-                                                @NonNull final Runnable onAuthorClickListener) {
-        setAuthorAttributionText(textView, authorAttributionLabel, authorData,
-                System.currentTimeMillis(), onAuthorClickListener);
-    }
+    public enum AuthorAttributionLabel {ANSWER, ENDORSEMENT}
 
     public static void setAuthorAttributionText(@NonNull TextView textView,
                                                 @NonNull AuthorAttributionLabel authorAttributionLabel,
@@ -76,11 +65,7 @@ public abstract class DiscussionTextUtils {
                 final SpannableString authorSpan = new SpannableString(author);
                 if (config.isUserProfilesEnabled() && !authorData.isAuthorAnonymous()) {
                     // Change the author text color and style
-                    authorSpan.setSpan(new ForegroundColorSpan(
-                                    context.getResources().getColor(R.color.edx_brand_primary_base)),
-                            0, authorSpan.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    authorSpan.setSpan(new StyleSpan(Typeface.BOLD), 0, authorSpan.length(),
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    applyColorAndStyle(context, authorSpan, R.color.edx_brand_primary_base, Typeface.BOLD);
 
                     // Set the click listener on the whole textView
                     textView.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +100,42 @@ public abstract class DiscussionTextUtils {
         } else {
             textView.setText(text);
         }
+    }
+
+    public static void setAuthorText(@NonNull TextView textView, @NonNull IAuthorData authorData) {
+        final CharSequence authorText;
+        {
+            final Context context = textView.getContext();
+            List<CharSequence> joinableStrings = new ArrayList<>();
+            final String author = authorData.getAuthor();
+            if (!TextUtils.isEmpty(author)) {
+                final SpannableString authorSpan = new SpannableString(author);
+                // Change the author text color and style
+                applyColorAndStyle(context, authorSpan, R.color.edx_brand_primary_base, Typeface.BOLD);
+                joinableStrings.add(authorSpan);
+            }
+
+            final String authorLabel = authorData.getAuthorLabel();
+            if (!TextUtils.isEmpty(authorLabel)) {
+                joinableStrings.add(ResourceUtil.getFormattedString(context.getResources(),
+                        R.string.discussion_post_author_label_attribution, "text", authorLabel));
+            }
+
+            authorText = org.edx.mobile.util.TextUtils.join(" ", joinableStrings);
+        }
+        if (TextUtils.isEmpty(authorText)) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setText(authorText);
+        }
+    }
+
+    private static void applyColorAndStyle(@NonNull Context context,
+                                           @NonNull SpannableString span,
+                                           @ColorRes int color, int style) {
+        span.setSpan(new ForegroundColorSpan(context.getResources().getColor(color)), 0,
+                span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(new StyleSpan(style), 0, span.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
@@ -154,13 +175,6 @@ public abstract class DiscussionTextUtils {
                                         @NonNull DiscussionThread thread,
                                         @NonNull DiscussionComment response) {
         if (response.isEndorsed()) {
-            Context context = target.getContext();
-            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    target,
-                    new IconDrawable(context, FontAwesomeIcons.fa_check_square_o)
-                            .sizeRes(context, R.dimen.edx_xxx_small)
-                            .colorRes(context, R.color.edx_utility_success),
-                    null, null, null);
             switch (thread.getType()) {
                 case QUESTION:
                     target.setText(R.string.discussion_responses_answer);

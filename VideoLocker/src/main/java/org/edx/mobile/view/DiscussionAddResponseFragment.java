@@ -20,12 +20,13 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
-import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.CreateCommentTask;
+import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
+import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,15 +59,16 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     @InjectView(R.id.tvResponse)
     private TextView textViewResponse;
 
-    @InjectView(R.id.tvTimeAuthor)
-    private TextView textViewTimeAuthor;
     private CreateCommentTask createCommentTask;
 
     @Inject
     private Router router;
 
     @Inject
-    ISegment segIO;
+    private ISegment segIO;
+
+    @Inject
+    private Config config;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,22 +83,27 @@ public class DiscussionAddResponseFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_response, container, false);
+        return inflater.inflate(R.layout.fragment_add_response_or_comment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        textViewTitle.setVisibility(View.VISIBLE);
         textViewTitle.setText(discussionThread.getTitle());
         textViewResponse.setText(Html.fromHtml(discussionThread.getRenderedBody()));
-        DiscussionTextUtils.setAuthorAttributionText(textViewTimeAuthor,
-                DiscussionTextUtils.AuthorAttributionLabel.POST,
-                discussionThread, new Runnable() {
+
+        AuthorLayoutViewHolder authorLayoutViewHolder =
+                new AuthorLayoutViewHolder(getView().findViewById(R.id.discussion_user_profile_row));
+        authorLayoutViewHolder.populateViewHolder(config, discussionThread, discussionThread,
+                System.currentTimeMillis(),
+                new Runnable() {
                     @Override
                     public void run() {
                         router.showUserProfile(getActivity(), discussionThread.getAuthor());
                     }
                 });
+
         buttonAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 createComment();

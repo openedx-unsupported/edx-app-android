@@ -4,4 +4,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/number_responses_or_comments_label"
     style="@style/discussion_responses_small_text"
-    tools:showIn="@layout/discussion_responses_thread_row" />
+    tools:showIn="@layout/row_discussion_responses_thread" />

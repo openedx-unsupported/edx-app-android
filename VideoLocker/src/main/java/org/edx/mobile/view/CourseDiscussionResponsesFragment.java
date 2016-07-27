@@ -37,7 +37,7 @@ import roboguice.inject.InjectView;
 
 public class CourseDiscussionResponsesFragment extends BaseFragment implements CourseDiscussionResponsesAdapter.Listener {
 
-    @InjectView(R.id.discussion_responses_recycler_view)
+    @InjectView(R.id.discussion_recycler_view)
     private RecyclerView discussionResponsesRecyclerView;
 
     @InjectView(R.id.create_new_item_text_view)
@@ -70,7 +70,7 @@ public class CourseDiscussionResponsesFragment extends BaseFragment implements C
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_discussion_responses, container, false);
+        return inflater.inflate(R.layout.fragment_discussion_responses_or_comments, container, false);
     }
 
     @Override

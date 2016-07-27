@@ -5,14 +5,11 @@
     android:background="@color/edx_grayscale_neutral_x_light"
     android:orientation="vertical">
 
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/discussion_comments_listview"
+        android:id="@+id/discussion_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingLeft="@dimen/discussion_responses_standard_margin"
-        android:paddingRight="@dimen/discussion_responses_standard_margin" />
+        android:layout_weight="1" />
 
     <include layout="@layout/create_new_item_layout" />
 

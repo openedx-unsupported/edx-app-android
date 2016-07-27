@@ -79,9 +79,11 @@
     <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>
     <dimen name="discussion_posts_icon_margin">5dp</dimen>
 
+    <dimen name="discussion_endorsed_response_icon_padding">4dp</dimen>
     <dimen name="discussion_responses_box_padding">10dp</dimen>
     <dimen name="discussion_responses_thread_text_view_spacing">3dp</dimen>
     <dimen name="discussion_responses_standard_margin">10dp</dimen>
+    <dimen name="discussion_responses_standard_half_margin">5dp</dimen>
     <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
     <dimen name="discussion_responses_comments_button_height">25dp</dimen>
     <dimen name="discussion_responses_action_bar_icon_margin">7dp</dimen>
@@ -105,7 +107,6 @@
     <dimen name="edx_double_margin">30dp</dimen>
     <dimen name="edx_quadruple_margin">60dp</dimen>
     <dimen name="widget_margin">10dp</dimen>
-    <dimen name="widget_double_margin">20dp</dimen>
     <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
     <dimen name="vertical_input_padding">8dp</dimen>
     <dimen name="edx_button_height">40dp</dimen>
@@ -134,6 +135,8 @@
 
     <dimen name="user_profile_image_diameter">166dp</dimen>
     <dimen name="user_profile_image_border_width">3dp</dimen>
+
+    <dimen name="discussion_image_diameter">40dp</dimen>
 
     <!-- font awesome sizes -->
     <dimen name="fa_xxxx_large">38dp</dimen>

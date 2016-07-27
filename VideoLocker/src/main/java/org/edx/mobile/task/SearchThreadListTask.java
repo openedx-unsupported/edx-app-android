@@ -3,8 +3,12 @@ package org.edx.mobile.task;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import org.edx.mobile.discussion.DiscussionRequestFields;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.model.Page;
+
+import java.util.Collections;
+import java.util.List;
 
 public abstract class SearchThreadListTask extends
         Task<Page<DiscussionThread>> {
@@ -24,6 +28,9 @@ public abstract class SearchThreadListTask extends
     }
 
     public Page<DiscussionThread> call() throws Exception {
-        return environment.getDiscussionAPI().searchThreadList(courseId, text, page);
+        List<String> requestedFields = Collections.singletonList(
+                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        return environment.getDiscussionAPI().searchThreadList(courseId, text, page,
+                requestedFields);
     }
 }

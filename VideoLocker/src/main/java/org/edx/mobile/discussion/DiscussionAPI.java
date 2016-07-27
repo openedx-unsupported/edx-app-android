@@ -91,43 +91,52 @@ public class DiscussionAPI {
     }
 
     public Page<DiscussionThread> getThreadList(String courseId, List<String> topicIds,
-                                                String filter, String orderBy, int page)
+                                                String filter, String orderBy, int page,
+                                                List<String> requestedFields)
             throws HttpException {
-        return discussionService.getThreadList(courseId, topicIds, filter, orderBy, ApiConstants.STANDARD_PAGE_SIZE,
-                page);
+        return discussionService.getThreadList(courseId, topicIds, filter, orderBy,
+                ApiConstants.STANDARD_PAGE_SIZE, page, requestedFields);
     }
 
     public Page<DiscussionThread> getFollowingThreadList(String courseId, String filter,
-                                                         String orderBy, int page)
+                                                         String orderBy, int page,
+                                                         List<String> requestedFields)
             throws HttpException {
         return discussionService.getFollowingThreadList(courseId, "True", filter, orderBy,
-                ApiConstants.STANDARD_PAGE_SIZE, page);
+                ApiConstants.STANDARD_PAGE_SIZE, page, requestedFields);
     }
 
 
-    public Page<DiscussionThread> searchThreadList(String courseId, String text, int page)
+    public Page<DiscussionThread> searchThreadList(String courseId, String text, int page,
+                                                   List<String> requestedFields)
             throws HttpException {
-        return discussionService.searchThreadList(courseId, text, ApiConstants.STANDARD_PAGE_SIZE, page);
+        return discussionService.searchThreadList(courseId, text, ApiConstants.STANDARD_PAGE_SIZE,
+                page, requestedFields);
     }
 
     public DiscussionThread getThread(String threadId) throws HttpException {
         return discussionService.getThread(threadId);
     }
 
-    public Page<DiscussionComment> getResponsesList(String threadId, int page)
+    public Page<DiscussionComment> getResponsesList(String threadId, int page,
+                                                    List<String> requestedFields)
             throws HttpException {
-        return discussionService.getResponsesList(threadId, ApiConstants.STANDARD_PAGE_SIZE, page);
+        return discussionService.getResponsesList(threadId, ApiConstants.STANDARD_PAGE_SIZE, page,
+                requestedFields);
     }
 
     public Page<DiscussionComment> getResponsesListForQuestion(String threadId, int page,
-                                                               boolean endorsed)
+                                                               boolean endorsed,
+                                                               List<String> requestedFields)
             throws HttpException {
-        return discussionService.getResponsesListForQuestion(threadId, ApiConstants.STANDARD_PAGE_SIZE, page, endorsed);
+        return discussionService.getResponsesListForQuestion(threadId,
+                ApiConstants.STANDARD_PAGE_SIZE, page, endorsed, requestedFields);
     }
 
-    public Page<DiscussionComment> getCommentsList(String responseId, int pageSize, int page)
+    public Page<DiscussionComment> getCommentsList(String responseId, int pageSize, int page,
+                                                   List<String> requestedFields)
             throws HttpException {
-        return discussionService.getCommentsList(responseId, pageSize, page);
+        return discussionService.getCommentsList(responseId, pageSize, page, requestedFields);
     }
 
     public DiscussionThread setThreadFlagged(DiscussionThread thread, boolean flagged)

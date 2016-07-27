@@ -21,4 +21,9 @@ public abstract class SetCommentVotedTask extends Task<DiscussionComment> {
     public DiscussionComment call() throws Exception {
         return environment.getDiscussionAPI().setCommentVoted(comment, voted);
     }
+
+    @Override
+    protected void onSuccess(DiscussionComment discussionComment) {
+        discussionComment = comment.patchObject(discussionComment);
+    }
 }
