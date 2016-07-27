@@ -1,7 +1,5 @@
 package org.edx.mobile.view;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -35,6 +33,7 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
+import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.view.dialog.ResetPasswordDialog;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.dialog.SuccessDialogFragment;
@@ -56,11 +55,9 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     @Inject
     LoginPrefs loginPrefs;
 
-    public static Intent newIntent(Context context) {
-        Intent launchIntent = new Intent(context, LoginActivity.class);
-        if (!(context instanceof Activity))
-            launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        return launchIntent;
+    @NonNull
+    public static Intent newIntent() {
+        return IntentFactory.newIntentForComponent(LoginActivity.class);
     }
 
     @NonNull
@@ -195,17 +192,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         super.onActivityResult(requestCode, resultCode, data);
         tryToSetUIInteraction(true);
         socialLoginDelegate.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    protected void onResume() {
-        super.onResume();
-        //MOB-1343 : app enter here when user in the login window and lock the screen
-        if (loginPrefs.getCurrentUserProfile() != null) {
-            Intent intent = new Intent(LoginActivity.this, MyCoursesListActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
     private void displayLastEmailId() {
@@ -390,12 +376,8 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     public void onUserLoginSuccess(ProfileModel profile) {
-        if (isActivityStarted()) {
-            // do NOT launch next screen if app minimized
-            environment.getRouter().showMyCourses(this);
-            // but finish this screen anyways as login is succeeded
-            finish();
-        }
+       setResult(RESULT_OK);
+        finish();
     }
 
     public void onUserLoginFailure(Exception ex, String accessToken, String backend) {

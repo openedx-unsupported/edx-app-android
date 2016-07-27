@@ -31,26 +31,19 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // configure slider layout. This should be called only once and
-        // hence is shifted to onCreate() function
-        configureDrawer();
-
+        if (environment.getLoginPrefs().getUsername() != null) {
+            configureDrawer();
+        } else {
+            blockDrawerFromOpening();
+        }
         environment.getSegment().trackScreenView(ISegment.Screens.FIND_COURSES);
-
         webView = (WebView) findViewById(R.id.webview);
-        webView.loadUrl(environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl());
+        webView.loadUrl(getInitialUrl());
+    }
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.label_open_drawer, R.string.label_close_drawer) {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                super.onDrawerSlide(drawerView, slideOffset);
-                invalidateOptionsMenu();
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+    @NonNull
+    protected String getInitialUrl() {
+        return environment.getConfig().getCourseDiscoveryConfig().getCourseSearchUrl();
     }
 
     @Override
@@ -100,6 +93,9 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     }
 
     public void enableDrawerMenuButton(boolean showDrawer) {
+        if (mDrawerToggle == null) {
+            return;
+        }
         mDrawerToggle.setDrawerIndicatorEnabled(showDrawer);
     }
 

@@ -55,6 +55,7 @@ public class Config {
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
+    private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -105,22 +106,29 @@ public class Config {
             }
         }
 
+        public WebViewConfig getWebViewConfig() {
+            return mWebViewConfig;
+        }
+
         public String getCourseSearchUrl() {
-            return mWebViewConfig.getCourseSearchUrl();
+            return getWebViewConfig().getCourseSearchUrl();
         }
 
         public String getCourseInfoUrlTemplate() {
-            return mWebViewConfig.getCourseInfoUrlTemplate();
+            return getWebViewConfig().getCourseInfoUrlTemplate();
         }
 
         public boolean isWebCourseSearchEnabled() {
-            return mWebViewConfig.isWebCourseSearchEnabled();
+            return getWebViewConfig().isWebCourseSearchEnabled();
         }
     }
 
     public static class WebViewConfig {
         @SerializedName("COURSE_SEARCH_URL")
         private String mSearchUrl;
+
+        @SerializedName("EXPLORE_SUBJECTS_URL")
+        private String mExploreSubjectsUrl;
 
         @SerializedName("COURSE_INFO_URL_TEMPLATE")
         private String mCourseInfoUrlTemplate;
@@ -130,6 +138,10 @@ public class Config {
 
         public String getCourseSearchUrl() {
             return mSearchUrl;
+        }
+
+        public String getExploreSubjectsUrl() {
+            return mExploreSubjectsUrl;
         }
 
         public String getCourseInfoUrlTemplate() {
@@ -367,6 +379,10 @@ public class Config {
 
     public boolean isNotificationEnabled() {
         return getBoolean(PUSH_NOTIFICATIONS_FLAG, false);
+    }
+
+    public boolean isNewLogistrationEnabled() {
+        return getBoolean(NEW_LOGISTRATION_ENABLED, false);
     }
 
     /**

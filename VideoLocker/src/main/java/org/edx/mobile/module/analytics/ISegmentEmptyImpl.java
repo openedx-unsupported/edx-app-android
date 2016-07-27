@@ -129,6 +129,16 @@ public class ISegmentEmptyImpl implements ISegment {
     }
 
     @Override
+    public Properties trackDiscoverCoursesClicked() {
+        return null;
+    }
+
+    @Override
+    public Properties trackExploreSubjectsClicked() {
+        return null;
+    }
+
+    @Override
     public Properties trackUserSignUpForAccount() {
         return null;
     }

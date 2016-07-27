@@ -7,6 +7,7 @@
 
 package org.edx.mobile.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +30,6 @@ import com.joanzapata.iconify.widget.IconImageView;
 
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
-import org.edx.mobile.base.FindCoursesBaseActivity;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.course.GetCourseDetailTask;
@@ -39,7 +38,6 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.ServiceManager;
 import org.edx.mobile.task.EnrollForCourseTask;
 import org.edx.mobile.task.GetEnrolledCourseTask;
-import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.WebViewUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 import org.edx.mobile.util.images.TopAnchorFillWidthTransformation;
@@ -53,6 +51,8 @@ import roboguice.inject.InjectExtra;
 
 
 public class CourseDetailFragment extends BaseFragment {
+
+    private static final int LOG_IN_REQUEST_CODE = 42;
 
     @Nullable
     private GetCourseDetailTask getCourseDetailTask;
@@ -308,10 +308,22 @@ public class CourseDetailFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOG_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            enrollInCourse();
+        }
+    }
+
     /**
      * Enroll in a course, Then open the course dashboard of the enrolled course.
      */
     public void enrollInCourse() {
+        if (null == environment.getLoginPrefs().getUsername()) {
+            startActivityForResult(environment.getRouter().getRegisterIntent(), LOG_IN_REQUEST_CODE);
+            return;
+        }
         environment.getSegment().trackEnrollClicked(courseDetail.course_id, emailOptIn);
         EnrollForCourseTask enrollForCourseTask = new EnrollForCourseTask(getActivity(),
                 courseDetail.course_id, emailOptIn) {

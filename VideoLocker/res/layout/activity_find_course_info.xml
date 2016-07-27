@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_act_background"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/offline_bar"
-        style="@style/offline_bar"
-        android:visibility="gone"
-        android:layout_alignParentTop="true"/>
-
-    <org.edx.mobile.view.custom.EdxWebView
-        android:id="@+id/webview"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/grey_act_background"
-        android:layout_below="@id/offline_bar"/>
+        android:orientation="vertical">
 
-    <include layout="@layout/loading_indicator" />
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/offline_mode_message"
-        style="@style/offline_mode_message"/>
-</RelativeLayout>
+        <org.edx.mobile.view.custom.EdxWebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/offline_bar"
+            android:background="@color/grey_act_background" />
+
+        <include layout="@layout/loading_indicator" />
+
+        <TextView
+            android:id="@+id/offline_mode_message"
+            style="@style/offline_mode_message" />
+    </RelativeLayout>
+
+    <fragment
+        android:name="org.edx.mobile.view.LogInSignUpFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="org.edx.mobile.view.LogInSignUpFragment" />
+</LinearLayout>

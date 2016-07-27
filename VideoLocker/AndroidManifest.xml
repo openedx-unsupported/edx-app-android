@@ -63,6 +63,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:name="org.edx.mobile.view.DiscoveryLaunchActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name="org.edx.mobile.view.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -158,6 +164,12 @@
         <activity
             android:name=".view.WebViewFindCoursesActivity"
             android:label="@string/find_courses_title"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".view.WebViewExploreSubjectsActivity"
+            android:label="@string/launch_explore_subjects"
             android:screenOrientation="portrait">
         </activity>
 

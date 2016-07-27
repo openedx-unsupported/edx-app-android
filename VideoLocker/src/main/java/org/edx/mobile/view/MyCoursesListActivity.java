@@ -11,7 +11,7 @@ import org.edx.mobile.base.BaseSingleFragmentActivity;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.notification.NotificationDelegate;
-import org.edx.mobile.util.images.IntentFactory;
+import org.edx.mobile.util.IntentFactory;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
     public static Intent newIntent() {
         // These flags will make it so we only have a single instance of this activity,
         // but that instance will not be restarted if it is already running
-        return IntentFactory.newIntentForComponent()
+        return IntentFactory.newIntentForComponent(MyCoursesListActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     }
 

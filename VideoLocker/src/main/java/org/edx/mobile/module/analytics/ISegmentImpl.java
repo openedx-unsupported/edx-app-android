@@ -501,6 +501,24 @@ public class ISegmentImpl implements ISegment {
         return aEvent.properties;
     }
 
+    @Override
+    public Properties trackDiscoverCoursesClicked() {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.DISCOVER_COURSES_CLICK);
+        aEvent.setAppNameContext();
+        tracker.track(Events.DISCOVER_COURSES, aEvent.properties);
+        return aEvent.properties;
+    }
+
+    @Override
+    public Properties trackExploreSubjectsClicked() {
+        SegmentAnalyticsEvent aEvent = new SegmentAnalyticsEvent();
+        aEvent.properties.putValue(Keys.NAME, Values.EXPLORE_SUBJECTS_CLICK);
+        aEvent.setAppNameContext();
+        tracker.track(Events.EXPLORE_SUBJECTS, aEvent.properties);
+        return aEvent.properties;
+    }
+
     /**
      * This function is used to track User Login activity
      * Method will take the following inputs “Password”|”Google”|”Facebook”
