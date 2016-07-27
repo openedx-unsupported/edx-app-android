@@ -20,6 +20,9 @@ dependencies:
         - echo "y" | android update sdk --no-ui --all --filter extra-google-m2repository
         - echo "y" | android update sdk --no-ui --all --filter extra-google-google_play_services
         - echo "y" | android update sdk --no-ui --all --filter extra-google-analytics_sdk_v2
+    override:
+        - rm -rf ~/.m2 ~/.gradle
+        - gradle dependencies --stacktrace --info
     post:
         - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/production ./config
         - cp -r config/pro/gradle.properties VideoLocker/gradle.properties
