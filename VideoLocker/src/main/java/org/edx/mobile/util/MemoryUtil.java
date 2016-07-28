@@ -10,6 +10,7 @@ import java.io.File;
 public class MemoryUtil {
     
     public static final long GB = 1024 * 1024 * 1024;
+    public static final long MB = 1024 * 1024;
 
     /**
      * Returns available number of bytes in external memory.

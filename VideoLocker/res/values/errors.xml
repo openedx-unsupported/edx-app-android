@@ -44,7 +44,7 @@
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
     <string name="file_size_exceeded">The size of the download exceeds the remaining device storage space.</string>
     <!-- Confirmation message shown when attempting to download a large quantity of video data -->
-    <string name="download_exceed_message">The videos you’ve selected are larger than 1 GB. 
+    <string name="download_exceed_message">The videos you’ve selected are larger than %1$s.
         Do you want to download these videos?</string>
     
     <!-- Message shown when user attempts to download a video over cellular data,

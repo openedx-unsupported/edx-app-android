@@ -266,38 +266,16 @@ public class CourseUnitVideoFragment extends CourseUnitFragment
     }
 
     private void startOnlinePlay(DownloadEntry model){
-
         if ( !isPlayerVisible()) {
             // don't try to showPlayer() if already shown here
             // this will cause player to freeze
             showPlayer();
         }
-
-        DownloadEntry de = (DownloadEntry) model;
+        DownloadEntry de = model;
         addVideoDatatoDb(de);
-
-
         playVideoModel(model);
         notifyAdapter();
     }
-
-
-    private void startOnlineDownload(DownloadEntry videoData, ProgressWheel progressWheel){
-        long downloadSize = videoData.size;
-        if (downloadSize > MemoryUtil
-            .getAvailableExternalMemory(getActivity())) {
-            ((BaseFragmentActivity) getActivity())
-                .showInfoMessage(getString(R.string.file_size_exceeded));
-            notifyAdapter();
-        } else {
-            if (downloadSize < MemoryUtil.GB) {
-                startDownload(videoData, progressWheel);
-            } else {
-                showStartDownloadDialog(videoData, progressWheel);
-            }
-        }
-    }
-
 
     public synchronized void playVideoModel(final DownloadEntry video) {
         try {
