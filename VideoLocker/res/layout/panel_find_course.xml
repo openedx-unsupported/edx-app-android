@@ -36,7 +36,7 @@
             android:layout_below="@+id/findcourse_tv"
             android:layout_centerInParent="true"
 			android:padding="10dp"
-            android:background="@drawable/bt_blue"
+            android:background="@drawable/edx_brand_button"
             android:text="@string/find_course_btn_text"
             android:textAllCaps="true"
             android:textColor="@color/white"

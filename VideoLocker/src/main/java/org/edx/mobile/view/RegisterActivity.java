@@ -555,14 +555,12 @@ public class RegisterActivity extends BaseFragmentActivity
 
     //Disable the Create button during server call
     private void createButtonDisabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.new_bt_signin_active);
         createAccountBtn.setEnabled(false);
         createAccountTv.setText(getString(R.string.create_account_text));
     }
 
     //Enable the Create button during server call
     private void createButtonEnabled() {
-        createAccountBtn.setBackgroundResource(R.drawable.bt_signin_active);
         createAccountBtn.setEnabled(true);
         createAccountTv.setText(getString(R.string.create_account_text));
     }

@@ -52,7 +52,7 @@
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/cyan_circle" />
+                    android:background="@drawable/edx_brand_primary_accent_circle" />
 
                 <TextView
                     android:id="@+id/new_course_content"

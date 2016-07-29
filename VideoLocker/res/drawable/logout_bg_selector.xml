@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/bt_signin_active" android:state_pressed="true"/>
-    <item android:drawable="@drawable/bt_logout_default" android:state_pressed="false"/>
-    <item android:drawable="@drawable/bt_signin_active" android:state_focused="true"/>
-
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/grey_name_background" />
+            <corners android:radius="@dimen/edx_box_radius" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/light_selectable_rounded_box_overlay" />
+</layer-list>

@@ -51,7 +51,8 @@
         android:layout_height="wrap_content"
         android:padding="10dp" >
 
-        <ImageView
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
             android:id="@+id/video_watched_status"
             android:layout_width="13dp"
             android:layout_height="13dp"
@@ -60,7 +61,9 @@
             android:layout_marginStart="10dp"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/cyan_circle"
+            android:progressDrawable="@drawable/video_watched_progress"
+            tools:progress="50"
+            android:max="100"
             tools:targetApi="17" />
 
         <TextView
@@ -73,9 +76,10 @@
             android:layout_toRightOf="@id/video_watched_status"
             android:layout_toEndOf="@id/video_watched_status"
             android:ellipsize="end"
-            android:maxWidth="@dimen/width_video_text"
             android:singleLine="true"
             tools:text="Video Title"
+            android:layout_toLeftOf="@+id/video_select_checkbox"
+            android:layout_toStartOf="@+id/video_select_checkbox"
             android:textColor="@color/grey_text_mycourse"
             android:textSize="16sp"
             tools:targetApi="17"
@@ -113,58 +117,18 @@
             tools:text="200 MB"
             android:textColor="@color/grey_video_size_text"
             android:textSize="13sp"
-            tools:targetApi="17"
- />
-
-        <LinearLayout
-            android:id="@+id/download_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="-4dp"
-            android:layout_marginEnd="-4dp"
-            android:visibility="gone"
-            tools:targetApi="17" >
-
-            <include layout="@layout/view_progress_wheel" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/video_download_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="-3dp"
-            android:layout_marginEnd="-3dp"
-            android:background="@android:color/transparent"
-            android:padding="10dp"
-            android:visibility="gone"
-            tools:targetApi="17" >
-
-            <ImageView
-                android:id="@+id/video_start_download"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:contentDescription="@string/course_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_download" />
-        </LinearLayout>
+            tools:targetApi="17" />
 
         <CheckBox
             android:id="@+id/video_select_checkbox"
-            android:layout_width="@dimen/checkbox_size"
-            android:layout_height="@dimen/checkbox_size"
+            android:layout_width="@dimen/fa_large"
+            android:layout_height="@dimen/fa_large"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="320dp"
-            android:layout_marginStart="320dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:button="@drawable/checkbox_selector"
+            android:layout_marginLeft="@dimen/edx_margin"
             android:visibility="invisible"
+            tools:visibility="visible"
             tools:targetApi="17" />
     </RelativeLayout>
 

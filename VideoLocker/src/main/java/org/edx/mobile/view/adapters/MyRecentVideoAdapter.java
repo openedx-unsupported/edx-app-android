@@ -1,12 +1,15 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.ClipDrawable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.CheckboxDrawableUtil;
 import org.edx.mobile.util.MemoryUtil;
 
 public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemInterface> {
@@ -65,13 +69,12 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                         new DataCallback<DownloadEntry.WatchedState>(true) {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
-                        DownloadEntry.WatchedState ws = result;
-                        if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.cyan_circle);
+                        DownloadEntry.WatchedState ws = result;if(ws == null || ws == DownloadEntry.WatchedState.UNWATCHED) {
+                            holder.video_watched_status.setProgress(100);
                         } else if(ws == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
-                            holder.video_watched_status.setImageResource(R.drawable.ic_partially_watched);
+                            holder.video_watched_status.setProgress(50);
                         } else {
-                            holder.video_watched_status.setImageResource(R.drawable.grey_circle);
+                            holder.video_watched_status.setProgress(0);
                         }
                     }
                     @Override
@@ -117,7 +120,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                 .findViewById(R.id.video_playing_time);
         holder.videoSize = (TextView) convertView
                 .findViewById(R.id.video_size);
-        holder.video_watched_status = (ImageView) convertView
+        holder.video_watched_status = (ProgressBar) convertView
                 .findViewById(R.id.video_watched_status);
         holder.section_title = (TextView) convertView
                 .findViewById(R.id.txt_chapter_title);
@@ -138,7 +141,14 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
                 }
             }
         });
-
+        holder.delete_checkbox.setButtonDrawable(
+                CheckboxDrawableUtil.createStateListDrawable(
+                        holder.delete_checkbox.getContext(),
+                        R.dimen.fa_large,
+                        R.color.edx_brand_primary_base,
+                        R.color.edx_grayscale_neutral_x_dark
+                )
+        );
         return holder;
     }
 
@@ -146,7 +156,7 @@ public abstract class MyRecentVideoAdapter extends VideoBaseAdapter<SectionItemI
         TextView videoTitle;
         TextView videoPlayingTime;
         TextView videoSize;
-        ImageView video_watched_status;
+        ProgressBar video_watched_status;
         CheckBox delete_checkbox;
         TextView section_title;
         RelativeLayout videolayout;

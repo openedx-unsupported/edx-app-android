@@ -402,12 +402,10 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     public boolean tryToSetUIInteraction(boolean enable) {
         if (enable) {
             unblockTouch();
-            activityLoginBinding.loginButtonLayout.setBackgroundResource(R.drawable.bt_signin_active);
             activityLoginBinding.loginButtonLayout.setEnabled(enable);
             activityLoginBinding.loginBtnTv.setText(getString(R.string.login));
         } else {
             blockTouch();
-            activityLoginBinding.loginButtonLayout.setBackgroundResource(R.drawable.new_bt_signin_active);
             activityLoginBinding.loginButtonLayout.setEnabled(enable);
             activityLoginBinding.loginBtnTv.setText(getString(R.string.signing_in));
         }

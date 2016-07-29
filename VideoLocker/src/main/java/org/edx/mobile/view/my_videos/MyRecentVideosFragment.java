@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -40,6 +38,7 @@ import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
 import org.edx.mobile.task.GetRecentDownloadedVideosTask;
 import org.edx.mobile.util.AppConstants;
+import org.edx.mobile.util.CheckboxDrawableUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.UiUtil;
 import org.edx.mobile.view.adapters.MyRecentVideoAdapter;
@@ -63,9 +62,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     private int playingVideoIndex = -1;
     private DownloadEntry videoModel;
     private Button deleteButton;
-    private CheckBox deleteCheckBox;
-    private MenuItem deleteCheckBoxMenuItem;
-    private CompoundButton.OnCheckedChangeListener deleteCheckBoxChangeListener;
+    private MenuItem selectAllMenuItem;
     private final Logger logger = new Logger(getClass().getName());
     private GetRecentDownloadedVideosTask getRecentDownloadedVideosTask;
 
@@ -122,7 +119,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
                     int selectedItemsCount = adapter.getSelectedVideoItemsCount();
                     int totalVideos = adapter.getTotalVideoItemsCount();
                     deleteButton.setEnabled(selectedItemsCount > 0);
-                    setCheckBoxChecked(selectedItemsCount == totalVideos);
+                    setSelectAllChecked(selectedItemsCount == totalVideos);
                 }
             };
             if (videoModel != null) {
@@ -142,7 +139,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     public void onStart() {
         super.onStart();
         showDeletePanel(getView());
-        setCheckBoxVisible(false);
+        setDeleteMode(false);
     }
 
     @Override
@@ -186,45 +183,48 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     }
 
     @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        selectAllMenuItem = null;
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.video_list, menu);
-        deleteCheckBoxMenuItem = menu.findItem(R.id.delete_checkbox);
-        deleteCheckBoxMenuItem.setVisible(AppConstants.myVideosDeleteMode);
-        deleteCheckBox = (CheckBox) deleteCheckBoxMenuItem.getActionView()
-                .findViewById(R.id.select_checkbox);
-        deleteCheckBox.setChecked(adapter.getSelectedVideoItemsCount() ==
-                adapter.getTotalVideoItemsCount());
-        if (deleteCheckBoxChangeListener == null) {
-            deleteCheckBoxChangeListener = new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        adapter.selectAll();
-                    } else {
-                        adapter.unselectAll();
-                    }
-                    notifyAdapter();
-                    deleteButton.setEnabled(isChecked);
+        if (AppConstants.myVideosDeleteMode) {
+            inflater.inflate(R.menu.video_list, menu);
+            selectAllMenuItem = menu.findItem(R.id.delete_checkbox);
+            setSelectAllChecked(adapter.getSelectedVideoItemsCount() == adapter.getTotalVideoItemsCount());
+        }
+    }
+
+    private void setSelectAllChecked(boolean isChecked) {
+        selectAllMenuItem.setChecked(isChecked);
+        selectAllMenuItem.setIcon(CheckboxDrawableUtil.createActionBarDrawable(getActivity(), isChecked));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_checkbox: {
+                selectAllMenuItem.setChecked(!selectAllMenuItem.isChecked());
+                if (selectAllMenuItem.isChecked()) {
+                    adapter.selectAll();
+                } else {
+                    adapter.unselectAll();
                 }
-            };
+                notifyAdapter();
+                deleteButton.setEnabled(selectAllMenuItem.isChecked());
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
         }
-        deleteCheckBox.setOnCheckedChangeListener(deleteCheckBoxChangeListener);
     }
 
-    private void setCheckBoxChecked(boolean checked) {
-        // Temporarily remove the listener so that this isn't handled
-        // as a user action to uncheck all items.
-        deleteCheckBox.setOnCheckedChangeListener(null);
-        deleteCheckBox.setChecked(checked);
-        deleteCheckBox.setOnCheckedChangeListener(deleteCheckBoxChangeListener);
-    }
-
-    private void setCheckBoxVisible(boolean visible) {
-        AppConstants.myVideosDeleteMode = visible;
-        if (deleteCheckBoxMenuItem != null) {
-            deleteCheckBoxMenuItem.setVisible(visible);
-            setCheckBoxChecked(false);
-        }
+    private void setDeleteMode(boolean inDeleteMode) {
+        AppConstants.myVideosDeleteMode = inDeleteMode;
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     private void addToRecentAdapter() {
@@ -383,7 +383,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         view.findViewById(R.id.delete_button_panel).setVisibility(View.GONE);
 
         // hide checkbox in action bar
-        setCheckBoxVisible(false);
+        setDeleteMode(false);
 
         // hide checkboxes in list
         notifyAdapter();
@@ -433,8 +433,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             public void onClick(View v) {
                 editButton.setVisibility(View.VISIBLE);
                 videoListView.setOnItemClickListener(adapter);
-                AppConstants.myVideosDeleteMode = false;
-                setCheckBoxVisible(false);
+                setDeleteMode(false);
                 adapter.unselectAll();
                 notifyAdapter();
                 deleteButton.setVisibility(View.GONE);
@@ -447,13 +446,12 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             @Override
             public void onClick(View v) {
                 editButton.setVisibility(View.GONE);
-                AppConstants.myVideosDeleteMode = true;
+                setDeleteMode(true);
                 notifyAdapter();
                 videoListView.setOnItemClickListener(null);
                 deleteButton.setEnabled(false);
                 deleteButton.setVisibility(View.VISIBLE);
                 cancelButton.setVisibility(View.VISIBLE);
-                setCheckBoxVisible(true);
             }
         });
     }
@@ -512,7 +510,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         addToRecentAdapter();
         notifyAdapter();
         videoListView.setOnItemClickListener(adapter);
-        setCheckBoxVisible(false);
+        setDeleteMode(false);
         if (deletedVideoCount > 0) {
             UiUtil.showMessage(getView(), ResourceUtil.getFormattedStringForQuantity(getResources(),
                     R.plurals.deleted_video, "video_count", deletedVideoCount).toString());

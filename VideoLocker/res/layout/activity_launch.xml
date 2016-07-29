@@ -35,7 +35,7 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="25dp"
-                android:background="@drawable/bt_signin_active"
+                android:background="@drawable/edx_brand_button"
                 android:contentDescription="@string/sign_up_and_learn"
                 android:padding="5dp"
                 android:text="@string/sign_up_and_learn"

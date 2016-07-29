@@ -183,7 +183,6 @@
         <item name="android:maxHeight">@dimen/video_player_seekbar_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_seekbar_right_margin</item>
         <item name="android:layout_marginEnd">@dimen/video_player_seekbar_right_margin</item>
-        <item name="android:background">@drawable/ic_seek_background</item>
         <item name="android:progressDrawable">@drawable/player_seekbar_progress</item>
         <item name="android:thumb">@drawable/player_seekbar_thumb</item>
         <item name="android:thumbOffset">0dp</item>
@@ -305,7 +304,7 @@
         <item name="android:paddingLeft">@dimen/widget_margin</item>
         <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:background">@drawable/edx_creation_button</item>
+        <item name="android:background">@drawable/edx_brand_button</item>
         <item name="android:textColor">@color/edx_grayscale_neutral_white</item>
         <item name="android:textSize">@dimen/edx_base</item>
     </style>
@@ -318,7 +317,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/edx_button_height</item>
         <item name="android:layout_marginTop">@dimen/edx_margin</item>
-        <item name="android:background">@drawable/bt_signin_active</item>
+        <item name="android:background">@drawable/edx_brand_button</item>
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">
@@ -335,7 +334,7 @@
         <item name="android:paddingLeft">@dimen/widget_margin</item>
         <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:background">@drawable/edx_creation_button</item>
+        <item name="android:background">@drawable/edx_brand_button</item>
     </style>
 
     <style name="edX.Widget.CreationButton">

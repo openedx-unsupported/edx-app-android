@@ -32,15 +32,6 @@
         android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/open_in_browser_panel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" >
-
-            <include layout="@layout/panel_external_component" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/delete_button_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
