@@ -1,20 +1,13 @@
 package org.edx.mobile.http;
 
 import org.edx.mobile.http.model.EnrollmentRequestBody;
-import org.edx.mobile.http.serialization.ShareCourseResult;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.model.json.CreateGroupResponse;
-import org.edx.mobile.model.json.SuccessResponse;
-import org.edx.mobile.social.SocialMember;
 
 import java.util.List;
 
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 import retrofit.http.POST;
@@ -22,7 +15,13 @@ import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
-import static org.edx.mobile.http.ApiConstants.*;
+import static org.edx.mobile.http.ApiConstants.COURSE_ID;
+import static org.edx.mobile.http.ApiConstants.URL_COURSE_ENROLLMENTS;
+import static org.edx.mobile.http.ApiConstants.URL_COURSE_OUTLINE;
+import static org.edx.mobile.http.ApiConstants.URL_ENROLLMENT;
+import static org.edx.mobile.http.ApiConstants.URL_LAST_ACCESS_FOR_COURSE;
+import static org.edx.mobile.http.ApiConstants.URL_VIDEO_OUTLINE;
+import static org.edx.mobile.http.ApiConstants.USER_NAME;
 
 /**
  * we group all the mobile endpoints which require oauth token together
@@ -73,8 +72,8 @@ public interface OauthRestApi {
                                                                   @Path(COURSE_ID) String courseId);
 
     @GET(URL_LAST_ACCESS_FOR_COURSE)
-    SyncLastAccessedSubsectionResponse getLastAccessedSubsection( @Path(USER_NAME) String username,
-                                                                  @Path(COURSE_ID) String courseId);
+    SyncLastAccessedSubsectionResponse getLastAccessedSubsection(@Path(USER_NAME) String username,
+                                                                 @Path(COURSE_ID) String courseId);
 
 
     @POST(URL_ENROLLMENT)
