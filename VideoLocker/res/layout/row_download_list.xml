@@ -104,7 +104,7 @@
         android:layout_marginLeft="18dp"
         android:layout_marginStart="18dp"
         android:text="@string/download_failed_text"
-        android:textColor="@color/red_download_failed_text"
+        android:textColor="@color/edx_error_text"
         android:textSize="12sp"
         tools:targetApi="17" />
 

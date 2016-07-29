@@ -25,6 +25,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/error_message"
-        android:textColor="@color/red_error_text"
+        android:textColor="@color/edx_error_text"
         android:textSize="16sp" />
 </LinearLayout>

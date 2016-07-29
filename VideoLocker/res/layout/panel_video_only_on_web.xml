@@ -20,14 +20,14 @@
         android:padding="@dimen/edx_margin"
         android:text="@string/video_only_on_web_label"
         android:textAllCaps="true"
-        android:textColor="@color/cyan_text_navigation"
+        android:textColor="@color/text_navigation"
         android:textSize="14sp"
         tools:targetApi="17" />
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:layout_width="@dimen/fa_x_large"
         android:layout_height="@dimen/fa_x_large"
-        app:iconColor="@color/cyan_text_navigation"
+        app:iconColor="@color/text_navigation"
         app:iconName="fa-share-square-o" />
 
 </LinearLayout>

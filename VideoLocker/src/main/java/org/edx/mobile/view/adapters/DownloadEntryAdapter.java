@@ -34,19 +34,19 @@ public abstract class DownloadEntryAdapter extends BaseListAdapter<DownloadEntry
         switch (item.getStatus()) {
             case PENDING: {
                 progressText = getContext().getString(R.string.download_pending);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_green;
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_success;
                 errorText = null;
                 break;
             }
             case DOWNLOADING: {
                 progressText = getByteCountProgressText(item);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_green;
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_success;
                 errorText = null;
                 break;
             }
             case FAILED: {
                 errorText = getContext().getString(R.string.error_download_failed);
-                progressDrawable = R.drawable.custom_progress_bar_horizontal_red;
+                progressDrawable = R.drawable.custom_progress_bar_horizontal_error;
                 if (item.getDownloadedByteCount() > 0) {
                     progressText = getByteCountProgressText(item);
                 } else {

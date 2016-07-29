@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/discussion_endorsed_response_icon_padding"
             android:text="@string/discussion_responses_answer"
-            android:textColor="@color/edx_utility_success"
+            android:textColor="@color/edx_success_accent"
             android:textSize="@dimen/edx_x_small"
             android:visibility="gone"
             tools:showIn="@layout/row_discussion_responses_response"

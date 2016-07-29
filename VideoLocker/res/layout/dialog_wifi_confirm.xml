@@ -55,7 +55,7 @@
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:text="@string/error_invalid_email"
-        android:textColor="@color/red_error_text"
+        android:textColor="@color/edx_error_text"
         android:textSize="16sp"
         android:visibility="gone" />
 

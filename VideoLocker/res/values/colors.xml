@@ -50,18 +50,15 @@
     <color name="grey_nav_pressed_background">#888889</color>
     <color name="grey_video_size_text">#9EA7B3</color>
     <color name="grey_text_mycourse">#454951</color>
-    <color name="red_error_text">#F47676</color>
     <color name="red_offline_bar">#BA2E6E</color>
     <color name="grey_act_background">#E2E3E5</color>
+    <color name="text_navigation">@color/edx_brand_primary_base</color>
     <color name="grey_text_tab">#898B8E</color>
-    <color name="cyan_text_navigation">#299ED7</color>
-    <color name="progress_wheel_color">#7DC88F</color>
     <color name="offline_text">#BA2E6E</color>
     <color name="offline_panel">#E6BA2E6E</color>
     <color name="white_list_clicked">#F1F1F2</color>
     <color name="transparent_download_bg">#E63E4247</color>
     <color name="video_section_bg">#3E4247</color>
-    <color name="red_download_failed_text">#fd7575</color>
     <color name="tab_bg">#3E4247</color>
     <color name="delete_panel_bg">#3E4247</color>
     <color name="switch_default_button_color">#C3C3C3</color>
@@ -106,8 +103,9 @@
     <color name="edx_grayscale_neutral_black">#111010</color>
     <color name="edx_grayscale_neutral_black_t">#000000</color>
 
-    <color name="edx_utility_success_dark">#1E8142</color>
-    <color name="edx_utility_success">#25B85A</color>
-    <color name="edx_utility_warning">#FDBC56</color>
-    <color name="edx_utility_error">#B20610</color>
+    <color name="edx_success_text">#1E8142</color>
+    <color name="edx_success_accent">#25B85A</color>
+    <color name="edx_warning_accent">#ffc01f</color>
+    <color name="edx_error_text">#B20610</color>
+    <color name="edx_error_accent">#cb0712</color>
 </resources>

@@ -32,8 +32,8 @@
 
                 <gradient
                     android:angle="0"
-                    android:endColor="@color/progress_wheel_color"
-                    android:startColor="@color/progress_wheel_color" 
+                    android:endColor="@color/edx_error_accent"
+                    android:startColor="@color/edx_error_accent"
                     />
             </shape>
         </clip>

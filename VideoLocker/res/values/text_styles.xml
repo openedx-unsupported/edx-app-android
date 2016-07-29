@@ -132,10 +132,6 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="bold_cyan_text" parent="@style/bold_text">
-        <item name="android:textColor">@color/cyan_text_navigation</item>
-    </style>
-
     <style name="semibold_white_text" parent="@style/semibold_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -249,7 +245,7 @@
     <style name="registration_error_message" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/red_error_text</item>
+        <item name="android:textColor">@color/edx_error_text</item>
         <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
         <item name="android:textSize">11sp</item>
         <item name="android:paddingRight">5dp</item>
