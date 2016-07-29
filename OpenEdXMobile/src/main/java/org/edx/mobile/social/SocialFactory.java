@@ -63,8 +63,11 @@ public class SocialFactory {
             return config.getGoogleConfig().isEnabled();
         } else if (type == SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
             return config.getFacebookConfig().isEnabled();
+        }else if (type == SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN) {
+            return config.getGoogleConfig().isEnabled()
+                    || config.getFacebookConfig().isEnabled();
         }
-        return true;
+        return false;
     }
 
 }
