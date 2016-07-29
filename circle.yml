@@ -1,7 +1,7 @@
 general:
     branches:
         only:
-            - proversity/production
+            - proversity/lfm
 
 machine:
     environment:
@@ -23,7 +23,7 @@ dependencies:
     override:
         - ./gradlew dependencies --stacktrace --info
     post:
-        - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/production ./config
+        - git clone git@github.com:proversity-org/edx-deployment-mobile.git --branch proversity/lfm ./config
         - cp -r config/gradle.properties VideoLocker/gradle.properties
         - echo "edx.dir = '../config'" > VideoLocker/edx.properties
         - cp -r config/config.yaml $CIRCLE_ARTIFACTS
@@ -33,7 +33,26 @@ test:
         - ./gradlew testProdReleaseUnitTestCoverage -PdisablePreDex
         - ./gradlew assembleProdRelease -PdisablePreDex
     override:
+        - emulator -avd circleci-android22 -no-audio -no-window:
+            background: true
+            parallel: true
+        - circle-android wait-for-boot
+        - adb shell input keyevent 82 # unlock
+        - adb install VideoLocker/build/outputs/apk/VideoLocker-prod-debug.apk
+        - sleep 30
+        - adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n io.proversity.edx/io.proversity.edx.view.SplashActivity
+        - adb shell screencap /data/local/SplashActivity.png
+        - adb pull /data/local/SplashActivity.png VideoLocker/build/outputs/SplashActivity.png
+        - adb shell am start -W -n io.proversity.edx/io.proversity.edx.view.LoginActivity
+        - adb shell screencap /data/local/LoginActivity.png
+        - adb pull /data/local/LoginActivity.png VideoLocker/build/outputs/LoginActivity.png
         - sleep 10
+        - adb shell am start -W -n io.proversity.edx/io.proversity.edx.view.MyCoursesListActivity
+        - adb shell screencap /data/local/MyCoursesListActivity.png
+        - adb pull /data/local/MyCoursesListActivity.png VideoLocker/build/outputs/MyCoursesListActivity.png
+        - adb shell input tap 720 620 # find courses
+        - adb shell screencap /data/local/NativeFindCoursesActivity.png
+        - adb pull /data/local/NativeFindCoursesActivity.png VideoLocker/build/outputs/NativeFindCoursesActivity.png
     post:
         - cp -r VideoLocker/build/reports $CIRCLE_ARTIFACTS
         - cp -r VideoLocker/build/outputs $CIRCLE_ARTIFACTS
