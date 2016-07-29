@@ -40,14 +40,14 @@ test:
         - adb shell input keyevent 82 # unlock
         - adb install VideoLocker/build/outputs/apk/VideoLocker-prod-release.apk
         - sleep 30
-        - adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n org.proversity.lfm/org.proversity.lfm.view.SplashActivity
+        - adb shell am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -n org.proversity.lfm/org.edx.mobile.view.SplashActivity
         - adb shell screencap /data/local/SplashActivity.png
         - adb pull /data/local/SplashActivity.png VideoLocker/build/outputs/SplashActivity.png
-        - adb shell am start -W -n org.proversity.lfm/org.proversity.lfm.view.LoginActivity
+        - adb shell am start -W -n org.proversity.lfm/org.edx.mobile.view.LoginActivity
         - adb shell screencap /data/local/LoginActivity.png
         - adb pull /data/local/LoginActivity.png VideoLocker/build/outputs/LoginActivity.png
         - sleep 10
-        - adb shell am start -W -n org.proversity.lfm/org.proversity.lfm.view.MyCoursesListActivity
+        - adb shell am start -W -n org.proversity.lfm/org.edx.mobile.view.MyCoursesListActivity
         - adb shell screencap /data/local/MyCoursesListActivity.png
         - adb pull /data/local/MyCoursesListActivity.png VideoLocker/build/outputs/MyCoursesListActivity.png
         - adb shell input tap 720 620 # find courses
