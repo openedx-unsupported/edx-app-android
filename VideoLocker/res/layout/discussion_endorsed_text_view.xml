@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/discussion_responses_answer_text_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:drawablePadding="4dp"
+    android:text="@string/discussion_responses_answer"
+    android:textColor="@color/edx_utility_success"
+    android:textSize="@dimen/edx_x_small"
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:showIn="@layout/discussion_responses_response_row" />

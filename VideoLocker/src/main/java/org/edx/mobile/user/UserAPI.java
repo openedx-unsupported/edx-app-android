@@ -19,7 +19,6 @@ import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IOUtils;
@@ -41,22 +40,19 @@ import retrofit.mime.TypedInput;
 
 @Singleton
 public class UserAPI {
-    private Logger logger = new Logger(UserAPI.class.getName());
-
     @NonNull
     private final UserService userService;
 
-    @Inject
-    private Config config;
+    private Logger logger = new Logger(UserAPI.class.getName());
 
     @Inject
-    private CacheManager cache;
+    Config config;
 
     @Inject
-    private Gson gson;
+    CacheManager cache;
 
     @Inject
-    private LoginPrefs loginPrefs;
+    Gson gson;
 
     @Inject
     public UserAPI(@NonNull RestAdapter restAdapter) {
@@ -66,16 +62,12 @@ public class UserAPI {
     public Account getAccount(@NonNull String username) throws HttpException {
         final Account account = userService.getAccount(username);
         EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-        // Store the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, account.getProfileImage());
         return account;
     }
 
     public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws HttpException {
         final Account updatedAccount = userService.updateAccount(username, Collections.singletonMap(field, value));
         EventBus.getDefault().post(new AccountDataLoadedEvent(updatedAccount));
-        // Update the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, updatedAccount.getProfileImage());
         return updatedAccount;
     }
 
@@ -92,8 +84,6 @@ public class UserAPI {
     public void deleteProfileImage(@NonNull String username) throws HttpException {
         userService.deleteProfileImage(username);
         EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
-        // Delete the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, null);
     }
 
     public Page<BadgeAssertion> getBadges(@NonNull String username, int page) throws HttpException {

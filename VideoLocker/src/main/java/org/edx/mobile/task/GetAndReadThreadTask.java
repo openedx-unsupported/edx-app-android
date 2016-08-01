@@ -25,7 +25,6 @@ public class GetAndReadThreadTask extends Task<DiscussionThread> {
 
     @Override
     protected void onSuccess(DiscussionThread discussionThread) {
-        discussionThread = thread.patchObject(discussionThread);
         EventBus.getDefault().post(new DiscussionThreadUpdatedEvent(discussionThread));
     }
 }

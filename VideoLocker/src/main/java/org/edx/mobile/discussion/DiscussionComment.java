@@ -16,21 +16,13 @@
 
 package org.edx.mobile.discussion;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
-
-import org.edx.mobile.user.DiscussionUser;
-import org.edx.mobile.user.ProfileImage;
-import org.edx.mobile.user.ProfileImageProvider;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class DiscussionComment implements Serializable, IAuthorData, ProfileImageProvider {
+public class DiscussionComment implements Serializable, IAuthorData {
     private @SerializedName("id") String identifier;
     private String parentId;
     private String threadId;
@@ -49,8 +41,6 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     private boolean abuseFlagged = false;
     private List<String> editableFields;
     private int childCount = 0;
-    @Nullable
-    private Map<String, DiscussionUser> users;
 
     public String getIdentifier() {
         return identifier;
@@ -95,7 +85,7 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     public Date getUpdatedAt() {
         return updatedAt;
     }
-
+    
     public boolean isEndorsed() {
         return endorsed;
     }
@@ -161,34 +151,5 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     public boolean isAuthorAnonymous() {
         // because a comment or a response cannot be posted anonymously
         return false;
-    }
-
-    @Nullable
-    public Map<String, DiscussionUser> getUsers() {
-        return users;
-    }
-
-    @Nullable
-    @Override
-    public ProfileImage getProfileImage() {
-        if (users == null) {
-            return null;
-        } else {
-            return users.get(author).getProfile().getImage();
-        }
-    }
-
-    /**
-     * Incase of PATCH calls we get a {@link DiscussionComment} object that doesn't have
-     * {@link #users} object, so, we patch the new object with existing {@link #users}
-     * object.
-     *
-     * @param newObj Updated {@link DiscussionComment} object returned from server.
-     * @return The patched object.
-     */
-    @NonNull
-    public DiscussionComment patchObject(@NonNull DiscussionComment newObj) {
-        newObj.users = users;
-        return newObj;
     }
 }

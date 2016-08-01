@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,32 +12,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="3dp"
-        android:paddingEnd="@dimen/discussion_responses_box_padding"
         android:paddingLeft="@dimen/discussion_responses_box_padding"
-        android:paddingRight="@dimen/discussion_responses_box_padding"
         android:paddingStart="@dimen/discussion_responses_box_padding"
+        android:paddingRight="@dimen/discussion_responses_box_padding"
+        android:paddingEnd="@dimen/discussion_responses_box_padding"
         android:paddingTop="@dimen/discussion_responses_box_padding">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <include layout="@layout/row_discussion_user_profile" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <include
-                layout="@layout/number_responses_or_comments_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/discussion_responses_standard_half_margin" />
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/discussion_responses_thread_row_title_text_view"
@@ -60,6 +40,43 @@
             android:id="@+id/discussion_responses_thread_row_visibility_text_view"
             style="@style/discussion_responses_small_text"
             tools:text="This post is visible to everyone/cohort." />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.edx.mobile.view.custom.IconImageViewXml
+                android:id="@+id/discussion_responses_thread_closed_icon_view"
+                android:layout_width="@dimen/edx_xxx_small"
+                android:layout_height="@dimen/edx_xxx_small"
+                android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
+                android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+                android:visibility="gone"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa-lock" />
+
+            <org.edx.mobile.view.custom.IconImageViewXml
+                android:id="@+id/discussion_responses_thread_row_pinned_icon_view"
+                android:layout_width="@dimen/edx_xxx_small"
+                android:layout_height="@dimen/edx_xxx_small"
+                android:layout_marginEnd="@dimen/discussion_responses_thread_text_view_spacing"
+                android:layout_marginRight="@dimen/discussion_responses_thread_text_view_spacing"
+                android:visibility="gone"
+                app:iconColor="@color/edx_grayscale_neutral_base"
+                app:iconName="fa-thumb-tack" />
+
+            <include layout="@layout/discussion_author_layout" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <include layout="@layout/number_responses_or_comments_layout" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

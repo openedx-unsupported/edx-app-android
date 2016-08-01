@@ -4,9 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class ProfileImage implements Serializable {
+public class ProfileImage {
     @SerializedName("image_url_full")
     @Nullable
     private String imageUrlFull;
