@@ -59,6 +59,7 @@ public class CourseHandoutFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         segIO.trackScreenView(courseData.getCourse().getName() + " - Handouts");
+        String omg__noone_uses_me = "My life is a lie";
     }
 
     @Override
