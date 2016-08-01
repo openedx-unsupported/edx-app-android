@@ -1,6 +1,7 @@
 package org.edx.mobile.player;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +11,9 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.TypedValue;
@@ -115,8 +116,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     private TranscriptManager transcriptManager;
     private TranscriptModel transcript;
     private DownloadEntry videoEntry;
-    private AccessibilityManager.TouchExplorationStateChangeListener touchExplorationStateChangeListener;
-
+    private Object touchExplorationStateChangeListener;
 
     private EnumSet<VideoNotPlayMessageType> curMessageTypes =  EnumSet.noneOf(VideoNotPlayMessageType.class);
 
@@ -361,15 +361,17 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             showProgress();
         }
 
-        boolean touchExploreEnabled = getTouchExploreEnabled();
-        player.setAutoHideControls(!touchExploreEnabled);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            boolean touchExploreEnabled = getTouchExploreEnabled();
+            player.setAutoHideControls(!touchExploreEnabled);
 
-        setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
-            @Override
-            public void onTouchExplorationStateChanged(boolean enabled) {
-                player.setAutoHideControls(!enabled);
-            }
-        });
+            setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
+                @Override
+                public void onTouchExplorationStateChanged(boolean enabled) {
+                    player.setAutoHideControls(!enabled);
+                }
+            });
+        }
 
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
@@ -1352,61 +1354,45 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      */
     private boolean getTouchExploreEnabled() {
         boolean ret = false;
-        AccessibilityManager am = getAccessibilityManager();
-        if (am != null && am.isTouchExplorationEnabled()) {
-            ret = true;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            AccessibilityManager am = getAccessibilityManager();
+            if (am != null && am.isTouchExplorationEnabled()) {
+                ret = true;
+            }
         }
+
         return ret;
     }
 
     /**
-     * @param am The accessibility manager to unregister from
-     * @return True if successful
+     * Sets the current touch explore state change listener and removes the previous one if necessary
+     * @param listener Null value unregisters the current listener, non-null unregisters previous one and registers new one
+     *                 If the current listener is the same as the previous one, no operation is performed.
      */
-    private boolean unregisterTouchExploreChangeListener(@NonNull AccessibilityManager am) {
-        boolean ret = false;
-        if (touchExplorationStateChangeListener == null) {
-            ret = true;
-        }
-        else if (am.removeTouchExplorationStateChangeListener(touchExplorationStateChangeListener)) {
-            touchExplorationStateChangeListener = null;
-            ret = true;
-        }
-        return ret;
-    }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    protected void setTouchExploreChangeListener(@Nullable AccessibilityManager.TouchExplorationStateChangeListener listener) {
 
-    /**
-     * If a listener is previously registered, unregisters then registers this one
-     * @param am The accessibility manager to unregister from/register to
-     * @param listener The new listener
-     * @return True if successful
-     */
-    private boolean registerTouchExploreChangeListener(@NonNull AccessibilityManager am, @NonNull AccessibilityManager.TouchExplorationStateChangeListener listener) {
-        boolean ret = false;
-        if (unregisterTouchExploreChangeListener(am) && am.addTouchExplorationStateChangeListener(listener)) {
-            touchExplorationStateChangeListener = listener;
-            ret = true;
-        }
-        return ret;
-    }
-
-    protected boolean setTouchExploreChangeListener(@Nullable AccessibilityManager.TouchExplorationStateChangeListener listener) {
-        boolean ret = false;
+        // if current touchExplorerStateChangeListener is identical to previous one, no operation is necessary
         if (listener != touchExplorationStateChangeListener) {
             AccessibilityManager am = getAccessibilityManager();
             if (am != null) {
+
+                /* touch explorer state listeners are additive (i.e. adding one doesn't remove the previous one), so we need to be careful
+                * and only register one at a time. so, if the one we currently have is valid (non-null), unregister it.
+                * If the new one is valid (non-null) register it.
+                */
+                if (touchExplorationStateChangeListener != null) {
+                    am.removeTouchExplorationStateChangeListener((AccessibilityManager.TouchExplorationStateChangeListener) touchExplorationStateChangeListener);
+                }
+
                 if (listener != null) {
-                    ret = registerTouchExploreChangeListener(am, listener);
+                    am.addTouchExplorationStateChangeListener(listener);
                 }
-                else {
-                    ret = unregisterTouchExploreChangeListener(am);
-                }
+
+                touchExplorationStateChangeListener = listener;
             }
         }
-        else {
-            ret = true;
-        }
-        return ret;
     }
 
     //The method that displays the popup.
@@ -1890,5 +1876,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
         player.setFullScreen(isLandscape);
         updateController("orientation change");
+        player.requestAccessibilityFocusPausePlay();
     }
 }
