@@ -28,7 +28,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     private final int MY_COURSE_LOADER_ID = 0x905000;
 
-    protected TextView noCourseText;
+    protected View noCourseText;
     private boolean refreshOnResume;
 
     @Inject
@@ -49,7 +49,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        noCourseText = (TextView) view.findViewById(R.id.no_course_tv);
+        noCourseText = view.findViewById(R.id.no_course_tv);
         return view;
     }
 
@@ -73,15 +73,12 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
     @Override
     public void onLoadFinished(Loader<AsyncTaskResult<List<EnrolledCoursesResponse>>> asyncTaskResultLoader, AsyncTaskResult<List<EnrolledCoursesResponse>> result) {
-
-        progressBar.setVisibility(View.GONE);
-
         if (result == null) {
             logger.warn("result is found null, was expecting non-null");
             return;
         }
 
-        myCourseList.setVisibility(View.VISIBLE);
+        adapter.clear();
 
         if (result.getEx() != null) {
             logger.error(result.getEx());
@@ -96,21 +93,24 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
                         environment.getNotificationDelegate());
             }
         } else if (result.getResult() != null) {
-            invalidateSwipeFunctionality();
-
             ArrayList<EnrolledCoursesResponse> newItems = new ArrayList<EnrolledCoursesResponse>(result.getResult());
 
             ((MyCoursesListActivity) getActivity()).updateDatabaseAfterDownload(newItems);
 
-            if (result.getResult().size() == 0) {
-                adapter.clear();
-            } else {
+            if (result.getResult().size() > 0) {
                 adapter.setItems(newItems);
                 adapter.notifyDataSetChanged();
             }
+        }
 
+        invalidateSwipeFunctionality();
+        progressBar.setVisibility(View.GONE);
+        if (adapter.isEmpty()) {
+            myCourseList.setVisibility(View.GONE);
+            noCourseText.setVisibility(View.VISIBLE);
         } else {
-            adapter.clear();
+            myCourseList.setVisibility(View.VISIBLE);
+            noCourseText.setVisibility(View.GONE);
         }
     }
 

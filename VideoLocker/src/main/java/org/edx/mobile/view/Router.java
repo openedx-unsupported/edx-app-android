@@ -304,6 +304,9 @@ public class Router {
     }
 
     public void showFindCourses(@NonNull Context context) {
+        if (!config.getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            throw new RuntimeException("Course discovery is not enabled");
+        }
         final Intent findCoursesIntent;
         if (config.getCourseDiscoveryConfig().isWebviewCourseDiscoveryEnabled()) {
             findCoursesIntent = new Intent(context, WebViewFindCoursesActivity.class);
