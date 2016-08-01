@@ -83,7 +83,7 @@ public abstract class FindCoursesBaseActivity extends BaseFragmentActivity imple
 
     @Override
     public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+//        super.onDetachedFromWindow();
         webview.destroy();
     }
 
