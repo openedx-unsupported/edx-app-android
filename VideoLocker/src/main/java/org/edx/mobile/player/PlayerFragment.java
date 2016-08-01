@@ -1723,6 +1723,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
         try{
             if (subtitleDisplayHandler != null) {
                 subtitleDisplayHandler.removeCallbacks(subtitleProcessesor);
+                throw new RuntimeException("meow"); // STOPSHIP: I don't want to ship this 🐱
             }
             resetClosedCaptioning();
             if(srtList!=null && srtList.size()>0){
