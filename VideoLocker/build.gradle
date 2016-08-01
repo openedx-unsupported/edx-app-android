@@ -302,9 +302,10 @@ android {
     }
 
     lintOptions {
-        abortOnError false
-        lintConfig file("lint.xml")
-        disable 'MissingTranslation'
+        abortOnError true
+        showAll true
+        warning 'TypographyQuotes', 'InvalidPackage', 'ValidFragment', 'NewApi'
+        error 'StopShip'
     }
 
     productFlavors {

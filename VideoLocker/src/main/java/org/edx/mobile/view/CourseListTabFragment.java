@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
@@ -29,8 +29,6 @@ import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.adapters.MyCourseAdapter;
 
 import java.util.List;
-
-import org.edx.mobile.base.BaseFragment;
 
 public abstract class CourseListTabFragment extends BaseFragment implements NetworkObserver, LoaderManager.LoaderCallbacks<AsyncTaskResult<List<EnrolledCoursesResponse>>> {
 
@@ -111,7 +109,7 @@ public abstract class CourseListTabFragment extends BaseFragment implements Netw
             }
         });
 
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 R.color.grey_act_background, R.color.grey_act_background,
                 R.color.grey_act_background);
 

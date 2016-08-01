@@ -44,6 +44,15 @@ task copyUnitTestBuildArtifacts << { task ->
 }
 copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
+// Copies lint report to the 'artifacts' directory
+task copyLintBuildArtifacts(type: Copy) {
+    from 'VideoLocker/build/outputs'
+    into 'artifacts'
+    include 'lint-results*'
+    include 'lint-results*/**'
+}
+copyLintBuildArtifacts.dependsOn createBuildArtifactsDirectory
+
 // Copies acceptance test reports to the 'artifacts' directory
 task copyAcceptanceTestBuildArtifacts << { task ->
     // copy acceptance test reports
