@@ -16,5 +16,5 @@
             </item>
         </selector>
     </item>
-    <item android:drawable="@drawable/light_selectable_box_overlay" />
+    <item android:drawable="@drawable/light_selectable_rounded_box_overlay" />
 </layer-list>

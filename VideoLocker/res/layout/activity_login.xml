@@ -81,6 +81,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
+                            android:focusable="true"
+                            android:background="@drawable/selectable_box_overlay"
                             android:text="@string/forgot_password"
                             android:textColor="@color/text_navigation"
                             android:textSize="12sp" />
@@ -88,6 +90,7 @@
                         <FrameLayout
                             android:id="@+id/login_button_layout"
                             style="@style/edX.Widget.SignInButtonLayout"
+                            android:focusable="true"
                             android:contentDescription="@string/login_btn">
 
                             <TextView
@@ -125,12 +128,14 @@
                         <TextView
                             android:id="@+id/end_user_agreement_tv"
                             style="@style/regular_text"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:gravity="center"
-                            android:linksClickable="true"
                             android:textColor="@color/text_navigation"
+                            android:background="@drawable/selectable_box_overlay"
                             android:textSize="11sp"
+                            android:focusable="true"
                             tools:text="@string/licensing_agreement" />
 
                         <TextView

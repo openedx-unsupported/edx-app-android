@@ -16,6 +16,7 @@
         android:paddingStart="5dp"
         android:paddingRight="10dp"
         android:paddingEnd="10dp"
+        android:focusable="true"
         tools:targetApi="17"/>
 
     <TextView

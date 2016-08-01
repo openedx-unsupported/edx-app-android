@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/light_selectable_box_overlay"
+            android:focusable="true"
             android:padding="@dimen/edx_margin"
             android:text="@string/launch_register"
             android:textColor="@color/white"
@@ -30,9 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/light_selectable_box_overlay"
+            android:focusable="true"
             android:padding="@dimen/edx_margin"
             android:text="@string/login"
             android:textColor="@color/white"
+
             android:textSize="@dimen/edx_base" />
     </LinearLayout>
 </layout>

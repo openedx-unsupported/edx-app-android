@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -56,6 +55,8 @@ public class RegisterActivity extends BaseFragmentActivity
     private TextView createAccountTv;
     private List<IRegistrationFieldView> mFieldViews = new ArrayList<>();
     private SocialLoginDelegate socialLoginDelegate;
+    private View facebookButton;
+    private View googleButton;
 
     @Inject
     LoginPrefs loginPrefs;
@@ -74,30 +75,27 @@ public class RegisterActivity extends BaseFragmentActivity
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
 
-        boolean isSocialEnabled = SocialFactory.isSocialFeatureEnabled(
-                getApplicationContext(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_UNKNOWN, environment.getConfig());
+        boolean isSocialEnabled = false;
+        facebookButton = findViewById(R.id.facebook_button);
+        googleButton = findViewById(R.id.google_button);
 
+        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK, environment.getConfig())) {
+            facebookButton.setVisibility(View.GONE);
+        } else {
+            isSocialEnabled = true;
+            facebookButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
+        }
+
+        if (!SocialFactory.isSocialFeatureEnabled(getApplication(), SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE, environment.getConfig())) {
+            googleButton.setVisibility(View.GONE);
+        } else {
+            isSocialEnabled = true;
+            googleButton.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
+        }
         if (!isSocialEnabled) {
             findViewById(R.id.panel_social_layout).setVisibility(View.GONE);
             findViewById(R.id.or_signup_with_email_title).setVisibility(View.GONE);
             findViewById(R.id.signup_with_row).setVisibility(View.GONE);
-        } else {
-            ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
-            ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
-
-            if (!environment.getConfig().getFacebookConfig().isEnabled()) {
-                findViewById(R.id.img_facebook).setVisibility(View.GONE);
-            } else {
-                imgFacebook.setClickable(true);
-                imgFacebook.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
-            }
-
-            if (!environment.getConfig().getGoogleConfig().isEnabled()) {
-                findViewById(R.id.img_google).setVisibility(View.GONE);
-            } else {
-                imgGoogle.setClickable(true);
-                imgGoogle.setOnClickListener(socialLoginDelegate.createSocialButtonClickHandler(SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
-            }
         }
 
         TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
@@ -580,10 +578,8 @@ public class RegisterActivity extends BaseFragmentActivity
             v.setEnabled(enable);
         }
 
-        ImageView imgFacebook = (ImageView) findViewById(R.id.img_facebook);
-        ImageView imgGoogle = (ImageView) findViewById(R.id.img_google);
-        imgFacebook.setClickable(enable);
-        imgGoogle.setClickable(enable);
+        facebookButton.setClickable(enable);
+        googleButton.setClickable(enable);
 
         return true;
     }

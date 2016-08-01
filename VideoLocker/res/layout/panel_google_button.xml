@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:id="@+id/google_layout"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_weight="0.5"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/google_text"
+        android:focusable="true"
+        android:foreground="@drawable/light_selectable_rounded_box_overlay"
         android:gravity="center_vertical">
 
         <ImageView
-            android:id="@+id/img_google"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/selector_google_button"
-            android:contentDescription="@string/google_text" />
+            android:background="@drawable/bt_google"
+            android:contentDescription="@null" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,11 +22,11 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imgview_google"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_googleplus" />
 
             <View
@@ -44,5 +44,5 @@
                 android:textColor="@color/white"
                 android:textSize="13sp" />
         </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 </layout>

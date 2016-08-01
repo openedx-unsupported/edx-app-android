@@ -2,5 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
     android:autoMirrored="true">
     <item android:drawable="@drawable/spinner_grey_active" android:state_pressed="true"/>
+    <item android:drawable="@drawable/spinner_grey_active" android:state_focused="true"/>
     <item android:drawable="@drawable/spinner_grey_default"/>
 </selector>
