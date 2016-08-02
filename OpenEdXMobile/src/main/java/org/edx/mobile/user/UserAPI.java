@@ -26,7 +26,6 @@ import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,7 +181,7 @@ public class UserAPI {
         if (tryCache) {
             try {
                 json = cache.get(cacheKey);
-            } catch (IOException | NoSuchAlgorithmException e) {
+            } catch (IOException e) {
                 logger.debug(e.toString());
             }
         }
@@ -195,7 +194,7 @@ public class UserAPI {
                 // cache result
                 try {
                     cache.put(cacheKey, json);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     logger.debug(e.toString());
                 }
             } else {
@@ -205,7 +204,7 @@ public class UserAPI {
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
-                } catch (IOException | NoSuchAlgorithmException e) {
+                } catch (IOException e) {
                     logger.debug(e.toString());
                     throw new HttpResponseStatusException(response.code());
                 }

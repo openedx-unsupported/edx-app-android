@@ -1,27 +1,33 @@
 package org.edx.mobile.util;
 
+import android.support.annotation.NonNull;
+
+import org.edx.mobile.logger.Logger;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Sha1Util {
+    private static final Logger logger = new Logger(Sha1Util.class);
 
     /**
-     * Returns SHA1 hash of the given text.
-     * @param text
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
+     * @param text The plain text to hash.
+     * @return SHA1 hash of the given text or the plain text if hashing failed.
      */
-    public static String SHA1(String text) throws NoSuchAlgorithmException,
-            UnsupportedEncodingException {
-        MessageDigest md = MessageDigest.getInstance("SHA-1");
-        md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        byte[] sha1hash = md.digest();
-        return convertToHex(sha1hash);
+    public static String SHA1(@NonNull String text) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            md.update(text.getBytes("iso-8859-1"), 0, text.length());
+            byte[] sha1hash = md.digest();
+            return convertToHex(sha1hash);
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            logger.error(e);
+            return text;
+        }
     }
 
-    private static String convertToHex(byte[] data) {
+    public static String convertToHex(@NonNull byte[] data) {
         StringBuilder buf = new StringBuilder();
         for (byte b : data) {
             int halfbyte = (b >>> 4) & 0x0F;

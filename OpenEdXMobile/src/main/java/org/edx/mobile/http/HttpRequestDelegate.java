@@ -65,12 +65,8 @@ public abstract class HttpRequestDelegate<T> {
 
         // get data from server
         HttpManager.HttpResult result = invokeHttpCall();
-        if ( result.statusCode == HttpStatus.OK ) {
-            try {
-                cacheManager.put(cacheKey, result.body);
-            } catch ( Exception e) {
-               logger.error(e);
-            }
+        if (result.statusCode == HttpStatus.OK) {
+            cacheManager.put(cacheKey, result.body);
             json = result.body;
         }
 

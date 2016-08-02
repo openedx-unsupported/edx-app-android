@@ -214,6 +214,14 @@ public class PrefManager {
         public void setLastCourseStructureFetch(String courseId, long timestamp) {
             super.put(Key.LAST_COURSE_STRUCTURE_FETCH + "_" + courseId, timestamp);
         }
+
+        public boolean isVideosCacheRestored() {
+            return getBoolean(Key.VIDEOS_CACHE_RESTORED, false);
+        }
+
+        public void setIsVideosCacheRestored(boolean restored) {
+            super.put(Key.VIDEOS_CACHE_RESTORED, restored);
+        }
     }
 
     /**
@@ -226,6 +234,10 @@ public class PrefManager {
         public static final String FEATURES = "features";
         public static final String APP_INFO = "pref_app_info";
         public static final String USER_PREF = "pref_user";
+
+        public static String[] getAll() {
+            return new String[]{LOGIN, WIFI, VIDEOS, FEATURES, APP_INFO, USER_PREF};
+        }
     }
 
     /**
@@ -254,6 +266,12 @@ public class PrefManager {
         public static final String AppSettingNeedSyncWithParse = "AppSettingNeedSyncWithParse";
         public static final String UserPrefVideoModel = "UserPrefVideoModel";
         public static final String LAST_COURSE_STRUCTURE_FETCH = "LastCourseStructureFetch";
+        /**
+         * For downloaded videos to appear in order on the My Videos screen, we need
+         * to have the videos' courses data cached. This is the key to a persistent
+         * flag which marks whether the cache has been restored
+         */
+        public static final String VIDEOS_CACHE_RESTORED = "VideosCacheRestored";
 
 
     }
@@ -264,5 +282,15 @@ public class PrefManager {
          */
         public static final String BACKEND_FACEBOOK = "facebook";
         public static final String BACKEND_GOOGLE = "google-oauth2";
+    }
+
+    /**
+     * Clears all the shared preferences that are used in the app.
+     */
+    public static void nukeSharedPreferences() {
+        for (String prefName : Pref.getAll()) {
+            MainApplication.application.getSharedPreferences(
+                    prefName, Context.MODE_PRIVATE).edit().clear().apply();
+        }
     }
 }

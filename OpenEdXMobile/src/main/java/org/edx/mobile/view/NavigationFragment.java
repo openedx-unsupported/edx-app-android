@@ -246,7 +246,7 @@ public class NavigationFragment extends BaseFragment {
 
             @Override
             public void onClick(View v) {
-                environment.getRouter().forceLogout(getActivity(), environment.getSegment(), environment.getNotificationDelegate());
+                environment.getRouter().performManualLogout(getActivity(), environment.getSegment(), environment.getNotificationDelegate());
             }
         });
 
