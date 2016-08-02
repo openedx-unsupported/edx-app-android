@@ -136,8 +136,8 @@ public class EditUserProfileFragment extends BaseFragment {
         viewHolder.username.setText(username);
         final IconDrawable icon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_camera)
                 .colorRes(getActivity(), R.color.disableable_button_text)
-                .sizeRes(getActivity(), R.dimen.fa_x_small);
-        icon.setTintList(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
+                .sizeRes(getActivity(), R.dimen.fa_x_small)
+                .tint(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(viewHolder.changePhoto, icon, null, null, null);
         viewHolder.changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override

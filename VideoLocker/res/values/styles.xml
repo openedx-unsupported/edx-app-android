@@ -439,7 +439,7 @@
         <item name="indeterminateIconColor">@color/edx_brand_primary_base</item>
         <item name="indeterminateIconPulse">true</item>
         <item name="android:indeterminateDuration">600</item>
-        <item name="android:mirrorForRtl">true</item>
+        <item name="android:mirrorForRtl" tools:targetApi="jelly_bean_mr2">true</item>
         <!-- Since we use xx_large for the standard ProgressBar
              style, we'll have xxxx_large as the large style,
              android base as the small style. -->

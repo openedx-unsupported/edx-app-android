@@ -37,6 +37,7 @@ import com.facebook.widget.FacebookDialog;
 import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.logger.Logger;
@@ -63,7 +64,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import org.edx.mobile.base.BaseFragment;
 import subtitleFile.Caption;
 import subtitleFile.FormatSRT;
 import subtitleFile.TimedTextObject;
@@ -161,7 +161,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_player, null);
         this.layoutInflater = inflater;
 
@@ -248,15 +248,15 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 public void onClick(View v) {
 
                     final StringBuffer urlStringBuffer = new StringBuffer();
-                        if (! videoEntry.url.startsWith("http://") && ! videoEntry.url.startsWith("https://")) {
-                            urlStringBuffer.append("http://");
-                            urlStringBuffer.append( videoEntry.url);
-                        } else {
-                            urlStringBuffer.append( videoEntry.url);
-                        }
-                        BrowserUtil.open(getActivity(),
-                                urlStringBuffer.toString());
+                    if (! videoEntry.url.startsWith("http://") && ! videoEntry.url.startsWith("https://")) {
+                        urlStringBuffer.append("http://");
+                        urlStringBuffer.append( videoEntry.url);
+                    } else {
+                        urlStringBuffer.append( videoEntry.url);
                     }
+                    BrowserUtil.open(getActivity(),
+                            urlStringBuffer.toString());
+                }
 
             });
         } catch(Exception ex) {
@@ -361,23 +361,27 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             showProgress();
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            boolean touchExploreEnabled = getTouchExploreEnabled();
-            player.setAutoHideControls(!touchExploreEnabled);
-
-            setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
-                @Override
-                public void onTouchExplorationStateChanged(boolean enabled) {
-                    player.setAutoHideControls(!enabled);
-                }
-            });
-        }
+        configureAutoHideControls();
 
         // start playback after 300 milli seconds, so that it works on HTC One, Nexus5, S4, S5
         // some devices take little time to be ready
         if (isPrepared) {
             handler.postDelayed(unfreezeCallback, UNFREEZE_DELAY_MS);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void configureAutoHideControls() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return;
+        }
+        player.setAutoHideControls(!getTouchExploreEnabled());
+        setTouchExploreChangeListener(new AccessibilityManager.TouchExplorationStateChangeListener() {
+            @Override
+            public void onTouchExplorationStateChanged(boolean enabled) {
+                player.setAutoHideControls(!enabled);
+            }
+        });
     }
 
     public void handleOnPause(){
@@ -468,7 +472,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     }
 
     public synchronized void prepare(String path, int seekTo, String title,
-                                  TranscriptModel trModel, DownloadEntry video) {
+                                     TranscriptModel trModel, DownloadEntry video) {
         playOrPrepare(path, seekTo, title, trModel, video, true);
     }
 
@@ -486,7 +490,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
      * @param prepareOnly  <code>true</code> player will be prepared but not start to play
      */
     public synchronized void playOrPrepare(String path, int seekTo, String title,
-            TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
+                                           TranscriptModel trModel, DownloadEntry video, boolean prepareOnly) {
         isPrepared = false;
         // block to portrait while preparing
         if ( !isScreenLandscape()) {
@@ -724,7 +728,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
                 errorView = getView().findViewById(R.id.panel_video_only_on_web);
             errorView.setVisibility(View.GONE);
             curMessageTypes.remove(reason);
-         } catch(Exception ex) {
+        } catch(Exception ex) {
             logger.error(ex);
         }
     }
@@ -1054,30 +1058,30 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
     public void onAudioFocusChange(int focusChange) {
         try {
             switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                // resume playback
-                if (playOnFocusGain) {
-                    // before we start playing, request focus on audio channel
-                    requestAudioFocus();
-                    if(player!=null){
-                        player.start();
-                        updateController("audio focus gained");
-                    }
-                }
-                playOnFocusGain = false;
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-                if(player!=null){
+                case AudioManager.AUDIOFOCUS_GAIN:
                     // resume playback
-                    if (player.isPlaying()) {
-                        player.pause();
-                        updateController("audio focus lost");
-                        playOnFocusGain = true;
-                    } else {
-                        playOnFocusGain = false;
+                    if (playOnFocusGain) {
+                        // before we start playing, request focus on audio channel
+                        requestAudioFocus();
+                        if(player!=null){
+                            player.start();
+                            updateController("audio focus gained");
+                        }
                     }
-                }
-                break;
+                    playOnFocusGain = false;
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    if(player!=null){
+                        // resume playback
+                        if (player.isPlaying()) {
+                            player.pause();
+                            updateController("audio focus lost");
+                            playOnFocusGain = true;
+                        } else {
+                            playOnFocusGain = false;
+                        }
+                    }
+                    break;
             }
         } catch(Exception ex) {
             logger.error(ex);
@@ -1494,32 +1498,32 @@ public class PlayerFragment extends BaseFragment implements IPlayerListener, Ser
             ListView lv_ccLang = (ListView) layout.findViewById(R.id.cc_list);
             ClosedCaptionAdapter ccAdaptor = new
                     ClosedCaptionAdapter(getActivity(), environment) {
-                @Override
-                public void onItemClicked(HashMap<String, String> lang) {
-                    try{
-                        final String languageSubtitle = lang.keySet().toArray()[0].toString();
-                        setSubtitleLanguage(languageSubtitle);
-                        try{
-                            if(player!=null){
-                                environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
-                                        player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
-                                        languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
-                            }
-                        }catch(Exception e){
-                            logger.error(e);
-                        }
+                        @Override
+                        public void onItemClicked(HashMap<String, String> lang) {
+                            try{
+                                final String languageSubtitle = lang.keySet().toArray()[0].toString();
+                                setSubtitleLanguage(languageSubtitle);
+                                try{
+                                    if(player!=null){
+                                        environment.getSegment().trackTranscriptLanguage(videoEntry.videoId,
+                                                player.getCurrentPosition()/AppConstants.MILLISECONDS_PER_SECOND,
+                                                languageSubtitle , videoEntry.eid, videoEntry.lmsUrl);
+                                    }
+                                }catch(Exception e){
+                                    logger.error(e);
+                                }
 
-                        displaySrtData();
-                        cc_popup.dismiss();
-                        if(player!=null){
-                            player.getController().setSettingsBtnDrawable(false);
-                            player.getController().setAutoHide(true);
+                                displaySrtData();
+                                cc_popup.dismiss();
+                                if(player!=null){
+                                    player.getController().setSettingsBtnDrawable(false);
+                                    player.getController().setAutoHide(true);
+                                }
+                            }catch(Exception e){
+                                logger.error(e);
+                            }
                         }
-                    }catch(Exception e){
-                        logger.error(e);
-                    }
-                }
-            };
+                    };
             lv_ccLang.setAdapter(ccAdaptor);
             lv_ccLang.setOnItemClickListener(ccAdaptor);
 

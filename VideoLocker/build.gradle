@@ -304,7 +304,7 @@ android {
     lintOptions {
         abortOnError true
         showAll true
-        warning 'TypographyQuotes', 'InvalidPackage', 'ValidFragment', 'NewApi'
+        warning 'TypographyQuotes', 'InvalidPackage', 'ValidFragment'
         error 'StopShip'
     }
 

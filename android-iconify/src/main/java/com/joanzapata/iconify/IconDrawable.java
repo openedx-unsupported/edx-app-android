@@ -31,11 +31,10 @@ import android.view.View;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR1;
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.os.Build.VERSION_CODES.M;
 import static android.util.TypedValue.COMPLEX_UNIT_DIP;
 import static android.view.View.LAYOUT_DIRECTION_RTL;
-
-import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 /**
  * Embed an icon into a Drawable that can be used as TextView icons, or ActionBar icons.
@@ -463,13 +462,19 @@ public final class IconDrawable extends Drawable implements Animatable {
         return iconState.colorFilter;
     }
 
-    @Override
-    public void setTintList(@Nullable ColorStateList tint) {
+    @NonNull
+    public IconDrawable tint(@Nullable ColorStateList tint) {
         if (tint != iconState.tint) {
             iconState.tint = tint;
             updateTintFilter();
             invalidateSelf();
         }
+        return this;
+    }
+
+    @Override
+    public void setTintList(@Nullable ColorStateList tint) {
+        tint(tint);
     }
 
     @Override
