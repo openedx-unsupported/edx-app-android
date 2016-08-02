@@ -82,7 +82,7 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:text="@string/forgot_password"
-                            android:textColor="@color/cyan_text_navigation"
+                            android:textColor="@color/text_navigation"
                             android:textSize="12sp" />
 
                         <FrameLayout
@@ -129,7 +129,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:linksClickable="true"
-                            android:textColor="@color/cyan_text_navigation"
+                            android:textColor="@color/text_navigation"
                             android:textSize="11sp"
                             tools:text="@string/licensing_agreement" />
 

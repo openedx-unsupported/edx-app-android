@@ -160,7 +160,7 @@
                 android:gravity="center"
                 android:linksClickable="true"
                 android:text="@string/licensing_agreement"
-                android:textColor="@color/cyan_text_navigation"
+                android:textColor="@color/text_navigation"
                 android:textSize="11sp"
                 android:layout_marginTop="2dp"
                 android:visibility="gone"/>

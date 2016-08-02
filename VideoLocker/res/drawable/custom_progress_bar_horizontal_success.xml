@@ -32,8 +32,8 @@
 
                 <gradient
                     android:angle="0"
-                    android:endColor="@color/red_download_failed_text"
-                    android:startColor="@color/red_download_failed_text" 
+                    android:endColor="@color/edx_success_accent"
+                    android:startColor="@color/edx_success_accent"
                     />
             </shape>
         </clip>

@@ -7,7 +7,7 @@
         android:layout_width="@dimen/fa_xxxx_large"
         android:layout_height="@dimen/fa_xxxx_large"
         android:layout_gravity="center"
-        ProgressWheel:barColor="@color/progress_wheel_color"
+        ProgressWheel:barColor="@color/edx_success_accent"
         ProgressWheel:barWidth="5dp"
         ProgressWheel:contourColor="@android:color/transparent"
         ProgressWheel:progressBarLength="70dp"

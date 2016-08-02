@@ -56,7 +56,6 @@
 
                 <TextView
                     android:id="@+id/new_course_content"
-                    style="@style/bold_cyan_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -68,6 +67,7 @@
                     android:text="@string/new_course_content"
                     android:textAllCaps="true"
                     android:textSize="@dimen/edx_xxx_small"
+                    android:textColor="@color/edx_brand_primary_accent"
                     tools:targetApi="17" />
             </LinearLayout>
 

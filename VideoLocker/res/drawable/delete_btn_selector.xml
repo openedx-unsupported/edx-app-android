@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true" android:drawable="@color/cyan_text_navigation"  />
-    <item android:state_enabled="false" android:drawable="@color/delete_btn_disabled"  />
-    <item android:state_enabled="true" android:drawable="@color/delete_panel_bg"  />
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <selector>
+            <item
+                android:drawable="@color/delete_btn_disabled"
+                android:state_enabled="false" />
+            <item
+                android:drawable="@color/delete_panel_bg"
+                android:state_enabled="true" />
+        </selector>
+    </item>
+    <item android:drawable="@drawable/light_selectable_box_overlay" />
+</layer-list>

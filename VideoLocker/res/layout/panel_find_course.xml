@@ -54,7 +54,7 @@
             android:gravity="center"
             android:linksClickable="true"
             android:text="@string/course_not_listed_text"
-            android:textColor="@color/cyan_text_navigation"
+            android:textColor="@color/text_navigation"
             android:textSize="14sp"
             android:contentDescription="@string/course_not_listed_btn" />
         

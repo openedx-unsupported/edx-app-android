@@ -36,7 +36,7 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
         edx_brand_primary_base = context.getResources().getColor(R.color.edx_brand_primary_base);
         edx_grayscale_neutral_light = context.getResources().getColor(R.color.edx_grayscale_neutral_light);
         edx_brand_secondary_dark = context.getResources().getColor(R.color.edx_brand_secondary_dark);
-        edx_utility_success_dark = context.getResources().getColor(R.color.edx_utility_success_dark);
+        edx_utility_success_dark = context.getResources().getColor(R.color.edx_success_text);
     }
 
     @Override
