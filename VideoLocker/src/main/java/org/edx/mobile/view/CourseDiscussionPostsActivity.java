@@ -103,9 +103,9 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
                 SpannableString title = new SpannableString("   " + discussionTopic.getName());
                 IconDrawable starIcon = new IconDrawable(this, FontAwesomeIcons.fa_star)
                         .colorRes(this, R.color.edx_grayscale_neutral_white_t)
-                        .sizeRes(this, R.dimen.edx_base);
+                        .sizeRes(this, R.dimen.edx_base)
+                        .tint(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
                 starIcon.setBounds(0, 0, starIcon.getIntrinsicWidth(), starIcon.getIntrinsicHeight());
-                starIcon.setTintList(null);
                 ImageSpan iSpan = new ImageSpan(starIcon, ImageSpan.ALIGN_BASELINE);
                 title.setSpan(iSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 setTitle(title);
