@@ -1259,16 +1259,6 @@
     }, {
         "restrictions": {},
         "required": false,
-        "name": "mailing_address",
-        "errorMessages": {},
-        "placeholder": "",
-        "defaultValue": "",
-        "instructions": "",
-        "type": "textarea",
-        "label": "Mailing address"
-    }, {
-        "restrictions": {},
-        "required": false,
         "name": "goals",
         "errorMessages": {},
         "placeholder": "",
