@@ -31,13 +31,14 @@
     <color name="transparent_black_80">#CC000000</color>
     <color name="transparent_black_90">#e5000000</color>
     <color name="transparent_black_50">#80000000</color>
-    <color name="transparent_black_10">#19000000</color>
+    <color name="transparent_black_26">#42000000</color>
+    <color name="transparent_black_13">#21000000</color>
     <color name="transparent_white_90">#E6FFFFFF</color>
     <color name="transparent_white_85">#D9FFFFFF</color>
     <color name="transparent_white_30">#4DFFFFFF</color>
     <color name="transparent_white_26">#42FFFFFF</color>
     <color name="transparent_white_20">#33FFFFFF</color>
-    <color name="transparent_white_10">#19FFFFFF</color>
+    <color name="transparent_white_13">#21ffffff</color>
     <color name="cyan_text_navigation_20">#20299ED7</color>
     <color name="disabled_chapter_list">#EBEBED</color>
     <color name="grey_light">#3c4045</color>

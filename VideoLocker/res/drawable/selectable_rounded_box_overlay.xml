@@ -3,7 +3,13 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/edx_box_radius" />
-            <solid android:color="@color/transparent_black_10" />
+            <solid android:color="@color/transparent_black_26" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/edx_box_radius" />
+            <solid android:color="@color/transparent_black_13" />
         </shape>
     </item>
     <item>

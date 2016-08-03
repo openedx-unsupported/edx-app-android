@@ -13,8 +13,8 @@
             android:id="@+id/edx_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="75dp"
             android:layout_marginBottom="75dp"
+            android:layout_marginTop="75dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/edx_logo" />
 
@@ -30,6 +30,7 @@
                 style="@style/edX.Widget.BrandPillButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:text="@string/launch_explore_subjects" />
 
             <Button
@@ -38,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:focusable="true"
                 android:text="@string/launch_discover_courses" />
 
         </LinearLayout>
@@ -48,10 +50,10 @@
             android:layout_weight="1" />
 
         <fragment
-            android:tag="org.edx.mobile.view.LogInSignUpFragment"
             android:name="org.edx.mobile.view.LogInSignUpFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:tag="org.edx.mobile.view.LogInSignUpFragment" />
 
     </LinearLayout>
 </layout>

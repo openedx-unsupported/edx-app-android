@@ -75,10 +75,10 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         hideSoftKeypad();
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), environment.getLoginPrefs());
 
-        activityLoginBinding.socialAuth.facebookButton.imgFacebook.setOnClickListener(
+        activityLoginBinding.socialAuth.facebookButton.getRoot().setOnClickListener(
                 socialLoginDelegate.createSocialButtonClickHandler(
                         SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK));
-        activityLoginBinding.socialAuth.googleButton.imgGoogle.setOnClickListener(
+        activityLoginBinding.socialAuth.googleButton.getRoot().setOnClickListener(
                 socialLoginDelegate.createSocialButtonClickHandler(
                         SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_GOOGLE));
 
@@ -144,9 +144,9 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                 if (!facebookEnabled && !googleEnabled) {
                     activityLoginBinding.panelLoginSocial.setVisibility(View.GONE);
                 } else if (!facebookEnabled) {
-                    activityLoginBinding.socialAuth.facebookButton.facebookLayout.setVisibility(View.GONE);
+                    activityLoginBinding.socialAuth.facebookButton.getRoot().setVisibility(View.GONE);
                 } else if (!googleEnabled) {
-                    activityLoginBinding.socialAuth.googleButton.googleLayout.setVisibility(View.GONE);
+                    activityLoginBinding.socialAuth.googleButton.getRoot().setVisibility(View.GONE);
                 }
             }
         };
@@ -411,8 +411,8 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         }
 
 
-        activityLoginBinding.socialAuth.facebookButton.imgFacebook.setClickable(enable);
-        activityLoginBinding.socialAuth.googleButton.imgGoogle.setClickable(enable);
+        activityLoginBinding.socialAuth.facebookButton.getRoot().setClickable(enable);
+        activityLoginBinding.socialAuth.googleButton.getRoot().setClickable(enable);
 
         activityLoginBinding.emailEt.setEnabled(enable);
         activityLoginBinding.passwordEt.setEnabled(enable);
