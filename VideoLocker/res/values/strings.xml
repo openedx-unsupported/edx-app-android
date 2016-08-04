@@ -335,12 +335,8 @@
     <string name="discussion_question">Question</string>
 
     <!-- Assessment -->
-    <!-- Label showing next sub-section on assessment navigation bar-->
-    <string name="assessment_next_unit">Next Unit</string>
     <!-- Label showing next unit in a sub-section on assessment navigation bar-->
     <string name="assessment_next">Next</string>
-    <!-- Label showing previous sub-section on assessment navigation bar-->
-    <string name="assessment_previous_unit">Previous Unit</string>
     <!-- Label showing previous unit in a sub-section on assessment navigation bar-->
     <string name="assessment_previous">Previous</string>
     <!-- Label for empty video in video only mode-->

@@ -48,16 +48,21 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         return unitList.get(pos);
     }
 
+    /**
+     * @return True if given unit is a video unit (not an only on YouTube unit)
+     */
+    public static boolean isCourseUnitVideo(CourseComponent unit) {
+        return (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null);
+    }
+
     @Override
     public Fragment getItem(int pos) {
         CourseComponent unit = getUnit(pos);
         CourseUnitFragment unitFragment;
         //FIXME - for the video, let's ignore studentViewMultiDevice for now
-        if (unit instanceof VideoBlockModel &&
-                ((VideoBlockModel) unit).getData().encodedVideos.getPreferredVideoInfo() != null) {
-            unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit);
-        } else if (unit instanceof VideoBlockModel &&
-                ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
+        if (isCourseUnitVideo(unit)) {
+            unitFragment = CourseUnitVideoFragment.newInstance((VideoBlockModel) unit, (pos < unitList.size()), (pos > 0));
+        } else if (unit instanceof VideoBlockModel && ((VideoBlockModel) unit).getData().encodedVideos.getYoutubeVideoInfo() != null) {
             unitFragment = CourseUnitOnlyOnYoutubeFragment.newInstance(unit);
         } else if (config.isDiscussionsEnabled() && unit instanceof DiscussionBlockModel) {
             unitFragment = CourseUnitDiscussionFragment.newInstance(unit, courseData);
@@ -72,6 +77,7 @@ public class CourseUnitPagerAdapter extends FragmentStatePagerAdapter {
         } else if (unit instanceof HtmlBlockModel) {
             unitFragment = CourseUnitWebViewFragment.newInstance((HtmlBlockModel) unit);
         }
+
         //fallback
         else {
             unitFragment = CourseUnitMobileNotSupportedFragment.newInstance(unit);
