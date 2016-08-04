@@ -9,7 +9,6 @@ import com.google.inject.Singleton;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
@@ -141,7 +140,7 @@ public class HttpManager {
         HttpResponse response = client.execute(post);
 
         int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 204) {
+        if (statusCode == HttpStatus.NO_CONTENT) {
             // that means response has "NO CONTENTS"
             // so return empty string
             // this is SUCCESS response for login by google/FB account
@@ -160,7 +159,7 @@ public class HttpManager {
                 client.getConnectionManager().shutdown();
                 return json.toString();
             }
-        } else if (statusCode == 401) {
+        } else if (statusCode == HttpStatus.UNAUTHORIZED) {
             // for google/FB login, this means google/FB account is not associated with edX
             logger.debug("Response of HTTP 401");
 
@@ -238,7 +237,7 @@ public class HttpManager {
         HttpResponse response = client.execute(post);
         int statusCode = response.getStatusLine().getStatusCode();
         //make this change to handle it consistent with iOS app
-        if (statusCode != HttpStatus.SC_OK ){
+        if (statusCode != HttpStatus.OK ){
             // Enroll endpoint may return 404 and 400 errors
             logger.debug("Response of HTTP " + statusCode);
 

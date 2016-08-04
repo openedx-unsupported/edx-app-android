@@ -250,7 +250,7 @@ public class Api implements IApi {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             final HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
-            if (result.statusCode == 401) {
+            if (result.statusCode == HttpStatus.UNAUTHORIZED) {
                 throw new HttpAuthRequiredException();
             }
             json = result.body;

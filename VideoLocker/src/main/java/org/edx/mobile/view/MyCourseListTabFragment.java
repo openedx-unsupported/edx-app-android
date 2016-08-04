@@ -11,6 +11,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.event.EnrolledInCourseEvent;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.loader.CoursesAsyncLoader;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -86,7 +87,8 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
                 loginPrefs.clear();
                 getActivity().finish();
             } else if (result.getEx() instanceof HttpResponseStatusException &&
-                    ((HttpResponseStatusException) result.getEx()).getStatusCode() == 401) {
+                    ((HttpResponseStatusException) result.getEx()).getStatusCode() ==
+                            HttpStatus.UNAUTHORIZED) {
                 environment.getRouter().forceLogout(
                         getContext(),
                         environment.getSegment(),

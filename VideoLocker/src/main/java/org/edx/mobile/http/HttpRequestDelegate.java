@@ -11,7 +11,6 @@ import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
 import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
 
 public abstract class HttpRequestDelegate<T> {
     protected final Logger logger = new Logger(getClass().getName());
@@ -66,7 +65,7 @@ public abstract class HttpRequestDelegate<T> {
 
         // get data from server
         HttpManager.HttpResult result = invokeHttpCall();
-        if ( result.statusCode == HttpURLConnection.HTTP_OK ) {
+        if ( result.statusCode == HttpStatus.OK ) {
             try {
                 cacheManager.put(cacheKey, result.body);
             } catch ( Exception e) {
