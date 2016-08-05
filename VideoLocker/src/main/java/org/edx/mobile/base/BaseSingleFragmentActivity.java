@@ -123,7 +123,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
         //TODO - -we need to define different UI message view for different message type?
         switch (messageType) {
             case FLYIN_ERROR:
-                this.showErrorMessage("", message);
+                this.showErrorDialog(null, message);
                 break;
             case FLYIN_WARNING:
             case FLYIN_INFO:
@@ -138,7 +138,7 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
                 this.hideMessageInSitu();
                 break;
             case DIALOG:
-                this.showErrorDialog(message);
+                this.showErrorDialog(null, message);
         }
     }
 

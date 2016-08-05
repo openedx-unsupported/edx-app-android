@@ -293,7 +293,7 @@ public class RegisterActivity extends BaseFragmentActivity
                         return; // Return here to avoid showing the generic error pop-up.
                     }
                 }
-                RegisterActivity.this.showErrorMessage(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
+                RegisterActivity.this.showErrorDialog(null, ErrorUtils.getErrorMessage(ex, RegisterActivity.this));
             }
         };
         task.execute();
@@ -426,15 +426,6 @@ public class RegisterActivity extends BaseFragmentActivity
                 }
             }
         });
-    }
-
-    @Override
-    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
-        if (message != null) {
-            return super.showErrorMessage(header, message, isPersistent);
-        } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
-        }
     }
 
     ///////section related to social login ///////////////

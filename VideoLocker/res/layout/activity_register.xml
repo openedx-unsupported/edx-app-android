@@ -156,17 +156,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:visibility="gone">
-
-        <include layout="@layout/panel_error_message_with_title" />
-    </LinearLayout>
-
-
     <TextView
         android:id="@+id/flying_message"
         style="@style/flying_message"
