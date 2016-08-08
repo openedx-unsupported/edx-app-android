@@ -23,33 +23,23 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.exception.LoginErrorMessage;
 import org.edx.mobile.exception.LoginException;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
-import org.edx.mobile.util.IntentFactory;
-import org.edx.mobile.view.dialog.ResetPasswordDialog;
+import org.edx.mobile.view.dialog.ResetPasswordActivity;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
-import org.edx.mobile.view.dialog.SuccessDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface> implements SocialLoginDelegate.MobileLoginCallback {
 
-    public String emailStr;
-    private SimpleAlertDialog NoNetworkFragment;
-    private ResetPasswordDialog resetDialog;
-    private SuccessDialogFragment successFragment;
     private SocialLoginDelegate socialLoginDelegate;
-
     private ActivityLoginBinding activityLoginBinding;
 
     @Inject
@@ -199,15 +189,14 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     public void callServerForLogin() {
-
         if (!NetworkUtil.isConnected(this)) {
             showErrorMessage(getString(R.string.no_connectivity),
                     getString(R.string.network_not_connected));
             return;
         }
 
-        emailStr = activityLoginBinding.emailEt.getText().toString().trim();
-        String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
+        final String emailStr = activityLoginBinding.emailEt.getText().toString().trim();
+        final String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
 
         if (activityLoginBinding.emailEt != null && emailStr.length() == 0) {
             showErrorMessage(getString(R.string.login_error),
@@ -222,8 +211,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
             activityLoginBinding.passwordEt.setEnabled(false);
             activityLoginBinding.forgotPasswordTv.setEnabled(false);
             activityLoginBinding.endUserAgreementTv.setEnabled(false);
-
-            clearDialogs();
 
             LoginTask logintask = new LoginTask(this, activityLoginBinding.emailEt.getText().toString().trim(),
                     activityLoginBinding.passwordEt.getText().toString()) {
@@ -253,7 +240,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     @Override
     protected void onStop() {
         super.onStop();
-
         socialLoginDelegate.onActivityStopped();
     }
 
@@ -261,53 +247,14 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         return activityLoginBinding.emailEt.getText().toString().trim();
     }
 
+    private static final int RESET_PASSWORD_REQUEST_CODE = 0;
+
     private void showResetPasswordDialog() {
-        clearDialogs();
-        resetDialog = new ResetPasswordDialog() {
-            @Override
-            protected void onResetSuccessful() {
-                super.onResetSuccessful();
-                if (isActivityStarted())
-                    showResetSuccessDialog();
-            }
-
-            @Override
-            protected void onResetFailed(ResetPasswordResponse result) {
-                super.onResetFailed(result);
-                showResetFailure(result.getPrimaryReason());
-            }
-        };
-        Bundle bundle = new Bundle();
-        bundle.putString("login_email", getEmail());
-        resetDialog.setArguments(bundle);
-        resetDialog.show(getSupportFragmentManager(), "show");
-    }
-
-    public void showResetSuccessDialog() {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title", getString(R.string.success_dialog_title_help));
-        dialogMap.put("message_1",
-                getString(R.string.success_dialog_message_help));
-
-        successFragment = SuccessDialogFragment.newInstance(dialogMap);
-        successFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        successFragment.show(getSupportFragmentManager(), "dialog");
+        startActivityForResult(ResetPasswordActivity.newIntent(getEmail()), RESET_PASSWORD_REQUEST_CODE);
     }
 
     public void showEulaDialog() {
-        clearDialogs();
         environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
-    }
-
-    public void showResetFailure(String text) {
-        Map<String, String> dialogMap = new HashMap<String, String>();
-        dialogMap.put("title", getString(R.string.title_reset_password_failed));
-        dialogMap.put("message_1", text);
-
-        successFragment = SuccessDialogFragment.newInstance(dialogMap);
-        successFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        successFragment.show(getSupportFragmentManager(), "dialog");
-
     }
 
     public void showNoNetworkDialog() {
@@ -315,9 +262,9 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
         args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
 
-        NoNetworkFragment = SimpleAlertDialog.newInstance(args);
-        NoNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        NoNetworkFragment.show(getSupportFragmentManager(), "dialog");
+        SimpleAlertDialog noNetworkFragment = SimpleAlertDialog.newInstance(args);
+        noNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+        noNetworkFragment.show(getSupportFragmentManager(), "dialog");
     }
 
     @Override
@@ -351,12 +298,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                 getString(R.string.network_not_connected), false);
     }
 
-    private void clearDialogs() {
-        if (resetDialog != null) {
-            resetDialog.dismiss();
-        }
-    }
-
     @Override
     public boolean createOptionsMenu(Menu menu) {
         // Login screen doesn't have any menu
@@ -376,7 +317,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     public void onUserLoginSuccess(ProfileModel profile) {
-       setResult(RESULT_OK);
+        setResult(RESULT_OK);
         finish();
     }
 
