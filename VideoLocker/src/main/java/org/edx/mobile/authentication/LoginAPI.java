@@ -137,6 +137,11 @@ public class LoginAPI {
         logInEvents.sendData(new LogInEvent());
     }
 
+    public void logOut(@NonNull final String refreshToken) throws HttpException {
+        loginService.revokeAccessToken(config.getOAuthClientId(),
+                refreshToken, ApiConstants.TOKEN_TYPE_REFRESH);
+    }
+
     @NonNull
     public AuthResponse registerUsingEmail(@NonNull Bundle parameters) throws Exception {
         register(parameters);

@@ -1,6 +1,7 @@
 package org.edx.mobile.authentication;
 
 import org.edx.mobile.http.ApiConstants;
+import org.edx.mobile.http.ApiConstants.TokenType;
 import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -61,6 +62,20 @@ public interface LoginService {
     AuthResponse exchangeAccessToken(@Field("access_token") String accessToken,
                                      @Field("client_id") String clientId,
                                      @Path(ApiConstants.GROUP_ID) String groupId) throws HttpException;
+
+    /**
+     * Revoke the specified refresh or access token, along with all other tokens based on the same
+     * application grant.
+     * @param clientId The client ID
+     * @param token The refresh or access token to be revoked
+     * @param tokenTypeHint The type of the token to be revoked; This should be either
+     *                      'access_token' or 'refresh_token'
+     */
+    @FormUrlEncoded
+    @POST(ApiConstants.URL_REVOKE_TOKEN)
+    Response revokeAccessToken(@Field("client_id") String clientId,
+                               @Field("token") String token,
+                               @Field("token_type_hint") @TokenType String tokenTypeHint) throws HttpException;
 
     /**
      * Reset password for account associated with an email address.
