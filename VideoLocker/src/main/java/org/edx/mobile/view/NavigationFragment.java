@@ -28,6 +28,7 @@ import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.databinding.DrawerNavigationBinding;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
@@ -35,17 +36,20 @@ import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.user.Account;
-import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
+import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
 import org.edx.mobile.util.ResourceUtil;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 
 
 public class NavigationFragment extends BaseFragment {
@@ -54,13 +58,16 @@ public class NavigationFragment extends BaseFragment {
     private DrawerNavigationBinding drawerNavigationBinding;
     private final Logger logger = new Logger(getClass().getName());
     @Nullable
-    private GetAccountTask getAccountTask;
+    private Call<Account> getAccountCall;
     @Nullable
     private ProfileImage profileImage;
     ProfileModel profile;
     @Nullable
     ImageView imageView;
     private IUiLifecycleHelper uiLifecycleHelper;
+
+    @Inject
+    private UserService userService;
 
     @Inject
     IEdxEnvironment environment;
@@ -82,9 +89,12 @@ public class NavigationFragment extends BaseFragment {
         uiLifecycleHelper.onCreate(savedInstanceState);
         profile = loginPrefs.getCurrentUserProfile();
         if (config.isUserProfilesEnabled() && profile != null && profile.username != null) {
-            getAccountTask = new GetAccountTask(getActivity(), profile.username);
-            getAccountTask.setTaskProcessCallback(null); // Disable global loading indicator
-            getAccountTask.execute();
+            getAccountCall = userService.getAccount(profile.username);
+            getAccountCall.enqueue(new UserAPI.AccountDataUpdatedCallback(
+                    getActivity(),
+                    profile.username,
+                    CallTrigger.LOADING_UNCACHED,
+                    (TaskProgressCallback) null)); // Disable global loading indicator
         }
         EventBus.getDefault().register(this);
     }
@@ -268,8 +278,8 @@ public class NavigationFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         uiLifecycleHelper.onDestroy();
-        if (null != getAccountTask) {
-            getAccountTask.cancel(true);
+        if (null != getAccountCall) {
+            getAccountCall.cancel();
         }
         EventBus.getDefault().unregister(this);
     }

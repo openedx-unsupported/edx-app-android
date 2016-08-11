@@ -1,5 +1,6 @@
 package org.edx.mobile.user;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,39 +13,36 @@ import com.google.inject.Singleton;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.ApiConstants;
-import org.edx.mobile.http.HttpConnectivityException;
-import org.edx.mobile.http.HttpException;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
+import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.profiles.BadgeAssertion;
 import org.edx.mobile.util.Config;
-import org.edx.mobile.util.IOUtils;
+import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedFile;
-import retrofit.mime.TypedInput;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 @Singleton
 public class UserAPI {
     private Logger logger = new Logger(UserAPI.class.getName());
 
-    @NonNull
-    private final UserService userService;
+    @Inject
+    private UserService userService;
 
     @Inject
     private Config config;
@@ -55,49 +53,116 @@ public class UserAPI {
     @Inject
     private Gson gson;
 
-    @Inject
-    private LoginPrefs loginPrefs;
+    public static class AccountDataUpdatedCallback extends ErrorHandlingCallback<Account> {
+        @Inject
+        private LoginPrefs loginPrefs;
+        @NonNull
+        private final String username;
 
-    @Inject
-    public UserAPI(@NonNull RestAdapter restAdapter) {
-        userService = restAdapter.create(UserService.class);
+        public AccountDataUpdatedCallback(@NonNull final Context context,
+                                          @NonNull final String username,
+                                          @NonNull final CallTrigger type) {
+            super(context, type);
+            this.username = username;
+        }
+
+        public AccountDataUpdatedCallback(@NonNull final Context context,
+                                          @NonNull final String username,
+                                          @NonNull final CallTrigger type,
+                                          @Nullable final TaskProgressCallback progressCallback) {
+            super(context, type, progressCallback);
+            this.username = username;
+        }
+
+        public AccountDataUpdatedCallback(@NonNull final Context context,
+                                          @NonNull final String username,
+                                          @NonNull final CallTrigger type,
+                                          @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, messageCallback);
+            this.username = username;
+        }
+
+        public AccountDataUpdatedCallback(@NonNull final Context context,
+                                          @NonNull final String username,
+                                          @NonNull final CallTrigger type,
+                                          @Nullable final TaskProgressCallback progressCallback,
+                                          @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, progressCallback, messageCallback);
+            this.username = username;
+        }
+
+        @Override
+        protected void onResponse(@NonNull final Account account) {
+            EventBus.getDefault().post(new AccountDataLoadedEvent(account));
+            // Store the logged in user's ProfileImage
+            loginPrefs.setProfileImage(username, account.getProfileImage());
+        }
     }
 
-    public Account getAccount(@NonNull String username) throws HttpException {
-        final Account account = userService.getAccount(username);
-        EventBus.getDefault().post(new AccountDataLoadedEvent(account));
-        // Store the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, account.getProfileImage());
-        return account;
-    }
-
-    public Account updateAccount(@NonNull String username, @NonNull String field, @Nullable Object value) throws HttpException {
-        final Account updatedAccount = userService.updateAccount(username, Collections.singletonMap(field, value));
-        EventBus.getDefault().post(new AccountDataLoadedEvent(updatedAccount));
-        // Update the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, updatedAccount.getProfileImage());
-        return updatedAccount;
-    }
-
-    public void setProfileImage(@NonNull String username, @NonNull final File file) throws HttpException, IOException {
+    public Call<ResponseBody> setProfileImage(@NonNull String username, @NonNull final File file) {
         final String mimeType = "image/jpeg";
-        logger.debug("Uploading file of type " + mimeType + " from " + file.toString());
-        userService.setProfileImage(
+        return userService.setProfileImage(
                 username,
                 "attachment;filename=filename." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType),
-                new TypedFile(mimeType, file));
-        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, Uri.fromFile(file)));
+                RequestBody.create(MediaType.parse(mimeType), file));
     }
 
-    public void deleteProfileImage(@NonNull String username) throws HttpException {
-        userService.deleteProfileImage(username);
-        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
-        // Delete the logged in user's ProfileImage
-        loginPrefs.setProfileImage(username, null);
-    }
+    public static class ProfileImageUpdatedCallback extends ErrorHandlingCallback<ResponseBody> {
+        @Inject
+        private LoginPrefs loginPrefs;
+        @NonNull
+        private final String username;
+        @Nullable
+        private final Uri profileImageUri;
 
-    public Page<BadgeAssertion> getBadges(@NonNull String username, int page) throws HttpException {
-        return userService.getBadges(username, page, ApiConstants.STANDARD_PAGE_SIZE);
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type) {
+            super(context, type);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskProgressCallback progressCallback) {
+            super(context, type, progressCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, messageCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        public ProfileImageUpdatedCallback(@NonNull final Context context,
+                                           @NonNull final String username,
+                                           @Nullable final File profileImageFile,
+                                           @NonNull final CallTrigger type,
+                                           @Nullable final TaskProgressCallback progressCallback,
+                                           @Nullable final TaskMessageCallback messageCallback) {
+            super(context, type, progressCallback, messageCallback);
+            this.username = username;
+            profileImageUri = profileImageFile == null ? null : Uri.fromFile(profileImageFile);
+        }
+
+        @Override
+        protected void onResponse(@NonNull final ResponseBody response) {
+            EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, profileImageUri));
+            if (profileImageUri == null) {
+                // Delete the logged in user's ProfileImage
+                loginPrefs.setProfileImage(username, null);
+            }
+        }
     }
 
     public
@@ -108,7 +173,7 @@ public class UserAPI {
 
     public
     @NonNull
-    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws HttpException {
+    List<EnrolledCoursesResponse> getUserEnrolledCourses(@NonNull String username, boolean tryCache) throws Exception {
         String json = null;
 
         final String cacheKey = getUserEnrolledCoursesURL(username);
@@ -124,33 +189,28 @@ public class UserAPI {
 
         // if we don't have a json yet, get it from userService
         if (json == null) {
-            try {
-                Response response = userService.getUserEnrolledCourses(username);
-                TypedInput input = response.getBody();
-                try {
-                    json = IOUtils.toString(input.in(), Charset.defaultCharset());
-                } catch (IOException e) {
-                    throw new HttpConnectivityException(RetrofitError.networkError(null, e));
-                }
+            Response<ResponseBody> response = userService.getUserEnrolledCourses(username).execute();
+            if (response.isSuccessful()) {
+                json = userService.getUserEnrolledCourses(username).execute().body().string();
                 // cache result
                 try {
                     cache.put(cacheKey, json);
                 } catch (IOException | NoSuchAlgorithmException e) {
                     logger.debug(e.toString());
                 }
-            } catch (HttpConnectivityException connectivityException) {
+            } else {
                 // Cache has already been checked, and connectivity
-                // can't be established, so throw the exception.
-                if (tryCache) throw connectivityException;
+                // can't be established, so throw an exception.
+                if (tryCache) throw new HttpResponseStatusException(response.code());
                 // Otherwise fall back to fetching from the cache
                 try {
                     json = cache.get(cacheKey);
                 } catch (IOException | NoSuchAlgorithmException e) {
                     logger.debug(e.toString());
-                    throw connectivityException;
+                    throw new HttpResponseStatusException(response.code());
                 }
-                // If the cache is empty, throw the exception.
-                if (json == null) throw connectivityException;
+                // If the cache is empty, then throw an exception.
+                if (json == null) throw new HttpResponseStatusException(response.code());
             }
         }
 

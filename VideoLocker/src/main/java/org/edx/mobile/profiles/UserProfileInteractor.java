@@ -6,14 +6,14 @@ import android.text.TextUtils;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.http.Callback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.Account;
-import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
-import org.edx.mobile.util.observer.AsyncCallableUtils;
 import org.edx.mobile.util.observer.CachingObservable;
 import org.edx.mobile.util.observer.Observable;
 import org.edx.mobile.util.observer.Observer;
@@ -43,7 +43,7 @@ public class UserProfileInteractor {
     @NonNull
     private final Logger logger = new Logger(getClass().getName());
 
-    public UserProfileInteractor(@NonNull final String username, @NonNull final UserAPI userAPI, @NonNull EventBus eventBus, @NonNull UserPrefs userPrefs) {
+    public UserProfileInteractor(@NonNull final String username, @NonNull final UserService userService, @NonNull EventBus eventBus, @NonNull UserPrefs userPrefs) {
         this.username = username;
         this.eventBus = eventBus;
 
@@ -52,19 +52,14 @@ public class UserProfileInteractor {
 
         eventBus.register(this);
 
-        AsyncCallableUtils.observe(new Callable<Account>() {
+        userService.getAccount(username).enqueue(new Callback<Account>() {
             @Override
-            public Account call() throws Exception {
-                return userAPI.getAccount(username);
-            }
-        }, new Observer<Account>() {
-            @Override
-            public void onData(@NonNull Account data) {
-                handleNewAccount(data);
+            protected void onResponse(@NonNull Account account) {
+                handleNewAccount(account);
             }
 
             @Override
-            public void onError(@NonNull Throwable error) {
+            protected void onFailure(@NonNull Throwable error) {
                 profileObservable.onError(error);
             }
         });

@@ -137,8 +137,18 @@ dependencies {
     compile 'com.squareup.phrase:phrase:1.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.0.2'
+    /* Exclude dependencies defined statically at the top-
+     * level, to prevent them from being resolved to the
+     * latest version as a result of dynamic version
+     * definitions in the transitive dependencies.
+     */
+    compile ('com.squareup.retrofit2:retrofit:2.1.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+    compile ('com.squareup.retrofit2:converter-gson:2.1.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.android.support:cardview-v7:23.3.0'
@@ -189,6 +199,9 @@ dependencies {
         exclude group: 'com.android.support'
     }
     testCompile 'com.squareup.okhttp3:mockwebserver:3.0.1'
+    testCompile ('com.squareup.retrofit2:retrofit-mock:2.1.0') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
 
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'

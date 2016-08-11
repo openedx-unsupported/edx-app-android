@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.discussion.DiscussionAPI;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.IDatabase;
 import org.edx.mobile.module.download.IDownloadManager;
@@ -54,9 +53,6 @@ public class EdxEnvironment implements IEdxEnvironment {
 
     @Inject
     ServiceManager serviceManager;
-
-    @Inject
-    DiscussionAPI discussionAPI;
 
     @Inject
     EventBus eventBus;
@@ -109,11 +105,6 @@ public class EdxEnvironment implements IEdxEnvironment {
     @Override
     public ServiceManager getServiceManager() {
         return serviceManager;
-    }
-
-    @Override
-    public DiscussionAPI getDiscussionAPI() {
-        return discussionAPI;
     }
 
     public EventBus getEventBus() {

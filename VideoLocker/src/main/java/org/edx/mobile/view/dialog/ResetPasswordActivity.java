@@ -8,20 +8,28 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseAppActivity;
 import org.edx.mobile.databinding.ActivityResetPasswordBinding;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.api.ResetPasswordResponse;
-import org.edx.mobile.task.ResetPasswordTask;
 import org.edx.mobile.util.InputValidationUtil;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 
+import retrofit2.Call;
+
 public class ResetPasswordActivity extends BaseAppActivity {
 
     private ActivityResetPasswordBinding binding;
-    private ResetPasswordTask resetPasswordTask;
+    private Call<ResetPasswordResponse> resetPasswordCall;
+    @Inject
+    private LoginService loginService;
 
     private static final String EXTRA_LOGIN_EMAIL = "login_email";
 
@@ -55,9 +63,9 @@ public class ResetPasswordActivity extends BaseAppActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (resetPasswordTask != null) {
-            resetPasswordTask.cancel(true);
-            resetPasswordTask = null;
+        if (resetPasswordCall != null) {
+            resetPasswordCall.cancel();
+            resetPasswordCall = null;
         }
     }
 
@@ -75,9 +83,11 @@ public class ResetPasswordActivity extends BaseAppActivity {
         binding.loadingIndicator.setVisibility(View.VISIBLE);
         binding.dialogErrorMessage.setVisibility(View.GONE);
         binding.emailEdit.setEnabled(false);
-        resetPasswordTask = new ResetPasswordTask(this, email) {
+        resetPasswordCall = loginService.resetPassword(email);
+        resetPasswordCall.enqueue(new ErrorHandlingCallback<ResetPasswordResponse>(
+                this, CallTrigger.USER_ACTION) {
             @Override
-            public void onSuccess(@NonNull ResetPasswordResponse result) {
+            protected void onResponse(@NonNull final ResetPasswordResponse result) {
                 if (result.isSuccess()) {
                     onResetSuccess();
                 } else {
@@ -86,12 +96,10 @@ public class ResetPasswordActivity extends BaseAppActivity {
             }
 
             @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
-                onResetError(ErrorUtils.getErrorMessage(ex, context));
+            protected void onFailure(@NonNull Throwable error) {
+                onResetError(ErrorUtils.getErrorMessage(error, ResetPasswordActivity.this));
             }
-        };
-        resetPasswordTask.execute();
+        });
     }
 
     private void onResetSuccess() {

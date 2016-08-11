@@ -5,13 +5,20 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.task.Task;
 
-public abstract class DeleteAccountImageTask extends
+import de.greenrobot.event.EventBus;
+
+public class DeleteAccountImageTask extends
         Task<Void> {
 
     @Inject
-    private UserAPI userAPI;
+    private UserService userService;
+
+    @Inject
+    private LoginPrefs loginPrefs;
 
     @NonNull
     private final String username;
@@ -23,7 +30,14 @@ public abstract class DeleteAccountImageTask extends
 
 
     public Void call() throws Exception {
-        userAPI.deleteProfileImage(username);
+        userService.deleteProfileImage(username).execute();
         return null;
+    }
+
+    @Override
+    protected void onSuccess(Void response) throws Exception {
+        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, null));
+        // Delete the logged in user's ProfileImage
+        loginPrefs.setProfileImage(username, null);
     }
 }

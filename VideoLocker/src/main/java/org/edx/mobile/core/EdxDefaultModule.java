@@ -8,7 +8,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
 
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.MainApplication;
+import org.edx.mobile.course.CourseService;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.IApi;
@@ -31,13 +34,15 @@ import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.storage.IStorage;
 import org.edx.mobile.module.storage.Storage;
 import org.edx.mobile.util.AppUpdateUtils;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.BrowserUtil;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.MediaConsentUtils;
 
 import de.greenrobot.event.EventBus;
 import okhttp3.OkHttpClient;
-import retrofit.RestAdapter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EdxDefaultModule extends AbstractModule {
     //if your module requires a context, add a constructor that will be passed a context.
@@ -77,8 +82,6 @@ public class EdxDefaultModule extends AbstractModule {
 
         bind(LinearLayoutManager.class).toProvider(LinearLayoutManagerProvider.class);
 
-        bind(RestAdapter.class).toProvider(RestAdapterProvider.class);
-
         bind(EventBus.class).toInstance(EventBus.getDefault());
 
         bind(Gson.class).toInstance(new GsonBuilder()
@@ -87,6 +90,13 @@ public class EdxDefaultModule extends AbstractModule {
                 .registerTypeAdapter(Page.class, new JsonPageDeserializer())
                 .serializeNulls()
                 .create());
+
+        bind(Retrofit.class).toProvider(RetrofitProvider.class);
+
+        bind(LoginService.class).toProvider(LoginService.Provider.class);
+        bind(CourseService.class).toProvider(CourseService.Provider.class);
+        bind(DiscussionService.class).toProvider(DiscussionService.Provider.class);
+        bind(UserService.class).toProvider(UserService.Provider.class);
 
         requestStaticInjection(BrowserUtil.class, MediaConsentUtils.class,
                 DiscussionTextUtils.class, AppUpdateUtils.class);

@@ -2,7 +2,6 @@ package org.edx.mobile.module.storage;
 
 import android.support.annotation.NonNull;
 
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.model.VideoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
@@ -97,14 +96,14 @@ public interface IStorage {
      * videos and no videos downloaded in the course
      * @return
      */
-    @NonNull ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws HttpException;
+    @NonNull ArrayList<EnrolledCoursesResponse> getDownloadedCoursesWithVideoCountAndSize() throws Exception;
 
     /**
      * Returns list of all recently downloaded videos list
      * The list contains local videos with only course header sorted based on Downloaded Date.
      * @return
      */
-    @NonNull ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws HttpException;
+    @NonNull ArrayList<SectionItemInterface> getRecentDownloadedVideosList() throws Exception;
 
     /**
      * This DownloadEntry model is fetched and returned from the db

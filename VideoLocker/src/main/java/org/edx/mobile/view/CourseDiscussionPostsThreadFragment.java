@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -25,20 +27,26 @@ import org.edx.mobile.discussion.CourseTopics;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionPostsFilter;
 import org.edx.mobile.discussion.DiscussionPostsSort;
+import org.edx.mobile.discussion.DiscussionRequestFields;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionThreadUpdatedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.task.GetSpecificCourseTopicsTask;
-import org.edx.mobile.task.GetThreadListTask;
 import org.edx.mobile.view.adapters.DiscussionPostsSpinnerAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -69,10 +77,13 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     @InjectExtra(value = Router.EXTRA_DISCUSSION_TOPIC, optional = true)
     private DiscussionTopic discussionTopic;
 
+    @Inject
+    private DiscussionService discussionService;
+
     private DiscussionPostsFilter postsFilter = DiscussionPostsFilter.ALL;
     private DiscussionPostsSort postsSort = DiscussionPostsSort.LAST_ACTIVITY_AT;
 
-    private GetThreadListTask getThreadListTask;
+    private Call<Page<DiscussionThread>> getThreadListCall;
 
     /**
      * Runnable for deferring the fetching of threads for a topic, until we
@@ -208,31 +219,31 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
 
     private void fetchDiscussionTopic() {
         String topicId = getArguments().getString(Router.EXTRA_DISCUSSION_TOPIC_ID);
-        final GetSpecificCourseTopicsTask getTopicsTask = new GetSpecificCourseTopicsTask(getContext(),
-                courseData.getCourse().getId(), Collections.singletonList(topicId)) {
-            @Override
-            protected void onSuccess(CourseTopics courseTopics) throws Exception {
-                discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
-                Activity activity = getActivity();
-                if (activity != null &&
-                        !getArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
-                    // We only need to set the title here when coming from a deep link
-                    activity.setTitle(discussionTopic.getName());
-                }
+        discussionService.getSpecificCourseTopics(courseData.getCourse().getId(),
+                Collections.singletonList(topicId))
+                .enqueue(new ErrorHandlingCallback<CourseTopics>(getContext(),
+                        CallTrigger.LOADING_UNCACHED,
+                        new ProgressViewController(loadingIndicator)) {
+                    @Override
+                    protected void onResponse(@NonNull final CourseTopics courseTopics) {
+                        discussionTopic = courseTopics.getCoursewareTopics().get(0).getChildren().get(0);
+                        Activity activity = getActivity();
+                        if (activity != null &&
+                                !getArguments().getBoolean(ARG_DISCUSSION_HAS_TOPIC_NAME)) {
+                            // We only need to set the title here when coming from a deep link
+                            activity.setTitle(discussionTopic.getName());
+                        }
 
-                if (getView() != null) {
-                    if (populatePostListRunnable != null) {
-                        setProgressDialog(null);
-                        populatePostListRunnable.run();
+                        if (getView() != null) {
+                            if (populatePostListRunnable != null) {
+                                populatePostListRunnable.run();
+                            }
+
+                            // Now that we have the topic date, we can allow the user to add new posts.
+                            createNewPostLayout.setEnabled(true);
+                        }
                     }
-
-                    // Now that we have the topic date, we can allow the user to add new posts.
-                    createNewPostLayout.setEnabled(true);
-                }
-            }
-        };
-        getTopicsTask.setProgressDialog(loadingIndicator);
-        getTopicsTask.execute();
+                });
     }
 
     @Override
@@ -311,14 +322,29 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
     }
 
     private void populatePostList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
-        if (getThreadListTask != null) {
-            getThreadListTask.cancel(true);
+        if (getThreadListCall != null) {
+            getThreadListCall.cancel();
         }
 
-        getThreadListTask = new GetThreadListTask(getActivity(), courseData.getCourse().getId(),
-                discussionTopic, postsFilter, postsSort, nextPage) {
+        final List<String> requestedFields = Collections.singletonList(
+                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        if (!discussionTopic.isFollowingType()) {
+            getThreadListCall = discussionService.getThreadList(courseData.getCourse().getId(),
+                    getAllTopicIds(), postsFilter.getQueryParamValue(),
+                    postsSort.getQueryParamValue(), nextPage, requestedFields);
+        } else {
+            getThreadListCall = discussionService.getFollowingThreadList(
+                    courseData.getCourse().getId(), postsFilter.getQueryParamValue(),
+                    postsSort.getQueryParamValue(), nextPage, requestedFields);
+        }
+        getThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(getActivity(),
+                CallTrigger.LOADING_UNCACHED,
+                // Initially we need to show the spinner at the center of the screen. After that,
+                // the ListView will start showing a footer-based loading indicator.
+                nextPage > 1 || callback.isRefreshingSilently() ? null :
+                        new ProgressViewController(loadingIndicator)) {
             @Override
-            public void onSuccess(Page<DiscussionThread> threadsPage) {
+            protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 if (getView() == null) return;
                 ++nextPage;
                 callback.onPageLoaded(threadsPage);
@@ -337,25 +363,18 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
             }
 
             @Override
-            protected void onException(Exception ex) {
+            public void onFailure(@NonNull final Call<Page<DiscussionThread>> call,
+                                  @NonNull final Throwable error) {
                 if (getView() == null) return;
                 // Don't display any error message if we're doing a silent
                 // refresh, as that would be confusing to the user.
                 if (!callback.isRefreshingSilently()) {
-                    super.onException(ex);
+                    super.onFailure(call, error);
                 }
                 callback.onError();
                 nextPage = 1;
             }
-        };
-        // Initially we need to show the spinner at the center of the screen. After that, the
-        // ListView will start showing a footer-based loading indicator.
-        if (nextPage > 1 || callback.isRefreshingSilently()) {
-            getThreadListTask.setProgressCallback(null);
-        } else {
-            getThreadListTask.setProgressDialog(loadingIndicator);
-        }
-        getThreadListTask.execute();
+        });
     }
 
     private void setScreenStateUponError(@NonNull EmptyQueryResultsFor query) {
@@ -392,5 +411,26 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         centerMessageBox.setVisibility(View.GONE);
         spinnersContainerLayout.setVisibility(View.VISIBLE);
         discussionPostsListView.setVisibility(View.VISIBLE);
+    }
+
+    @NonNull
+    public List<String> getAllTopicIds() {
+        if (discussionTopic.isAllType()) {
+            return Collections.EMPTY_LIST;
+        } else {
+            final List<String> ids = new ArrayList<>();
+            appendTopicIds(discussionTopic, ids);
+            return ids;
+        }
+    }
+
+    private void appendTopicIds(@NonNull DiscussionTopic dTopic, @NonNull List<String> ids) {
+        String id = dTopic.getIdentifier();
+        if (!TextUtils.isEmpty(id)) {
+            ids.add(id);
+        }
+        for (DiscussionTopic child : dTopic.getChildren()) {
+            appendTopicIds(child, ids);
+        }
     }
 }

@@ -7,12 +7,11 @@ import android.text.TextUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 
-import retrofit.RestAdapter;
+import retrofit2.Call;
 
 @Singleton
 public class CourseAPI {
@@ -24,20 +23,20 @@ public class CourseAPI {
 
 
     @Inject
-    public CourseAPI(@NonNull RestAdapter restAdapter, @NonNull UserPrefs userPrefs) {
-        courseService = restAdapter.create(CourseService.class);
+    public CourseAPI(@NonNull CourseService courseService, @NonNull UserPrefs userPrefs) {
+        this.courseService = courseService;
         this.userPrefs = userPrefs;
     }
 
     public
     @NonNull
-    Page<CourseDetail> getCourseList(int page) throws HttpException {
+    Call<Page<CourseDetail>> getCourseList(int page) {
         return courseService.getCourseList(getUsername(), true, page);
     }
 
     public
     @NonNull
-    CourseDetail getCourseDetail(@NonNull String courseId) throws HttpException {
+    Call<CourseDetail> getCourseDetail(@NonNull String courseId) {
         // Empty courseId will return a 200 for a list of course details, instead of a single course
         if (TextUtils.isEmpty(courseId)) throw new IllegalArgumentException();
         return courseService.getCourseDetail(courseId, getUsername());

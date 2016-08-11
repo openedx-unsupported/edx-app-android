@@ -16,7 +16,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.EdxEnvironment;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ShareUtils;
 import org.edx.mobile.view.PresenterFragment;
@@ -40,7 +40,7 @@ public class UserProfileAccomplishmentsFragment extends PresenterFragment<UserPr
     protected UserProfileAccomplishmentsPresenter createPresenter() {
         final Injector injector = RoboGuice.getInjector(getActivity());
         return new UserProfileAccomplishmentsPresenter(
-                injector.getInstance(UserAPI.class),
+                injector.getInstance(UserService.class),
                 injector.getInstance(UserPrefs.class),
                 ((UserProfileBioTabParent) getParentFragment()).getBioInteractor().getUsername());
     }

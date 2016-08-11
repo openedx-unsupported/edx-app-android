@@ -33,22 +33,30 @@ public class OkHttpUtil {
     private static final int cacheSize = 10 * 1024 * 1024; // 10 MiB
 
     public static OkHttpClient getClient(@NonNull Context context) {
-        return getClient(context, false);
+        return getClient(context, false, false);
     }
 
     public static OkHttpClient getOAuthBasedClient(@NonNull Context context) {
-        return getClient(context, true);
+        return getClient(context, true, false);
     }
 
-    private static OkHttpClient getClient(@NonNull Context context, boolean isOAuthBased) {
+    public static OkHttpClient getOAuthBasedClientWithOfflineCache(@NonNull Context context) {
+        return getClient(context, true, true);
+    }
+
+    private static OkHttpClient getClient(@NonNull Context context,
+                                          boolean isOAuthBased, boolean usesOfflineCache) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        final File cacheDirectory = new File(context.getFilesDir(), "http-cache");
-        if (!cacheDirectory.exists()) {
-            cacheDirectory.mkdirs();
-        }
-        final Cache cache = new Cache(cacheDirectory, cacheSize);
-        builder.cache(cache);
         List<Interceptor> interceptors = builder.interceptors();
+        if (usesOfflineCache) {
+            final File cacheDirectory = new File(context.getFilesDir(), "http-cache");
+            if (!cacheDirectory.exists()) {
+                cacheDirectory.mkdirs();
+            }
+            final Cache cache = new Cache(cacheDirectory, cacheSize);
+            builder.cache(cache);
+            interceptors.add(new OfflineRequestInterceptor(context));
+        }
         interceptors.add(new JsonMergePatchInterceptor());
         interceptors.add(new UserAgentInterceptor(
                 System.getProperty("http.agent") + " " +

@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import retrofit2.Response;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -105,7 +107,9 @@ public class ApiTests extends HttpBaseTestCase {
     @Test
     public void testResetPassword() throws Exception {
         print("test: reset password");
-        ResetPasswordResponse model = loginAPI.resetPassword("user@edx.org");
+        Response<ResetPasswordResponse> response = loginService.resetPassword("user@edx.org").execute();
+        assertTrue(response.isSuccessful());
+        ResetPasswordResponse model = response.body();
         assertTrue(model != null);
         print(model.value);
         print("test: finished: reset password");

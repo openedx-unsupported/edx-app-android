@@ -11,11 +11,9 @@ import com.google.inject.Singleton;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpResponseStatusException;
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -23,10 +21,13 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.observer.BasicObservable;
 import org.edx.mobile.util.observer.Observable;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit.RestAdapter;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 @Singleton
 public class LoginAPI {
@@ -53,43 +54,40 @@ public class LoginAPI {
     private final Gson gson;
 
     @Inject
-    public LoginAPI(@NonNull RestAdapter restAdapter,
+    public LoginAPI(@NonNull LoginService loginService,
                     @NonNull Config config,
                     @NonNull LoginPrefs loginPrefs,
                     @NonNull ISegment segment,
                     @NonNull NotificationDelegate notificationDelegate,
                     @NonNull Gson gson) {
+        this.loginService = loginService;
         this.config = config;
         this.loginPrefs = loginPrefs;
         this.segment = segment;
         this.notificationDelegate = notificationDelegate;
         this.gson = gson;
-        loginService = restAdapter.create(LoginService.class);
     }
 
     @NonNull
-    public AuthResponse getAccessToken(@NonNull String username,
-                                       @NonNull String password) throws HttpException {
+    public Response<AuthResponse> getAccessToken(@NonNull String username,
+                                       @NonNull String password) throws IOException {
         String grantType = "password";
         String clientID = config.getOAuthClientId();
-        return loginService.getAccessToken(grantType, clientID, username, password);
+        return loginService.getAccessToken(grantType, clientID, username, password).execute();
     }
 
     @NonNull
     public AuthResponse logInUsingEmail(@NonNull String email, @NonNull String password) throws Exception {
-        try {
-            final AuthResponse response = getAccessToken(email, password);
-            if (!response.isSuccess()) {
-                throw new AuthException(response.error);
-            }
-            finishLogIn(response, LoginPrefs.AuthBackend.PASSWORD, email.trim());
-            return response;
-        } catch (HttpResponseStatusException ex) {
-            if (ex.getStatusCode() >= 400 && ex.getStatusCode() < 500) {
-                throw new AuthException(ex);
-            }
-            throw ex;
+        final Response<AuthResponse> response = getAccessToken(email, password);
+        if (!response.isSuccessful()) {
+            throw new AuthException(response.message());
         }
+        final AuthResponse data = response.body();
+        if (!data.isSuccess()) {
+            throw new AuthException(data.error);
+        }
+        finishLogIn(data, LoginPrefs.AuthBackend.PASSWORD, email.trim());
+        return data;
     }
 
     @NonNull
@@ -105,13 +103,20 @@ public class LoginAPI {
     @NonNull
     private AuthResponse finishSocialLogIn(@NonNull String accessToken, @NonNull LoginPrefs.AuthBackend authBackend) throws Exception {
         final String backend = ApiConstants.getOAuthGroupIdForAuthBackend(authBackend);
-        final AuthResponse response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(), backend);
-        if (response.error != null && response.error.equals("401")) {
+        final Response<AuthResponse> response = loginService.exchangeAccessToken(accessToken, config.getOAuthClientId(), backend).execute();
+        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // TODO: Introduce a more explicit error code to indicate that an account is not linked.
             throw new AccountNotLinkedException();
         }
-        finishLogIn(response, authBackend, "");
-        return response;
+        if (!response.isSuccessful()) {
+            throw new HttpResponseStatusException(response.code());
+        }
+        final AuthResponse data = response.body();
+        if (data.error != null && data.error.equals(Integer.toString(HttpURLConnection.HTTP_UNAUTHORIZED))) {
+            throw new AccountNotLinkedException();
+        }
+        finishLogIn(data, authBackend, "");
+        return data;
     }
 
     private void finishLogIn(@NonNull AuthResponse response, @NonNull LoginPrefs.AuthBackend authBackend, @NonNull String usernameUsedToLogIn) throws Exception {
@@ -138,9 +143,12 @@ public class LoginAPI {
         logInEvents.sendData(new LogInEvent());
     }
 
-    public void logOut(@NonNull final String refreshToken) throws HttpException {
-        loginService.revokeAccessToken(config.getOAuthClientId(),
-                refreshToken, ApiConstants.TOKEN_TYPE_REFRESH);
+    public void logOut() {
+        final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
+        if (currentAuth != null && currentAuth.refresh_token != null) {
+            loginService.revokeAccessToken(config.getOAuthClientId(),
+                    currentAuth.refresh_token, ApiConstants.TOKEN_TYPE_REFRESH);
+        }
     }
 
     @NonNull
@@ -167,22 +175,18 @@ public class LoginAPI {
     }
 
     @NonNull
-    public ResetPasswordResponse resetPassword(@NonNull String email) throws HttpException {
-        return loginService.resetPassword(email);
-    }
-
-    @NonNull
     private void register(Bundle parameters) throws Exception {
-        try {
-            final Map<String, String> parameterMap = new HashMap<>();
-            for (String key : parameters.keySet()) {
-                parameterMap.put(key, parameters.getString(key));
-            }
-            loginService.register(parameterMap);
-        } catch (HttpResponseStatusException e) {
-            if ((e.getStatusCode() == HttpStatus.BAD_REQUEST || e.getStatusCode() == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(e.getBody())) {
+        final Map<String, String> parameterMap = new HashMap<>();
+        for (String key : parameters.keySet()) {
+            parameterMap.put(key, parameters.getString(key));
+        }
+        Response<ResponseBody> response = loginService.register(parameterMap).execute();
+        if (!response.isSuccessful()) {
+            final int errorCode = response.code();
+            final String errorBody = response.errorBody().string();
+            if ((errorCode == HttpStatus.BAD_REQUEST || errorCode == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(errorBody)) {
                 try {
-                    final FormFieldMessageBody body = gson.fromJson(e.getBody(), FormFieldMessageBody.class);
+                    final FormFieldMessageBody body = gson.fromJson(errorBody, FormFieldMessageBody.class);
                     if (body != null && body.size() > 0) {
                         throw new RegistrationException(body);
                     }
@@ -190,15 +194,19 @@ public class LoginAPI {
                     // Looks like the response does not contain form validation errors.
                 }
             }
-            throw e;
+            throw new HttpResponseStatusException(errorCode);
         }
     }
 
     @NonNull
     public ProfileModel getProfile() throws Exception {
-        ProfileModel res = loginService.getProfile();
-        loginPrefs.storeUserProfile(res);
-        return res;
+        Response<ProfileModel> response = loginService.getProfile().execute();
+        if (!response.isSuccessful()) {
+            throw new HttpResponseStatusException(response.code());
+        }
+        ProfileModel data = response.body();
+        loginPrefs.storeUserProfile(data);
+        return data;
     }
 
     public static class AccountNotLinkedException extends Exception {

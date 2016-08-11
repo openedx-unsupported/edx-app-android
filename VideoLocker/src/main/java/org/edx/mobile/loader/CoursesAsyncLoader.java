@@ -6,7 +6,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.google.inject.Inject;
 
 import org.edx.mobile.core.IEdxEnvironment;
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
@@ -52,7 +51,7 @@ public class CoursesAsyncLoader extends AsyncTaskLoader<AsyncTaskResult<List<Enr
                 environment.getNotificationDelegate().checkCourseEnrollment(enrolledCoursesResponse);
             }
 
-        } catch (HttpException exception) {
+        } catch (Exception exception) {
             result.setEx(exception);
         }
 

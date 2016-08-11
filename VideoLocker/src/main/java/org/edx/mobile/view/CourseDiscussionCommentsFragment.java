@@ -18,19 +18,26 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionRequestFields;
+import org.edx.mobile.discussion.DiscussionService;
+import org.edx.mobile.discussion.DiscussionService.FlagBody;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionUtils;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.task.GetCommentsListTask;
-import org.edx.mobile.task.SetCommentFlaggedTask;
 import org.edx.mobile.view.adapters.DiscussionCommentsAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -58,12 +65,15 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private DiscussionComment discussionResponse;
 
     @Inject
+    private DiscussionService discussionService;
+
+    @Inject
     ISegment segIO;
 
     private DiscussionCommentsAdapter discussionCommentsAdapter;
 
     @Nullable
-    private GetCommentsListTask getCommentsListTask;
+    private Call<Page<DiscussionComment>> getCommentsListCall;
 
     private int nextPage = 1;
     private boolean hasMorePages = true;
@@ -71,7 +81,7 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     private InfiniteScrollUtils.InfiniteListController controller;
 
     @Nullable
-    private SetCommentFlaggedTask setCommentFlaggedTask;
+    private Call<DiscussionComment> setCommentFlaggedCall;
 
     @Nullable
     @Override
@@ -114,14 +124,17 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     }
 
     protected void getCommentsList(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionComment> callback) {
-        if (getCommentsListTask != null) {
-            getCommentsListTask.cancel(true);
+        if (getCommentsListCall != null) {
+            getCommentsListCall.cancel();
         }
-        getCommentsListTask = new GetCommentsListTask(getActivity(),
-                discussionResponse.getIdentifier(),
-                nextPage) {
+        final List<String> requestedFields = Collections.singletonList(
+                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        getCommentsListCall = discussionService.getCommentsList(
+                discussionResponse.getIdentifier(), nextPage, requestedFields);
+        getCommentsListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionComment>>(
+                getActivity(), CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
             @Override
-            public void onSuccess(Page<DiscussionComment> threadCommentsPage) {
+            protected void onResponse(@NonNull final Page<DiscussionComment> threadCommentsPage) {
                 ++nextPage;
                 callback.onPageLoaded(threadCommentsPage);
                 discussionCommentsAdapter.notifyDataSetChanged();
@@ -129,15 +142,12 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
             }
 
             @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
+            protected void onFailure(@NonNull final Throwable error) {
                 callback.onError();
                 nextPage = 1;
                 hasMorePages = false;
             }
-        };
-        getCommentsListTask.setProgressCallback(null);
-        getCommentsListTask.execute();
+        });
     }
 
     @Override
@@ -156,8 +166,8 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (getCommentsListTask != null) {
-            getCommentsListTask.cancel(true);
+        if (getCommentsListCall != null) {
+            getCommentsListCall.cancel();
         }
         EventBus.getDefault().unregister(this);
     }
@@ -178,18 +188,18 @@ public class CourseDiscussionCommentsFragment extends BaseFragment implements Di
 
     @Override
     public void reportComment(@NonNull DiscussionComment comment) {
-        if (setCommentFlaggedTask != null) {
-            setCommentFlaggedTask.cancel(true);
+        if (setCommentFlaggedCall != null) {
+            setCommentFlaggedCall.cancel();
         }
-        setCommentFlaggedTask = new SetCommentFlaggedTask(context, comment, !comment.isAbuseFlagged()) {
+        setCommentFlaggedCall = discussionService.setCommentFlagged(
+                comment.getIdentifier(), new FlagBody(!comment.isAbuseFlagged()));
+        setCommentFlaggedCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
+                context, CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
             @Override
-            public void onSuccess(DiscussionComment comment) {
-                super.onSuccess(comment);
+            protected void onResponse(@NonNull final DiscussionComment comment) {
                 discussionCommentsAdapter.updateComment(comment);
             }
-        };
-        setCommentFlaggedTask.setProgressCallback(null);
-        setCommentFlaggedTask.execute();
+        });
     }
 
     @Override

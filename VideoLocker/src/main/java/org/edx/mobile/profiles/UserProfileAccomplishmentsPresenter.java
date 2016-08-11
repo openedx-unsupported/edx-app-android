@@ -1,26 +1,22 @@
 package org.edx.mobile.profiles;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 
+import org.edx.mobile.http.Callback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.user.UserAPI;
-import org.edx.mobile.util.observer.AsyncCallableUtils;
-import org.edx.mobile.util.observer.Observer;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.view.ViewHoldingPresenter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<UserProfileAccomplishmentsPresenter.ViewInterface> {
 
     @NonNull
-    private final UserAPI userAPI;
+    private final UserService userService;
 
     @NonNull
     private final String username;
@@ -36,8 +32,8 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
 
     private boolean pageLoading = false;
 
-    public UserProfileAccomplishmentsPresenter(@NonNull UserAPI userAPI, @NonNull UserPrefs userPrefs, @NonNull String username) {
-        this.userAPI = userAPI;
+    public UserProfileAccomplishmentsPresenter(@NonNull UserService userService, @NonNull UserPrefs userPrefs, @NonNull String username) {
+        this.userService = userService;
         this.username = username;
         final ProfileModel model = userPrefs.getProfile();
         viewingOwnProfile = null != model && model.username.equalsIgnoreCase(username);
@@ -67,27 +63,15 @@ public class UserProfileAccomplishmentsPresenter extends ViewHoldingPresenter<Us
         }, new InfiniteScrollUtils.PageLoader<BadgeAssertion>() {
             @Override
             public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<BadgeAssertion> callback) {
-                AsyncCallableUtils.observe(new Callable<Page<BadgeAssertion>>() {
+                userService.getBadges(username, page).enqueue(new Callback<Page<BadgeAssertion>>() {
                     @Override
-                    public Page<BadgeAssertion> call() throws Exception {
-                        return userAPI.getBadges(username, page);
-                    }
-                }, new Observer<Page<BadgeAssertion>>() {
-                    @Override
-                    public void onData(@NonNull final Page<BadgeAssertion> data) {
+                    protected void onResponse(@NonNull final Page<BadgeAssertion> badges) {
                         ++page;
-                        // TODO: Better way to schedule this on main thread
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                callback.onPageLoaded(data);
-
-                            }
-                        });
+                        callback.onPageLoaded(badges);
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable error) {
+                    protected void onFailure(@NonNull Throwable error) {
                         // do nothing. Better to just deal show what we can
                     }
                 });

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +32,10 @@ import com.joanzapata.iconify.widget.IconImageView;
 import org.apache.http.protocol.HTTP;
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
-import org.edx.mobile.course.GetCourseDetailTask;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.services.ServiceManager;
@@ -47,6 +50,8 @@ import org.edx.mobile.view.custom.URLInterceptorWebViewClient;
 import java.util.List;
 
 import org.edx.mobile.base.BaseFragment;
+
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 
 
@@ -55,7 +60,7 @@ public class CourseDetailFragment extends BaseFragment {
     private static final int LOG_IN_REQUEST_CODE = 42;
 
     @Nullable
-    private GetCourseDetailTask getCourseDetailTask;
+    private Call<CourseDetail> getCourseDetailCall;
 
     private TextView mCourseTextName;
     private TextView mCourseTextDetails;
@@ -82,6 +87,9 @@ public class CourseDetailFragment extends BaseFragment {
 
 
     protected final Logger logger = new Logger(getClass().getName());
+
+    @Inject
+    private CourseAPI courseApi;
 
     @Inject
     IEdxEnvironment environment;
@@ -208,18 +216,18 @@ public class CourseDetailFragment extends BaseFragment {
      * overview, remove the courseAbout view.
      */
     private void populateAboutThisCourse() {
-        getCourseDetailTask = new GetCourseDetailTask(getActivity(), courseDetail.course_id) {
+        getCourseDetailCall = courseApi.getCourseDetail(courseDetail.course_id);
+        getCourseDetailCall.enqueue(new ErrorHandlingCallback<CourseDetail>(
+                getActivity(), CallTrigger.LOADING_UNCACHED) {
             @Override
-            protected void onSuccess(CourseDetail courseDetail) throws Exception {
-                super.onSuccess(courseDetail);
+            protected void onResponse(@NonNull final CourseDetail courseDetail) {
                 if (courseDetail.overview != null && !courseDetail.overview.isEmpty()) {
                     populateAboutThisCourse(courseDetail.overview);
                 } else {
                     courseAbout.setVisibility(View.GONE);
                 }
             }
-        };
-        getCourseDetailTask.execute();
+        });
     }
 
     /**
