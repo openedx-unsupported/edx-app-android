@@ -175,7 +175,7 @@
     <!-- Label for date when course is ending -->
     <string name="label_ending">Ending - {date}</string>
     <!-- Title for the course filter menu popup -->
-    <string name="course_view_modes">Course View Modes</string>
+    <string name="course_view_modes">Course View Options</string>
     <!-- Label for the course filter menu popup option for filtering by videos only -->
     <string name="course_view_mode_videos_only">Videos Only</string>
     <!-- Label for the course filter menu popup option for displaying the full course -->
@@ -183,7 +183,7 @@
     <!-- Label for the menu popup for viewing the course on the web -->
     <string name="course_view_on_web">View on Web</string>
     <!-- Label for the menu popup for changing mode to Videos Only/Full Course -->
-    <string name="course_change_mode">Mode picker</string>
+    <string name="course_change_mode">Course viewing options</string>
 
     <!-- Course Details -->
     <!-- Accessible content description of label for course content -->
@@ -428,7 +428,7 @@
     <!-- Accessibility Label for Pause button of Video Player -->
     <string name="video_player_pause">Pause</string>
     <!-- Accessibility Label for Rewind button on Video Player bottom bar -->
-    <string name="video_player_rewind">Rewind</string>
+    <string name="video_player_rewind">Rewind 30 seconds</string>
     <!-- Accessibility Label for Settings button on Video Player bottom bar -->
     <string name="video_player_settings">Settings</string>
     <!-- Accessibility Label for Entering Fullscreen button on Video Player bottom bar -->

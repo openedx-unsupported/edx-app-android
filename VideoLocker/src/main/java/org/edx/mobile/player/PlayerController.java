@@ -21,7 +21,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -194,7 +193,7 @@ public class PlayerController extends FrameLayout {
             mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
-        mRewButton = (ImageButton) v.findViewById(R.id.rew);
+        mRewButton = (ImageButton) v.findViewById(R.id.rewind_button);
         if (mRewButton != null) {
             mRewButton.setOnClickListener(mRewListener);
             if (!mFromXml) {
