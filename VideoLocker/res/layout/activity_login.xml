@@ -100,18 +100,6 @@
 
                         </android.support.design.widget.TextInputLayout>
 
-                        <TextView
-                            android:id="@+id/forgot_password_tv"
-                            style="@style/semibold_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/selectable_box_overlay"
-                            android:focusable="true"
-                            android:gravity="center"
-                            android:text="@string/forgot_password"
-                            android:textColor="@color/text_navigation"
-                            android:textSize="12sp" />
 
                         <FrameLayout
                             android:id="@+id/login_button_layout"
@@ -128,6 +116,20 @@
                                 android:id="@+id/progress"
                                 layout="@layout/button_progress_indicator" />
                         </FrameLayout>
+                        <TextView
+                            android:id="@+id/forgot_password_tv"
+                            style="@style/semibold_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/selectable_box_overlay"
+                            android:focusable="true"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:text="@string/forgot_password"
+                            android:textColor="@color/text_navigation"
+                            android:textSize="12sp" />
+
 
                         <LinearLayout
                             android:id="@+id/panel_login_social"

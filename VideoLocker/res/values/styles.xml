@@ -329,7 +329,7 @@
     <style name="edX.Widget.SignInButtonLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/edx_button_height</item>
-        <item name="android:layout_marginTop">@dimen/edx_margin</item>
+        <item name="android:layout_marginTop">@dimen/widget_margin</item>
         <item name="android:background">@drawable/edx_brand_button</item>
     </style>
 
