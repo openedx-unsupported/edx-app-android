@@ -2,21 +2,19 @@ package org.edx.mobile.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +28,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.base.BaseFragmentActivity;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.databinding.DrawerNavigationBinding;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.logger.Logger;
@@ -37,15 +36,12 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.facebook.IUiLifecycleHelper;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.profiles.UserProfileActivity;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
-import org.edx.mobile.view.dialog.IDialogCallback;
-import org.edx.mobile.view.dialog.NetworkCheckDialogFragment;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
@@ -54,36 +50,29 @@ import de.greenrobot.event.EventBus;
 public class NavigationFragment extends BaseFragment {
 
     private static final String TAG = "NavigationFragment";
+    private DrawerNavigationBinding drawerNavigationBinding;
+    private final Logger logger = new Logger(getClass().getName());
+    @Nullable
+    private GetAccountTask getAccountTask;
+    @Nullable
+    private ProfileImage profileImage;
+    ProfileModel profile;
+    @Nullable
+    ImageView imageView;
+    private IUiLifecycleHelper uiLifecycleHelper;
 
     @Inject
     IEdxEnvironment environment;
-
     @Inject
     Config config;
-
     @Inject
     LoginPrefs loginPrefs;
 
-    private final Logger logger = new Logger(getClass().getName());
-    private NetworkCheckDialogFragment newFragment;
-
-    private IUiLifecycleHelper uiLifecycleHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
         }
     };
-
-    @Nullable
-    private GetAccountTask getAccountTask;
-
-    @Nullable
-    private ProfileImage profileImage;
-
-    ProfileModel profile;
-
-    @Nullable
-    ImageView imageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,18 +103,13 @@ public class NavigationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View layout = inflater.inflate(R.layout.drawer_navigation, container, false);
-
-        final TextView name_tv = (TextView) layout.findViewById(R.id.name_tv);
-        final TextView email_tv = (TextView) layout.findViewById(R.id.email_tv);
-        final FrameLayout nameLayout = (FrameLayout) layout.findViewById(R.id.name_layout);
-        imageView = (ImageView) layout.findViewById(R.id.profile_image);
+        drawerNavigationBinding = DataBindingUtil.inflate(inflater, R.layout.drawer_navigation, container, false);
         if (config.isUserProfilesEnabled()) {
             if (null != profileImage) {
-                loadProfileImage(profileImage, imageView);
+                loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
-                nameLayout.setOnClickListener(new OnClickListener() {
+                drawerNavigationBinding.profileLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
@@ -142,15 +126,14 @@ public class NavigationFragment extends BaseFragment {
                 });
             }
         } else {
-            imageView.setVisibility(View.GONE);
+            drawerNavigationBinding.profileImage.setVisibility(View.GONE);
 
             // Disable any on-tap effects
-            nameLayout.setClickable(false);
-            nameLayout.setForeground(null);
+            drawerNavigationBinding.profileLayout.setClickable(false);
+            drawerNavigationBinding.profileLayout.setForeground(null);
         }
 
-        TextView tvMyCourses = (TextView) layout.findViewById(R.id.drawer_option_my_courses);
-        tvMyCourses.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionMyCourses.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -164,8 +147,7 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        TextView tvMyVideos = (TextView) layout.findViewById(R.id.drawer_option_my_videos);
-        tvMyVideos.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionMyVideos.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Activity act = getActivity();
@@ -183,9 +165,7 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-
-        TextView tvFindCourses = (TextView) layout.findViewById(R.id.drawer_option_find_courses);
-        tvFindCourses.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 ISegment segIO = environment.getSegment();
@@ -205,8 +185,7 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        TextView tvSettings = (TextView) layout.findViewById(R.id.drawer_option_my_settings);
-        tvSettings.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionMySettings.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Activity act = getActivity();
@@ -222,8 +201,7 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        TextView tvSubmitFeedback = (TextView) layout.findViewById(R.id.drawer_option_submit_feedback);
-        tvSubmitFeedback.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.drawerOptionSubmitFeedback.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 String to = environment.getConfig().getFeedbackEmailAddress();
@@ -241,15 +219,14 @@ public class NavigationFragment extends BaseFragment {
 
         if (profile != null) {
             if (profile.name != null) {
-                name_tv.setText(profile.name);
+                drawerNavigationBinding.nameTv.setText(profile.name);
             }
             if (profile.email != null) {
-                email_tv.setText(profile.email);
+                drawerNavigationBinding.emailTv.setText(profile.email);
             }
         }
 
-        Button logout_btn = (Button) layout.findViewById(R.id.logout_button);
-        logout_btn.setOnClickListener(new OnClickListener() {
+        drawerNavigationBinding.logoutButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -257,10 +234,10 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        ((TextView) layout.findViewById(R.id.tv_version_no)).setText(String.format("%s %s %s",
+        drawerNavigationBinding.tvVersionNo.setText(String.format("%s %s %s",
                 getString(R.string.label_version), BuildConfig.VERSION_NAME, environment.getConfig().getEnvironmentDisplayName()));
 
-        return layout;
+        return drawerNavigationBinding.getRoot();
     }
 
     @Override
@@ -309,43 +286,19 @@ public class NavigationFragment extends BaseFragment {
         uiLifecycleHelper.onSaveInstanceState(outState);
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    private void updateWifiSwitch(View layout) {
-        final PrefManager wifiPrefManager = new PrefManager(
-                getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-        Switch wifi_switch = (Switch) layout.findViewById(R.id.wifi_setting);
-
-        wifi_switch.setOnCheckedChangeListener(null);
-        wifi_switch.setChecked(wifiPrefManager.getBoolean(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true));
-        wifi_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true);
-                } else {
-                    showWifiDialog();
-                }
-            }
-        });
-    }
-
     @SuppressWarnings("unused")
     public void onEventMainThread(@NonNull ProfilePhotoUpdatedEvent event) {
         if (event.getUsername().equalsIgnoreCase(profile.username)) {
             if (null == event.getUri()) {
                 Glide.with(NavigationFragment.this)
                         .load(R.drawable.profile_photo_placeholder)
-                        .into(imageView);
+                        .into(drawerNavigationBinding.profileImage);
             } else {
                 Glide.with(NavigationFragment.this)
                         .load(event.getUri())
                         .skipMemoryCache(true) // URI is re-used in subsequent events; disable caching
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(imageView);
+                        .into(drawerNavigationBinding.profileImage);
             }
         }
     }
@@ -355,43 +308,9 @@ public class NavigationFragment extends BaseFragment {
         final Account account = event.getAccount();
         if (account.getUsername().equalsIgnoreCase(profile.username)) {
             profileImage = account.getProfileImage();
-            if (imageView != null) {
-                loadProfileImage(account.getProfileImage(), imageView);
+            if (drawerNavigationBinding.profileImage != null) {
+                loadProfileImage(account.getProfileImage(), drawerNavigationBinding.profileImage);
             }
         }
-    }
-
-    protected void showWifiDialog() {
-        newFragment = NetworkCheckDialogFragment.newInstance(getString(R.string.wifi_dialog_title_help), getString(R.string.wifi_dialog_message_help), new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                try {
-                    PrefManager wifiPrefManager = new PrefManager
-                            (getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, false);
-                    updateWifiSwitch(getView());
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-
-            @Override
-            public void onNegativeClicked() {
-                try {
-                    PrefManager wifiPrefManager = new PrefManager(
-                            getActivity().getBaseContext(), PrefManager.Pref.WIFI);
-
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_ONLY_ON_WIFI, true);
-                    wifiPrefManager.put(PrefManager.Key.DOWNLOAD_OFF_WIFI_SHOW_DIALOG_FLAG, true);
-
-                    updateWifiSwitch(getView());
-                } catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-        });
-        newFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        newFragment.show(getFragmentManager(), "dialog");
-        newFragment.setCancelable(false);
     }
 }
