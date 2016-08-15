@@ -13,6 +13,7 @@ import com.facebook.testing.screenshot.ViewHelpers;
 import org.edx.mobile.R;
 
 public class DummyTest extends InstrumentationTestCase {
+
     public void testRendering() throws Throwable {
         LayoutInflater inflater = LayoutInflater.from(getInstrumentation().getTargetContext());
         View view = inflater.inflate(R.layout.fragment_course_dashboard, null, false);
