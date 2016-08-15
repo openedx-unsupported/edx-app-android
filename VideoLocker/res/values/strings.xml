@@ -89,6 +89,8 @@
     <string name="label_close_drawer">Close Navigation</string>
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
+    <!-- Title of user's profile screen -->
+    <string name="label_my_profile">My Profile</string>
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">My Courses</string>
     <!-- Title of user's downloaded videos list screen -->

@@ -9,7 +9,7 @@
         android:background="@color/grey_nav_background">
 
         <FrameLayout
-            android:id="@+id/name_layout"
+            android:id="@+id/profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -25,6 +25,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
+                    android:contentDescription="@string/label_my_profile"
                     style="@style/profile_image"
                     android:layout_width="@dimen/drawer_profile_image_diameter"
                     android:layout_height="@dimen/drawer_profile_image_diameter"
@@ -63,7 +64,7 @@
             android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_layout"
+            android:layout_below="@id/profile_layout"
             android:divider="@drawable/navigation_drawer_divider"
             android:dividerPadding="@dimen/edx_margin"
             android:orientation="vertical"

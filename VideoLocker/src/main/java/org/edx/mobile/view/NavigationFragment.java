@@ -109,7 +109,7 @@ public class NavigationFragment extends BaseFragment {
                 loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
-                drawerNavigationBinding.nameLayout.setOnClickListener(new OnClickListener() {
+                drawerNavigationBinding.profileLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
@@ -129,8 +129,8 @@ public class NavigationFragment extends BaseFragment {
             drawerNavigationBinding.profileImage.setVisibility(View.GONE);
 
             // Disable any on-tap effects
-            drawerNavigationBinding.nameLayout.setClickable(false);
-            drawerNavigationBinding.nameLayout.setForeground(null);
+            drawerNavigationBinding.profileLayout.setClickable(false);
+            drawerNavigationBinding.profileLayout.setForeground(null);
         }
 
         drawerNavigationBinding.drawerOptionMyCourses.setOnClickListener(new OnClickListener() {
