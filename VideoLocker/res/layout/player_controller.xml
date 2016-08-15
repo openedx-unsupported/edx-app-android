@@ -48,7 +48,7 @@
         tools:targetApi="17">
 
         <com.joanzapata.iconify.widget.IconImageButton
-            android:id="@+id/rew"
+            android:id="@+id/rewind_button"
             style="@style/video_player_bottom_control"
             android:contentDescription="@string/video_player_rewind"
             app:iconName="fa-history"
