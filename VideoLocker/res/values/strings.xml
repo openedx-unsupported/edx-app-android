@@ -381,12 +381,6 @@
     <string name="view_button_text">View</string>
     <!-- Error text when downloading an item fails -->
     <string name="download_failed_text">Download Failed</string>
-    <!-- Message indicating a number of videos has begun. Argument is a number -->
-    <plurals name="downloading_count_videos">
-        <item quantity="zero">Download Failed</item>
-        <item quantity="one">Downloading {quantity} video</item>
-        <item quantity="other">Downloading {quantity} videos</item>
-    </plurals>
     <!-- Alert dialog title to confirm download of a large quantity of data -->
     <string name="download_exceed_title">Large Download</string>
     <!-- Message shown a single video download begins -->
