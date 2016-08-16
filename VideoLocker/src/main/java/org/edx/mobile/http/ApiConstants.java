@@ -1,9 +1,13 @@
 package org.edx.mobile.http;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.prefs.PrefManager;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class ApiConstants {
     public static final String COURSE_ID = "courseId";
@@ -24,6 +28,8 @@ public class ApiConstants {
 
     public static final String URL_EXCHANGE_ACCESS_TOKEN = "/oauth2/exchange_access_token/{" + GROUP_ID + "}/";
 
+    public static final String URL_REVOKE_TOKEN = "/oauth2/revoke_token/";
+
     public static final String URL_LAST_ACCESS_FOR_COURSE ="/api/mobile/v0.5/users/{username}/course_status_info/{courseId}";
 
     public static final String URL_REGISTRATION = "/user_api/v1/account/registration/";
@@ -31,6 +37,14 @@ public class ApiConstants {
     public static final String URL_ENROLLMENT = "/api/enrollment/v1/enrollment";
 
     public static final String URL_COURSE_OUTLINE = "/api/courses/v1/blocks/?course_id={courseId}&username={username}&depth=all&requested_fields={requested_fields}&student_view_data={student_view_data}&block_counts={block_counts}&nav_depth=3";
+
+    public static final String TOKEN_TYPE_ACCESS = "access_token";
+
+    public static final String TOKEN_TYPE_REFRESH = "refresh_token";
+
+    @StringDef({TOKEN_TYPE_ACCESS, TOKEN_TYPE_REFRESH})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TokenType {}
 
     public static final int STANDARD_PAGE_SIZE = 20;
 
