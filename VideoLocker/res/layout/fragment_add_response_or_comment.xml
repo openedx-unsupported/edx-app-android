@@ -25,21 +25,15 @@
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/discussion_title_text"
                 android:layout_marginBottom="@dimen/widget_margin"
-                android:textColor="@color/edx_grayscale_neutral_x_dark"
-                android:textSize="@dimen/edx_base"
                 android:visibility="gone"
                 tools:text="Post Title"
                 tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/tvResponse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/edx_grayscale_neutral_dark"
-                android:textSize="@dimen/edx_small"
+                style="@style/discussion_regular_text"
                 tools:text="Post body" />
 
         </LinearLayout>
@@ -67,13 +61,13 @@
                 android:inputType="text|textMultiLine" />
 
             <FrameLayout
-                style="@style/edX.Widget.CreationButtonLayout"
                 android:id="@+id/btnAddComment"
+                style="@style/edX.Widget.CreationButtonLayout"
                 android:contentDescription="@string/discussion_add_response_button_description">
 
                 <TextView
-                    style="@style/edX.Widget.CreationButton"
                     android:id="@+id/btnAddCommentText"
+                    style="@style/edX.Widget.CreationButton"
                     android:text="@string/discussion_add_response_button_label" />
 
                 <include layout="@layout/button_progress_indicator" />

@@ -29,11 +29,8 @@
 
             <TextView
                 android:id="@+id/discussion_responses_comment_body_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/discussion_regular_text"
                 android:layout_marginBottom="5dp"
-                android:textColor="@color/edx_grayscale_neutral_dark"
-                android:textSize="@dimen/edx_x_small"
                 tools:text="This is a response" />
 
             <TextView

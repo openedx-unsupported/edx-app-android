@@ -286,6 +286,13 @@
         <item name="android:paddingRight">@dimen/discussion_responses_box_padding</item>
     </style>
 
+    <style name="discussion_action_bar_icon">
+        <item name="android:layout_width">@dimen/edx_small</item>
+        <item name="android:layout_height">@dimen/edx_small</item>
+        <item name="android:layout_marginEnd">@dimen/discussion_responses_action_bar_icon_margin</item>
+        <item name="android:layout_marginRight">@dimen/discussion_responses_action_bar_icon_margin</item>
+    </style>
+
     <style name="profile_image">
         <item name="android:src">@color/edx_grayscale_neutral_base</item>
         <item name="civ_border_color">@color/white</item>

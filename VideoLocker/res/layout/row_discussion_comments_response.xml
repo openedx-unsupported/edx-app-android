@@ -45,10 +45,7 @@
 
         <TextView
             android:id="@+id/discussion_comment_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/edx_grayscale_neutral_dark"
-            android:textSize="@dimen/edx_x_small"
+            style="@style/discussion_regular_text"
             tools:text="This is the text of a response." />
     </LinearLayout>
 </android.support.v7.widget.CardView>
