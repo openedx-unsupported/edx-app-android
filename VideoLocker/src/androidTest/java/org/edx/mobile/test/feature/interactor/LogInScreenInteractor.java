@@ -18,13 +18,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.edx.mobile.test.feature.matcher.ActionBarMatcher.isInActionBar;
+import static org.hamcrest.CoreMatchers.allOf;
 
 public class LogInScreenInteractor {
 
     public LogInScreenInteractor observeLogInScreen() {
         final MainApplication app = MainApplication.instance();
         final CharSequence title = ResourceUtil.getFormattedString(app.getResources(), R.string.login_title, "platform_name", app.getInjector().getInstance(Config.class).getPlatformName());
-        onView(withId(R.id.activity_title)).check(matches(withText(title.toString())));
+        onView(allOf(isInActionBar(), withText(title.toString()))).check(matches(isCompletelyDisplayed()));
         onUsernameView().check(matches(isCompletelyDisplayed()));
         onPasswordView().check(matches(isCompletelyDisplayed()));
         onLogInButton().check(matches(isCompletelyDisplayed()));

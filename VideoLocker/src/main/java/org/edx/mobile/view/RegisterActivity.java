@@ -71,6 +71,8 @@ public class RegisterActivity extends BaseFragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        setTitle(ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName()));
+
         environment.getSegment().trackScreenView(ISegment.Screens.LAUNCH_ACTIVITY);
 
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), loginPrefs);
@@ -128,27 +130,9 @@ public class RegisterActivity extends BaseFragmentActivity
             }
         });
 
-        View closeButton = findViewById(R.id.actionbar_close_btn);
-        if (closeButton != null) {
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loginPrefs.clearSocialLoginToken();
-                    finish();
-                }
-            });
-        }
-
-        TextView customTitle = (TextView) findViewById(R.id.activity_title);
-        if (customTitle != null) {
-            CharSequence title = ResourceUtil.getFormattedString(getResources(), R.string.register_title, "platform_name", environment.getConfig().getPlatformName());
-            customTitle.setText(title);
-        }
-
         setupRegistrationForm();
         hideSoftKeypad();
         tryToSetUIInteraction(true);
-
     }
 
     public void showAgreement(RegistrationAgreement agreement) {
