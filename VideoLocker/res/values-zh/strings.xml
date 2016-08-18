@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Certificates-->
+  <!--Label congratulation user on finishing course-->
+  <string name="course_details_congratulations">恭喜！</string>
+  <!--Message for user who has successfully completed a certificate course-->
+  <!--Button that opens a full view of an earned certificate-->
+  <!--Course Discovery-->
+  <!--Enroll Now button text-->
+  <!--View Course button text text-->
+  <!--Floating overlay text shown to user when they succeed at enrolling in a course-->
+  <!--Error message shown when dashboard cannot be shown from course detail view-->
+  <!--Course Sharing-->
+  <!--Description of button that will open the share course menu-->
+  <!--Share menu title-->
+  <!--Share course-->
+  <!--Settings Page-->
+  <!--Label for wifi only switch-->
+  <string name="settings_wifi_top">仅在 Wi-Fi 下下载</string>
+  <!--Label explaining what wifi only means in detail-->
+  <string name="settings_wifi_bottom">仅在 Wi-Fi 开启时下载内容</string>
+  <!--Certificate Page-->
+  <!--Description of button that will open the certificate sharing menu-->
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+  <!--Tab of tab for certicate for finished course-->
+  <string name="tab_label_certificate">证书</string>
+  <!--Header for popup list of share targets-->
+  <!--Data Usage Dialog-->
+  <!--Alert dialog error message shown when using a feature with a required Internet connection-->
+  <!--Login Activity Place Holders-->
+  <!--Hint text for login field-->
+  <string name="email_username">用户名或邮箱</string>
+  <!--Hint text for email address field in reset password dialog-->
+  <string name="email">邮箱地址</string>
+  <!--Hint text for password field-->
+  <string name="password">密码</string>
+  <!--Button text allowing user to reset their password-->
+  <string name="forgot_password">忘记密码？</string>
+  <!--Button initiating login process after user enters credentials like username and password-->
+  <string name="login">登录</string>
+  <!--Accessible content description of sign in button on Log in screen-->
+  <!--Message shown while waiting for action-->
+  <string name="progressText">请稍等...</string>
+  <!--Message shown while user waits for response to a sign in request-->
+  <string name="signing_in">登录中...</string>
+  <!--Message for shown after tapping Sign In-->
+  <string name="error_message">错误信息</string>
+  <!--Generic error during log in-->
+  <string name="error_heading">登录时出现以下错误</string>
+  <!--Error during log in.-->
+  <string name="login_failed">请确保用户名/邮箱与密码正确，再重试。</string>
+  <string name="by_signing_up">登录此应用，表明你已同意</string>
+  <!--Accessible content description of close button on Sign in and Sign up screen-->
+  <!--Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns-->
+  <!--Navigation Drawer Labels-->
+  <!--Button to open drawer-->
+  <!--Button to open drawer-->
+  <!--Button text to show user Settings screen-->
+  <string name="action_settings">设置</string>
+  <!--Title of user's profile screen-->
+  <!--Title of user's course list screen-->
+  <string name="label_my_courses">我的课程</string>
+  <!--Title of user's downloaded videos list screen-->
+  <string name="label_my_videos">我的视频</string>
+  <!--Title of Find Courses screen-->
+  <string name="label_find_courses">查找课程</string>
+  <!--Button allowing users to send an email for feedback-->
+  <string name="label_submit_feedback">提交反馈</string>
+  <!--Toggle switch on state label-->
+  <!--Toggle switch off state label-->
+  <!--Logout button label-->
+  <string name="logout">退出</string>
+  <!--Settings screen title-->
+  <string name="settings_txt">设置</string>
+  <!--Settings screen version-->
+  <string name="label_version">版本</string>
+  <!--Button text to show user Settings screen-->
+  <string name="label_settings">我的设置</string>
+  <!--Help Dialog Place Holder messages-->
+  <!--Reset password alert dialog title-->
+  <string name="confirm_dialog_title_help">密码重置</string>
+  <!--Reset password alert dialog message-->
+  <string name="success_dialog_title_help">已发送密码重置邮件</string>
+  <!--Reset password alert dialog title-->
+  <string name="title_reset_password_failed">密码重置错误</string>
+  <!--Label for switch controlling whether users permit downloading using cellular data or only wifi-->
+  <string name="wifi_dialog_title_help">允许通过数据流量下载</string>
+  <!--Password reset sent succesfully alert-->
+  <!--Password reset dialog prompt-->
+  <!--Label explaining toggle for cellular data access-->
+  <string name="wifi_dialog_message_help">允许你的设备在 Wi-Fi 不可用时，通过手机的数据流量下载视频。可能会产生数据费用。</string>
+  <!--Confirmation text for delete video dialog-->
+  <string name="delete_dialog_title_help">删除确认</string>
+  <plurals name="delete_video_dialog_msg">
+    <item quantity="other">你确定要删除这些视频吗？</item>
+  </plurals>
+  <!--Alert dialog title for users with zero rated data-->
+  <!--Alert dialog content for users with zero rated data-->
+  <!--Reset Dialog Fragment Place Holder messages-->
+  <string name="reset_dialog_title">重置标题</string>
+  <!--Title of agreement users must accept to use the app-->
+  <string name="end_user_title">最终用户许可协议</string>
+  <!--My Courses-->
+  <!--Row of course on dashboard screen-->
+  <!--Row of course on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <!--Row of Discussion on dashboard screen-->
+  <!--Row of Discussion on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <!--Row of Handouts on dashboard screen-->
+  <!--Row of Handouts on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <!--Row of announcement on dashboard screen-->
+  <!--Row of announcement on dashboard screen-->
+  <!--NOTE: TODO - not final one-->
+  <!--Accessible content description of school code label a course-->
+  <string name="school_code">学校代码</string>
+  <!--Accessible content description of course name label field-->
+  <string name="course_name">课程名称</string>
+  <!--Label indicating new course content has been downloaded-->
+  <string name="new_course_content">新的课程内容</string>
+  <!--Label for date when course starts-->
+  <!--Label for course that has ended-->
+  <!--Label for date when course is ending-->
+  <!--Title for the course filter menu popup-->
+  <!--Label for the course filter menu popup option for filtering by videos only-->
+  <!--Label for the course filter menu popup option for displaying the full course-->
+  <!--Label for the menu popup for viewing the course on the web-->
+  <!--Label for the menu popup for changing mode to Videos Only/Full Course-->
+  <!--Course Details-->
+  <!--Accessible content description of label for course content-->
+  <string name="course_content">课程内容</string>
+  <!--Tab title for course handouts section-->
+  <string name="tab_label_handouts">讲义</string>
+  <!--Button for last accessed course section. Will be followed by course name-->
+  <!--Label shown when no courseware content is available-->
+  <string name="no_chapter_text">当前没有可用的课件。</string>
+  <!--Label shown when user is enrolled in no courses-->
+  <string name="no_courses_to_display">你还未加入任何课程的学习</string>
+  <!--Label shown when no announcements are available for a course-->
+  <string name="no_announcements_to_display">本课程现在尚无任何通告。</string>
+  <!--Label shown when no handouts are available for a course-->
+  <string name="no_handouts_to_display">本课程现在尚无任何讲义。</string>
+  <!--Discussion Topics-->
+  <!--Label for the discussion topics page-->
+  <!--Hint displayed in search view for discussion posts-->
+  <!--Discussion Posts Fragment-->
+  <!--Title for discussion post search results-->
+  <!--Label for the the filter and sort options for refining the thread list-->
+  <!--Label for creating a new post-->
+  <!--Label for creating a new comment-->
+  <!--Discussion posts filter options-->
+  <!--Discussion posts filter for all posts-->
+  <!--Discussion posts filter for unread posts-->
+  <!--Discussion posts filter for unanswered posts-->
+  <!--Discussion posts sort options-->
+  <!--Discussion posts sort by recent activity-->
+  <!--Discussion posts sort by most activity-->
+  <!--Discussion posts sort by most votes-->
+  <!--Label for discussion post authored by the community TA-->
+  <!--Label for discussion post authored by the staff-->
+  <!--The label to use when indicating a post was authored by a privileged user-->
+  <!--Label for the visibility of a discussion post that is only visible to cohort-->
+  <!--Label for the visibility of a discussion post that is visible to everyone-->
+  <!--Used while constructing the author attribution text for a discussion post e.g. "3 days ago by Brian (Staff)"-->
+  <!--Used while constructing the author attribution text for an answer response e.g. "Marked as answer 2 days ago by Khalid (Community TA)"-->
+  <!--Used while constructing the author attribution text for an endorsed response e.g. "Endorsed 2 days ago by Khalid"-->
+  <!--Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff)-->
+  <!--Discussion Responses-->
+  <!--Label for question type discussions that are answered-->
+  <!--Label for question type discussions that are unanswered-->
+  <!--Label for adding a discussion response-->
+  <!--Label for number of discussion responses-->
+  <!--Label for number of discussion comments-->
+  <!--Label for adding a new comment-->
+  <!--Label for indicating that a response is an answer-->
+  <!--Label for indicating that a response is endorsed-->
+  <!--Label for time span when its less than a second after posting a response/comment-->
+  <!--Label for letting the user know his/her response was successfully added-->
+  <!--Label for letting the user know his/her comment was successfully added-->
+  <!--Discussion Responses Action Bar-->
+  <!--Label to indicate number of votes-->
+  <!--Label to indicate discussion response is not marked as inappropriate-->
+  <!--Label for discussion response that has been marked as inappropriate-->
+  <!--Title in adding a new comment-->
+  <!--Title when adding a new comment is disabled-->
+  <!--Title in showing list of comments-->
+  <!--Add comment button title in adding a new comment-->
+  <!--Add comment button description for accessibility in adding a new comment-->
+  <!--Add your comment placeholder in adding a new comment-->
+  <!--Title in adding a new response-->
+  <!--Title when adding a new response is disabled-->
+  <!--Add response button title in adding a new response-->
+  <!--Add response button description for accessibility in adding a new response-->
+  <!--Add your response placeholder in adding a new response-->
+  <!--Title placeholder in adding a new post-->
+  <!--Label for selected topic when creating a post-->
+  <!--Add post button title in adding a new discussion-->
+  <!--Add post button description for accessibility in adding a new discussion-->
+  <!--Add post button title in adding a new post-->
+  <!--Add post button content description for accessibility in adding a new post-->
+  <!--Add your post placeholder in adding a new post-->
+  <!--Add your post placeholder in adding a new post-->
+  <!--Question text in adding a new post-->
+  <!--Assessment-->
+  <!--Label showing next unit in a sub-section on assessment navigation bar-->
+  <!--Label showing previous unit in a sub-section on assessment navigation bar-->
+  <!--Label for empty video in video only mode-->
+  <!--Label showing assessment only available on website-->
+  <!--Label showing assessment only available on website-->
+  <!--Button to show wiew on web for assessment-->
+  <!--Label to show empty assessment-->
+  <!--Label to show a course will be starting soon-->
+  <!--Label to notify user to rotate device for viewing a video in full screen-->
+  <!--Label showing only youtube is available-->
+  <!--Label for button to open on youtube-->
+  <!--Video List-->
+  <!--Label shown to indicate video currently downloading-->
+  <string name="started_downloading">下载中</string>
+  <!--Title of video download screen-->
+  <string name="title_download">下载</string>
+  <!--MyVideos-->
+  <!--Title of all videos section-->
+  <string name="my_all_videos">所有视频</string>
+  <!--Title of recent videos section-->
+  <string name="my_recent_videos">近期视频</string>
+  <!--Label indicating user has no Internet connection-->
+  <string name="offline_text">离线模式</string>
+  <!--Label shown in videos section when user has no videos downloaded-->
+  <!--My Downloads-->
+  <!--Button action label to view an item-->
+  <string name="view_button_text">查看</string>
+  <!--Error text when downloading an item fails-->
+  <string name="download_failed_text">下载失败</string>
+  <!--Alert dialog title to confirm download of a large quantity of data-->
+  <string name="download_exceed_title">大数据量下载</string>
+  <!--Message shown a single video download begins-->
+  <string name="msg_started_one_video_download">正在下载1个视频</string>
+  <!--When a video download is about to start and we don't know it's file size yet-->
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_downloaded">无法下载视频</string>
+  <!--Error shown when video download fails-->
+  <string name="msg_video_not_available">此视频暂时不可访问。\n请稍后再试。</string>
+  <!--Error shown when video has flag to indicate it is not available for mobile app-->
+  <!--Message to indicate the it is not available for mobile app-->
+  <!--Alert dialog title when login fails-->
+  <string name="login_error">登录错误</string>
+  <!--Alert dialog title when login fails due to lack of Internet-->
+  <string name="no_connectivity">连接错误</string>
+  <!--Wifi New Message-->
+  <!--Toggle to allow downloads using cellular data-->
+  <string name="allow">允许</string>
+  <!--Toggle to disallow downloads using cellular data-->
+  <!--Player Settings-->
+  <!--Label for closed captions in video player-->
+  <string name="lbl_closed_caption">字幕</string>
+  <!--Label for no closed captions selected-->
+  <string name="lbl_cc_cancel">无</string>
+  <!--Accessibility Label for Video Player-->
+  <!--Accessibility Label for View on Web button on Video Player top bar-->
+  <!--Accessibility Label for Play button of Video Player-->
+  <!--Accessibility Label for Pause button of Video Player-->
+  <!--Accessibility Label for Previous button of Video Player-->
+  <!--Accessibility Label for Pause button of Video Player-->
+  <!--Accessibility Label for Rewind button on Video Player bottom bar-->
+  <!--Accessibility Label for Settings button on Video Player bottom bar-->
+  <!--Accessibility Label for Entering Fullscreen button on Video Player bottom bar-->
+  <!--Accessibility Label for Exiting Fullscreen button on Video Player bottom bar-->
+  <!--Button label to bring up course finder-->
+  <string name="find_course_text">寻找新的挑战？</string>
+  <!--Button label to bring up course finder-->
+  <string name="find_course_btn_text">寻找一门移动设备友好的课程</string>
+  <!--Message between sign in button and social login buttons-->
+  <!--Facebook login method-->
+  <string name="facebook_text">Facebook</string>
+  <!--Google login method-->
+  <string name="google_text">Google</string>
+  <!--Message on course list-->
+  <!--Accessible content description of course not listed button on Course list screen-->
+  <!--Title of find course screen-->
+  <string name="find_courses_title">查找课程</string>
+  <!--Message shown when attempting to find courses with no Internet connection-->
+  <!--Prompt allowing user to choose email program-->
+  <string name="email_chooser_header">选择发邮件的应用...</string>
+  <!--Error shown when user attempts to send email, but has no email app-->
+  <string name="email_client_not_present">未安装任何e-mail客户端</string>
+  <!--Search for a course prompt-->
+  <!--Landing Activity text-->
+  <!--Prompt leading user to sign in screen-->
+  <string name="already_have_an_account">已有账户？登录</string>
+  <!--Prompt leading user to create account screen-->
+  <string name="sign_up_and_learn">注册并开始学习</string>
+  <!--In Sign up screen-->
+  <!--In Sign up screen-->
+  <!--New Logistration Launch screen text-->
+  <!--Button leading user to create account screen-->
+  <!--Button leading user to Find Courses screen from the launch screen-->
+  <!--Button leading user to Find Courses screen from the launch screen-->
+  <!--Registration Screen-->
+  <!--Create account agreement. Followed by list of agreement names like "End User License Agreement"-->
+  <!--Button text allowing user to show hidden optional registration fields-->
+  <string name="show_optional_text">显示可选信息</string>
+  <!--Button text allowing user to hide visible optional registration fields-->
+  <string name="hide_optional_text">隐藏可选信息</string>
+  <!--Button text allowing user create an account-->
+  <string name="create_account_text">创建我的账户</string>
+  <!--Accessible content description of create account button on Registration screen-->
+  <!--Text shown while waiting for registration request-->
+  <string name="creating_account_text">创建账户...</string>
+  <!--Registration screen title-->
+  <!--Text for successful registration with social token-->
+  <!--Continue registration after social login-->
+  <!--Message shown when enrolling in a course fails-->
+  <string name="enrollment_failure">我们目前无法将你加入到这门课程。</string>
+  <!--Alert dialog button allowing user to repeat their attempted action-->
+  <!--data charges may apply dialog text-->
+  <!--Alert dialog title shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_title">可能会产生数据流量费用</string>
+  <!--Alert dialog content shown for users whose in app data is zero rated, when they follow a link outside the app-->
+  <string name="open_external_url_desc">此链接将在你的浏览器中打开，这可能产生额外的数据费用。</string>
+  <string name="android">Android</string>
+  <!--Email subject line when user attempts to submit feedback about the app-->
+  <string name="email_subject">用户反馈</string>
+  <!--Submit Feedback app version text-->
+  <!--Submit Feedback android version text-->
+  <!--Submit Feedback android model text-->
+  <!--Submit Feedback feedback text-->
+  <!--Message indicating num of video deleted. {video_count} is a number of videos deleted, like "3".-->
+  <!--Notification related-->
+  <!--toggle between subscribe and unsubscribe to course announcement-->
+  <!--Placeholder title for course content with no title-->
+  <!--Discussion/Forum-->
+  <!--User Profiles-->
+  <!--Label for toolbar icon that launches the edit profile screen for the current user-->
+  <!--Shown when viewing your own profile and you are not sharing a full profile-->
+  <!--Shown when viewing another user's profile and that user is not sharing a full profile-->
+  <!--Shown when viewing your own profile until you have confirmed you are over the age of consent (13 years old)-->
+  <!--Shown as button below the explanation for age of consent; it launches the edit profile screen-->
+  <!--Shown when viewing your own incomplete profile-->
+  <!--Shown as button below the explanation for incomplete profile; it launches the edit profile screen-->
+  <!--This text is shown in place of the "About Me" text if the user has not filled in their "About Me"-->
+  <!--Window title for edit profile screen-->
+  <!--How most profile fields are formatted when viewing the edit screen-->
+  <!--Default placeholder if a profile field is blank-->
+  <!--Button that saves changes to a profile text field-->
+  <!--An option that will set the user profile's primary language to the language of their device's configured locale-->
+  <!--An option that will set the user profile's location to the country of their device's configured locale-->
+  <!--Button label that will open gallery or camera for choosing new profile photo-->
+  <!--Button that will open a camera for taking a new profile photo-->
+  <!--Button that will open photo gallery for choosing a new profile photo-->
+  <!--Button that will open a camera for taking a new profile photo-->
+  <!--Title when cropping newly selected profile photo-->
+  <!--Button that will exit the crop tool without saving the image-->
+  <!--Button that will confirm the crop region and continue to upload the cropped photo-->
+  <!--Tab title for section of profile that displays a user's bio-->
+  <!--Tab title for section of profile that lists a user's accomplishments-->
+  <!--Button that will initiate sharing one of a user's accomplishments-->
+  <!--Text that pre-populates your post/email/SMS when sharing certificate-->
+</resources>

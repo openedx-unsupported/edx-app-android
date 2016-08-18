@@ -306,6 +306,7 @@ android {
         showAll true
         warning 'TypographyQuotes', 'InvalidPackage'
         error 'StopShip'
+        disable 'MissingTranslation'
     }
 
     productFlavors {
