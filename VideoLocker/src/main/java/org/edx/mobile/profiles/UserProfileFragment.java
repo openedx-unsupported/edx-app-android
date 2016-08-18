@@ -28,6 +28,7 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
@@ -123,17 +124,6 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
     protected UserProfilePresenter.ViewInterface createView() {
         viewHolder = DataBindingUtil.getBinding(getView());
 
-        viewHolder.appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset <= -viewHolder.nameText.getBottom()) {
-                    getActivity().setTitle(getUsername());
-                } else {
-                    getActivity().setTitle("");
-                }
-            }
-        });
-
         viewHolder.profileSectionPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -166,6 +156,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                     viewHolder.languageContainer.setVisibility(View.GONE);
                 } else {
                     viewHolder.languageText.setText(profile.language);
+                    viewHolder.languageText.setContentDescription(ResourceUtil.getFormattedString(
+                            getResources(), R.string.profile_language_description, "language", profile.language));
                     viewHolder.languageContainer.setVisibility(View.VISIBLE);
                 }
 
@@ -173,6 +165,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                     viewHolder.locationContainer.setVisibility(View.GONE);
                 } else {
                     viewHolder.locationText.setText(profile.location);
+                    viewHolder.locationText.setContentDescription(ResourceUtil.getFormattedString(
+                            getResources(), R.string.profile_location_description, "location", profile.location));
                     viewHolder.locationContainer.setVisibility(View.VISIBLE);
                 }
 
@@ -231,6 +225,8 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             @Override
             public void setName(@NonNull String name) {
                 viewHolder.nameText.setText(name);
+                viewHolder.nameText.setContentDescription(ResourceUtil.getFormattedString(
+                        getResources(), R.string.profile_name_description, "name", name));
             }
 
             @Override

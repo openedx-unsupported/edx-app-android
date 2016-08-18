@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBioBinding;
 import org.edx.mobile.logger.Logger;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.PresenterFragment;
 import org.edx.mobile.view.Router;
 
@@ -67,6 +68,7 @@ public class UserProfileBioFragment extends PresenterFragment<UserProfileBioPres
                 viewHolder.noAboutMe.setVisibility(bio.contentType == UserProfileBioModel.ContentType.NO_ABOUT_ME ? View.VISIBLE : View.GONE);
                 viewHolder.bioText.setVisibility(bio.contentType == UserProfileBioModel.ContentType.ABOUT_ME ? View.VISIBLE : View.GONE);
                 viewHolder.bioText.setText(bio.bioText);
+                viewHolder.bioText.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.profile_about_me_description, "about_me", bio.bioText));
                 prefersScrollingHeader = bio.contentType == UserProfileBioModel.ContentType.ABOUT_ME;
                 ((ScrollingPreferenceParent)getParentFragment()).onChildScrollingPreferenceChanged();
             }
