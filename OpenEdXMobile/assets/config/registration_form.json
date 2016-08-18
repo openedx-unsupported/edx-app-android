@@ -64,7 +64,7 @@
         "type": "select",
         "options": [{
             "default": true,
-            "name": "--",
+            "name": "Country",
             "value": ""
         }, {
             "name": "Afghanistan",
@@ -826,7 +826,7 @@
         "type": "select",
         "options": [{
             "default": true,
-            "name": "--",
+            "name": "Gender",
             "value": ""
         }, {
             "name": "Male",
@@ -850,7 +850,7 @@
         "type": "select",
         "options": [{
             "default": true,
-            "name": "--",
+            "name": "Year Of Birth",
             "value": ""
         }, {
             "name": "2015",
@@ -1225,7 +1225,7 @@
         "type": "select",
         "options": [{
             "default": true,
-            "name": "--",
+            "name": "Level of Education",
             "value": ""
         }, {
             "name": "Doctorate",

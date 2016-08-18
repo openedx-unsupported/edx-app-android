@@ -134,7 +134,10 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <include layout="@layout/view_signin_title_row" />
+                            <org.edx.mobile.view.custom.DividerWithTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/or_sign_in_with" />
 
                             <include
                                 android:id="@+id/social_auth"
