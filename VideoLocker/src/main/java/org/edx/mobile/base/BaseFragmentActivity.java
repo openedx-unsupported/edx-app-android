@@ -280,7 +280,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     /**
      * Handle options menu item selection. This is called from
      * {@link #onOptionsItemSelected(MenuItem)} to provide a menu
-     * selection handler that can be overriden by subclass that override
+     * selection handler that can be overridden by subclass that override
      * {@link #createOptionsMenu(Menu)}, and should only be used to handle
      * selections of the menu items that are initialized from that method.
      *

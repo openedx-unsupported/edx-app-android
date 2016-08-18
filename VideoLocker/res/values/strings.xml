@@ -109,7 +109,7 @@
     <!-- Settings screen title -->
     <string name="settings_txt">Settings</string>
     <!-- Settings screen version -->
-    <string name="label_version">Version</string>
+    <string name="label_version">App Version</string>
     <!-- Button text to show user Settings screen -->
     <string name="label_settings">My Settings</string>
 

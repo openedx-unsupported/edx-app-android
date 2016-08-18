@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,6 +68,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         Bundle bundle = arg0;
         if ( bundle == null ) {
             if ( getIntent() != null )

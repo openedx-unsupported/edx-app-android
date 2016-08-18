@@ -109,7 +109,8 @@ public class NavigationFragment extends BaseFragment {
                 loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
-                drawerNavigationBinding.drawerOptionMyProfile.setOnClickListener(new OnClickListener() {
+
+                OnClickListener profileClickListener = new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
@@ -123,10 +124,14 @@ public class NavigationFragment extends BaseFragment {
                             }
                         }
                     }
-                });
+                };
+                drawerNavigationBinding.drawerOptionMyProfile.setOnClickListener(profileClickListener);
+                drawerNavigationBinding.nameLayout.setOnClickListener(profileClickListener);
             }
         } else {
             drawerNavigationBinding.profileImage.setVisibility(View.GONE);
+            drawerNavigationBinding.nameLayout.setClickable(false);
+            drawerNavigationBinding.nameLayout.setForeground(null);
             drawerNavigationBinding.drawerOptionMyProfile.setVisibility(View.GONE);
         }
 
