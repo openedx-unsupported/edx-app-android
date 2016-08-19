@@ -12,10 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -42,7 +39,11 @@ import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -126,12 +127,12 @@ public class NavigationFragment extends BaseFragment {
                     }
                 };
                 drawerNavigationBinding.drawerOptionMyProfile.setOnClickListener(profileClickListener);
-                drawerNavigationBinding.nameLayout.setOnClickListener(profileClickListener);
+                drawerNavigationBinding.navigationHeaderLayout.setOnClickListener(profileClickListener);
             }
         } else {
             drawerNavigationBinding.profileImage.setVisibility(View.GONE);
-            drawerNavigationBinding.nameLayout.setClickable(false);
-            drawerNavigationBinding.nameLayout.setForeground(null);
+            drawerNavigationBinding.navigationHeaderLayout.setClickable(false);
+            drawerNavigationBinding.navigationHeaderLayout.setForeground(null);
             drawerNavigationBinding.drawerOptionMyProfile.setVisibility(View.GONE);
         }
 
@@ -229,6 +230,12 @@ public class NavigationFragment extends BaseFragment {
             if (profile.email != null) {
                 drawerNavigationBinding.emailTv.setText(profile.email);
             }
+
+            // TODO Decide on what should be spoken
+            Map map = new HashMap<>(200);
+            map.put("username", profile.name);
+            map.put("email", profile.email);
+            drawerNavigationBinding.navigationHeaderLayout.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.navigation_header, map));
         }
 
         drawerNavigationBinding.logoutButton.setOnClickListener(new OnClickListener() {

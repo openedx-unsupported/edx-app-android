@@ -84,6 +84,8 @@
     <string name="dropdown_list_prefix">Dropdown list.</string>
 
     <!-- Navigation Drawer Labels -->
+    <!-- The accessibility description for the navigation header -->
+    <string name="navigation_header">Signed in with username {username} and email {email}</string>
     <!-- Button to open drawer -->
     <string name="label_open_navigation_menu">Open Navigation Menu</string>
     <!-- Button to open drawer -->
