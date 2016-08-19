@@ -4,43 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_act_background"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    android:fitsSystemWindows="true"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar" />
+        <include layout="@layout/toolbar"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:id="@+id/offline_bar"
-                style="@style/offline_bar"
-                android:layout_alignParentTop="true"
-                android:visibility="gone" />
-
-
-            <RelativeLayout
-                android:id="@+id/my_groups_list_container"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_below="@id/offline_bar"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </RelativeLayout>
+                <View
+                    android:id="@+id/offline_bar"
+                    style="@style/offline_bar"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
 
-            <fragment
-                android:name="org.edx.mobile.view.LogInSignUpFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:tag="org.edx.mobile.view.LogInSignUpFragment" />
+                <RelativeLayout
+                    android:id="@+id/my_groups_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_below="@id/offline_bar"
+                    android:layout_weight="1">
 
+                </RelativeLayout>
+
+                <fragment
+                    android:name="org.edx.mobile.view.LogInSignUpFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="org.edx.mobile.view.LogInSignUpFragment" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/flying_message"
