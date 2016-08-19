@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/edx_margin"
-    android:paddingTop="@dimen/edx_margin"
-    android:gravity="center"
-    android:orientation="horizontal">
+    android:paddingTop="@dimen/edx_margin">
 
     <org.edx.mobile.view.custom.IconImageViewXml
         android:id="@+id/discussion_post_type_icon"
         style="@style/icon_view_standard_size"
-        android:layout_margin="@dimen/edx_margin"
-        app:iconColor="@color/edx_grayscale_neutral_light" />
+        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginRight="@dimen/edx_margin"
+        android:layout_marginTop="@dimen/discussion_posts_icon_margin"
+        app:iconColor="@color/edx_grayscale_neutral_dark"
+        app:iconName="fa-comments" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -23,67 +25,77 @@
 
         <TextView
             android:id="@+id/discussion_post_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="@color/edx_grayscale_neutral_x_dark"
-            android:textSize="@dimen/edx_small"
-            tools:text="This is a post title. It is a very long title to demonstrate that post titles will be truncated when they are too long." />
+            style="@style/discussion_title_text"
+            tools:text="This is a post title. It is a very long title to demonstrate that post titles will not be truncated when they are too long." />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/x_small_icon_margin"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_closed_icon"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
-                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
-                app:iconColor="@color/edx_grayscale_neutral_base"
+                style="@style/discussion_thread_icon"
+                app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-lock" />
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_pin_icon"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/x_small_icon_margin"
-                android:layout_marginRight="@dimen/x_small_icon_margin"
-                app:iconColor="@color/edx_grayscale_neutral_base"
+                style="@style/discussion_thread_icon"
+                app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-thumb-tack" />
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_following_icon"
-                android:layout_width="@dimen/edx_x_small"
-                android:layout_height="@dimen/edx_x_small"
-                android:layout_marginEnd="@dimen/x_small_icon_margin"
-                android:layout_marginRight="@dimen/x_small_icon_margin"
-                app:iconColor="@color/edx_grayscale_neutral_base"
+                style="@style/discussion_thread_icon"
+                app:iconColor="@color/edx_grayscale_neutral_dark"
                 app:iconName="fa-star" />
 
             <TextView
-                android:id="@+id/discussion_post_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/edx_grayscale_neutral_base"
-                android:textSize="@dimen/edx_x_small"
-                tools:text="By Staff" />
+                android:id="@+id/discussion_subtitle_first_pipe"
+                style="@style/discussion_responses_small_text"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                android:contentDescription="@null"
+                android:text="|"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/discussion_post_replies_count"
+                style="@style/discussion_responses_small_text"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                tools:text="Total: 20" />
+
+            <TextView
+                android:id="@+id/discussion_subtitle_second_pipe"
+                style="@style/discussion_responses_small_text"
+                android:layout_marginEnd="@dimen/discussion_posts_icon_margin"
+                android:layout_marginRight="@dimen/discussion_posts_icon_margin"
+                android:contentDescription="@null"
+                android:text="|"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/discussion_post_date"
+                style="@style/discussion_responses_small_text"
+                tools:text="Last post: Apr 06, 2016" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/discussion_post_indicator_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/edx_small"
-        android:layout_margin="@dimen/edx_margin"
-        android:drawablePadding="3sp"
-        tools:text="42" />
+        android:id="@+id/discussion_unread_replies_text"
+        style="@style/discussion_title_text"
+        fontPath="fonts/OpenSans-Semibold.ttf"
+        android:layout_marginLeft="@dimen/edx_margin"
+        android:layout_marginRight="@dimen/edx_margin"
+        android:layout_marginTop="@dimen/discussion_posts_icon_margin"
+        android:textColor="@color/edx_brand_primary_base"
+        android:textStyle="bold"
+        tools:ignore="MissingPrefix"
+        tools:text="99+" />
 
 </LinearLayout>

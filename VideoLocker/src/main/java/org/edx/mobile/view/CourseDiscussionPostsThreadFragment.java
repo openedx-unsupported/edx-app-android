@@ -307,7 +307,6 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         nextPage = 1;
         discussionPostsListView.setVisibility(View.INVISIBLE);
         centerMessageBox.setVisibility(View.GONE);
-        discussionPostsAdapter.setVoteCountsEnabled(postsSort == DiscussionPostsSort.VOTE_COUNT);
         controller.reset();
     }
 

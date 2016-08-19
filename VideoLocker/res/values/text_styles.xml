@@ -294,6 +294,8 @@
 
     <style name="discussion_title_text" parent="discussion_regular_text">
         <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="discussion_responses_small_text" parent="discussion_regular_text">
