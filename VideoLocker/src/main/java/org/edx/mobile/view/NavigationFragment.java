@@ -161,25 +161,29 @@ public class NavigationFragment extends BaseFragment {
             }
         });
 
-        drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ISegment segIO = environment.getSegment();
-                segIO.trackUserFindsCourses();
-                FragmentActivity act = getActivity();
-                ((BaseFragmentActivity) act).closeDrawer();
-                if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
-                    environment.getRouter().showFindCourses(act);
+        if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
+            drawerNavigationBinding.drawerOptionFindCourses.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ISegment segIO = environment.getSegment();
+                    segIO.trackUserFindsCourses();
+                    FragmentActivity act = getActivity();
+                    ((BaseFragmentActivity) act).closeDrawer();
+                    if (!(act instanceof WebViewFindCoursesActivity || act instanceof NativeFindCoursesActivity)) {
+                        environment.getRouter().showFindCourses(act);
 
-                    //Finish need not be called if the current activity is MyCourseListing
-                    // as on returning back from FindCourses,
-                    // the student should be returned to the MyCourses screen
-                    if (!(act instanceof MyCoursesListActivity)) {
-                        act.finish();
+                        //Finish need not be called if the current activity is MyCourseListing
+                        // as on returning back from FindCourses,
+                        // the student should be returned to the MyCourses screen
+                        if (!(act instanceof MyCoursesListActivity)) {
+                            act.finish();
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            drawerNavigationBinding.drawerOptionFindCourses.setVisibility(View.GONE);
+        }
 
         drawerNavigationBinding.drawerOptionMySettings.setOnClickListener(new OnClickListener() {
             @Override

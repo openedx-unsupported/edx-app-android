@@ -2,6 +2,7 @@ package org.edx.mobile.util;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -80,9 +81,6 @@ public class Config {
         }
     }
 
-    /**
-     * If TYPE is not "webview" in any letter case, defaults to "native"
-     */
     public static class EnrollmentConfig {
         @SerializedName("WEBVIEW")
         private WebViewConfig mWebViewConfig;
@@ -90,20 +88,32 @@ public class Config {
         @SerializedName("TYPE")
         private String mCourseEnrollmentType;
 
-        public boolean isWebviewCourseDiscoveryEnabled() {
-            if (mCourseEnrollmentType == null) {
-                return false;
-            }
+        public enum CourseDiscoveryType {
+            WEBVIEW,
+            NATIVE
+        }
 
-            switch (mCourseEnrollmentType.toUpperCase(Locale.US)) {
-                case "WEBVIEW":
-                    return true;
-                case "NATIVE":
-                    return false;
-                default:
-                    logger.debug("No match in config for COURSE_ENROLLMENT.TYPE:" + mCourseEnrollmentType + ". Defaulting to Native");
-                    return false;
+        @Nullable
+        private CourseDiscoveryType getCourseDiscoveryType() {
+            if (null == mCourseEnrollmentType) {
+                return null;
             }
+            return CourseDiscoveryType.valueOf(mCourseEnrollmentType.toUpperCase(Locale.US));
+        }
+
+        public boolean isCourseDiscoveryEnabled() {
+            return getCourseDiscoveryType() != null;
+        }
+
+        public boolean isExploreSubjectsEnabled() {
+            // Explore Subjects is only supported for web course discovery, and requires a URL
+            return isWebviewCourseDiscoveryEnabled()
+                    && null != getWebViewConfig().getExploreSubjectsUrl()
+                    && !getWebViewConfig().getExploreSubjectsUrl().isEmpty();
+        }
+
+        public boolean isWebviewCourseDiscoveryEnabled() {
+            return getCourseDiscoveryType() == CourseDiscoveryType.WEBVIEW;
         }
 
         public WebViewConfig getWebViewConfig() {
@@ -111,15 +121,15 @@ public class Config {
         }
 
         public String getCourseSearchUrl() {
-            return getWebViewConfig().getCourseSearchUrl();
+            return null == mWebViewConfig ? null : mWebViewConfig.getCourseSearchUrl();
         }
 
         public String getCourseInfoUrlTemplate() {
-            return getWebViewConfig().getCourseInfoUrlTemplate();
+            return null == mWebViewConfig ? null : mWebViewConfig.getCourseInfoUrlTemplate();
         }
 
         public boolean isWebCourseSearchEnabled() {
-            return getWebViewConfig().isWebCourseSearchEnabled();
+            return null != mWebViewConfig && mWebViewConfig.isWebCourseSearchEnabled();
         }
     }
 
