@@ -85,15 +85,15 @@
 
     <!-- Navigation Drawer Labels -->
     <!-- The accessibility description for the navigation header -->
-    <string name="navigation_header">Signed in with username {username} and email {email}</string>
+    <string name="navigation_header">Currently signed in as {username}, {email}</string>
     <!-- Button to open drawer -->
     <string name="label_open_navigation_menu">Open Navigation Menu</string>
     <!-- Button to open drawer -->
     <string name="label_close_navigation_menu">Close Navigation Menu</string>
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
-    <!-- Title of user's profile screen -->
-    <string name="label_my_profile">My Profile</string>
+    <!-- Content description for edit profile button -->
+    <string name="open_profile_button">Open your profile</string>
     <!-- Title of user's course list screen -->
     <string name="label_my_courses">My Courses</string>
     <!-- Title of user's downloaded videos list screen -->

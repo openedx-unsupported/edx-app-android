@@ -233,7 +233,8 @@
             android:name=".view.FormFieldActivity"
             android:label=""
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar.TranslucentStatusBar"/>
 
         <activity
             android:name=".view.CropImageActivity"

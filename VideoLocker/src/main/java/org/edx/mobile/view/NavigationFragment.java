@@ -110,8 +110,7 @@ public class NavigationFragment extends BaseFragment {
                 loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
-
-                OnClickListener profileClickListener = new OnClickListener() {
+                drawerNavigationBinding.profileImage.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
@@ -125,15 +124,12 @@ public class NavigationFragment extends BaseFragment {
                             }
                         }
                     }
-                };
-                drawerNavigationBinding.drawerOptionMyProfile.setOnClickListener(profileClickListener);
-                drawerNavigationBinding.navigationHeaderLayout.setOnClickListener(profileClickListener);
+                });
             }
         } else {
             drawerNavigationBinding.profileImage.setVisibility(View.GONE);
             drawerNavigationBinding.navigationHeaderLayout.setClickable(false);
             drawerNavigationBinding.navigationHeaderLayout.setForeground(null);
-            drawerNavigationBinding.drawerOptionMyProfile.setVisibility(View.GONE);
         }
 
         drawerNavigationBinding.drawerOptionMyCourses.setOnClickListener(new OnClickListener() {
@@ -230,12 +226,10 @@ public class NavigationFragment extends BaseFragment {
             if (profile.email != null) {
                 drawerNavigationBinding.emailTv.setText(profile.email);
             }
-
-            // TODO Decide on what should be spoken
-            Map map = new HashMap<>(200);
+            Map<String,CharSequence> map = new HashMap<>();
             map.put("username", profile.name);
             map.put("email", profile.email);
-            drawerNavigationBinding.navigationHeaderLayout.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.navigation_header, map));
+            drawerNavigationBinding.userInfoLayout.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.navigation_header, map));
         }
 
         drawerNavigationBinding.logoutButton.setOnClickListener(new OnClickListener() {

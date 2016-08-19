@@ -216,6 +216,11 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                     }
                     invalidateOptionsMenu();
                 }
+
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    super.onDrawerSlide(drawerView, 0); // this disables the animation
+                }
             };
             mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
