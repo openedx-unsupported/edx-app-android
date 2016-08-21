@@ -27,14 +27,13 @@ To run all screenshot tests and save the screenshots to the screenshot directory
 
 Screenshots need to be consistent for pixel by pixel comparison. In order to set up a local emulator, which will share the same dpi and screen size as the CI emulator setup in travis.yml, follow these steps. 
 
-1. Create an avd: `echo no | android create avd --force --name screenshotDevice --target android-21 --abi armeabi-v7a --skin 480x854 --sdcard 250M`
-  * Note: We need to use ARM instead of x86 since the png binaries are saved differently.
-1. Set the dpi: `echo "hw.lcd.density=213" >> .android/avd/screenshotDevice.avd/config.ini`
+1. Create an avd: `echo no | android create avd --force --name screenshotDevice --target android-21 --abi default/x86 --skin 480x854 --sdcard 250M`
+1. Set the dpi: `echo "hw.lcd.density=213" >> ~/.android/avd/screenshotDevice.avd/config.ini`
 1. Start the emulator: `emulator -avd screenshotDevice`
 
 ```
-echo no | android create avd --force --name screenshotDevice --target android-21 --abi armeabi-v7a --skin 480x854 --sdcard 250M
-echo "hw.lcd.density=213" >> .android/avd/screenshotDevice.avd/config.ini
+echo no | android create avd --force --name screenshotDevice --target android-21 --abi default/x86 --skin 480x854 --sdcard 250M
+echo "hw.lcd.density=213" >> ~/.android/avd/screenshotDevice.avd/config.ini
 emulator -avd screenshotDevice
 ```
 

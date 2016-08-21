@@ -22,6 +22,7 @@ public class CourseDashboardActivity extends BaseVideosDownloadStateActivity {
                 getIntent().getBundleExtra(Router.EXTRA_BUNDLE);
         courseData = (EnrolledCoursesResponse) data.getSerializable(Router.EXTRA_COURSE_DATA);
 
+
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function
         //  configureDrawer();
