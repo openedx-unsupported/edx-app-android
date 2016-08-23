@@ -546,6 +546,16 @@
     <string name="forum_unfollow">Unfollow</string>
 
     <!-- User Profiles -->
+    <!-- Window title for the user profile screen -->
+    <string name="profile_title">Profile</string>
+    <!-- The accessibility description for the name section -->
+    <string name="profile_name_description">Name: {name}</string>
+    <!-- The accessibility description for the language section -->
+    <string name="profile_language_description">Language: {language}</string>
+    <!-- The accessibility description for the location section -->
+    <string name="profile_location_description">Location: {location}</string>
+    <!-- The accessibility description for the "About Me" section -->
+    <string name="profile_about_me_description">About me: {about_me}</string>
     <!-- Label for toolbar icon that launches the edit profile screen for the current user -->
     <string name="profile_toolbar_edit_button">Edit</string>
     <!-- Shown when viewing your own profile and you are not sharing a full profile -->

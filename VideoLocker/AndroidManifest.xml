@@ -225,7 +225,7 @@
         <activity android:name=".profiles.UserProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoShadow"
-            android:label=""/>
+            android:label="@string/profile_title"/>
 
         <activity android:name=".view.EditUserProfileActivity"
             android:screenOrientation="portrait"/>
