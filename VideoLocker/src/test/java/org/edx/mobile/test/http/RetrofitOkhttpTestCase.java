@@ -29,7 +29,7 @@ import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 @Ignore
 public class RetrofitOkhttpTestCase extends BaseTestCase {
 

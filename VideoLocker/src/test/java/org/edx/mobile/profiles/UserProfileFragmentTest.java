@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
-import org.assertj.core.api.Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.util.images.ErrorUtils;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -34,7 +34,7 @@ public class UserProfileFragmentTest extends PresenterFragmentTest<
     public void before() {
         startFragment(TestableUserProfileFragment.newInstance(ProfileValues.USERNAME));
         binding = DataBindingUtil.getBinding(fragment.getView());
-        Assertions.assertThat(binding).isNotNull();
+        assertThat(binding).isNotNull();
     }
 
     @Test

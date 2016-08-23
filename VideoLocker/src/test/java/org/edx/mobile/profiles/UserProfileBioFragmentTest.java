@@ -2,13 +2,13 @@ package org.edx.mobile.profiles;
 
 import android.databinding.DataBindingUtil;
 
-import org.assertj.core.api.Assertions;
 import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.databinding.FragmentUserProfileBioBinding;
 import org.edx.mobile.view.PresenterFragmentTest;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 public class UserProfileBioFragmentTest extends PresenterFragmentTest<UserProfileBioFragment, UserProfileBioPresenter, UserProfileBioPresenter.ViewInterface> {
@@ -19,7 +19,7 @@ public class UserProfileBioFragmentTest extends PresenterFragmentTest<UserProfil
     public void before() {
         startFragment(UserProfileBioFragment.newInstance());
         binding = DataBindingUtil.getBinding(fragment.getView());
-        Assertions.assertThat(binding).isNotNull();
+        assertThat(binding).isNotNull();
     }
     @Test
     public void click_onParentalConsentEditProfileButton_callsEditProfile() {

@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Java6Assertions.fail;
 import static org.junit.Assert.*;
 
 public class DateParseTests extends BaseTestCase {
