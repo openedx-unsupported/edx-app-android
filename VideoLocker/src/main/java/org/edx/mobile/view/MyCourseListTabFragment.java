@@ -54,9 +54,9 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
     }
 
     protected void loadData(boolean showProgress) {
-        //This Show progress is used to display the progress when a user enrolls in a Course
         if (showProgress && progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
+            noCourseText.setVisibility(View.GONE);
         }
         getLoaderManager().restartLoader(MY_COURSE_LOADER_ID, null, this);
     }
@@ -105,7 +105,7 @@ public class MyCourseListTabFragment extends CourseListTabFragment {
 
         invalidateSwipeFunctionality();
         progressBar.setVisibility(View.GONE);
-        if (adapter.isEmpty()) {
+        if (adapter.isEmpty() && !environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             myCourseList.setVisibility(View.GONE);
             noCourseText.setVisibility(View.VISIBLE);
         } else {
