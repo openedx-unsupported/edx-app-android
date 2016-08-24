@@ -7,6 +7,7 @@ import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.test.feature.data.Credentials;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
+import org.hamcrest.CoreMatchers;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -14,9 +15,11 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.edx.mobile.test.feature.matcher.ActionBarMatcher.isInActionBar;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
@@ -27,7 +30,7 @@ public class RegistrationScreenInteractor {
         final CharSequence title = ResourceUtil.getFormattedString(app.getResources(),
                 R.string.register_title, "platform_name",
                 app.getInjector().getInstance(Config.class).getPlatformName());
-        onView(withId(R.id.activity_title)).check(matches(withText(title.toString())));
+        onView(allOf(isInActionBar(), withText(title.toString()))).check(matches(isCompletelyDisplayed()));
         return this;
     }
 

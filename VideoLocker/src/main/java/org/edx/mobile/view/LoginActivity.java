@@ -62,6 +62,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     @Override
     protected LoginPresenter.LoginViewInterface createView(@Nullable Bundle savedInstanceState) {
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+
         hideSoftKeypad();
         socialLoginDelegate = new SocialLoginDelegate(this, savedInstanceState, this, environment.getConfig(), environment.getLoginPrefs());
 
@@ -104,20 +105,11 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
 
         environment.getSegment().trackScreenView(ISegment.Screens.LOGIN);
 
-        activityLoginBinding.panelCustomActionBar.actionbarCloseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
         // enable login buttons at launch
         tryToSetUIInteraction(true);
 
         Config config = environment.getConfig();
-
-        activityLoginBinding.panelCustomActionBar.activityTitle.setText(
-                ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
+        setTitle(ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
 
         String envDisplayName = config.getEnvironmentDisplayName();
         if (envDisplayName != null && envDisplayName.length() > 0) {
@@ -166,7 +158,6 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         }
 
         socialLoginDelegate.onActivityStarted();
-
     }
 
     @Override

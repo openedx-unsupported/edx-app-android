@@ -65,12 +65,9 @@
 
         <activity
             android:name="org.edx.mobile.view.LoginActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing"
-            android:configChanges="keyboardHidden|orientation"
-            >
+            android:configChanges="keyboardHidden|orientation">
         </activity>
 
         <activity
@@ -218,9 +215,7 @@
 
         <activity
             android:name="org.edx.mobile.view.RegisterActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait" />
 
         <activity android:name=".profiles.UserProfileActivity"
             android:screenOrientation="portrait"
