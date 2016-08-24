@@ -38,7 +38,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
-                            android:contentDescription="@string/app_name"
+                            android:contentDescription="@null"
                             android:scaleType="fitXY"
                             android:src="@drawable/edx_map_login" />
 
@@ -47,7 +47,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:contentDescription="@string/app_name"
+                            android:contentDescription="@string/phonetic_app_name"
                             android:src="@drawable/edx_logo_login" />
                     </RelativeLayout>
 

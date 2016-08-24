@@ -265,6 +265,12 @@ android {
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
 
+        def phoneticPlatformName = config.get('PHONETIC_PLATFORM_NAME')
+        if (phoneticPlatformName == null) {
+            phoneticPlatformName = platformName
+        }
+        resValue "string", "phonetic_platform_name", phoneticPlatformName
+
         def fabric = config.get('FABRIC')
         if (fabric?.get('ENABLED')) {
             def fabric_key = fabric?.get('FABRIC_KEY')
