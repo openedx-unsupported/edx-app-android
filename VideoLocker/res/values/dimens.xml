@@ -51,7 +51,7 @@
     <dimen name="edx_logo_height">125dp</dimen>
     <dimen name="logo_margin_top">20dp</dimen>
     <dimen name="logo_margin_bottom">15dp</dimen>
-    <dimen name="social_margin_top">20dp</dimen>
+    <dimen name="social_margin_top">15dp</dimen>
     <dimen name="social_margin_bottom">15dp</dimen>
 
     <dimen name="switch_corner_radius">3dp</dimen>
