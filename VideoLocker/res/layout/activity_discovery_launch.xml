@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/launch_background"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        tools:background="@drawable/launch_background">
 
         <ImageView
             android:id="@+id/edx_logo"
@@ -49,11 +51,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <fragment
-            android:name="org.edx.mobile.view.LogInSignUpFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:tag="org.edx.mobile.view.LogInSignUpFragment" />
+        <include layout="@layout/auth_panel" android:id="@+id/auth_panel" />
 
     </LinearLayout>
 </layout>

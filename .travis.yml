@@ -59,6 +59,8 @@ script:
   - ./gradlew verifyMode screenshotTests -PdisablePreDex
 
 after_script:
+  - ./gradlew recordMode pullScreenshots -PdisablePreDex
+  - mv VideoLocker/screenshots artifacts/
   - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install | bash
   - ~/bin/artifacts upload artifacts
 

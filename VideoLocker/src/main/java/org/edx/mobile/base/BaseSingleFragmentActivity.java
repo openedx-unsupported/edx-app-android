@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.edx.mobile.R;
+import org.edx.mobile.view.AuthPanelUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
 
@@ -33,12 +34,17 @@ public abstract class BaseSingleFragmentActivity extends BaseFragmentActivity im
     @Nullable
     TextView centerMessageBox;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_fragment_base);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AuthPanelUtils.configureAuthPanel(findViewById(R.id.auth_panel), environment);
     }
 
     @Override
