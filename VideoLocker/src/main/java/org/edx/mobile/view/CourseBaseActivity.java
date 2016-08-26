@@ -332,7 +332,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     }
 
     public void onMessage(@NonNull MessageType messageType, @NonNull String message){
-        showErrorMessage("", message);
+        showErrorDialog(null, message);
     }
 }
 

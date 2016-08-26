@@ -7,10 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 
 import com.google.inject.Inject;
 
@@ -32,7 +30,6 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.dialog.ResetPasswordActivity;
 import org.edx.mobile.view.dialog.SimpleAlertDialog;
 import org.edx.mobile.view.login.LoginPresenter;
@@ -181,7 +178,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
 
     public void callServerForLogin() {
         if (!NetworkUtil.isConnected(this)) {
-            showErrorMessage(getString(R.string.no_connectivity),
+            showErrorDialog(getString(R.string.no_connectivity),
                     getString(R.string.network_not_connected));
             return;
         }
@@ -190,11 +187,11 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         final String passwordStr = activityLoginBinding.passwordEt.getText().toString().trim();
 
         if (activityLoginBinding.emailEt != null && emailStr.length() == 0) {
-            showErrorMessage(getString(R.string.login_error),
+            showErrorDialog(getString(R.string.login_error),
                     getString(R.string.error_enter_email));
             activityLoginBinding.emailEt.requestFocus();
         } else if (activityLoginBinding.passwordEt != null && passwordStr.length() == 0) {
-            showErrorMessage(getString(R.string.login_error),
+            showErrorDialog(getString(R.string.login_error),
                     getString(R.string.error_enter_password));
             activityLoginBinding.passwordEt.requestFocus();
         } else {
@@ -259,42 +256,10 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
     }
 
     @Override
-    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
-        if (message != null) {
-            return super.showErrorMessage(header, message, isPersistent);
-        } else {
-            return super.showErrorMessage(header, getString(R.string.login_failed), isPersistent);
-        }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Animation errorMessageAnim = activityLoginBinding.errorLayout.getAnimation();
-        if (errorMessageAnim == null || errorMessageAnim.hasEnded()) {
-            ViewAnimationUtil.hideMessageBar(activityLoginBinding.errorLayout);
-        }
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    protected void onOnline() {
-        super.onOnline();
-        hideErrorMessage();
-    }
-
-    @Override
-    protected void onOffline() {
-        super.onOffline();
-        showErrorMessage(getString(R.string.no_connectivity),
-                getString(R.string.network_not_connected), false);
-    }
-
-    @Override
     public boolean createOptionsMenu(Menu menu) {
         // Login screen doesn't have any menu
         return true;
     }
-
 
     /**
      * Starts fetching profile of the user after login by Facebook or Google.
@@ -320,12 +285,12 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         if (ex != null && ex instanceof LoginException) {
             LoginErrorMessage error = (((LoginException) ex).getLoginErrorMessage());
 
-            showErrorMessage(
+            showErrorDialog(
                     error.getMessageLine1(),
                     (error.getMessageLine2() != null) ?
                             error.getMessageLine2() : getString(R.string.login_failed));
         } else {
-            showErrorMessage(getString(R.string.login_error), getString(R.string.error_unknown));
+            showErrorDialog(getString(R.string.login_error), getString(R.string.error_unknown));
             logger.error(ex);
         }
     }

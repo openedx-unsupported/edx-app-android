@@ -195,10 +195,7 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
             }
 
             String filepath = null;
-            // check if file available on local
-            if (video.isVideoForWebOnly) {
-                //don't download anything
-            } else if (video.filepath != null && video.filepath.length() > 0) {
+            if (video.filepath != null && video.filepath.length() > 0) {
                 if (video.isDownloaded()) {
                     File f = new File(video.filepath);
                     if (f.exists()) {
@@ -398,9 +395,6 @@ public class VideoListActivity extends BaseVideosDownloadStateActivity
         }
         finish();
     }
-
-    ;
-
 
     @Override
     public boolean showInfoMessage(String message) {

@@ -1,5 +1,7 @@
 package org.edx.mobile.base;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -26,8 +27,6 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.interfaces.NetworkObserver;
 import org.edx.mobile.interfaces.NetworkSubject;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ViewAnimationUtil;
 import org.edx.mobile.view.ICommonUI;
@@ -42,9 +41,6 @@ import de.greenrobot.event.EventBus;
 public abstract class BaseFragmentActivity extends BaseAppActivity
         implements NetworkSubject, ICommonUI {
 
-    public static final String ACTION_SHOW_MESSAGE_INFO = "ACTION_SHOW_MESSAGE_INFO";
-    public static final String ACTION_SHOW_MESSAGE_ERROR = "ACTION_SHOW_MESSAGE_ERROR";
-
     private MenuItem offlineMenuItem;
     protected ActionBarDrawerToggle mDrawerToggle;
     //FIXME - we should not set a separate flag to indicate the status of UI component
@@ -53,9 +49,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     private boolean isActivityStarted = false;
     @Inject
     protected IEdxEnvironment environment;
-
-
-    private List<NetworkObserver> networkObservers = new ArrayList<NetworkObserver>();
+    private List<NetworkObserver> networkObservers = new ArrayList<>();
 
     public void registerNetworkObserver(NetworkObserver observer) {
         if (observer != null && !networkObservers.contains(observer)) {
@@ -89,7 +83,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-
         updateActionBarShadow();
 
         logger.debug("created");
@@ -99,9 +92,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     protected void onStart() {
         super.onStart();
         isActivityStarted = true;
-
-        PrefManager pmFeatures = new PrefManager(this, PrefManager.Pref.FEATURES);
-
 
         // enabling action bar app icon.
         ActionBar bar = getSupportActionBar();
@@ -224,7 +214,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      * Call this function if you do not want to allow
      * opening/showing the drawer(Navigation Fragment) on swiping left to right
      */
-    protected void blockDrawerFromOpening(){
+    protected void blockDrawerFromOpening() {
         DrawerLayout drawerLayout = (DrawerLayout)
                 findViewById(R.id.drawer_layout);
         if (drawerLayout != null) {
@@ -332,7 +322,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggles
         if (mDrawerToggle != null) {
             mDrawerToggle.onConfigurationChanged(newConfig);
         }
@@ -408,12 +398,12 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         return (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     }
 
-
     /**
      * callback from EventBus
      *
      * @param event
      */
+    @SuppressWarnings("unused")
     public void onEvent(LogoutEvent event) {
         finish();
     }
@@ -423,6 +413,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
      *
      * @param event
      */
+    @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
 
         logger.debug("network state changed");
@@ -530,43 +521,8 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
-    public boolean showErrorMessage(String header, String message) {
-        return showErrorMessage(header, message, true);
-    }
-
-    public boolean showErrorMessage(String header, String message, boolean isPersistent) {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        if (error_layout == null) {
-            logger.warn("Error Layout not available, so couldn't show flying message");
-            return false;
-        }
-        TextView errorHeader = (TextView) findViewById(R.id.error_header);
-        TextView errorMessageView = (TextView) findViewById(R.id.error_message);
-        if (header == null || header.isEmpty()) {
-            errorHeader.setVisibility(View.GONE);
-        } else {
-            errorHeader.setVisibility(View.VISIBLE);
-            errorHeader.setText(header);
-        }
-        if (message != null) {
-            errorMessageView.setText(message);
-        }
-        ViewAnimationUtil.showMessageBar(error_layout, isPersistent);
-        return true;
-    }
-
-    public boolean hideErrorMessage() {
-        LinearLayout error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        if (error_layout == null) {
-            logger.warn("Error Layout not available, so couldn't show flying message");
-            return false;
-        }
-        ViewAnimationUtil.hideMessageBar(error_layout);
-        return true;
-    }
-
-    public void showErrorDialog(String message) {
-        AlertDialogFragment.newInstance(message).show(getSupportFragmentManager(), null);
+    public void showErrorDialog(@Nullable String title, @NonNull String message) {
+        AlertDialogFragment.newInstance(title, message).show(getSupportFragmentManager(), null);
     }
 
     @Override
