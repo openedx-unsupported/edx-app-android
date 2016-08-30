@@ -483,7 +483,7 @@
 
     <!-- Registration Screen -->
     <!-- Create account agreement. Followed by list of agreement names like "End User License Agreement" -->
-    <string name="by_creating_account">By creating an account, you agree to the </string>
+    <string name="by_creating_account">By creating an {platform_name} account, you agree to the </string>
     <!-- Button text allowing user to show hidden optional registration fields -->
     <string name="show_optional_text">Show optional fields</string>
     <!-- Button text allowing user to hide visible optional registration fields -->

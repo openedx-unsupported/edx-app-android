@@ -194,20 +194,6 @@ public class ApiTests extends HttpBaseTestCase {
         }
     }
 
-    @Test
-    public void testReadRegistrationDescription() throws Exception {
-        RegistrationDescription form = api.getRegistrationDescription();
-
-        assertNotNull(form);
-        assertNotNull(form.getEndpoint());
-        assertNotNull(form.getMethod());
-        assertNotNull(form.getFields());
-        assertTrue(form.getFields().size() > 0);
-
-        // verify if enum type is parsed
-        assertNotNull(form.getFields().get(0).getFieldType());
-    }
-
     // TODO: Debug and fix test failure
     @Ignore
     @Test

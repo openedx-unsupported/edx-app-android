@@ -39,6 +39,7 @@ class RegistrationSelectView implements IRegistrationFieldView {
         for (RegistrationOption option : mField.getOptions()) {
             if (option.isDefaultValue()) {
                 defaultOption = option;
+                defaultOption.setName(mField.getLabel());
                 break;
             }
         }

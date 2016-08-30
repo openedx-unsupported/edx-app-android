@@ -12,6 +12,9 @@ import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
 public interface IRegistrationFieldView {
+
+    String HONOR_CODE_CHECKBOX_ID = "honor_code";
+
     // Returns the value that should be sent to the server when registering.
     // Can be null to indicate do not send the field
     JsonElement getCurrentValue();
@@ -31,7 +34,7 @@ public interface IRegistrationFieldView {
     boolean setRawValue(String value);
 
     public static interface IActionListener {
-        void onClickAgreement(RegistrationAgreement agreement);
+        void onClickAgreement();
     }
 
     /**
@@ -39,7 +42,6 @@ public interface IRegistrationFieldView {
      * for the given {@link org.edx.mobile.module.registration.model.RegistrationFormField}.
      */
     public static class Factory {
-
         private static final Logger logger = new Logger(IRegistrationFieldView.Factory.class);
 
         public static IRegistrationFieldView getInstance(LayoutInflater inflater, RegistrationFormField field) {
@@ -54,7 +56,7 @@ public interface IRegistrationFieldView {
                 return new RegistrationPasswordView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.TEXT)) {
-                View view = inflater.inflate(R.layout.view_register_edit_text, null);
+                View view = inflater.inflate( R.layout.view_register_edit_text, null);
                 return new RegistrationTextView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.TEXTAREA)) {
@@ -66,7 +68,7 @@ public interface IRegistrationFieldView {
                 return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-                if (field.getAgreement() != null) {
+                if (HONOR_CODE_CHECKBOX_ID.equals(field.getName())) {
                     View view = inflater.inflate(R.layout.view_register_agreement, null);
                     return new RegistrationAgreementView(field, view);
                 }

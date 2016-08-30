@@ -577,21 +577,6 @@ public class Api implements IApi {
         return gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
     }
 
-    /**
-     * Reads registration description from assets and return Model representation of it.
-     *
-     * @return
-     * @throws IOException
-     */
-    @Override
-    public RegistrationDescription getRegistrationDescription() throws Exception {
-        Gson gson = new Gson();
-        InputStream in = context.getAssets().open("config/registration_form.json");
-        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
-        logger.debug("picking up registration description (form) from assets, not from cache");
-        return form;
-    }
-
     @Override
     public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         String enrollUrl = getBaseUrl() + "/api/enrollment/v1/enrollment";

@@ -1,29 +1,39 @@
 package org.edx.mobile.module.registration.view;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.google.inject.Inject;
 
 import org.edx.mobile.R;
+import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
+import org.edx.mobile.util.ResourceUtil;
+
+import roboguice.RoboGuice;
 
 class RegistrationAgreementView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationAgreementView.class);
-    protected RegistrationFormField mField;
-    private View mView;
+    protected final @NonNull RegistrationFormField mField;
+    private final @NonNull View mView;
     protected TextView mInputView;
     private TextView mErrorView, mInstructionView;
     private IActionListener actionListener;
 
-    public RegistrationAgreementView(RegistrationFormField field, View view) {
+    @Inject
+    public IEdxEnvironment environment;
+
+    public RegistrationAgreementView(@NonNull RegistrationFormField field, @NonNull View view) {
         // create and configure view and save it to an instance variable
-        this.mField = field;
-        this.mView = view;
+        mField = field;
+        mView = view;
 
         this.mInputView = (TextView) view.findViewById(R.id.txt_input);
         this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
@@ -31,13 +41,16 @@ class RegistrationAgreementView implements IRegistrationFieldView {
 
         // display label as HTML and text to be centered horizontally
         mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
-        mInputView.setText(mField.getAgreement().getText());
-        mInputView.setOnClickListener(new View.OnClickListener() {
 
+        Context context = view.getContext();
+        RoboGuice.getInjector(context).injectMembers(this);
+
+        mInputView.setText(ResourceUtil.getFormattedString(context.getResources(), R.string.tos_and_honor, "platform_name", environment.getConfig().getPlatformName()));
+        mInputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (actionListener != null) {
-                    actionListener.onClickAgreement(mField.getAgreement());
+                    actionListener.onClickAgreement();
                 }
             }
         });

@@ -27,13 +27,12 @@ import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
-import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
+import org.edx.mobile.task.GetRegistrationDescriptionTask;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.ResourceUtil;
@@ -134,79 +133,55 @@ public class RegisterActivity extends BaseFragmentActivity
         tryToSetUIInteraction(true);
     }
 
-    public void showAgreement(RegistrationAgreement agreement) {
-        boolean isInAppEULALink = false;
-        try {
-            Uri uri = Uri.parse(agreement.getLink());
-            if (uri.getScheme().equals("edxapp")
-                    && uri.getHost().equals("show_eula")) {
-                isInAppEULALink = true;
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
-
-        if (isInAppEULALink) {
-            // show EULA license that is shipped with app
-            environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
-        } else {
-            // for any other link, open agreement link in a webview container
-            environment.getRouter().showWebViewDialog(this, agreement.getLink(), agreement.getText());
-        }
+    public void showAgreement() {
+        environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
     }
 
     private void setupRegistrationForm() {
-        try {
-            RegistrationDescription form = environment.getServiceManager().getRegistrationDescription();
+        new GetRegistrationDescriptionTask(this) {
 
-            LayoutInflater inflater = getLayoutInflater();
+            @Override
+            protected void onSuccess(RegistrationDescription registrationDescription) throws Exception {
+                LayoutInflater inflater = getLayoutInflater();
 
-            List<RegistrationFormField> agreements = new ArrayList<>();
+                List<RegistrationFormField> agreements = new ArrayList<>();
 
-            for (RegistrationFormField field : form.getFields()) {
-                if (field.getFieldType().equals(RegistrationFieldType.CHECKBOX)
-                        && field.getAgreement() != null) {
-                    // this is agreement field
-                    // this must be added at the end of the form
-                    // hold on it
-                    agreements.add(field);
-                } else {
-                    IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
-                    if (fieldView != null) mFieldViews.add(fieldView);
-                }
-            }
-
-            // add required and optional fields to the window
-            for (IRegistrationFieldView v : mFieldViews) {
-                if (v.getField().isRequired()) {
-                    requiredFieldsLayout.addView(v.getView());
-                } else {
-                    optionalFieldsLayout.addView(v.getView());
-                }
-            }
-
-            // add agreement fields to the window if available
-            for (RegistrationFormField agreement : agreements) {
-                IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
-                agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
-                    @Override
-                    public void onClickAgreement(RegistrationAgreement agreement) {
-                        showAgreement(agreement);
+                for (RegistrationFormField field : registrationDescription.getFields()) {
+                    if (IRegistrationFieldView.HONOR_CODE_CHECKBOX_ID.equals(field.getName())) {
+                        agreements.add(field);
+                    } else {
+                        IRegistrationFieldView fieldView = IRegistrationFieldView.Factory.getInstance(inflater, field);
+                        if (fieldView != null) mFieldViews.add(fieldView);
                     }
-                });
-                agreementLayout.addView(agreementView.getView());
+                }
+
+                // add required and optional fields to the window
+                for (IRegistrationFieldView v : mFieldViews) {
+                    if (v.getField().isRequired()) {
+                        requiredFieldsLayout.addView(v.getView());
+                    } else {
+                        optionalFieldsLayout.addView(v.getView());
+                    }
+                }
+
+                // add agreement fields to the window if available
+                for (RegistrationFormField agreement : agreements) {
+                    IRegistrationFieldView agreementView = IRegistrationFieldView.Factory.getInstance(inflater, agreement);
+                    agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
+                        @Override
+                        public void onClickAgreement() {
+                            showAgreement();
+                        }
+                    });
+                    agreementLayout.addView(agreementView.getView());
+                }
             }
 
-            // request rendering of the layouts
-            requiredFieldsLayout.requestLayout();
-            optionalFieldsLayout.requestLayout();
-            agreementLayout.requestLayout();
-
-            // enable all the views
-            tryToSetUIInteraction(true);
-        } catch (Exception ex) {
-            logger.error(ex);
-        }
+            @Override
+            protected void onException(Exception ex) {
+                showErrorDialog(getString(R.string.no_connectivity), getString(R.string.network_not_connected));
+            }
+        }.execute();
     }
 
     private void createAccount() {

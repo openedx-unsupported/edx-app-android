@@ -193,15 +193,9 @@ public class ServiceManager {
         return api.syncLastAccessedSubsection(courseId, lastVisitedModuleId);
     }
 
-
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
         return api.getLastAccessedSubsection(courseId);
     }
-
-    public RegistrationDescription getRegistrationDescription() throws Exception {
-        return api.getRegistrationDescription();
-    }
-
 
     public Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception {
         return api.enrollInACourse(courseId, email_opt_in);

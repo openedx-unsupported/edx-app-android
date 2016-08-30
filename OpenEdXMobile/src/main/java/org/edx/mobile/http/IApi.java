@@ -39,8 +39,6 @@ public interface IApi {
 
     SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception;
 
-    RegistrationDescription getRegistrationDescription() throws Exception;
-
     Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception;
 
     List<HttpCookie> getSessionExchangeCookie() throws Exception;
