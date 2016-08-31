@@ -119,8 +119,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             holder.discussionCommentCountReportTextView.setText(context.getResources().
                     getQuantityString(R.plurals.number_responses_or_comments_comments_label, childCount, childCount));
             iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_comment)
-                    .sizeRes(context, R.dimen.edx_xxx_small)
-                    .colorRes(context, R.color.edx_grayscale_neutral_base);
+                    .sizeRes(context, R.dimen.edx_small)
+                    .colorRes(context, R.color.edx_grayscale_neutral_dark);
             holder.discussionCommentCountReportTextView.setOnClickListener(null);
             holder.discussionCommentCountReportTextView.setClickable(false);
 
@@ -129,10 +129,10 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             discussionComment = discussionComments.get(position - 1);
 
             iconDrawable = new IconDrawable(context, FontAwesomeIcons.fa_flag)
-                    .sizeRes(context, R.dimen.edx_xxx_small)
-                    .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
+                    .sizeRes(context, R.dimen.edx_small)
+                    .colorRes(context, discussionComment.isAbuseFlagged() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
             holder.discussionCommentCountReportTextView.setText(discussionComment.isAbuseFlagged() ? context.getString(R.string.discussion_responses_reported_label) : context.getString(R.string.discussion_responses_report_label));
-            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_base));
+            holder.discussionCommentCountReportTextView.setTextColor(context.getResources().getColor(R.color.edx_grayscale_neutral_dark));
 
             holder.discussionCommentCountReportTextView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {

@@ -58,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/edx_grayscale_neutral_white"
             android:visibility="invisible"
             tools:listitem="@layout/row_discussion_thread"
             tools:visibility="visible" />

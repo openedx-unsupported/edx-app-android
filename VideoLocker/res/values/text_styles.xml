@@ -42,7 +42,7 @@
         <item name="android:textSize">13sp</item>
         <item name="android:paddingBottom">14dp</item>
     </style>
-    
+
      <style name="video_section_title" parent="@style/semibold_text">
        	<item name="android:background">@color/grey_act_background</item>
         <item name="android:paddingLeft">15dp</item>
@@ -61,7 +61,7 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
     </style>
-     
+
     <!-- EditText theme -->
     <style name="edit_text_style" parent="@android:style/Widget.DeviceDefault.EditText">
         <item name="android:layout_width">match_parent</item>
@@ -89,7 +89,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
-    
+
     <style name="offline_access_header" parent="@style/bold_white_text">
         <item name="android:gravity">center</item>
         <item name="android:paddingLeft">15dp</item>
@@ -123,11 +123,11 @@
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:visibility">gone</item>
     </style>
-    
+
     <style name="bold_grey_text" parent="@style/bold_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
     </style>
-    
+
     <style name="bold_white_text" parent="@style/bold_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
@@ -135,15 +135,15 @@
     <style name="semibold_white_text" parent="@style/semibold_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
-    
+
     <style name="regular_grey_text" parent="@style/regular_text">
         <item name="android:textColor">@color/grey_text_mycourse</item>
     </style>
-    
+
     <style name="regular_white_text" parent="@style/regular_text">
         <item name="android:textColor">@android:color/white</item>
     </style>
-    
+
     <style name="bold_edx_brand_primary_base_text" parent="@style/bold_text">
         <item name="android:textColor">@color/edx_brand_primary_base</item>
     </style>
@@ -186,15 +186,15 @@
     <style name="bold_text">
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
-    
+
     <style name="semibold_text">
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
-    
+
     <style name="regular_text">
         <item name="fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
-    
+
      <style name="text_network_error" parent="@style/semibold_white_text">
         <item name="android:textSize">12sp</item>
         <item name="android:layout_width">match_parent</item>
@@ -285,12 +285,21 @@
     </style>
 
     <!-- Discussion text styles -->
-    <style name="discussion_responses_small_text" parent="regular_edx_gray_base_text">
-        <item name="android:textSize">@dimen/edx_xxx_small</item>
+    <style name="discussion_regular_text" parent="regular_edx_gray_xdark_text">
+        <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_vertical</item>
         <item name="android:drawablePadding">@dimen/discussion_responses_thread_text_view_spacing</item>
+    </style>
+
+    <style name="discussion_title_text" parent="discussion_regular_text">
+        <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="discussion_responses_small_text" parent="discussion_regular_text">
+        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
     </style>
 
 </resources>

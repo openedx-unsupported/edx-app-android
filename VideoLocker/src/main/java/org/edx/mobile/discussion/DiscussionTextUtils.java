@@ -140,14 +140,17 @@ public abstract class DiscussionTextUtils {
 
     public static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
                                                          long timeMs) {
+        return getRelativeTimeSpanString(context, nowMs, timeMs,
+                DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+    }
+
+    public static CharSequence getRelativeTimeSpanString(@NonNull Context context, long nowMs,
+                                                         long timeMs, int flags) {
         if (nowMs - timeMs < DateUtils.SECOND_IN_MILLIS) {
             return context.getString(R.string.just_now);
         } else {
-            return DateUtils.getRelativeTimeSpanString(
-                    timeMs,
-                    nowMs,
-                    DateUtils.SECOND_IN_MILLIS,
-                    DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR);
+            return DateUtils.getRelativeTimeSpanString(timeMs, nowMs,
+                    DateUtils.SECOND_IN_MILLIS, flags);
         }
     }
 

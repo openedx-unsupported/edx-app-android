@@ -233,12 +233,6 @@
     <string name="discussion_posts_sort_most_activity">Most Activity</string>
     <!--Discussion posts sort by most votes-->
     <string name="discussion_posts_sort_most_votes">Most Votes</string>
-    <!--Label for discussion post authored by the community TA-->
-    <string name="discussion_priviledged_author_label_ta">Community TA</string>
-    <!--Label for discussion post authored by the staff-->
-    <string name="discussion_priviledged_author_label_staff">Staff</string>
-    <!-- The label to use when indicating a post was authored by a privileged user -->
-    <string name="discussion_priviledged_author_attribution">By %s</string>
     <!-- Label for the visibility of a discussion post that is only visible to cohort -->
     <string name="discussion_post_visibility_cohort">This post is visible only to {cohort}.</string>
     <!-- Label for the visibility of a discussion post that is visible to everyone -->
@@ -251,7 +245,10 @@
     <string name="discussion_post_endorsed">Endorsed</string>
     <!-- Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff) -->
     <string name="discussion_post_author_label_attribution">({text})</string>
-
+    <!-- Label indicating the number of replies on a post e.g. Total: 47 -->
+    <string name="discussion_post_total_replies">Total: {total_replies}</string>
+    <!-- Label indicating the last time a post was updated e.g. Last post: Jun 22, 2016 -->
+    <string name="discussion_post_last_interaction_date">Last post: {date}</string>
 
     <!--Discussion Responses-->
     <!--Label for question type discussions that are answered-->

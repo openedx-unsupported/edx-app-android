@@ -17,6 +17,7 @@
         android:id="@+id/discussion_posts_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/edx_grayscale_neutral_white"
         android:visibility="invisible"
         tools:listitem="@layout/row_discussion_thread"
         tools:visibility="visible" />
