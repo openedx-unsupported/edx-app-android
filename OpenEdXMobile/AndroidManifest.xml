@@ -70,18 +70,6 @@
             android:windowSoftInputMode="adjustNothing"></activity>
 
         <activity
-            android:name=".view.dialog.ResetPasswordActivity"
-            android:label="@string/reset_dialog_title"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog.NoTitle" />
-
-        <activity
-            android:name=".view.dialog.ResetPasswordSuccessActivity"
-            android:label="@string/success_dialog_title_help"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Dialog.NoTitle" />
-
-        <activity
             android:name="org.edx.mobile.view.MyCoursesListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -243,10 +231,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".view.dialog.WebViewDialogActivity"
-            android:label=""
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".view.dialog.WebViewActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name="org.edx.mobile.module.download.DownloadCompleteReceiver">
             <intent-filter>

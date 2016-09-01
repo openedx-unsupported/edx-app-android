@@ -145,8 +145,6 @@
     <string name="leaving_app_data_title">Leaving the {platform_name} App</string>
     <!-- Alert dialog content for users with zero rated data -->
     <string name="leaving_app_data_message">If you leave the app, you will no longer be viewing free {platform_name} content. Data charges may apply.</string>
-    <!-- Reset Dialog Fragment Place Holder messages -->
-    <string name="reset_dialog_title">Reset Title</string>
     <!-- Title of agreement users must accept to use the app -->
     <string name="end_user_title">End User License Agreement</string>
 

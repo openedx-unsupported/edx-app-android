@@ -152,7 +152,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
         }
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -417,8 +416,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     /**
      * callback from EventBus
-     *
-     * @param event
      */
     @SuppressWarnings("unused")
     public void onEvent(LogoutEvent event) {
@@ -427,8 +424,6 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
 
     /**
      * callback from EventBus
-     *
-     * @param event
      */
     @SuppressWarnings("unused")
     public void onEvent(NetworkConnectivityChangeEvent event) {
@@ -550,5 +545,4 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     public boolean tryToSetUIInteraction(boolean enable) {
         return false;
     }
-
 }

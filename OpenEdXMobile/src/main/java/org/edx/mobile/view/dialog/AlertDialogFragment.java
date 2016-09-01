@@ -53,7 +53,7 @@ public class AlertDialogFragment extends DialogFragment {
 
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton(positiveButtonAttributes.getMessage(), positiveButtonAttributes.getOnClickListener())
+                .setPositiveButton(R.string.label_ok, null)
                 .create();
 
         alertDialog.setCanceledOnTouchOutside(false);

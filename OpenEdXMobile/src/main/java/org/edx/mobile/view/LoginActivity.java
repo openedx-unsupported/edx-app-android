@@ -31,12 +31,13 @@ import org.edx.mobile.util.Config;
 import org.edx.mobile.util.IntentFactory;
 import org.edx.mobile.util.NetworkUtil;
 import org.edx.mobile.util.ResourceUtil;
-import org.edx.mobile.view.dialog.ResetPasswordActivity;
-import org.edx.mobile.view.dialog.SimpleAlertDialog;
+import org.edx.mobile.view.dialog.ResetPasswordAlertDialogFragment;
 import org.edx.mobile.view.login.LoginPresenter;
 
-public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface> implements SocialLoginDelegate.MobileLoginCallback {
+public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresenter.LoginViewInterface>
+        implements SocialLoginDelegate.MobileLoginCallback, ResetPasswordAlertDialogFragment.Listener {
 
+    private ResetPasswordAlertDialogFragment resetPasswordAlert;
     private SocialLoginDelegate socialLoginDelegate;
     private ActivityLoginBinding activityLoginBinding;
 
@@ -86,7 +87,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
                 if (NetworkUtil.isConnected(LoginActivity.this)) {
                     showResetPasswordDialog();
                 } else {
-                    showNoNetworkDialog();
+                    showErrorDialog(getString(R.string.reset_no_network_title), getString(R.string.network_not_connected));
                 }
             }
         });
@@ -97,7 +98,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         activityLoginBinding.endUserAgreementTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEulaDialog();
+                environment.getRouter().showWebView(LoginActivity.this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
             }
         });
 
@@ -236,24 +237,32 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         return activityLoginBinding.emailEt.getText().toString().trim();
     }
 
-    private static final int RESET_PASSWORD_REQUEST_CODE = 0;
-
     private void showResetPasswordDialog() {
-        startActivityForResult(ResetPasswordActivity.newIntent(getEmail()), RESET_PASSWORD_REQUEST_CODE);
+        resetPasswordAlert = ResetPasswordAlertDialogFragment.newInstance(this, getEmail());
+        resetPasswordAlert.setListener(this);
+        resetPasswordAlert.show(getSupportFragmentManager(), null);
     }
 
-    public void showEulaDialog() {
-        environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
+    @Override
+    public void onResult(boolean success, @Nullable String errorMessage) {
+        if (success) {
+            if (resetPasswordAlert != null) {
+                resetPasswordAlert.dismiss();
+            }
+            showErrorDialog(getString(R.string.success_dialog_title_help), getString(R.string.success_dialog_message_help));
+        } else if (resetPasswordAlert != null) {
+            if (errorMessage != null) {
+                resetPasswordAlert.showError(errorMessage);
+            } else {
+                // this shouldn't happen, but just in case we are here, dismiss the dialog
+                resetPasswordAlert.dismiss();
+            }
+        }
     }
 
-    public void showNoNetworkDialog() {
-        Bundle args = new Bundle();
-        args.putString(SimpleAlertDialog.EXTRA_TITLE, getString(R.string.reset_no_network_title));
-        args.putString(SimpleAlertDialog.EXTRA_MESSAGE, getString(R.string.reset_no_network_message));
-
-        SimpleAlertDialog noNetworkFragment = SimpleAlertDialog.newInstance(args);
-        noNetworkFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        noNetworkFragment.show(getSupportFragmentManager(), "dialog");
+    @Override
+    public void omDismissed() {
+        resetPasswordAlert = null;
     }
 
     @Override

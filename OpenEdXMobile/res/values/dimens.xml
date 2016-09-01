@@ -8,6 +8,13 @@
     <!-- Per Material Design Guidelines -->
     <dimen name="action_bar_icon_size">24dp</dimen>
 
+    <!-- Alert dialog default padding -->
+    <dimen name="alert_dialog_padding_width">22dp</dimen>
+    <dimen name="alert_dialog_padding_height">11dp</dimen>
+
+    <!-- Web dialog -->
+    <dimen name="web_dialog_margin">10dp</dimen>
+
     <!-- Navigation Drawer -->
     <dimen name="height_drawer_menu">44dp</dimen>
     <dimen name="drawer_profile_image_diameter">85dp</dimen>

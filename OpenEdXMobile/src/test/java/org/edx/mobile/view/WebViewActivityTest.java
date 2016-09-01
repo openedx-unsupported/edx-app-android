@@ -3,12 +3,10 @@ package org.edx.mobile.view;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.TextView;
 
-import org.assertj.android.api.Assertions;
 import org.edx.mobile.R;
 import org.edx.mobile.test.BaseTestCase;
-import org.edx.mobile.view.dialog.WebViewDialogActivity;
+import org.edx.mobile.view.dialog.WebViewActivity;
 import org.junit.Test;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -19,7 +17,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-public class WebViewDialogActivityTest extends BaseTestCase {
+public class WebViewActivityTest extends BaseTestCase {
 
     /**
      * Testing method for displaying web view dialog
@@ -39,24 +37,25 @@ public class WebViewDialogActivityTest extends BaseTestCase {
      * @param title The title to show, if any
      */
     protected static void test_StartWebViewDialogActivity_LoadsUrlAndShowsTitle(String url, String title) {
-        final WebViewDialogActivity activity =
-                Robolectric.buildActivity(WebViewDialogActivity.class)
-                        .withIntent(WebViewDialogActivity.newIntent(RuntimeEnvironment.application, url, title)).setup().get();
+        final WebViewActivity activity =
+                Robolectric.buildActivity(WebViewActivity.class)
+                        .withIntent(WebViewActivity.newIntent(RuntimeEnvironment.application, url, title)).setup().get();
         final View dialogView = Shadows.shadowOf(activity).getContentView();
         assertNotNull(dialogView);
         final WebView webView = (WebView) dialogView.findViewById(R.id.eula_webView);
         assertNotNull(webView);
         final ShadowWebView shadowWebView = Shadows.shadowOf(webView);
         assertEquals(shadowWebView.getLastLoadedUrl(), url);
-        final TextView titleView = (TextView) dialogView.findViewById(R.id.tv_dialog_title);
-        assertNotNull(titleView);
+        android.support.v7.app.ActionBar actionBar = activity.getSupportActionBar();
+        assertNotNull(actionBar);
         if (TextUtils.isEmpty(title)) {
-            Assertions.assertThat(titleView).isNotVisible();
+            assertTrue(!actionBar.isShowing());
         } else {
-            Assertions.assertThat(titleView).isVisible();
-            Assertions.assertThat(titleView).hasText(title);
+            assertTrue(actionBar.isShowing());
+            assertTrue(title.equals(activity.getTitle()));
         }
-        dialogView.findViewById(R.id.positiveButton).performClick();
+
+        activity.onBackPressed();
         assertTrue(activity.isFinishing());
     }
 }
