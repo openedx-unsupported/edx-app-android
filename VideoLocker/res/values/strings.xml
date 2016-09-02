@@ -245,8 +245,8 @@
     <string name="discussion_post_endorsed">Endorsed</string>
     <!-- Used for putting authorLabel into parenthesis e.g. (Community TA) or (Staff) -->
     <string name="discussion_post_author_label_attribution">({text})</string>
-    <!-- Label indicating the number of replies on a post e.g. Total: 47 -->
-    <string name="discussion_post_total_replies">Total: {total_replies}</string>
+    <!-- Label indicating the number of replies on a post e.g. 47 total -->
+    <string name="discussion_post_total_replies">{total_replies} total</string>
     <!-- Label indicating the last time a post was updated e.g. Last post: Jun 22, 2016 -->
     <string name="discussion_post_last_interaction_date">Last post: {date}</string>
 

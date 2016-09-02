@@ -22,8 +22,10 @@
         <item name="popupSpinnerStyle">@style/edX.Widget.Spinner.Popup</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="disableableButtonTextColor">@color/disableable_button_text</item>
-        <item name="android:listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
-        <item name="listChoiceBackgroundIndicator">@drawable/list_item_selector</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/view_selector</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/view_selector</item>
+        <item name="android:selectableItemBackground">@drawable/view_selector</item>
+        <item name="selectableItemBackground">@drawable/view_selector</item>
         <item name="android:activatedBackgroundIndicator">@drawable/activated_item_selector</item>
         <!--<item name="android:windowAnimationStyle">@style/EnterExitAnimation.Activity</item>-->
         <item name="android:dropDownListViewStyle">@style/edX.Widget.DropDownListView</item>
