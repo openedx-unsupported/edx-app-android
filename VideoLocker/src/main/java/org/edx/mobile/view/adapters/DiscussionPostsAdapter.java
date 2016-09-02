@@ -106,7 +106,9 @@ public class DiscussionPostsAdapter extends BaseListAdapter<DiscussionThread> {
                     (isAnyIconVisible(discussionThread) || discussionThread.getCommentCount() != 0) ?
                             View.VISIBLE : View.GONE
             );
-            holder.discussionPostDateTextView.setText(lastPostDate);
+            holder.discussionPostDateTextView.setText(ResourceUtil.getFormattedString(
+                    getContext().getResources(), R.string.discussion_post_last_interaction_date,
+                    "date", lastPostDate));
         }
 
         {
