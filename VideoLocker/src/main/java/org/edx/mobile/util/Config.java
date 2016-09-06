@@ -61,6 +61,7 @@ public class Config {
     private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
+    private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -417,6 +418,10 @@ public class Config {
 
     public boolean isNewLogistrationEnabled() {
         return getBoolean(NEW_LOGISTRATION_ENABLED, false);
+    }
+
+    public boolean isDiscussionProfilePicturesEnabled() {
+        return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
     }
 
     /**

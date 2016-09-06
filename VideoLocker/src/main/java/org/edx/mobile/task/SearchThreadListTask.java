@@ -28,9 +28,7 @@ public abstract class SearchThreadListTask extends
     }
 
     public Page<DiscussionThread> call() throws Exception {
-        List<String> requestedFields = Collections.singletonList(
-                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
         return environment.getDiscussionAPI().searchThreadList(courseId, text, page,
-                requestedFields);
+                DiscussionRequestFields.getRequestedFieldsList(environment.getConfig()));
     }
 }
