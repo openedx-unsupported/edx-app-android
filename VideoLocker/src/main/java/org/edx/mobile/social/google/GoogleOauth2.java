@@ -1,13 +1,10 @@
 package org.edx.mobile.social.google;
 
-import java.io.IOException;
-import org.edx.mobile.social.ISocialImpl;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -17,24 +14,17 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.plus.People;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
+
+import org.edx.mobile.social.ISocialImpl;
+
+import java.io.IOException;
 
 public class GoogleOauth2 extends ISocialImpl{
     
     private String accessToken;
     private String mEmail; // Received from newChooseAccountIntent(); passed to getToken()
     private static final int REQUEST_AUTHORIZATION = 343;
-    
-    // https://developers.google.com/+/api/oauth
-    
-    //private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
-//  private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/plus.login";
-    // https://www.googleapis.com/auth/plus.profile.emails.read
-//  private static final String SCOPE1      = "plus.login";
-//  private static final String SCOPE2      = "plus.profile.emails.read";
+
     
     public GoogleOauth2(Activity activity) {
         super(activity);
@@ -186,8 +176,6 @@ public class GoogleOauth2 extends ISocialImpl{
         }
     }
 
-
-    
     @Override
     public void login() {
         pickUserAccount();
@@ -216,29 +204,14 @@ public class GoogleOauth2 extends ISocialImpl{
     }
 
     private String getScopes() {
-
-
         String login = "https://www.googleapis.com/auth/plus.login";
-//      String email = "https://www.googleapis.com/auth/plus.profile.emails.read";
 
         //TODO-  this scope is deprecated
-        //see document - https://developers.google.com/+/api/oauth
         String email = "https://www.googleapis.com/auth/userinfo.email";
 
-
-
-//      String clientId = activity.get().getString(R.string.google_server_client_id);
-//      String scope = "oauth2:server:client_id:" + clientId + ":api_scope:" + login + " " + email;
         
         String scope = "oauth2:" + login + " " + email;
         logger.debug("Scopes= " + scope);
         return scope;
     }
-
-
-
-
-
-
-
 }
