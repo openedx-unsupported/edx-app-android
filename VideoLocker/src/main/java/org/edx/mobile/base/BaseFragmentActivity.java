@@ -188,7 +188,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
                             "NavigationFragment").commit();
 
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.string.label_open_drawer, R.string.label_close_drawer) {
+                    R.string.label_open_navigation_menu, R.string.label_close_navigation_menu) {
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     invalidateOptionsMenu();
