@@ -23,6 +23,19 @@ public class SoftKeyboardUtil {
     }
 
     /**
+     * Hides the soft keyboard.
+     *
+     * @param view The view object's reference from which we'll get the window token.
+     */
+    public static void hide(@NonNull final View view) {
+        final InputMethodManager iManager = (InputMethodManager) view.getContext().
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (iManager != null) {
+            iManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    /**
      * Hides the soft keyboard by clearing view's focus.
      *
      * @param view The view whose focus needs to be cleared.
