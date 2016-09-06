@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         textViewResponse.setText(Html.fromHtml(discussionResponse.getRenderedBody()));
+        Linkify.addLinks(textViewResponse, Linkify.ALL);
 
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(getView().findViewById(R.id.discussion_user_profile_row));

@@ -5,6 +5,8 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,8 +155,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
 
-        String commentBody = discussionComment.getRawBody();
-        holder.discussionCommentBody.setText(commentBody);
+        holder.discussionCommentBody.setText(DiscussionTextUtils.parseHtml(discussionComment.getRenderedBody()));
+        Linkify.addLinks(holder.discussionCommentBody, Linkify.ALL);
     }
 
     @Override
@@ -206,6 +208,8 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
             discussionCommentBody = (TextView) itemView.findViewById(R.id.discussion_comment_body);
             discussionCommentCountReportTextView = (TextView) itemView.findViewById(R.id.discussion_comment_count_report_text_view);
             authorLayoutViewHolder = new AuthorLayoutViewHolder(itemView.findViewById(R.id.discussion_user_profile_row));
+
+            discussionCommentBody.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
