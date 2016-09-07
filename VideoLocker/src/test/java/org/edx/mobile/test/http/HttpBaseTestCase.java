@@ -8,6 +8,7 @@ import com.google.inject.Injector;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.http.Api;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.services.ServiceManager;
@@ -186,18 +187,18 @@ public class HttpBaseTestCase extends BaseTestCase {
         final String body = request.getBody().readUtf8();
         MockResponse response = new MockResponse();
         response.addHeader("Set-Cookie", "csrftoken=dummy; Max-Age=31449600; Path=/");
-        response.setResponseCode(404);
+        response.setResponseCode(HttpStatus.NOT_FOUND);
         try {
             if ("POST".equals(method)) {
                 if (urlMatches(path, "/oauth2/access_token")) {
                     response.setBody(MockDataUtil.getMockResponse("post_oauth2_access_token"));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/staff/course_status_info/[^/]+/[^/]+/[^/]+")) {
                     try {
                         JSONObject jsonObject = new JSONObject(request.getBody().readUtf8());
                         String moduleId = jsonObject.getString("last_visited_module_id");
                         response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("post_course_status_info"), moduleId));
-                        response.setResponseCode(200);
+                        response.setResponseCode(HttpStatus.OK);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -206,44 +207,44 @@ public class HttpBaseTestCase extends BaseTestCase {
                         JSONObject jsonObject = new JSONObject(request.getBody().readUtf8());
                         response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("post_enrollment"),
                                 jsonObject.getJSONObject("course_details").getString("course_id")));
-                        response.setResponseCode(200);
+                        response.setResponseCode(HttpStatus.OK);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 } else if (urlMatches(path, "/password_reset")) {
                     response.setBody(MockDataUtil.getMockResponse("post_password_reset"));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 }
             } else if ("GET".equals(method)) {
                 if (urlMatches(path, "/api/mobile/v0.5/my_user_info")) {
                     String baseMockUrl = getBaseMockUrl();
                     response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_my_user_info"), baseMockUrl));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/[^/]+/course_enrollments")) {
                     String baseMockUrl = getBaseMockUrl();
                     response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_enrollments"), baseMockUrl));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/video_outlines/courses/[^/]+/[^/]+/[^/]+")) {
                     response.setBody(MockDataUtil.getMockResponse("get_video_outlines_courses"));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/updates")) {
                     response.setBody(MockDataUtil.getMockResponse("get_course_info_updates"));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/users/staff/course_status_info/[^/]+/[^/]+/[^/]+")) {
                     Matcher matcher = Pattern.compile(
                             "/api/mobile/v0.5/users/staff/course_status_info/([^/]+)/([^/]+)/([^/]+)", 0).matcher(path);
                     matcher.matches();
                     String moduleId = "i4x://" + matcher.group(1) + '/' + matcher.group(2) + "/course/" + matcher.group(3);
                     response.setBody(String.format(Locale.US, MockDataUtil.getMockResponse("get_course_status_info"), moduleId));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 } else if (urlMatches(path, "/api/mobile/v0.5/course_info/[^/]+/[^/]+/[^/]+/handouts")) {
                     // TODO: Find out if this is a wrong API call or server issue
-                    response.setResponseCode(404);
+                    response.setResponseCode(HttpStatus.NOT_FOUND);
                     response.setBody("{\"detail\": \"Not found\"}");
                 } else if (urlMatches(path, "/api/courses/v1/blocks/")) {
                     // TODO: Return different responses based on the parameters?
                     response.setBody(MockDataUtil.getMockResponse("get_course_structure"));
-                    response.setResponseCode(200);
+                    response.setResponseCode(HttpStatus.OK);
                 }
             }
         } catch (IOException e) {

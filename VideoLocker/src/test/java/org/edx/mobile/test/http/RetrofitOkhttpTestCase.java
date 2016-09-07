@@ -5,6 +5,7 @@ import android.content.Context;
 import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.http.GzipRequestInterceptor;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.OauthHeaderRequestInterceptor;
 import org.edx.mobile.http.OfflineRequestInterceptor;
 import org.edx.mobile.test.BaseTestCase;
@@ -28,7 +29,7 @@ import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Headers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 @Ignore
 public class RetrofitOkhttpTestCase extends BaseTestCase {
 
@@ -132,9 +133,9 @@ public class RetrofitOkhttpTestCase extends BaseTestCase {
         public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
 
             if (request.getPath().equals("/endpoint1")){
-                return new MockResponse().setResponseCode(200);
+                return new MockResponse().setResponseCode(HttpStatus.OK);
             }
-            return new MockResponse().setResponseCode(404);
+            return new MockResponse().setResponseCode(HttpStatus.NOT_FOUND);
         }
     };
 }

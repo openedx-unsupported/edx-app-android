@@ -6,10 +6,9 @@ import android.support.annotation.NonNull;
 import org.edx.mobile.R;
 import org.edx.mobile.http.HttpConnectivityException;
 import org.edx.mobile.http.HttpResponseStatusException;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
-
-import java.net.HttpURLConnection;
 
 public enum ErrorUtils {
     ;
@@ -28,11 +27,11 @@ public enum ErrorUtils {
         } else if (ex instanceof HttpResponseStatusException) {
             final int status = ((HttpResponseStatusException) ex).getStatusCode();
             switch (status) {
-                case HttpURLConnection.HTTP_UNAVAILABLE:
+                case HttpStatus.SERVICE_UNAVAILABLE:
                     errorMessage = context.getString(R.string.network_service_unavailable);
                     break;
-                case HttpURLConnection.HTTP_NOT_FOUND:
-                case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                case HttpStatus.NOT_FOUND:
+                case HttpStatus.INTERNAL_SERVER_ERROR:
                     errorMessage = context.getString(R.string.action_not_completed);
                     break;
             }

@@ -6,7 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.assertj.core.api.Assertions;
 import org.edx.mobile.databinding.FragmentUserProfileAccomplishmentsBinding;
 import org.edx.mobile.view.PresenterFragmentTest;
 import org.junit.Before;
@@ -17,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.android.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Shadows.shadowOf;
 
@@ -34,12 +34,12 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
     public void before() {
         startFragment(new TestableUserProfileAccomplishmentsFragment(mockAdapter));
         binding = DataBindingUtil.getBinding(fragment.getView());
-        Assertions.assertThat(binding).isNotNull();
+        assertThat(binding).isNotNull();
     }
 
     @Test
     public void adapterListener_onShare_callsPresenter() {
-        Assertions.assertThat(fragment.listener).isNotNull();
+        assertThat(fragment.listener).isNotNull();
         final BadgeAssertion badgeAssertion = new BadgeAssertion();
         fragment.listener.onShare(badgeAssertion);
         verify(presenter).onClickShare(badgeAssertion);
@@ -71,7 +71,7 @@ public class UserProfileAccomplishmentsFragmentTest extends PresenterFragmentTes
 
     @Test
     public void prefersScrollingHeader_isTrue() {
-        Assertions.assertThat(fragment.prefersScrollingHeader()).isTrue();
+        assertThat(fragment.prefersScrollingHeader()).isTrue();
     }
 
     @SuppressLint("ValidFragment")

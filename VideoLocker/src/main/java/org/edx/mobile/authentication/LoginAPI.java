@@ -12,6 +12,7 @@ import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.HttpResponseStatusException;
 import org.edx.mobile.http.HttpException;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
@@ -179,7 +180,7 @@ public class LoginAPI {
             }
             loginService.register(parameterMap);
         } catch (HttpResponseStatusException e) {
-            if ((e.getStatusCode() == 400 || e.getStatusCode() == 409) && !android.text.TextUtils.isEmpty(e.getBody())) {
+            if ((e.getStatusCode() == HttpStatus.BAD_REQUEST || e.getStatusCode() == HttpStatus.CONFLICT) && !android.text.TextUtils.isEmpty(e.getBody())) {
                 try {
                     final FormFieldMessageBody body = gson.fromJson(e.getBody(), FormFieldMessageBody.class);
                     if (body != null && body.size() > 0) {

@@ -187,7 +187,7 @@ public class RestApiManager implements IApi {
 
     @Override
     public SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(String courseId, String lastVisitedModuleId) throws Exception {
-        String date = DateUtil.getModificationDate();
+        String date = DateUtil.getCurrentTimeStamp();
         EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
         body.last_visited_module_id = lastVisitedModuleId;
         body.modification_date = date;

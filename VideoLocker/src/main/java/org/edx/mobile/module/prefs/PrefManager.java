@@ -228,7 +228,7 @@ public class PrefManager {
     public void putLastAccessedSubsection(String subsectionId, boolean lastAccessedFlag) {
         Editor edit = context.getSharedPreferences(prefName, Context.MODE_PRIVATE).edit();
         edit.putString(PrefManager.Key.LASTACCESSED_MODULE_ID, subsectionId);
-        edit.putString(PrefManager.Key.LAST_ACCESS_MODIFICATION_TIME, DateUtil.getModificationDate());
+        edit.putString(PrefManager.Key.LAST_ACCESS_MODIFICATION_TIME, DateUtil.getCurrentTimeStamp());
         edit.putBoolean(PrefManager.Key.LASTACCESSED_SYNCED_FLAG, lastAccessedFlag);
         edit.commit();
     }

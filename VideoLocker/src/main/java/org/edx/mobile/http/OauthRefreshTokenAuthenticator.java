@@ -53,7 +53,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     public Request authenticate(Route route, final Response response) throws IOException {
         logger.warn(response.toString());
 
-        if (!isTokenExpired(response.peekBody(200).string())) {
+        if (!isTokenExpired(response.peekBody(HttpStatus.OK).string())) {
             return null;
         }
 

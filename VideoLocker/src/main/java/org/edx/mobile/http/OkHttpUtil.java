@@ -58,6 +58,7 @@ public class OkHttpUtil {
         if (isOAuthBased) {
             interceptors.add(new OauthHeaderRequestInterceptor(context));
         }
+        interceptors.add(new NewVersionBroadcastInterceptor());
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

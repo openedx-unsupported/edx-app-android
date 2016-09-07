@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.inject.Injector;
 
 import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.OauthRefreshTokenAuthenticator;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.test.util.MockDataUtil;
@@ -74,7 +75,7 @@ public final class AuthenticationTests extends BaseTestCase {
 
         // Make request
         Response response = client.newCall(request).execute();
-        assertEquals(200, response.code());
+        assertEquals(HttpStatus.OK, response.code());
         assertEquals("Bearer dummy", response.request().header("Authorization"));
 
         // Assert the expired token request was sent
@@ -107,7 +108,7 @@ public final class AuthenticationTests extends BaseTestCase {
                 .build();
 
         Response response = client.newCall(request).execute();
-        assertEquals(401, response.code());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.code());
         assertEquals("401_not_caused_by_expired_token", response.request().header("Authorization"));
     }
 
@@ -125,7 +126,7 @@ public final class AuthenticationTests extends BaseTestCase {
                 .build();
 
         Response response = client.newCall(request).execute();
-        assertEquals(401, response.code());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.code());
         assertEquals("expired_token", response.request().header("Authorization"));
     }
 
@@ -138,22 +139,22 @@ public final class AuthenticationTests extends BaseTestCase {
             String path = request.getPath();
             String header = request.getHeader("Authorization");
 
-            response.setResponseCode(404);
+            response.setResponseCode(HttpStatus.NOT_FOUND);
             try {
                 if (path.equals("/oauth2/access_token/")) {
-                    response.setResponseCode(200).setBody(MockDataUtil.getMockResponse("post_oauth2_access_token"));
+                    response.setResponseCode(HttpStatus.OK).setBody(MockDataUtil.getMockResponse("post_oauth2_access_token"));
                 } else if (path.equals("/dummy/endpoint/")) {
                     switch (header) {
                         case "expired_token":
-                            response.setResponseCode(401)
+                            response.setResponseCode(HttpStatus.UNAUTHORIZED)
                                     .addHeader("Authorization", "old_access_token")
                                     .setBody(MockDataUtil.getMockResponse("401_expired_token_body"));
                             break;
                         case "Bearer dummy":
-                            response.setResponseCode(200);
+                            response.setResponseCode(HttpStatus.OK);
                             break;
                         case "401_not_caused_by_expired_token":
-                            response.setResponseCode(401);
+                            response.setResponseCode(HttpStatus.UNAUTHORIZED);
                             break;
                     }
                 }

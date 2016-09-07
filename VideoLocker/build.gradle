@@ -132,7 +132,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-plus:9.4.0'
     compile 'com.google.android.gms:play-services-analytics:9.4.0'
     compile 'com.google.android.gms:play-services-auth:9.4.0'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'de.greenrobot:eventbus:2.4.1'
     compile 'com.squareup.phrase:phrase:1.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.0.1'
@@ -181,7 +181,7 @@ dependencies {
     testCompile "org.robolectric:robolectric:3.0"
     testCompile "org.robolectric:shadows-support-v4:3.0"
     testCompile "org.robolectric:shadows-multidex:3.0"
-    testCompile 'org.assertj:assertj-core:1.7.1'
+    testCompile 'org.assertj:assertj-core:2.5.0'
     testCompile ('com.squareup.assertj:assertj-android:1.1.1') {
         exclude group: 'com.android.support'
     }

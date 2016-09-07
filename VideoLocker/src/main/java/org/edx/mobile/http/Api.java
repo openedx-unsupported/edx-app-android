@@ -106,7 +106,6 @@ public class Api implements IApi {
         }
 
         //Initializing task call
-        logger.debug("Received Data from Server at : " + DateUtil.getCurrentTimeStamp());
         logger.debug("course_hierarchy= " + json);
 
         Gson gson = new GsonBuilder().create();
@@ -163,7 +162,6 @@ public class Api implements IApi {
             videos.add(m);
         }
 
-        logger.debug("Finished converting data at " + DateUtil.getCurrentTimeStamp());
         return chapterMap;
     }
 
@@ -250,7 +248,7 @@ public class Api implements IApi {
             // get data from server
             String urlWithAppendedParams = HttpManager.toGetUrl(url, p);
             final HttpManager.HttpResult result = http.get(urlWithAppendedParams, getAuthHeaders());
-            if (result.statusCode == 401) {
+            if (result.statusCode == HttpStatus.UNAUTHORIZED) {
                 throw new HttpAuthRequiredException();
             }
             json = result.body;
@@ -542,7 +540,7 @@ public class Api implements IApi {
         String url = getBaseUrl() + "/api/mobile/v0.5/users/" + username + "/course_status_info/" + courseId;
         logger.debug("PATCH url for syncLastAccessed Subsection: " + url);
 
-        String date = DateUtil.getModificationDate();
+        String date = DateUtil.getCurrentTimeStamp();
 
         JSONObject postBody = new JSONObject();
         postBody.put("last_visited_module_id", lastVisitedModuleId);

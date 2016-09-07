@@ -63,6 +63,20 @@
     <!-- Alert dialog content shown when user attempts to view a video that hasn't been synced -->
     <string name="video_offline_message">Please select a video that you’ve downloaded onto your device.</string>
 
+    <!-- New version available -->
+    <!-- Snackbar notification shown when the current version of the app is unsupported -->
+    <string name="app_version_unsupported">Your version of the app is no longer supported.</string>
+    <!-- Snackbar notification shown when the current version of the app is deprecated -->
+    <string name="app_version_deprecated">@string/app_version_outdated</string>
+    <!-- Snackbar notification shown when the current version of the app is outdated -->
+    <string name="app_version_outdated">A new version of the app is available.</string>
+    <!-- Snackbar action button label for opening an app store to upgrade the app to the latest version -->
+    <string name="app_version_update_button">Update</string>
+    <!-- Toast notification for when the user presses the update action button from the Snackbar
+         notifications while no supported app store or browser is installed on the device with which
+         the app could be updated -->
+    <string name="app_version_upgrade_app_store_unavailable">No supported app store found on device.</string>
+
     <!-- Registration Error Messages -->
 
     <!-- Error prompt shown during registration to indicate an empty field. Argument is a field name -->
