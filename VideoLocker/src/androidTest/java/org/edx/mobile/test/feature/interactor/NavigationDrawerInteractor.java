@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.allOf;
 
 public class NavigationDrawerInteractor {
     public static NavigationDrawerInteractor open() {
-        onView(allOf(isInActionBar(), withContentDescription(R.string.label_open_drawer))).perform(click());
+        onView(allOf(isInActionBar(), withContentDescription(R.string.label_open_navigation_menu))).perform(click());
         return new NavigationDrawerInteractor();
     }
 

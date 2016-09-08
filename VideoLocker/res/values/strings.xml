@@ -66,9 +66,9 @@
     <!-- Accessible content description of sign in button on Log in screen -->
     <string name="login_btn">Sign in button</string>
     <!-- Message shown while waiting for action -->
-    <string name="progressText">Please wait....</string>
+    <string name="progress_text">Please wait</string>
     <!-- Message shown while user waits for response to a sign in request-->
-    <string name="signing_in">Signing In...</string>
+    <string name="signing_in">Signing In</string>
     <!-- Message for shown after tapping Sign In -->
     <string name="error_message">Error Message</string>
     <!-- Generic error during log in -->
@@ -85,9 +85,9 @@
 
     <!-- Navigation Drawer Labels -->
     <!-- Button to open drawer -->
-    <string name="label_open_drawer">Open Navigation</string>
+    <string name="label_open_navigation_menu">Open Navigation Menu</string>
     <!-- Button to open drawer -->
-    <string name="label_close_drawer">Close Navigation</string>
+    <string name="label_close_navigation_menu">Close Navigation Menu</string>
     <!-- Button text to show user Settings screen -->
     <string name="action_settings">Settings</string>
     <!-- Title of user's profile screen -->
