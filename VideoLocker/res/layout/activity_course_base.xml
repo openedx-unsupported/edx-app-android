@@ -41,7 +41,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/edx_brand_primary_x_light"
+                android:background="@color/edx_brand_primary_back"
                 android:visibility="gone">
 
                 <LinearLayout

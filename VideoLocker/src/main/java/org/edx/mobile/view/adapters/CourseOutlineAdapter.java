@@ -250,7 +250,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             // If we reach here & the type is VIDEO, it means the video is webOnly
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             viewHolder.rowType.setIcon(FontAwesomeIcons.fa_laptop);
-            viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
         } else {
             viewHolder.bulkDownload.setVisibility(View.INVISIBLE);
             if (unit.getType() == BlockType.PROBLEM) {
@@ -267,7 +267,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
             @Override
             public void onResult(Boolean accessed) {
                 if (accessed) {
-                    viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                    viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
                 } else {
                     viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
                 }
@@ -294,7 +294,7 @@ public class CourseOutlineAdapter extends BaseAdapter {
                     @Override
                     public void onResult(DownloadEntry.WatchedState result) {
                         if (result != null && result == DownloadEntry.WatchedState.WATCHED) {
-                            viewHolder.rowType.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                            viewHolder.rowType.setIconColorResource(R.color.edx_brand_gray_accent);
                         } else {
                             viewHolder.rowType.setIconColorResource(R.color.edx_brand_primary_base);
                         }
@@ -423,12 +423,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
             case DOWNLOADED:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_check);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
-                row.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
                 break;
             case ONLINE:
                 row.bulkDownload.setIcon(FontAwesomeIcons.fa_arrow_down);
                 row.bulkDownload.setIconAnimation(Animation.NONE);
-                row.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+                row.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
                 break;
         }
         row.numOfVideoAndDownloadArea.setOnClickListener(listener);
@@ -478,12 +478,12 @@ public class CourseOutlineAdapter extends BaseAdapter {
                 .findViewById(R.id.row_subtitle);
         holder.rowSubtitleIcon = (IconImageView) convertView
                 .findViewById(R.id.row_subtitle_icon);
-        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_grayscale_neutral_light);
+        holder.rowSubtitleIcon.setIconColorResource(R.color.edx_brand_gray_back);
         holder.noOfVideos = (TextView) convertView
                 .findViewById(R.id.no_of_videos);
         holder.bulkDownload = (IconImageView) convertView
                 .findViewById(R.id.bulk_download);
-        holder.bulkDownload.setIconColorResource(R.color.edx_grayscale_neutral_base);
+        holder.bulkDownload.setIconColorResource(R.color.edx_brand_gray_accent);
         holder.numOfVideoAndDownloadArea = (LinearLayout) convertView
                 .findViewById(R.id.bulk_download_layout);
         holder.rowSubtitlePanel = convertView.findViewById(R.id.row_subtitle_panel);

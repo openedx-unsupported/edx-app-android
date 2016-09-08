@@ -1,13 +1,11 @@
 package org.edx.mobile.view.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.ClipDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -148,7 +146,7 @@ public abstract class MyAllVideoAdapter extends VideoBaseAdapter<SectionItemInte
                         holder.delete_checkbox.getContext(),
                         R.dimen.fa_large,
                         R.color.edx_brand_primary_base,
-                        R.color.edx_grayscale_neutral_x_dark
+                        R.color.edx_brand_gray_base
                 )
         );
         return holder;

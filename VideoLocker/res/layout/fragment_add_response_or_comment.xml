@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_x_light"
+    android:background="@color/edx_brand_gray_x_back"
     android:fillViewport="true">
 
     <LinearLayout
@@ -14,7 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/edx_grayscale_neutral_white"
+            android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="@dimen/widget_margin"
             android:paddingLeft="@dimen/edx_margin"

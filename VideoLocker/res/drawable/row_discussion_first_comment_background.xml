@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/edx_grayscale_neutral_white" />
+    <solid android:color="@color/white" />
     <stroke
         android:width="@dimen/edx_hairline"
-        android:color="@color/edx_grayscale_neutral_light" />
+        android:color="@color/edx_brand_gray_back" />
     <corners android:radius="@dimen/edx_box_radius"
         android:topLeftRadius="@dimen/edx_box_radius"
         android:topRightRadius="@dimen/edx_box_radius"

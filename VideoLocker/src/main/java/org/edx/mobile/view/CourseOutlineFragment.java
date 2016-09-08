@@ -148,7 +148,7 @@ public class CourseOutlineFragment extends BaseFragment {
                 Context context = getActivity();
                 Drawable modeSwitcherDrawable =
                         new IconDrawable(context, FontAwesomeIcons.fa_list)
-                        .colorRes(context, R.color.edx_grayscale_neutral_light)
+                        .colorRes(context, R.color.edx_brand_gray_back)
                         .sizeRes(context, R.dimen.content_unavailable_error_icon_size);
                 messageView.setCompoundDrawablesWithIntrinsicBounds(
                         null, modeSwitcherDrawable, null, null);

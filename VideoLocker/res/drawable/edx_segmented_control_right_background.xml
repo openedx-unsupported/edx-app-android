@@ -3,10 +3,10 @@
     <item android:state_checked="true" android:state_enabled="false">
         <shape
             android:shape="rectangle">
-            <solid android:color="@color/edx_grayscale_neutral_light" />
+            <solid android:color="@color/edx_brand_gray_back" />
             <stroke
                 android:width="@dimen/edx_hairline"
-                android:color="@color/edx_grayscale_neutral_light" />
+                android:color="@color/edx_brand_gray_back" />
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="@dimen/edx_box_radius"
@@ -33,10 +33,10 @@
     <item>
         <shape
             android:shape="rectangle">
-            <solid android:color="@color/edx_grayscale_neutral_white" />
+            <solid android:color="@color/white" />
             <stroke
                 android:width="@dimen/edx_hairline"
-                android:color="@color/edx_grayscale_neutral_light" />
+                android:color="@color/edx_brand_gray_back" />
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="@dimen/edx_box_radius"

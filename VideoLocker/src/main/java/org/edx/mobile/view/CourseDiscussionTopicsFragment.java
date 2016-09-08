@@ -83,7 +83,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
             Context context = getActivity();
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(header,
                     new IconDrawable(context, FontAwesomeIcons.fa_star)
-                            .colorRes(context, R.color.edx_grayscale_neutral_dark)
+                            .colorRes(context, R.color.edx_brand_gray_base)
                             .sizeRes(context, R.dimen.edx_base),
                     null, null, null);
             final DiscussionTopic discussionTopic = new DiscussionTopic();

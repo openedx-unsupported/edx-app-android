@@ -21,7 +21,7 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_margin="20dp"
-            app:iconColor="@color/edx_grayscale_neutral_light"
+            app:iconColor="@color/edx_brand_gray_back"
             app:iconName="fa-exclamation-circle" />
 
         <TextView

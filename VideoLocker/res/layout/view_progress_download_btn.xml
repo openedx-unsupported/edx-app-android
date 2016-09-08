@@ -14,7 +14,7 @@
         android:layout_width="@dimen/fa_x_small"
         android:layout_height="@dimen/fa_x_small"
         android:layout_gravity="center"
-        app:iconColor="@color/edx_grayscale_neutral_white_t"
+        app:iconColor="@color/white"
         app:iconName="fa-arrow-down"
         tools:ignore="ContentDescription" />
 

@@ -28,8 +28,8 @@ public enum CheckboxDrawableUtil {
         return CheckboxDrawableUtil.createStaticDrawable(
                 context,
                 R.dimen.action_bar_icon_size,
-                R.color.edx_grayscale_neutral_white,
-                R.color.edx_grayscale_neutral_white,
+                R.color.white,
+                R.color.white,
                 isChecked
         );
     }

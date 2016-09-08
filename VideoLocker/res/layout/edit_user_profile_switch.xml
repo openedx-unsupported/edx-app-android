@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Label"
-        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_small" />
 
     <RadioGroup
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/edx_margin"
         tools:text="Instructions"
-        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_x_small" />
 
 </LinearLayout>

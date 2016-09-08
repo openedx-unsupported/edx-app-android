@@ -29,7 +29,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_grayscale_neutral_dark"
+                android:textColor="@color/edx_brand_gray_base"
                 android:textSize="@dimen/edx_small"
                 android:textStyle="bold"
                 tools:text="Name" />
@@ -38,7 +38,7 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_grayscale_neutral_base"
+                android:textColor="@color/edx_brand_gray_accent"
                 android:textSize="@dimen/edx_x_small"
                 tools:text="Description that is long enough to wrap onto another line." />
 
@@ -46,7 +46,7 @@
                 android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/edx_grayscale_neutral_light"
+                android:textColor="@color/edx_brand_gray_back"
                 android:textSize="@dimen/edx_x_small"
                 tools:text="Date" />
 
@@ -61,6 +61,6 @@
             android:padding="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
-            android:tint="@color/edx_grayscale_neutral_dark" />
+            android:tint="@color/edx_brand_gray_base" />
     </LinearLayout>
 </layout>

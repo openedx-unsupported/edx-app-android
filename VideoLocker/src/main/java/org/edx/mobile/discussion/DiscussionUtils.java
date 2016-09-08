@@ -34,7 +34,7 @@ public abstract class DiscussionUtils {
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
                     new IconDrawable(context, FontAwesomeIcons.fa_lock)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
-                            .colorRes(context, R.color.edx_grayscale_neutral_white_t),
+                            .colorRes(context, R.color.white),
                     null, null, null
             );
             creationLayout.setOnClickListener(null);
@@ -43,7 +43,7 @@ public abstract class DiscussionUtils {
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
                     new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
                             .sizeRes(context, R.dimen.icon_view_standard_width_height)
-                            .colorRes(context, R.color.edx_grayscale_neutral_white_t),
+                            .colorRes(context, R.color.white),
                     null, null, null
             );
             creationLayout.setOnClickListener(listener);

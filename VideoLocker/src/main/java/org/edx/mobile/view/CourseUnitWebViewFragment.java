@@ -25,11 +25,9 @@ import org.edx.mobile.event.NetworkConnectivityChangeEvent;
 import org.edx.mobile.event.SessionIdRefreshEvent;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.HtmlBlockModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.EdxCookieManager;
 import org.edx.mobile.services.ViewPagerDownloadManager;
 import org.edx.mobile.util.NetworkUtil;
@@ -215,7 +213,7 @@ public class CourseUnitWebViewFragment extends CourseUnitFragment {
             errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
                     new IconDrawable(context, errorIcon)
                             .sizeRes(context, R.dimen.content_unavailable_error_icon_size)
-                            .colorRes(context, R.color.edx_grayscale_neutral_light),
+                            .colorRes(context, R.color.edx_brand_gray_back),
                     null, null
             );
         }

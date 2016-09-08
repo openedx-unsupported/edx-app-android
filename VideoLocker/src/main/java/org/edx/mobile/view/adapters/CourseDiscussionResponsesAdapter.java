@@ -361,7 +361,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 holder.numberResponsesOrCommentsLabel,
                 new IconDrawable(context, icon)
-                        .colorRes(context, R.color.edx_grayscale_neutral_dark)
+                        .colorRes(context, R.color.edx_brand_gray_base)
                         .sizeRes(context, R.dimen.edx_small),
                 null, null, null);
     }

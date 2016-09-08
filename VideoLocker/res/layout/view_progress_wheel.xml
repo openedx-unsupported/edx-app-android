@@ -11,7 +11,7 @@
         ProgressWheel:barWidth="5dp"
         ProgressWheel:contourColor="@android:color/transparent"
         ProgressWheel:progressBarLength="70dp"
-        ProgressWheel:rimColor="@color/edx_grayscale_neutral_white_t"
+        ProgressWheel:rimColor="@color/white"
         ProgressWheel:rimWidth="4dp"
         ProgressWheel:text=""
         ProgressWheel:textColor="#222"

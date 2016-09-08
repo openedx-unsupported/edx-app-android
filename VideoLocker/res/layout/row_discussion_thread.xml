@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/edx_margin"
         android:layout_marginRight="@dimen/edx_margin"
         android:layout_marginTop="@dimen/discussion_posts_icon_margin"
-        app:iconColor="@color/edx_grayscale_neutral_dark"
+        app:iconColor="@color/edx_brand_gray_base"
         app:iconName="fa-comments" />
 
     <LinearLayout
@@ -37,19 +37,19 @@
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_closed_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
+                app:iconColor="@color/edx_brand_gray_base"
                 app:iconName="fa-lock" />
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_pin_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
+                app:iconColor="@color/edx_brand_gray_base"
                 app:iconName="fa-thumb-tack" />
 
             <org.edx.mobile.view.custom.IconImageViewXml
                 android:id="@+id/discussion_post_following_icon"
                 style="@style/discussion_thread_icon"
-                app:iconColor="@color/edx_grayscale_neutral_dark"
+                app:iconColor="@color/edx_brand_gray_base"
                 app:iconName="fa-star" />
 
             <TextView

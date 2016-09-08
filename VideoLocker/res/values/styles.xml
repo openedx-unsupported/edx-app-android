@@ -8,13 +8,13 @@
         <item name="colorPrimary">@color/edx_brand_primary_base</item>
         <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
         <item name="colorAccent">@color/edx_brand_primary_accent</item>
-        <item name="actionModeBackground">@color/edx_brand_primary_x_dark</item>
-        <item name="actionMenuTextColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="actionModeBackground">@color/edx_brand_primary_dark</item>
+        <item name="actionMenuTextColor">@color/white</item>
         <item name="actionButtonStyle">@style/MyActionBarButton</item>
         <item name="actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
         <item name="android:actionButtonStyle">@style/MyActionBarButton</item>
         <item name="android:actionMenuTextAppearance">@style/MyMenuTextAppearance</item>
-        <item name="android:windowBackground">@color/edx_grayscale_neutral_x_light</item>
+        <item name="android:windowBackground">@color/edx_brand_gray_x_back</item>
         <item name="android:titleTextStyle">@style/MyActionBarTitleText</item>
         <item name="android:listPopupWindowStyle">@style/edX.Widget.ListPopupWindow</item>
         <item name="android:popupMenuStyle">@style/edX.Widget.PopupMenu</item>
@@ -113,14 +113,14 @@
     <style name="offline_bar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">3dp</item>
-        <item name="android:background">@color/red_offline_bar</item>
+        <item name="android:background">@color/edx_brand_secondary_base</item>
         <item name="android:visibility">gone</item>
     </style>
 
     <style name="offline_msg_bar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
-        <item name="android:background">@color/edx_brand_secondary_x_light</item>
+        <item name="android:background">@color/edx_brand_secondary_back</item>
         <item name="android:textColor">@color/edx_brand_secondary_base</item>
         <item name="android:visibility">gone</item>
     </style>
@@ -135,11 +135,11 @@
     </style>
 
     <style name="gray_separator" parent="separator_base">
-        <item name="android:background">@color/edx_grayscale_neutral_light</item>
+        <item name="android:background">@color/edx_brand_gray_back</item>
     </style>
 
     <style name="light_gray_separator" parent="separator_base">
-        <item name="android:background">@color/edx_grayscale_neutral_xx_light</item>
+        <item name="android:background">@color/edx_brand_gray_x_back</item>
     </style>
 
     <style name="red_separator" parent="separator_base">
@@ -152,7 +152,7 @@
     </style>
 
     <style name="gray_hairline_separator" parent="hairline_separator_style">
-        <item name="android:background">@color/edx_grayscale_neutral_light</item>
+        <item name="android:background">@color/edx_brand_gray_back</item>
     </style>
 
     <style name="video_player_panel">
@@ -169,7 +169,7 @@
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
         <item name="android:padding">@dimen/video_player_pause_btn_padding</item>
         <item name="android:layout_gravity">center</item>
-        <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="video_player_top_control">
@@ -177,7 +177,7 @@
         <item name="android:layout_height">@dimen/video_player_top_control_height</item>
         <item name="android:layout_marginRight">@dimen/video_player_control_right_margin</item>
         <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
-        <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="video_player_side_control">
@@ -187,7 +187,7 @@
         <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_control_right_margin</item>
         <item name="android:padding">@dimen/video_player_side_control_padding</item>
         <item name="android:background">@drawable/semi_transparent_gray_circle</item>
-        <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="video_player_seekbar_control">
@@ -215,7 +215,7 @@
         <item name="android:layout_marginStart" tools:targetApi="17">@dimen/video_player_bottom_control_left_margin</item>
         <item name="android:layout_marginRight">@dimen/video_player_bottom_control_right_margin</item>
         <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/video_player_bottom_control_right_margin</item>
-        <item name="iconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="iconColor">@color/white</item>
     </style>
 
     <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
@@ -254,7 +254,7 @@
         <item name="android:maxWidth">150dp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
+        <item name="android:textColor">@color/edx_brand_gray_accent</item>
         <item name="android:layout_marginTop">-5dp</item>
     </style>
 
@@ -266,7 +266,7 @@
 
     <style name="discussion_topics_search_bar" parent="search_bar">
         <item name="android:queryHint">@string/topics_search</item>
-        <item name="android:background">@color/edx_grayscale_neutral_white_t</item>
+        <item name="android:background">@color/white</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
 
@@ -288,7 +288,7 @@
         <item name="android:layout_marginEnd" tools:targetApi="17">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginRight">@dimen/discussion_posts_icon_margin</item>
         <item name="android:layout_marginTop">@dimen/discussion_posts_icon_margin</item>
-        <item name="iconColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="iconColor">@color/edx_brand_gray_base</item>
     </style>
 
     <style name="discussion_responses_nested_card_layout">
@@ -305,7 +305,7 @@
     </style>
 
     <style name="profile_image">
-        <item name="android:src">@color/edx_grayscale_neutral_base</item>
+        <item name="android:src">@color/edx_brand_gray_accent</item>
         <item name="civ_border_color">@color/white</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:background">@drawable/white_circle</item>
@@ -336,7 +336,7 @@
         <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
         <item name="android:background">@drawable/edx_brand_button</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_white</item>
+        <item name="android:textColor">@color/edx_brand_button_text</item>
         <item name="android:textSize">@dimen/edx_base</item>
     </style>
 
@@ -352,10 +352,13 @@
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">
+        <!-- When this style is used, it is always wrapped by edX.Widget.CreationButtonLayout -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">@dimen/edx_base</item>
+        <item name="android:textColor">@color/edx_brand_button_text</item>
+        <item name="android:duplicateParentState">true</item>
     </style>
 
     <style name="edX.Widget.CreationButtonLayout">
@@ -369,11 +372,13 @@
     </style>
 
     <style name="edX.Widget.CreationButton">
+        <!-- When this style is used, it is always wrapped by edX.Widget.CreationButtonLayout -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/edx_white</item>
+        <item name="android:textColor">@color/edx_brand_button_text</item>
         <item name="android:textSize">@dimen/edx_small</item>
+        <item name="android:duplicateParentState">true</item>
     </style>
 
     <style name="edX.Widget.EnrollButton" parent="edX.Widget.Button">
@@ -453,7 +458,7 @@
 
     <style name="edX.Widget.PopupMenu.HeaderTextAppearance" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">@dimen/popupMenuHeaderTextSize</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
     <style name="edX.Widget.PopupMenu.RowTextAppearance" parent="TextAppearance.AppCompat.Small">
@@ -495,15 +500,15 @@
     </style>
 
     <style name="edX.Widget.ProgressBar.Inverse">
-        <item name="indeterminateIconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="indeterminateIconColor">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Large.Inverse">
-        <item name="indeterminateIconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="indeterminateIconColor">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Inverse">
-        <item name="indeterminateIconColor">@color/edx_grayscale_neutral_white_t</item>
+        <item name="indeterminateIconColor">@color/white</item>
     </style>
 
     <style name="edX.Widget.ProgressBar.Small.Title"/>

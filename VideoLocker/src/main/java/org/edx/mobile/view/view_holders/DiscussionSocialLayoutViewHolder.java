@@ -44,7 +44,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionThread.getVoteCount()));
         threadVoteIconImageView.setIconColorResource(discussionThread.isVoted() ?
-                R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
+                R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
 
         threadFollowContainer.setVisibility(View.VISIBLE);
 
@@ -53,7 +53,7 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
             threadFollowIconImageView.setIconColorResource(R.color.edx_brand_primary_base);
         } else {
             threadFollowTextView.setText(R.string.forum_follow);
-            threadFollowIconImageView.setIconColorResource(R.color.edx_grayscale_neutral_dark);
+            threadFollowIconImageView.setIconColorResource(R.color.edx_brand_gray_base);
         }
     }
 
@@ -61,6 +61,6 @@ public class DiscussionSocialLayoutViewHolder extends RecyclerView.ViewHolder {
         threadVoteTextView.setText(ResourceUtil.getFormattedStringForQuantity(
                 threadVoteTextView.getResources(), R.plurals.discussion_responses_action_bar_vote_text, discussionResponse.getVoteCount()));
         threadVoteIconImageView.setIconColorResource(discussionResponse.isVoted() ?
-                R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_dark);
+                R.color.edx_brand_primary_base : R.color.edx_brand_gray_base);
     }
 }

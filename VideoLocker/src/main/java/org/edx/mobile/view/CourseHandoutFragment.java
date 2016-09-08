@@ -163,7 +163,7 @@ public class CourseHandoutFragment extends BaseFragment {
         errorTextView.setCompoundDrawablesWithIntrinsicBounds(null,
                 new IconDrawable(context, errorIcon)
                         .sizeRes(context, R.dimen.content_unavailable_error_icon_size)
-                        .colorRes(context, R.color.edx_grayscale_neutral_light),
+                        .colorRes(context, R.color.edx_brand_gray_back),
                 null, null
         );
     }

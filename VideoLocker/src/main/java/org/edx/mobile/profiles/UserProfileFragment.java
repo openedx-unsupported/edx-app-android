@@ -178,7 +178,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             @Override
             public void showLoading() {
                 ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
+                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_x_back));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentError.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
@@ -188,7 +188,7 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             @Override
             public void showError(@NonNull Throwable error) {
                 ((AppBarLayout.LayoutParams) viewHolder.profileHeader.getLayoutParams()).setScrollFlags(0);
-                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_grayscale_neutral_xx_light));
+                viewHolder.profileBody.setBackgroundColor(getResources().getColor(R.color.edx_brand_gray_x_back));
                 viewHolder.profileSectionTabs.setVisibility(View.GONE);
                 viewHolder.contentLoadingIndicator.getRoot().setVisibility(View.GONE);
                 viewHolder.profileBodyContent.setVisibility(View.GONE);
