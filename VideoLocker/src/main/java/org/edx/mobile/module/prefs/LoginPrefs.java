@@ -155,6 +155,15 @@ public class LoginPrefs {
         }
     }
 
+    @Nullable
+    public ProfileImage getProfileImage() {
+        final String json = pref.getString(PrefManager.Key.PROFILE_IMAGE);
+        if (null == json) {
+            return null;
+        }
+        return gson.fromJson(json, ProfileImage.class);
+    }
+
     @NonNull
     private static String segmentKeyFromAuthBackend(@NonNull AuthBackend backend) {
         switch (backend) {

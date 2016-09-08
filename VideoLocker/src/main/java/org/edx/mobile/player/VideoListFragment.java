@@ -26,7 +26,7 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.db.DataCallback;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
+import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.task.CircularProgressTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.NetworkUtil;
@@ -65,6 +65,9 @@ public class VideoListFragment extends BaseFragment {
     TranscriptManager transcriptManager;
 
     @Inject
+    LastAccessManager lastAccessManager;
+
+    @Inject
     protected IEdxEnvironment environment;
 
     private final Logger logger = new Logger(getClass().getName());
@@ -80,7 +83,7 @@ public class VideoListFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_video_list, null);
     }
@@ -91,7 +94,7 @@ public class VideoListFragment extends BaseFragment {
         restore(savedInstanceState);
 
         Intent extraIntent = getActivity().getIntent();
-        if(extraIntent!=null){
+        if (extraIntent != null) {
             // read incoming enrollment model
             if (enrollment == null) {
                 enrollment = (EnrolledCoursesResponse) extraIntent
@@ -122,14 +125,14 @@ public class VideoListFragment extends BaseFragment {
         } else {
             isLandscape = true;
             // probably the landscape player view, so hide action bar
-            ActionBar bar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-            if(bar!=null){
+            ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (bar != null) {
                 bar.hide();
             }
         }
     }
 
-    public void setAdaptertoVideoList(){
+    public void setAdaptertoVideoList() {
         showDeletePanel(getView());
         addDataToMyVideoAdapter();
     }
@@ -137,19 +140,19 @@ public class VideoListFragment extends BaseFragment {
     private void addDataToMyVideoAdapter() {
         try {
             String selectedId = null;
-            if(adapter!=null){
+            if (adapter != null) {
                 selectedId = adapter.getVideoId();
             }
 
             adapter = new MyAllVideoAdapter(getActivity(), environment) {
                 @Override
                 public void onItemClicked(SectionItemInterface model,
-                        int position) {
+                                          int position) {
                     if (!AppConstants.myVideosDeleteMode) {
                         //Check if the model is a DownloadEntry
                         if (model.isDownload()) {
                             DownloadEntry downloadEntry = (DownloadEntry) model;
-                            if ( downloadEntry.isVideoForWebOnly ){
+                            if (downloadEntry.isVideoForWebOnly) {
                                 Toast.makeText(getActivity(), R.string.video_only_on_web_short, Toast.LENGTH_SHORT).show();
                             }
                             if (downloadEntry.isDownloaded()) {
@@ -172,7 +175,7 @@ public class VideoListFragment extends BaseFragment {
                     handleCheckboxSelection();
                 }
             };
-            if(selectedId!=null){
+            if (selectedId != null) {
                 adapter.setVideoId(selectedId);
             }
 
@@ -186,10 +189,10 @@ public class VideoListFragment extends BaseFragment {
             ArrayList<SectionItemInterface> list = environment.getStorage()
                     .getSortedOrganizedVideosByCourse(enrollment.getCourse().getId());
             downloadAvailable = false;
-            if(list==null||list.size()==0){
+            if (list == null || list.size() == 0) {
                 hideDeletePanel(getView());
                 downloadAvailable = false;
-            }else{
+            } else {
                 downloadAvailable = true;
             }
 
@@ -204,12 +207,13 @@ public class VideoListFragment extends BaseFragment {
 
     /**
      * This function sets text to the title in Action Bar
+     *
      * @param title
      */
-    private void setActivityTitle(String title){
-        try{
+    private void setActivityTitle(String title) {
+        try {
             getActivity().setTitle(title);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -218,11 +222,8 @@ public class VideoListFragment extends BaseFragment {
         if (model instanceof DownloadEntry) {
             DownloadEntry v = (DownloadEntry) model;
             try {
-                String prefName = PrefManager.getPrefNameForLastAccessedBy(
-                        loginPrefs.getUsername(), v.eid);
-                PrefManager prefManager = new PrefManager(getActivity(), prefName);
-                VideoResponseModel vrm =  environment.getServiceManager().getVideoById(v.eid, v.videoId);
-                prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
+                final VideoResponseModel vrm = environment.getServiceManager().getVideoById(v.eid, v.videoId);
+                lastAccessManager.setLastAccessed(v.eid, vrm.getSection().getId());
 
                 // capture chapter name
                 if (chapterName == null) {
@@ -250,10 +251,10 @@ public class VideoListFragment extends BaseFragment {
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
         try {
-            if(getView()!=null){
+            if (getView() != null) {
                 View container = getView().findViewById(R.id.container_player);
                 if (container != null) {
-                    container.setVisibility(View.VISIBLE);  
+                    container.setVisibility(View.VISIBLE);
                 }
             }
         } catch (Exception ex) {
@@ -274,7 +275,7 @@ public class VideoListFragment extends BaseFragment {
         if (isPlayerVisible()) {
             hideDeletePanel(getView());
         } else {
-            if(downloadAvailable){
+            if (downloadAvailable) {
                 showDeletePanel(getView());
             }
         }
@@ -303,7 +304,7 @@ public class VideoListFragment extends BaseFragment {
 
                         // hide checkboxes in list
                         notifyAdapter();
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         logger.error(ex);
                     }
                 }
@@ -330,26 +331,26 @@ public class VideoListFragment extends BaseFragment {
                 final Button cancelButton = (Button) view.findViewById(
                         R.id.cancel_btn);
 
-                    if (AppConstants.myVideosDeleteMode) {
-                        deleteButton.setVisibility(View.VISIBLE);
-                        cancelButton.setVisibility(View.VISIBLE);
-                        editButton.setVisibility(View.GONE);
-                    } else {
-                        deleteButton.setVisibility(View.GONE);
-                        cancelButton.setVisibility(View.GONE);
-                        editButton.setVisibility(View.VISIBLE);
-                    }
+                if (AppConstants.myVideosDeleteMode) {
+                    deleteButton.setVisibility(View.VISIBLE);
+                    cancelButton.setVisibility(View.VISIBLE);
+                    editButton.setVisibility(View.GONE);
+                } else {
+                    deleteButton.setVisibility(View.GONE);
+                    cancelButton.setVisibility(View.GONE);
+                    editButton.setVisibility(View.VISIBLE);
+                }
 
                 deleteButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ArrayList<SectionItemInterface> list;
-                            list = adapter.getSelectedItems();
+                        list = adapter.getSelectedItems();
 
                         if (list != null && list.size() > 0) {
                             // Confirmation Dialog before deleting Videos
                             showConfirmDeleteDialog(list.size());
-                        } 
+                        }
                     }
                 });
 
@@ -378,9 +379,9 @@ public class VideoListFragment extends BaseFragment {
                     public void onClick(View v) {
                         editButton.setVisibility(View.GONE);
 
-                            AppConstants.myVideosDeleteMode = true;
-                            adapter.setSelectedPosition(playingVideoIndex);
-                            adapter.notifyDataSetChanged();
+                        AppConstants.myVideosDeleteMode = true;
+                        adapter.setSelectedPosition(playingVideoIndex);
+                        adapter.notifyDataSetChanged();
 
                         disableDeleteButton();
                         deleteButton.setVisibility(View.VISIBLE);
@@ -422,9 +423,9 @@ public class VideoListFragment extends BaseFragment {
 
     public void setAllVideosChecked() {
         adapter.selectAll();
-        int count  = adapter.getSelectedVideoItemsCount();
+        int count = adapter.getSelectedVideoItemsCount();
 
-        logger.debug("Video Count of selected videos"+ count);
+        logger.debug("Video Count of selected videos" + count);
         enableDeleteButton();
         adapter.setSelectedPosition(playingVideoIndex);
         adapter.notifyDataSetChanged();
@@ -446,6 +447,7 @@ public class VideoListFragment extends BaseFragment {
     /**
      * This method inserts the Download Entry Model in the database
      * Called when a user clicks on a Video in the list
+     *
      * @param v - Download Entry object
      */
     public void addVideoDatatoDb(final DownloadEntry v) {
@@ -454,10 +456,11 @@ public class VideoListFragment extends BaseFragment {
                 environment.getDatabase().addVideoData(v, new DataCallback<Long>() {
                     @Override
                     public void onResult(Long result) {
-                        if(result!=-1){
-                            logger.debug("Video entry inserted"+v.videoId);
+                        if (result != -1) {
+                            logger.debug("Video entry inserted" + v.videoId);
                         }
                     }
+
                     @Override
                     public void onFail(Exception ex) {
                         logger.error(ex);
@@ -489,7 +492,7 @@ public class VideoListFragment extends BaseFragment {
                 v = (DownloadEntry) adapter.getItem(playingVideoIndex);
             }
 
-            if (v!=null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
+            if (v != null && v.watched == DownloadEntry.WatchedState.PARTIALLY_WATCHED) {
                 videoModel.watched = DownloadEntry.WatchedState.WATCHED;
                 // mark this as partially watches, as playing has started
                 environment.getDatabase().updateVideoWatchedState(v.videoId, DownloadEntry.WatchedState.WATCHED,
@@ -519,11 +522,11 @@ public class VideoListFragment extends BaseFragment {
         ((VideoListActivity) getActivity()).hideCheckBox();
         AppConstants.myVideosDeleteMode = false;
         videoListView.setOnItemClickListener(adapter);
-        if(adapter.getCount()<=0){
+        if (adapter.getCount() <= 0) {
             finishActivity();
         }
 
-        if(deletedVideoCount>0){
+        if (deletedVideoCount > 0) {
             try {
                 String format = ResourceUtil.getFormattedStringForQuantity(getResources(), R.plurals.deleted_video,
                         "video_count", deletedVideoCount).toString();
@@ -539,12 +542,12 @@ public class VideoListFragment extends BaseFragment {
         getView().findViewById(R.id.cancel_btn).setVisibility(View.GONE);
     }
 
-    
+
     private void finishActivity() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(isActivityStarted){
+                if (isActivityStarted) {
                     getActivity().finish();
                 }
             }
@@ -555,9 +558,9 @@ public class VideoListFragment extends BaseFragment {
         int selectedItemsNo = adapter.getSelectedVideoItemsCount();
         int totalVideos = adapter.getTotalVideoItemsCount();
 
-        if(selectedItemsNo==0){
+        if (selectedItemsNo == 0) {
             disableDeleteButton();
-        }else{
+        } else {
             enableDeleteButton();
         }
 
@@ -569,12 +572,12 @@ public class VideoListFragment extends BaseFragment {
     }
 
     public void startDownload(final DownloadEntry downloadEntry, final ProgressWheel progressWheel) {
-        try{
+        try {
             if (environment.getStorage() != null) {
                 boolean isVideoFilePresentByUrl = environment.getDatabase().isVideoFilePresentByUrl(
                         downloadEntry.url, null);
                 boolean reloadListFlag = true;
-                if(isVideoFilePresentByUrl){
+                if (isVideoFilePresentByUrl) {
                     CircularProgressTask circularTask = new CircularProgressTask();
                     circularTask.setProgressBar(progressWheel);
                     circularTask.execute();
@@ -601,7 +604,7 @@ public class VideoListFragment extends BaseFragment {
                 }
                 transcriptManager.downloadTranscriptsForVideo(downloadEntry.transcript);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -611,20 +614,20 @@ public class VideoListFragment extends BaseFragment {
         dialogMap.put("title", getString(R.string.download_exceed_title));
         dialogMap.put("message_1", getString(R.string.download_exceed_message));
         dialogMap.put("yes_button", getString(R.string.label_yes));
-        dialogMap.put("no_button",  getString(R.string.label_no));
+        dialogMap.put("no_button", getString(R.string.label_no));
         downloadSizeExceedDialog = DeleteVideoDialogFragment.newInstance(dialogMap,
                 new IDialogCallback() {
-            @Override
-            public void onPositiveClicked() {
-                startDownload(de, progressWheel);
-            }
+                    @Override
+                    public void onPositiveClicked() {
+                        startDownload(de, progressWheel);
+                    }
 
-            @Override
-            public void onNegativeClicked() {
-                notifyAdapter();
-                downloadSizeExceedDialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onNegativeClicked() {
+                        notifyAdapter();
+                        downloadSizeExceedDialog.dismiss();
+                    }
+                });
         downloadSizeExceedDialog.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         downloadSizeExceedDialog.show(getFragmentManager(), "dialog");
         downloadSizeExceedDialog.setCancelable(false);
@@ -634,33 +637,33 @@ public class VideoListFragment extends BaseFragment {
         Map<String, String> dialogMap = new HashMap<String, String>();
         dialogMap.put("title", getString(R.string.delete_dialog_title_help));
         dialogMap.put("yes_button", getString(R.string.label_delete));
-        dialogMap.put("no_button",  getString(R.string.label_cancel));
+        dialogMap.put("no_button", getString(R.string.label_cancel));
         dialogMap.put("message_1", getResources().getQuantityString(R.plurals.delete_video_dialog_msg, itemCount));
 
         confirmDeleteFragment = DeleteVideoDialogFragment.newInstance(dialogMap,
                 new IDialogCallback() {
 
-            @Override
-            public void onPositiveClicked() {
-                onConfirmDelete();
-            }
+                    @Override
+                    public void onPositiveClicked() {
+                        onConfirmDelete();
+                    }
 
-            @Override
-            public void onNegativeClicked() {
-                confirmDeleteFragment.dismiss();
-            }
-        });
+                    @Override
+                    public void onNegativeClicked() {
+                        confirmDeleteFragment.dismiss();
+                    }
+                });
         confirmDeleteFragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         confirmDeleteFragment.show(getFragmentManager(), "dialog");
         confirmDeleteFragment.setCancelable(false);
     }
 
     protected void hideConfirmDeleteDialog() {
-        try{
-            if(confirmDeleteFragment!=null){
+        try {
+            if (confirmDeleteFragment != null) {
                 confirmDeleteFragment.dismiss();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -684,7 +687,6 @@ public class VideoListFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt("playingVideoIndex", playingVideoIndex);
@@ -703,41 +705,41 @@ public class VideoListFragment extends BaseFragment {
         public void playVideoModel(DownloadEntry video);
     }
 
-    private void disableDeleteButton(){
+    private void disableDeleteButton() {
         deleteButton.setEnabled(false);
     }
 
-    private void enableDeleteButton(){
+    private void enableDeleteButton() {
         deleteButton.setEnabled(true);
 
     }
 
     public void playNext() {
-        try{
+        try {
             //playingVideoIndex++;
             int videoPos = adapter.getPositionByVideoId(videoModel.videoId);
-            if(videoPos!=-1){
+            if (videoPos != -1) {
                 // check next playable video entry
                 videoPos++;
                 while (videoPos < adapter.getCount()) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i!=null && i instanceof DownloadEntry) {
-                        if(!NetworkUtil.isConnected(getActivity())){
+                    if (i != null && i instanceof DownloadEntry) {
+                        if (!NetworkUtil.isConnected(getActivity())) {
                             DownloadEntry de = (DownloadEntry) i;
-                            if(de.isDownloaded()){
+                            if (de.isDownloaded()) {
                                 if (callback != null) {
                                     videoModel = de;
-                                    playingVideoIndex=videoPos;
+                                    playingVideoIndex = videoPos;
                                     adapter.setSelectedPosition(playingVideoIndex);
                                     adapter.setVideoId(videoModel.videoId);
                                     callback.playVideoModel(videoModel);
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             if (callback != null) {
                                 videoModel = (DownloadEntry) i;
-                                playingVideoIndex=videoPos;
+                                playingVideoIndex = videoPos;
                                 adapter.setVideoId(videoModel.videoId);
                                 adapter.setSelectedPosition(playingVideoIndex);
                                 callback.playVideoModel(videoModel);
@@ -750,64 +752,64 @@ public class VideoListFragment extends BaseFragment {
                 }
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     public boolean hasNextVideo() {
-        try{
-            if(videoModel!=null){
+        try {
+            if (videoModel != null) {
                 int videoPos = adapter.getPositionByVideoId(videoModel.videoId);
-                if(videoPos!=-1){
-                    for (int i=(videoPos+1) ; i<adapter.getCount(); i++) {
+                if (videoPos != -1) {
+                    for (int i = (videoPos + 1); i < adapter.getCount(); i++) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d!=null && d instanceof DownloadEntry) {
+                        if (d != null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
-                            if(!NetworkUtil.isConnected(getActivity())){
-                                if(de.isDownloaded()){
+                            if (!NetworkUtil.isConnected(getActivity())) {
+                                if (de.isDownloaded()) {
                                     return true;
                                 }
-                            }else{
+                            } else {
                                 return true;
                             }
                         }
                     }
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
         return false;
     }
 
     public void playPrevious() {
-        try{
+        try {
             //playingVideoIndex--;
             int videoPos = adapter.getPositionByVideoId(videoModel.videoId);
-            if(videoPos!=-1){
+            if (videoPos != -1) {
                 // check next playable video entry
                 videoPos--;
                 while (videoPos >= 0) {
                     SectionItemInterface i = adapter.getItem(videoPos);
-                    if (i!=null && i instanceof DownloadEntry) {
-                        if(!NetworkUtil.isConnected(getActivity())){
+                    if (i != null && i instanceof DownloadEntry) {
+                        if (!NetworkUtil.isConnected(getActivity())) {
                             DownloadEntry de = (DownloadEntry) i;
-                            if(de.isDownloaded()){
+                            if (de.isDownloaded()) {
                                 if (callback != null) {
                                     videoModel = de;
                                     adapter.setVideoId(videoModel.videoId);
-                                    playingVideoIndex=videoPos;
+                                    playingVideoIndex = videoPos;
                                     adapter.setSelectedPosition(playingVideoIndex);
                                     callback.playVideoModel(videoModel);
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             if (callback != null) {
                                 videoModel = (DownloadEntry) i;
                                 adapter.setVideoId(videoModel.videoId);
-                                playingVideoIndex=videoPos;
+                                playingVideoIndex = videoPos;
                                 adapter.setSelectedPosition(playingVideoIndex);
                                 callback.playVideoModel(videoModel);
                                 break;
@@ -817,59 +819,59 @@ public class VideoListFragment extends BaseFragment {
                     videoPos--;
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
     }
 
     public boolean hasPreviousVideo() {
-        try{
-            if(videoModel!=null){
+        try {
+            if (videoModel != null) {
                 int videoPos = adapter.getPositionByVideoId(videoModel.videoId);
-                if(videoPos!=-1){
-                    for (int i=(videoPos-1) ; i>=0; i--) {
+                if (videoPos != -1) {
+                    for (int i = (videoPos - 1); i >= 0; i--) {
                         SectionItemInterface d = adapter.getItem(i);
-                        if (d!=null && d instanceof DownloadEntry) {
+                        if (d != null && d instanceof DownloadEntry) {
                             DownloadEntry de = (DownloadEntry) d;
-                            if(!NetworkUtil.isConnected(getActivity())){
-                                if(de.isDownloaded()){
+                            if (!NetworkUtil.isConnected(getActivity())) {
+                                if (de.isDownloaded()) {
                                     return true;
                                 }
-                            }else{
+                            } else {
                                 return true;
                             }
                         }
-                    }   
+                    }
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e);
         }
         return false;
     }
 
-    public View.OnClickListener getNextListener(){
-        if(hasNextVideo()){
+    public View.OnClickListener getNextListener() {
+        if (hasNextVideo()) {
             return new NextClickListener();
         }
         return null;
     }
 
-    public View.OnClickListener getPreviousListener(){
-        if(hasPreviousVideo()){
+    public View.OnClickListener getPreviousListener() {
+        if (hasPreviousVideo()) {
             return new PreviousClickListener();
         }
         return null;
     }
 
-    private class NextClickListener implements OnClickListener{
+    private class NextClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             playNext();
         }
     }
 
-    private class PreviousClickListener implements OnClickListener{
+    private class PreviousClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
             playPrevious();

@@ -1,6 +1,5 @@
 package org.edx.mobile.view.my_videos;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -30,12 +29,11 @@ import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.model.db.DownloadEntry;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.db.DataCallback;
-import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.module.storage.DownloadCompletedEvent;
 import org.edx.mobile.module.storage.DownloadedVideoDeletedEvent;
 import org.edx.mobile.player.IPlayerEventCallback;
 import org.edx.mobile.player.PlayerFragment;
+import org.edx.mobile.services.LastAccessManager;
 import org.edx.mobile.task.GetRecentDownloadedVideosTask;
 import org.edx.mobile.util.AppConstants;
 import org.edx.mobile.util.CheckboxDrawableUtil;
@@ -67,7 +65,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
     private GetRecentDownloadedVideosTask getRecentDownloadedVideosTask;
 
     @Inject
-    LoginPrefs loginPrefs;
+    LastAccessManager lastAccessManager;
 
     @Inject
     protected IEdxEnvironment environment;
@@ -278,10 +276,6 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             return;
         }
 
-        Context context = getContext();
-        String prefName = PrefManager.getPrefNameForLastAccessedBy(
-                loginPrefs.getUsername(), videoModel.eid);
-        PrefManager prefManager = new PrefManager(context, prefName);
         VideoResponseModel vrm;
         try {
             vrm = environment.getServiceManager().getVideoById(videoModel.eid, videoModel.videoId);
@@ -289,7 +283,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
             logger.error(e);
             return;
         }
-        prefManager.putLastAccessedSubsection(vrm.getSection().getId(), false);
+        lastAccessManager.setLastAccessed(videoModel.eid, vrm.getSection().getId());
 
         // reload this model
         environment.getStorage().reloadDownloadEntry(videoModel);
@@ -331,7 +325,7 @@ public class MyRecentVideosFragment extends BaseFragment implements IPlayerEvent
         if (filepath == null || filepath.length() <= 0) {
             // not available on local, so play online
             logger.warn("Local file path not available");
-            filepath = videoModel.getBestEncodingUrl(context);
+            filepath = videoModel.getBestEncodingUrl(getContext());
         }
 
         playerFragment.play(filepath, videoModel.lastPlayedOffset,
