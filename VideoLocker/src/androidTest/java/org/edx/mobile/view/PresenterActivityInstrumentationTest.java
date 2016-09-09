@@ -1,21 +1,18 @@
 package org.edx.mobile.view;
 
+import android.content.Intent;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.facebook.testing.screenshot.Screenshot;
-
 import org.edx.mobile.loader.AsyncTaskResult;
 import org.edx.mobile.test.EdxInstrumentationTestApplication;
 import org.edx.mobile.test.GenericSuperclassUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import java.lang.reflect.InvocationHandler;
@@ -24,6 +21,14 @@ import java.lang.reflect.Proxy;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Extend this class to create an instrumentation test that automatically:
+ * Injects a mock presenter into your activity.
+ * Makes the MVP view interface accessible as a variable named `view`.
+ * Executes `view` interface method calls on the application's UI thread.
+
+ Call {@link #startActivity(Intent)} in your test to start the activity.
+ */
 @RunWith(AndroidJUnit4.class)
 public abstract class PresenterActivityInstrumentationTest<ActivityT extends PresenterActivity<PresenterT, ViewT>, PresenterT extends Presenter<ViewT>, ViewT> {
 
@@ -37,21 +42,12 @@ public abstract class PresenterActivityInstrumentationTest<ActivityT extends Pre
     @Rule
     public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
-    @Rule
-    public TestName testName = new TestName();
-
-    @Before
-    public void before() {
+    protected void startActivity(@Nullable Intent intent) {
         this.presenter = mock(getPresenterType());
         ((EdxInstrumentationTestApplication) InstrumentationRegistry.getTargetContext().getApplicationContext()).setNextPresenter(presenter);
-        this.activity = mActivityRule.launchActivity(null);
+        this.activity = mActivityRule.launchActivity(intent);
         // To simplify tests, we automatically execute view methods on the application's UI thread.
         this.view = UiThreadInvocationHandler.newProxyInstance(uiThreadTestRule, activity.view, getViewType());
-    }
-
-    @After
-    public void after() {
-        Screenshot.snap(activity.findViewById(android.R.id.content)).setName(getClass().getName() + "_" + testName.getMethodName()).record();
     }
 
     @SuppressWarnings("unchecked")
