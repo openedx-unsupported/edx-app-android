@@ -6,10 +6,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_nav_background">
+        android:background="@color/grey_nav_background"
+        android:focusable="false"
+        android:clickable="true"
+        android:importantForAccessibility="no">
 
         <FrameLayout
-            android:id="@+id/name_layout"
+            android:id="@+id/navigation_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true">
@@ -29,10 +32,12 @@
                     android:layout_height="@dimen/drawer_profile_image_diameter"
                     android:layout_marginEnd="@dimen/edx_margin"
                     android:layout_marginRight="@dimen/edx_margin"
+                    android:contentDescription="@string/open_profile_button"
                     app:civ_border_width="@dimen/drawer_profile_image_border_width"
                     tools:src="@drawable/profile_photo_placeholder" />
 
                 <LinearLayout
+                    android:id="@+id/user_info_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -42,6 +47,7 @@
                         style="@style/regular_white_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
                         android:textSize="@dimen/drawer_username_text"
                         tools:targetApi="17"
                         tools:text="username" />
@@ -53,6 +59,7 @@
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/widget_margin"
                         android:textSize="@dimen/drawer_email_text"
+                        android:importantForAccessibility="no"
                         tools:text="user@domain.com" />
                 </LinearLayout>
             </LinearLayout>
@@ -62,18 +69,13 @@
             android:id="@+id/button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_layout"
+            android:layout_below="@id/navigation_header_layout"
             android:divider="@drawable/navigation_drawer_divider"
             android:dividerPadding="@dimen/edx_margin"
             android:orientation="vertical"
             android:paddingBottom="@dimen/widget_margin"
             android:showDividers="middle|end"
             android:splitMotionEvents="false">
-
-            <TextView
-                android:id="@+id/drawer_option_my_profile"
-                style="@style/drawer_option"
-                android:text="@string/label_my_profile" />
 
             <TextView
                 android:id="@+id/drawer_option_my_courses"
@@ -112,7 +114,7 @@
             android:gravity="center_horizontal"
             android:text="@string/label_version"
             android:textColor="@color/transparent_white_90"
-            android:textSize="10sp" />
+            android:textSize="@dimen/drawer_app_version_text" />
 
         <Button
             android:id="@+id/logout_button"

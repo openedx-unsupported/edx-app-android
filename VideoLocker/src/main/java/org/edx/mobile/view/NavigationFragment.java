@@ -12,10 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -42,7 +39,11 @@ import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.EmailUtil;
+import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -109,7 +110,7 @@ public class NavigationFragment extends BaseFragment {
                 loadProfileImage(profileImage, drawerNavigationBinding.profileImage);
             }
             if (profile != null && profile.username != null) {
-                drawerNavigationBinding.drawerOptionMyProfile.setOnClickListener(new OnClickListener() {
+                drawerNavigationBinding.profileImage.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final BaseFragmentActivity act = (BaseFragmentActivity) getActivity();
@@ -127,7 +128,8 @@ public class NavigationFragment extends BaseFragment {
             }
         } else {
             drawerNavigationBinding.profileImage.setVisibility(View.GONE);
-            drawerNavigationBinding.drawerOptionMyProfile.setVisibility(View.GONE);
+            drawerNavigationBinding.navigationHeaderLayout.setClickable(false);
+            drawerNavigationBinding.navigationHeaderLayout.setForeground(null);
         }
 
         drawerNavigationBinding.drawerOptionMyCourses.setOnClickListener(new OnClickListener() {
@@ -224,6 +226,10 @@ public class NavigationFragment extends BaseFragment {
             if (profile.email != null) {
                 drawerNavigationBinding.emailTv.setText(profile.email);
             }
+            Map<String,CharSequence> map = new HashMap<>();
+            map.put("username", profile.name);
+            map.put("email", profile.email);
+            drawerNavigationBinding.userInfoLayout.setContentDescription(ResourceUtil.getFormattedString(getResources(), R.string.navigation_header, map));
         }
 
         drawerNavigationBinding.logoutButton.setOnClickListener(new OnClickListener() {
