@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -61,7 +61,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
     private RadioGroup discussionQuestionSegmentedGroup;
 
     @InjectView(R.id.topics_spinner)
-    private Spinner topicsSpinner;
+    private AppCompatSpinner topicsSpinner;
 
     @InjectView(R.id.title_edit_text)
     private EditText titleEditText;
@@ -121,7 +121,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
         getTopicList();
-
+        
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
