@@ -171,7 +171,7 @@ public class DiscussionComment implements Serializable, IAuthorData, ProfileImag
     @Nullable
     @Override
     public ProfileImage getProfileImage() {
-        if (users == null) {
+        if (users == null || isAuthorAnonymous()) {
             return null;
         } else {
             return users.get(author).getProfile().getImage();

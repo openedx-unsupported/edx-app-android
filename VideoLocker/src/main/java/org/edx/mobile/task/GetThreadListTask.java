@@ -41,8 +41,8 @@ public abstract class GetThreadListTask extends Task<Page<DiscussionThread>> {
     }
 
     public Page<DiscussionThread> call() throws Exception {
-        List<String> requestedFields = Collections.singletonList(
-                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        final List<String> requestedFields = DiscussionRequestFields.getRequestedFieldsList(
+                environment.getConfig());
         if (!topic.isFollowingType()) {
             return environment.getDiscussionAPI().getThreadList(courseId,
                     getAllTopicIds(), filter.getQueryParamValue(),
