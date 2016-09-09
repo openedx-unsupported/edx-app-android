@@ -17,7 +17,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.IAuthorData;
 import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.module.prefs.UserPrefs;
+import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.user.ProfileImage;
 import org.edx.mobile.user.ProfileImageProvider;
 import org.edx.mobile.util.Config;
@@ -26,7 +26,7 @@ import roboguice.RoboGuice;
 
 public class AuthorLayoutViewHolder {
     @Inject
-    private UserPrefs userPrefs;
+    private LoginPrefs loginPrefs;
 
     public final ViewGroup profileRow;
     public final ImageView profileImageView;
@@ -65,12 +65,12 @@ public class AuthorLayoutViewHolder {
                  * Background: Currently the POST & PATCH APIs aren't configured to return a user's
                  * {@link ProfileImage} in their response. Since, the currently logged-in user is
                  * the only one that can POST using the app, so, we use the locally stored
-                 * {@link ProfileImage} in {@link UserPrefs} instead.
+                 * {@link ProfileImage} in {@link LoginPrefs} instead.
                  * Incase of PATCH we just use the image that we got in the initial GET call.
                  */
-                ProfileModel profileModel = userPrefs.getProfile();
+                ProfileModel profileModel = loginPrefs.getCurrentUserProfile();
                 if (profileModel != null && authorData.getAuthor().equals(profileModel.username)) {
-                    profileImage = userPrefs.getProfileImage();
+                    profileImage = loginPrefs.getProfileImage();
                 } else {
                     profileImage = null;
                 }
