@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="0dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="@dimen/widget_margin"
         android:drawSelectorOnTop="false"
-        android:listSelector="@color/grey_act_background"
+        android:listSelector="@android:color/transparent"
         tools:listitem="@layout/row_course_list" />
 
     <include layout="@layout/loading_indicator" />

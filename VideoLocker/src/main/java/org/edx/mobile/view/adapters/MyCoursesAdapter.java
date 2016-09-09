@@ -13,10 +13,10 @@ import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 
-public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
+public abstract class MyCoursesAdapter extends BaseListAdapter<EnrolledCoursesResponse> {
     private long lastClickTime;
 
-    public MyCourseAdapter(Context context, IEdxEnvironment environment) {
+    public MyCoursesAdapter(Context context, IEdxEnvironment environment) {
         super(context, CourseCardViewHolder.LAYOUT, environment);
         lastClickTime = 0;
     }
@@ -27,7 +27,6 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
 
         final CourseEntry courseData = enrollment.getCourse();
-        holder.setPadding(tag.position == 0);
         holder.setCourseTitle(courseData.getName());
         holder.setCourseImage(courseData.getCourse_image(environment.getConfig().getApiHostURL()));
 
@@ -52,13 +51,13 @@ public abstract class MyCourseAdapter extends BaseListAdapter<EnrolledCoursesRes
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+    public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
                             long arg3) {
         //This time is checked to avoid taps in quick succession
         final long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
-            EnrolledCoursesResponse model = getItem(position);
+            EnrolledCoursesResponse model = (EnrolledCoursesResponse)adapterView.getItemAtPosition(position);
             if (model != null) onItemClicked(model);
         }
     }

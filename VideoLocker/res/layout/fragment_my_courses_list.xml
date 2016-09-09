@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/offline_bar"
+            style="@style/offline_bar"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/no_course_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <org.edx.mobile.view.custom.IconImageViewXml
+                android:layout_width="@dimen/large_indicator_icon_width"
+                android:layout_height="@dimen/large_indicator_icon_height"
+                android:layout_margin="@dimen/edx_margin"
+                app:iconColor="@color/edx_grayscale_neutral_light"
+                app:iconName="fa-exclamation-circle" />
+
+            <TextView
+                style="@style/content_unavailable_error_text"
+                android:text="@string/no_courses_to_display"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/my_course_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="@dimen/widget_margin"
+                android:drawSelectorOnTop="false"
+                android:listSelector="@android:color/transparent"
+                tools:listitem="@layout/row_course_list" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <include
+            android:id="@+id/loading_indicator"
+            layout="@layout/loading_indicator" />
+
+        <LinearLayout
+            android:id="@+id/offline_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <include layout="@layout/panel_offline_mode" />
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>
