@@ -42,6 +42,7 @@
         <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
         <item name="android:progressBarStyleSmallInverse">@style/edX.Widget.ProgressBar.Small.Inverse</item>
         <item name="android:progressBarStyleLargeInverse">@style/edX.Widget.ProgressBar.Large.Inverse</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -71,6 +72,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/edx_brand_primary_base</item>
+        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+    </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
