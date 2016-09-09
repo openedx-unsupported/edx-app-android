@@ -52,6 +52,9 @@ public class NativeFindCoursesFragment extends BaseFragment {
                 environment.getRouter().showCourseDetail(getActivity(), model);
             }
         };
+        // Add empty views to cause a dividers to render at the top and bottom of the list
+        viewHolder.listView.addHeaderView(new View(getContext()), null, false);
+        viewHolder.listView.addFooterView(new View(getContext()), null, false);
         InfiniteScrollUtils.configureListViewWithInfiniteList(viewHolder.listView, adapter, new InfiniteScrollUtils.PageLoader<CourseDetail>() {
             @Override
             public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<CourseDetail> callback) {

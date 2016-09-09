@@ -2,21 +2,23 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/course_card_height"
+    android:descendantFocusability="blocksDescendants"
     android:paddingLeft="@dimen/widget_margin"
-    android:paddingRight="@dimen/widget_margin"
-    android:paddingBottom="@dimen/widget_margin"
-    android:descendantFocusability="blocksDescendants">
+    android:paddingRight="@dimen/widget_margin">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/course_card_height"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:duplicateParentState="true"
+        android:foreground="@drawable/fg_course_row">
 
         <ImageView
             android:id="@+id/course_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@null"
             android:scaleType="fitXY"
             tools:background="@color/edx_brand_primary_base" />
 
@@ -24,13 +26,13 @@
             android:id="@+id/course_item_detail"
             android:layout_width="match_parent"
             android:layout_height="@dimen/course_detail_card_height"
-            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:background="@color/transparent_white_85"
-            android:paddingEnd="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
+            android:paddingEnd="@dimen/widget_margin"
+            android:paddingLeft="@dimen/widget_margin"
+            android:paddingRight="@dimen/widget_margin"
+            android:paddingStart="@dimen/widget_margin"
+            android:paddingTop="@dimen/widget_margin"
             tools:targetApi="17">
 
             <TextView
@@ -66,8 +68,8 @@
                     android:paddingStart="3dp"
                     android:text="@string/new_course_content"
                     android:textAllCaps="true"
-                    android:textSize="@dimen/edx_xxx_small"
                     android:textColor="@color/edx_brand_primary_accent"
+                    android:textSize="@dimen/edx_xxx_small"
                     tools:targetApi="17" />
             </LinearLayout>
 
@@ -91,15 +93,10 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/course_name"
                 android:layout_gravity="center_vertical"
+                android:layout_toEndOf="@+id/new_course_content_layout"
                 android:layout_toRightOf="@+id/new_course_content_layout"
                 tools:targetApi="17"
                 tools:text="MITx | CS501" />
         </RelativeLayout>
-
-        <!-- put a frame over this cell, so that corners look rounded -->
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/ic_card" />
-    </RelativeLayout>
+    </FrameLayout>
 </FrameLayout>

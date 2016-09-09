@@ -69,13 +69,13 @@ public abstract class MyAllVideoCourseAdapter extends BaseListAdapter<EnrolledCo
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    public void onItemClick(AdapterView<?> adapterView, View arg1, int position, long arg3) {
         //This has been used so that if user clicks continuously on the screen,
         //two activities should not be opened
         long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
-            EnrolledCoursesResponse model = getItem(position);
+            EnrolledCoursesResponse model = (EnrolledCoursesResponse)adapterView.getItemAtPosition(position);
             if(model!=null) onItemClicked(model);
         }
     }
