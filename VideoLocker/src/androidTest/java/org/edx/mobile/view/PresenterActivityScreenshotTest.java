@@ -24,8 +24,16 @@ import java.lang.reflect.Proxy;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Extend this class to create an instrumentation test that automatically:
+ * Starts the activity.
+ * Injects a mock presenter into the activity.
+ * Makes the MVP view interface accessible as a variable named `view`.
+ * Executes `view` interface method calls on the application's UI thread.
+ * Snaps a screenshot of your activity at the end of each test.
+ */
 @RunWith(AndroidJUnit4.class)
-public abstract class PresenterActivityInstrumentationTest<ActivityT extends PresenterActivity<PresenterT, ViewT>, PresenterT extends Presenter<ViewT>, ViewT> {
+public abstract class PresenterActivityScreenshotTest<ActivityT extends PresenterActivity<PresenterT, ViewT>, PresenterT extends Presenter<ViewT>, ViewT> {
 
     protected ActivityT activity;
     protected ViewT view;
@@ -56,17 +64,17 @@ public abstract class PresenterActivityInstrumentationTest<ActivityT extends Pre
 
     @SuppressWarnings("unchecked")
     private Class<ActivityT> getActivityType() {
-        return (Class<ActivityT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityInstrumentationTest.class)[0];
+        return (Class<ActivityT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityScreenshotTest.class)[0];
     }
 
     @SuppressWarnings("unchecked")
     private Class<PresenterT> getPresenterType() {
-        return (Class<PresenterT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityInstrumentationTest.class)[1];
+        return (Class<PresenterT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityScreenshotTest.class)[1];
     }
 
     @SuppressWarnings("unchecked")
     private Class<ViewT> getViewType() {
-        return (Class<ViewT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityInstrumentationTest.class)[2];
+        return (Class<ViewT>) GenericSuperclassUtils.getTypeArguments(getClass(), PresenterActivityScreenshotTest.class)[2];
     }
 
     public static class UiThreadInvocationHandler<ViewT> implements InvocationHandler {
