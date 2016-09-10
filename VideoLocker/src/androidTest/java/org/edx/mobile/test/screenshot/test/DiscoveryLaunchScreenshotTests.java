@@ -1,11 +1,11 @@
 package org.edx.mobile.test.screenshot.test;
 
-import org.edx.mobile.test.screenshot.PresenterActivityScreenshotTest;
 import org.edx.mobile.view.DiscoveryLaunchActivity;
 import org.edx.mobile.view.DiscoveryLaunchPresenter;
+import org.edx.mobile.view.PresenterActivityInstrumentationTest;
 import org.junit.Test;
 
-public class DiscoveryLaunchScreenshotTests extends PresenterActivityScreenshotTest<DiscoveryLaunchActivity, DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
+public class DiscoveryLaunchScreenshotTests extends PresenterActivityInstrumentationTest<DiscoveryLaunchActivity, DiscoveryLaunchPresenter, DiscoveryLaunchPresenter.ViewInterface> {
 
     @Test
     public void testScreenshot_withCourseDiscoveryDisabled() {
