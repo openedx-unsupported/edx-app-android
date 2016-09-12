@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Xml.Encoding;
 import android.view.LayoutInflater;
@@ -95,7 +96,9 @@ public class CourseHandoutFragment extends BaseFragment {
                     return;
                 }
 
-                if (result != null && (!TextUtils.isEmpty(result.handouts_html))) {
+                if (result != null
+                        && (!TextUtils.isEmpty(result.handouts_html))
+                        && (!TextUtils.isEmpty(Html.fromHtml(result.handouts_html).toString()))) {
                     populateHandouts(result);
                 } else {
                     CourseHandoutFragment.this.showErrorMessage(R.string.no_handouts_to_display,
