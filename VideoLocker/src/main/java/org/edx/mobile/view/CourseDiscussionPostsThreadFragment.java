@@ -128,7 +128,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         Context context = getActivity();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(createNewPostTextView,
                 new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
-                        .sizeRes(context, R.dimen.icon_view_standard_width_height)
+                        .sizeRes(context, R.dimen.small_icon_size)
                         .colorRes(context, R.color.edx_grayscale_neutral_white_t),
                 null, null, null
         );
@@ -160,7 +160,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                         });
                         Resources resources = context.getResources();
                         final int width = resources.getDimensionPixelSize(
-                                R.dimen.icon_view_standard_width_height);
+                                R.dimen.small_icon_size);
                         final int verticalPadding = resources.getDimensionPixelSize(
                                 R.dimen.discussion_posts_filter_popup_icon_margin);
                         final int height = width + verticalPadding;

@@ -12,8 +12,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="@dimen/discussion_image_diameter"
-        android:layout_height="@dimen/discussion_image_diameter"
+        android:layout_width="@dimen/discussion_profile_image_diameter"
+        android:layout_height="@dimen/discussion_profile_image_diameter"
         android:layout_marginEnd="@dimen/discussion_responses_standard_margin"
         android:layout_marginRight="@dimen/discussion_responses_standard_margin"
         android:src="@drawable/profile_photo_placeholder" />

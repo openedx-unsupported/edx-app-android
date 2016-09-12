@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <!--To be removed in https://openedx.atlassian.net/browse/MA-2412-->
                 <LinearLayout
                     android:id="@+id/offline_bar"
                     style="@style/offline_msg_bar"
@@ -47,9 +48,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/last_access_bar"
+                    android:id="@+id/last_accessed_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/last_accessed_bar_height"
                     android:background="@color/edx_brand_primary_x_light"
                     android:orientation="vertical"
                     android:visibility="gone">
@@ -57,9 +58,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
                         android:layout_weight="1"
+                        android:layout_marginLeft="@dimen/last_accessed_bar_left_margin"
+                        android:layout_marginStart="@dimen/last_accessed_bar_left_margin"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         tools:targetApi="17">
@@ -75,29 +76,29 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/last_accessed"
-                                android:textSize="14sp"
+                                android:textSize="@dimen/last_accessed_header_text_size"
                                 tools:targetApi="17" />
 
                             <TextView
-                                android:id="@+id/last_access_text"
+                                android:id="@+id/last_accessed_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
-                                android:singleLine="true"
-                                android:textSize="16sp"
+                                android:maxLines="1"
+                                android:textSize="@dimen/last_accessed_unit_text_size"
                                 tools:targetApi="17"
                                 tools:text="Course Name" />
                         </LinearLayout>
 
                         <TextView
-                            android:id="@+id/last_access_button"
+                            android:id="@+id/last_accessed_button"
                             style="@style/bold_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/widget_margin"
+                            android:padding="@dimen/last_accessed_button_margin"
                             android:text="@string/view_button_text"
                             android:textColor="@color/edx_brand_primary_base"
-                            android:textSize="16sp" />
+                            android:textSize="@dimen/last_accessed_button_text_size" />
 
                     </LinearLayout>
 
@@ -107,7 +108,7 @@
                 <RelativeLayout
                     android:id="@+id/fragment_container"
                     android:layout_width="match_parent"
-                    android:layout_height="0px"
+                    android:layout_height="0dp"
                     android:layout_below="@+id/offline_bar"
                     android:layout_weight="1" />
 
@@ -120,10 +121,10 @@
                     android:gravity="center"
                     android:measureWithLargestChild="true"
                     android:orientation="horizontal"
-                    android:paddingEnd="15dp"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:paddingStart="15dp"
+                    android:paddingEnd="@dimen/course_unit_nav_bar_padding_left"
+                    android:paddingLeft="@dimen/course_unit_nav_bar_padding_left"
+                    android:paddingRight="@dimen/course_unit_nav_bar_padding_right"
+                    android:paddingStart="@dimen/course_unit_nav_bar_padding_right"
                     android:visibility="gone"
                     tools:targetApi="17"
                     tools:visibility="visible">

@@ -11,7 +11,7 @@
         android:id="@+id/create_new_item_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/create_new_item_icon_margin"
+        android:drawablePadding="@dimen/discussion_create_new_item_icon_margin"
         android:textColor="@color/edx_grayscale_neutral_white_t"
         android:textSize="@dimen/edx_small"
         android:layout_gravity="center"
