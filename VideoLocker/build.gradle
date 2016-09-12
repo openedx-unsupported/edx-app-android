@@ -312,7 +312,7 @@ android {
         abortOnError true
         showAll true
         warning 'TypographyQuotes', 'InvalidPackage'
-        error 'StopShip'
+        error 'StopShip', 'ContentDescription'
     }
 
     productFlavors {

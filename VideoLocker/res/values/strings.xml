@@ -16,6 +16,9 @@
 
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
+    <!-- When discovering courses, some courses have an externally hosted video that describes it.
+    In that case, a play icon is shown on top of the course image. This is the content description. -->
+    <string name="go_to_video">Go to video</string>
     <!-- View Course button text text-->
     <string name="view_course_button_text">View course</string>
     <!-- Floating overlay text shown to user when they succeed at enrolling in a course -->
@@ -375,6 +378,8 @@
     <string name="offline_text">Offline Mode</string>
     <!-- Label shown in videos section when user has no videos downloaded -->
     <string name="no_videos_to_display">You haven’t downloaded any videos.</string>
+    <!-- Cancel video download -->
+    <string name="cancel_download">Cancel download</string>
 
     <!-- My Downloads -->
     <!-- Button action label to view an item -->
