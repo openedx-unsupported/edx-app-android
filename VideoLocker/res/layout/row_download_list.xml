@@ -41,6 +41,7 @@
 
         <ImageView
             android:id="@+id/close_btn"
+            android:contentDescription="@string/cancel_download"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:src="@drawable/ic_close" />
