@@ -54,14 +54,8 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     public Request authenticate(Route route, final Response response) throws IOException {
         logger.warn(response.toString());
 
-        final AuthResponse meh = loginPrefs.getCurrentAuth();
-        logger.warn("#####################START########################");
-        logger.warn(meh.access_token);
-        logger.warn("##################################################");
-
-
         if (!isTokenExpired(response.peekBody(HttpStatus.OK).string())) {
-            if (doesTokenExist(response.peekBody(HttpStatus.OK).string())) {
+            if (doesTokenNonexistent(response.peekBody(HttpStatus.OK).string())) {
                 final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
                 return response.request().newBuilder()
                         .header("Authorization", currentAuth.token_type + " " + currentAuth.access_token)
@@ -117,9 +111,9 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     }
 
     /**
-     * Checks the if the error_code in the response body is the token_expired error code.
+     * Checks the if the error_code in the response body is the token_nonexistent error code.
      */
-    private boolean doesTokenExist(String responseBody) {
+    private boolean doesTokenNonexistent(String responseBody) {
         try {
             JSONObject jsonObj = new JSONObject(responseBody);
             String errorCode = jsonObj.getString("error_code");
