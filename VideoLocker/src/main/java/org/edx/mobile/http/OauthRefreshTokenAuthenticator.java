@@ -36,6 +36,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
 
     private final Logger logger = new Logger(getClass().getName());
     private final static String TOKEN_EXPIRED_ERROR_MESSAGE = "token_expired";
+    private final static String TOKEN_NONEXISTENT_ERROR_MESSAGE = "token_nonexistent";
     private Context context;
 
     @Inject
@@ -53,9 +54,23 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     public Request authenticate(Route route, final Response response) throws IOException {
         logger.warn(response.toString());
 
+        final AuthResponse meh = loginPrefs.getCurrentAuth();
+        logger.warn("#####################START########################");
+        logger.warn(meh.access_token);
+        logger.warn("##################################################");
+
+
         if (!isTokenExpired(response.peekBody(HttpStatus.OK).string())) {
-            return null;
+            if (doesTokenExist(response.peekBody(HttpStatus.OK).string())) {
+                final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
+                return response.request().newBuilder()
+                        .header("Authorization", currentAuth.token_type + " " + currentAuth.access_token)
+                        .build();
+            } else {
+                return null;
+            }
         }
+
 
         final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
         if (null == currentAuth || null == currentAuth.refresh_token) {
@@ -96,6 +111,19 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
             JSONObject jsonObj = new JSONObject(responseBody);
             String errorCode = jsonObj.getString("error_code");
             return errorCode.equals(TOKEN_EXPIRED_ERROR_MESSAGE);
+        } catch (JSONException ex) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks the if the error_code in the response body is the token_expired error code.
+     */
+    private boolean doesTokenExist(String responseBody) {
+        try {
+            JSONObject jsonObj = new JSONObject(responseBody);
+            String errorCode = jsonObj.getString("error_code");
+            return errorCode.equals(TOKEN_NONEXISTENT_ERROR_MESSAGE);
         } catch (JSONException ex) {
             return false;
         }
