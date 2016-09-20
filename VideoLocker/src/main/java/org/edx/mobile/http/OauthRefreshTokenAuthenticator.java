@@ -36,6 +36,8 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
 
     private final Logger logger = new Logger(getClass().getName());
     private final static String TOKEN_EXPIRED_ERROR_MESSAGE = "token_expired";
+    private final static String TOKEN_NONEXISTENT_ERROR_MESSAGE = "token_nonexistent";
+    private final static String TOKEN_INVALID_GRANT_ERROR_MESSAGE = "invalid_grant";
     private Context context;
 
     @Inject
@@ -43,6 +45,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
 
     @Inject
     LoginPrefs loginPrefs;
+
 
     public OauthRefreshTokenAuthenticator(Context context) {
         this.context = context;
@@ -53,14 +56,26 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     public Request authenticate(Route route, final Response response) throws IOException {
         logger.warn(response.toString());
 
-        if (!isTokenExpired(response.peekBody(200).string())) {
-            return null;
-        }
-
         final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
         if (null == currentAuth || null == currentAuth.refresh_token) {
             return null;
         }
+        String response_body = response.peekBody(200).string();
+
+        switch (getErrorCode(response_body)) {
+            case TOKEN_EXPIRED_ERROR_MESSAGE:
+                break;
+            case TOKEN_NONEXISTENT_ERROR_MESSAGE:
+            case TOKEN_INVALID_GRANT_ERROR_MESSAGE:
+                if (!response.request().headers().get("Authorization").split(" ")[1].equals(currentAuth.access_token)) {
+                    return response.request().newBuilder()
+                            .header("Authorization", currentAuth.token_type + " " + currentAuth.access_token)
+                            .build();
+                }
+            default:
+                return null;
+        }
+
         final AuthResponse refreshedAuth;
         try {
             refreshedAuth = refreshAccessToken(currentAuth);
@@ -88,16 +103,12 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         return refreshTokenResponse;
     }
 
-    /**
-     * Checks the if the error_code in the response body is the token_expired error code.
-     */
-    private boolean isTokenExpired(String responseBody) {
+    private String getErrorCode(String responseBody) {
         try {
             JSONObject jsonObj = new JSONObject(responseBody);
-            String errorCode = jsonObj.getString("error_code");
-            return errorCode.equals(TOKEN_EXPIRED_ERROR_MESSAGE);
+            return jsonObj.getString("error_code");
         } catch (JSONException ex) {
-            return false;
+            return null;
         }
     }
 }
