@@ -4,9 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +19,7 @@ import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
 import org.edx.mobile.discussion.DiscussionService;
+import org.edx.mobile.discussion.DiscussionTextUtils;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.http.ErrorHandlingCallback;
@@ -98,8 +97,8 @@ public class DiscussionAddResponseFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         textViewTitle.setVisibility(View.VISIBLE);
         textViewTitle.setText(discussionThread.getTitle());
-        textViewResponse.setText(Html.fromHtml(discussionThread.getRenderedBody()));
-        Linkify.addLinks(textViewResponse, Linkify.ALL);
+
+        DiscussionTextUtils.renderHtml(textViewResponse, discussionThread.getRenderedBody());
 
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(getView().findViewById(R.id.discussion_user_profile_row));

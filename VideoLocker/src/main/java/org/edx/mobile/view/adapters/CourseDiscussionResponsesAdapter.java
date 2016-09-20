@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,8 +153,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
-        holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
-        Linkify.addLinks(holder.threadBodyTextView, Linkify.ALL);
+        DiscussionTextUtils.renderHtml(holder.threadBodyTextView, discussionThread.getRenderedBody());
 
         String groupName = discussionThread.getGroupName();
         if (groupName == null) {
@@ -294,8 +291,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
         }
 
-        holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
-        Linkify.addLinks(holder.responseCommentBodyTextView, Linkify.ALL);
+        DiscussionTextUtils.renderHtml(holder.responseCommentBodyTextView, comment.getRenderedBody());
 
         if (discussionThread.isClosed() && comment.getChildCount() == 0) {
             holder.addCommentLayout.setEnabled(false);
@@ -486,8 +482,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
             discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
-
-            threadBodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 
@@ -511,8 +505,6 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             numberResponsesViewHolder = new NumberResponsesViewHolder(itemView);
             socialLayoutViewHolder = new DiscussionSocialLayoutViewHolder(itemView);
             discussionReportViewHolder = new DiscussionReportViewHolder(itemView);
-
-            responseCommentBodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 }

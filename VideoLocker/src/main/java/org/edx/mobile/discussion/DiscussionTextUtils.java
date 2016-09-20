@@ -9,8 +9,11 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -154,10 +157,10 @@ public abstract class DiscussionTextUtils {
         }
     }
 
-    public static CharSequence parseHtml(@NonNull String html) {
+    public static Spanned parseHtml(@NonNull String html) {
         // If the HTML contains a paragraph at the end, there will be blank lines following the text
         // Therefore, we need to trim the resulting CharSequence to remove those extra lines
-        return trim(Html.fromHtml(html));
+        return (Spanned) trim(Html.fromHtml(html));
     }
 
     public static CharSequence trim(CharSequence s) {
@@ -190,5 +193,28 @@ public abstract class DiscussionTextUtils {
             target.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    /**
+     * Renders various HTML elements and plain hyperlinks in the given HTML to clickable items
+     * while applying it on the given {@link TextView}.
+     *
+     * @param textView The {@link TextView} which will render the given HTML.
+     * @param html     The HTML to render.
+     */
+    public static void renderHtml(@NonNull TextView textView, @NonNull String html) {
+        Spanned spannedHtml = DiscussionTextUtils.parseHtml(html);
+        URLSpan[] urlSpans = spannedHtml.getSpans(0, spannedHtml.length(), URLSpan.class);
+        textView.setAutoLinkMask(Linkify.ALL);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setText(spannedHtml);
+
+        SpannableString viewText = (SpannableString) textView.getText();
+        for (final URLSpan spanObj : urlSpans) {
+            final int start = spannedHtml.getSpanStart(spanObj);
+            final int end = spannedHtml.getSpanEnd(spanObj);
+            final int flags = spannedHtml.getSpanFlags(spanObj);
+            viewText.setSpan(spanObj, start, end, flags);
+        }
     }
 }

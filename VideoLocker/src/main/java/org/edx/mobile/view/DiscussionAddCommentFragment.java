@@ -4,9 +4,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,8 +100,7 @@ public class DiscussionAddCommentFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        textViewResponse.setText(Html.fromHtml(discussionResponse.getRenderedBody()));
-        Linkify.addLinks(textViewResponse, Linkify.ALL);
+        DiscussionTextUtils.renderHtml(textViewResponse, discussionResponse.getRenderedBody());
 
         AuthorLayoutViewHolder authorLayoutViewHolder =
                 new AuthorLayoutViewHolder(getView().findViewById(R.id.discussion_user_profile_row));
