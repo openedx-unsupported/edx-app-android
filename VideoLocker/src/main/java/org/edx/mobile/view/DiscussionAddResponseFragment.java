@@ -17,21 +17,24 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
-import org.edx.mobile.discussion.CommentBody;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionCommentPostedEvent;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.task.CreateCommentTask;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.SoftKeyboardUtil;
+import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 import org.edx.mobile.view.view_holders.AuthorLayoutViewHolder;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -59,7 +62,10 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     @InjectView(R.id.tvResponse)
     private TextView textViewResponse;
 
-    private CreateCommentTask createCommentTask;
+    private Call<DiscussionComment> createCommentCall;
+
+    @Inject
+    private DiscussionService discussionService;
 
     @Inject
     private Router router;
@@ -129,31 +135,28 @@ public class DiscussionAddResponseFragment extends BaseFragment {
     private void createComment() {
         buttonAddComment.setEnabled(false);
 
-        if (createCommentTask != null) {
-            createCommentTask.cancel(true);
+        if (createCommentCall != null) {
+            createCommentCall.cancel();
         }
 
-        final CommentBody commentBody = new CommentBody();
-        commentBody.setRawBody(editTextNewComment.getText().toString());
-        commentBody.setThreadId(discussionThread.getIdentifier());
-        commentBody.setParentId(null);
-
-        createCommentTask = new CreateCommentTask(getActivity(), commentBody) {
+        createCommentCall = discussionService.createComment(discussionThread.getIdentifier(),
+                editTextNewComment.getText().toString(), null);
+        createCommentCall.enqueue(new ErrorHandlingCallback<DiscussionComment>(
+                getActivity(),
+                CallTrigger.USER_ACTION,
+                new ProgressViewController(createCommentProgressBar)) {
             @Override
-            public void onSuccess(@NonNull DiscussionComment thread) {
+            protected void onResponse(@NonNull final DiscussionComment thread) {
                 logger.debug(thread.toString());
                 EventBus.getDefault().post(new DiscussionCommentPostedEvent(thread, null));
                 getActivity().finish();
             }
 
             @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
+            protected void onFailure(@NonNull final Throwable error) {
                 buttonAddComment.setEnabled(true);
             }
-        };
-        createCommentTask.setProgressDialog(createCommentProgressBar);
-        createCommentTask.execute();
+        });
     }
 
     @Override

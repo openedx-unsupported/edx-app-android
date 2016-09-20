@@ -12,21 +12,29 @@ import com.google.inject.Inject;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
+import org.edx.mobile.course.CourseAPI;
 import org.edx.mobile.course.CourseDetail;
-import org.edx.mobile.course.GetCourseListTask;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
 import org.edx.mobile.view.adapters.FindCoursesListAdapter;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.view.common.TaskProgressCallback;
+
+import retrofit2.Call;
 
 public class NativeFindCoursesFragment extends BaseFragment {
+
+    @Inject
+    private CourseAPI courseAPI;
 
     @Inject
     IEdxEnvironment environment;
 
     @Nullable
-    private GetCourseListTask task;
+    private Call<Page<CourseDetail>> call;
 
     @Nullable
     private ViewHolder viewHolder;
@@ -58,13 +66,14 @@ public class NativeFindCoursesFragment extends BaseFragment {
         InfiniteScrollUtils.configureListViewWithInfiniteList(viewHolder.listView, adapter, new InfiniteScrollUtils.PageLoader<CourseDetail>() {
             @Override
             public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<CourseDetail> callback) {
-                if (null != task) {
-                    task.cancel(true);
+                if (null != call) {
+                    call.cancel();
                 }
-                task = new GetCourseListTask(getActivity(), nextPage) {
+                call = courseAPI.getCourseList(nextPage);
+                call.enqueue(new ErrorHandlingCallback<Page<CourseDetail>>(getActivity(),
+                        CallTrigger.LOADING_UNCACHED, (TaskProgressCallback) null) {
                     @Override
-                    protected void onSuccess(Page<CourseDetail> coursesPage) throws Exception {
-                        super.onSuccess(coursesPage);
+                    protected void onResponse(@NonNull final Page<CourseDetail> coursesPage) {
                         callback.onPageLoaded(coursesPage);
                         ++nextPage;
                         if (null != viewHolder) {
@@ -74,17 +83,14 @@ public class NativeFindCoursesFragment extends BaseFragment {
                     }
 
                     @Override
-                    protected void onException(Exception e) throws RuntimeException {
-                        super.onException(e);
+                    protected void onFailure(@NonNull final Throwable error) {
                         callback.onError();
                         nextPage = 1;
                         if (null != viewHolder) {
                             viewHolder.loadingIndicator.setVisibility(View.GONE);
                         }
                     }
-                };
-                task.setProgressCallback(null);
-                task.execute();
+                });
             }
         });
         viewHolder.listView.setOnItemClickListener(adapter);
@@ -99,8 +105,8 @@ public class NativeFindCoursesFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (null != task) {
-            task.cancel(true);
+        if (null != call) {
+            call.cancel();
         }
     }
 

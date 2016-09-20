@@ -5,23 +5,24 @@ import android.support.annotation.NonNull;
 
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.module.prefs.UserPrefs;
 import org.edx.mobile.test.BaseTest;
 import org.edx.mobile.user.Account;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.ProfileImage;
-import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.observer.Observer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.mock.Calls;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class UserProfileInteractorTest extends BaseTest {
 
     @Mock
-    private UserAPI userAPI;
+    private UserService userService;
 
     @Mock
     private UserPrefs userPrefs;
@@ -62,14 +63,14 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     private void createAndObserveInteractor() {
-        interactor = new UserProfileInteractor(ProfileValues.USERNAME, userAPI, eventBus, userPrefs);
+        interactor = new UserProfileInteractor(ProfileValues.USERNAME, userService, eventBus, userPrefs);
         interactor.observeProfile().subscribe(profileObserver);
         interactor.observeProfileImage().subscribe(imageObserver);
     }
 
     @Test
-    public void getUsername_returnsUsernamePassedInConstructor() throws Exception {
-        when(userAPI.getAccount(ProfileValues.USERNAME)).thenThrow(new RuntimeException());
+    public void getUsername_returnsUsernamePassedInConstructor() {
+        when(userService.getAccount(ProfileValues.USERNAME)).thenReturn(Calls.<Account>failure(new IOException()));
         createAndObserveInteractor();
         assertThat(interactor.getUsername(), is(ProfileValues.USERNAME));
     }
@@ -90,9 +91,9 @@ public class UserProfileInteractorTest extends BaseTest {
     }
 
     @Test
-    public void whenProfileObserved_withGetAccountError_emitsError() throws Exception {
-        final Throwable exception = new RuntimeException();
-        when(userAPI.getAccount(ProfileValues.USERNAME)).thenThrow(exception);
+    public void whenProfileObserved_withGetAccountError_emitsError() {
+        final IOException exception = new IOException();
+        when(userService.getAccount(ProfileValues.USERNAME)).thenReturn(Calls.<Account>failure(exception));
         createAndObserveInteractor();
         verify(profileObserver).onError(exception);
     }
@@ -310,11 +311,7 @@ public class UserProfileInteractorTest extends BaseTest {
         final Account account = mock(Account.class);
         when(account.getUsername()).thenReturn(ProfileValues.USERNAME);
         when(account.getProfileImage()).thenReturn(mock(ProfileImage.class));
-        try {
-            when(userAPI.getAccount(ProfileValues.USERNAME)).thenReturn(account);
-        } catch (HttpException e) {
-            throw new RuntimeException(e);
-        }
+        when(userService.getAccount(ProfileValues.USERNAME)).thenReturn(Calls.response(account));
         return account;
     }
 }

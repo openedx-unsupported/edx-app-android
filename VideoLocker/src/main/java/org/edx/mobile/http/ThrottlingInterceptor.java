@@ -2,15 +2,17 @@ package org.edx.mobile.http;
 
 import org.edx.mobile.logger.Logger;
 
+import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import retrofit.RequestInterceptor;
+import okhttp3.Interceptor;
+import okhttp3.Response;
 
 /**
  * TODO used for network control
  */
-public class ThrottlingInterceptor implements RequestInterceptor {
+public class ThrottlingInterceptor implements Interceptor {
     protected final Logger logger = new Logger(getClass().getName());
 
     private long lastRequest = 0L;
@@ -18,7 +20,7 @@ public class ThrottlingInterceptor implements RequestInterceptor {
     private final Lock requestLock = new ReentrantLock();
 
     @Override
-    public void intercept(RequestFacade request) {
+    public Response intercept(Chain chain) throws IOException {
         requestLock.lock();
 
         try {
@@ -38,5 +40,7 @@ public class ThrottlingInterceptor implements RequestInterceptor {
         finally {
             requestLock.unlock();
         }
+
+        return chain.proceed(chain.request());
     }
 }

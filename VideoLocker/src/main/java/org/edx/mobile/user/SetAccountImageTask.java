@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
 
+import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.third_party.crop.CropUtil;
 
@@ -16,7 +17,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public abstract class SetAccountImageTask extends
+import de.greenrobot.event.EventBus;
+
+public class SetAccountImageTask extends
         Task<Void> {
 
     @Inject
@@ -42,7 +45,12 @@ public abstract class SetAccountImageTask extends
     public Void call() throws Exception {
         final File cropped = new File(context.getExternalCacheDir(), "cropped-image" + System.currentTimeMillis() + ".jpg");
         CropUtil.crop(getContext(), uri, cropRect, 500, 500, cropped);
-        userAPI.setProfileImage(username, cropped);
+        userAPI.setProfileImage(username, cropped).execute();
         return null;
+    }
+
+    @Override
+    protected void onSuccess(Void response) throws Exception {
+        EventBus.getDefault().post(new ProfilePhotoUpdatedEvent(username, uri));
     }
 }

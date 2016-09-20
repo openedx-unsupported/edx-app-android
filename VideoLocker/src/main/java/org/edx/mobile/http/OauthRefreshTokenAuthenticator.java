@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.inject.Inject;
-import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.authentication.LoginService;
 
@@ -22,7 +21,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
-import retrofit.RestAdapter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import roboguice.RoboGuice;
 
 /**
@@ -64,7 +64,7 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
         final AuthResponse refreshedAuth;
         try {
             refreshedAuth = refreshAccessToken(currentAuth);
-        } catch (HttpException e) {
+        } catch (HttpResponseStatusException e) {
             return null;
         }
         return response.request().newBuilder()
@@ -73,19 +73,25 @@ public class OauthRefreshTokenAuthenticator implements Authenticator {
     }
 
     @NonNull
-    private AuthResponse refreshAccessToken(AuthResponse currentAuth) throws HttpException {
+    private AuthResponse refreshAccessToken(AuthResponse currentAuth)
+            throws IOException, HttpResponseStatusException {
         OkHttpClient client = OkHttpUtil.getClient(context);
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new Ok3Client(client))
-                .setEndpoint(config.getApiHostURL())
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(config.getApiHostURL())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        LoginService loginService = restAdapter.create(LoginService.class);
+        LoginService loginService = retrofit.create(LoginService.class);
 
-        AuthResponse refreshTokenResponse;
-        refreshTokenResponse = loginService.refreshAccessToken(
-                "refresh_token", config.getOAuthClientId(), currentAuth.refresh_token);
-        loginPrefs.storeRefreshTokenResponse(refreshTokenResponse);
-        return refreshTokenResponse;
+        retrofit2.Response<AuthResponse> refreshTokenResponse;
+        refreshTokenResponse = loginService.refreshAccessToken("refresh_token",
+                config.getOAuthClientId(), currentAuth.refresh_token).execute();
+        if (!refreshTokenResponse.isSuccessful()) {
+            throw new HttpResponseStatusException(refreshTokenResponse.code());
+        }
+        AuthResponse refreshTokenData = refreshTokenResponse.body();
+        loginPrefs.storeRefreshTokenResponse(refreshTokenData);
+        return refreshTokenData;
     }
 
     /**

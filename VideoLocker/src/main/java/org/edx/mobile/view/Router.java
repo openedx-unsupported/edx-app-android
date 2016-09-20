@@ -12,7 +12,7 @@ import android.support.v4.app.TaskStackBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.authentication.AuthResponse;
+import org.edx.mobile.authentication.LoginAPI;
 import org.edx.mobile.course.CourseDetail;
 import org.edx.mobile.discussion.DiscussionComment;
 import org.edx.mobile.discussion.DiscussionThread;
@@ -23,13 +23,11 @@ import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.notification.NotificationDelegate;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.profiles.UserProfileActivity;
-import org.edx.mobile.task.LogoutTask;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.view.dialog.WebViewDialogActivity;
 import org.edx.mobile.view.my_videos.MyVideosActivity;
 
 import de.greenrobot.event.EventBus;
-import roboguice.RoboGuice;
 
 @Singleton
 public class Router {
@@ -49,6 +47,11 @@ public class Router {
 
     @Inject
     Config config;
+
+    @Inject
+    private LoginAPI loginAPI;
+    @Inject
+    private LoginPrefs loginPrefs;
 
     public void showDownloads(Activity sourceActivity) {
         Intent downloadIntent = new Intent(sourceActivity, DownloadListActivity.class);
@@ -259,11 +262,7 @@ public class Router {
      * or programmatically
      */
     public void forceLogout(Context context, ISegment segment, NotificationDelegate delegate) {
-        final LoginPrefs loginPrefs = RoboGuice.getInjector(context).getInstance(LoginPrefs.class);
-        final AuthResponse currentAuth = loginPrefs.getCurrentAuth();
-        if (currentAuth != null && currentAuth.refresh_token != null) {
-            new LogoutTask(context, currentAuth.refresh_token).execute();
-        }
+        loginAPI.logOut();
         loginPrefs.clear();
 
         EventBus.getDefault().post(new LogoutEvent());

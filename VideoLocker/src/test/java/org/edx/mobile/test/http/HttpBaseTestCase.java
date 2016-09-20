@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.http.Api;
 import org.edx.mobile.http.HttpStatus;
 import org.edx.mobile.http.IApi;
@@ -52,6 +53,7 @@ public class HttpBaseTestCase extends BaseTestCase {
     protected boolean useArtificialDelay = false;
     protected ServiceManager serviceManager;
     protected LoginAPI loginAPI;
+    protected LoginService loginService;
 
     /**
      * Returns the base url used by the mock server
@@ -91,6 +93,7 @@ public class HttpBaseTestCase extends BaseTestCase {
         injector.injectMembers(api);
         serviceManager = injector.getInstance(ServiceManager.class);
         loginAPI = injector.getInstance(LoginAPI.class);
+        loginService = injector.getInstance(LoginService.class);
     }
 
     /**

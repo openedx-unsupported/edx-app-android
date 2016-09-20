@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.jakewharton.retrofit.Ok3Client;
 
 import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
@@ -44,7 +43,8 @@ import okhttp3.CacheControl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import retrofit.RestAdapter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * DESIGN NOTES -
@@ -71,15 +71,15 @@ public class RestApiManager implements IApi {
     private Context context;
 
     @Inject
-    public RestApiManager(Context context, OkHttpClient oauthBasedClient) {
+    public RestApiManager(Context context) {
         this.context = context;
-        this.oauthBasedClient = oauthBasedClient;
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new Ok3Client(oauthBasedClient))
-                .setEndpoint(getBaseUrl())
-                .setRequestInterceptor(new OfflineRequestInterceptor(context))
+        this.oauthBasedClient = OkHttpUtil.getOAuthBasedClientWithOfflineCache(context);
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(oauthBasedClient)
+                .baseUrl(getBaseUrl())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        oauthRestApi = restAdapter.create(OauthRestApi.class);
+        oauthRestApi = retrofit.create(OauthRestApi.class);
 
         client = OkHttpUtil.getClient(context);
     }
@@ -120,11 +120,11 @@ public class RestApiManager implements IApi {
     @Override
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {
         if (!NetworkUtil.isConnected(context)) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername());
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername()).execute().body();
         } else if (fetchFromCache) {
-            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername());
+            return oauthRestApi.getEnrolledCourses(loginPrefs.getUsername()).execute().body();
         } else {
-            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername());
+            return oauthRestApi.getEnrolledCoursesNoCache(loginPrefs.getUsername()).execute().body();
         }
     }
 
@@ -191,13 +191,23 @@ public class RestApiManager implements IApi {
         EnrollmentRequestBody.LastAccessRequestBody body = new EnrollmentRequestBody.LastAccessRequestBody();
         body.last_visited_module_id = lastVisitedModuleId;
         body.modification_date = date;
-        return oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId);
+        retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
+                oauthRestApi.syncLastAccessedSubsection(body, loginPrefs.getUsername(), courseId).execute();
+        if (!response.isSuccessful()) {
+            throw new HttpResponseStatusException(response.code());
+        }
+        return response.body();
 
     }
 
     @Override
     public SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception {
-        return oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId);
+        retrofit2.Response<SyncLastAccessedSubsectionResponse> response =
+                oauthRestApi.getLastAccessedSubsection(loginPrefs.getUsername(), courseId).execute();
+        if (!response.isSuccessful()) {
+            throw new HttpResponseStatusException(response.code());
+        }
+        return response.body();
     }
 
     @Override
@@ -220,14 +230,17 @@ public class RestApiManager implements IApi {
         EnrollmentRequestBody body = new EnrollmentRequestBody();
         body.course_details = idObject;
 
-        String json = oauthRestApi.enrollACourse(body);
+        retrofit2.Response<String> response = oauthRestApi.enrollACourse(body).execute();
 
-        if (json != null && !json.isEmpty()) {
-            JSONObject resultJson = new JSONObject(json);
-            if (resultJson.has("error")) {
-                return false;
-            } else {
-                return true;
+        if (response.isSuccessful()) {
+            String json = response.body();
+            if (json != null && !json.isEmpty()) {
+                JSONObject resultJson = new JSONObject(json);
+                if (resultJson.has("error")) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         }
         return false;
@@ -247,11 +260,11 @@ public class RestApiManager implements IApi {
 
         String response;
         if (!NetworkUtil.isConnected(context)) {
-            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts);
+            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
         } else if (preferCache) {
-            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts);
+            response = oauthRestApi.getCourseOutline(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
         } else {
-            response = oauthRestApi.getCourseOutlineNoCache(courseId, username, requested_fields, student_view_data, block_counts);
+            response = oauthRestApi.getCourseOutlineNoCache(courseId, username, requested_fields, student_view_data, block_counts).execute().body();
         }
 
         CourseStructureV1Model model = new CourseStructureJsonHandler().processInput(response);
