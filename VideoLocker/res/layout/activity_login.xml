@@ -27,11 +27,11 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/edx_logo_height"
-                        android:layout_marginBottom="@dimen/logo_margin_bottom"
+                        android:layout_height="@dimen/login_edx_logo_height"
+                        android:layout_marginBottom="@dimen/login_logo_margin_bottom"
                         android:layout_marginLeft="44dp"
                         android:layout_marginRight="44dp"
-                        android:layout_marginTop="@dimen/logo_margin_top">
+                        android:layout_marginTop="@dimen/login_logo_margin_top">
 
                         <ImageView
                             android:id="@+id/login_map"

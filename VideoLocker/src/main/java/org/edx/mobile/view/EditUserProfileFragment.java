@@ -38,6 +38,7 @@ import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.event.AccountDataLoadedEvent;
 import org.edx.mobile.event.ProfilePhotoUpdatedEvent;
+import org.edx.mobile.http.CallTrigger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.user.Account;
@@ -45,15 +46,16 @@ import org.edx.mobile.user.DataType;
 import org.edx.mobile.user.DeleteAccountImageTask;
 import org.edx.mobile.user.FormDescription;
 import org.edx.mobile.user.FormField;
-import org.edx.mobile.user.GetAccountTask;
 import org.edx.mobile.user.GetProfileFormDescriptionTask;
 import org.edx.mobile.user.LanguageProficiency;
 import org.edx.mobile.user.SetAccountImageTask;
-import org.edx.mobile.user.UpdateAccountTask;
+import org.edx.mobile.user.UserAPI.AccountDataUpdatedCallback;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.InvalidLocaleException;
 import org.edx.mobile.util.LocaleUtils;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ImageCaptureHelper;
+import org.edx.mobile.view.common.TaskProgressCallback;
 import org.edx.mobile.view.custom.popup.menu.PopupMenu;
 
 import java.util.Collections;
@@ -62,6 +64,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 
 public class EditUserProfileFragment extends BaseFragment {
@@ -74,7 +77,7 @@ public class EditUserProfileFragment extends BaseFragment {
     @InjectExtra(EditUserProfileActivity.EXTRA_USERNAME)
     private String username;
 
-    private GetAccountTask getAccountTask;
+    private Call<Account> getAccountCall;
 
     private GetProfileFormDescriptionTask getProfileFormDescriptionTask;
 
@@ -88,6 +91,9 @@ public class EditUserProfileFragment extends BaseFragment {
 
     @Nullable
     private ViewHolder viewHolder;
+
+    @Inject
+    private UserService userService;
 
     @Inject
     private Router router;
@@ -105,9 +111,12 @@ public class EditUserProfileFragment extends BaseFragment {
         setHasOptionsMenu(true);
         EventBus.getDefault().register(this);
 
-        getAccountTask = new GetAccountTask(getActivity(), username);
-        getAccountTask.setTaskProcessCallback(null); // Disable default loading indicator, we have our own
-        getAccountTask.execute();
+        getAccountCall = userService.getAccount(username);
+        getAccountCall.enqueue(new AccountDataUpdatedCallback(
+                getActivity(),
+                username,
+                CallTrigger.LOADING_UNCACHED,
+                (TaskProgressCallback) null)); // Disable default loading indicator, we have our own
 
         getProfileFormDescriptionTask = new GetProfileFormDescriptionTask(getActivity()) {
             @Override
@@ -161,18 +170,9 @@ public class EditUserProfileFragment extends BaseFragment {
                                 break;
                             }
                             case R.id.remove_photo: {
-                                executePhotoTask(new DeleteAccountImageTask(getActivity(), username) {
-                                    @Override
-                                    protected void onSuccess(Void aVoid) throws Exception {
-                                        hideLoading();
-                                    }
-
-                                    private void hideLoading() {
-                                        if (null != viewHolder) {
-                                            viewHolder.profileImageProgress.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
+                                final Task task = new DeleteAccountImageTask(getActivity(), username);
+                                task.setProgressDialog(viewHolder.profileImageProgress);
+                                executePhotoTask(task);
                                 break;
                             }
                         }
@@ -193,14 +193,13 @@ public class EditUserProfileFragment extends BaseFragment {
             setAccountImageTask.cancel(true);
         }
         setAccountImageTask = task;
-        setAccountImageTask.setProgressCallback(null); // Hide default loading indicator
         task.execute();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getAccountTask.cancel(true);
+        getAccountCall.cancel();
         getProfileFormDescriptionTask.cancel(true);
         if (null != setAccountImageTask) {
             setAccountImageTask.cancel(true);
@@ -412,24 +411,9 @@ public class EditUserProfileFragment extends BaseFragment {
                 final Uri imageUri = CropImageActivity.getImageUriFromResult(data);
                 final Rect cropRect = CropImageActivity.getCropRectFromResult(data);
                 if (null != imageUri && null != cropRect) {
-                    executePhotoTask(new SetAccountImageTask(getActivity(), username, imageUri, cropRect) {
-                        @Override
-                        protected void onSuccess(Void aVoid) throws Exception {
-                            hideLoading();
-                        }
-
-                        @Override
-                        protected void onException(Exception e) throws RuntimeException {
-                            super.onException(e);
-                            hideLoading();
-                        }
-
-                        private void hideLoading() {
-                            if (null != viewHolder) {
-                                viewHolder.profileImageProgress.setVisibility(View.GONE);
-                            }
-                        }
-                    });
+                    final Task task = new SetAccountImageTask(getActivity(), username, imageUri, cropRect);
+                    task.setProgressDialog(viewHolder.profileImageProgress);
+                    executePhotoTask(task);
                     segment.trackProfilePhotoSet(CropImageActivity.isResultFromCamera(data));
                 }
                 break;
@@ -454,13 +438,16 @@ public class EditUserProfileFragment extends BaseFragment {
         } else {
             valueObject = fieldValue;
         }
-        new UpdateAccountTask(getActivity(), username, field.getName(), valueObject) {
-            @Override
-            protected void onSuccess(Account account) throws Exception {
-                EditUserProfileFragment.this.account = account;
-                setData(account, formDescription);
-            }
-        }.execute();
+        userService.updateAccount(username, Collections.singletonMap(field.getName(), valueObject))
+                .enqueue(new AccountDataUpdatedCallback(getActivity(), username,
+                        CallTrigger.USER_ACTION) {
+                    @Override
+                    protected void onResponse(@NonNull final Account account) {
+                        super.onResponse(account);
+                        EditUserProfileFragment.this.account = account;
+                        setData(account, formDescription);
+                    }
+                });
     }
 
     public interface SwitchListener {

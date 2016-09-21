@@ -14,26 +14,38 @@
     <dimen name="drawer_profile_image_border_width">1dp</dimen>
     <dimen name="drawer_username_text">20sp</dimen>
     <dimen name="drawer_email_text">13sp</dimen>
+    <dimen name="drawer_app_version_text">12sp</dimen>
 
-    <dimen name="popupMenuWidth">154dp</dimen>
-    <dimen name="popupMenuHorizontalOffset">-6dp</dimen>
-    <dimen name="popupMenuVerticalOffset">6dp</dimen>
-    <dimen name="popupMenuHorizontalPadding">16dp</dimen>
-    <dimen name="popupMenuVerticalPadding">18dp</dimen>
-    <dimen name="popupMenuItemVerticalPadding">12dp</dimen>
-    <dimen name="popupMenuHeaderTextSize">13sp</dimen>
-    <dimen name="popupMenuRowTextSize">14sp</dimen>
-    <dimen name="popupMenuIconDefaultSize">16dp</dimen>
-    <dimen name="popupMenuIconPadding">16dp</dimen>
-    <dimen name="spinnerPopupBorder">1dp</dimen>
-    <dimen name="popupSpinnerMinHeight">34dp</dimen>
+    <!-- Popup Menu -->
+    <dimen name="popup_menu_width">154dp</dimen>
+    <dimen name="popup_menu_horizontal_offset">-6dp</dimen>
+    <dimen name="popup_menu_vertical_offset">6dp</dimen>
+    <dimen name="popup_menu_horizontal_padding">16dp</dimen>
+    <dimen name="popup_menu_vertical_padding">18dp</dimen>
+    <dimen name="popup_menu_item_vertical_padding">12dp</dimen>
+    <dimen name="popup_menu_header_text_size">13sp</dimen>
+    <dimen name="popup_menu_row_text_size">14sp</dimen>
+    <dimen name="popup_menu_icon_default_size">16dp</dimen>
+    <dimen name="popup_menu_icon_padding">16dp</dimen>
+    <dimen name="popup_spinner_border">1dp</dimen>
+    <dimen name="popup_spinner_min_height">34dp</dimen>
+
+    <!-- Course Outline -->
     <dimen name="width_chapter_text">185dp</dimen>
-    <dimen name="course_detail_margin">12dp</dimen>
+
+    <!-- Last Accessed Bar-->
+    <dimen name="last_accessed_bar_left_margin">20dp</dimen>
+    <dimen name="last_accessed_bar_height">50dp</dimen>
+    <dimen name="last_accessed_header_text_size">14sp</dimen>
+    <dimen name="last_accessed_button_text_size">16sp</dimen>
+    <dimen name="last_accessed_button_margin">10dp</dimen>
+    <dimen name="last_accessed_unit_text_size">20sp</dimen>
+
+    <!-- Course Card -->
     <dimen name="course_card_height">190dp</dimen>
     <dimen name="course_detail_card_height">70dp</dimen>
-    <dimen name="large_indicator_icon_width">100dp</dimen>
-    <dimen name="large_indicator_icon_height">100dp</dimen>
 
+    <!-- Course Dashboard-->
     <dimen name="dashboard_nav_element_height">85dp</dimen>
     <dimen name="dashboard_nav_element_left_margin">30dp</dimen>
     <dimen name="dashboard_nav_element_right_margin">30dp</dimen>
@@ -45,19 +57,24 @@
     -->
     <dimen name="dashboard_nav_element_text_left_margin">21dp</dimen>
 
-    <dimen name="width_video_text">200dp</dimen>
-    <dimen name="checkbox_margin">10dp</dimen>
-    <dimen name="checkbox_size">25dp</dimen>
-    <dimen name="edx_logo_height">125dp</dimen>
-    <dimen name="logo_margin_top">20dp</dimen>
-    <dimen name="logo_margin_bottom">15dp</dimen>
-    <dimen name="social_margin_top">20dp</dimen>
-    <dimen name="social_margin_bottom">15dp</dimen>
+    <!-- Sign in dimensions-->
+    <dimen name="login_edx_logo_height">125dp</dimen>
+    <dimen name="login_logo_margin_top">20dp</dimen>
+    <dimen name="login_logo_margin_bottom">15dp</dimen>
+    <dimen name="login_social_divider_margin_top">20dp</dimen>
+    <dimen name="login_social_divider_margin_bottom">15dp</dimen>
 
+    <!-- Sign up -->
+    <dimen name="signup_social_title_margin">5dp</dimen>
+    <dimen name="signup_social_title_margin_large">13dp</dimen>
+    <dimen name="signup_social_title_margin_bottom">6dp</dimen>
+
+    <!-- Switch -->
     <dimen name="switch_corner_radius">3dp</dimen>
     <dimen name="switch_default_height">25dp</dimen>
     <dimen name="switch_default_width">60dp</dimen>
 
+    <!-- Video Player -->
     <dimen name="video_player_height">200dp</dimen>
     <dimen name="video_player_pause_btn_width">70dp</dimen>
     <dimen name="video_player_pause_btn_height">70dp</dimen>
@@ -78,6 +95,12 @@
     <dimen name="video_player_seekbar_right_margin">6dp</dimen>
     <dimen name="video_player_duration_padding">4dp</dimen>
 
+    <!-- row height for CC language options, NONE option and the header of popup -->
+    <dimen name="row_height_cc_option">40dp</dimen>
+
+    <!-- Discussion -->
+    <dimen name="discussion_create_new_item_icon_margin">3dp</dimen>
+
     <dimen name="discussion_post_refine_layout_height">40dp</dimen>
     <dimen name="discussion_posts_filter_popup_width">120dp</dimen>
     <dimen name="discussion_posts_filter_popup_icon_margin">5dp</dimen>
@@ -91,36 +114,23 @@
     <dimen name="discussion_responses_secondary_actions_bar_height">30dp</dimen>
     <dimen name="discussion_responses_comments_button_height">25dp</dimen>
     <dimen name="discussion_responses_action_bar_icon_margin">7dp</dimen>
+    <dimen name="discussion_profile_image_diameter">40dp</dimen>
 
+    <!-- Profile Picture-->
     <dimen name="crop_circle_padding">12dp</dimen>
     <dimen name="crop_circle_border_width">3dp</dimen>
+    <dimen name="user_profile_image_diameter">166dp</dimen>
+    <dimen name="user_profile_image_border_width">3dp</dimen>
 
-    <dimen name="icon_view_standard_width_height">15dp</dimen>
+    <!-- Course unit -->
+    <dimen name="course_unit_nav_bar_height">55dp</dimen>
+    <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
+    <dimen name="course_unit_nav_bar_padding_left">15dp</dimen>
+    <dimen name="course_unit_nav_bar_padding_right">@dimen/course_unit_nav_bar_padding_left</dimen>
 
-    <!-- row height for CC language options, NONE option and the header of popup -->
-    <dimen name="row_height_cc_option">40dp</dimen>
-
-    <dimen name="signup_social_title_margin">5dp</dimen>
-    <dimen name="signup_social_title_margin_large">13dp</dimen>
-    <dimen name="signup_social_title_margin_bottom">6dp</dimen>
-
-    <dimen name="edx_hairline">1px</dimen>
-    <dimen name="edx_line">3px</dimen>
-    <dimen name="edx_box_radius">5dp</dimen>
-    <dimen name="edx_margin">15dp</dimen>
-    <dimen name="edx_double_margin">30dp</dimen>
-    <dimen name="edx_quadruple_margin">60dp</dimen>
-    <dimen name="widget_margin">10dp</dimen>
-    <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
-    <dimen name="vertical_input_padding">8dp</dimen>
-    <dimen name="edx_button_height">40dp</dimen>
+    <!-- My Videos -->
     <dimen name="tab_indicator_unselected_height">1.5dp</dimen>
     <dimen name="tab_indicator_selected_height">6dp</dimen>
-    <dimen name="create_new_item_icon_margin">3dp</dimen>
-    <dimen name="button_horizontal_padding">22dp</dimen>
-    <dimen name="x_small_icon_margin">5dp</dimen>
-    <dimen name="empty_list_text_max_width">240dp</dimen>
-    <dimen name="content_unavailable_error_icon_size">80dp</dimen>
 
     <!--edX typography-->
     <dimen name="edx_xxxx_large">38sp</dimen>
@@ -134,14 +144,6 @@
     <dimen name="edx_xx_small">11sp</dimen>
     <dimen name="edx_xxx_small">10sp</dimen>
 
-    <dimen name="course_unit_nav_bar_height">55dp</dimen>
-    <dimen name="course_unit_nav_bar_btn_height">35dp</dimen>
-
-    <dimen name="user_profile_image_diameter">166dp</dimen>
-    <dimen name="user_profile_image_border_width">3dp</dimen>
-
-    <dimen name="discussion_image_diameter">40dp</dimen>
-
     <!-- font awesome sizes -->
     <dimen name="fa_xxxx_large">38dp</dimen>
     <dimen name="fa_xxx_large">28dp</dimen>
@@ -153,5 +155,29 @@
     <dimen name="fa_x_small">12dp</dimen>
     <dimen name="fa_xx_small">11dp</dimen>
     <dimen name="fa_xxx_small">10dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="x_small_icon_margin">5dp</dimen>
+    <dimen name="small_icon_size">15dp</dimen>
+    <dimen name="large_indicator_icon_width">100dp</dimen>
+    <dimen name="large_indicator_icon_height">100dp</dimen>
+    <dimen name="content_unavailable_error_icon_size">80dp</dimen>
+
+    <!-- Stray dimensions -->
+    <dimen name="notification_settings_margin">12dp</dimen>
+    <dimen name="fullscreen_message_max_width">240dp</dimen>
+
+    <!-- Unorganized -->
+    <dimen name="edx_hairline">1px</dimen>
+    <dimen name="edx_line">3px</dimen>
+    <dimen name="edx_box_radius">5dp</dimen>
+    <dimen name="edx_margin">15dp</dimen>
+    <dimen name="edx_double_margin">30dp</dimen>
+    <dimen name="edx_quadruple_margin">60dp</dimen>
+    <dimen name="widget_margin">10dp</dimen>
+    <dimen name="horizontal_input_padding">@dimen/widget_margin</dimen>
+    <dimen name="vertical_input_padding">8dp</dimen>
+    <dimen name="edx_button_height">40dp</dimen>
+    <dimen name="button_horizontal_padding">22dp</dimen>
 
 </resources>

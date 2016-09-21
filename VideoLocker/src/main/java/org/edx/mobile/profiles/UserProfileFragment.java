@@ -26,7 +26,7 @@ import org.edx.mobile.databinding.FragmentUserProfileBinding;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.UserPrefs;
-import org.edx.mobile.user.UserAPI;
+import org.edx.mobile.user.UserService;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.images.ErrorUtils;
@@ -101,12 +101,12 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
                 injector.getInstance(ISegment.class),
                 new UserProfileInteractor(
                         username,
-                        injector.getInstance(UserAPI.class),
+                        injector.getInstance(UserService.class),
                         injector.getInstance(EventBus.class),
                         injector.getInstance(UserPrefs.class)),
                 new UserProfileTabsInteractor(
                         username,
-                        injector.getInstance(UserAPI.class),
+                        injector.getInstance(UserService.class),
                         injector.getInstance(Config.class)
                 ));
     }

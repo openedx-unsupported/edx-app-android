@@ -77,7 +77,7 @@ public class MyCoursesListActivity extends BaseSingleFragmentActivity {
 
     @Override
     public Fragment getFirstFragment() {
-        return new MyCourseListTabFragment();
+        return new MyCoursesListFragment();
     }
 
 

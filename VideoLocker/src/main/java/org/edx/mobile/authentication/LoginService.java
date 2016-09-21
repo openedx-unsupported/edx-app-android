@@ -1,33 +1,49 @@
 package org.edx.mobile.authentication;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.ApiConstants.TokenType;
-import org.edx.mobile.http.HttpException;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.module.prefs.LoginPrefs;
 
 import java.util.Map;
 
-import retrofit.client.Response;
-import retrofit.http.Field;
-import retrofit.http.FieldMap;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 import static org.edx.mobile.http.ApiConstants.URL_MY_USER_INFO;
 
 public interface LoginService {
 
     /**
-     * If there are form validation errors, this method will throw an {@link org.edx.mobile.http.HttpResponseStatusException} with 400 or 409 error code.
+     * A RoboGuice Provider implementation for LoginService.
+     */
+    class Provider implements com.google.inject.Provider<LoginService> {
+        @Inject
+        private Retrofit retrofit;
+
+        @Override
+        public LoginService get() {
+            return retrofit.create(LoginService.class);
+        }
+    }
+
+    /**
+     * If there are form validation errors, this call will fail with 400 or 409 error code.
      * In case of validation errors the response body will be {@link org.edx.mobile.model.api.FormFieldMessageBody}.
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_REGISTRATION)
-    Response register(@FieldMap Map<String, String> parameters) throws HttpException;
+    Call<ResponseBody> register(@FieldMap Map<String, String> parameters);
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -35,10 +51,10 @@ public interface LoginService {
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_ACCESS_TOKEN)
-    AuthResponse getAccessToken(@Field("grant_type") String grant_type,
-                                @Field("client_id") String client_id,
-                                @Field("username") String username,
-                                @Field("password") String password) throws HttpException;
+    Call<AuthResponse> getAccessToken(@Field("grant_type") String grant_type,
+                                      @Field("client_id") String client_id,
+                                      @Field("username") String username,
+                                      @Field("password") String password);
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered
@@ -46,9 +62,9 @@ public interface LoginService {
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_ACCESS_TOKEN)
-    AuthResponse refreshAccessToken(@Field("grant_type") String grant_type,
-                                    @Field("client_id") String client_id,
-                                    @Field("refresh_token") String refresh_token) throws HttpException;
+    Call<AuthResponse> refreshAccessToken(@Field("grant_type") String grant_type,
+                                          @Field("client_id") String client_id,
+                                          @Field("refresh_token") String refresh_token);
 
 
     /**
@@ -59,9 +75,9 @@ public interface LoginService {
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_EXCHANGE_ACCESS_TOKEN)
-    AuthResponse exchangeAccessToken(@Field("access_token") String accessToken,
-                                     @Field("client_id") String clientId,
-                                     @Path(ApiConstants.GROUP_ID) String groupId) throws HttpException;
+    Call<AuthResponse> exchangeAccessToken(@Field("access_token") String accessToken,
+                                           @Field("client_id") String clientId,
+                                           @Path(ApiConstants.GROUP_ID) String groupId);
 
     /**
      * Revoke the specified refresh or access token, along with all other tokens based on the same
@@ -73,21 +89,21 @@ public interface LoginService {
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_REVOKE_TOKEN)
-    Response revokeAccessToken(@Field("client_id") String clientId,
-                               @Field("token") String token,
-                               @Field("token_type_hint") @TokenType String tokenTypeHint) throws HttpException;
+    Call<ResponseBody> revokeAccessToken(@Field("client_id") String clientId,
+                                         @Field("token") String token,
+                                         @Field("token_type_hint") @TokenType String tokenTypeHint);
 
     /**
      * Reset password for account associated with an email address.
      */
     @FormUrlEncoded
     @POST(ApiConstants.URL_PASSWORD_RESET)
-    ResetPasswordResponse resetPassword(@Field("email") String email) throws HttpException;
+    Call<ResetPasswordResponse> resetPassword(@Field("email") String email);
 
 
     /**
      * @return basic profile information for currently authenticated user.
      */
     @GET(URL_MY_USER_INFO)
-    ProfileModel getProfile() throws HttpException;
+    Call<ProfileModel> getProfile();
 }

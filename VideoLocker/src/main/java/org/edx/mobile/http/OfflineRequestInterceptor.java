@@ -5,13 +5,17 @@ import android.content.Context;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.util.NetworkUtil;
 
-import retrofit.RequestInterceptor;
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * okhttp does not work with offline mode by default.
  * we force okhttp to look at the local cache when in offline mode
  */
-public class OfflineRequestInterceptor implements RequestInterceptor {
+public class OfflineRequestInterceptor implements Interceptor {
     protected final Logger logger = new Logger(getClass().getName());
     private final static int MAX_STALE = 60 * 60 * 24 * 28; // tolerate 4-weeks stale
     private Context context;
@@ -27,16 +31,18 @@ public class OfflineRequestInterceptor implements RequestInterceptor {
     }
 
     @Override
-    public void intercept(RequestInterceptor.RequestFacade request) {
+    public Response intercept(Chain chain) throws IOException {
+        final Request.Builder requestBuilder = chain.request().newBuilder();
         if (isNetworkConnected()) {
             //TODO? should we specify caching here?
 //            int maxAge = 60; // read from cache for 1 minute
-//            request.addHeader("Cache-Control", "public, max-age=" + maxAge);
-            request.addHeader("Cache-Control", "public");
+//            requestBuilder.header(("Cache-Control", "public, max-age=" + maxAge);
+            requestBuilder.header("Cache-Control", "public");
         } else {
-            request.addHeader("Cache-Control",
-                "public, only-if-cached, max-stale=" + maxStaleTime);
+            requestBuilder.header("Cache-Control",
+                    "public, only-if-cached, max-stale=" + maxStaleTime);
         }
+        return chain.proceed(requestBuilder.build());
     }
 
     //TODO - we dont need this method after DI is used

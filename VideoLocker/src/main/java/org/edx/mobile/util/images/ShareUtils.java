@@ -32,7 +32,7 @@ public enum ShareUtils {
         final PopupMenu popupMenu = new PopupMenu(context, anchor);
         final SubMenu subMenu = popupMenu.getMenu().addSubMenu(menu_title);
         final PackageManager packageManager = context.getPackageManager();
-        final int iconSize = context.getResources().getDimensionPixelSize(R.dimen.popupMenuIconDefaultSize);
+        final int iconSize = context.getResources().getDimensionPixelSize(R.dimen.popup_menu_icon_default_size);
         final List<ResolveInfo> resolveInfoList = packageManager.queryIntentActivities(shareIntent, 0);
         for (final ResolveInfo resolveInfo : resolveInfoList) {
             final MenuItem shareItem = subMenu.add(resolveInfo.loadLabel(packageManager));

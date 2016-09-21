@@ -3,6 +3,7 @@ package org.edx.mobile.view;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +45,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @InjectView(R.id.offline_bar)
     View offlineBar;
 
-    @InjectView(R.id.last_access_bar)
+    @InjectView(R.id.last_accessed_bar)
     View lastAccessBar;
 
     @InjectView(R.id.loading_indicator)
@@ -67,6 +68,7 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         Bundle bundle = arg0;
         if ( bundle == null ) {
             if ( getIntent() != null )
@@ -297,11 +299,11 @@ public abstract  class CourseBaseActivity  extends BaseFragmentActivity implemen
 
     protected void showLastAccessedView(View v, String title, View.OnClickListener listener) {
         lastAccessBar.setVisibility(View.VISIBLE);
-        View lastAccessTextView = v == null ? findViewById(R.id.last_access_text) :
-            v.findViewById(R.id.last_access_text);
+        View lastAccessTextView = v == null ? findViewById(R.id.last_accessed_text) :
+            v.findViewById(R.id.last_accessed_text);
         ((TextView)lastAccessTextView).setText(title);
-        View detailButton = v == null ? findViewById(R.id.last_access_button) :
-            v.findViewById(R.id.last_access_button);
+        View detailButton = v == null ? findViewById(R.id.last_accessed_button) :
+            v.findViewById(R.id.last_accessed_button);
         detailButton.setOnClickListener(listener);
     }
 

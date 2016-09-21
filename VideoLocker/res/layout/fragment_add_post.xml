@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/widget_margin">
 
-                <android.support.v7.widget.AppCompatSpinner
+                <org.edx.mobile.view.custom.KeyboardDismissingSpinner
                     android:id="@+id/topics_spinner"
                     style="@style/edX.Widget.Spinner"
                     android:layout_width="match_parent"

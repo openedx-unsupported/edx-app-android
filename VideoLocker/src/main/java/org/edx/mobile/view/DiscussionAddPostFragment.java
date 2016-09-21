@@ -3,8 +3,10 @@ package org.edx.mobile.view;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -22,24 +23,28 @@ import com.google.inject.Inject;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
 import org.edx.mobile.discussion.DiscussionThreadPostedEvent;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
 import org.edx.mobile.discussion.ThreadBody;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.task.CreateThreadTask;
-import org.edx.mobile.task.GetTopicListTask;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.TopicSpinnerAdapter;
+import org.edx.mobile.view.common.TaskMessageCallback;
+import org.edx.mobile.view.common.TaskProgressCallback.ProgressViewController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -61,7 +66,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
     private RadioGroup discussionQuestionSegmentedGroup;
 
     @InjectView(R.id.topics_spinner)
-    private Spinner topicsSpinner;
+    private AppCompatSpinner topicsSpinner;
 
     @InjectView(R.id.title_edit_text)
     private EditText titleEditText;
@@ -79,12 +84,15 @@ public class DiscussionAddPostFragment extends BaseFragment {
     private ProgressBar addPostProgressBar;
 
     @Inject
+    private DiscussionService discussionService;
+
+    @Inject
     ISegment segIO;
 
     private ViewGroup container;
 
-    private GetTopicListTask getTopicListTask;
-    private CreateThreadTask createThreadTask;
+    private Call<CourseTopics> getTopicListCall;
+    private Call<DiscussionThread> createThreadCall;
 
     private int selectedTopicIndex;
 
@@ -121,7 +129,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
         discussionQuestionSegmentedGroup.check(R.id.discussion_radio_button);
 
         getTopicList();
-
+        
         topicsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -200,33 +208,36 @@ public class DiscussionAddPostFragment extends BaseFragment {
     }
 
     protected void createThread(ThreadBody threadBody) {
-        if (createThreadTask != null) {
-            createThreadTask.cancel(true);
+        if (createThreadCall != null) {
+            createThreadCall.cancel();
         }
-        createThreadTask = new CreateThreadTask(getActivity(), threadBody) {
+        createThreadCall = discussionService.createThread(threadBody);
+        createThreadCall.enqueue(new ErrorHandlingCallback<DiscussionThread>(
+                getActivity(),
+                CallTrigger.USER_ACTION,
+                new ProgressViewController(addPostProgressBar)) {
             @Override
-            public void onSuccess(DiscussionThread courseTopics) {
+            protected void onResponse(@NonNull final DiscussionThread courseTopics) {
                 EventBus.getDefault().post(new DiscussionThreadPostedEvent(courseTopics));
                 getActivity().finish();
             }
 
             @Override
-            public void onException(Exception ex) {
-                super.onException(ex);
+            protected void onFailure(@NonNull final Throwable error) {
                 addPostButton.setEnabled(true);
             }
-        };
-        createThreadTask.setProgressDialog(addPostProgressBar);
-        createThreadTask.execute();
+        });
     }
 
     protected void getTopicList() {
-        if (getTopicListTask != null) {
-            getTopicListTask.cancel(true);
+        if (getTopicListCall != null) {
+            getTopicListCall.cancel();
         }
-        getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
+        getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
+        getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(getActivity(),
+                CallTrigger.LOADING_UNCACHED, (TaskMessageCallback) null) {
             @Override
-            public void onSuccess(CourseTopics courseTopics) {
+            protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 final ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
                 allTopics.addAll(courseTopics.getCoursewareTopics());
@@ -259,9 +270,7 @@ public class DiscussionAddPostFragment extends BaseFragment {
                 segIO.trackScreenView(ISegment.Screens.FORUM_CREATE_TOPIC_THREAD,
                         courseData.getCourse().getId(), selectedTopic.getName(), values);
             }
-        };
-        getTopicListTask.setMessageCallback(null);
-        getTopicListTask.execute();
+        });
     }
 
     @Override

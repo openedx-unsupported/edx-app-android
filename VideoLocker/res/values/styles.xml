@@ -40,14 +40,26 @@
         <item name="android:progressBarStyleSmallTitle">@style/edX.Widget.ProgressBar.Small.Title</item>
         <item name="android:progressBarStyleLarge">@style/edX.Widget.ProgressBar.Large</item>
         <item name="android:progressBarStyleInverse">@style/edX.Widget.ProgressBar.Inverse</item>
-        <item name="android:progressBarStyleSmallInverse">@style/edX.Widget.ProgressBar.Small.Inverse</item>
-        <item name="android:progressBarStyleLargeInverse">@style/edX.Widget.ProgressBar.Large.Inverse</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
+        <item name="android:progressBarStyleSmallInverse">
+            @style/edX.Widget.ProgressBar.Small.Inverse
+        </item>
+        <item name="android:progressBarStyleLargeInverse">
+            @style/edX.Widget.ProgressBar.Large.Inverse
+        </item>
+    </style>
+
+    <style name="MyToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.TranslucentStatusBar"></style>
 
     <style name="AppTheme.Launch" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
@@ -63,14 +75,19 @@
         <item name="actionBarStyle">@style/MyActionBar.NoShadow</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-    </style>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog"></style>
 
     <style name="AppTheme.Dialog.NoTitle" parent="Theme.AppCompat.Light.Dialog">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
+
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/edx_brand_primary_base</item>
+        <item name="colorPrimaryDark">@color/edx_brand_primary_dark</item>
+        <item name="colorAccent">@color/edx_brand_primary_accent</item>
+    </style>
 
     <!-- we need to change the color of the drawer arrow toggle -->
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -278,8 +295,8 @@
     </style>
 
     <style name="icon_view_standard_size">
-        <item name="android:layout_width">@dimen/icon_view_standard_width_height</item>
-        <item name="android:layout_height">@dimen/icon_view_standard_width_height</item>
+        <item name="android:layout_width">@dimen/small_icon_size</item>
+        <item name="android:layout_height">@dimen/small_icon_size</item>
     </style>
 
     <style name="discussion_thread_icon">
@@ -413,7 +430,7 @@
 
     <style name="edX.Widget.Spinner.Popup" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:minHeight">@dimen/popupSpinnerMinHeight</item>
+        <item name="android:minHeight">@dimen/popup_spinner_min_height</item>
         <item name="android:popupBackground">@drawable/spinner_popup_background</item>
         <!-- We need to set a top margin equal to the top padding of the
              background, because ListPopupWindow (which is used internally by
@@ -421,8 +438,8 @@
              default, so it would should up above the Spinner's boundaries.
              Then we need a bottom padding of an equal amount to offset it, in
              order to maintain the expected anchor for centered gravity. -->
-        <item name="android:layout_marginTop">@dimen/spinnerPopupBorder</item>
-        <item name="android:paddingBottom">@dimen/spinnerPopupBorder</item>
+        <item name="android:layout_marginTop">@dimen/popup_spinner_border</item>
+        <item name="android:paddingBottom">@dimen/popup_spinner_border</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
     </style>
@@ -440,29 +457,29 @@
         <item name="android:popupBackground">@drawable/popup_menu_background</item>
         <item name="android:overlapAnchor" tools:targetApi="21">true</item>
         <item name="overlapAnchor">true</item>
-        <item name="android:paddingLeft">@dimen/popupMenuHorizontalPadding</item>
-        <item name="android:paddingRight">@dimen/popupMenuHorizontalPadding</item>
-        <item name="android:paddingTop">@dimen/popupMenuVerticalPadding</item>
-        <item name="android:paddingBottom">@dimen/popupMenuVerticalPadding</item>
-        <item name="android:dropDownVerticalOffset">@dimen/popupMenuVerticalOffset</item>
-        <item name="android:minWidth">@dimen/popupMenuWidth</item>
-        <item name="itemVerticalPadding">@dimen/popupMenuItemVerticalPadding</item>
-        <item name="iconPadding">@dimen/popupMenuIconPadding</item>
-        <item name="iconDefaultSize">@dimen/popupMenuIconDefaultSize</item>
+        <item name="android:paddingLeft">@dimen/popup_menu_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/popup_menu_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/popup_menu_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/popup_menu_vertical_padding</item>
+        <item name="android:dropDownVerticalOffset">@dimen/popup_menu_vertical_offset</item>
+        <item name="android:minWidth">@dimen/popup_menu_width</item>
+        <item name="itemVerticalPadding">@dimen/popup_menu_item_vertical_padding</item>
+        <item name="iconPadding">@dimen/popup_menu_icon_padding</item>
+        <item name="iconDefaultSize">@dimen/popup_menu_icon_default_size</item>
     </style>
 
     <!-- Menu popup that is aligned to the vertical edge of the screen -->
     <style name="edX.Widget.EdgePopupMenu" parent="edX.Widget.PopupMenu">
-        <item name="android:dropDownHorizontalOffset">@dimen/popupMenuHorizontalOffset</item>
+        <item name="android:dropDownHorizontalOffset">@dimen/popup_menu_horizontal_offset</item>
     </style>
 
     <style name="edX.Widget.PopupMenu.HeaderTextAppearance" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/popupMenuHeaderTextSize</item>
+        <item name="android:textSize">@dimen/popup_menu_header_text_size</item>
         <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
     <style name="edX.Widget.PopupMenu.RowTextAppearance" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textSize">@dimen/popupMenuRowTextSize</item>
+        <item name="android:textSize">@dimen/popup_menu_row_text_size</item>
         <item name="android:textColor">@color/course_mode</item>
     </style>
 
@@ -511,7 +528,7 @@
         <item name="indeterminateIconColor">@color/white</item>
     </style>
 
-    <style name="edX.Widget.ProgressBar.Small.Title"/>
+    <style name="edX.Widget.ProgressBar.Small.Title" />
 
     <!-- Unfortunately, TabLayout doesn't define a global theme
          attribute for it's default style, so this would need to be

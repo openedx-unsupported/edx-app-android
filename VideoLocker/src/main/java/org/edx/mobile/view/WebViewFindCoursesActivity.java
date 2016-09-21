@@ -100,17 +100,6 @@ public class WebViewFindCoursesActivity extends FindCoursesBaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        View sliderMenu = findViewById(R.id.slider_menu);
-
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerVisible(sliderMenu)) {
-            menu.clear();
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home && searchView != null && searchView.hasFocus()) {

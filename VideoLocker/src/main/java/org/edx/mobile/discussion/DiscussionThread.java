@@ -234,7 +234,7 @@ public class DiscussionThread implements Serializable, IAuthorData, ProfileImage
     @Nullable
     @Override
     public ProfileImage getProfileImage() {
-        if (users == null) {
+        if (users == null || isAuthorAnonymous()) {
             return null;
         } else {
             return users.get(author).getProfile().getImage();

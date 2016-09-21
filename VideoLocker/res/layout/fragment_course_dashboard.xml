@@ -19,6 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
+                android:contentDescription="@null"
                 tools:src="@drawable/edx_map_login" />
 
             <LinearLayout
@@ -71,6 +72,7 @@
                 android:clickable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
+                android:contentDescription="@string/go_to_video"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_media_play_inactive"
                 android:tint="@color/black"

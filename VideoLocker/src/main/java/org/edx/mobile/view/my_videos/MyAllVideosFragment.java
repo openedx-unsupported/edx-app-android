@@ -2,7 +2,6 @@ package org.edx.mobile.view.my_videos;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +61,10 @@ public class MyAllVideosFragment extends BaseFragment {
             }
         };
 
+
+        // Add empty views to cause dividers to render at the top and bottom of the list
+        myCourseList.addHeaderView(new View(getContext()), null, false);
+        myCourseList.addFooterView(new View(getContext()), null, false);
         myCourseList.setAdapter(myCoursesAdaptor);
         myCourseList.setOnItemClickListener(myCoursesAdaptor);
 

@@ -10,20 +10,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import com.google.inject.Inject;
+
 import org.edx.mobile.R;
+import org.edx.mobile.discussion.DiscussionRequestFields;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionThread;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.Page;
-import org.edx.mobile.task.SearchThreadListTask;
 import org.edx.mobile.util.ResourceUtil;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.InfiniteScrollUtils;
 import org.edx.mobile.view.common.MessageType;
 import org.edx.mobile.view.common.TaskProcessCallback;
+import org.edx.mobile.view.common.TaskProgressCallback;
 
+import java.util.Collections;
+import java.util.List;
+
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
 public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBaseFragment {
+
+    @Inject
+    private DiscussionService discussionService;
 
     @InjectExtra(value = Router.EXTRA_SEARCH_QUERY, optional = true)
     private String searchQuery;
@@ -31,7 +44,7 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @InjectView(R.id.discussion_topics_searchview)
     private SearchView discussionTopicsSearchView;
 
-    private SearchThreadListTask searchThreadListTask;
+    private Call<Page<DiscussionThread>> searchThreadListCall;
 
     @Nullable
     @Override
@@ -67,12 +80,23 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
     @Override
     public void loadNextPage(@NonNull final InfiniteScrollUtils.PageLoadCallback<DiscussionThread> callback) {
         ((TaskProcessCallback) getActivity()).onMessage(MessageType.EMPTY, "");
-        if (searchThreadListTask != null) {
-            searchThreadListTask.cancel(true);
+        if (searchThreadListCall != null) {
+            searchThreadListCall.cancel();
         }
-        searchThreadListTask = new SearchThreadListTask(getActivity(), courseData.getCourse().getId(), searchQuery, nextPage) {
+        final List<String> requestedFields = Collections.singletonList(
+                DiscussionRequestFields.PROFILE_IMAGE.getQueryParamValue());
+        searchThreadListCall = discussionService.searchThreadList(
+                courseData.getCourse().getId(), searchQuery, nextPage, requestedFields);
+        final Activity activity = getActivity();
+        final TaskProgressCallback progressCallback = activity instanceof TaskProgressCallback ?
+                (TaskProgressCallback) activity : null;
+        searchThreadListCall.enqueue(new ErrorHandlingCallback<Page<DiscussionThread>>(
+                activity, CallTrigger.LOADING_UNCACHED,
+                // Initially we need to show the spinner at the center of the screen. After that,
+                // the ListView will start showing a footer-based loading indicator.
+                nextPage > 1 || callback.isRefreshingSilently() ? null : progressCallback) {
             @Override
-            public void onSuccess(Page<DiscussionThread> threadsPage) {
+            protected void onResponse(@NonNull final Page<DiscussionThread> threadsPage) {
                 ++nextPage;
                 callback.onPageLoaded(threadsPage);
                 Activity activity = getActivity();
@@ -95,22 +119,16 @@ public class CourseDiscussionPostsSearchFragment extends CourseDiscussionPostsBa
             }
 
             @Override
-            protected void onException(Exception ex) {
+            public void onFailure(@NonNull Call<Page<DiscussionThread>> call, @NonNull Throwable error) {
                 // Don't display any error message if we're doing a silent
                 // refresh, as that would be confusing to the user.
                 if (!callback.isRefreshingSilently()) {
-                    super.onException(ex);
+                    super.onFailure(call, error);
                 }
                 callback.onError();
                 nextPage = 1;
             }
-        };
-        // Initially we need to show the spinner at the center of the screen. After that, the
-        // ListView will start showing a footer-based loading indicator.
-        if (nextPage > 1 || callback.isRefreshingSilently()) {
-            searchThreadListTask.setProgressCallback(null);
-        }
-        searchThreadListTask.execute();
+        });
 
     }
 

@@ -17,7 +17,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     @LayoutRes
     public static int LAYOUT = R.layout.row_course_list;
 
-    private final View rootView;
     private final ImageView courseImage;
     private final TextView courseTitle;
     private final TextView courseRun;
@@ -25,7 +24,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     private final View newCourseContent;
 
     public CourseCardViewHolder(View convertView) {
-        this.rootView = convertView;
         this.courseTitle = (TextView) convertView
                 .findViewById(R.id.course_name);
         this.courseRun = (TextView) convertView
@@ -36,14 +34,6 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
                 .findViewById(R.id.course_image);
         this.newCourseContent = convertView
                 .findViewById(R.id.new_course_content_layout);
-    }
-
-    public void setPadding(boolean isFirstItem) {
-        rootView.setPadding(
-                rootView.getPaddingLeft(),
-                isFirstItem ? rootView.getResources().getDimensionPixelOffset(R.dimen.widget_margin) : 0,
-                rootView.getPaddingRight(),
-                rootView.getPaddingBottom());
     }
 
     public void setCourseTitle(@NonNull String title) {

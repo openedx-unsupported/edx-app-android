@@ -2,6 +2,7 @@ package org.edx.mobile.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.TextViewCompat;
 import android.view.LayoutInflater;
@@ -19,17 +20,20 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import org.edx.mobile.R;
 import org.edx.mobile.base.BaseFragment;
 import org.edx.mobile.discussion.CourseTopics;
+import org.edx.mobile.discussion.DiscussionService;
 import org.edx.mobile.discussion.DiscussionTopic;
 import org.edx.mobile.discussion.DiscussionTopicDepth;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.task.GetTopicListTask;
 import org.edx.mobile.util.SoftKeyboardUtil;
 import org.edx.mobile.view.adapters.DiscussionTopicsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
 import roboguice.inject.InjectExtra;
 import roboguice.inject.InjectView;
 
@@ -46,12 +50,15 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
     private EnrolledCoursesResponse courseData;
 
     @Inject
+    private DiscussionService discussionService;
+
+    @Inject
     private DiscussionTopicsAdapter discussionTopicsAdapter;
 
     @Inject
     private Router router;
 
-    private GetTopicListTask getTopicListTask;
+    private Call<CourseTopics> getTopicListCall;
 
     @Nullable
     @Override
@@ -123,12 +130,14 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
     }
 
     private void getTopicList() {
-        if (getTopicListTask != null) {
-            getTopicListTask.cancel(true);
+        if (getTopicListCall != null) {
+            getTopicListCall.cancel();
         }
-        getTopicListTask = new GetTopicListTask(getActivity(), courseData.getCourse().getId()) {
+        getTopicListCall = discussionService.getCourseTopics(courseData.getCourse().getId());
+        getTopicListCall.enqueue(new ErrorHandlingCallback<CourseTopics>(
+                getActivity(), CallTrigger.LOADING_UNCACHED) {
             @Override
-            public void onSuccess(CourseTopics courseTopics) {
+            protected void onResponse(@NonNull final CourseTopics courseTopics) {
                 logger.debug("GetTopicListTask success=" + courseTopics);
                 ArrayList<DiscussionTopic> allTopics = new ArrayList<>();
                 allTopics.addAll(courseTopics.getNonCoursewareTopics());
@@ -138,8 +147,7 @@ public class CourseDiscussionTopicsFragment extends BaseFragment {
                 discussionTopicsAdapter.setItems(allTopicsWithDepth);
                 discussionTopicsAdapter.notifyDataSetChanged();
             }
-        };
-        getTopicListTask.execute();
+        });
     }
 
     @Override

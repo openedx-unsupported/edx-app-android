@@ -3,6 +3,7 @@ package org.edx.mobile.view.my_videos;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -20,6 +21,7 @@ public class MyVideosActivity extends BaseVideosDownloadStateActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myvideos_tab);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         // configure slider layout. This should be called only once and
         // hence is shifted to onCreate() function

@@ -7,13 +7,14 @@ import org.edx.mobile.model.api.VideoResponseModel;
 
 import java.util.List;
 
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Headers;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import static org.edx.mobile.http.ApiConstants.COURSE_ID;
 import static org.edx.mobile.http.ApiConstants.URL_COURSE_ENROLLMENTS;
@@ -31,22 +32,22 @@ public interface OauthRestApi {
     /* GET calls */
 
     @GET(URL_VIDEO_OUTLINE)
-    List<VideoResponseModel> getCourseHierarchy(@Path(COURSE_ID) String courseId);
+    Call<List<VideoResponseModel>> getCourseHierarchy(@Path(COURSE_ID) String courseId);
 
     @Headers("Cache-Control: no-cache")
     @GET(URL_COURSE_OUTLINE)
-    String getCourseOutlineNoCache(@Query("course_id") String courseId,
-                                   @Query("user") String username,
-                                   @Query("requested_fields") String fields,
-                                   @Query("student_view_data") String blockJson,
-                                   @Query("block_counts") String blockCount);
+    Call<String> getCourseOutlineNoCache(@Query("course_id") String courseId,
+                                         @Query("user") String username,
+                                         @Query("requested_fields") String fields,
+                                         @Query("student_view_data") String blockJson,
+                                         @Query("block_counts") String blockCount);
 
     @GET(URL_COURSE_OUTLINE)
-    String getCourseOutline(@Query("course_id") String courseId,
-                            @Query("user") String username,
-                            @Query("requested_fields") String fields,
-                            @Query("student_view_data") String blockJson,
-                            @Query("block_counts") String blockCount);
+    Call<String> getCourseOutline(@Query("course_id") String courseId,
+                                  @Query("user") String username,
+                                  @Query("requested_fields") String fields,
+                                  @Query("student_view_data") String blockJson,
+                                  @Query("block_counts") String blockCount);
 
     /**
      * Returns enrolled courses of given user.
@@ -55,28 +56,28 @@ public interface OauthRestApi {
      * @throws Exception
      */
     @GET(URL_COURSE_ENROLLMENTS)
-    List<EnrolledCoursesResponse> getEnrolledCourses(@Path(USER_NAME) String username);
+    Call<List<EnrolledCoursesResponse>> getEnrolledCourses(@Path(USER_NAME) String username);
 
     @Headers("Cache-Control: no-cache")
     @GET(URL_COURSE_ENROLLMENTS)
-    List<EnrolledCoursesResponse> getEnrolledCoursesNoCache(@Path(USER_NAME) String username);
+    Call<List<EnrolledCoursesResponse>> getEnrolledCoursesNoCache(@Path(USER_NAME) String username);
 
     /* POST Calls */
 
     @POST(URL_VIDEO_OUTLINE)
-    List<VideoResponseModel> getVideosByCourseId(@Path(COURSE_ID) String courseId);
+    Call<List<VideoResponseModel>> getVideosByCourseId(@Path(COURSE_ID) String courseId);
 
     @PUT(URL_LAST_ACCESS_FOR_COURSE)
-    SyncLastAccessedSubsectionResponse syncLastAccessedSubsection(@Body EnrollmentRequestBody.LastAccessRequestBody body,
-                                                                  @Path(USER_NAME) String username,
-                                                                  @Path(COURSE_ID) String courseId);
+    Call<SyncLastAccessedSubsectionResponse> syncLastAccessedSubsection(@Body EnrollmentRequestBody.LastAccessRequestBody body,
+                                                                        @Path(USER_NAME) String username,
+                                                                        @Path(COURSE_ID) String courseId);
 
     @GET(URL_LAST_ACCESS_FOR_COURSE)
-    SyncLastAccessedSubsectionResponse getLastAccessedSubsection(@Path(USER_NAME) String username,
-                                                                 @Path(COURSE_ID) String courseId);
+    Call<SyncLastAccessedSubsectionResponse> getLastAccessedSubsection(@Path(USER_NAME) String username,
+                                                                       @Path(COURSE_ID) String courseId);
 
 
     @POST(URL_ENROLLMENT)
-    String enrollACourse(@Body EnrollmentRequestBody body);
+    Call<String> enrollACourse(@Body EnrollmentRequestBody body);
 
 }

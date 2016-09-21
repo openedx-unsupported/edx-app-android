@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import org.edx.mobile.R;
-import org.edx.mobile.base.MainApplication;
 import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.module.analytics.ISegment;
-import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.prefs.PrefManager;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.services.LastAccessManager;
 
@@ -24,9 +21,6 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
 
     @Inject
     CourseManager courseManager;
-
-    @Inject
-    LoginPrefs loginPrefs;
 
     @Inject
     LastAccessManager lastAccessManager;
@@ -82,10 +76,7 @@ public class CourseOutlineActivity extends CourseVideoListActivity {
                     ISegment.Screens.SECTION_OUTLINE, courseData.getCourse().getId(), courseComponent.getInternalName());
 
             // Update the last accessed item reference if we are in the course subsection view
-            String prefName = PrefManager.getPrefNameForLastAccessedBy(
-                    loginPrefs.getUsername(), courseComponent.getCourseId());
-            final PrefManager prefManager = new PrefManager(MainApplication.instance(), prefName);
-            prefManager.putLastAccessedSubsection(courseComponent.getId(), false);
+            lastAccessManager.setLastAccessed(courseComponent.getCourseId(), courseComponent.getId());
         }
     }
 

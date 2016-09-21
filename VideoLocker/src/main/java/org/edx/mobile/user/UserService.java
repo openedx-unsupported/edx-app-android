@@ -1,40 +1,57 @@
 package org.edx.mobile.user;
 
-import org.edx.mobile.http.HttpException;
+import com.google.inject.Inject;
+
 import org.edx.mobile.model.Page;
 import org.edx.mobile.profiles.BadgeAssertion;
 
 import java.util.Map;
 
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.DELETE;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.PATCH;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedOutput;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+import static org.edx.mobile.http.ApiConstants.PARAM_PAGE_SIZE;
 
 public interface UserService {
+    /**
+     * A RoboGuice Provider implementation for UserService.
+     */
+    class Provider implements com.google.inject.Provider<UserService> {
+        @Inject
+        private Retrofit retrofit;
+
+        @Override
+        public UserService get() {
+            return retrofit.create(UserService.class);
+        }
+    }
+
     @GET("/api/user/v1/accounts/{username}")
-    Account getAccount(@Path("username") String username) throws HttpException;
+    Call<Account> getAccount(@Path("username") String username);
 
     @PATCH("/api/user/v1/accounts/{username}")
-    Account updateAccount(@Path("username") String username, @Body Map<String, Object> fields) throws HttpException;
+    Call<Account> updateAccount(@Path("username") String username, @Body Map<String, Object> fields);
 
     @POST("/api/user/v1/accounts/{username}/image")
-    Response setProfileImage(@Path("username") String username, @Header("Content-Disposition") String contentDisposition, @Body TypedOutput file) throws HttpException;
+    Call<ResponseBody> setProfileImage(@Path("username") String username, @Header("Content-Disposition") String contentDisposition, @Body RequestBody file);
 
     @DELETE("/api/user/v1/accounts/{username}/image")
-    Response deleteProfileImage(@Path("username") String username) throws HttpException;
+    Call<ResponseBody> deleteProfileImage(@Path("username") String username);
 
     @GET("/api/mobile/v0.5/users/{username}/course_enrollments")
-    Response getUserEnrolledCourses(@Path("username") String username) throws HttpException;
+    Call<ResponseBody> getUserEnrolledCourses(@Path("username") String username);
 
-    @GET("/api/badges/v1/assertions/user/{username}")
-    Page<BadgeAssertion> getBadges(@Path("username") String username,
-                                   @Query("page") int page,
-                                   @Query("page_size") int pageSize) throws HttpException;
+    @GET("/api/badges/v1/assertions/user/{username}?" + PARAM_PAGE_SIZE)
+    Call<Page<BadgeAssertion>> getBadges(@Path("username") String username,
+                                         @Query("page") int page);
 }

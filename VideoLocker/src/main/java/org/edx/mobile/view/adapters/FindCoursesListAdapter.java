@@ -23,7 +23,6 @@ public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetai
     @Override
     public void render(BaseViewHolder tag, final CourseDetail courseDetail) {
         final CourseCardViewHolder holder = (CourseCardViewHolder) tag;
-        holder.setPadding(tag.position == 0);
         holder.setCourseTitle(courseDetail.name);
         holder.setCourseImage(courseDetail.media.course_image.getUri(environment.getConfig().getApiHostURL()));
         holder.setDescription(CourseCardUtils.getDescription(courseDetail.org, courseDetail.number, null),
@@ -36,13 +35,13 @@ public abstract class FindCoursesListAdapter extends BaseListAdapter<CourseDetai
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+    public void onItemClick(AdapterView<?> adapterView, View arg1, int position,
                             long arg3) {
         //This time is checked to avoid taps in quick succession
         final long currentTime = SystemClock.elapsedRealtime();
         if (currentTime - lastClickTime > MIN_CLICK_INTERVAL) {
             lastClickTime = currentTime;
-            CourseDetail model = getItem(position);
+            CourseDetail model = (CourseDetail)adapterView.getItemAtPosition(position);
             if (model != null) onItemClicked(model);
         }
     }
