@@ -2,7 +2,7 @@
     "fields":[
     {
               "name" : "account_privacy",
-              "label" : "edX learners can see my:",
+              "label" : "Other learners can see my:",
               "type" : "switch",
               "data_type" : "boolean",
               "options" : {
@@ -53,7 +53,7 @@
               "name" : "bio",
               "label" : "About me",
               "type" : "textarea",
-              "placeholder" : "With edX I would like to learn..."
+              "placeholder" : "I would like to learn..."
     }
     ]
 }

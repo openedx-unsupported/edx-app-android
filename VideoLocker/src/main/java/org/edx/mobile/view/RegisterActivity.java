@@ -101,8 +101,7 @@ public class RegisterActivity extends BaseFragmentActivity
         }
 
         TextView agreementMessageView = (TextView) findViewById(R.id.by_creating_account_tv);
-        CharSequence agreementMessage = ResourceUtil.getFormattedString(getResources(), R.string.by_creating_account, "platform_name", environment.getConfig().getPlatformName());
-        agreementMessageView.setText(agreementMessage);
+        agreementMessageView.setText(R.string.by_creating_account);
 
         createAccountBtn = (ViewGroup) findViewById(R.id.createAccount_button_layout);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
