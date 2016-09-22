@@ -18,24 +18,25 @@
                 android:id="@+id/header_image_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:contentDescription="@null"
+                android:scaleType="fitXY"
                 tools:src="@drawable/placeholder_course_card_image" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@color/transparent_white_85"
+                android:minHeight="@dimen/course_detail_card_height"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="@dimen/widget_margin">
 
                     <TextView
                         android:id="@+id/course_detail_name"
@@ -52,12 +53,12 @@
 
                 <ImageButton
                     android:id="@+id/course_detail_share"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="@dimen/course_detail_share_icon_size"
+                    android:layout_height="@dimen/course_detail_share_icon_size"
                     android:layout_gravity="bottom|right"
                     android:background="@null"
                     android:contentDescription="@string/share_course_button"
-                    android:padding="10dp"
+                    android:padding="@dimen/widget_margin"
                     android:scaleType="fitCenter"
                     android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
                     android:tint="@color/black"
@@ -66,31 +67,30 @@
 
             <ImageView
                 android:id="@+id/header_play_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/course_card_play_icon_size"
+                android:layout_height="@dimen/course_card_play_icon_size"
                 android:layout_gravity="center"
                 android:clickable="false"
+                android:contentDescription="@string/go_to_video"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:contentDescription="@string/go_to_video"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_media_play_inactive"
                 android:tint="@color/black"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                tools:visibility="visible" />
 
         </FrameLayout>
 
         <View style="@style/gray_hairline_separator" />
 
-
         <LinearLayout
             android:id="@+id/dashboard_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:divider="@drawable/edx_divider"
-            android:showDividers="middle|end">
-        </LinearLayout>
+            android:orientation="vertical"
+            android:showDividers="middle|end" />
 
     </LinearLayout>
 
