@@ -153,8 +153,7 @@ public class DiscussionCommentsAdapter extends RecyclerView.Adapter implements I
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 holder.discussionCommentCountReportTextView, iconDrawable, null, null, null);
 
-        String commentBody = discussionComment.getRawBody();
-        holder.discussionCommentBody.setText(commentBody);
+        DiscussionTextUtils.renderHtml(holder.discussionCommentBody, discussionComment.getRenderedBody());
     }
 
     @Override

@@ -153,7 +153,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
 
         holder.threadTitleTextView.setText(discussionThread.getTitle());
 
-        holder.threadBodyTextView.setText(DiscussionTextUtils.parseHtml(discussionThread.getRenderedBody()));
+        DiscussionTextUtils.renderHtml(holder.threadBodyTextView, discussionThread.getRenderedBody());
 
         String groupName = discussionThread.getGroupName();
         if (groupName == null) {
@@ -291,7 +291,7 @@ public class CourseDiscussionResponsesAdapter extends RecyclerView.Adapter imple
             holder.responseAnswerAuthorTextView.setVisibility(View.GONE);
         }
 
-        holder.responseCommentBodyTextView.setText(DiscussionTextUtils.parseHtml(comment.getRenderedBody()));
+        DiscussionTextUtils.renderHtml(holder.responseCommentBodyTextView, comment.getRenderedBody());
 
         if (discussionThread.isClosed() && comment.getChildCount() == 0) {
             holder.addCommentLayout.setEnabled(false);
