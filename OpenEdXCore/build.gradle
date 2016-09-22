@@ -356,7 +356,7 @@ android {
                 variant.outputs.each { output ->
                     project.ext { appName = 'edx' }
                     def newName = output.outputFile.name
-                    newName = newName.replace("VideoLocker-", "$project.ext.appName-")
+                    newName = newName.replace("OpenEdXCore-", "$project.ext.appName-")
                     newName = newName.replace(("-" + variant.buildType.name), ("-" + variant.buildType.name + "-" + versionName))
                     output.outputFile = new File(output.outputFile.parent, newName)
                 }
