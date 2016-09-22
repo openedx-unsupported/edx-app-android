@@ -1,1 +1,1 @@
-include ':VideoLocker', ':android-iconify', ':android-iconify-fontawesome'
+include ':OpenEdXCore', ':android-iconify', ':android-iconify-fontawesome'
