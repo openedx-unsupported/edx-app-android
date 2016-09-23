@@ -16,7 +16,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp"
             android:contentDescription="@string/phonetic_app_name"
-            android:src="@drawable/edx_logo" />
+            android:src="@drawable/launch_screen_logo" />
 
         <LinearLayout
             android:id="@+id/bottom_layout"

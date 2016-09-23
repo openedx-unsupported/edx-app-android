@@ -43,7 +43,7 @@ public class CourseCardViewHolder extends BaseListAdapter.BaseViewHolder {
     public void setCourseImage(@NonNull String imageUrl) {
         Glide.with(courseImage.getContext())
                 .load(imageUrl)
-                .placeholder(R.drawable.edx_map)
+                .placeholder(R.drawable.placeholder_course_card_image)
                 .transform(new TopAnchorFillWidthTransformation(courseImage.getContext()))
                 .into(courseImage);
     }

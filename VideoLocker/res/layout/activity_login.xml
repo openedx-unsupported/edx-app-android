@@ -40,7 +40,7 @@
                             android:layout_centerHorizontal="true"
                             android:contentDescription="@null"
                             android:scaleType="fitXY"
-                            android:src="@drawable/edx_map_login" />
+                            android:src="@drawable/login_screen_image" />
 
                         <ImageView
                             android:id="@+id/login_logo"
@@ -48,7 +48,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:contentDescription="@string/phonetic_app_name"
-                            android:src="@drawable/edx_logo_login" />
+                            android:src="@drawable/login_screen_logo" />
                     </RelativeLayout>
 
                     <LinearLayout
