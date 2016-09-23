@@ -127,8 +127,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         super.onViewCreated(view, savedInstanceState);
 
         if (discussionTopic == null) {
-            // Disable the button for adding new posts until the topic is loaded.
-            createNewPostLayout.setEnabled(false);
+            // Hide the button for adding new posts until the topic is loaded.
+            createNewPostLayout.setVisibility(View.GONE);
             // Either we are coming from a deep link or courseware's inline discussion
             fetchDiscussionTopic();
         } else {
@@ -239,8 +239,8 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
                                 populatePostListRunnable.run();
                             }
 
-                            // Now that we have the topic date, we can allow the user to add new posts.
-                            createNewPostLayout.setEnabled(true);
+                            // Now that we have the topic data, we can allow the user to add new posts.
+                            createNewPostLayout.setVisibility(View.VISIBLE);
                         }
                     }
                 });
