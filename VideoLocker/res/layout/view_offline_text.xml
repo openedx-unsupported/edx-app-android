@@ -11,6 +11,6 @@
     android:paddingEnd="15dp"
     android:text="@string/offline_text"
     android:textAllCaps="true"
-    android:textColor="@color/offline_text"
+    android:textColor="@color/edx_brand_secondary_base"
     android:textSize="12sp"
     tools:targetApi="17" />

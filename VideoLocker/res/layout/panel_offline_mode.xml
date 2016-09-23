@@ -3,7 +3,7 @@
     android:id="@+id/offline_panel_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/offline_panel"
+    android:background="@color/edx_brand_secondary_dark"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingBottom="15dp"

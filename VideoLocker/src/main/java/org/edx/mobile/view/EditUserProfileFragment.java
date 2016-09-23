@@ -272,7 +272,7 @@ public class EditUserProfileFragment extends BaseFragment {
             viewHolder.content.setVisibility(View.VISIBLE);
             viewHolder.loadingIndicator.setVisibility(View.GONE);
             viewHolder.changePhoto.setEnabled(!account.requiresParentalConsent());
-            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.edx_brand_primary_base : R.color.edx_grayscale_neutral_base);
+            viewHolder.profileImage.setBorderColorResource(viewHolder.changePhoto.isEnabled() ? R.color.edx_brand_primary_base : R.color.edx_brand_gray_accent);
 
             if (account.getProfileImage().hasImage()) {
                 Glide.with(viewHolder.profileImage.getContext())
@@ -477,7 +477,7 @@ public class EditUserProfileFragment extends BaseFragment {
         }
         if (readOnly) {
             group.setEnabled(false);
-            view.setBackgroundColor(view.getResources().getColor(R.color.edx_grayscale_neutral_x_light));
+            view.setBackgroundColor(view.getResources().getColor(R.color.edx_brand_gray_x_back));
         } else {
             group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -493,7 +493,7 @@ public class EditUserProfileFragment extends BaseFragment {
     private static TextView createField(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent, @NonNull final FormField field, @NonNull final String value, boolean readOnly, @NonNull View.OnClickListener onClickListener) {
         final TextView textView = (TextView) inflater.inflate(R.layout.edit_user_profile_field, parent, false);
         final SpannableString formattedValue = new SpannableString(value);
-        formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_grayscale_neutral_dark)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        formattedValue.setSpan(new ForegroundColorSpan(parent.getResources().getColor(R.color.edx_brand_gray_base)), 0, formattedValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(ResourceUtil.getFormattedString(parent.getResources(), R.string.edit_user_profile_field, new HashMap<String, CharSequence>() {{
             put("label", field.getLabel());
             put("value", formattedValue);
@@ -501,11 +501,11 @@ public class EditUserProfileFragment extends BaseFragment {
         Context context = parent.getContext();
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
                 textView, null, null, new IconDrawable(context, FontAwesomeIcons.fa_angle_right)
-                        .colorRes(context, R.color.edx_grayscale_neutral_light)
+                        .colorRes(context, R.color.edx_brand_gray_back)
                         .sizeDp(context, 24), null);
         if (readOnly) {
             textView.setEnabled(false);
-            textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_grayscale_neutral_x_light));
+            textView.setBackgroundColor(textView.getResources().getColor(R.color.edx_brand_gray_x_back));
         } else {
             textView.setOnClickListener(onClickListener);
         }

@@ -4,8 +4,9 @@
         <selector xmlns:android="http://schemas.android.com/apk/res/android">
             <item android:state_enabled="false">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/edx_brand_primary_x_light" />
+                    <solid android:color="@color/edx_brand_gray_x_back" />
                     <corners android:radius="@dimen/edx_box_radius" />
+                    <stroke android:color="@color/edx_brand_gray_back" android:width="@dimen/edx_hairline" />
                 </shape>
             </item>
             <item>

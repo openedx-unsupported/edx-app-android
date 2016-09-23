@@ -119,7 +119,7 @@
         <item name="android:maxWidth">@dimen/fullscreen_message_max_width</item>
         <item name="android:drawablePadding">@dimen/edx_margin</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:visibility">gone</item>
     </style>
@@ -150,23 +150,23 @@
 
     <style name="bold_regular_edx_black_text" parent="@style/regular_text">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_black</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="regular_edx_black_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_grayscale_neutral_black</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="regular_edx_gray_xdark_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_grayscale_neutral_x_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
     <style name="regular_edx_gray_dark_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
     <style name="regular_edx_gray_base_text" parent="@style/regular_text">
-        <item name="android:textColor">@color/edx_grayscale_neutral_base</item>
+        <item name="android:textColor">@color/edx_brand_gray_accent</item>
     </style>
 
     <style name="drawer_option" parent="@style/regular_white_text">
@@ -223,7 +223,7 @@
         <item name="android:text">@string/find_courses_offline_text</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
         <item name="android:visibility">gone</item>
     </style>
 
@@ -299,7 +299,7 @@
     </style>
 
     <style name="discussion_responses_small_text" parent="discussion_regular_text">
-        <item name="android:textColor">@color/edx_grayscale_neutral_dark</item>
+        <item name="android:textColor">@color/edx_brand_gray_base</item>
     </style>
 
 </resources>

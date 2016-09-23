@@ -20,7 +20,7 @@
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
-        app:iconColor="@color/edx_grayscale_neutral_light" />
+        app:iconColor="@color/edx_brand_gray_back" />
 
     <LinearLayout
         style="@style/regular_grey_text"
@@ -61,7 +61,7 @@
         android:layout_height="@dimen/fa_xx_large"
         android:baselineAlignBottom="true"
         android:gravity="center_vertical"
-        app:iconColor="@color/edx_grayscale_neutral_light"
+        app:iconColor="@color/edx_brand_gray_back"
         app:iconName="fa-angle-right" />
 
 </LinearLayout>

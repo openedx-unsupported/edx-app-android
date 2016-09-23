@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/edx_grayscale_neutral_white">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                     android:padding="10dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/abc_ic_menu_share_mtrl_alpha"
-                    android:tint="@color/edx_grayscale_neutral_black_t"
+                    android:tint="@color/black"
                     android:visibility="invisible" />
             </LinearLayout>
 
@@ -75,7 +75,7 @@
                 android:contentDescription="@string/go_to_video"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_media_play_inactive"
-                android:tint="@color/edx_grayscale_neutral_black_t"
+                android:tint="@color/black"
                 android:visibility="invisible" />
 
         </FrameLayout>

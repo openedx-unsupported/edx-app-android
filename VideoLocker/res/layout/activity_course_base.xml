@@ -51,7 +51,7 @@
                     android:id="@+id/last_accessed_bar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/last_accessed_bar_height"
-                    android:background="@color/edx_brand_primary_x_light"
+                    android:background="@color/edx_brand_primary_back"
                     android:orientation="vertical"
                     android:visibility="gone">
 

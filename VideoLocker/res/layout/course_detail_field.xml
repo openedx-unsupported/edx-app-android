@@ -20,7 +20,7 @@
             android:layout_height="@dimen/fa_xxx_large"
             android:baselineAlignBottom="true"
             android:gravity="left"
-            app:iconColor="@color/edx_grayscale_neutral_black"
+            app:iconColor="@color/black"
             tools:src="@color/edx_brand_primary_base" />
 
         <TextView

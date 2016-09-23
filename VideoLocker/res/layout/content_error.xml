@@ -13,7 +13,7 @@
             android:id="@+id/content_error_icon"
             android:layout_width="@dimen/content_unavailable_error_icon_size"
             android:layout_height="@dimen/content_unavailable_error_icon_size"
-            app:iconColor="@color/edx_grayscale_neutral_light"
+            app:iconColor="@color/edx_brand_gray_back"
             app:iconName="fa-exclamation-triangle" />
 
         <TextView

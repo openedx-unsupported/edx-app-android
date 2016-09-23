@@ -140,7 +140,7 @@ public class CourseDiscussionPostsThreadFragment extends CourseDiscussionPostsBa
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(createNewPostTextView,
                 new IconDrawable(context, FontAwesomeIcons.fa_plus_circle)
                         .sizeRes(context, R.dimen.small_icon_size)
-                        .colorRes(context, R.color.edx_grayscale_neutral_white_t),
+                        .colorRes(context, R.color.white),
                 null, null, null
         );
         createNewPostLayout.setOnClickListener(new View.OnClickListener() {

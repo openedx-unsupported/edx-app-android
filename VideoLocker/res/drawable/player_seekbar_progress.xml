@@ -4,7 +4,7 @@
         <shape android:shape="line">
             <stroke
                 android:width="@dimen/video_player_seekbar_line_width"
-                android:color="@color/edx_grayscale_neutral_x_dark" />
+                android:color="@color/edx_brand_gray_base" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">

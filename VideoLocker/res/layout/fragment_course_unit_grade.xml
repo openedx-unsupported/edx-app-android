@@ -11,7 +11,7 @@
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_margin="20dp"
-        app:iconColor="@color/edx_grayscale_neutral_light"
+        app:iconColor="@color/edx_brand_gray_back"
         app:iconName="fa-laptop" />
 
     <TextView
@@ -25,7 +25,7 @@
         android:singleLine="false"
         tools:text="@string/assessment_not_available"
         android:textAlignment="center"
-        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base"
         tools:targetApi="17" />
 
@@ -39,7 +39,7 @@
         android:singleLine="false"
         android:text="@string/assessment_explore_on_web"
         android:textAlignment="center"
-        android:textColor="@color/edx_grayscale_neutral_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base"
         tools:targetApi="17" />
 
@@ -52,7 +52,7 @@
         android:paddingLeft="@dimen/button_horizontal_padding"
         android:paddingRight="@dimen/button_horizontal_padding"
         android:text="@string/assessment_view_on_web"
-        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base" />
 
 </LinearLayout>

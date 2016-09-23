@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/edx_grayscale_neutral_x_light">
+    android:background="@color/edx_brand_gray_x_back">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:paddingRight="@dimen/edx_margin"
             android:paddingTop="@dimen/widget_margin"
             android:paddingBottom="@dimen/widget_margin"
-            android:background="@color/edx_grayscale_neutral_white">
+            android:background="@color/white">
 
             <RadioGroup
                 android:id="@+id/discussion_question_segmented_group"

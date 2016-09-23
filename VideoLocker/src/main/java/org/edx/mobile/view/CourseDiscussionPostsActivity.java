@@ -102,7 +102,7 @@ public class CourseDiscussionPostsActivity extends BaseSingleFragmentActivity {
             if (discussionTopic.isFollowingType()) {
                 SpannableString title = new SpannableString("   " + discussionTopic.getName());
                 IconDrawable starIcon = new IconDrawable(this, FontAwesomeIcons.fa_star)
-                        .colorRes(this, R.color.edx_grayscale_neutral_white_t)
+                        .colorRes(this, R.color.white)
                         .sizeRes(this, R.dimen.edx_base)
                         .tint(null); // IconDrawable is tinted by default, but we don't want it to be tinted here
                 starIcon.setBounds(0, 0, starIcon.getIntrinsicWidth(), starIcon.getIntrinsicHeight());

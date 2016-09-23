@@ -539,12 +539,12 @@ public class PlayerController extends FrameLayout {
         }
         if (mPlayer.isPlaying()) {
             mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_pause)
-                    .colorRes(getContext(), R.color.edx_grayscale_neutral_white_t));
+                    .colorRes(getContext(), R.color.white));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_pause));
         } else {
             mPauseButton.setImageDrawable(new IconDrawable(getContext(), FontAwesomeIcons.fa_play)
-                    .colorRes(getContext(),R.color.edx_grayscale_neutral_white_t));
+                    .colorRes(getContext(),R.color.white));
             mPauseButton.setContentDescription(getContext().getResources()
                     .getString(R.string.video_player_play));
         }
@@ -892,7 +892,7 @@ public class PlayerController extends FrameLayout {
             if (isSettingEnabled) {
                 mSettingsButton.setIconColor(getResources().getColor(R.color.edx_brand_primary_accent));
             } else {
-                mSettingsButton.setIconColor(getResources().getColor(R.color.edx_grayscale_neutral_white_t));
+                mSettingsButton.setIconColor(getResources().getColor(R.color.white));
             }
         }
     }

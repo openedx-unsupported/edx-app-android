@@ -6,7 +6,7 @@
             <corners android:radius="@dimen/edx_box_radius" />
             <stroke
                 android:width="1dp"
-                android:color="@color/edx_grayscale_neutral_base" />
+                android:color="@color/edx_brand_gray_accent" />
             <solid android:color="@android:color/transparent" />
         </shape>
     </item>

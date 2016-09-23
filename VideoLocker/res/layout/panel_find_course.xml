@@ -27,7 +27,7 @@
                 android:layout_marginBottom="@dimen/edx_margin"
                 android:gravity="center"
                 android:text="@string/find_course_text"
-                android:textColor="@color/edx_grayscale_neutral_x_dark"
+                android:textColor="@color/edx_brand_gray_base"
                 android:textSize="@dimen/edx_base" />
 
             <Button

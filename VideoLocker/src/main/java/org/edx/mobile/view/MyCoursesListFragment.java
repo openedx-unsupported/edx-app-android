@@ -85,8 +85,8 @@ public class MyCoursesListFragment extends BaseFragment implements NetworkObserv
             }
         });
         binding.swipeContainer.setColorSchemeResources(R.color.edx_brand_primary_accent,
-                R.color.edx_grayscale_neutral_x_light, R.color.edx_grayscale_neutral_x_light,
-                R.color.edx_grayscale_neutral_x_light);
+                R.color.edx_brand_gray_x_back, R.color.edx_brand_gray_x_back,
+                R.color.edx_brand_gray_x_back);
         if (environment.getConfig().getCourseDiscoveryConfig().isCourseDiscoveryEnabled()) {
             // As per docs, the footer needs to be added before adapter is set to the ListView
             addFindCoursesFooter();

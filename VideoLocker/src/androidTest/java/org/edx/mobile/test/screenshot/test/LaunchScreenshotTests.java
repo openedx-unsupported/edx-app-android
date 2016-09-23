@@ -17,7 +17,7 @@ public class LaunchScreenshotTests {
 
     @Rule
     public ActivityTestRule<LaunchActivity> mActivityRule =
-            new ActivityTestRule<>(LaunchActivity.class);
+            new ActivityTestRule<>(LaunchActivity.class, true, true);
 
     @Test
     public void testScreenshot_recordLaunchActivity() throws Throwable {

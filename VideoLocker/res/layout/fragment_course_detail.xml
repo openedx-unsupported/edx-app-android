@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/edx_grayscale_neutral_white"
+              android:background="@color/white"
               android:orientation="vertical"
               android:paddingLeft="@dimen/common_course_display_margin_side"
               android:paddingRight="@dimen/common_course_display_margin_side"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:paddingTop="@dimen/common_course_display_margin_top"
-        android:textColor="@color/edx_grayscale_neutral_x_dark"
+        android:textColor="@color/edx_brand_gray_base"
         android:textSize="@dimen/edx_base"
         tools:text="Bacon ipsum dolor amet bresaola bacon shoulder chicken beef ribs rump andouille turkey pig frankfurter tail sausage leberkas fatback."/>
 
