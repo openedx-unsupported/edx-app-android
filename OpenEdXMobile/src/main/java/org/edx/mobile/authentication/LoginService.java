@@ -2,6 +2,7 @@ package org.edx.mobile.authentication;
 
 import com.google.inject.Inject;
 
+import org.apache.http.HttpException;
 import org.edx.mobile.http.ApiConstants;
 import org.edx.mobile.http.ApiConstants.TokenType;
 import org.edx.mobile.model.api.ProfileModel;
@@ -47,10 +48,10 @@ public interface LoginService {
     Call<ResponseBody> register(@FieldMap Map<String, String> parameters);
 
     /**
-     * @return Description of what registration screen should look like
+     * @return Description of what registration screen should look like.
      */
     @GET(ApiConstants.URL_REGISTRATION)
-    RegistrationDescription getRegistrationDescription() throws HttpException;
+    RegistrationDescription getRegistrationDescription();
 
     /**
      * Depending on the query parameters for this endpoint, a different action will be triggered

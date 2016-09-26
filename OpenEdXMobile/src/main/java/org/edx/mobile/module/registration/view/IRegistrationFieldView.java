@@ -56,7 +56,7 @@ public interface IRegistrationFieldView {
                 return new RegistrationPasswordView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.TEXT)) {
-                View view = inflater.inflate( R.layout.view_register_edit_text, null);
+                View view = inflater.inflate(R.layout.view_register_edit_text, null);
                 return new RegistrationTextView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.TEXTAREA)) {

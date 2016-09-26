@@ -9,7 +9,7 @@ import org.edx.mobile.module.registration.model.RegistrationDescription;
 
 public abstract class GetRegistrationDescriptionTask extends Task<RegistrationDescription> {
     @Inject
-    LoginAPI loginAPI;
+    private LoginAPI loginAPI;
 
     public GetRegistrationDescriptionTask(Context context) {
         super(context);

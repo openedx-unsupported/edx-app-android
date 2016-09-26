@@ -45,7 +45,7 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         Context context = view.getContext();
         RoboGuice.getInjector(context).injectMembers(this);
 
-        mInputView.setText(ResourceUtil.getFormattedString(context.getResources(), R.string.tos_and_honor, "platform_name", environment.getConfig().getPlatformName()));
+        mInputView.setText(ResourceUtil.getFormattedString(context.getResources(), R.string.licensing_agreement, "platform_name", environment.getConfig().getPlatformName()));
         mInputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

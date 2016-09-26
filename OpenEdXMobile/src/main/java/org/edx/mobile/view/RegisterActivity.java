@@ -170,7 +170,7 @@ public class RegisterActivity extends BaseFragmentActivity
                     agreementView.setActionListener(new IRegistrationFieldView.IActionListener() {
                         @Override
                         public void onClickAgreement() {
-                            showAgreement();
+                            environment.getRouter().showWebViewDialog(RegisterActivity.this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
                         }
                     });
                     agreementLayout.addView(agreementView.getView());
