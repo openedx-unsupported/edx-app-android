@@ -45,7 +45,7 @@ To use a custom configuration in place of the default configuration, you will ne
 
 1. Create your own configuration directory somewhere else on the file system. For example, create ``my_config`` as a sibling of the ``edx-app-android`` repository.
 
-2. Create an ``edx.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory relative to the ``VideoLocker`` directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at `my_config`` then I'd have the following ``edx.properties``:
+2. Create an ``edx.properties`` file inside the ``OpenEdXMobile`` directory of ``edx-app-android``. In this ``edx.properties`` file, set the ``edx.dir`` property to the path to your configuration directory relative to the ``OpenEdXMobile`` directory. For example, if I stored my configuration side by side with the ``edx-app-android`` repository at `my_config`` then I'd have the following ``edx.properties``:
 
 ::
 
@@ -67,7 +67,7 @@ The full set of known keys can be found in the
 
 Building For Release
 --------------------
-To build an APK for release, you must specify an application ID and signing key. Create or edit the ``gradle.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. For example:
+To build an APK for release, you must specify an application ID and signing key. Create or edit the ``gradle.properties`` file inside the ``OpenEdXMobile`` directory of ``edx-app-android``. For example:
 
 ::
 
@@ -85,13 +85,13 @@ Now you can build a release build from Android Studio. Or, in the directory of `
 
 Customization
 -------------
-To customize images, colors, and layouts, you can specify a custom resource directory. Create or edit the ``gradle.properties`` file inside the ``VideoLocker`` directory of ``edx-app-android``. For example:
+To customize images, colors, and layouts, you can specify a custom resource directory. Create or edit the ``gradle.properties`` file inside the ``OpenEdXMobile`` directory of ``edx-app-android``. For example:
 
 ::
 
     RES_DIR = ../../path/to/your/res
 
-Any resources placed here will override resources of the same name in the ``VideoLocker/res`` directory.
+Any resources placed here will override resources of the same name in the ``OpenEdXMobile/res`` directory.
 
 To remove all edX branding, override the drawables for: ``edx_logo``, ``edx_logo_login``, ``ic_launcher``, ``ic_new_cert``, and ``profile_photo_placeholder``. These come in a number of resolutions, be sure to replace them all.
 

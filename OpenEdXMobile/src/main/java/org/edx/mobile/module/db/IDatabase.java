@@ -355,7 +355,7 @@ public interface IDatabase {
 
     /**
      * Return true if IVideoModel for associated dmId is present in db. Do not use username
-     * as this function is to check if the dmid is of VideoLocker or other application
+     * as this function is to check if the dmid is of OpenEdXMobile or other application
      *
      * @param dmId
      * @return

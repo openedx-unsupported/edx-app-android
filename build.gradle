@@ -37,7 +37,7 @@ task createBuildArtifactsDirectory << { task ->
 // Copies unit test reports to the 'artifacts' directory
 task copyUnitTestBuildArtifacts << { task ->
     // copy unit test reports
-    def srcPath = "VideoLocker/build/reports"
+    def srcPath = "OpenEdXMobile/build/reports"
     task.project.exec {
         commandLine = ['cp', '-R', srcPath, 'artifacts']
     }
@@ -46,7 +46,7 @@ copyUnitTestBuildArtifacts.dependsOn createBuildArtifactsDirectory
 
 // Copies lint report to the 'artifacts' directory
 task copyLintBuildArtifacts(type: Copy) {
-    from 'VideoLocker/build/outputs'
+    from 'OpenEdXMobile/build/outputs'
     into 'artifacts'
     include 'lint-results*'
     include 'lint-results*/**'
