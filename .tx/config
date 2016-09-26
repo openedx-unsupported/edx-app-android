@@ -3,16 +3,16 @@ type = ANDROID
 host = https://www.transifex.com
 
 [edx-mobile-apps.android-app-strings]
-file_filter = VideoLocker/res/values-<lang>/strings.xml
-source_file = VideoLocker/res/values/strings.xml
+file_filter = OpenEdXMobile/res/values-<lang>/strings.xml
+source_file = OpenEdXMobile/res/values/strings.xml
 source_lang = en
 
 [edx-mobile-apps.android-app-errors]
-file_filter = VideoLocker/res/values-<lang>/errors.xml
-source_file = VideoLocker/res/values/errors.xml
+file_filter = OpenEdXMobile/res/values-<lang>/errors.xml
+source_file = OpenEdXMobile/res/values/errors.xml
 source_lang = en
 
 [edx-mobile-apps.android-app-labels]
-file_filter = VideoLocker/res/values-<lang>/labels.xml
-source_file = VideoLocker/res/values/labels.xml
+file_filter = OpenEdXMobile/res/values-<lang>/labels.xml
+source_file = OpenEdXMobile/res/values/labels.xml
 source_lang = en
