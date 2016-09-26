@@ -16,7 +16,7 @@
             android:layout_marginBottom="75dp"
             android:layout_marginTop="75dp"
             android:contentDescription="@string/phonetic_app_name"
-            android:src="@drawable/edx_logo" />
+            android:src="@drawable/launch_screen_logo" />
 
         <LinearLayout
             android:layout_width="match_parent"

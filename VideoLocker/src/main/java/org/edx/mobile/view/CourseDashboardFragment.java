@@ -165,7 +165,7 @@ public class CourseDashboardFragment extends BaseFragment {
         final String headerImageUrl = courseData.getCourse().getCourse_image(environment.getConfig().getApiHostURL());
         Glide.with(CourseDashboardFragment.this)
                 .load(headerImageUrl)
-                .placeholder(R.drawable.edx_map_login)
+                .placeholder(R.drawable.placeholder_course_card_image)
                 .transform(new TopAnchorFillWidthTransformation(getActivity()))
                 .into(headerImageView);
 
