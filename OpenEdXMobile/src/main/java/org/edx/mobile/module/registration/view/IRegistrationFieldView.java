@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
@@ -33,7 +32,7 @@ public interface IRegistrationFieldView {
      */
     boolean setRawValue(String value);
 
-    public static interface IActionListener {
+    interface IActionListener {
         void onClickAgreement();
     }
 
@@ -41,7 +40,7 @@ public interface IRegistrationFieldView {
      * Factory class to get instance {@link IRegistrationFieldView}
      * for the given {@link org.edx.mobile.module.registration.model.RegistrationFormField}.
      */
-    public static class Factory {
+    class Factory {
         private static final Logger logger = new Logger(IRegistrationFieldView.Factory.class);
 
         public static IRegistrationFieldView getInstance(LayoutInflater inflater, RegistrationFormField field) {

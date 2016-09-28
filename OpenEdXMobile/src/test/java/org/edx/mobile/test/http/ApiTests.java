@@ -20,7 +20,6 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.json.JSONException;
 import org.json.JSONObject;

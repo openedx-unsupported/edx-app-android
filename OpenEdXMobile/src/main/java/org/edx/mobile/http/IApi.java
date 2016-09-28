@@ -7,7 +7,6 @@ import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 
 import java.net.HttpCookie;
 import java.util.ArrayList;

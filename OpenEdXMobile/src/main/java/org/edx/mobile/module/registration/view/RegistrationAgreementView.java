@@ -14,21 +14,20 @@ import org.edx.mobile.R;
 import org.edx.mobile.core.IEdxEnvironment;
 import org.edx.mobile.logger.Logger;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
-import org.edx.mobile.util.ResourceUtil;
 
 import roboguice.RoboGuice;
 
 class RegistrationAgreementView implements IRegistrationFieldView {
 
     protected static final Logger logger = new Logger(RegistrationAgreementView.class);
-    protected final @NonNull RegistrationFormField mField;
+    private final @NonNull RegistrationFormField mField;
     private final @NonNull View mView;
     protected TextView mInputView;
     private TextView mErrorView, mInstructionView;
     private IActionListener actionListener;
 
     @Inject
-    public IEdxEnvironment environment;
+    private IEdxEnvironment environment;
 
     public RegistrationAgreementView(@NonNull RegistrationFormField field, @NonNull View view) {
         // create and configure view and save it to an instance variable
@@ -45,7 +44,6 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         Context context = view.getContext();
         RoboGuice.getInjector(context).injectMembers(this);
 
-        mInputView.setText(ResourceUtil.getFormattedString(context.getResources(), R.string.licensing_agreement, "platform_name", environment.getConfig().getPlatformName()));
         mInputView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

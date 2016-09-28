@@ -12,9 +12,7 @@ import org.edx.mobile.http.HttpRequestEndPoint;
 import org.edx.mobile.http.IApi;
 import org.edx.mobile.http.OkHttpUtil;
 import org.edx.mobile.http.cache.CacheManager;
-import org.edx.mobile.interfaces.SectionItemInterface;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.model.Filter;
 import org.edx.mobile.model.api.AnnouncementsModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
 import org.edx.mobile.model.api.HandoutModel;
@@ -26,7 +24,6 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.util.Config;
 
 import java.net.HttpCookie;
@@ -50,13 +47,13 @@ public class ServiceManager {
     //TODO - we will move this logic into DI framework
 
     @Inject
-    Config config;
+    private Config config;
 
     @Inject
-    IApi api;
+    private IApi api;
 
     @Inject
-    LoginPrefs loginPrefs;
+    private LoginPrefs loginPrefs;
 
     public ServiceManager() {
         cacheManager = new CacheManager(MainApplication.instance());
@@ -114,21 +111,6 @@ public class ServiceManager {
         return delegate.fetchData(requestCacheType);
     }
 
-
-    public List<SectionItemInterface> getLiveOrganizedVideosByChapter(String courseId, final String chapter) throws Exception {
-        CourseComponent course = this.getCourseStructureFromCache(courseId);
-        if (course == null) {  //it means we cache the old data model in the file system
-            return api.getLiveOrganizedVideosByChapter(courseId, chapter);
-        } else {
-            return CourseManager.mappingAllVideoResponseModelFrom(course, new Filter<VideoResponseModel>() {
-                @Override
-                public boolean apply(VideoResponseModel videoResponseModel) {
-                    return videoResponseModel != null && videoResponseModel.getChapterName().equals(chapter);
-                }
-            });
-        }
-    }
-
     public Map<String, SectionEntry> getCourseHierarchy(String courseId) throws Exception {
         CourseComponent course = this.getCourseStructureFromCache(courseId);
         if (course == null) {  //it means we cache the old data model in the file system
@@ -167,10 +149,6 @@ public class ServiceManager {
 
     public List<EnrolledCoursesResponse> getEnrolledCourses() throws Exception {
         return api.getEnrolledCourses();
-    }
-
-    public EnrolledCoursesResponse getCourseById(String courseId) {
-        return api.getCourseById(courseId);
     }
 
     public List<EnrolledCoursesResponse> getEnrolledCourses(boolean fetchFromCache) throws Exception {

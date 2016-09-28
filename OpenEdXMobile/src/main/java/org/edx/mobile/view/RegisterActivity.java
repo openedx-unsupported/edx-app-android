@@ -2,7 +2,6 @@ package org.edx.mobile.view;
 
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,10 +20,14 @@ import org.edx.mobile.BuildConfig;
 import org.edx.mobile.R;
 import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.authentication.LoginAPI;
+import org.edx.mobile.authentication.LoginService;
 import org.edx.mobile.base.BaseFragmentActivity;
+import org.edx.mobile.http.CallTrigger;
+import org.edx.mobile.http.ErrorHandlingCallback;
 import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.ProfileModel;
 import org.edx.mobile.model.api.RegisterResponseFieldError;
+
 import org.edx.mobile.module.analytics.ISegment;
 import org.edx.mobile.module.prefs.LoginPrefs;
 import org.edx.mobile.module.registration.model.RegistrationDescription;
@@ -32,7 +35,6 @@ import org.edx.mobile.module.registration.model.RegistrationFormField;
 import org.edx.mobile.module.registration.view.IRegistrationFieldView;
 import org.edx.mobile.social.SocialFactory;
 import org.edx.mobile.social.SocialLoginDelegate;
-import org.edx.mobile.task.GetRegistrationDescriptionTask;
 import org.edx.mobile.task.RegisterTask;
 import org.edx.mobile.task.Task;
 import org.edx.mobile.util.ResourceUtil;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retrofit2.Call;
 
 public class RegisterActivity extends BaseFragmentActivity
         implements SocialLoginDelegate.MobileLoginCallback {
@@ -58,7 +62,10 @@ public class RegisterActivity extends BaseFragmentActivity
     private View googleButton;
 
     @Inject
-    LoginPrefs loginPrefs;
+    private LoginPrefs loginPrefs;
+
+    @Inject
+    private LoginService loginService;
 
     @NonNull
     public static Intent newIntent() {
@@ -119,10 +126,10 @@ public class RegisterActivity extends BaseFragmentActivity
             @Override
             public void onClick(View v) {
                 if (optionalFieldsLayout.getVisibility() == View.VISIBLE) {
-                    optionalFieldsLayout.setVisibility(v.GONE);
+                    optionalFieldsLayout.setVisibility(View.GONE);
                     optional_text.setText(getString(R.string.show_optional_text));
                 } else {
-                    optionalFieldsLayout.setVisibility(v.VISIBLE);
+                    optionalFieldsLayout.setVisibility(View.VISIBLE);
                     optional_text.setText(getString(R.string.hide_optional_text));
                 }
             }
@@ -133,20 +140,16 @@ public class RegisterActivity extends BaseFragmentActivity
         tryToSetUIInteraction(true);
     }
 
-    public void showAgreement() {
-        environment.getRouter().showWebViewDialog(this, getString(R.string.eula_file_link), getString(R.string.end_user_title));
-    }
-
     private void setupRegistrationForm() {
-        new GetRegistrationDescriptionTask(this) {
-
+        Call<RegistrationDescription> call = loginService.getRegistrationDescription();
+        call.enqueue(new ErrorHandlingCallback<RegistrationDescription>(
+                this, CallTrigger.USER_ACTION) {
             @Override
-            protected void onSuccess(RegistrationDescription registrationDescription) throws Exception {
+            protected void onResponse(@NonNull final RegistrationDescription result) {
                 LayoutInflater inflater = getLayoutInflater();
-
                 List<RegistrationFormField> agreements = new ArrayList<>();
 
-                for (RegistrationFormField field : registrationDescription.getFields()) {
+                for (RegistrationFormField field : result.getFields()) {
                     if (IRegistrationFieldView.HONOR_CODE_CHECKBOX_ID.equals(field.getName())) {
                         agreements.add(field);
                     } else {
@@ -178,10 +181,10 @@ public class RegisterActivity extends BaseFragmentActivity
             }
 
             @Override
-            protected void onException(Exception ex) {
+            protected void onFailure(@NonNull Throwable error) {
                 showErrorDialog(getString(R.string.no_connectivity), getString(R.string.network_not_connected));
             }
-        }.execute();
+        });
     }
 
     private void createAccount() {
@@ -275,27 +278,20 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * Displays given errors on the given registration field.
-     *
-     * @param errors
-     * @param fieldView
-     * @return
      */
     private void showErrorOnField(List<RegisterResponseFieldError> errors, IRegistrationFieldView fieldView) {
         if (errors != null && !errors.isEmpty()) {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder builder = new StringBuilder();
             for (RegisterResponseFieldError e : errors) {
-                buffer.append(e.getUserMessage() + " ");
+                builder.append(e.getUserMessage() + " ");
             }
 
-            fieldView.handleError(buffer.toString());
+            fieldView.handleError(builder.toString());
         }
     }
 
     /**
      * Scrolls to the top of the given View in the given ScrollView.
-     *
-     * @param scrollView
-     * @param view
      */
     public static void scrollToView(final ScrollView scrollView, final View view) {
 
@@ -315,7 +311,6 @@ public class RegisterActivity extends BaseFragmentActivity
         }
     }
 
-
     @Override
     public boolean createOptionsMenu(Menu menu) {
         // Register screen doesn't have any menu
@@ -324,16 +319,14 @@ public class RegisterActivity extends BaseFragmentActivity
 
     /**
      * we can create enum for strong type, but lose the extensibility.
-     *
-     * @param socialType
      */
     private void showRegularMessage(SocialFactory.SOCIAL_SOURCE_TYPE socialType) {
         LinearLayout messageLayout = (LinearLayout) findViewById(R.id.message_layout);
         TextView messageView = (TextView) findViewById(R.id.message_body);
         //we replace facebook and google programmatically here
         //in order to make localization work
-        String socialTypeString = "";
-        String signUpSuccessString = "";
+        String socialTypeString;
+        String signUpSuccessString;
         if (socialType == SocialFactory.SOCIAL_SOURCE_TYPE.TYPE_FACEBOOK) {
             socialTypeString = getString(R.string.facebook_text);
             signUpSuccessString = getString(R.string.sign_up_with_facebook_ok);
@@ -450,9 +443,6 @@ public class RegisterActivity extends BaseFragmentActivity
      * 1. first we try to login,
      * 2. if login return 200, redirect to course screen.
      * 3. otherwise, go through the normal registration flow.
-     *
-     * @param accessToken
-     * @param backend
      */
     public void onSocialLoginSuccess(String accessToken, String backend, Task task) {
         //we should handle UI update here. but right now we do nothing in UI
