@@ -48,7 +48,7 @@ script:
 # It comes in handy to see stacktraces from test failures, which otherwise aren't printed
 # P.S. --debug flag prints too many logs that are mostly not needed, which make it exceed the
 #      4mb limit enforced by travis (so use it with caution)
-  - ./gradlew lintProdDebug
+  - ./gradlew lintProdDebug --info
   - ./gradlew copyLintBuildArtifacts
   - ./gradlew testProdDebugUnitTestCoverage
   - ./gradlew copyUnitTestBuildArtifacts
