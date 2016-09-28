@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/discussion_post_title"
                 android:inputType="text"
-                android:singleLine="true" />
+                android:maxLines="1" />
 
             <EditText
                 android:id="@+id/body_edit_text"

@@ -369,7 +369,7 @@
     </style>
 
     <style name="edX.Widget.SignInButton" parent="regular_white_text">
-        <!-- When this style is used, it is always wrapped by edX.Widget.CreationButtonLayout -->
+        <!-- When this style is used, it is always wrapped by edX.Widget.SignInButtonLayout -->
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
@@ -385,7 +385,7 @@
         <item name="android:paddingLeft">@dimen/widget_margin</item>
         <item name="android:paddingRight">@dimen/widget_margin</item>
         <item name="android:minHeight">@dimen/edx_button_height</item>
-        <item name="android:background">@drawable/edx_brand_button</item>
+        <item name="android:background">@drawable/edx_brand_single_state_button</item>
     </style>
 
     <style name="edX.Widget.CreationButton">
@@ -393,7 +393,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:textColor">@color/edx_brand_button_text</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/edx_small</item>
         <item name="android:duplicateParentState">true</item>
     </style>
