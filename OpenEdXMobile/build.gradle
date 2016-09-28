@@ -279,6 +279,12 @@ android {
         def platformName = config.get('PLATFORM_NAME')
         resValue "string", "platform_name", platformName
 
+        def appShortcutName = config.get('APP_SHORTCUT_NAME')
+        if (appShortcutName == null) {
+            appShortcutName = platformName
+        }
+        resValue "string", "shortcut_name", appShortcutName
+
         def phoneticPlatformName = config.get('PHONETIC_PLATFORM_NAME')
         if (phoneticPlatformName == null) {
             phoneticPlatformName = platformName
