@@ -58,10 +58,11 @@ public class Config {
     private static final String CERTIFICATES_ENABLED = "CERTIFICATES_ENABLED";
     private static final String COURSE_SHARING_ENABLED = "COURSE_SHARING_ENABLED";
     private static final String BADGES_ENABLED = "BADGES_ENABLED";
-    private static final String SERVER_SIDE_CHANGED_THREAD = "SERVER_SIDE_CHANGED_THREAD";
     private static final String END_TO_END_TEST = "END_TO_END_TEST";
     private static final String NEW_LOGISTRATION_ENABLED = "NEW_LOGISTRATION_ENABLED";
     private static final String DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM = "DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM";
+    private static final String REGISTRATION_ENABLED = "REGISTRATION_ENABLED";
+
 
     public static class ZeroRatingConfig {
         @SerializedName("ENABLED")
@@ -422,6 +423,10 @@ public class Config {
 
     public boolean isDiscussionProfilePicturesEnabled() {
         return getBoolean(DISCUSSIONS_ENABLE_PROFILE_PICTURE_PARAM, false);
+    }
+
+    public boolean isRegistrationEnabled() {
+        return getBoolean(REGISTRATION_ENABLED, true);
     }
 
     /**
