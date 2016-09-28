@@ -1,5 +1,5 @@
 language: android
-jdk: oraclejdk8
+jdk: oraclejdk7
 sudo: required
 dist: precise # For 7.5GB of memory since the emulator requires a big chunk.
 env:
