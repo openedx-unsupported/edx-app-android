@@ -3,9 +3,9 @@ package org.edx.mobile.util;
 /**
  * A collection of Unicode characters that may be ambiguous when rendered directly as literals.
  */
-public class UnicodeChars {
+public class UnicodeCharacters {
     // Make this class non-instantiable
-    private UnicodeChars() {
+    private UnicodeCharacters() {
         throw new UnsupportedOperationException();
     }
 

@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.util.UnicodeChars;
+import org.edx.mobile.util.UnicodeCharacters;
 import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 
@@ -88,7 +88,7 @@ public class CourseEntry implements Serializable {
 
     @NonNull
     public String getName() {
-        return name.replaceAll("-", String.valueOf(UnicodeChars.NON_BREAKING_HYPHEN));
+        return name.replaceAll("-", String.valueOf(UnicodeCharacters.NON_BREAKING_HYPHEN));
     }
 
     public void setName(@NonNull String name) {
