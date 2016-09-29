@@ -56,12 +56,12 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
      * Create a new instance of this class.
      *
      * @param context A Context for resolving the error message strings. Note that for convenience,
-     *                this will be checked to determine whether it's implementing any of the
-     *                callback interfaces, and will be registered as such if so. If this is not the
-     *                desired outcome, then one of the alternative constructors should be used
-     *                instead, with the relevant callback parameters explicitly passed as null (this
-     *                may require casting the null in case of ambiguity when using a constructor
-     *                that only sets one callback explicitly).
+     *                this will be checked to determine whether it's implementing the
+     *                {@link TaskProgressCallback} interface, and will be registered as such if so.
+     *                If this is not the desired outcome, then one of the alternative constructors
+     *                should be used instead, with the relevant callback parameters explicitly
+     *                passed as null (this may require casting the null in case of ambiguity when
+     *                using a constructor that only sets one callback explicitly).
      * @param callTrigger The trigger for initiating the call. This is used to determine the type of
      *                    error message to deliver.
      */
@@ -69,17 +69,13 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
                                  @NonNull final CallTrigger callTrigger) {
         this(context, callTrigger,
                 context instanceof TaskProgressCallback ? (TaskProgressCallback) context : null,
-                context instanceof TaskMessageCallback ? (TaskMessageCallback) context : null);
+                null);
     }
 
     /**
      * Create a new instance of this class.
      *
-     * @param context A Context for resolving the error message strings. Note that for convenience,
-     *                this will be checked to determine whether it's implementing the
-     *                {@link TaskMessageCallback} interface, and will be registered as such if so.
-     *                If this is not the desired outcome, then the other constructor should be used
-     *                that takes this callback parameter, and it should be explicitly set as null.
+     * @param context A Context for resolving the error message strings.
      * @param callTrigger The trigger for initiating the call. This is used to determine the type of
      *                    error message to deliver.
      * @param progressCallback The callback to invoke on start and finish of the request. Note that
@@ -90,9 +86,7 @@ public abstract class ErrorHandlingCallback<T> implements Callback<T> {
     public ErrorHandlingCallback(@NonNull final Context context,
                                  @NonNull final CallTrigger callTrigger,
                                  @Nullable final TaskProgressCallback progressCallback) {
-        this(context, callTrigger,
-                progressCallback,
-                context instanceof TaskMessageCallback ? (TaskMessageCallback) context : null);
+        this(context, callTrigger, progressCallback, null);
     }
 
     /**
