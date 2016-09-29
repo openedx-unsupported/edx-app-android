@@ -223,10 +223,10 @@ public class UserProfileFragment extends PresenterFragment<UserProfilePresenter,
             }
 
             @Override
-            public void setName(@NonNull String name) {
-                viewHolder.nameText.setText(name);
+            public void setUsername(@NonNull String username) {
+                viewHolder.nameText.setText(username);
                 viewHolder.nameText.setContentDescription(ResourceUtil.getFormattedString(
-                        getResources(), R.string.profile_name_description, "name", name));
+                        getResources(), R.string.profile_username_description, "username", username));
             }
 
             @Override
