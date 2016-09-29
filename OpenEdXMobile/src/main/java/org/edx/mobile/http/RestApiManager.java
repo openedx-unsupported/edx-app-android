@@ -24,14 +24,11 @@ import org.edx.mobile.model.course.CourseComponent;
 import org.edx.mobile.model.course.CourseStructureJsonHandler;
 import org.edx.mobile.model.course.CourseStructureV1Model;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.services.CourseManager;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -59,10 +56,10 @@ public class RestApiManager implements IApi {
     protected final Logger logger = new Logger(getClass().getName());
 
     @Inject
-    IEdxEnvironment environment;
+    private IEdxEnvironment environment;
 
     @Inject
-    LoginPrefs loginPrefs;
+    private LoginPrefs loginPrefs;
 
     private final OkHttpClient oauthBasedClient;
     private final OauthRestApi oauthRestApi;
@@ -208,15 +205,6 @@ public class RestApiManager implements IApi {
             throw new HttpResponseStatusException(response.code());
         }
         return response.body();
-    }
-
-    @Override
-    public RegistrationDescription getRegistrationDescription() throws Exception {
-        Gson gson = new Gson();
-        InputStream in = context.getAssets().open("config/registration_form.json");
-        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
-        logger.debug("picking up registration description (form) from assets, not from cache");
-        return form;
     }
 
     @Override

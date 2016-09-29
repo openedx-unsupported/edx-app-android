@@ -7,7 +7,6 @@ import org.edx.mobile.model.api.HandoutModel;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 
 import java.net.HttpCookie;
 import java.util.ArrayList;
@@ -38,8 +37,6 @@ public interface IApi {
                                                                   String lastVisitedModuleId) throws Exception;
 
     SyncLastAccessedSubsectionResponse getLastAccessedSubsection(String courseId) throws Exception;
-
-    RegistrationDescription getRegistrationDescription() throws Exception;
 
     Boolean enrollInACourse(String courseId, boolean email_opt_in) throws Exception;
 

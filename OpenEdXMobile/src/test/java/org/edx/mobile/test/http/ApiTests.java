@@ -20,7 +20,6 @@ import org.edx.mobile.model.course.HasDownloadEntry;
 import org.edx.mobile.model.course.IBlock;
 import org.edx.mobile.model.course.VideoBlockModel;
 import org.edx.mobile.model.course.VideoData;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.test.util.MockDataUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -192,20 +191,6 @@ public class ApiTests extends HttpBaseTestCase {
         for (AnnouncementsModel r : res) {
             print(r.getDate());
         }
-    }
-
-    @Test
-    public void testReadRegistrationDescription() throws Exception {
-        RegistrationDescription form = api.getRegistrationDescription();
-
-        assertNotNull(form);
-        assertNotNull(form.getEndpoint());
-        assertNotNull(form.getMethod());
-        assertNotNull(form.getFields());
-        assertTrue(form.getFields().size() > 0);
-
-        // verify if enum type is parsed
-        assertNotNull(form.getFields().get(0).getFieldType());
     }
 
     // TODO: Debug and fix test failure

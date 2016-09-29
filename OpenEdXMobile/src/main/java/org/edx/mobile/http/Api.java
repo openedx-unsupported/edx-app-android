@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.edx.mobile.authentication.AuthResponse;
 import org.edx.mobile.exception.AuthException;
 import org.edx.mobile.http.cache.CacheManager;
 import org.edx.mobile.interfaces.SectionItemInterface;
@@ -19,26 +18,18 @@ import org.edx.mobile.model.api.AuthErrorResponse;
 import org.edx.mobile.model.api.ChapterModel;
 import org.edx.mobile.model.api.CourseInfoModel;
 import org.edx.mobile.model.api.EnrolledCoursesResponse;
-import org.edx.mobile.model.api.FormFieldMessageBody;
 import org.edx.mobile.model.api.HandoutModel;
-import org.edx.mobile.model.api.ProfileModel;
-import org.edx.mobile.model.api.RegisterResponse;
-import org.edx.mobile.model.api.ResetPasswordResponse;
 import org.edx.mobile.model.api.SectionEntry;
 import org.edx.mobile.model.api.SectionItemModel;
 import org.edx.mobile.model.api.SyncLastAccessedSubsectionResponse;
 import org.edx.mobile.model.api.VideoResponseModel;
 import org.edx.mobile.module.prefs.LoginPrefs;
-import org.edx.mobile.module.registration.model.RegistrationDescription;
 import org.edx.mobile.user.UserAPI;
 import org.edx.mobile.util.Config;
 import org.edx.mobile.util.DateUtil;
 import org.edx.mobile.util.NetworkUtil;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -575,21 +566,6 @@ public class Api implements IApi {
 
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, SyncLastAccessedSubsectionResponse.class);
-    }
-
-    /**
-     * Reads registration description from assets and return Model representation of it.
-     *
-     * @return
-     * @throws IOException
-     */
-    @Override
-    public RegistrationDescription getRegistrationDescription() throws Exception {
-        Gson gson = new Gson();
-        InputStream in = context.getAssets().open("config/registration_form.json");
-        RegistrationDescription form = gson.fromJson(new InputStreamReader(in), RegistrationDescription.class);
-        logger.debug("picking up registration description (form) from assets, not from cache");
-        return form;
     }
 
     @Override

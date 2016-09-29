@@ -7,11 +7,13 @@ import com.google.gson.JsonElement;
 
 import org.edx.mobile.R;
 import org.edx.mobile.logger.Logger;
-import org.edx.mobile.module.registration.model.RegistrationAgreement;
 import org.edx.mobile.module.registration.model.RegistrationFieldType;
 import org.edx.mobile.module.registration.model.RegistrationFormField;
 
 public interface IRegistrationFieldView {
+
+    String HONOR_CODE_CHECKBOX_ID = "honor_code";
+
     // Returns the value that should be sent to the server when registering.
     // Can be null to indicate do not send the field
     JsonElement getCurrentValue();
@@ -30,16 +32,15 @@ public interface IRegistrationFieldView {
      */
     boolean setRawValue(String value);
 
-    public static interface IActionListener {
-        void onClickAgreement(RegistrationAgreement agreement);
+    interface IActionListener {
+        void onClickAgreement();
     }
 
     /**
      * Factory class to get instance {@link IRegistrationFieldView}
      * for the given {@link org.edx.mobile.module.registration.model.RegistrationFormField}.
      */
-    public static class Factory {
-
+    class Factory {
         private static final Logger logger = new Logger(IRegistrationFieldView.Factory.class);
 
         public static IRegistrationFieldView getInstance(LayoutInflater inflater, RegistrationFormField field) {
@@ -66,7 +67,7 @@ public interface IRegistrationFieldView {
                 return new RegistrationSelectView(field, view);
             }
             else if (fieldType.equals(RegistrationFieldType.CHECKBOX)) {
-                if (field.getAgreement() != null) {
+                if (HONOR_CODE_CHECKBOX_ID.equals(field.getName())) {
                     View view = inflater.inflate(R.layout.view_register_agreement, null);
                     return new RegistrationAgreementView(field, view);
                 }

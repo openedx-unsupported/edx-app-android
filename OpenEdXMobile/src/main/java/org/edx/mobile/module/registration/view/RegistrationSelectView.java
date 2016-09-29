@@ -17,7 +17,7 @@ class RegistrationSelectView implements IRegistrationFieldView {
     protected static final Logger logger = new Logger(RegistrationEditTextView.class);
     private RegistrationFormField mField;
     private View mView;
-    protected RegistrationOptionSpinner mInputView;
+    private RegistrationOptionSpinner mInputView;
     private TextView mErrorView, mInstructionView;
 
     public RegistrationSelectView(RegistrationFormField field, View view) {
@@ -39,6 +39,7 @@ class RegistrationSelectView implements IRegistrationFieldView {
         for (RegistrationOption option : mField.getOptions()) {
             if (option.isDefaultValue()) {
                 defaultOption = option;
+                defaultOption.setName(mField.getLabel());
                 break;
             }
         }
