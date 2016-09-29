@@ -1,13 +1,11 @@
 package org.edx.mobile.test;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.test.runner.AndroidJUnitRunner;
 
 import com.facebook.testing.screenshot.ScreenshotRunner;
-
-/**
- * Created by cleeedx on 4/20/16.
- */
 
 public class EdXTestRunner extends AndroidJUnitRunner {
     @Override
@@ -22,4 +20,8 @@ public class EdXTestRunner extends AndroidJUnitRunner {
         super.finish(resultCode, results);
     }
 
+    @Override
+    public Application newApplication(ClassLoader cl, String className, Context context) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        return super.newApplication(cl, EdxInstrumentationTestApplication.class.getName(), context);
+    }
 }

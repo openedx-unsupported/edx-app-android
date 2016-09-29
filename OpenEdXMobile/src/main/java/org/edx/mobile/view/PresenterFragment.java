@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import org.edx.mobile.base.BaseFragment;
+import org.edx.mobile.test.PresenterInjector;
 
 public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseFragment {
 
@@ -31,7 +32,13 @@ public abstract class PresenterFragment<P extends Presenter<V>, V> extends BaseF
             setRetainInstance(true);
         }
         if (null == presenter) {
-            presenter = createPresenter();
+            if (getContext().getApplicationContext() instanceof PresenterInjector) {
+                //noinspection unchecked
+                presenter = (P)((PresenterInjector) getContext().getApplicationContext()).getPresenter();
+            }
+            if (null == presenter) {
+                presenter = createPresenter();
+            }
         }
     }
 
