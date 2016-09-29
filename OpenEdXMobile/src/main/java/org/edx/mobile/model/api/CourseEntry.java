@@ -1,17 +1,15 @@
 package org.edx.mobile.model.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.inject.Inject;
-
 import org.edx.mobile.social.SocialMember;
-import org.edx.mobile.util.Config;
+import org.edx.mobile.util.UnicodeCharacters;
 import org.edx.mobile.util.UrlUtil;
 import org.edx.mobile.util.images.CourseCardUtils;
 
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @SuppressWarnings("serial")
@@ -24,7 +22,7 @@ public class CourseEntry implements Serializable {
     private String end; // completion date
     private String start_display;
     private StartType start_type;
-    private String name;
+    @NonNull private String name;
     private String org;
     private String video_outline;
     private String course_about;
@@ -37,7 +35,7 @@ public class CourseEntry implements Serializable {
     private String discussion_url;
     private SocialURLModel social_urls;
     private CoursewareAccess courseware_access;
-    
+
     public LatestUpdateModel getLatest_updates() {
         return latest_updates;
     }
@@ -88,11 +86,12 @@ public class CourseEntry implements Serializable {
         this.start_type = start_type;
     }
 
+    @NonNull
     public String getName() {
-        return name;
+        return name.replaceAll("-", String.valueOf(UnicodeCharacters.NON_BREAKING_HYPHEN));
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 

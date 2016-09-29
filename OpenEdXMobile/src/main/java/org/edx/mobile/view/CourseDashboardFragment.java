@@ -70,6 +70,9 @@ public class CourseDashboardFragment extends BaseFragment {
             parent = (LinearLayout) view.findViewById(R.id.dashboard_detail);
             shareButton = (ImageButton) view.findViewById(R.id.course_detail_share); //invisible by default
 
+            // Full course name should appear on the course's dashboard screen.
+            courseTextName.setEllipsize(null);
+            courseTextName.setSingleLine(false);
         } else {
             view = inflater.inflate(R.layout.fragment_course_dashboard_disabled, container, false);
             errorText = (TextView) view.findViewById(R.id.error_msg);
