@@ -17,6 +17,8 @@
 
     <!-- Enroll Now button text-->
     <string name="enroll_now_button_text">Enroll now</string>
+    <!-- Effort field name -->
+    <string name="effort_field_name">Effort:</string>
     <!-- When discovering courses, some courses have an externally hosted video that describes it.
     In that case, a play icon is shown on top of the course image. This is the content description. -->
     <string name="go_to_video">Go to video</string>
