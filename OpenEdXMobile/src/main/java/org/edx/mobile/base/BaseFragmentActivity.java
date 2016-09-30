@@ -538,7 +538,7 @@ public abstract class BaseFragmentActivity extends BaseAppActivity
     }
 
     public void showErrorDialog(@Nullable String title, @NonNull String message) {
-        AlertDialogFragment.newInstance(title, message).show(getSupportFragmentManager(), null);
+        AlertDialogFragment.showDialog(getSupportFragmentManager(), title, message);
     }
 
     @Override
