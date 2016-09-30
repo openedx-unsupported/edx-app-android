@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">@string/platform_name</string>
-    <string name="app_shortcut_name">@string/shortcut_name</string>
-    <string name="phonetic_app_name">@string/phonetic_platform_name</string>
+    <string name="app_name" translatable="false">@string/platform_name</string>
+    <string name="app_shortcut_name" translatable="false">@string/shortcut_name</string>
+    <string name="phonetic_app_name" translatable="false">@string/phonetic_platform_name</string>
 
     <!-- Certificates -->
 
@@ -224,7 +224,7 @@
     <!--Label for creating a new post-->
     <string name="discussion_post_create_new_post">Create a new post</string>
     <!--Label for creating a new comment-->
-    <string name="discussion_post_create_new_comment">@string/discussion_add_comment_title</string>
+    <string name="discussion_post_create_new_comment" translatable="false">@string/discussion_add_comment_title</string>
     <!--Discussion posts filter options-->
     <!--Discussion posts filter for all posts-->
     <string name="discussion_posts_filter_all_posts">All Posts</string>
@@ -262,7 +262,7 @@
     <!--Label for question type discussions that are unanswered-->
     <string name="course_discussion_unanswered_title">Unanswered Question</string>
     <!--Label for adding a discussion response-->
-    <string name="discussion_responses_add_response_button">@string/discussion_add_response_title</string>
+    <string name="discussion_responses_add_response_button" translatable="false">@string/discussion_add_response_title</string>
     <!--Label for number of discussion responses-->
     <plurals name="number_responses_or_comments_responses_label">
         <item quantity="one">%s response</item>
@@ -274,7 +274,7 @@
         <item quantity="other">%s comments</item>
     </plurals>
     <!--Label for adding a new comment-->
-    <string name="number_responses_or_comments_add_comment_label">@string/discussion_add_comment_title</string>
+    <string name="number_responses_or_comments_add_comment_label" translatable="false">@string/discussion_add_comment_title</string>
     <!--Label for indicating that a response is an answer-->
     <string name="discussion_responses_answer">Answer</string>
     <!--Label for indicating that a response is endorsed-->
@@ -308,7 +308,7 @@
     <!-- Add comment button description for accessibility in adding a new comment -->
     <string name="discussion_add_comment_button_description">Add comment button</string>
     <!-- Add your comment placeholder in adding a new comment -->
-    <string name="discussion_add_comment_hint">@string/discussion_add_comment_title</string>
+    <string name="discussion_add_comment_hint" translatable="false">@string/discussion_add_comment_title</string>
 
     <!-- Title in adding a new response -->
     <string name="discussion_add_response_title">Add a response</string>
@@ -319,7 +319,7 @@
     <!-- Add response button description for accessibility in adding a new response -->
     <string name="discussion_add_response_button_description">Add response button</string>
     <!-- Add your response placeholder in adding a new response -->
-    <string name="discussion_add_response_hint">@string/discussion_add_response_title</string>
+    <string name="discussion_add_response_hint" translatable="false">@string/discussion_add_response_title</string>
 
     <!-- Title placeholder in adding a new post -->
     <string name="discussion_post_title">Title</string>
@@ -334,9 +334,9 @@
     <!-- Add post button content description for accessibility in adding a new post -->
     <string name="discussion_add_question_button_description">Post question button</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_discussion">@string/discussion_title</string>
+    <string name="discussion_body_hint_discussion" translatable="false">@string/discussion_title</string>
     <!-- Add your post placeholder in adding a new post -->
-    <string name="discussion_body_hint_question">@string/discussion_question</string>
+    <string name="discussion_body_hint_question" translatable="false">@string/discussion_question</string>
     <!-- Question text in adding a new post -->
     <string name="discussion_question">Question</string>
 
