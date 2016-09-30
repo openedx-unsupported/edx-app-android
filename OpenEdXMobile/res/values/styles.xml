@@ -122,7 +122,6 @@
 
     <!-- ActionBar title text -->
     <style name="MyActionBarTitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textSize">@dimen/edx_base</item>
         <item name="android:textColor">@color/white</item>
         <item name="fontPath">fonts/OpenSans-Semibold.ttf</item>
     </style>
