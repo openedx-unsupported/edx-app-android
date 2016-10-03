@@ -1,6 +1,7 @@
 package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,14 +15,23 @@ import org.edx.mobile.R;
  * message and an OK button without any listener.
  *
  * In the future, more customizability might be added as need.
-  */
+ */
 
 public class AlertDialogFragment extends DialogFragment {
-    public static final String ARG_TITLE = "title";
-    public static final String ARG_MESSAGE = "message";
+    protected static final String ARG_TITLE = "title";
+    protected static final String ARG_MESSAGE = "message";
 
-    public static AlertDialogFragment newInstance(@Nullable String title, @NonNull String message) {
+    public interface ButtonAttributes {
+        @NonNull
+        String getMessage();
+
+        @Nullable
+        DialogInterface.OnClickListener getOnClickListener();
+    }
+
+    public static AlertDialogFragment newInstance(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
         AlertDialogFragment fragment = new AlertDialogFragment();
+        fragment.mOnPositiveClick = onPositiveClick;
         Bundle args = new Bundle();
         args.putString(ARG_TITLE, title);
         args.putString(ARG_MESSAGE, message);
@@ -29,21 +39,56 @@ public class AlertDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    @Nullable
+    private DialogInterface.OnClickListener mOnPositiveClick;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String title = getArguments().getString(ARG_TITLE);
         String message = getArguments().getString(ARG_MESSAGE);
 
+        ButtonAttributes positiveButtonAttributes = getPositiveButtonAttributes();
+        ButtonAttributes negativeButtonAttributes = getNegativeButtonAttributes();
+
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton(R.string.label_ok, null)
+                .setPositiveButton(positiveButtonAttributes.getMessage(), positiveButtonAttributes.getOnClickListener())
                 .create();
+
+        alertDialog.setCanceledOnTouchOutside(false);
+
         if (title != null) {
             alertDialog.setTitle(title);
         }
 
-        alertDialog.setCanceledOnTouchOutside(false);
+        if (negativeButtonAttributes != null) {
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, negativeButtonAttributes.getMessage(), negativeButtonAttributes.getOnClickListener());
+        }
+
         return alertDialog;
+    }
+
+    @NonNull
+    protected ButtonAttributes getPositiveButtonAttributes() {
+        return new ButtonAttributes() {
+
+            @NonNull
+            @Override
+            public String getMessage() {
+                return getContext().getResources().getString(R.string.label_ok);
+            }
+
+            @Nullable
+            @Override
+            public DialogInterface.OnClickListener getOnClickListener() {
+                return mOnPositiveClick;
+            }
+        };
+    }
+
+    @Nullable
+    protected ButtonAttributes getNegativeButtonAttributes() {
+        return null;
     }
 }

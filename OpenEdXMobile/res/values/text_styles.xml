@@ -250,17 +250,11 @@
         <item name="android:textSize">11sp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingTop">5dp</item>
     </style>
 
-    <!-- Registration Message below fields-->
-    <style name="registration_instruction_message" parent="@android:style/Widget.DeviceDefault.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/grey_redirected_txt</item>
-        <item name="android:gravity" tools:targetApi="17">left|start|center_vertical</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:padding">5dp</item>
+    <!-- Registration Instruction Message below fields-->
+    <style name="registration_instruction_message" parent="registration_error_message">
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <!-- Course Card styles -->

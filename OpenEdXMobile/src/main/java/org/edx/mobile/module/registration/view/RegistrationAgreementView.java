@@ -1,5 +1,6 @@
 package org.edx.mobile.module.registration.view;
 
+import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -13,11 +14,12 @@ import org.edx.mobile.module.registration.model.RegistrationFormField;
 
 class RegistrationAgreementView implements IRegistrationFieldView {
 
-    protected static final Logger logger = new Logger(RegistrationAgreementView.class);
-    protected RegistrationFormField mField;
+    private static final Logger logger = new Logger(RegistrationAgreementView.class);
+    private RegistrationFormField mField;
     private View mView;
-    protected TextView mInputView;
-    private TextView mErrorView, mInstructionView;
+    private TextView mInputView;
+    private TextView mInstructionView;
+    private TextView mErrorView;
     private IActionListener actionListener;
 
     public RegistrationAgreementView(RegistrationFormField field, View view) {
@@ -26,8 +28,8 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         this.mView = view;
 
         this.mInputView = (TextView) view.findViewById(R.id.txt_input);
+        this.mInstructionView = (TextView)view.findViewById(R.id.txt_input_instruction);
         this.mErrorView = (TextView) view.findViewById(R.id.txt_input_error);
-        this.mInstructionView = (TextView) view.findViewById(R.id.txt_input_instruction);
 
         // display label as HTML and text to be centered horizontally
         mInputView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -42,13 +44,7 @@ class RegistrationAgreementView implements IRegistrationFieldView {
             }
         });
 
-        // display instructions if available
-        if (mField.getInstructions() != null && !mField.getInstructions().isEmpty()) {
-            mInstructionView.setVisibility(View.VISIBLE);
-            mInstructionView.setText(mField.getInstructions());
-        } else {
-            mInstructionView.setVisibility(View.GONE);
-        }
+        setInstructions(field.getInstructions());
 
         // hide error text view
         mErrorView.setVisibility(View.GONE);
@@ -91,6 +87,17 @@ class RegistrationAgreementView implements IRegistrationFieldView {
         }
         else {
             logger.warn("error message not provided, so not informing the user about this error");
+        }
+    }
+
+    @Override
+    public void setInstructions(@Nullable String instructions) {
+        if (instructions != null && !instructions.isEmpty()) {
+            mInstructionView.setVisibility(View.VISIBLE);
+            mInstructionView.setText(instructions);
+        }
+        else {
+            mInstructionView.setVisibility(View.GONE);
         }
     }
 

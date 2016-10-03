@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="@dimen/social_auth_bottom_margin"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="horizontal"

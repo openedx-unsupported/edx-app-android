@@ -52,7 +52,6 @@
     <color name="crop_circle_overlay_color">#c8000000</color>
 
     <color name="hint_grey_text">#8c8e90</color>
-    <color name="grey_hide_optional_text">#AFAFB5</color>
     <color name="last_accessed_row_blue">#E5F5FC</color>
 
     <!--  Colors defined by edX Pattern Library at http://ux.edx.org/design_elements/colors/ -->
