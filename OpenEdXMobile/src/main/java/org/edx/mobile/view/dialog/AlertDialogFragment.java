@@ -1,11 +1,11 @@
 package org.edx.mobile.view.dialog;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
 import org.edx.mobile.R;
@@ -13,24 +13,25 @@ import org.edx.mobile.R;
 /**
  * Note: This is a very simple implementation that only shows an {@link AlertDialog} with a given
  * message and an OK button without any listener.
- * <p/>
+ *
  * In the future, more customizability might be added as need.
  */
 
 public class AlertDialogFragment extends DialogFragment {
-    public static final String ARG_TITLE = "title";
-    public static final String ARG_MESSAGE = "message";
+    protected static final String ARG_TITLE = "title";
+    protected static final String ARG_MESSAGE = "message";
 
-    /**
-     * Creates a new instance of this dialog fragment.
-     *
-     * @param title   The title.
-     * @param message The message.
-     * @return AlertDialogFragment object.
-     * @see #showDialog(FragmentManager, String, String)
-     */
-    private static AlertDialogFragment newInstance(@Nullable String title, @NonNull String message) {
+    public interface ButtonAttributes {
+        @NonNull
+        String getMessage();
+
+        @Nullable
+        DialogInterface.OnClickListener getOnClickListener();
+    }
+
+    public static AlertDialogFragment newInstance(@Nullable String title, @NonNull String message, @Nullable DialogInterface.OnClickListener onPositiveClick) {
         AlertDialogFragment fragment = new AlertDialogFragment();
+        fragment.mOnPositiveClick = onPositiveClick;
         Bundle args = new Bundle();
         args.putString(ARG_TITLE, title);
         args.putString(ARG_MESSAGE, message);
@@ -38,22 +39,8 @@ public class AlertDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    /**
-     * Creates and shows a new instance of this dialog fragment.
-     *
-     * @param title   The title.
-     * @param message The message.
-     */
-    public static void showDialog(@NonNull FragmentManager manager,
-                                  @Nullable String title, @NonNull String message) {
-
-        // TODO: Re-work this code after migrating to an MVP framework.
-        try {
-            newInstance(title, message).show(manager, null);
-        } catch (IllegalStateException e) {
-            // Do nothing, since this is an issue due to improper session management in our tasks.
-        }
-    }
+    @Nullable
+    private DialogInterface.OnClickListener mOnPositiveClick;
 
     @NonNull
     @Override
@@ -61,15 +48,47 @@ public class AlertDialogFragment extends DialogFragment {
         String title = getArguments().getString(ARG_TITLE);
         String message = getArguments().getString(ARG_MESSAGE);
 
+        ButtonAttributes positiveButtonAttributes = getPositiveButtonAttributes();
+        ButtonAttributes negativeButtonAttributes = getNegativeButtonAttributes();
+
         AlertDialog alertDialog = new AlertDialog.Builder(getContext())
                 .setMessage(message)
-                .setPositiveButton(R.string.label_ok, null)
+                .setPositiveButton(positiveButtonAttributes.getMessage(), positiveButtonAttributes.getOnClickListener())
                 .create();
+
+        alertDialog.setCanceledOnTouchOutside(false);
+
         if (title != null) {
             alertDialog.setTitle(title);
         }
 
-        alertDialog.setCanceledOnTouchOutside(false);
+        if (negativeButtonAttributes != null) {
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, negativeButtonAttributes.getMessage(), negativeButtonAttributes.getOnClickListener());
+        }
+
         return alertDialog;
+    }
+
+    @NonNull
+    protected ButtonAttributes getPositiveButtonAttributes() {
+        return new ButtonAttributes() {
+
+            @NonNull
+            @Override
+            public String getMessage() {
+                return getContext().getResources().getString(R.string.label_ok);
+            }
+
+            @Nullable
+            @Override
+            public DialogInterface.OnClickListener getOnClickListener() {
+                return mOnPositiveClick;
+            }
+        };
+    }
+
+    @Nullable
+    protected ButtonAttributes getNegativeButtonAttributes() {
+        return null;
     }
 }
