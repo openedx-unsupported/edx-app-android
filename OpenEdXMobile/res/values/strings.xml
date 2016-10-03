@@ -81,7 +81,7 @@
     <string name="login_failed">Please make sure that your user name or e-mail address and password are correct and try again.</string>
     <string name="by_signing_up">By signing in to this app, you agree to the </string>
     <string name="licensing_agreement">{platform_name} Terms of Service and Honor Code</string>
-    <string name="login_title">Sign in to {platform_name}</string>
+    <string name="login_title">Sign In</string>
     <!-- Accessible content description of close button on Sign in and Sign up screen -->
     <string name="close">Close</string>
     <!-- Accessible content description prefix of dropdowns on Sign up screen, like, country and gender dropdowns -->

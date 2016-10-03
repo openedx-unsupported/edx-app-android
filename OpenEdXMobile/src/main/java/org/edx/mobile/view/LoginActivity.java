@@ -107,7 +107,7 @@ public class LoginActivity extends PresenterActivity<LoginPresenter, LoginPresen
         tryToSetUIInteraction(true);
 
         Config config = environment.getConfig();
-        setTitle(ResourceUtil.getFormattedString(getResources(), R.string.login_title, "platform_name", config.getPlatformName()));
+        setTitle(getString(R.string.login_title));
 
         String envDisplayName = config.getEnvironmentDisplayName();
         if (envDisplayName != null && envDisplayName.length() > 0) {
